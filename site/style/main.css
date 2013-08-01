@@ -43,6 +43,7 @@ footer {
    clear: both;
    bottom: 0;
    width: 90%;
+   margin-top: 5%;
 }
 
 .indent-1 {
@@ -162,4 +163,20 @@ border:1px solid #CCCCCC;-webkit-box-shadow: #FEFFFF 0px 1px 1px ;-moz-box-shado
 .ui-widget-header { 
 	border: 0;
 	background: #fff;
+}
+
+.ui-widget-overlay {
+	background: #000;
+}
+
+footer img {
+    filter: url(../image/filters.svg#grayscale); /* Firefox 3.5+ */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+    margin-right: 0.5%;
+}
+
+footer img:hover {
+    filter: none;
+    -webkit-filter: grayscale(0);
 }
