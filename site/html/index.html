@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link href="../style/shCore.css" rel="stylesheet" type="text/css" />
+        <link href="../style/shThemeDefault.css" rel="stylesheet" type="text/css" />
+        
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+  <link rel="stylesheet" href="../style/main.css">
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+        <script src="../script/shCore.js"></script>
+        <script src="../script/shBrushCpp.js"></script>
+        <script>
+            SyntaxHighlighter.all();
+        </script>
+        <script>
+          $(function() {
+            $( "#license").click(function(){
+                $( "#dialog-confirm" ).dialog({
+                  resizable: false,
+                  closeOnEscape: false,
+                  height:600,
+                  width: 500,
+                  modal: true,
+                  draggable: false,
+                  dialogClass: "alert",
+                  buttons: {
+                    Purchase: function() {
+                      $( this ).dialog( "close" );
+                    },
+                    Cancel: function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+
+                return false;
+            });
+          });
+        </script>
+    </head>
+    <body>
+        <header>
+            Logo Image
+            <hr style="color:#002186;background-color:#002186;height: 3px;border: 0;">            
+        </header>
+        <nav style="float: right;">
+            <a class="button_example" href="https://bitbucket.org/bcrowhurst/restbed/src">API</a>
+            <a class="button_example" href="https://bitbucket.org/bcrowhurst/restbed/src">Design</a>
+            <a class="button_example" href="https://bitbucket.org/bcrowhurst/restbed/src">Source</a>
+            <a class="button_example" href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">Wiki</a>
+            <a class="button_example" href="https://bitbucket.org/bcrowhurst/restbed/issues">Issues</a>
+            <a class="button_example" href="" id="license">License</a>
+        </nav>
+        <section class="indent-1">            
+            <section>
+                <div id="code-example">
+                    <div class="content">
+                        <pre class='brush: cpp; gutter: false;toolbar: false;'>
+                                #include "restbed.h"
+
+                                using namespace restbed;
+                                            
+                                Response get_handler( Request& request )
+                                {
+                                    Response response;
+                                    
+                                    response.set_data( "Hello, World!" );
+                                    
+                                    return response;
+                                }
+
+                                int main( int, char** )
+                                try
+                                {
+                                    Settings settings;
+                                    settings.set_port( 1984 );
+                                    settings.set_root( "resources" );
+                                    settings.set_log( "/tmp/restbed.XXXXX.log" );
+                                    
+                                    Service service( settings );
+                                        
+                                    Resource resource;
+                                    resource.set_path( "events/{id:.*}" );
+                                    resource.set_content_type( "application/.*" );
+                                    resource.set_method_handler( "GET", &get_handler );
+                                    
+                                    service.publish( resource );
+                                    
+                                    service.start( );
+
+                                    return EXIT_SUCCESS;
+                                }
+                                catch ( ... )
+                                {
+                                    return EXIT_FAILURE;
+                                }
+                        </pre>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div id="code-example">
+                    <div class="content2">
+                        <h1>Restbed</h1>
+                        <div class="content3">
+Developing RESTful Web services that seamlessly support 
+exposing your data in a variety of representation media
+types and abstract away the low-level details of the 
+consumer-service communication is not an easy task
+without a good framework. In order to simplify 
+development of RESTful Web services in C++, a standard
+and portable Restful API has been designed.
+                        </div>
+                        <h1>Features</h1>
+                        <ul>
+                            <li>HTTP Method, Path, and Content-Type request filteration</li>
+                            <li>Path parameters</li>
+                            <li>C++11 Support</li>
+                            <li>Linux, BSD, Mac OSX, and Windows platform support</li>
+                            <li>Two way SSL certificate authentication</li>
+                            <li>Designed with inheritance and customisation in mind</li>
+                            <li>Logging</li>
+                            <li>Thread Safe</li>
+                            <li>Logging</li>
+                        </ul>
+                        <a style="float:right" class="button_download" href="https://bitbucket.org/bcrowhurst/restbed/downloads">
+                            DOWNLOAD
+                            <span style="display: block;font-size:8pt;color: #000;margin-top:5%;text-align:center;">Version 1.0</span>
+                        </a>
+                        <span class="ui-icon ui-icon-alert" style="display: inline-block;"></span>
+                        <span style="line-height: 16px; display: inline-block; height: 16px;">
+                            Development license required for commercial use.
+                        </span>
+                    </div>
+                </div>
+
+            <div id="dialog-confirm" title="EULA">
+              <p>
+                <span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>License text</p>
+            </div>
+
+            </section>
+        </section>
+        <footer>
+        </footer>
+    </body>
+</html>
