@@ -1,0 +1,22 @@
+footer {   
+   float: left;
+   clear: both;
+   bottom: 0;
+   width: 90%;
+   margin-top: 3.5%;
+   margin-bottom: 2%;
+}
+
+footer img {
+    filter: url(../image/filters.svg#grayscale); /* Firefox 3.5+ */
+    filter: gray; /* IE6-9 */
+    -webkit-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+    -moz-filter: grayscale(1); /* Google Chrome & Safari 6+ */
+    margin-right: 0.5%;
+}
+
+footer img:hover {
+    filter: none;
+    -webkit-filter: grayscale(0);
+    -moz-filter: grayscale(0);
+}

@@ -55,7 +55,7 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static std::string to_string( const int code );
+                static std::string to_string( const int code ); //add parse method
 
                 //Getters
                 

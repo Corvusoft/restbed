@@ -1,0 +1,16 @@
+nav {
+	width: 35%;
+}
+
+nav a {
+	margin-right: 5%;
+	text-decoration:none;
+	color: #000;
+	font-size: 16px;
+	line-height: 20px;
+	font-family: verdana;	
+}
+
+nav a:hover {
+	color:#002186;	
+}

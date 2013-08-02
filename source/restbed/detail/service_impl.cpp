@@ -111,7 +111,7 @@ namespace restbed
 
         void ServiceImpl::publish( const Resource& value )
         {
-            string path = "/" + m_root + "/" + value.get_path( ); //remove double /////
+            string path = "/" + m_root + "/" + value.get_path( ); //remove double ///// and lowercase.
 
             Resource resource = value;
             resource.set_path( path );
@@ -181,6 +181,7 @@ namespace restbed
             std::cout << "Uri path: " << "http://" << destination->host_name( ) << ":" << std::to_string( port ) << path << std::endl;
 
             //check if we need forward slash for concat.
+            //what if ftp is used? or myschema://
             request.set_uri( Uri( "http://" + destination->host_name( ) + ":" + std::to_string( port ) + path ) );
             
             std::cout << "Uri: " << request.get_uri( ).to_string( ) << std::endl;
@@ -274,9 +275,9 @@ namespace restbed
         {
             if ( not error )
             {
-                Request request = build_request( socket ); //Request::build( socket );
+                Request request = build_request( socket );
                 
-                bool authenticated = authentication_handler( request ); //put this on resource?
+                bool authenticated = authentication_handler( request );
                 
                 if ( authenticated )
                 {
