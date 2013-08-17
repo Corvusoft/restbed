@@ -279,7 +279,7 @@ namespace restbed
                 
                 bool authenticated = authentication_handler( request );
                 
-                if ( authenticated )
+                if ( authenticated ) //response.get_status( ) != StatusCode::Unauthorized.
                 {
                     std::cout << "authenticated!" << std::endl;
                     
@@ -295,11 +295,13 @@ namespace restbed
                 }
                 else
                 {
-                    //not authorized!
+                    //unauthorized!
+                    //401
                 }
             }
             else
             {
+                //500
                 //internal server error!
             }
 

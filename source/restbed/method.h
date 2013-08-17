@@ -1,5 +1,5 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
@@ -53,7 +53,7 @@ namespace restbed
             //Definitions
 
             //Constructors
-            Method( const char* value ); //also add parse method! per appon uri etc...
+            Method( const char* value );
             
             Method( const std::string& value );
             
@@ -63,6 +63,8 @@ namespace restbed
 
             //Functionality
             std::string to_string( void ) const;
+        
+            static Method parse( const std::string& value );
 
             //Getters
 
@@ -106,7 +108,8 @@ namespace restbed
             //Constructors
             
             //Functionality
-            
+            Method( void );
+        
             //Getters
             
             //Setters

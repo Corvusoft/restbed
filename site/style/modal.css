@@ -1,0 +1,13 @@
+.ui-dialog-titlebar-close {
+  visibility: hidden;
+}
+
+.ui-widget-header { 
+	border: 0;
+	background: #fff;
+}
+
+.ui-widget-overlay {
+	opacity: 0.7;
+	background: #000;
+}

@@ -28,6 +28,7 @@ try
     settings.set_port( 1984 );
     settings.set_root( "resources" );
     //settings.set_log( "/tmp/restbed.XXXXX.log" );
+    //settings.set_log_levels( DEBUG | FATAL | INFO );
     
     Service service( settings );
         
@@ -50,3 +51,17 @@ catch ( const std::exception& ex )
 
     return EXIT_FAILURE;
 }
+
+    //RestMQ
+    //http://.../queues
+    //          /queues/audit
+    //          /queues/audit/register
+
+    //Queue queue;
+    //queue.set_name("audit");
+    //queue.set_content_type("application/.*");
+    //queue.set_handler();
+
+    //service.publish( queue );
+
+    //consumer.register(event);

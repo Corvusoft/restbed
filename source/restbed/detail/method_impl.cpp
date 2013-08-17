@@ -34,7 +34,7 @@
 using std::find;
 using std::array;
 using std::string;
-using std::runtime_error;
+using std::invalid_argument;
 
 //Project Namespaces
 
@@ -115,7 +115,7 @@ namespace restbed
 
             if ( iterator == methods.end( ) )
             {
-                throw runtime_error( "unsupported method type: " + method );
+                throw invalid_argument( "unsupported method type: " + method );
             }
 
             m_value = method;

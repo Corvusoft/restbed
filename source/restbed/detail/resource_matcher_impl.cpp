@@ -72,7 +72,7 @@ namespace restbed
             std::cout << "operator resource matcher" << std::endl;
 
             //WHAT IF NONE IS SUPPLIED == SEGFAULT!
-            std::string type = m_request.get_header( "Content-Type" ); //what if none is supplied!?
+            std::string type = m_request.get_header( "Content-Type" ); //what if none is supplied!? //case?
 
             std::regex pattern = regex( resource.get_content_type( ) );
             

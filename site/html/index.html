@@ -1,68 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="utf-8">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <title>Corvusoft - Restbed</title>
+        <meta charset="utf-8">  
+        <meta name="author" content="Corvusoft - Software Solutions"/>      
+        <meta name="copyright" content="&copy;" />
+        <meta name="description" content="C++ RESTful Web Service Framework"/>
+        <meta name="keywords" content="C++, RESTful, REST, Web Service, Embedded, Open Source, OpenSource, C/C++"/>
+        <meta name="viewport" content="width=device-width"/>
+
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link href="../style/shCore.css" rel="stylesheet" type="text/css" />
-        <link href="../style/shThemeDefault.css" rel="stylesheet" type="text/css" />
-        
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <link rel="stylesheet" href="../style/shCore.css"/>
+        <link rel="stylesheet" href="../style/shThemeDefault.css"/>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 
-  <link rel="stylesheet" href="../style/main.css">
-  <link rel="stylesheet" href="../style/footer.css">
-  <link rel="stylesheet" href="../style/navigation.css">
-  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <link rel="stylesheet" href="../style/main.css">
+        <link rel="stylesheet" href="../style/rule.css">
+        <link rel="stylesheet" href="../style/modal.css">
+        <link rel="stylesheet" href="../style/header.css">
+        <link rel="stylesheet" href="../style/footer.css">
 
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
         <script src="../script/shCore.js"></script>
         <script src="../script/shBrushCpp.js"></script>
-        <script>
-            SyntaxHighlighter.all();
-        </script>
-        <script>
-          $(function() {
-            $( "#license").click(function(){
-                $( "#dialog-confirm" ).dialog({
-                  resizable: false,
-                  closeOnEscape: false,
-                  height:800,
-                  width: 600,
-                  modal: true,
-                  draggable: false,
-                  dialogClass: "alert",
-                  buttons: {
-                    Purchase: function() {
-                      $( this ).dialog( "close" );
-                    },
-                    Cancel: function() {
-                      $( this ).dialog( "close" );
-                    }
-                  }
-                });
 
-                return false;
-            });
-          });
-        </script>
+        <script src="../script/syntax.js"></script>
+        <script src="../script/modal.js"></script>
     </head>
     <body>
         <header>
             Logo Image
-            <nav style="float: right;">
-                <a href="https://bitbucket.org/bcrowhurst/restbed/src">API</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Design</a>
+            <nav>
+                <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">API</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/src">Source</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">Wiki</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/issues">Issues</a>
-                <a href="" id="license">License</a>
+                <a href="#" id="header-license">License</a>
             </nav>  
-            <hr style="color:#002186;background-color:#002186;height: 3px;border: 0;">          
+            <hr>          
         </header>
-        <section class="indent-1">            
+        <section class="indent-1">
             <section>
                 <div id="code-example">
                     <div class="content">
@@ -75,7 +54,7 @@
                                 {
                                     Response response;
                                     
-                                    response.set_data( "Hello, World!" );
+                                    response.set_content( "Hello, World!" );
                                     
                                     return response;
                                 }
@@ -86,7 +65,8 @@
                                     Settings settings;
                                     settings.set_port( 1984 );
                                     settings.set_root( "resources" );
-                                    settings.set_log( "/tmp/restbed.XXXXX.log" );
+                                    settings.set_log( "file:///tmp/restbed.XXXXX.log" );
+                                    settings.set_log_level( INFO | WARNING | SECURITY );
                                     
                                     Service service( settings );
                                         
@@ -112,7 +92,9 @@
             <section>
                 <div id="code-example">
                     <div class="content2">
-                        <h1>Restbed</h1>
+                        <h1>
+                            Restbed
+                        </h1>
                         <div class="content3">
                             Developing RESTful Web services that seamlessly support 
                             exposing your data in a variety of representations while abstracting
@@ -121,35 +103,39 @@
                             of such systems within the C++ development arena. It offers a clean, portable
                             interface to get RESTful Web Services up and running within a matter of minutes.
                         </div>
-                        <h1>Features</h1>
+
+                        <h1>
+                            Features
+                        </h1>
                         <ul>
                             <li>HTTP Method, Path, and Content-Type request filteration</li>
                             <li>Path parameters</li>
                             <li>C++11 Support</li>
                             <li>Linux, BSD, Mac OSX, and Windows platform support</li>
                             <li>Two way SSL certificate authentication</li>
-                            <li>Designed with inheritance and customisation in mind</li>
-                            <li>Logging</li>
+                            <li>Designed with developer customisation in mind</li>
+                            <li>Request Logging</li>
                             <li>Thread Safe</li>
-                            <li>Logging</li>
                         </ul>
-                        <div>
-                            <a style="float:right" class="button_download" href="https://bitbucket.org/bcrowhurst/restbed/downloads">
+
+                        <div class="download">
+                            <a href="https://bitbucket.org/bcrowhurst/restbed/downloads">
                                 DOWNLOAD
-                                <span style="display: block;font-size:8pt;color: #000;margin-top:5%;text-align:center;">Version 1.0</span>
-                            </a>
-                            <div style="margin-left: 15%;margin-top: 5%;background: url(../image/warning.png) no-repeat;">
-                                <span style="line-height: 16px;font-size: 8pt;margin-left: 20px">
-                                    per developer license required for commercial use.
+                                <span>
+                                    Version 1.0
                                 </span>
-                            </div>
-                        
-                     
-                    </div>
+                            </a>
+                        </div>
+                        <div class="license-warning">
+                            <span>
+                                per developer <a href="#" id="main-license">license</a> required for commercial use.
+                            </span>
+                        </div>
                 </div>
+
             </section>
         </section>
-        <div id="dialog-confirm" title="SOFTWARE LICENSE AGREEMENT" style="display: none">
+        <section id="dialog-confirm" title="SOFTWARE LICENSE AGREEMENT" style="display: none">
             <p>
 Emweb bvba
 Technologielaan 9
@@ -273,7 +259,7 @@ This agreement shall be governed by the laws of Belgium and only the courts of L
 competent jurisdiction.
 Wt Software License Agreement v2.2 Page 3 / 3
             </p>
-        </div>
+        </section>
         <footer>
             <img src="../image/twitter.png" alt="twitter" />
             <img src="../image/facebook.png" alt="facebook" />

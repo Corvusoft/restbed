@@ -56,30 +56,7 @@ include( build_manifest.cmake )
 
 include_directories( ${SOURCE_DIR} )
 
-#add_library( restbed SHARED ${MANIFEST} )
-
-add_executable( restbed 
-		   ${FRAMEWORK_SOURCE_DIR}/main.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/string.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/string_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/settings.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/settings_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/status_code.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/status_code_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/method.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/method_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/resource.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/resource_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/request.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/request_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/response.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/response_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/uri.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/uri_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/resource_matcher.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher_impl.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/service.cpp
-		   ${FRAMEWORK_SOURCE_DIR}/detail/service_impl.cpp )
+add_library( restbed SHARED ${MANIFEST} )
 
 target_link_libraries( restbed pthread )
 

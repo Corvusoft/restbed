@@ -62,6 +62,13 @@ namespace restbed
     {
         return m_pimpl->to_string( );
     }
+    
+    Method Method::parse( const string& value )
+    {
+        Method method( value );
+        
+        return method;
+    }
 
     Method& Method::operator =( const Method& rhs )
     {
@@ -88,5 +95,10 @@ namespace restbed
     bool Method::operator !=( const Method& rhs ) const
     {
         return *m_pimpl != *rhs.m_pimpl;
+    }
+    
+    Method::Method( void ) : m_pimpl( nullptr )
+    {
+        //n/a
     }
 }
