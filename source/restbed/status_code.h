@@ -1,5 +1,5 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
@@ -24,6 +24,7 @@
 #define _RESTBED_STATUS_CODE_H 1
 
 //System Includes
+#include <map>
 #include <string>
 
 //Project Includes
@@ -46,7 +47,7 @@ namespace restbed
             //Friends
             
             //Definitions
-            enum 
+            enum : int
             {
                 CONTINUE = 100,
                 SWITCHING_PROTOCOLS = 101,
@@ -111,12 +112,16 @@ namespace restbed
             //Constructors
             
             //Functionality
+            static int parse( const std::string& value );
+        
             static std::string to_string( const int code );
 
             //Getters
-            
+            static std::map< int, std::string > get_mappings( void );
+        
             //Setters
-            
+            static void set_mappings( const std::map< int, std::string >& values );
+        
             //Operators
             
             //Properties

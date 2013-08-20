@@ -1,5 +1,5 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
@@ -53,6 +53,8 @@ namespace restbed
             //Functionality
             static std::string trim( const std::string& value );
         
+            static std::string to_lower( const std::string& value );
+
             static std::string to_upper( const std::string& value );
 
             static std::vector< std::string > split( const std::string& text, const char delimiter );

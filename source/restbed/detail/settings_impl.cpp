@@ -44,7 +44,8 @@ namespace restbed
     {
         SettingsImpl::SettingsImpl( void ) : m_properties( )
         {
-            //n/a
+            m_properties[ "ROOT" ] = "/";
+            m_properties[ "PORT" ] = "80";
         }
         
         SettingsImpl::SettingsImpl( const SettingsImpl& original ) : m_properties( original.m_properties )
@@ -69,13 +70,15 @@ namespace restbed
 
         string SettingsImpl::get_property( const string& name ) const
         {
-            string property = "";
+            string property = String::empty;
 
-            const auto& iterator = m_properties.find( name );
+            const string key = String::to_upper( name );
+
+            const auto& iterator = m_properties.find( key );
 
             if ( iterator not_eq m_properties.end( ) )
             {
-                property = m_properties.at( name );
+                property = m_properties.at( key );
             }
 
             return property;
@@ -113,12 +116,12 @@ namespace restbed
 
         bool SettingsImpl::operator <( const SettingsImpl& rhs ) const
         {
-            return m_properties < rhs.m_properties;
+            return m_properties.size( ) < rhs.m_properties.size( );
         }
         
         bool SettingsImpl::operator >( const SettingsImpl& rhs ) const
         {
-            return m_properties > rhs.m_properties;
+            return m_properties.size( ) > rhs.m_properties.size( );
         }
         
         bool SettingsImpl::operator ==( const SettingsImpl& rhs ) const

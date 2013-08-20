@@ -45,7 +45,12 @@ namespace restbed
     {
         return StringImpl::trim( value );
     }
-    
+
+    string String::to_lower( const string& value )
+    {
+        return StringImpl::to_lower( value );
+    }
+
     string String::to_upper( const string& value )
     {
     	return StringImpl::to_upper( value );

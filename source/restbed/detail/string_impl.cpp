@@ -33,6 +33,7 @@
 //System Namespaces
 using std::string;
 using std::vector;
+using std::tolower;
 using std::toupper;
 using std::transform;
 using std::back_inserter;
@@ -66,6 +67,15 @@ namespace restbed
             
             return result;
         }
+
+        string StringImpl::to_lower( const string& value )
+        {
+            string result = empty;
+            
+            transform( value.begin( ), value.end( ), back_inserter( result ), (int (*)(int))tolower );
+            
+            return result;
+        }
         
         string StringImpl::to_upper( const string& value )
         {
@@ -95,11 +105,11 @@ namespace restbed
                 start = end + 1;
             }
             
-            string str = text.substr( start );
+            string token = text.substr( start );
             
-            if ( not str.empty( ) )
+            if ( not token.empty( ) && token not_eq text )
             {
-                tokens.push_back( text.substr( start ) );
+                tokens.push_back( token );
             }
             
             return tokens;

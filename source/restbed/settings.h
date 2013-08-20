@@ -46,7 +46,7 @@ namespace restbed
         class SettingsImpl;
     }
 
-    class Settings
+    class Settings //add readonly funcationality, and add map constructor (remember uppercase!). + ServiceSettings, ReourceSettings
     {
         public:
             //Friends
@@ -74,7 +74,7 @@ namespace restbed
             //Setters  
             void set_port( const uint16_t value );
             
-            void set_root( const std::string& value );
+            void set_root( const std::string& value ); //needs validation
             
             void set_property( const std::string& name, const std::string& value );
             

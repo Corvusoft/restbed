@@ -50,7 +50,7 @@ namespace restbed
         class ResourceImpl;
     }
 
-    class Resource
+    class Resource //no resource properties? would allow nice extension for ppl like settings.set_root etc... + set_properties??
     {
         public:
             //Friends

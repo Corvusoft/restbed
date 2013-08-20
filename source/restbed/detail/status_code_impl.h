@@ -1,5 +1,5 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
@@ -55,11 +55,15 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static std::string to_string( const int code ); //add parse method
-
+                static int parse( const std::string& value );
+            
+                static std::string to_string( const int code );
+            
                 //Getters
-                
+                static std::map< int, std::string > get_mappings( void );
+            
                 //Setters
+                static void set_mappings( const std::map< int, std::string >& values );
                 
                 //Operators
                 
@@ -104,7 +108,7 @@ namespace restbed
                 StatusCodeImpl& operator =( const StatusCodeImpl& rhs ) = delete;
 
                 //Properties
-                static std::map< int, std::string> m_strings;
+                static std::map< int, std::string > m_mappings;
         };
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
@@ -21,8 +21,10 @@
  */
 
 //System Includes
+#include <stdexcept>
 
 //Project Includes
+#include "restbed/string.h"
 #include "restbed/detail/status_code_impl.h"
 
 //External Includes
@@ -30,6 +32,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::invalid_argument;
 
 //Project Namespaces
 
@@ -39,21 +42,60 @@ namespace restbed
 {
     namespace detail
     {
+        int StatusCodeImpl::parse( const string& value )
+        {
+            int result = -1;
+            
+            const string original = String::to_lower( value );
+            
+            for ( auto pair : m_mappings )
+            {
+                string text = String::to_lower( pair.second );
+                
+                if ( original == text )
+                {
+                    result = pair.first;
+                    break;
+                }
+            }
+            
+            if ( result == -1 )
+            {
+                throw invalid_argument( String::empty );
+            }
+            
+            return result;
+        }
+        
         string StatusCodeImpl::to_string( const int code )
         {
-            string value = "";
+            string value = String::empty;
 
-            const auto& iterator = m_strings.find( code );
+            const auto& iterator = m_mappings.find( code );
 
-            if ( iterator not_eq m_strings.end( ) )
+            if ( iterator not_eq m_mappings.end( ) )
             {
-                value = m_strings.at( code );
+                value = m_mappings.at( code );
+            }
+            else
+            {
+                throw invalid_argument( String::empty );
             }
 
             return value;
         }
+        
+        map< int, string > StatusCodeImpl::get_mappings( void )
+        {
+            return m_mappings;
+        }
+        
+        void StatusCodeImpl::set_mappings( const map< int, string >& values )
+        {
+            m_mappings = values;
+        }
 
-        std::map< int, std::string> StatusCodeImpl::m_strings = {
+        map< int, string > StatusCodeImpl::m_mappings = {
             { 100, "Continue" },
             { 101, "Switching Protocols" },
             { 102, "Processing" },

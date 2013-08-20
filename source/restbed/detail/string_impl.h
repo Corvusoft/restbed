@@ -56,6 +56,8 @@ namespace restbed
                 
                 //Functionality
                 static std::string trim( const std::string& value );
+
+                static std::string to_lower( const std::string& value );
             
                 static std::string to_upper( const std::string& value );
 
