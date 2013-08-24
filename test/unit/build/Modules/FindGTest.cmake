@@ -1,24 +1,22 @@
-# File: FindGTest.cmake
-# Site: code.google.com/p/application-on
+# Site: restbed.corvusoft.co.uk
 # Author: Ben Crowhurst
-# Project: Application On (AppOn) Event Reaction System
 #
-# Copyright (c) 2013 AppOn Core Development Team and Community Contributors
+# Copyright (c) 2013 Restbed Core Development Team and Community Contributors
 #
-# This file is part of AppOn (Application On).
+# This file is part of Restbed.
 #
-# AppOn is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
+# Restbed is free software: you can redistribute it and/or modify
+# it under the terms of the Lesser GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# AppOn is distributed in the hope that it will be useful,
+# Restbed is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Lesser GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with AppOn.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the Lesser GNU General Public License
+# along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
 
 find_path( GTEST_INCLUDE_DIR gtest/gtest.h "/usr/include" "/usr/local/include" )
 

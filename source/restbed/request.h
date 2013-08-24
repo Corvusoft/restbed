@@ -1,23 +1,23 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
  *
  * This file is part of Restbed.
  *
- * AppOn is free software: you can redistribute it and/or modify
+ * Restbed is free software: you can redistribute it and/or modify
  * it under the terms of the Lesser GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * AppOn is distributed in the hope that it will be useful,
+ * Restbed is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * Lesser GNU General Public License for more details.
  *
  * You should have received a copy of the Lesser GNU General Public License
- * along with AppOn.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _RESTBED_REQUEST_H
@@ -67,7 +67,7 @@ namespace restbed
             //Getters
             Uri get_uri( void ) const;
             
-            std::string get_method( void ) const;
+            std::string get_method( void ) const; //Why is this not a Method class
             
             std::string get_version( void ) const;
             

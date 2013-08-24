@@ -1,5 +1,5 @@
 /*
- * Site: restbed.net
+ * Site: restbed.corvusoft.co.uk
  * Author: Ben Crowhurst
  *
  * Copyright (c) 2013 Restbed Core Development Team and Community Contributors
@@ -19,7 +19,7 @@
  * You should have received a copy of the Lesser GNU General Public License
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+ 
 #include "restbed/uri.h"
 #include "restbed/method.h"
 #include "restbed/string.h"

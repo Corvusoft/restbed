@@ -1,24 +1,22 @@
-# File: CMakeLists.txt
-# Site: appon.sourcemosaic.com
+# Site: restbed.corvusoft.co.uk
 # Author: Ben Crowhurst
-# Project: Application On (AppOn) Event Reaction System
 #
-# Copyright (c) 2013 AppOn Core Development Team and Community Contributors
+# Copyright (c) 2013 Restbed Core Development Team and Community Contributors
 #
-# This file is part of AppOn (Application On).
+# This file is part of Restbed.
 #
-# AppOn is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
+# Restbed is free software: you can redistribute it and/or modify
+# it under the terms of the Lesser GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# AppOn is distributed in the hope that it will be useful,
+# Restbed is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Lesser GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with AppOn.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the Lesser GNU General Public License
+# along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
 
 project( "Test Suites" )
 
@@ -57,12 +55,20 @@ include_directories( "../../../distribution/include" ${GTEST_INCLUDE_DIR} )
 #
 # Build
 #
+add_executable( uri_suite ${SOURCE_DIR}/uri_suite.cpp )
 add_executable( method_suite ${SOURCE_DIR}/method_suite.cpp )
 add_executable( string_suite ${SOURCE_DIR}/string_suite.cpp )
+add_executable( request_suite ${SOURCE_DIR}/request_suite.cpp )
 add_executable( settings_suite ${SOURCE_DIR}/settings_suite.cpp )
+add_executable( response_suite ${SOURCE_DIR}/response_suite.cpp )
+add_executable( resource_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( status_code_suite ${SOURCE_DIR}/status_code_suite.cpp )
 
+target_link_libraries( uri_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( method_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( string_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
+target_link_libraries( request_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( settings_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
+target_link_libraries( response_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
+target_link_libraries( resource_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( status_code_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )

@@ -1,4 +1,4 @@
-# Site: restbed.net
+# Site: restbed.corvusoft.co.uk
 # Author: Ben Crowhurst
 #
 # Copyright (c) 2013 Restbed Core Development Team and Community Contributors
