@@ -21,9 +21,10 @@
  */
 
 //System Includes
+#include <sstream>
+#include <iostream> //testing
 
 //Project Includes
-#include "restbed/uri.h"
 #include "restbed/string.h"
 #include "restbed/detail/request_impl.h"
 
@@ -32,6 +33,8 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::istream;
+using std::istreambuf_iterator;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -42,7 +45,7 @@ namespace restbed
 {
     namespace detail
     {
-        RequestImpl::RequestImpl( void ) : m_uri( String::empty ),
+        RequestImpl::RequestImpl( void ) : m_path( String::empty ),
                                            m_method( String::empty ),
                                            m_version( String::empty ),
                                            m_headers( ),
@@ -52,7 +55,7 @@ namespace restbed
             //n/a
         }
         
-        RequestImpl::RequestImpl( const RequestImpl& original ) : m_uri( original.m_uri ),
+        RequestImpl::RequestImpl( const RequestImpl& original ) : m_path( original.m_path ),
                                                                   m_method( original.m_method ),
                                                                   m_version( original.m_version ),
                                                                   m_headers( original.m_headers ),
@@ -66,10 +69,51 @@ namespace restbed
         {
             //n/a
         }
-        
-        Uri RequestImpl::get_uri( void ) const
+
+        RequestImpl RequestImpl::parse( istream& socket )
         {
-            return m_uri;
+            //detect malformed request
+            //request.set_status_code( MALFORMED );
+            string method = parse_http_method( socket ); //Method
+            
+            string path = parse_http_path( socket );
+            
+            auto query_parameters = parse_http_query_parameters( socket );
+            
+            string version = parse_http_version( socket );
+            
+            auto headers = parse_http_headers( socket );
+
+            string body = parse_http_body( socket );
+            
+            RequestImpl pimpl;
+            //pimpl.set_path( path );
+            //pimpl.set_method( method );            
+            //pimpl.set_version( version ); //throw HTTP_VERSION_NOT_SUPPORTED
+            //pimpl.set_headers( headers );
+            //pimpl.set_query_parameters( query_parameters );            
+
+            std::cout << "request body: " << body << std::endl;
+            std::cout << "request method: " << method << std::endl;
+            std::cout << "request path: " << path << std::endl;
+            std::cout << "request version: " << version << std::endl;
+
+            for ( auto parameter : query_parameters )
+            {
+                std::cout << "query parameter name: " << parameter.first << " value: " << parameter.second << std::endl;
+            }
+
+            for ( auto header : headers )
+            {
+                std::cout << "header name: " << header.first << " value: " << header.second << std::endl;
+            }
+
+            return pimpl;
+        }
+        
+        string RequestImpl::get_path( void ) const
+        {
+            return m_path;
         }
         
         string RequestImpl::get_method( void ) const
@@ -112,9 +156,9 @@ namespace restbed
             return m_path_parameters;
         }
         
-        void RequestImpl::set_uri( const Uri& value )
+        void RequestImpl::set_path( const string& value )
         {
-            m_uri = value.to_string( );
+            m_path = value;
         }
         
         void RequestImpl::set_method( const string& value )
@@ -144,27 +188,27 @@ namespace restbed
         
         bool RequestImpl::operator <( const RequestImpl& rhs ) const
         {
-            return m_uri < rhs.m_uri;
+            return m_path < rhs.m_path;
         }
         
         bool RequestImpl::operator >( const RequestImpl& rhs ) const
         {
-            return m_uri > rhs.m_uri;
+            return m_path > rhs.m_path;
         }
         
         bool RequestImpl::operator ==( const RequestImpl& rhs ) const
         {
-            return m_uri == rhs.m_uri;
+            return m_path == rhs.m_path;
         }
         
         bool RequestImpl::operator !=( const RequestImpl& rhs ) const
         {
-            return m_uri not_eq rhs.m_uri;
+            return m_path not_eq rhs.m_path;
         }
         
         RequestImpl& RequestImpl::operator =( const RequestImpl& rhs )
         {
-            m_uri = rhs.m_uri;
+            m_path = rhs.m_path;
                                 
             m_method = rhs.m_method;
             
@@ -177,6 +221,103 @@ namespace restbed
             m_query_parameters = rhs.m_query_parameters;
 
             return *this;
+        }
+
+        string RequestImpl::parse_http_body( istream& socket )
+        {
+            istreambuf_iterator< char > end_of_stream;
+
+            string body( istreambuf_iterator< char >( socket ), end_of_stream );
+
+            return body;
+        }
+
+        string RequestImpl::parse_http_method( istream& socket )
+        {
+            string method = String::empty;
+            
+            socket >> method;
+
+            socket.get( ); //socket.ignore( sizeof( Whitespace ), Whitespace );
+            
+            return method;
+        }
+    
+        string RequestImpl::parse_http_path( istream& socket )
+        {
+            string path = String::empty;
+
+            for ( char character = socket.get( ); character not_eq ' ' and character not_eq '?'; character = socket.get( ) )
+            {
+                path.push_back( character );
+            }
+
+            return path;
+        }
+    
+        string RequestImpl::parse_http_version( istream& socket )
+        {
+            string version = String::empty;
+
+            socket >> version;
+
+            socket.get( ); //socket.ignore( sizeof( CarriageReturn ), CarriageReturn );
+            socket.get( ); //line feed.
+
+            return version;
+        }
+    
+        map< string, string > RequestImpl::parse_http_headers( istream& socket )
+        {
+            map< string, string > headers;
+
+            const char* CR = "\r";
+            
+            string header = String::empty;
+            
+            while ( std::getline( socket, header ) && header not_eq CR )
+            {
+                header.erase( header.length( ) - 1 ); //remove CR
+                
+                string::size_type index = header.find_first_of( ':' );
+                
+                string name = String::trim( header.substr( 0, index ) );
+                
+                string value = String::trim( header.substr( index + 1 ) );
+                
+                headers[ name ] = value;
+            }
+
+            return headers;
+        }
+
+        map< string, string > RequestImpl::parse_http_query_parameters( istream& socket )
+        {
+            map< string, string > parameters;
+
+            socket.unget( ); //reverse_peek( socket )
+
+            if ( socket.get( ) == '?' )
+            {
+                string query_string = String::empty;
+
+                socket >> query_string;
+
+                const auto& query = String::split( query_string, '&' );
+
+                for ( const auto& parameter : query )
+                {
+                    string::size_type index = parameter.find_first_of( '=' );
+                    
+                    string name = parameter.substr( 0, index );
+                    
+                    string value = parameter.substr( index + 1, parameter.length( ) );
+
+                    parameters[ name ] = value;
+                }
+            }
+
+            return parameters;
         }
     }
 }

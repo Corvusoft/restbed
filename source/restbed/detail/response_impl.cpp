@@ -24,6 +24,7 @@
 
 //Project Includes
 #include "restbed/string.h"
+#include "restbed/status_code.h"
 #include "restbed/detail/response_impl.h"
 
 //External Includes
@@ -40,13 +41,15 @@ namespace restbed
 {
     namespace detail
     {
-        ResponseImpl::ResponseImpl( void ) : m_data( String::empty ),
+        ResponseImpl::ResponseImpl( void ) : m_status_code( StatusCode::OK ),
+                                             m_data( String::empty ),
                                              m_headers( )
         {
             //n/a
         }
         
-        ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_data( original.m_data ),
+        ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_status_code( original.m_status_code ),
+                                                                     m_data( original.m_data ),
                                                                      m_headers( original.m_headers )
         {
             //n/a
@@ -56,7 +59,31 @@ namespace restbed
         {
             //n/a
         }
-                
+
+        string ResponseImpl::to_string( void ) const
+        {
+            string response = "HTTP/1.1 200 OK\r\n";
+            //general headers //get_general_headers
+            response += "Date: Thu, 20 May 2003 21:12:58 GMT\r\n";
+            response += "Connection: close\r\n";
+            //response headers //get_response_headers
+            response += "Server: Restbed/1.0.23\r\n";
+            response += "Accept-Ranges: bytes\r\n";
+            //entity headers //get_entity_headers
+            response += "Content-Type: text/html\r\n";
+            response += "Content-Length: 12\r\n";
+            response += "Last-Modified: Tue, 18 May 2004 10:14:49 GMT\r\n\r\n";
+            //message body //get_content
+            response += "1234567890jk";
+
+            return response;
+        }
+         
+        int ResponseImpl::get_status_code( void ) const
+        {
+            return m_status_code;
+        }
+
         string ResponseImpl::get_data( void ) const
         {
             return m_data;
@@ -72,6 +99,11 @@ namespace restbed
             return m_headers;
         }
         
+        void ResponseImpl::set_status_code( const int value )
+        {
+            m_status_code = value;
+        }
+
         void ResponseImpl::set_data( const string& value )
         {
             m_data = value;

@@ -53,7 +53,17 @@ namespace restbed
     {
         //n/a
     }
-            
+
+    string Response::to_string( void ) const
+    {
+        return m_pimpl->to_string( );
+    }
+           
+    int Response::get_status_code( void ) const
+    {
+        return m_pimpl->get_status_code( );
+    }
+
     string Response::get_data( void ) const
     {
         return m_pimpl->get_data( );
@@ -68,7 +78,12 @@ namespace restbed
     {
         return m_pimpl->get_headers( );
     }
-    
+
+    void Response::set_status_code( const int value )
+    {
+        m_pimpl->set_status_code( value );
+    }
+
     void Response::set_data( const string& value )
     {
         m_pimpl->set_data( value );

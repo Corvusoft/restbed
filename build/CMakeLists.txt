@@ -41,7 +41,7 @@ endforeach( DEPENDENCY )
 # Configuration
 #
 set( SOURCE_DIR "../source" )
-set( FRAMEWORK_SOURCE_DIR "${SOURCE_DIR}/restbed" )
+set( FRAMEWORK_SOURCE_DIR ${SOURCE_DIR}/restbed )
 
 set( CMAKE_INSTALL_PREFIX "../distribution" )
 set( LIBRARY_OUTPUT_PATH    "${CMAKE_INSTALL_PREFIX}/library" )
@@ -59,6 +59,10 @@ include_directories( ${SOURCE_DIR} )
 add_library( restbed SHARED ${MANIFEST} )
 
 target_link_libraries( restbed pthread )
+
+add_executable( main ${FRAMEWORK_SOURCE_DIR}/main.cpp )
+
+target_link_libraries( main restbed )
 
 #
 # Install

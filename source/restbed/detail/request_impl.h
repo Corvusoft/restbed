@@ -27,6 +27,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <istream>
 
 //Project Includes
 
@@ -61,9 +62,10 @@ namespace restbed
                 virtual ~RequestImpl( void );
                 
                 //Functionality
+                static RequestImpl parse( std::istream& socket );
                 
                 //Getters
-                Uri get_uri( void ) const;
+                std::string get_path( void ) const;
                 
                 std::string get_method( void ) const;
                 
@@ -82,7 +84,7 @@ namespace restbed
                 std::map< std::string, std::string > get_path_parameters( void ) const;
                 
                 //Setters //All these methods should be hidden!
-                void set_uri( const Uri& value );
+                void set_path( const std::string& value );
                 
                 void set_method( const std::string& value );
                 
@@ -132,7 +134,18 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                static std::string parse_http_body( std::istream& socket );
                 
+                static std::string parse_http_method( std::istream& socket );
+            
+                static std::string parse_http_path( std::istream& socket );
+            
+                static std::string parse_http_version( std::istream& socket );
+            
+                static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
+
+                static std::map< std::string, std::string > parse_http_query_parameters( std::istream& socket );
+
                 //Getters
                 
                 //Setters
@@ -140,7 +153,7 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                std::string m_uri;
+                std::string m_path;
                 
                 std::string m_method;
                 

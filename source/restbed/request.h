@@ -27,6 +27,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <istream>
  
 //Project Includes
 
@@ -41,7 +42,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Uri;
 
     namespace detail
     {
@@ -63,9 +63,11 @@ namespace restbed
             virtual ~Request( void );
 
             //Functionality
+            //std::string to_string( void );
+            static Request parse( std::istream& socket );
 
             //Getters
-            Uri get_uri( void ) const;
+            std::string get_path( void ) const;
             
             std::string get_method( void ) const; //Why is this not a Method class
             
@@ -84,7 +86,7 @@ namespace restbed
             std::map< std::string, std::string > get_path_parameters( void ) const;
 
             //Setters //All these methods should be hidden!
-            void set_uri( const Uri& value );
+            void set_path( const std::string& value );
             
             void set_method( const std::string& value );
             

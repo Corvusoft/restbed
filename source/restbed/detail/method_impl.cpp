@@ -115,7 +115,7 @@ namespace restbed
 
             if ( iterator == methods.end( ) )
             {
-                throw invalid_argument( "unsupported method type: " + method );
+                throw invalid_argument( "unsupported method type: " + method ); //throw StatsuCode::METHOD_NOT_ALLOWED
             }
 
             m_value = method;

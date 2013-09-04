@@ -46,7 +46,8 @@ namespace restbed
         FATAL = 3000,
         ERROR = 4000,
         WARNING = 5000,
-        SECURITY = 6000
+        SECURITY = 6000,
+        //VERBOSE = 7000 //and mask of all of them.
     };
 }
 

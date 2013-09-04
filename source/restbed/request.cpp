@@ -23,7 +23,6 @@
 //System Includes
 
 //Project Includes
-#include "restbed/uri.h"
 #include "restbed/request.h"
 #include "restbed/detail/request_impl.h"
 
@@ -32,6 +31,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::istream;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -55,9 +55,17 @@ namespace restbed
         //n/a
     }
 
-    Uri Request::get_uri( void ) const
+    Request Request::parse( istream& socket )
     {
-        return m_pimpl->get_uri( );
+        Request request;
+        *request.m_pimpl = RequestImpl::parse( socket );
+        
+        return request;
+    }
+
+    string Request::get_path( void ) const
+    {
+        return m_pimpl->get_path( );
     }
     
     string Request::get_method( void ) const
@@ -100,9 +108,9 @@ namespace restbed
         return m_pimpl->get_path_parameters( );
     }
 
-    void Request::set_uri( const Uri& value )
+    void Request::set_path( const string& value )
     {
-        m_pimpl->set_uri( value );
+        m_pimpl->set_path( value );
     }
     
     void Request::set_method( const string& value )

@@ -41,6 +41,7 @@ namespace restbed
 {
     //Forward Declarations
     class Request;
+    class Response;
     class Resource;
     class Settings;
 
@@ -99,9 +100,9 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual void error_handler( const Request& request );
+            virtual void error_handler( const Request& request, /*out*/ Response& response );
 
-            virtual bool authentication_handler( const Request& request );
+            virtual void authentication_handler( const Request& request, /*out*/ Response& response );
 
             virtual void log_handler(  const LogLevel level, const std::string& format, ... );
 

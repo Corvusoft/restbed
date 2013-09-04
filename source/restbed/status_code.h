@@ -66,7 +66,7 @@ namespace restbed
                 MOVED_PERMANENTLY = 301,
                 FOUND = 302,
                 SEE_OTHER = 303,
-                Not_Modified = 304,
+                NOT_MODIFIED = 304,
                 USE_PROXY = 305,
                 RESERVED = 306,
                 TEMPORARY_REDIRECT = 307,

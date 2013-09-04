@@ -76,9 +76,9 @@ namespace restbed
 
                 void suppress( const Resource& value );
 
-                virtual void error_handler( const Request& request );
+                virtual void error_handler( const Request& request, Response& response );
 
-                virtual bool authentication_handler( const Request& request );
+                virtual void authentication_handler( const Request& request, Response& response );
 
                 virtual void log_handler( const LogLevel level, const std::string& format, ... );
 
@@ -126,15 +126,15 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
-                void build_request_path( std::istream& stream, Request& request, std::shared_ptr< asio::ip::tcp::socket >& socket );
+                //void build_request_path( std::istream& stream, Request& request, std::shared_ptr< asio::ip::tcp::socket >& socket );
 
-                void build_request_method( std::istream& stream, Request& request );
+                //void build_request_method( std::istream& stream, Request& request );
 
-                void build_request_version( std::istream& stream, Request& request );
+                //void build_request_version( std::istream& stream, Request& request );
 
-                void build_request_headers( std::istream& stream, Request& request );
+                //void build_request_headers( std::istream& stream, Request& request );
 
-                Request build_request( std::shared_ptr< asio::ip::tcp::socket >& socket );
+                Request parse_incoming_request( std::shared_ptr< asio::ip::tcp::socket >& socket );
 
                 void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
 

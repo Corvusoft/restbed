@@ -36,6 +36,7 @@
 #include "restbed/resource.h"
 #include "restbed/settings.h"
 #include "restbed/log_level.h"
+#include "restbed/status_code.h"
 #include "restbed/resource_matcher.h"
 #include "restbed/detail/service_impl.h"
 
@@ -49,6 +50,7 @@ using asio::system_error;
 //System Namespaces
 using std::list;
 using std::string;
+using std::find_if;
 using std::istream;
 using std::shared_ptr;
 using std::stringstream;
@@ -114,6 +116,7 @@ namespace restbed
 
         void ServiceImpl::publish( const Resource& value )
         {
+            //String::join( "/", m_root, "/", value.get_path( ) );
             string path = "/" + m_root + "/" + value.get_path( ); //remove double ///// and lowercase.
 
             Resource resource = value;
@@ -129,16 +132,16 @@ namespace restbed
             m_resources.erase( position );
         }
 
-        void ServiceImpl::error_handler( const Request& request ) //message
+        void ServiceImpl::error_handler( const Request& request, Response& response )
         {
-            //500 Internal Server Error
-
             log_handler( LogLevel::ERROR, "Failed to process request." );
+
+            response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
         }
         
-        bool ServiceImpl::authentication_handler( const Request& request )
+        void ServiceImpl::authentication_handler( const Request& request, Response& response )
         {
-            return true;
+            response.set_status_code( StatusCode::OK );
         }
 
         void ServiceImpl::log_handler(  const LogLevel level, const std::string& format, ... )
@@ -165,89 +168,95 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
 
-        void ServiceImpl::build_request_path( istream& stream, Request& request, shared_ptr< tcp::socket >& socket )
-        {
-            string value = "";
+        // void ServiceImpl::build_request_path( istream& stream, Request& request, shared_ptr< tcp::socket >& socket )
+        // {
+        //     string value = String::empty;
             
-            stream >> value;
+        //     stream >> value;
             
-            string::size_type index = value.find_first_of( '?' );
+        //     string::size_type index = value.find_first_of( '?' );
             
-            string path = value.substr( 0, index );
+        //     string path = value.substr( 0, index );
                         
-            asio::ip::tcp::resolver resolver(*m_io_service);
+        //     asio::ip::tcp::resolver resolver(*m_io_service);
 
-            asio::ip::tcp::resolver::iterator destination = resolver.resolve(socket->local_endpoint());
+        //     asio::ip::tcp::resolver::iterator destination = resolver.resolve(socket->local_endpoint());
 
-            uint16_t port = socket->local_endpoint().port();
+        //     uint16_t port = socket->local_endpoint().port();
 
-            std::cout << "Uri path: " << "http://" << destination->host_name( ) << ":" << std::to_string( port ) << path << std::endl;
+        //     std::cout << "Uri path: " << "http://" << destination->host_name( ) << ":" << std::to_string( port ) << path << std::endl;
 
-            //check if we need forward slash for concat.
-            //what if ftp is used? or myschema://
-            request.set_uri( Uri( "http://" + destination->host_name( ) + ":" + std::to_string( port ) + path ) );
+        //     //check if we need forward slash for concat.
+        //     //what if ftp is used? or myschema://
+        //     //no only allow http & https
+        //     //if port != 80 or port != 433 then attach to uri. (keeps it clean)
+        //     request.set_uri( Uri( "http://" + destination->host_name( ) + ":" + std::to_string( port ) + path ) );
+
+        //     //if ( port == 80 or port == 433 )
+        //     //Uri uri = String::join( "http://", destination->host_name( ), ":", port, "/", path );
+        //     //request.set_uri( uri );
             
-            std::cout << "Uri: " << request.get_uri( ).to_string( ) << std::endl;
+        //     std::cout << "Uri: " << request.get_uri( ).to_string( ) << std::endl;
 
-            string query = value.substr( index + 1, value.length( ) );
+        //     string query = value.substr( index + 1, value.length( ) );
             
-            stringstream  data( query );
+        //     stringstream  data( query );
             
-            string parameter = "";
+        //     string parameter = String::empty;
             
-            while( std::getline( data, parameter, '&' ) )
-            {
-                string::size_type index = parameter.find_first_of( '=' );
+        //     while( std::getline( data, parameter, '&' ) )
+        //     {
+        //         string::size_type index = parameter.find_first_of( '=' );
                 
-                string name = parameter.substr( 0, index );
+        //         string name = parameter.substr( 0, index );
                 
-                string value = parameter.substr( index + 1, parameter.length( ) );
+        //         string value = parameter.substr( index + 1, parameter.length( ) );
+                                
+        //         //decode url
                 
-                //decode url
-                
-                request.set_query_parameter( name, value );
-            }
-        }
+        //         request.set_query_parameter( name, value );
+        //     }
+        // }
 
-        void ServiceImpl::build_request_method( istream& stream, Request& request )
-        {
-            string value = ""; //String::empty
+        // void ServiceImpl::build_request_method( istream& stream, Request& request )
+        // {
+        //     string value = String::empty;
             
-            stream >> value;
+        //     stream >> value;
             
-            request.set_method( value );
-        }
+        //     request.set_method( value );
+        // }
 
-        void ServiceImpl::build_request_version( istream& stream, Request& request )
-        {
-            string value = "";
+        // void ServiceImpl::build_request_version( istream& stream, Request& request )
+        // {
+        //     string value = String::empty;
             
-            stream >> value;
+        //     stream >> value;
             
-            request.set_version( value );
-        }
+        //     request.set_version( value );
+        // }
 
-        void ServiceImpl::build_request_headers( istream& stream, Request& request )
-        {
-            const char* CR = "\r";
+        // void ServiceImpl::build_request_headers( istream& stream, Request& request )
+        // {
+        //     const char* CR = "\r";
             
-            std::string header = "";
+        //     std::string header = String::empty;
             
-            while( std::getline(stream, header) && header != CR )
-            {
-                header.erase( header.length( ) - 1 ); //remove CR
+        //     while( std::getline(stream, header) && header != CR )
+        //     {
+        //         header.erase( header.length( ) - 1 ); //remove CR
                 
-                std::string::size_type index = header.find_first_of( ':' );
+        //         std::string::size_type index = header.find_first_of( ':' );
                 
-                std::string name = String::trim( header.substr( 0, index ) );
+        //         std::string name = String::trim( header.substr( 0, index ) );
                 
-                std::string value = String::trim( header.substr( index + 1 ) );
+        //         std::string value = String::trim( header.substr( index + 1 ) );
                 
-                request.set_header( name, value );
-            }
-        }
+        //         request.set_header( name, value );
+        //     }
+        // }
 
-        Request ServiceImpl::build_request( shared_ptr< tcp::socket >& socket )
+        Request ServiceImpl::parse_incoming_request( shared_ptr< tcp::socket >& socket )
         {
             const char* CRLF = "\r\n";
             
@@ -257,60 +266,95 @@ namespace restbed
             
             asio::read_until( *socket, buffer, CRLF, status );
             
-            istream stream( &buffer );
+            //istream stream( &buffer );
+
+            istream stream_test( &buffer );
+
+            Request test = Request::parse( stream_test );
+            //return Request::parse( istream( &buffer ) );
             
             Request request;
+
+            //build_request_method( stream, request ); 
+            //Method method = parse_http_method( );
             
-            build_request_method( stream, request );
+            //build_request_path( stream, request, socket );
+            //string path = parse_http_path( );
             
-            build_request_path( stream, request, socket );
+            //build_request_version( stream, request );
+            //string version = parse_http_version( );
             
-            build_request_version( stream, request );
+            //buffer.consume( 2 ); //remove trailing CRLF, CRLF.length()
             
-            buffer.consume( 2 ); //remove trailing CRLF
-            
-            build_request_headers( stream, request );
+            //build_request_headers( stream, request );
+            //auto parse_http_headers( );
             
             return request;
         }
 
+        //do curl with a fake Method is gets all the way to get_method_handler :s It should fail at build_request( socket );                
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         {
+            // Request request;
+            // Response response;
+
+            //try
+            //{
+                //if ( error )
+                //{
+                //    throw INTERNAL_SERVER_ERROR;
+                //}
+
+                //request = parse( socket );
+
+                //authentication_handler( request );
+
+                //resource = resolve_resource_route( request );
+
+                //response = invoke_method_handler( request, resource );
+            //}
+            //catch ( const int status_code )
+            //{
+                //response.set_status_code( status_code );
+                //error_handler( request, response );
+            //}
+
+            //asio::write( *socket, buffer( response.to_string( ) ), asio::transfer_all( ) );
+
+            //listen( );
+
+            Request request;
+            Response response;
+
             if ( not error )
             {
-                Request request = build_request( socket );
+                //request = build_request( socket );
+                request = parse_incoming_request( socket );
                 
-                bool authenticated = authentication_handler( request );
+                authentication_handler( request, response );
                 
-                if ( authenticated ) //response.get_status( ) != StatusCode::Unauthorized.
+                int status = response.get_status_code( );
+
+                if ( status not_eq StatusCode::UNAUTHORIZED and status not_eq StatusCode::FORBIDDEN )
                 {
-                    std::cout << "authenticated!" << std::endl;
+                    const auto& resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) );
                     
-                    std::cout << "Path: " << request.get_uri( ).get_path( ) << std::endl;
-                    
-                    const auto& resource = std::find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) );
-                    
-                    std::string method = request.get_method( ); //Why is this not Method? do curl with a fake Method is gets all the way to get_method_handler :s It should fail at build_request( socket );
-                        
+                    Method method = request.get_method( );  
+
                     auto handle = resource->get_method_handler( method );
                         
-                    Response response = handle( request );
-                }
-                else
-                {
-                    //unauthorized!
-                    //401
+                    response = handle( request );
                 }
             }
             else
             {
-                //500
-                //internal server error!
+                error_handler( request, response );
             }
 
-            //send back response!
-            //response
-            
+            //system_error err;
+
+            asio::write( *socket, buffer( response.to_string( ) ), asio::transfer_all( ) );
+
             listen( );
         }
 
@@ -337,6 +381,8 @@ namespace restbed
         ServiceImpl& ServiceImpl::operator =( const ServiceImpl& rhs )
         {
             m_port = rhs.m_port;
+
+            m_root = rhs.m_root;
 
             m_resources = rhs.m_resources;
 

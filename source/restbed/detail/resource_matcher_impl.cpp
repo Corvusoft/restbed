@@ -75,6 +75,9 @@ namespace restbed
             std::string type = m_request.get_header( "Content-Type" ); //what if none is supplied!? //case?
 
             std::regex pattern = regex( resource.get_content_type( ) );
+
+            //resource.has_header( "Content-Type" );
+            //request.has_header( "Content-Type" );
             
             std::cout << "type:" << type << std::endl;
             std::cout << "uri path:" << m_request.get_uri( ).get_path( ) << std::endl;
@@ -94,7 +97,7 @@ namespace restbed
                 {
                     std::cout << "y: " << element << std::endl;
                     
-                    if ( element.front( ) == '{' )
+                    if ( element.front( ) == '{' ) //const char START_QUERY_PA
                     {
                         if ( element.back( ) == '}' )
                         {

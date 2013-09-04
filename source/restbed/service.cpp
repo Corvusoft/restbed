@@ -25,6 +25,7 @@
 
 //Project Includes
 #include "restbed/service.h"
+#include "restbed/response.h"
 #include "restbed/settings.h"
 #include "restbed/log_level.h"
 #include "restbed/detail/service_impl.h"
@@ -103,14 +104,14 @@ namespace restbed
         return *m_pimpl != *rhs.m_pimpl;
     }
 
-    void Service::error_handler( const Request& request )
+    void Service::error_handler( const Request& request, Response& response )
     {
-        m_pimpl->error_handler( request );
+        m_pimpl->error_handler( request, response );
     }
     
-    bool Service::authentication_handler( const Request& request )
+    void Service::authentication_handler( const Request& request, Response& response )
     {
-        return m_pimpl->authentication_handler( request );
+        m_pimpl->authentication_handler( request, response );
     }
 
     void Service::log_handler( const LogLevel level, const string& format, ... )

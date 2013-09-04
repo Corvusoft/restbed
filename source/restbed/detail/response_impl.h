@@ -40,7 +40,6 @@
 namespace restbed
 {
     //Forward Declarations
-    
     namespace detail
     {
         //Forward Declarations
@@ -60,8 +59,11 @@ namespace restbed
                 virtual ~ResponseImpl( void );
 
                 //Functionality
+                std::string to_string( void ) const;
                             
                 //Getters
+                int get_status_code( void ) const;
+
                 std::string get_data( void ) const;
 
                 std::string get_header( const std::string& name ) const;
@@ -69,6 +71,8 @@ namespace restbed
                 std::map< std::string, std::string > get_headers( void ) const;
 
                 //Setters
+                void set_status_code( const int value );
+
                 void set_data( const std::string& value ); //Bytes
 
                 void set_header( const std::string& name, const std::string& value );
@@ -121,6 +125,8 @@ namespace restbed
                 //Operators
 
                 //Properties
+                int m_status_code;
+
                 std::string m_data;
         
                 std::map< std::string, std::string > m_headers;
