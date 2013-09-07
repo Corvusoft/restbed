@@ -26,6 +26,7 @@
 
 //Project Includes
 #include "restbed/string.h"
+#include "restbed/status_code.h"
 #include "restbed/detail/method_impl.h"
 
 //External Includes
@@ -115,7 +116,7 @@ namespace restbed
 
             if ( iterator == methods.end( ) )
             {
-                throw invalid_argument( "unsupported method type: " + method ); //throw StatsuCode::METHOD_NOT_ALLOWED
+                throw StatusCode::METHOD_NOT_ALLOWED;
             }
 
             m_value = method;

@@ -42,6 +42,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Method;
 
     namespace detail
     {
@@ -63,13 +64,14 @@ namespace restbed
             virtual ~Request( void );
 
             //Functionality
-            //std::string to_string( void );
             static Request parse( std::istream& socket );
 
             //Getters
+            Method get_method( void ) const;
+
             std::string get_path( void ) const;
-            
-            std::string get_method( void ) const; //Why is this not a Method class
+
+            std::string get_body( void ) const;
             
             std::string get_version( void ) const;
             
@@ -85,18 +87,7 @@ namespace restbed
             
             std::map< std::string, std::string > get_path_parameters( void ) const;
 
-            //Setters //All these methods should be hidden!
-            void set_path( const std::string& value );
-            
-            void set_method( const std::string& value );
-            
-            void set_version( const std::string& value );
-            
-            void set_header( const std::string& name, const std::string& value );
-            
-            void set_path_parameter( const std::string& name, const std::string& value );
-            
-            void set_query_parameter( const std::string& name, const std::string& value );
+            //Setters
         
             //Operators
             Request& operator =( const Request& rhs );
@@ -140,7 +131,20 @@ namespace restbed
             //Getters
             
             //Setters
+            void set_method( const Method& value );
+
+            void set_path( const std::string& value );
+
+            void set_body( const std::string& value );
             
+            void set_version( const std::string& value );
+            
+            void set_headers( const std::map< std::string, std::string >& value );
+            
+            void set_path_parameter( const std::string& name, const std::string& value );
+            
+            void set_query_parameters( const std::map< std::string, std::string >& value );
+
             //Operators
 
             //Properties

@@ -69,24 +69,24 @@ namespace restbed
         {
             bool result = false;
             
-            std::cout << "operator resource matcher" << std::endl;
+            //std::cout << "operator resource matcher" << std::endl;
 
             //WHAT IF NONE IS SUPPLIED == SEGFAULT!
-            std::string type = m_request.get_header( "Content-Type" ); //what if none is supplied!? //case?
+            string type = m_request.get_header( "Content-Type" ); //what if none is supplied!? //case?
 
-            std::regex pattern = regex( resource.get_content_type( ) );
+            regex pattern = regex( resource.get_content_type( ) );
 
             //resource.has_header( "Content-Type" );
             //request.has_header( "Content-Type" );
             
-            std::cout << "type:" << type << std::endl;
-            std::cout << "uri path:" << m_request.get_uri( ).get_path( ) << std::endl;
-            std::cout << "pattern:" << resource.get_content_type( ) << std::endl;
+            //std::cout << "type:" << type << std::endl;
+            //std::cout << "uri path:" << m_request.get_uri( ).get_path( ) << std::endl;
+            //std::cout << "pattern:" << resource.get_content_type( ) << std::endl;
         
             if ( std::regex_match( type, pattern ) )
             {
-                std::cout << "found resource with content type: " << type << std::endl;
-                std::cout << "found resource with path: " << m_request.get_uri( ).get_path( ) << std::endl;
+                //std::cout << "found resource with content type: " << type << std::endl;
+                //std::cout << "found resource with path: " << m_request.get_uri( ).get_path( ) << std::endl;
 
                 auto rs = String::split( resource.get_path( ), '/' );
                 
@@ -140,7 +140,7 @@ namespace restbed
                 }
                 
                 //match!
-                auto rq = String::split( m_request.get_uri( ).get_path( ), '/' );
+                auto rq = String::split( m_request.get_path( ), '/' );
                 
                 std::cout << rq.size( ) << "-" << m_resource_path_parameter_patterns.size( ) << std::endl;
                 
@@ -172,6 +172,7 @@ namespace restbed
             return result;
         }
 
+        //delete?
         bool ResourceMatcherImpl::operator <( const ResourceMatcherImpl& rhs ) const
         {
             return m_request < rhs.m_request;

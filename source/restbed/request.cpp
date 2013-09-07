@@ -21,8 +21,9 @@
  */
 
 //System Includes
-
+ 
 //Project Includes
+#include "restbed/method.h"
 #include "restbed/request.h"
 #include "restbed/detail/request_impl.h"
 
@@ -63,14 +64,19 @@ namespace restbed
         return request;
     }
 
+    Method Request::get_method( void ) const
+    {
+        return m_pimpl->get_method( );
+    }
+
     string Request::get_path( void ) const
     {
         return m_pimpl->get_path( );
     }
-    
-    string Request::get_method( void ) const
+
+    string Request::get_body( void ) const
     {
-        return m_pimpl->get_method( );
+        return m_pimpl->get_body( );
     }
     
     string Request::get_version( void ) const
@@ -108,36 +114,6 @@ namespace restbed
         return m_pimpl->get_path_parameters( );
     }
 
-    void Request::set_path( const string& value )
-    {
-        m_pimpl->set_path( value );
-    }
-    
-    void Request::set_method( const string& value )
-    {
-        m_pimpl->set_method( value );
-    }
-    
-    void Request::set_version( const string& value )
-    {
-        m_pimpl->set_version( value );
-    }
-    
-    void Request::set_header( const string& name, const string& value )
-    {
-        m_pimpl->set_header( name, value );
-    }
-    
-    void Request::set_path_parameter( const string& name, const string& value )
-    {
-        m_pimpl->set_path_parameter( name, value );
-    }
-    
-    void Request::set_query_parameter( const string& name, const string& value )
-    {
-        m_pimpl->set_query_parameter( name, value );
-    }
-
     Request& Request::operator =( const Request& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
@@ -163,5 +139,40 @@ namespace restbed
     bool Request::operator !=( const Request& rhs ) const
     {
         return *m_pimpl != *rhs.m_pimpl;
+    }
+    
+    void Request::set_method( const Method& value )
+    {
+        m_pimpl->set_method( value.to_string( ) );
+    }
+
+    void Request::set_path( const string& value )
+    {
+        m_pimpl->set_path( value );
+    }
+
+    void Request::set_body( const string& value )
+    {
+        m_pimpl->set_body( value );
+    }
+
+    void Request::set_version( const string& value )
+    {
+        m_pimpl->set_version( value );
+    }
+    
+    void Request::set_headers( const map< string, string >& value )
+    {
+        m_pimpl->set_headers( value );
+    }
+    
+    void Request::set_path_parameter( const string& name, const string& value )
+    {
+        m_pimpl->set_path_parameter( name, value );
+    }
+    
+    void Request::set_query_parameters( const map< string, string >& value )
+    {
+        m_pimpl->set_query_parameters( value );
     }
 }
