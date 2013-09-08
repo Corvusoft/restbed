@@ -28,7 +28,6 @@
 #include <iostream> //debug
 
 //Project Includes
-#include "restbed/uri.h"
 #include "restbed/string.h"
 #include "restbed/request.h"
 #include "restbed/resource.h"

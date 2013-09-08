@@ -19,8 +19,7 @@
  * You should have received a copy of the Lesser GNU General Public License
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
-#include "restbed/uri.h"
+
 #include "restbed/method.h"
 #include "restbed/string.h"
 #include "restbed/request.h"
