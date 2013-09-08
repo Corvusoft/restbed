@@ -71,14 +71,16 @@ namespace restbed
 
                 std::string get_content_type( void ) const;
 
-                std::function< Response ( Request& ) > get_method_handler( const Method& method ) const;
+                std::function< Response ( const Request& ) > get_method_handler( const Method& method ) const;
+
+                std::map< std::string, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
 
                 //Setters
                 void set_path( const std::string& value );
 
                 void set_content_type( const std::string& value );
                 
-                void set_method_handler( const Method& method, const std::function< Response ( Request& ) >& callback ); //const Request?
+                void set_method_handler( const Method& method, const std::function< Response ( const Request& ) >& callback );
 
                 //Operators
                 bool operator <( const ResourceImpl& rhs ) const;
@@ -114,17 +116,22 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-                
+                typedef size_t address_type;
+
                 //Constructors
                 
                 //Functionality
                 void setup( void );
 
+                //address_type address_of( );
+
+                std::string generate_allow_header_value( void );
+
+                Response default_options_handler( const Request& request );
+
                 static Response default_handler( const Request& request );
 
                 static Response default_trace_handler( const Request& request );
-
-                static Response default_options_handler( const Request& request );
                 
                 //Getters
                 
@@ -137,7 +144,7 @@ namespace restbed
         
                 std::string m_content_type;
             
-                std::map< std::string, std::function< Response ( Request& ) > > m_method_handles;
+                std::map< std::string, std::function< Response ( const Request& ) > > m_method_handlers;
         };
     }
 }

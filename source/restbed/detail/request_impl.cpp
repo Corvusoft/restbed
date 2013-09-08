@@ -225,7 +225,7 @@ namespace restbed
             return *this;
         }
 
-        char RequestImpl::reverse_peek( std::istream& socket ) //restbed::istream::reverse_peek
+        char RequestImpl::reverse_peek( istream& socket ) //restbed::istream::reverse_peek
         {
             socket.unget( );
 
@@ -239,8 +239,7 @@ namespace restbed
             string version = String::empty;
 
             socket >> version;
-            socket.get( ); //socket.ignore( sizeof( CarriageReturn ), CarriageReturn );
-            socket.get( ); //line feed.
+            socket.ignore( 2 ); //ignore carriage return-line feed sequence.
 
             version = String::remove( "HTTP/", version, true );
 
@@ -271,9 +270,9 @@ namespace restbed
         string RequestImpl::parse_http_method( istream& socket )
         {
             string method = String::empty;
-            
+
             socket >> method;
-            socket.get( ); //socket.ignore( sizeof( Whitespace ), Whitespace );
+            socket.ignore( 1 );  //ignore whitespace character.
             
             return method;
         }
@@ -286,9 +285,9 @@ namespace restbed
             
             string header = String::empty;
             
-            while ( std::getline( socket, header ) && header not_eq CR )
+            while ( getline( socket, header ) && header not_eq CR )
             {
-                header.erase( header.length( ) - 1 ); //remove CR
+                header.erase( header.length( ) - 1 ); //erase carriage return.
                 
                 string::size_type index = header.find_first_of( ':' );
                 

@@ -65,6 +65,7 @@ namespace restbed
             virtual ~Resource( void );
 
             //Functionality
+            //not_implemented_handler;
 
             //Getters
             std::string get_path( void ) const;
@@ -76,9 +77,9 @@ namespace restbed
             //Setters
             void set_path( const std::string& value );
 
-            void set_content_type( const std::string& value );
+            void set_content_type( const std::string& value ); //set_header_filter
             
-            void set_method_handler( const Method& method, const std::function< Response ( Request& ) >& callback ); //const Request?
+            void set_method_handler( const Method& method, const std::function< Response ( const Request& ) >& callback );
 
             //Operators
             bool operator <( const Resource& rhs ) const;

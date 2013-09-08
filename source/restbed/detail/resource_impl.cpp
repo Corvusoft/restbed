@@ -23,17 +23,21 @@
 //System Includes
 
 //Project Includes
+#include "restbed/string.h"
 #include "restbed/method.h"
 #include "restbed/request.h"
 #include "restbed/response.h"
+#include "restbed/status_code.h"
 #include "restbed/detail/resource_impl.h"
 
 //External Includes
 
 //System Namespaces
 using std::map;
+using std::bind;
 using std::string;
 using std::function;
+using std::placeholders::_1;
 
 //Project Namespaces
 
@@ -45,7 +49,7 @@ namespace restbed
     {
         ResourceImpl::ResourceImpl( void ) : m_path( ".*" ),
                                              m_content_type( ".*" ),
-                                             m_method_handles( )
+                                             m_method_handlers( )
 
         {
             setup( );
@@ -53,7 +57,7 @@ namespace restbed
         
         ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
                                                                      m_content_type( original.m_content_type ),
-                                                                     m_method_handles( original.m_method_handles )
+                                                                     m_method_handlers( original.m_method_handlers )
         {
             //n/a
         }
@@ -73,9 +77,14 @@ namespace restbed
             return m_content_type;
         }
 
-        function< Response ( Request& ) > ResourceImpl::get_method_handler( const Method& method ) const
+        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& method ) const
         {
-            return m_method_handles.at( method.to_string( ) );
+            return m_method_handlers.at( method.to_string( ) );
+        }
+
+        map< string, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
+        {
+            return m_method_handlers;
         }
 
         void ResourceImpl::set_path( const string& value )
@@ -88,9 +97,11 @@ namespace restbed
             m_content_type = value;
         }
 
-        void ResourceImpl::set_method_handler( const Method& method, const function< Response ( Request& ) >& callback )
+        void ResourceImpl::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )
         {
-            m_method_handles[ method.to_string( ) ] = callback;
+            string key = String::to_upper( method.to_string( ) );
+
+            m_method_handlers[ key ] = callback;
         }
         
         bool ResourceImpl::operator <( const ResourceImpl& rhs ) const
@@ -119,7 +130,7 @@ namespace restbed
 
             m_content_type = rhs.m_content_type;
 
-            m_method_handles = rhs.m_method_handles;
+            m_method_handlers = rhs.m_method_handlers;
 
             return *this;
         }
@@ -133,15 +144,66 @@ namespace restbed
             set_method_handler( "DELETE",  &ResourceImpl::default_handler );
             set_method_handler( "CONNECT", &ResourceImpl::default_handler );
             set_method_handler( "TRACE",   &ResourceImpl::default_trace_handler );
-            set_method_handler( "OPTIONS", &ResourceImpl::default_options_handler );
+            set_method_handler( "OPTIONS", bind( &ResourceImpl::default_options_handler, this, _1 ) );
         }
 
-        Response ResourceImpl::default_handler( const Request& request )
+        template<typename T, typename... U>
+        size_t getAddress(std::function<T(U...)> f)
+        {
+            typedef T( fnType )( U... );
+
+            fnType ** fnPointer = f.template target< fnType* >( );
+
+            size_t address = 0;
+
+            if ( fnPointer not_eq nullptr )
+            {
+                address = ( size_t )*fnPointer;
+            }
+
+            return address;
+        }
+
+        string ResourceImpl::generate_allow_header_value( void )
+        {
+            string value = String::empty;
+
+            for ( auto& handler : m_method_handlers )
+            {
+                address_type callback_address = getAddress( handler.second );
+                address_type default_address = ( address_type ) ResourceImpl::default_handler;
+
+                if ( callback_address not_eq default_address )
+                {
+                    string method = handler.first;
+
+                    value += method + ", ";
+                }
+            }
+
+            if ( not value.empty( ) )
+            {
+                value = value.substr( 0, value.length( ) - 2 );
+            }
+
+            return value;   
+        }
+
+        Response ResourceImpl::default_options_handler( const Request& request )
         {
             Response response;
+            response.set_status_code( StatusCode::OK );
+            response.set_header( "Allow", generate_allow_header_value( ) );
 
-            //response.set_status(Status::NOT_FOUND);
-            std::cout << "default handler 404!" << std::endl;
+            std::cout << "options handler: allow: " << generate_allow_header_value() << std::endl;
+            
+            return response;
+        }
+
+        Response ResourceImpl::default_handler( const Request& request ) //not_implemented_handler //make public!
+        {
+            Response response;
+            response.set_status_code( StatusCode::NOT_IMPLEMENTED );
 
             return response;
         }
@@ -149,22 +211,11 @@ namespace restbed
         Response ResourceImpl::default_trace_handler( const Request& request )
         {
             Response response;
-            
-            std::cout << "default trace handler" << std::endl;
-            
-            return response;
-        }
+            response.set_status_code( StatusCode::OK );
+            response.set_header( "Content-Type", "message/http" );
 
-        Response ResourceImpl::default_options_handler( const Request& request )
-        {
-            //default OPTIONS method handler.
-            //HTTP/1.1 200 OK
-            //Date: …
-            //Allow: OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE
-            //Content-Length: 0
-            Response response;
-            
-            std::cout << "default options handler" << std::endl;
+            //string body = "TRACE <res> HTTP/<ver>" + \r\n + "Host: this.machine.com"
+            //response.set_body( request.get_body( ) );
             
             return response;
         }

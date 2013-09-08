@@ -10,7 +10,7 @@
 
 using namespace restbed;
             
-Response get_handler( Request& request )
+Response get_handler( const Request& request )
 {
     Response response;
     

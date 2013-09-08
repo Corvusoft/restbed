@@ -76,6 +76,11 @@ namespace restbed
             //message body //get_content
             response += "1234567890jk";
 
+            //date for free
+            //content length
+            //connection: close
+            //also make sure the ':' is added automatically for all headers!
+
             return response;
         }
          

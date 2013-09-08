@@ -82,7 +82,7 @@ namespace restbed
         m_pimpl->set_content_type( value );
     }
 
-    void Resource::set_method_handler( const Method& method, const function< Response ( Request& ) >& callback )
+    void Resource::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )
     {
         m_pimpl->set_method_handler( method, callback );
     }
