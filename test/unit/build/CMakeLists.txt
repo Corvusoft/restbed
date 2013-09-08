@@ -55,7 +55,6 @@ include_directories( "../../../distribution/include" ${GTEST_INCLUDE_DIR} )
 #
 # Build
 #
-add_executable( uri_suite ${SOURCE_DIR}/uri_suite.cpp )
 add_executable( method_suite ${SOURCE_DIR}/method_suite.cpp )
 add_executable( string_suite ${SOURCE_DIR}/string_suite.cpp )
 add_executable( request_suite ${SOURCE_DIR}/request_suite.cpp )
@@ -64,7 +63,6 @@ add_executable( response_suite ${SOURCE_DIR}/response_suite.cpp )
 add_executable( resource_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( status_code_suite ${SOURCE_DIR}/status_code_suite.cpp )
 
-target_link_libraries( uri_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( method_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( string_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( request_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
