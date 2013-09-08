@@ -25,12 +25,14 @@
 
 //Project Includes
 #include "restbed/string.h"
+#include "restbed/status_code.h"
 #include "restbed/detail/request_impl.h"
 
 //External Includes
 
 //System Namespaces
 using std::map;
+using std::stod;
 using std::string;
 using std::istream;
 using std::istreambuf_iterator;
@@ -44,10 +46,10 @@ namespace restbed
 {
     namespace detail
     {
-        RequestImpl::RequestImpl( void ) : m_path( String::empty ),
+        RequestImpl::RequestImpl( void ) : m_version( 1.1 ),
+                                           m_path( String::empty ),
                                            m_body( String::empty ),
                                            m_method( String::empty ),
-                                           m_version( String::empty ),
                                            m_headers( ),
                                            m_path_parameters( ),
                                            m_query_parameters( )
@@ -55,10 +57,10 @@ namespace restbed
             //n/a
         }
         
-        RequestImpl::RequestImpl( const RequestImpl& original ) : m_path( original.m_path ),
+        RequestImpl::RequestImpl( const RequestImpl& original ) : m_version( original.m_version ),
+                                                                  m_path( original.m_path ),
                                                                   m_body( original.m_body ),
                                                                   m_method( original.m_method ),
-                                                                  m_version( original.m_version ),
                                                                   m_headers( original.m_headers ),
                                                                   m_path_parameters( original.m_path_parameters ),
                                                                   m_query_parameters( original.m_query_parameters )
@@ -84,8 +86,8 @@ namespace restbed
             auto query_parameters = parse_http_query_parameters( socket );
             pimpl.set_query_parameters( query_parameters );
 
-            string version = parse_http_version( socket );
-            pimpl.set_version( version ); //throw HTTP_VERSION_NOT_SUPPORTED make 1.1 or 1.0
+            double version = parse_http_version( socket );
+            pimpl.set_version( version );
 
             auto headers = parse_http_headers( socket );
             pimpl.set_headers( headers );
@@ -96,6 +98,11 @@ namespace restbed
             return pimpl;
         }
         
+        double RequestImpl::get_version( void ) const
+        {
+            return m_version;
+        }
+
         string RequestImpl::get_path( void ) const
         {
             return m_path;
@@ -109,11 +116,6 @@ namespace restbed
         string RequestImpl::get_method( void ) const
         {
             return m_method;
-        }
-        
-        string RequestImpl::get_version( void ) const
-        {
-            return m_version;
         }
         
         string RequestImpl::get_header( const string& name ) const
@@ -145,6 +147,16 @@ namespace restbed
         {
             return m_path_parameters;
         }
+
+        void RequestImpl::set_version( const double value )
+        {
+            if ( value not_eq 1.0 and value not_eq 1.1 )
+            {
+                throw StatusCode::HTTP_VERSION_NOT_SUPPORTED;
+            }
+
+            m_version = value;
+        }
         
         void RequestImpl::set_path( const string& value )
         {
@@ -159,11 +171,6 @@ namespace restbed
         void RequestImpl::set_method( const string& value )
         {
             m_method = value;
-        }
-        
-        void RequestImpl::set_version( const string& value )
-        {
-            m_version = value;
         }
         
         void RequestImpl::set_headers( const map< string, string >& value )
@@ -218,13 +225,26 @@ namespace restbed
             return *this;
         }
 
-        char RequestImpl::reverse_peek( std::istream& socket )
+        char RequestImpl::reverse_peek( std::istream& socket ) //restbed::istream::reverse_peek
         {
             socket.unget( );
 
             char previous_byte = socket.get( );
 
             return previous_byte;
+        }
+
+        double RequestImpl::parse_http_version( istream& socket )
+        {
+            string version = String::empty;
+
+            socket >> version;
+            socket.get( ); //socket.ignore( sizeof( CarriageReturn ), CarriageReturn );
+            socket.get( ); //line feed.
+
+            version = String::remove( "HTTP/", version, true );
+
+            return stod( version );
         }
 
         string RequestImpl::parse_http_path( istream& socket )
@@ -253,22 +273,9 @@ namespace restbed
             string method = String::empty;
             
             socket >> method;
-
             socket.get( ); //socket.ignore( sizeof( Whitespace ), Whitespace );
             
             return method;
-        }
-    
-        string RequestImpl::parse_http_version( istream& socket )
-        {
-            string version = String::empty;
-
-            socket >> version;
-
-            socket.get( ); //socket.ignore( sizeof( CarriageReturn ), CarriageReturn );
-            socket.get( ); //line feed.
-
-            return version;
         }
     
         map< string, string > RequestImpl::parse_http_headers( istream& socket )

@@ -114,5 +114,20 @@ namespace restbed
             
             return tokens;
         }
+
+        string StringImpl::remove( const string& needle, const string& haystack, bool case_insensitive )
+        {
+            string target = case_insensitive ? StringImpl::to_lower( needle ) : needle;
+            string source = case_insensitive ? StringImpl::to_lower( haystack ) : haystack;
+
+            string::size_type index = source.find( target );
+
+            if ( index not_eq string::npos )
+            {
+                source.replace( index, target.length( ), StringImpl::empty );
+            }
+
+            return source;
+        }
     }
 }

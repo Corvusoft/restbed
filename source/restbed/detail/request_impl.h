@@ -65,13 +65,13 @@ namespace restbed
                 static RequestImpl parse( std::istream& socket );
                 
                 //Getters
+                double get_version( void ) const;
+
                 std::string get_path( void ) const;
 
                 std::string get_body( void ) const;
                 
                 std::string get_method( void ) const;
-                
-                std::string get_version( void ) const;
                 
                 std::string get_header( const std::string& name ) const;
                 
@@ -86,13 +86,13 @@ namespace restbed
                 std::map< std::string, std::string > get_path_parameters( void ) const;
                 
                 //Setters
+                void set_version( const double value );
+
                 void set_path( const std::string& value );
 
                 void set_body( const std::string& value );
                 
                 void set_method( const std::string& value );
-                
-                void set_version( const std::string& value );
                 
                 void set_headers( const std::map< std::string, std::string >& value );
                 
@@ -140,13 +140,13 @@ namespace restbed
                 //Functionality
                 static char reverse_peek( std::istream& socket );
 
+                static double parse_http_version( std::istream& socket );
+
                 static std::string parse_http_path( std::istream& socket );
 
                 static std::string parse_http_body( std::istream& socket );
                 
                 static std::string parse_http_method( std::istream& socket );
-            
-                static std::string parse_http_version( std::istream& socket );
             
                 static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
 
@@ -159,13 +159,13 @@ namespace restbed
                 //Operators
                 
                 //Properties
+                double m_version;
+
                 std::string m_path;
 
                 std::string m_body;
                 
                 std::string m_method;
-                
-                std::string m_version;
                 
                 std::map< std::string, std::string > m_headers;
                 

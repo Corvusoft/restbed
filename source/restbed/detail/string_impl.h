@@ -63,6 +63,8 @@ namespace restbed
 
                 static std::vector< std::string > split( const std::string& text, const char delimiter );
 
+                static std::string remove( const std::string& needle, const std::string& haystack, bool case_insensitive );
+
                 //Getters
                 
                 //Setters

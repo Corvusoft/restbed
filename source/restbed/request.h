@@ -69,11 +69,11 @@ namespace restbed
             //Getters
             Method get_method( void ) const;
 
+            double get_version( void ) const;
+
             std::string get_path( void ) const;
 
             std::string get_body( void ) const;
-            
-            std::string get_version( void ) const;
             
             std::string get_header( const std::string& name ) const;
             
@@ -133,11 +133,11 @@ namespace restbed
             //Setters
             void set_method( const Method& value );
 
+            void set_version( const double value );
+
             void set_path( const std::string& value );
 
             void set_body( const std::string& value );
-            
-            void set_version( const std::string& value );
             
             void set_headers( const std::map< std::string, std::string >& value );
             

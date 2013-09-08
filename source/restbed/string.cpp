@@ -60,4 +60,9 @@ namespace restbed
     {
     	return StringImpl::split( text, delimiter );
     }
+
+    string String::remove( const string& needle, const string& haystack, bool case_insensitive )
+    {
+        return StringImpl::remove( needle, haystack, case_insensitive );
+    }
 }

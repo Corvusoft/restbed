@@ -69,6 +69,11 @@ namespace restbed
         return m_pimpl->get_method( );
     }
 
+    double Request::get_version( void ) const
+    {
+        return m_pimpl->get_version( );
+    }
+
     string Request::get_path( void ) const
     {
         return m_pimpl->get_path( );
@@ -77,11 +82,6 @@ namespace restbed
     string Request::get_body( void ) const
     {
         return m_pimpl->get_body( );
-    }
-    
-    string Request::get_version( void ) const
-    {
-        return m_pimpl->get_version( );
     }
     
     string Request::get_header( const string& name ) const
@@ -146,6 +146,11 @@ namespace restbed
         m_pimpl->set_method( value.to_string( ) );
     }
 
+    void Request::set_version( const double value )
+    {
+        m_pimpl->set_version( value );
+    }
+
     void Request::set_path( const string& value )
     {
         m_pimpl->set_path( value );
@@ -154,11 +159,6 @@ namespace restbed
     void Request::set_body( const string& value )
     {
         m_pimpl->set_body( value );
-    }
-
-    void Request::set_version( const string& value )
-    {
-        m_pimpl->set_version( value );
     }
     
     void Request::set_headers( const map< string, string >& value )
