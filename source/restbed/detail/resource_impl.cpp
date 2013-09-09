@@ -48,15 +48,14 @@ namespace restbed
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_path( ".*" ),
-                                             m_content_type( ".*" ),
+                                             m_header_filters( ),
                                              m_method_handlers( )
-
         {
             setup( );
         }
         
         ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
-                                                                     m_content_type( original.m_content_type ),
+                                                                     m_header_filters( original.m_header_filters ),
                                                                      m_method_handlers( original.m_method_handlers )
         {
             //n/a
@@ -72,9 +71,11 @@ namespace restbed
             return m_path;
         }
         
-        string ResourceImpl::get_content_type( void ) const
+        string ResourceImpl::get_header_filter( const string& name ) const
         {
-            return m_content_type;
+            string key = String::to_upper( name );
+
+            return m_header_filters.at( key );
         }
 
         function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& method ) const
@@ -92,9 +93,11 @@ namespace restbed
             m_path = value;
         }
 
-        void ResourceImpl::set_content_type( const string& value )
+        void ResourceImpl::set_header_filter( const string& name, const string& value )
         {
-            m_content_type = value;
+            string key = String::to_upper( name );
+
+            m_header_filters[ key ] = value;
         }
 
         void ResourceImpl::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )
@@ -128,7 +131,7 @@ namespace restbed
         {
             m_path = rhs.m_path;
 
-            m_content_type = rhs.m_content_type;
+            m_header_filters = rhs.m_header_filters;
 
             m_method_handlers = rhs.m_method_handlers;
 
@@ -189,7 +192,7 @@ namespace restbed
             return value;   
         }
 
-        Response ResourceImpl::default_options_handler( const Request& request )
+        Response ResourceImpl::default_options_handler( const Request& )
         {
             Response response;
             response.set_status_code( StatusCode::OK );
@@ -200,7 +203,7 @@ namespace restbed
             return response;
         }
 
-        Response ResourceImpl::default_handler( const Request& request ) //not_implemented_handler //make public!
+        Response ResourceImpl::default_handler( const Request& ) //not_implemented_handler //make public!
         {
             Response response;
             response.set_status_code( StatusCode::NOT_IMPLEMENTED );
@@ -208,7 +211,7 @@ namespace restbed
             return response;
         }
         
-        Response ResourceImpl::default_trace_handler( const Request& request )
+        Response ResourceImpl::default_trace_handler( const Request& )
         {
             Response response;
             response.set_status_code( StatusCode::OK );

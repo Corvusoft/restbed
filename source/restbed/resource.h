@@ -70,14 +70,16 @@ namespace restbed
             //Getters
             std::string get_path( void ) const;
 
-            std::string get_content_type( void ) const;
+            std::string get_header_filter( const std::string& name ) const;
 
             std::function< Response ( Request& ) > get_method_handler( const Method& method ) const;
 
             //Setters
             void set_path( const std::string& value );
 
-            void set_content_type( const std::string& value ); //set_header_filter
+            //void set_content_type( const std::string& value ); //set_header_filter
+
+            void set_header_filter( const std::string& name, const std::string& value );
             
             void set_method_handler( const Method& method, const std::function< Response ( const Request& ) >& callback );
 

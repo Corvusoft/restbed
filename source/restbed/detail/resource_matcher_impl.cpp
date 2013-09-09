@@ -66,40 +66,80 @@ namespace restbed
         
         bool ResourceMatcherImpl::operator ( )( const Resource& resource ) const
         {
-            bool result = false;
-            
-            //std::cout << "operator resource matcher" << std::endl;
+            bool result = true;
+
+            // compare_headers( m_request, resource );
+            // for ( auto filter : resource.get_header_filters( ) )
+            // {
+            //     string name = filter.first;
+
+            //     if ( m_request.has_header( name ) )
+            //     {
+            //         string value = filter.second;
+
+            //         string pattern = regex( resource.get_header_filter( name ) );
+
+            //         if ( not regex_match( value, pattern ) )
+            //         {
+            //             result = false;
+            //             break;
+            //         }
+            //     }
+            //     else
+            //     {
+            //         result = false;
+            //         break;
+            //     }
+            // }
+
+            // compare_paths( m_request, resource );
+            // auto path_filters = resource.get_path_filters( );
+            // auto path_segments = String::split( m_request.get_path( ), '/' );
+
+            // if ( path_segments.size( ) == path_filters.size( ) )
+            // {
+            //     for ( vector< string >::size_type index = 0; index not_eq path_filters.size( ); index++ )
+            //     {
+            //         if ( not regex_match( path_segments[ index ], regex( path_filters[ index ] ) ) )
+            //         {
+            //             result = false;
+            //             break;
+            //         }
+            //     }
+            // }
+
+            //return compare_paths( m_request, resource ) and compare_headers( m_request, resource );
+
+
+
 
             //WHAT IF NONE IS SUPPLIED == SEGFAULT!
-            string type = m_request.get_header( "Content-Type" ); //what if none is supplied!? //case?
+            string type = m_request.get_header( "Content-Type" ); //what if none is supplied!?
 
-            regex pattern = regex( resource.get_content_type( ) );
-
-            //resource.has_header( "Content-Type" );
-            //request.has_header( "Content-Type" );
-            
-            //std::cout << "type:" << type << std::endl;
-            //std::cout << "uri path:" << m_request.get_uri( ).get_path( ) << std::endl;
-            //std::cout << "pattern:" << resource.get_content_type( ) << std::endl;
+            regex pattern = regex( resource.get_header_filter( "Content-Type" ) );
         
             if ( std::regex_match( type, pattern ) )
             {
-                //std::cout << "found resource with content type: " << type << std::endl;
-                //std::cout << "found resource with path: " << m_request.get_uri( ).get_path( ) << std::endl;
-
                 auto rs = String::split( resource.get_path( ), '/' );
                 
-                std::map< std::string, std::string > m_resource_path_parameters;
+                //std::map< std::string, std::string > m_resource_path_parameters;
                 std::vector< std::string > m_resource_path_parameter_patterns;
                 
                 for ( auto element : rs )
                 {
-                    std::cout << "y: " << element << std::endl;
-                    
                     if ( element.front( ) == '{' ) //const char START_QUERY_PA
                     {
                         if ( element.back( ) == '}' )
                         {
+                            //string pattern = String::empty; 
+                            //pattern = String::trim( element, '{' );
+                            //pattern = String::trim( element, '}' );
+
+                            //auto segments = String::split( pattern, ':' );
+
+                            //resource.get_path_patterns( );
+
+
                             std::string pattern = element.substr( 1, element.length( ) - 2 );
                             
                             std::cout << "path pattern: " << pattern << std::endl;
@@ -123,7 +163,7 @@ namespace restbed
                             std::cout << "path pattern name: " << name << std::endl;
                             std::cout << "path pattern value: " << value << std::endl;
                             
-                            m_resource_path_parameters[ name ] = value;
+                            //m_resource_path_parameters[ name ] = value;
                             
                             m_resource_path_parameter_patterns.push_back( value );
                         }

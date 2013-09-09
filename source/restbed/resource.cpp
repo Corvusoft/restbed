@@ -62,9 +62,9 @@ namespace restbed
         return m_pimpl->get_path( );
     }
     
-    string Resource::get_content_type( void ) const
+    string Resource::get_header_filter( const string& name ) const
     {
-        return m_pimpl->get_content_type( );
+        return m_pimpl->get_header_filter( name );
     }
 
     function< Response ( Request& ) > Resource::get_method_handler( const Method& method ) const
@@ -77,9 +77,9 @@ namespace restbed
         m_pimpl->set_path( value );
     }
 
-    void Resource::set_content_type( const string& value )
+    void Resource::set_header_filter( const string& name, const string& value )
     {
-        m_pimpl->set_content_type( value );
+        m_pimpl->set_header_filter( name, value );
     }
 
     void Resource::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )

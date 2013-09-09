@@ -40,7 +40,7 @@ try
 
     Resource resource;
     resource.set_path( "events/{id: .*}" ); //make sure this check is also case insentive, remove space.
-    resource.set_content_type( "application/.*" ); //make sure this check is also case insentive
+    resource.set_header_filter( "Content-Type", "application/.*" ); //make sure this check is also case insentive
     resource.set_method_handler( "GET", &get_handler );
     
     service.publish( resource );
