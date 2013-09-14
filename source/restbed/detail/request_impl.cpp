@@ -26,7 +26,9 @@
 //Project Includes
 #include "restbed/string.h"
 #include "restbed/status_code.h"
+#include "restbed/detail/helpers/map.h"
 #include "restbed/detail/request_impl.h"
+#include "restbed/detail/helpers/istream.h"
 
 //External Includes
 
@@ -39,6 +41,8 @@ using std::istreambuf_iterator;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
+using restbed::detail::helpers::Map;
+using restbed::detail::helpers::IStream;
 
 //External Namespaces
 
@@ -97,6 +101,11 @@ namespace restbed
 
             return pimpl;
         }
+
+        bool RequestImpl::has_header( const string& name ) const
+        {
+            return ( Map::find_key_ignoring_case( m_headers, name ) not_eq m_headers.end( ) );
+        }
         
         double RequestImpl::get_version( void ) const
         {
@@ -120,7 +129,16 @@ namespace restbed
         
         string RequestImpl::get_header( const string& name ) const
         {
-            return m_headers.at( name );
+            string value = String::empty;
+            
+            if ( has_header( name ) )
+            {
+                const auto iterator = Map::find_key_ignoring_case( m_headers, name );
+
+                value = iterator->second;
+            }
+
+            return value;
         }
         
         map< string, string > RequestImpl::get_headers( void ) const
@@ -130,7 +148,9 @@ namespace restbed
         
         string RequestImpl::get_query_parameter( const string& name ) const
         {
-            return m_query_parameters.at( name );
+            const auto iterator = Map::find_key_ignoring_case( m_query_parameters, name );
+            
+            return iterator->second;
         }
         
         map< string, string > RequestImpl::get_query_parameters( void ) const
@@ -140,7 +160,9 @@ namespace restbed
         
         string RequestImpl::get_path_parameter( const string& name ) const
         {
-            return m_path_parameters.at( name );
+            const auto iterator = Map::find_key_ignoring_case( m_path_parameters, name );
+            
+            return iterator->second;
         }
         
         map< string, string > RequestImpl::get_path_parameters( void ) const
@@ -225,15 +247,6 @@ namespace restbed
             return *this;
         }
 
-        char RequestImpl::reverse_peek( istream& socket ) //restbed::istream::reverse_peek
-        {
-            socket.unget( );
-
-            char previous_byte = socket.get( );
-
-            return previous_byte;
-        }
-
         double RequestImpl::parse_http_version( istream& socket )
         {
             string version = String::empty;
@@ -305,7 +318,9 @@ namespace restbed
         {
             map< string, string > parameters;
 
-            if ( reverse_peek( socket ) == '?' )
+            char previous_byte = IStream::reverse_peek( socket );
+
+            if ( previous_byte == '?' )
             {
                 string query_string = String::empty;
 

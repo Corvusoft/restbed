@@ -57,24 +57,4 @@ namespace restbed
     {
         return (*m_pimpl)( resource );
     }
-
-    bool ResourceMatcher::operator <( const ResourceMatcher& rhs ) const
-    {
-        return *m_pimpl < *rhs.m_pimpl;
-    }
-    
-    bool ResourceMatcher::operator >( const ResourceMatcher& rhs ) const
-    {
-        return *m_pimpl > *rhs.m_pimpl;
-    }
-    
-    bool ResourceMatcher::operator ==( const ResourceMatcher& rhs ) const
-    {
-        return *m_pimpl == *rhs.m_pimpl;
-    }
-    
-    bool ResourceMatcher::operator !=( const ResourceMatcher& rhs ) const
-    {
-        return *m_pimpl != *rhs.m_pimpl;
-    }
 }

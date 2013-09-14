@@ -21,6 +21,7 @@
  */
 
 //System Includes
+#include <iostream> //debug
 
 //Project Includes
 #include "restbed/string.h"
@@ -35,6 +36,7 @@
 //System Namespaces
 using std::map;
 using std::bind;
+using std::vector;
 using std::string;
 using std::function;
 using std::placeholders::_1;
@@ -47,14 +49,14 @@ namespace restbed
 {
     namespace detail
     {
-        ResourceImpl::ResourceImpl( void ) : m_path( ".*" ),
+        ResourceImpl::ResourceImpl( void ) : m_path_filters( ),
                                              m_header_filters( ),
                                              m_method_handlers( )
         {
             setup( );
         }
         
-        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
+        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path_filters( original.m_path_filters ),
                                                                      m_header_filters( original.m_header_filters ),
                                                                      m_method_handlers( original.m_method_handlers )
         {
@@ -68,7 +70,21 @@ namespace restbed
 
         string ResourceImpl::get_path( void ) const
         {
-            return m_path;
+            string path = "/";
+
+            for ( auto filter : m_path_filters )
+            {
+                path += filter + "/";
+            }
+
+            path.erase( path.length( ) - 1 );
+
+            return path;
+        }
+
+        vector< string > ResourceImpl::get_path_filters( void ) const
+        {
+            return m_path_filters;
         }
         
         string ResourceImpl::get_header_filter( const string& name ) const
@@ -76,6 +92,11 @@ namespace restbed
             string key = String::to_upper( name );
 
             return m_header_filters.at( key );
+        }
+
+        map< string, string > ResourceImpl::get_header_filters( void ) const
+        {
+            return m_header_filters;
         }
 
         function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& method ) const
@@ -90,7 +111,9 @@ namespace restbed
 
         void ResourceImpl::set_path( const string& value )
         {
-            m_path = value;
+            //String::deduplicate( value, "/" );
+
+            m_path_filters = String::split( value, '/' );
         }
 
         void ResourceImpl::set_header_filter( const string& name, const string& value )
@@ -109,27 +132,27 @@ namespace restbed
         
         bool ResourceImpl::operator <( const ResourceImpl& rhs ) const
         {
-            return m_path < rhs.m_path;
+            return get_path( ) < rhs.get_path( );
         }
         
         bool ResourceImpl::operator >( const ResourceImpl& rhs ) const
         {
-            return m_path > rhs.m_path;
+            return get_path( ) > rhs.get_path( );
         }
         
         bool ResourceImpl::operator ==( const ResourceImpl& rhs ) const
         {
-            return m_path == rhs.m_path;
+            return get_path( ) == rhs.get_path( );
         }
         
         bool ResourceImpl::operator !=( const ResourceImpl& rhs ) const
         {
-            return m_path not_eq rhs.m_path;
+            return get_path( ) not_eq rhs.get_path( );
         }
 
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& rhs )
         {
-            m_path = rhs.m_path;
+            m_path_filters = rhs.m_path_filters;
 
             m_header_filters = rhs.m_header_filters;
 
@@ -151,7 +174,7 @@ namespace restbed
         }
 
         template<typename T, typename... U>
-        size_t getAddress(std::function<T(U...)> f)
+        size_t getAddress(std::function<T(U...)> f) //move!
         {
             typedef T( fnType )( U... );
 

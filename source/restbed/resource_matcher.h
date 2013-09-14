@@ -68,17 +68,7 @@ namespace restbed
             //Setters
 
             //Operators
-            bool operator( )( const Resource& resource ) const;
-
-            bool operator <( const ResourceMatcher& rhs ) const;
-            
-            bool operator >( const ResourceMatcher& rhs ) const;
-            
-            bool operator ==( const ResourceMatcher& rhs ) const;
-            
-            bool operator !=( const ResourceMatcher& rhs ) const;            
-
-            
+            bool operator( )( const Resource& resource ) const;          
 
             //Properties
             

@@ -25,6 +25,8 @@
 #include <iterator>
 #include <algorithm>
 
+#include <iostream>
+
 //Project Includes
 #include "restbed/detail/string_impl.h"
 
@@ -48,23 +50,24 @@ namespace restbed
     {
         const char* StringImpl::empty = "";
         
-        string StringImpl::trim( const string& value )
+        string StringImpl::trim( const string& value, const string& delimiter )
         {
-            static const char* whitespace = " \t";
-            
             string result = value;
-            
-            string::size_type index = result.find_first_not_of( whitespace );
-            
-            result.erase( 0, index );
-            
-            index = result.find_last_not_of( whitespace );
-            
-            if ( index not_eq string::npos )
+
+            //trim_leading
+            size_t startpos = result.find_first_not_of( delimiter );
+            if( string::npos != startpos )
             {
-                result.erase( index + 1 );
+                result = result.substr( startpos );
             }
-            
+
+            //trim_lagging
+            size_t endpos = result.find_last_not_of( delimiter );
+            if( string::npos != endpos )
+            {
+                result = result.substr( 0, endpos + 1 );
+            }
+
             return result;
         }
 

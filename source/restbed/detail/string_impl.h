@@ -55,11 +55,13 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static std::string trim( const std::string& value );
+                //static deduplicate
 
-                static std::string to_lower( const std::string& value );
+                static std::string trim( const std::string& value, const std::string& delimiter = " \t" );
+
+                static std::string to_lower( const std::string& value ); //lowercase
             
-                static std::string to_upper( const std::string& value );
+                static std::string to_upper( const std::string& value ); //uppercase
 
                 static std::vector< std::string > split( const std::string& text, const char delimiter );
 

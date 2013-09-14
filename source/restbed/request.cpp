@@ -64,6 +64,11 @@ namespace restbed
         return request;
     }
 
+    bool Request::has_header( const string& name ) const
+    {
+        return m_pimpl->has_header( name );
+    }
+
     Method Request::get_method( void ) const
     {
         return m_pimpl->get_method( );
@@ -139,40 +144,5 @@ namespace restbed
     bool Request::operator !=( const Request& rhs ) const
     {
         return *m_pimpl != *rhs.m_pimpl;
-    }
-    
-    void Request::set_method( const Method& value )
-    {
-        m_pimpl->set_method( value.to_string( ) );
-    }
-
-    void Request::set_version( const double value )
-    {
-        m_pimpl->set_version( value );
-    }
-
-    void Request::set_path( const string& value )
-    {
-        m_pimpl->set_path( value );
-    }
-
-    void Request::set_body( const string& value )
-    {
-        m_pimpl->set_body( value );
-    }
-    
-    void Request::set_headers( const map< string, string >& value )
-    {
-        m_pimpl->set_headers( value );
-    }
-    
-    void Request::set_path_parameter( const string& name, const string& value )
-    {
-        m_pimpl->set_path_parameter( name, value );
-    }
-    
-    void Request::set_query_parameters( const map< string, string >& value )
-    {
-        m_pimpl->set_query_parameters( value );
     }
 }

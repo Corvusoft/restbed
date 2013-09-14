@@ -65,6 +65,8 @@ namespace restbed
 
             //Functionality
             static Request parse( std::istream& socket );
+            
+            bool has_header( const std::string& name ) const;
 
             //Getters
             Method get_method( void ) const;
@@ -131,19 +133,6 @@ namespace restbed
             //Getters
             
             //Setters
-            void set_method( const Method& value );
-
-            void set_version( const double value );
-
-            void set_path( const std::string& value );
-
-            void set_body( const std::string& value );
-            
-            void set_headers( const std::map< std::string, std::string >& value );
-            
-            void set_path_parameter( const std::string& name, const std::string& value );
-            
-            void set_query_parameters( const std::map< std::string, std::string >& value );
 
             //Operators
 

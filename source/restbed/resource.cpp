@@ -32,6 +32,8 @@
 //External Includes
 
 //System Namespaces
+using std::map;
+using std::vector;
 using std::string;
 using std::function;
 
@@ -61,15 +63,30 @@ namespace restbed
     {
         return m_pimpl->get_path( );
     }
-    
+        
+    vector< string > Resource::get_path_filters( void ) const
+    {
+        return m_pimpl->get_path_filters( );
+    }
+
     string Resource::get_header_filter( const string& name ) const
     {
         return m_pimpl->get_header_filter( name );
     }
 
-    function< Response ( Request& ) > Resource::get_method_handler( const Method& method ) const
+    map< string, string > Resource::get_header_filters( void ) const
+    {
+        return m_pimpl->get_header_filters( );
+    }
+
+    function< Response ( const Request& ) > Resource::get_method_handler( const Method& method ) const
     {
         return m_pimpl->get_method_handler( method );
+    }
+
+    map< string, function< Response ( const Request& ) > >  Resource::get_method_handlers( void ) const
+    {
+        return m_pimpl->get_method_handlers( );
     }
 
     void Resource::set_path( const string& value )

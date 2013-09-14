@@ -24,7 +24,8 @@
 #define _RESTBED_DETAIL_RESOURCE_MATCHER_IMPL_H 1
 
 //System Includes
-
+#include <regex>
+ 
 //Project Includes
 
 //External Includes
@@ -68,14 +69,6 @@ namespace restbed
                 //Operators
                 bool operator ( )( const Resource& resource ) const;
 
-                bool operator <( const ResourceMatcherImpl& rhs ) const;
-                
-                bool operator >( const ResourceMatcherImpl& rhs ) const;
-                
-                bool operator ==( const ResourceMatcherImpl& rhs ) const;
-                
-                bool operator !=( const ResourceMatcherImpl& rhs ) const;
-
                 //Properties
                 
             protected:
@@ -103,7 +96,12 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                
+                std::regex parse_filter_definition( const std::string& filter ) const;
+
+                bool compare_path( const Request& request, const Resource& resource ) const;
+
+                bool compare_headers( const Request& request, const Resource& resource ) const;
+
                 //Getters
                 
                 //Setters

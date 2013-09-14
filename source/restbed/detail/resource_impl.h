@@ -25,9 +25,9 @@
 
 //System Includes
 #include <map>
+#include <vector>
 #include <string>
 #include <functional>
-#include <iostream> //debug
  
 //Project Includes
 
@@ -69,7 +69,11 @@ namespace restbed
                 //Getters
                 std::string get_path( void ) const;
 
+                std::vector< std::string > get_path_filters( void ) const;
+
                 std::string get_header_filter( const std::string& name ) const;
+
+                std::map< std::string, std::string > get_header_filters( void ) const;
 
                 std::function< Response ( const Request& ) > get_method_handler( const Method& method ) const;
 
@@ -140,8 +144,9 @@ namespace restbed
                 //Operators
 
                 //Properties
-                std::string m_path;
-        
+                //std::string m_path;
+                std::vector< std::string > m_path_filters;
+
                 std::map< std::string, std::string > m_header_filters;
             
                 std::map< std::string, std::function< Response ( const Request& ) > > m_method_handlers;

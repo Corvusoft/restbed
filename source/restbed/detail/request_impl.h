@@ -53,7 +53,7 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-                
+
                 //Constructors
                 RequestImpl( void );
                 
@@ -63,6 +63,10 @@ namespace restbed
                 
                 //Functionality
                 static RequestImpl parse( std::istream& socket );
+                
+                bool has_header( const std::string& name ) const;
+                //has_query_parameter
+                //has_path_parameter
                 
                 //Getters
                 double get_version( void ) const;
@@ -138,8 +142,6 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static char reverse_peek( std::istream& socket );
-
                 static double parse_http_version( std::istream& socket );
 
                 static std::string parse_http_path( std::istream& socket );
@@ -159,6 +161,7 @@ namespace restbed
                 //Operators
                 
                 //Properties
+
                 double m_version;
 
                 std::string m_path;

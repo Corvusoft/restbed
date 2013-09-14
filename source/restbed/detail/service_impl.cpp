@@ -116,7 +116,9 @@ namespace restbed
         void ServiceImpl::publish( const Resource& value )
         {
             //String::join( "/", m_root, "/", value.get_path( ) );
-            string path = "/" + m_root + "/" + value.get_path( ); //remove double ///// and lowercase.
+            //String::lower_case( ); //when comparing... don't change user data!
+            //String::deduplicate( path, "/" );
+            string path = "/" + m_root + "/" + value.get_path( );
 
             Resource resource = value;
             resource.set_path( path );

@@ -41,9 +41,9 @@ namespace restbed
 {
     const char* String::empty = StringImpl::empty;
     
-    string String::trim( const string& value )
+    string String::trim( const string& value, const string& delimiter )
     {
-        return StringImpl::trim( value );
+        return StringImpl::trim( value, delimiter );
     }
 
     string String::to_lower( const string& value )

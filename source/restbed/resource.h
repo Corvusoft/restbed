@@ -24,6 +24,8 @@
 #define _RESTBED_RESOURCE_H 1
 
 //System Includes
+#include <map>
+#include <vector>
 #include <memory>
 #include <string>
 #include <functional>
@@ -70,18 +72,28 @@ namespace restbed
             //Getters
             std::string get_path( void ) const;
 
+            std::vector< std::string > get_path_filters( void ) const;
+
             std::string get_header_filter( const std::string& name ) const;
 
-            std::function< Response ( Request& ) > get_method_handler( const Method& method ) const;
+            std::map< std::string, std::string > get_header_filters( void ) const;
+
+            std::function< Response ( const Request& ) > get_method_handler( const Method& method ) const;
+
+            std::map< std::string, std::function< Response ( const Request& ) > >  get_method_handlers( void ) const;
 
             //Setters
             void set_path( const std::string& value );
 
-            //void set_content_type( const std::string& value ); //set_header_filter
+            //get_path_filters
 
             void set_header_filter( const std::string& name, const std::string& value );
+
+            //set_header_filters
             
             void set_method_handler( const Method& method, const std::function< Response ( const Request& ) >& callback );
+
+            //set_method_handlers
 
             //Operators
             bool operator <( const Resource& rhs ) const;
