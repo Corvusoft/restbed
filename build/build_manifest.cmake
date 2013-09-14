@@ -34,9 +34,8 @@ set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/detail/request_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/response.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/response_impl.cpp
-	${FRAMEWORK_SOURCE_DIR}/resource_matcher.cpp
-	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/service.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/service_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/string.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher.cpp
 )

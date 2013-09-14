@@ -20,8 +20,8 @@
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _RESTBED_ISTREAM_H
-#define _RESTBED_ISTREAM_H 1
+#ifndef _RESTBED_DETAIL_HELPER_ISTREAM_H
+#define _RESTBED_DETAIL_HELPER_ISTREAM_H 1
 
 //System Includes
 #include <istream>
@@ -119,4 +119,4 @@ namespace restbed
     }
 }
 
-#endif  /* _RESTBED_ISTREAM_H */
+#endif  /* _RESTBED_DETAIL_HELPER_ISTREAM_H */

@@ -20,8 +20,8 @@
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _RESTBED_MAP_H
-#define _RESTBED_MAP_H 1
+#ifndef _RESTBED_DETAIL_HELPER_MAP_H
+#define _RESTBED_DETAIL_HELPER_MAP_H 1
 
 //System Includes
 #include <map>
@@ -130,4 +130,4 @@ namespace restbed
     }
 }
 
-#endif  /* _RESTBED_MAP_H */
+#endif  /* _RESTBED_DETAIL_HELPER_MAP_H */

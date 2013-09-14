@@ -35,10 +35,10 @@
 #include "restbed/settings.h"
 #include "restbed/log_level.h"
 #include "restbed/status_code.h"
-#include "restbed/resource_matcher.h"
 #include "restbed/detail/service_impl.h"
 #include "restbed/detail/helpers/string.h"
-
+#include "restbed/detail/resource_matcher.h"
+ 
 //External Includes
 using asio::buffer;
 using asio::ip::tcp;
