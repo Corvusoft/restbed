@@ -21,7 +21,6 @@
  */
 
 #include "restbed/method.h"
-#include "restbed/string.h"
 #include "restbed/request.h"
 #include "restbed/service.h"
 #include "restbed/response.h"

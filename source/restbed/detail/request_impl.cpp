@@ -24,10 +24,10 @@
 #include <sstream>
 
 //Project Includes
-#include "restbed/string.h"
 #include "restbed/status_code.h"
 #include "restbed/detail/helpers/map.h"
 #include "restbed/detail/request_impl.h"
+#include "restbed/detail/helpers/string.h"
 #include "restbed/detail/helpers/istream.h"
 
 //External Includes
@@ -42,6 +42,7 @@ using std::istreambuf_iterator;
 //Project Namespaces
 using restbed::detail::RequestImpl;
 using restbed::detail::helpers::Map;
+using restbed::detail::helpers::String;
 using restbed::detail::helpers::IStream;
 
 //External Namespaces

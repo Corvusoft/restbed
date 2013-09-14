@@ -24,12 +24,12 @@
 #include <iostream> //debug
 
 //Project Includes
-#include "restbed/string.h"
 #include "restbed/method.h"
 #include "restbed/request.h"
 #include "restbed/response.h"
 #include "restbed/status_code.h"
 #include "restbed/detail/resource_impl.h"
+#include "restbed/detail/helpers/string.h"
 
 //External Includes
 
@@ -42,6 +42,7 @@ using std::function;
 using std::placeholders::_1;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 
@@ -89,7 +90,7 @@ namespace restbed
         
         string ResourceImpl::get_header_filter( const string& name ) const
         {
-            string key = String::to_upper( name );
+            string key = String::uppercase( name );
 
             return m_header_filters.at( key );
         }
@@ -118,14 +119,14 @@ namespace restbed
 
         void ResourceImpl::set_header_filter( const string& name, const string& value )
         {
-            string key = String::to_upper( name );
+            string key = String::uppercase( name );
 
             m_header_filters[ key ] = value;
         }
 
         void ResourceImpl::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )
         {
-            string key = String::to_upper( method.to_string( ) );
+            string key = String::uppercase( method.to_string( ) );
 
             m_method_handlers[ key ] = callback;
         }

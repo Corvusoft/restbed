@@ -22,8 +22,6 @@
 # Build manifest
 #
 set( MANIFEST
-	${FRAMEWORK_SOURCE_DIR}/string.cpp
-	${FRAMEWORK_SOURCE_DIR}/detail/string_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/settings.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/settings_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/status_code.cpp
@@ -40,4 +38,5 @@ set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/service.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/service_impl.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/helpers/string.cpp
 )

@@ -29,7 +29,6 @@
 
 //Project Includes
 #include "restbed/method.h"
-#include "restbed/string.h"
 #include "restbed/request.h"
 #include "restbed/response.h"
 #include "restbed/resource.h"
@@ -38,6 +37,7 @@
 #include "restbed/status_code.h"
 #include "restbed/resource_matcher.h"
 #include "restbed/detail/service_impl.h"
+#include "restbed/detail/helpers/string.h"
 
 //External Includes
 using asio::buffer;
@@ -57,6 +57,7 @@ using std::runtime_error;
 using std::placeholders::_1;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 

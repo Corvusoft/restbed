@@ -24,7 +24,7 @@
 #include <stdexcept>
 
 //Project Includes
-#include "restbed/string.h"
+#include "restbed/detail/helpers/string.h"
 #include "restbed/detail/status_code_impl.h"
 
 //External Includes
@@ -35,6 +35,7 @@ using std::string;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 
@@ -46,11 +47,11 @@ namespace restbed
         {
             int result = -1;
             
-            const string original = String::to_lower( value );
+            const string original = String::lowercase( value );
             
             for ( auto pair : m_mappings )
             {
-                string text = String::to_lower( pair.second );
+                string text = String::lowercase( pair.second );
                 
                 if ( original == text )
                 {

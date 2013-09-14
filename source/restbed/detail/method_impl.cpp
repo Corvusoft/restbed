@@ -25,10 +25,10 @@
 #include <algorithm>
 
 //Project Includes
-#include "restbed/string.h"
 #include "restbed/status_code.h"
 #include "restbed/detail/method_impl.h"
-
+#include "restbed/detail/helpers/string.h"
+ 
 //External Includes
 
 //System Namespaces
@@ -38,6 +38,7 @@ using std::string;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 
@@ -110,7 +111,7 @@ namespace restbed
                 "OPTIONS"
             }};
             
-            string method = String::to_upper( value );
+            string method = String::uppercase( value );
 
             auto iterator = find( methods.begin( ), methods.end( ), method );
 

@@ -23,8 +23,8 @@
 //System Includes
 
 //Project Includes
-#include "restbed/string.h"
 #include "restbed/detail/settings_impl.h"
+#include "restbed/detail/helpers/string.h"
 
 //External Includes
 
@@ -35,6 +35,7 @@ using std::string;
 using std::to_string;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 
@@ -72,7 +73,7 @@ namespace restbed
         {
             string property = String::empty;
 
-            const string key = String::to_upper( name );
+            const string key = String::uppercase( name );
 
             const auto& iterator = m_properties.find( key );
 
@@ -101,7 +102,7 @@ namespace restbed
         
         void SettingsImpl::set_property( const string& name, const string& value )
         {
-            const string key = String::to_upper( name );
+            const string key = String::uppercase( name );
 
             m_properties[ key ] = value;
         }

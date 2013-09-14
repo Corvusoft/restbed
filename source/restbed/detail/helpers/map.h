@@ -28,6 +28,7 @@
 #include <string>
 
 //Project Includes
+#include "restbed/detail/helpers/string.h"
 
 //External Includes
 
@@ -61,13 +62,13 @@ namespace restbed
                     //Functionality
                     static std::map< std::string, std::string >::const_iterator find_key_ignoring_case( const std::map< std::string, std::string >& haystack, const std::string& needle )
                     {
-                        std::string key = String::to_lower( needle );
+                        std::string key = String::lowercase( needle );
 
                         std::string name = String::empty;
 
                         for ( auto value : haystack )
                         {
-                            if ( key == String::to_lower( value.first ) )
+                            if ( key == String::lowercase( value.first ) )
                             {
                                 name = value.first;
                                 break;

@@ -23,9 +23,9 @@
 //System Includes
 
 //Project Includes
-#include "restbed/string.h"
 #include "restbed/status_code.h"
 #include "restbed/detail/response_impl.h"
+#include "restbed//detail/helpers/string.h"
 
 //External Includes
 
@@ -34,6 +34,7 @@ using std::map;
 using std::string;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 

@@ -28,9 +28,9 @@
 #include <iostream> //debug
 
 //Project Includes
-#include "restbed/string.h"
 #include "restbed/request.h"
 #include "restbed/resource.h"
+#include "restbed/detail/helpers/string.h"
 #include "restbed/detail/resource_matcher_impl.h"
 
 //External Includes
@@ -42,6 +42,7 @@ using std::string;
 using std::vector;
 
 //Project Namespaces
+using restbed::detail::helpers::String;
 
 //External Namespaces
 
@@ -81,7 +82,7 @@ namespace restbed
                     definition = String::trim( definition, "}" ); 
                     
                     auto segments = String::split( definition, ':' );
-                    
+
                     if ( segments.size( ) not_eq 2 )
                     {
                         std::cout << "invalid path parameter" << std::endl;
