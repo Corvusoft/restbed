@@ -38,7 +38,7 @@
 #include "restbed/detail/service_impl.h"
 #include "restbed/detail/helpers/string.h"
 #include "restbed/detail/resource_matcher.h"
- 
+
 //External Includes
 using asio::buffer;
 using asio::ip::tcp;
@@ -117,7 +117,7 @@ namespace restbed
         void ServiceImpl::publish( const Resource& value )
         {
             //String::join( "/", m_root, "/", value.get_path( ) );
-            //String::lower_case( ); //when comparing... don't change user data!
+            //String::lowercase( ); //when comparing... don't change user data!
             //String::deduplicate( path, "/" );
             string path = "/" + m_root + "/" + value.get_path( );
 
@@ -140,18 +140,14 @@ namespace restbed
 
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
         }
-        
-        void ServiceImpl::authentication_handler( const Request& request, Response& response )
-        {
-            response.set_status_code( StatusCode::OK );
-        }
 
-        void ServiceImpl::log_handler(  const LogLevel level, const std::string& format, ... )
+        void ServiceImpl::log_handler(  const LogLevel level, const string& format, ... )
         {
-            //timestamp the entry!
             //[Error 12:18:08] Failed to process request.
             //[Error 12:18:08] Headers
             //[Error 12:18:08] Url
+
+            //string message = "[" + LogLevel::to_string( level ) + time + "] " + format;
 
             va_list arguments;
             
@@ -162,6 +158,11 @@ namespace restbed
             va_end( arguments );
         }
 
+        void ServiceImpl::authentication_handler( const Request&, Response& response )
+        {
+            response.set_status_code( StatusCode::OK );
+        }
+
         void ServiceImpl::listen( void )
         {
             shared_ptr< tcp::socket > socket( new tcp::socket( m_acceptor->get_io_service( ) ) );
@@ -169,7 +170,14 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
 
-        Request ServiceImpl::parse_incoming_request( shared_ptr< tcp::socket >& socket )
+        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
+        {
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
+
+            return *resource;
+        }
+
+        Request ServiceImpl::parse_incoming_request( shared_ptr< tcp::socket >& socket ) const
         {
             error_code status;
             
@@ -182,81 +190,46 @@ namespace restbed
             return Request::parse( stream );
         }
 
-        //do curl with a fake Method is gets all the way to get_method_handler :s It should fail at build_request( socket );                
+        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
+        {
+            Method method = request.get_method( );  
+
+            auto handle = resource.get_method_handler( method );
+                
+            return handle( request );
+        }
+           
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         {
-            // Request request;
-            // Response response;
-
-            //try
-            //{
-                //if ( error )
-                //{
-                //    throw INTERNAL_SERVER_ERROR;
-                //}
-
-                //request = parse_incoming_request( socket );
-
-                //authentication_handler( request );
-
-                //resource = resolve_resource_route( request );
-
-                //response = invoke_method_handler( request, resource );
-            //}
-            //catch ( const int status_code )
-            //{
-                //response.set_status_code( status_code );
-                //error_handler( request, response );
-            //}
-
-            //asio::write( *socket, buffer( response.to_string( ) ), asio::transfer_all( ) );
-
-            //listen( );
-
             Request request;
             Response response;
 
-            if ( not error )
+            try
             {
+                if ( error )
+                {
+                    throw StatusCode::INTERNAL_SERVER_ERROR;
+                }
+
                 request = parse_incoming_request( socket );
 
-
-                std::cout << "method: " << request.get_method( ).to_string( ) << std::endl;
-                std::cout << "version: " << request.get_version( ) << std::endl;
-                std::cout << "path: " << request.get_path( ) << std::endl;
-                std::cout << "body: " << request.get_body( ) << std::endl;
-
-                for ( auto parameter : request.get_query_parameters( ) )
-                {
-                    std::cout << "param: " << parameter.first << " value: " << parameter.second << std::endl;
-                }
-
-                for ( auto header : request.get_headers( ) )
-                {
-                    std::cout << "header: " << header.first << " value: " << header.second << std::endl;
-                }
-                
                 authentication_handler( request, response );
-                
-                int status = response.get_status_code( );
+
+                const int status = response.get_status_code( );
 
                 if ( status not_eq StatusCode::UNAUTHORIZED and status not_eq StatusCode::FORBIDDEN )
                 {
-                    const auto& resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) );
-                    
-                    Method method = request.get_method( );  
+                    const auto& resource = resolve_resource_route( request );
 
-                    auto handle = resource->get_method_handler( method );
-                        
-                    response = handle( request );
+                    response = invoke_method_handler( request, resource );
                 }
             }
-            else
+            catch ( const int status_code )
             {
+                response.set_status_code( status_code );
+
                 error_handler( request, response );
             }
-
-            //system_error err;
 
             asio::write( *socket, buffer( response.to_string( ) ), asio::transfer_all( ) );
 

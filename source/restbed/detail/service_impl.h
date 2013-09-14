@@ -78,9 +78,9 @@ namespace restbed
 
                 virtual void error_handler( const Request& request, Response& response );
 
-                virtual void authentication_handler( const Request& request, Response& response );
-
                 virtual void log_handler( const LogLevel level, const std::string& format, ... );
+
+                virtual void authentication_handler( const Request& request, Response& response );
 
                 //Getters
                 
@@ -126,17 +126,15 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
-                //void build_request_path( std::istream& stream, Request& request, std::shared_ptr< asio::ip::tcp::socket >& socket );
+                Resource resolve_resource_route( const Request& request ) const;
 
-                //void build_request_method( std::istream& stream, Request& request );
+                Request parse_incoming_request( std::shared_ptr< asio::ip::tcp::socket >& socket ) const;
 
-                //void build_request_version( std::istream& stream, Request& request );
-
-                //void build_request_headers( std::istream& stream, Request& request );
-
-                Request parse_incoming_request( std::shared_ptr< asio::ip::tcp::socket >& socket );
+                Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
 
                 void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
+
+                Response invoke_method_handler( const Request& request );
 
                 //Getters
                 
