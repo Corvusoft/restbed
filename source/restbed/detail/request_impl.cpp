@@ -105,7 +105,7 @@ namespace restbed
 
         bool RequestImpl::has_header( const string& name ) const
         {
-            return ( Map::find_key_ignoring_case( m_headers, name ) not_eq m_headers.end( ) );
+            return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
         
         double RequestImpl::get_version( void ) const
@@ -134,7 +134,7 @@ namespace restbed
             
             if ( has_header( name ) )
             {
-                const auto iterator = Map::find_key_ignoring_case( m_headers, name );
+                const auto iterator = Map::find_key_ignoring_case( name, m_headers );
 
                 value = iterator->second;
             }
@@ -149,7 +149,7 @@ namespace restbed
         
         string RequestImpl::get_query_parameter( const string& name ) const
         {
-            const auto iterator = Map::find_key_ignoring_case( m_query_parameters, name );
+            const auto iterator = Map::find_key_ignoring_case( name, m_query_parameters );
             
             return iterator->second;
         }
@@ -161,7 +161,7 @@ namespace restbed
         
         string RequestImpl::get_path_parameter( const string& name ) const
         {
-            const auto iterator = Map::find_key_ignoring_case( m_path_parameters, name );
+            const auto iterator = Map::find_key_ignoring_case( name, m_path_parameters );
             
             return iterator->second;
         }

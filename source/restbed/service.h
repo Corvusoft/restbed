@@ -67,7 +67,7 @@ namespace restbed
             virtual ~Service( void );
 
             //Functionality
-            void start( void );
+            void start( void ); //async = false
 
             void stop( void );
 

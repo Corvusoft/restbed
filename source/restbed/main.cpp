@@ -27,7 +27,7 @@ try
     Settings settings;
     settings.set_port( 1984 );
     settings.set_root( "resources" );
-    //settings.set_log( "/tmp/restbed.XXXXX.log", DEBUG | FATAL | INFO ); //level = VERBOSE
+    //settings.set_log_level( DEBUG | FATAL | INFO ); //level = VERBOSE
     //set_log_handler
     
     //ServiceSettings service_settings;
@@ -57,6 +57,16 @@ catch ( const std::exception& ex )
 
     return EXIT_FAILURE;
 }
+
+//example
+// Resource json_resource;
+// json_resource.set_path('/api');
+// json_resource.set_header_filter('content-type', 'application/json');
+
+// Resource xml_resource;
+// xml_resource.set_path('/api');
+// xml_resource.set_header_filter('content-type', 'application/xml');
+
 
     //RestMQ
     //http://.../queues

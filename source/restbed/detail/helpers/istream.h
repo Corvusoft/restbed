@@ -58,14 +58,7 @@ namespace restbed
                     //Constructors
                     
                     //Functionality
-			        static char reverse_peek( std::istream& socket )
-			        {
-			            socket.unget( );
-
-			            char previous_byte = socket.get( );
-
-			            return previous_byte;
-			        }
+			        static char reverse_peek( std::istream& socket );
 
                     //Getters
                     
