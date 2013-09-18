@@ -41,13 +41,13 @@ namespace restbed
 
     enum LogLevel : int
     {
-        INFO = 1000,             
-        DEBUG = 2000,
-        FATAL = 3000,
-        ERROR = 4000,
-        WARNING = 5000,
-        SECURITY = 6000,
-        VERBOSE = 7000 //and mask of all of them.
+        INFO     = 0x00000008,     
+        DEBUG    = 0x00000040,
+        FATAL    = 0x00000200,
+        ERROR    = 0x00001000,
+        WARNING  = 0x00008000,
+        SECURITY = 0x00040000,
+        VERBOSE  = 0xffffffff
     };
 }
 
