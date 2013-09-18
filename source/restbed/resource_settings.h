@@ -20,8 +20,8 @@
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _RESTBED_SERVICE_SETTINGS_H
-#define _RESTBED_SERVICE_SETTINGS_H 1
+#ifndef _RESTBED_RESOURCE_SETTINGS_H
+#define _RESTBED_RESOURCE_SETTINGS_H 1
 
 //System Includes
 #include <map>
@@ -44,10 +44,10 @@ namespace restbed
     //Forward Declarations
     namespace detail
     {
-        class ServiceSettingsImpl;
+        class ResourceSettingsImpl;
     }
 
-    class ServiceSettings : public Settings
+    class ResourceSettings : public Settings
     {
         public:
             //Friends
@@ -55,42 +55,34 @@ namespace restbed
             //Definitions
 
             //Constructors
-            ServiceSettings( void ); //add map constructor (remember uppercase!)
+            ResourceSettings( void ); //add map constructor (remember uppercase!)
             
-            ServiceSettings( const ServiceSettings& original );
+            ResourceSettings( const ResourceSettings& original );
             
-            virtual ~ServiceSettings( void );
+            virtual ~ResourceSettings( void );
             
             //Functionality
 
             //Getters
-            uint16_t get_port( void ) const;
-
-            std::string get_root( void ) const;
-
             std::string get_property( const std::string& name ) const;
 
             std::map< std::string, std::string > get_properties( void ) const;
 
-            //Setters  
-            void set_port( const uint16_t value );
-            
-            void set_root( const std::string& value ); //needs validation
-            
+            //Setters              
             void set_property( const std::string& name, const std::string& value );
             
             void set_properties( const std::map< std::string, std::string >& values );
 
             //Operators
-            bool operator <( const ServiceSettings& rhs ) const;
+            bool operator <( const ResourceSettings& rhs ) const;
             
-            bool operator >( const ServiceSettings& rhs ) const;
+            bool operator >( const ResourceSettings& rhs ) const;
             
-            bool operator ==( const ServiceSettings& rhs ) const;
+            bool operator ==( const ResourceSettings& rhs ) const;
             
-            bool operator !=( const ServiceSettings& rhs ) const;
+            bool operator !=( const ResourceSettings& rhs ) const;
 
-            ServiceSettings& operator =( const ServiceSettings& rhs );
+            ResourceSettings& operator =( const ResourceSettings& rhs );
 
             //Properties
             
@@ -127,8 +119,8 @@ namespace restbed
             //Operators
 
             //Properties
-            std::unique_ptr< detail::ServiceSettingsImpl > m_pimpl;
+            std::unique_ptr< detail::ResourceSettingsImpl > m_pimpl;
     };
 }
 
-#endif  /* _RESTBED_SERVICE_SETTINGS_H */
+#endif  /* _RESTBED_RESOURCE_SETTINGS_H */
