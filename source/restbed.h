@@ -28,3 +28,5 @@
 #include "restbed/settings.h"
 #include "restbed/log_level.h"
 #include "restbed/status_code.h"
+#include "restbed/service_settings.h"
+#include "restbed/resource_settings.h"
