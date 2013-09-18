@@ -24,6 +24,10 @@
 set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/settings.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/settings_impl.cpp
+	${FRAMEWORK_SOURCE_DIR}/service_settings.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/service_settings_impl.cpp
+	${FRAMEWORK_SOURCE_DIR}/resource_settings.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/resource_settings_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/status_code.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/status_code_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/method.cpp
