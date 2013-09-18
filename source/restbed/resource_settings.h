@@ -55,7 +55,7 @@ namespace restbed
             //Definitions
 
             //Constructors
-            ResourceSettings( void ); //add map constructor (remember uppercase!)
+            ResourceSettings( void );
             
             ResourceSettings( const ResourceSettings& original );
             

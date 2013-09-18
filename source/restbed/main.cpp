@@ -36,7 +36,7 @@ try
     Service service( settings );
     
     //ResourceSettings resource_settings;
-    //resource_settings.set_path, content_type, method_handler
+    //resource_settings.set_path, header_filter, method_handler
 
     Resource resource;
     resource.set_path( "events/{id: .*}" ); //make sure this check is also case insentive, remove space.
@@ -45,7 +45,7 @@ try
     
     service.publish( resource );
     
-    service.start( );
+    service.start( ); //async = true
 
     std::cout << "out of start" << std::endl;
 

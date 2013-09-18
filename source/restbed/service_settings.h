@@ -55,7 +55,7 @@ namespace restbed
             //Definitions
 
             //Constructors
-            ServiceSettings( void ); //add map constructor (remember uppercase!)
+            ServiceSettings( void );
             
             ServiceSettings( const ServiceSettings& original );
             
