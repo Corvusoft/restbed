@@ -64,16 +64,6 @@ namespace restbed
         return m_pimpl->get_root( );
     }
 
-    string ServiceSettings::get_property( const string& name ) const
-    {
-        return m_pimpl->get_property( name );
-    }
-
-    map< string, string > ServiceSettings::get_properties( void ) const
-    {
-        return m_pimpl->get_properties( );
-    }
-
     void ServiceSettings::set_port( const uint16_t value )
     {
         m_pimpl->set_port( value );
@@ -82,16 +72,6 @@ namespace restbed
     void ServiceSettings::set_root( const string& value )
     {
         m_pimpl->set_root( value );
-    }
-    
-    void ServiceSettings::set_property( const string& name, const string& value )
-    {
-    	m_pimpl->set_property( name, value );
-    }
-    
-    void ServiceSettings::set_properties( const map< string, string >& values )
-    {
-        m_pimpl->set_properties( values );
     }
 
     bool ServiceSettings::operator <( const ServiceSettings& rhs ) const

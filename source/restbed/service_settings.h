@@ -24,12 +24,10 @@
 #define _RESTBED_SERVICE_SETTINGS_H 1
 
 //System Includes
-#include <map>
 #include <memory>
 #include <string>
  
 //Project Includes
-#include <restbed/settings>
 
 //External Includes
 
@@ -47,7 +45,7 @@ namespace restbed
         class ServiceSettingsImpl;
     }
 
-    class ServiceSettings : public Settings
+    class ServiceSettings
     {
         public:
             //Friends
@@ -68,18 +66,10 @@ namespace restbed
 
             std::string get_root( void ) const;
 
-            std::string get_property( const std::string& name ) const;
-
-            std::map< std::string, std::string > get_properties( void ) const;
-
             //Setters  
             void set_port( const uint16_t value );
             
             void set_root( const std::string& value ); //needs validation
-            
-            void set_property( const std::string& name, const std::string& value );
-            
-            void set_properties( const std::map< std::string, std::string >& values );
 
             //Operators
             bool operator <( const ServiceSettings& rhs ) const;

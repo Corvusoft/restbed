@@ -301,7 +301,7 @@ namespace restbed
             
             while ( getline( socket, header ) && header not_eq CR )
             {
-                header.erase( header.length( ) - 1 ); //erase carriage return.
+                header.erase( header.length( ) - 1 ); //erase_carriage_return.
                 
                 string::size_type index = header.find_first_of( ':' );
                 

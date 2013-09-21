@@ -6,7 +6,6 @@
 //TODO:
 //web site
 //ssl support
-//locale.resource? for things that log?
 
 using namespace restbed;
             
@@ -14,7 +13,7 @@ Response get_handler( const Request& request )
 {
     Response response;
     
-    response.set_data( "hello from get handler" ); //set_content( "" );
+    response.set_data( "hello from get handler" ); //set_body( "" );
 
     std::cout << "hello from get handler" << std::endl;
     
@@ -27,7 +26,6 @@ try
     Settings settings;
     settings.set_port( 1984 );
     settings.set_root( "resources" );
-    //settings.set_log_level( DEBUG | FATAL | INFO ); //level = VERBOSE
     //set_log_handler
     
     //ServiceSettings service_settings;
@@ -45,7 +43,7 @@ try
     
     service.publish( resource );
     
-    service.start( ); //async = true
+    service.start( ); //async = true Service::ASYNC, Service::SYNC
 
     std::cout << "out of start" << std::endl;
 
@@ -66,6 +64,66 @@ catch ( const std::exception& ex )
 // Resource xml_resource;
 // xml_resource.set_path('/api');
 // xml_resource.set_header_filter('content-type', 'application/xml');
+
+
+// string deduplicate( const string& value, const char target )
+// {
+//     string result = String::empty;
+
+//     stringstream stream( value );
+
+//     for ( int index = 0; index not_eq value.length( ); index++ )
+//     {       
+//         char character = stream.get( );
+
+//         if ( character == target )
+//         {
+//             char next_character = stream.peek( );
+
+//             if ( next_character not_eq target )
+//             {
+//                 result.push_back( character );
+//             }
+//         }
+//         else
+//         {
+//             result.push_back( character );
+//         }
+//     }
+
+//     return result;
+// }
+
+
+// string join( const string& format, ... )
+// {
+//     va_list arguments;
+
+//     va_start( arguments, format );
+
+//     string::size_type size = format.size( ) * 2;
+
+//     char* result = new char[ size ];
+
+//     int written = vsprintf( result, format.data( ), arguments );
+
+//     while ( written < 0 )
+//     {
+//        delete[ ] result;
+
+//        size *= 2;
+
+//        result = new char[ size ];
+
+//        written = vsprintf( result, format.data( ), arguments );
+//     }
+
+//     va_end( arguments );
+
+//     return result;
+// }
+
+
 
 
     //RestMQ

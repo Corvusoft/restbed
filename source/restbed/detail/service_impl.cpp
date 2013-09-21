@@ -116,9 +116,11 @@ namespace restbed
 
         void ServiceImpl::publish( const Resource& value )
         {
-            //String::join( "/", m_root, "/", value.get_path( ) );
-            //String::lowercase( ); //when comparing... don't change user data!
-            //String::deduplicate( path, "/" );
+            //when comparing... don't change user data!
+            //path = String::join( "%s/%s", m_root, value.get_path( ) );
+            //path = String::deduplicate( root, '/' );
+            //path = String::lowercase( path );
+
             string path = "/" + m_root + "/" + value.get_path( );
 
             Resource resource = value;
@@ -131,7 +133,7 @@ namespace restbed
         {
             auto position = std::find( m_resources.begin( ), m_resources.end( ), value );
         
-            m_resources.erase( position );
+            m_resources.erase( position ); //if async == true grab mutex first!
         }
 
         void ServiceImpl::error_handler( const Request& request, Response& response )

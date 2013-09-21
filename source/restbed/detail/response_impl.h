@@ -127,7 +127,7 @@ namespace restbed
                 //Properties
                 int m_status_code;
 
-                std::string m_data;
+                std::string m_data; //Bytes m_body
         
                 std::map< std::string, std::string > m_headers;
         };
