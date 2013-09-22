@@ -62,8 +62,6 @@ namespace restbed
                 //Functionality
                 Bytes to_bytes( void ) const;
 
-                bool has_header( const std::string& name ) const;
-
                 //Getters
                 Bytes get_body( void ) const;
 
@@ -122,6 +120,8 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                bool has_header( const std::string& name ) const;
+
                 std::string generate_status_section( void ) const;
 
                 std::string generate_header_section( void ) const;

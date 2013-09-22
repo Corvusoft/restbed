@@ -23,7 +23,6 @@
 //System Includes
 #include <ctime>
 #include <chrono>
- #include <iostream> //debug
 
 //Project Includes
 #include "restbed/status_code.h"
@@ -79,11 +78,6 @@ namespace restbed
             bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
 
             return bytes;
-        }
-
-        bool ResponseImpl::has_header( const string& name ) const
-        {
-            return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
 
         Bytes ResponseImpl::get_body( void ) const
@@ -167,6 +161,11 @@ namespace restbed
             m_headers = rhs.m_headers;
 
             return *this;
+        }
+
+        bool ResponseImpl::has_header( const string& name ) const
+        {
+            return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
 
         string ResponseImpl::generate_status_section( void ) const
