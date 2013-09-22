@@ -42,15 +42,15 @@ namespace restbed
 {
     namespace detail
     {
-        ResponseImpl::ResponseImpl( void ) : m_status_code( StatusCode::OK ),
-                                             m_data( String::empty ),
+        ResponseImpl::ResponseImpl( void ) : m_body( ),
+                                             m_status_code( StatusCode::OK ),
                                              m_headers( )
         {
             //n/a
         }
         
-        ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_status_code( original.m_status_code ),
-                                                                     m_data( original.m_data ),
+        ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_body( original.m_body ),
+                                                                     m_status_code( original.m_status_code ),
                                                                      m_headers( original.m_headers )
         {
             //n/a
@@ -84,15 +84,15 @@ namespace restbed
 
             return response;
         }
+
+        Bytes ResponseImpl::get_body( void ) const
+        {
+            return m_body;
+        }
          
         int ResponseImpl::get_status_code( void ) const
         {
             return m_status_code;
-        }
-
-        string ResponseImpl::get_body( void ) const
-        {
-            return m_data;
         }
 
         string ResponseImpl::get_header( const string& name ) const
@@ -105,14 +105,19 @@ namespace restbed
             return m_headers;
         }
         
-        void ResponseImpl::set_status_code( const int value )
+        void ResponseImpl::set_body( const Bytes& value )
         {
-            m_status_code = value;
+            m_body = value;
         }
 
         void ResponseImpl::set_body( const string& value )
         {
-            m_data = value;
+            m_body = Bytes( value.begin( ), value.end( ) );
+        }
+
+        void ResponseImpl::set_status_code( const int value )
+        {
+            m_status_code = value;
         }
 
         void ResponseImpl::set_header( const string& name, const string& value )
@@ -127,27 +132,27 @@ namespace restbed
 
         bool ResponseImpl::operator <( const ResponseImpl& rhs ) const
         {
-            return m_data < rhs.m_data;
+            return m_body < rhs.m_body;
         }
         
         bool ResponseImpl::operator >( const ResponseImpl& rhs ) const
         {
-            return m_data > rhs.m_data;
+            return m_body > rhs.m_body;
         }
         
         bool ResponseImpl::operator ==( const ResponseImpl& rhs ) const
         {
-            return m_data == rhs.m_data and m_headers == rhs.m_headers;
+            return m_body == rhs.m_body and m_headers == rhs.m_headers;
         }
         
         bool ResponseImpl::operator !=( const ResponseImpl& rhs ) const
         {
-            return m_data not_eq rhs.m_data or m_headers not_eq rhs.m_headers;
+            return m_body not_eq rhs.m_body or m_headers not_eq rhs.m_headers;
         }
         
         ResponseImpl& ResponseImpl::operator =( const ResponseImpl& rhs )
         {
-            m_data = rhs.m_data;
+            m_body = rhs.m_body;
 
             m_headers = rhs.m_headers;
 

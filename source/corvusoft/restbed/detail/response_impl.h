@@ -28,6 +28,7 @@
 #include <string>
  
 //Project Includes
+#include <corvusoft/restbed/bytes>
 
 //External Includes
 
@@ -62,18 +63,20 @@ namespace restbed
                 std::string to_string( void ) const;
                             
                 //Getters
-                int get_status_code( void ) const;
+                Bytes get_body( void ) const;
 
-                std::string get_body( void ) const;
+                int get_status_code( void ) const;
 
                 std::string get_header( const std::string& name ) const;
 
                 std::map< std::string, std::string > get_headers( void ) const;
 
                 //Setters
-                void set_status_code( const int value );
+                void set_body( const Bytes& value );
 
                 void set_body( const std::string& value );
+
+                void set_status_code( const int value );
 
                 void set_header( const std::string& name, const std::string& value );
 
@@ -125,9 +128,9 @@ namespace restbed
                 //Operators
 
                 //Properties
-                int m_status_code;
+                Bytes m_body;
 
-                std::string m_data; //Bytes m_body
+                int m_status_code;
         
                 std::map< std::string, std::string > m_headers;
         };

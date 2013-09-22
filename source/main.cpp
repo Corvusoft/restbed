@@ -10,8 +10,8 @@ using namespace restbed;
 Response get_handler( const Request& request )
 {
     Response response;
-    
-    response.set_body( "hello from get handler" ); //byte;
+
+    response.set_body( "hello from get handler" );
 
     std::cout << "hello from get handler" << std::endl;
     

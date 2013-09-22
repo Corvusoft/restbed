@@ -58,15 +58,15 @@ namespace restbed
     {
         return m_pimpl->to_string( );
     }
-           
+
+    Bytes Response::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
+    }
+
     int Response::get_status_code( void ) const
     {
         return m_pimpl->get_status_code( );
-    }
-
-    string Response::get_body( void ) const
-    {
-        return m_pimpl->get_body( );
     }
 
     string Response::get_header( const string& name ) const
@@ -79,14 +79,19 @@ namespace restbed
         return m_pimpl->get_headers( );
     }
 
-    void Response::set_status_code( const int value )
+    void Response::set_body( const Bytes& value )
     {
-        m_pimpl->set_status_code( value );
+        m_pimpl->set_body( value );
     }
 
     void Response::set_body( const string& value )
     {
         m_pimpl->set_body( value );
+    }
+
+    void Response::set_status_code( const int value )
+    {
+        m_pimpl->set_status_code( value );
     }
 
     void Response::set_header( const string& name, const string& value )
