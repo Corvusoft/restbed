@@ -11,7 +11,7 @@ Response get_handler( const Request& request )
 {
     Response response;
     
-    response.set_data( "hello from get handler" ); //set_body( "" );
+    response.set_body( "hello from get handler" ); //byte;
 
     std::cout << "hello from get handler" << std::endl;
     

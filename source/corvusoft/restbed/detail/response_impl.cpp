@@ -90,7 +90,7 @@ namespace restbed
             return m_status_code;
         }
 
-        string ResponseImpl::get_data( void ) const
+        string ResponseImpl::get_body( void ) const
         {
             return m_data;
         }
@@ -110,7 +110,7 @@ namespace restbed
             m_status_code = value;
         }
 
-        void ResponseImpl::set_data( const string& value )
+        void ResponseImpl::set_body( const string& value )
         {
             m_data = value;
         }

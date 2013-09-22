@@ -64,9 +64,9 @@ namespace restbed
         return m_pimpl->get_status_code( );
     }
 
-    string Response::get_data( void ) const
+    string Response::get_body( void ) const
     {
-        return m_pimpl->get_data( );
+        return m_pimpl->get_body( );
     }
 
     string Response::get_header( const string& name ) const
@@ -84,9 +84,9 @@ namespace restbed
         m_pimpl->set_status_code( value );
     }
 
-    void Response::set_data( const string& value )
+    void Response::set_body( const string& value )
     {
-        m_pimpl->set_data( value );
+        m_pimpl->set_body( value );
     }
 
     void Response::set_header( const string& name, const string& value )

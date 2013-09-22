@@ -66,7 +66,7 @@ namespace restbed
             //Getters
             int get_status_code( void ) const;
 
-            std::string get_data( void ) const;
+            std::string get_body( void ) const;
 
             std::string get_header( const std::string& name ) const;
 
@@ -75,7 +75,7 @@ namespace restbed
             //Setters
             void set_status_code( const int value );
 
-            void set_data( const std::string& value ); //Bytes //set_body
+            void set_body( const std::string& value );
 
             void set_header( const std::string& name, const std::string& value );
 
