@@ -26,24 +26,17 @@ try
     Settings settings;
     settings.set_port( 1984 );
     settings.set_root( "resources" );
-    //set_log_handler
-    
-    //ServiceSettings service_settings;
-    //service_settings.set_port, set_root
 
     Service service( settings );
-    
-    //ResourceSettings resource_settings;
-    //resource_settings.set_path, header_filter, method_handler
 
     Resource resource;
     resource.set_path( "events/{id: .*}" ); //make sure this check is also case insentive, remove space.
     resource.set_header_filter( "Content-Type", "application/.*" ); //make sure this check is also case insentive
     resource.set_method_handler( "GET", &get_handler );
-    
+
     service.publish( resource );
     
-    service.start( ); //async = true Service::ASYNC, Service::SYNC
+    service.start( );
 
     std::cout << "out of start" << std::endl;
 

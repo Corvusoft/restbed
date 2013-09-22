@@ -95,8 +95,10 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::start( void )
+        void ServiceImpl::start( bool async )
         {
+            //async == true = thread;
+            
             m_io_service = shared_ptr< io_service >( new io_service );
             
             m_acceptor = shared_ptr< tcp::acceptor >( new tcp::acceptor( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) ) );
@@ -121,10 +123,8 @@ namespace restbed
             //path = String::deduplicate( root, '/' );
             //path = String::lowercase( path );
 
-            string path = "/" + m_root + "/" + value.get_path( );
-
-            Resource resource = value;
-            resource.set_path( path );
+            Resource resource( value );
+            resource.set_path( "/" + m_root + "/" + value.get_path( ) );
 
             m_resources.push_back( resource );
         }

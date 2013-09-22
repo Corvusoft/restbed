@@ -57,9 +57,9 @@ namespace restbed
         //n/a
     }
 
-    void Service::start( void )
+    void Service::start( const bool async )
     {
-        m_pimpl->start( );
+        m_pimpl->start( async );
     }
 
     void Service::stop( void )

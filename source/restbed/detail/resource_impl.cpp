@@ -50,14 +50,16 @@ namespace restbed
 {
     namespace detail
     {
-        ResourceImpl::ResourceImpl( void ) : m_path_filters( ),
+        ResourceImpl::ResourceImpl( void ) : m_path( String::empty ),
+                                             m_path_filters( ),
                                              m_header_filters( ),
                                              m_method_handlers( )
         {
             setup( );
         }
         
-        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path_filters( original.m_path_filters ),
+        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
+                                                                     m_path_filters( original.m_path_filters ),
                                                                      m_header_filters( original.m_header_filters ),
                                                                      m_method_handlers( original.m_method_handlers )
         {
@@ -71,16 +73,16 @@ namespace restbed
 
         string ResourceImpl::get_path( void ) const
         {
-            string path = "/";
+            //string path = "/";
 
-            for ( auto filter : m_path_filters )
-            {
-                path += filter + "/";
-            }
+            //for ( auto filter : m_path_filters )
+            //{
+            //    path += filter + "/";
+            //}
 
-            path.erase( path.length( ) - 1 );
+            //path.erase( path.length( ) - 1 );
 
-            return path;
+            return m_path;
         }
 
         vector< string > ResourceImpl::get_path_filters( void ) const
@@ -112,47 +114,47 @@ namespace restbed
 
         void ResourceImpl::set_path( const string& value )
         {
-            //String::deduplicate( value, "/" );
-
-            m_path_filters = String::split( value, '/' );
+            m_path = value;
         }
 
         void ResourceImpl::set_header_filter( const string& name, const string& value )
         {
-            string key = String::uppercase( name );
+            string key = String::uppercase(  name );
 
             m_header_filters[ key ] = value;
         }
 
-        void ResourceImpl::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )
+        void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
         {
-            string key = String::uppercase( method.to_string( ) );
+            string key = String::uppercase(  verb.to_string( ) );
 
             m_method_handlers[ key ] = callback;
         }
-        
+
         bool ResourceImpl::operator <( const ResourceImpl& rhs ) const
         {
-            return get_path( ) < rhs.get_path( );
+            return m_path < rhs.m_path;
         }
         
         bool ResourceImpl::operator >( const ResourceImpl& rhs ) const
         {
-            return get_path( ) > rhs.get_path( );
+            return m_path > rhs.m_path;
         }
         
         bool ResourceImpl::operator ==( const ResourceImpl& rhs ) const
         {
-            return get_path( ) == rhs.get_path( );
+            return m_path == rhs.m_path;
         }
         
         bool ResourceImpl::operator !=( const ResourceImpl& rhs ) const
         {
-            return get_path( ) not_eq rhs.get_path( );
+            return m_path not_eq rhs.m_path;
         }
 
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& rhs )
         {
+            m_path = rhs.m_path;
+
             m_path_filters = rhs.m_path_filters;
 
             m_header_filters = rhs.m_header_filters;
@@ -164,13 +166,13 @@ namespace restbed
 
         void ResourceImpl::setup( void )
         {
-            set_method_handler( "GET",     &ResourceImpl::default_handler );
-            set_method_handler( "PUT",     &ResourceImpl::default_handler );
-            set_method_handler( "POST",    &ResourceImpl::default_handler );
-            set_method_handler( "HEAD",    &ResourceImpl::default_handler );
-            set_method_handler( "DELETE",  &ResourceImpl::default_handler );
+            set_method_handler( "GET", &ResourceImpl::default_handler );
+            set_method_handler( "PUT", &ResourceImpl::default_handler );
+            set_method_handler( "POST", &ResourceImpl::default_handler );
+            set_method_handler( "HEAD", &ResourceImpl::default_handler );
+            set_method_handler( "DELETE", &ResourceImpl::default_handler );
             set_method_handler( "CONNECT", &ResourceImpl::default_handler );
-            set_method_handler( "TRACE",   &ResourceImpl::default_trace_handler );
+            set_method_handler( "TRACE", &ResourceImpl::default_trace_handler );
             set_method_handler( "OPTIONS", bind( &ResourceImpl::default_options_handler, this, _1 ) );
         }
 

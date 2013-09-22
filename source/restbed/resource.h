@@ -52,7 +52,7 @@ namespace restbed
         class ResourceImpl;
     }
 
-    class Resource //no resource properties? would allow nice extension for ppl like settings.set_root etc... + set_properties??
+    class Resource
     {
         public:
             //Friends
@@ -72,7 +72,7 @@ namespace restbed
             //Getters
             std::string get_path( void ) const;
 
-            std::vector< std::string > get_path_filters( void ) const;
+            std::vector< std::string > get_path_filters( void ) const; //hide
 
             std::string get_header_filter( const std::string& name ) const;
 
@@ -80,20 +80,14 @@ namespace restbed
 
             std::function< Response ( const Request& ) > get_method_handler( const Method& method ) const;
 
-            std::map< std::string, std::function< Response ( const Request& ) > >  get_method_handlers( void ) const;
+            std::map< std::string, std::function< Response ( const Request& ) > >  get_method_handlers( void ) const; //not Method
 
             //Setters
             void set_path( const std::string& value );
 
-            //get_path_filters
-
             void set_header_filter( const std::string& name, const std::string& value );
 
-            //set_header_filters
-            
-            void set_method_handler( const Method& method, const std::function< Response ( const Request& ) >& callback );
-
-            //set_method_handlers
+            void set_method_handler( const Method& verb, const std::function< Response ( const Request& ) >& callback );
 
             //Operators
             bool operator <( const Resource& rhs ) const;

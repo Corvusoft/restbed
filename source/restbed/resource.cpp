@@ -99,9 +99,9 @@ namespace restbed
         m_pimpl->set_header_filter( name, value );
     }
 
-    void Resource::set_method_handler( const Method& method, const function< Response ( const Request& ) >& callback )
+    void Resource::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
     {
-        m_pimpl->set_method_handler( method, callback );
+        m_pimpl->set_method_handler( verb, callback );
     }
 
     bool Resource::operator <( const Resource& rhs ) const
