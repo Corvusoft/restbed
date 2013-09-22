@@ -30,6 +30,7 @@
 #include "restbed/status_code.h"
 #include "restbed/detail/resource_impl.h"
 #include "restbed/detail/helpers/string.h"
+#include "restbed/detail/helpers/functional.h"
 
 //External Includes
 
@@ -43,6 +44,7 @@ using std::placeholders::_1;
 
 //Project Namespaces
 using restbed::detail::helpers::String;
+using restbed::detail::helpers::Functional;
 
 //External Namespaces
 
@@ -176,30 +178,13 @@ namespace restbed
             set_method_handler( "OPTIONS", bind( &ResourceImpl::default_options_handler, this, _1 ) );
         }
 
-        template<typename T, typename... U>
-        size_t getAddress(std::function<T(U...)> f) //move!
-        {
-            typedef T( fnType )( U... );
-
-            fnType ** fnPointer = f.template target< fnType* >( );
-
-            size_t address = 0;
-
-            if ( fnPointer not_eq nullptr )
-            {
-                address = ( size_t )*fnPointer;
-            }
-
-            return address;
-        }
-
         string ResourceImpl::generate_allow_header_value( void )
         {
             string value = String::empty;
 
             for ( auto& handler : m_method_handlers )
             {
-                address_type callback_address = getAddress( handler.second );
+                address_type callback_address = Functional::get_address( handler.second );
                 address_type default_address = ( address_type ) ResourceImpl::default_handler;
 
                 if ( callback_address not_eq default_address )

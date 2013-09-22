@@ -25,7 +25,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <functional>
-#include <iostream> //debug
 
 //Project Includes
 #include "restbed/method.h"
@@ -95,17 +94,15 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::start( bool async )
+        void ServiceImpl::start( void )
         {
-            //async == true = thread;
-            
             m_io_service = shared_ptr< io_service >( new io_service );
-            
+                
             m_acceptor = shared_ptr< tcp::acceptor >( new tcp::acceptor( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) ) );
 
             listen( );
 
-            m_io_service->run( ); 
+            m_io_service->run( );
         }
 
         void ServiceImpl::stop( void )
