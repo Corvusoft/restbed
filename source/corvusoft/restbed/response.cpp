@@ -54,9 +54,9 @@ namespace restbed
         //n/a
     }
 
-    string Response::to_string( void ) const
+    Bytes Response::to_bytes( void ) const
     {
-        return m_pimpl->to_string( );
+        return m_pimpl->to_bytes( );
     }
 
     Bytes Response::get_body( void ) const

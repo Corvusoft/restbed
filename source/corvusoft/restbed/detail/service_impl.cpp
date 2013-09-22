@@ -233,7 +233,7 @@ namespace restbed
                 error_handler( request, response );
             }
 
-            asio::write( *socket, buffer( response.to_string( ) ), asio::transfer_all( ) );
+            asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
 
             listen( );
         }

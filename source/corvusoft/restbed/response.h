@@ -62,7 +62,7 @@ namespace restbed
             virtual ~Response( void );
 
             //Functionality
-            std::string to_string( void ) const;
+            Bytes to_bytes( void ) const;
                         
             //Getters
             Bytes get_body( void ) const;

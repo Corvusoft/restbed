@@ -21,19 +21,27 @@
  */
 
 //System Includes
+#include <ctime>
+#include <chrono>
+ #include <iostream> //debug
 
 //Project Includes
 #include "restbed/status_code.h"
 #include "restbed/detail/response_impl.h"
-#include "restbed//detail/helpers/string.h"
+#include "restbed/detail/helpers/map.h"
+#include "restbed/detail/helpers/string.h"
 
 //External Includes
 
 //System Namespaces
 using std::map;
 using std::string;
+using std::time_t;
+using std::to_string;
+using std::chrono::system_clock;
 
 //Project Namespaces
+using restbed::detail::helpers::Map;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -61,28 +69,21 @@ namespace restbed
             //n/a
         }
 
-        string ResponseImpl::to_string( void ) const
+        Bytes ResponseImpl::to_bytes( void ) const
         {
-            string response = "HTTP/1.1 200 OK\r\n";
-            //general headers //get_general_headers
-            response += "Date: Thu, 20 May 2003 21:12:58 GMT\r\n";
-            response += "Connection: close\r\n";
-            //response headers //get_response_headers
-            response += "Server: Restbed/1.0.23\r\n";
-            response += "Accept-Ranges: bytes\r\n";
-            //entity headers //get_entity_headers
-            response += "Content-Type: text/html\r\n";
-            response += "Content-Length: 12\r\n";
-            response += "Last-Modified: Tue, 18 May 2004 10:14:49 GMT\r\n\r\n";
-            //message body //get_content
-            response += "1234567890jk";
+            string sections = generate_status_section( );
+            sections += generate_header_section( );
+            sections += "\r\n";
 
-            //date for free
-            //content length
-            //connection: close
-            //also make sure the ':' is added automatically for all headers!
+            Bytes bytes( sections.begin( ), sections.end( ) );
+            bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
 
-            return response;
+            return bytes;
+        }
+
+        bool ResponseImpl::has_header( const string& name ) const
+        {
+            return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
 
         Bytes ResponseImpl::get_body( void ) const
@@ -97,7 +98,16 @@ namespace restbed
 
         string ResponseImpl::get_header( const string& name ) const
         {
-            return m_headers.at( name );
+            string value = String::empty;
+            
+            if ( has_header( name ) )
+            {
+                const auto iterator = Map::find_key_ignoring_case( name, m_headers );
+
+                value = iterator->second;
+            }
+
+            return value;
         }
 
         map< string, string > ResponseImpl::get_headers( void ) const
@@ -157,6 +167,98 @@ namespace restbed
             m_headers = rhs.m_headers;
 
             return *this;
+        }
+
+        string ResponseImpl::generate_status_section( void ) const
+        {
+            string section = "HTTP/1.1 ";
+            section += to_string( m_status_code );
+            section += " ";
+            section += StatusCode::to_string( m_status_code );
+            section += "\r\n";
+
+            return section;
+        }
+
+        string ResponseImpl::generate_header_section( void ) const
+        {
+            string section = generate_default_date_header( );
+            section += generate_default_connection_header( );
+            section += generate_default_server_header( );
+            section += generate_default_content_type_header( );
+            section += generate_default_content_length_header( );
+
+            for ( auto header : m_headers )
+            {
+                section += header.first + ": " + header.second + "\r\n";
+            }
+
+            return section;
+        }
+
+        string ResponseImpl::generate_default_date_header( void ) const
+        {
+            string section = String::empty;
+
+            if ( not has_header( "Date" ) )
+            {
+                time_t time = system_clock::to_time_t( system_clock::now( ) );
+
+                section = "Date: " + string( ctime( &time ) );
+                section.erase( section.length( ) - 1 );
+
+                section += "\r\n";
+            }
+
+            return section;
+        }
+
+        string ResponseImpl::generate_default_server_header( void ) const
+        {
+            string section = String::empty;
+
+            if ( not has_header( "Server" ) )
+            {
+                section = "Server: Corvusoft - restbed/1.0\r\n";
+            }
+
+            return section;
+        }
+        
+        string ResponseImpl::generate_default_connection_header( void ) const
+        {
+            string section = String::empty;
+
+            if ( not has_header( "Connection" ) )
+            {
+                section = "Connection: close\r\n";
+            }
+
+            return section;
+        }
+
+        string ResponseImpl::generate_default_content_type_header( void ) const
+        {
+            string section = String::empty;
+
+            if ( not has_header( "Content-Type" ) )
+            {
+                section = "Content-Type: application/json; charset=utf-8\r\n";
+            }
+
+            return section;
+        }
+
+        string ResponseImpl::generate_default_content_length_header( void ) const
+        {
+            string section = String::empty;
+
+            if ( not has_header( "Content-Length" ) )
+            {
+                section = "Content-Length: " + to_string( m_body.size( ) ) + "\r\n";
+            }
+
+            return section;
         }
     }
 }

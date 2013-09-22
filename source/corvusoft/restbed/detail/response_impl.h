@@ -60,8 +60,10 @@ namespace restbed
                 virtual ~ResponseImpl( void );
 
                 //Functionality
-                std::string to_string( void ) const;
-                            
+                Bytes to_bytes( void ) const;
+
+                bool has_header( const std::string& name ) const;
+
                 //Getters
                 Bytes get_body( void ) const;
 
@@ -120,6 +122,19 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                std::string generate_status_section( void ) const;
+
+                std::string generate_header_section( void ) const;
+
+                std::string generate_default_date_header( void ) const;
+
+                std::string generate_default_server_header( void ) const;
+
+                std::string generate_default_connection_header( void ) const;
+
+                std::string generate_default_content_type_header( void ) const;
+
+                std::string generate_default_content_length_header( void ) const;
                 
                 //Getters
                 

@@ -10,8 +10,9 @@ using namespace restbed;
 Response get_handler( const Request& request )
 {
     Response response;
-
     response.set_body( "hello from get handler" );
+    response.set_header( "Forename", "Ben" );
+    response.set_status_code( StatusCode::CREATED );
 
     std::cout << "hello from get handler" << std::endl;
     
@@ -34,6 +35,8 @@ try
 
     service.publish( resource );
     
+    //why is method not a special enum like stauts code?
+
     service.start( );
 
     std::cout << "out of start" << std::endl;
