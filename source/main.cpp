@@ -1,7 +1,5 @@
 #include <iostream>
-#include <restbed.h>
-
-//http://en.wikipedia.org/wiki/PATCH_(HTTP)#Request_methods
+#include <restbed>
 
 //TODO:
 //web site

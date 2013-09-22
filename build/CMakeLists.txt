@@ -40,7 +40,7 @@ endforeach( DEPENDENCY )
 #
 # Configuration
 #
-set( SOURCE_DIR "../source" )
+set( SOURCE_DIR "../source/corvusoft" )
 set( FRAMEWORK_SOURCE_DIR ${SOURCE_DIR}/restbed )
 
 set( CMAKE_INSTALL_PREFIX "../distribution" )
@@ -60,7 +60,8 @@ add_library( restbed SHARED ${MANIFEST} )
 
 target_link_libraries( restbed pthread )
 
-add_executable( main ${FRAMEWORK_SOURCE_DIR}/main.cpp )
+include_directories( ${SOURCE_DIR} "../source" )
+add_executable( main ../source/main.cpp )
 
 target_link_libraries( main restbed )
 
