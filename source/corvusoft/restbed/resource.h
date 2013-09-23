@@ -25,7 +25,6 @@
 
 //System Includes
 #include <map>
-#include <vector>
 #include <memory>
 #include <string>
 #include <functional>
@@ -67,12 +66,9 @@ namespace restbed
             virtual ~Resource( void );
 
             //Functionality
-            //not_implemented_handler;
 
             //Getters
             std::string get_path( void ) const;
-
-            std::vector< std::string > get_path_filters( void ) const; //hide
 
             std::string get_header_filter( const std::string& name ) const;
 

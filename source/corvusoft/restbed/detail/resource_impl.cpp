@@ -37,7 +37,6 @@
 //System Namespaces
 using std::map;
 using std::bind;
-using std::vector;
 using std::string;
 using std::function;
 using std::placeholders::_1;
@@ -53,7 +52,6 @@ namespace restbed
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_path( String::empty ),
-                                             m_path_filters( ),
                                              m_header_filters( ),
                                              m_method_handlers( )
         {
@@ -61,7 +59,6 @@ namespace restbed
         }
         
         ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
-                                                                     m_path_filters( original.m_path_filters ),
                                                                      m_header_filters( original.m_header_filters ),
                                                                      m_method_handlers( original.m_method_handlers )
         {
@@ -75,21 +72,7 @@ namespace restbed
 
         string ResourceImpl::get_path( void ) const
         {
-            //string path = "/";
-
-            //for ( auto filter : m_path_filters )
-            //{
-            //    path += filter + "/";
-            //}
-
-            //path.erase( path.length( ) - 1 );
-
             return m_path;
-        }
-
-        vector< string > ResourceImpl::get_path_filters( void ) const
-        {
-            return m_path_filters;
         }
         
         string ResourceImpl::get_header_filter( const string& name ) const
@@ -157,8 +140,6 @@ namespace restbed
         {
             m_path = rhs.m_path;
 
-            m_path_filters = rhs.m_path_filters;
-
             m_header_filters = rhs.m_header_filters;
 
             m_method_handlers = rhs.m_method_handlers;
@@ -184,8 +165,8 @@ namespace restbed
 
             for ( auto& handler : m_method_handlers )
             {
-                address_type callback_address = Functional::get_address( handler.second );
-                address_type default_address = ( address_type ) ResourceImpl::default_handler;
+                Functional::address_type callback_address = Functional::get_address( handler.second );
+                Functional::address_type default_address = ( Functional::address_type ) ResourceImpl::default_handler;
 
                 if ( callback_address not_eq default_address )
                 {

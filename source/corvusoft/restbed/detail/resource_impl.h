@@ -25,7 +25,6 @@
 
 //System Includes
 #include <map>
-#include <vector>
 #include <string>
 #include <functional>
  
@@ -68,8 +67,6 @@ namespace restbed
 
                 //Getters
                 std::string get_path( void ) const;
-
-                std::vector< std::string > get_path_filters( void ) const;
 
                 std::string get_header_filter( const std::string& name ) const;
 
@@ -120,14 +117,11 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-                typedef size_t address_type;
-
+                
                 //Constructors
                 
                 //Functionality
                 void setup( void );
-
-                //address_type address_of( );
 
                 std::string generate_allow_header_value( void );
 
@@ -145,8 +139,6 @@ namespace restbed
 
                 //Properties
                 std::string m_path;
-
-                std::vector< std::string > m_path_filters;
 
                 std::map< std::string, std::string > m_header_filters;
             

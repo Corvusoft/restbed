@@ -54,18 +54,19 @@ namespace restbed
                     //Friends
                     
                     //Definitions
+                    typedef std::size_t address_type;
  
                     //Constructors
                     
                     //Functionality
                     template< typename Type, typename... Arguments >
-                    static std::size_t get_address( std::function< Type( Arguments... ) > function )
+                    static address_type get_address( std::function< Type( Arguments... ) > function )
                     {
                         typedef Type( function_decl )( Arguments... );
 
                         function_decl** ptr = function.template target< function_decl* >( );
 
-                        size_t address = ( ptr not_eq nullptr ) ? ( size_t ) *ptr : 0;
+                        address_type address = ( ptr not_eq nullptr ) ? ( address_type ) *ptr : 0;
                         
                         return address;
                     }

@@ -23,7 +23,6 @@
 //System Includes
 #include <map>
 #include <regex>
-#include <vector> 
 #include <string>
 #include <iostream> //debug
 
@@ -70,9 +69,9 @@ namespace restbed
             return compare_path( m_request, resource ) and compare_headers( m_request, resource );
         }
 
-        regex ResourceMatcher::parse_filter_definition( const string& filter ) const
+        regex ResourceMatcher::parse_filter_definition( const string& value ) const
         {
-            string definition = filter;
+            string definition = value;
 
             if ( definition.front( ) == '{' )
             {
@@ -88,20 +87,23 @@ namespace restbed
                         std::cout << "invalid path parameter" << std::endl;
                     }
                     
-                    string value = String::trim( segments[ 1 ] );
-
-                    definition = value;
+                    definition = String::trim( segments[ 1 ] );
                 }
             }
 
             return regex( definition );  
         }
 
+        vector< string > parse_path_definition( const string& value ) const
+        {
+            return String::split( value, '/' );
+        }
+
         bool ResourceMatcher::compare_path( const Request& request, const Resource& resource ) const
         {
             bool result = true;
 
-            auto path_filters = resource.get_path_filters( );
+            auto path_filters = parse_path_definition( resource.get_path( ) );
 
             auto path_segments = String::split( request.get_path( ), '/' );
 

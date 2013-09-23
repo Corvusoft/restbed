@@ -33,7 +33,6 @@
 
 //System Namespaces
 using std::map;
-using std::vector;
 using std::string;
 using std::function;
 
@@ -62,11 +61,6 @@ namespace restbed
     string Resource::get_path( void ) const
     {
         return m_pimpl->get_path( );
-    }
-        
-    vector< string > Resource::get_path_filters( void ) const
-    {
-        return m_pimpl->get_path_filters( );
     }
 
     string Resource::get_header_filter( const string& name ) const
