@@ -76,8 +76,6 @@ namespace restbed
 
             std::function< Response ( const Request& ) > get_method_handler( const Method& method ) const;
 
-            std::map< std::string, std::function< Response ( const Request& ) > >  get_method_handlers( void ) const; //not Method
-
             //Setters
             void set_path( const std::string& value );
 

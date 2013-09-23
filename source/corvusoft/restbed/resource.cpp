@@ -78,11 +78,6 @@ namespace restbed
         return m_pimpl->get_method_handler( method );
     }
 
-    map< string, function< Response ( const Request& ) > >  Resource::get_method_handlers( void ) const
-    {
-        return m_pimpl->get_method_handlers( );
-    }
-
     void Resource::set_path( const string& value )
     {
         m_pimpl->set_path( value );

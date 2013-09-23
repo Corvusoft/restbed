@@ -92,11 +92,6 @@ namespace restbed
             return m_method_handlers.at( method.to_string( ) );
         }
 
-        map< string, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
-        {
-            return m_method_handlers;
-        }
-
         void ResourceImpl::set_path( const string& value )
         {
             m_path = value;
