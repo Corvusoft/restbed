@@ -21,6 +21,7 @@
  */
 
 //System Includes
+#include <cstdarg>
 
 //Project Includes
 #include "restbed/detail/helpers/string.h"
@@ -60,6 +61,66 @@ namespace restbed
 	            
 	            return result;
 	        }
+
+	        string String::join( const string& format, ... )
+			{
+			    va_list arguments;
+
+			    va_start( arguments, format );
+
+			    string::size_type size = format.size( ) * 2;
+
+			    char* formatted = new char[ size ];
+
+			    int written = vsprintf( formatted, format.data( ), arguments );
+
+			    while ( written < 0 )
+			    {
+			       delete[ ] formatted;
+
+			       size *= 2;
+
+			       formatted = new char[ size ];
+
+			       written = vsprintf( formatted, format.data( ), arguments );
+			    }
+
+			    va_end( arguments );
+
+			    string result = formatted;
+
+			    delete[ ] formatted;
+
+			    return result;
+			}
+
+			string String::deduplicate( const string& value, const char target )
+			{
+			    string result = String::empty;
+
+			    stringstream stream( value );
+
+			    for ( int index = 0; index not_eq value.length( ); index++ )
+			    {       
+			        char character = stream.get( );
+
+			        if ( character == target )
+			        {
+			            char next_character = stream.peek( );
+
+			            if ( next_character not_eq target )
+			            {
+			                result.push_back( character );
+			            }
+			        }
+			        else
+			        {
+			            result.push_back( character );
+			        }
+			    }
+
+			    return result;
+			}
 
 	        vector< string > String::split(const string& value, const char delimiter )
 	        {

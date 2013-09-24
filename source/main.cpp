@@ -29,14 +29,12 @@ try
     Service service( settings );
 
     Resource resource;
-    resource.set_path( "events/{id: .*}" ); //make sure this check is also case insentive, remove space.
-    resource.set_header_filter( "Content-Type", "application/.*" ); //make sure this check is also case insentive
+    resource.set_path( "events/{id: .*}" ); //make sure this check is also ignores case , remove space.
+    resource.set_header_filter( "Content-Type", "application/.*" ); //make sure this check is also ignores case.
     resource.set_method_handler( "GET", &get_handler );
 
     service.publish( resource );
     
-    //why is method not a special enum like stauts code?
-
     service.start( );
 
     std::cout << "out of start" << std::endl;
@@ -58,67 +56,6 @@ catch ( const std::exception& ex )
 // Resource xml_resource;
 // xml_resource.set_path('/api');
 // xml_resource.set_header_filter('content-type', 'application/xml');
-
-
-// string deduplicate( const string& value, const char target )
-// {
-//     string result = String::empty;
-
-//     stringstream stream( value );
-
-//     for ( int index = 0; index not_eq value.length( ); index++ )
-//     {       
-//         char character = stream.get( );
-
-//         if ( character == target )
-//         {
-//             char next_character = stream.peek( );
-
-//             if ( next_character not_eq target )
-//             {
-//                 result.push_back( character );
-//             }
-//         }
-//         else
-//         {
-//             result.push_back( character );
-//         }
-//     }
-
-//     return result;
-// }
-
-
-// string join( const string& format, ... )
-// {
-//     va_list arguments;
-
-//     va_start( arguments, format );
-
-//     string::size_type size = format.size( ) * 2;
-
-//     char* result = new char[ size ];
-
-//     int written = vsprintf( result, format.data( ), arguments );
-
-//     while ( written < 0 )
-//     {
-//        delete[ ] result;
-
-//        size *= 2;
-
-//        result = new char[ size ];
-
-//        written = vsprintf( result, format.data( ), arguments );
-//     }
-
-//     va_end( arguments );
-
-//     return result;
-// }
-
-
-
 
     //RestMQ
     //http://.../queues
