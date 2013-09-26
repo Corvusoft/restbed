@@ -253,7 +253,7 @@ namespace restbed
             string version = String::empty;
 
             socket >> version;
-            socket.ignore( 2 ); //ignore carriage return-line feed sequence.
+            socket.ignore( 2 );
 
             version = String::remove( "HTTP/", version, true );
 
@@ -286,7 +286,7 @@ namespace restbed
             string method = String::empty;
 
             socket >> method;
-            socket.ignore( 1 );  //ignore whitespace character.
+            socket.ignore( 1 );
             
             return method;
         }
@@ -299,9 +299,9 @@ namespace restbed
             
             string header = String::empty;
             
-            while ( getline( socket, header ) && header not_eq CR )
+            while ( getline( socket, header ) and header not_eq CR )
             {
-                header.erase( header.length( ) - 1 ); //erase_carriage_return.
+                header.erase( header.length( ) - 1 );
                 
                 string::size_type index = header.find_first_of( ':' );
                 
