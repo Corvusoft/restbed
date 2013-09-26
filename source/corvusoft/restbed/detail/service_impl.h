@@ -147,7 +147,7 @@ namespace restbed
             
                 std::string m_root;
 
-                std::list< Resource > m_resources; //thread-safe container
+                std::list< Resource > m_resources;
 
                 std::shared_ptr< asio::io_service > m_io_service;
 
