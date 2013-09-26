@@ -24,7 +24,7 @@
 #include <map>
 #include <regex>
 #include <string>
-#include <iostream> //debug
+#include <stdexcept>
 
 //Project Includes
 #include "restbed/request.h"
@@ -39,6 +39,7 @@ using std::map;
 using std::regex;
 using std::string;
 using std::vector;
+using std::invalid_argument;
 
 //Project Namespaces
 using restbed::detail::helpers::String;
@@ -84,7 +85,7 @@ namespace restbed
 
                     if ( segments.size( ) not_eq 2 )
                     {
-                        std::cout << "invalid path parameter" << std::endl;
+                        throw invalid_argument( "" );
                     }
                     
                     definition = String::trim( segments[ 1 ] );
