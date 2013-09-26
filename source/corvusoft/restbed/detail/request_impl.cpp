@@ -294,12 +294,10 @@ namespace restbed
         map< string, string > RequestImpl::parse_http_headers( istream& socket )
         {
             map< string, string > headers;
-
-            const char* CR = "\r";
-            
+                        
             string header = String::empty;
             
-            while ( getline( socket, header ) and header not_eq CR )
+            while ( getline( socket, header ) and header not_eq "\r" )
             {
                 header.erase( header.length( ) - 1 );
                 
