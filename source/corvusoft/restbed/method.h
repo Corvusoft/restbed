@@ -45,7 +45,7 @@ namespace restbed
         class MethodImpl;
     }
 
-    class Method //Why is this not like status code?
+    class Method
     {
         public:
             //Friends
