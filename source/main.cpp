@@ -18,6 +18,7 @@ Response get_handler( const Request& request )
     
     return response;
 }
+//exception trace!!!
 
 int main( int, char** )
 try
