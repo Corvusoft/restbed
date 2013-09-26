@@ -88,9 +88,9 @@ namespace restbed
             {
                 stop( );
             }
-            catch ( const runtime_error& re )
+            catch ( const exception& ex )
             {
-                log_handler( LogLevel::WARNING, "Service failed graceful shutdown: " + string( re.what( ) ) );
+                log_handler( LogLevel::WARNING, "Service failed graceful shutdown: " + string( ex.what( ) ) );
             }
         }
 
