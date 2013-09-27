@@ -16,9 +16,15 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 }
 
 body {
-	font-family: Impact, Charcoal, sans-serif;
-	padding: 5%;
-    line-height: 1;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 90%;
+	color: #000000;
+	letter-spacing: 0px;
+	line-height: 1.4em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+	padding: 2% 5%;
 	background: #fff;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -40,28 +46,14 @@ body {
 	width: 50%;
 }
 
-#code-example {
-	width:90%;
-	padding: 5%;
-	float:left;
-	font-size: 10pt;
+#code-example {	
+	padding-top: 5%;
+	padding-left: 8%;
+	padding-right: 8%;
 }
 
-#code-example .content {
-	border: 1px solid #E0E0E0;
-	border-radius: 10px;
-	width: 75%;
-	padding: 2%;		
+.logo {
 	float: left;
-	margin-left: 10.5%;
-	background-color: #f4f5f5;
-}
-
-#code-example .content2 {
-	width: 75%;
-	padding: 2%;		
-	float: left;
-	margin-left: 2%;
 }
 
 ul {
@@ -69,29 +61,17 @@ ul {
 	margin-bottom: 6%;
 }
 
-.content3 {
-	font-size: 12pt;
-	margin-left: 5%;
-	margin-top: 2%;
-	margin-bottom: 9%;
-}
-
 h1 {
-	font-size: 32px;
+	font-size: 22px;
 	line-height: 40px;
-	letter-spacing: -1px;
-	color: #444;
+	letter-spacing: -1px;	
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 	font-weight: 100;
 }
 
-li{ 	
-	font-size: 14px;
-	line-height: 20px;
-	text-transform: uppercase;
-	margin-top: 2%;
-	margin-bottom: 2%;
+li {	
+	margin-top: 1%;
 }
 
 .download a {
@@ -112,7 +92,7 @@ li{
 	display:inline-block;
 	text-shadow: 0px 1px 0 rgba(255,255,255,1);
 	font-weight:bold;
-	color: #002186;
+	color: rgb(0,151,156);
  	background-color: #f4f5f5;
  	background-image: -webkit-gradient(linear, left top, left bottom, from(#f4f5f5), to(#dfdddd));
  	background-image: -webkit-linear-gradient(top, #f4f5f5, #dfdddd);

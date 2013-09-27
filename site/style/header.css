@@ -1,17 +1,15 @@
 header nav {
 	width: 20%;
 	float: right;
+	padding-top: 5%;
 }
 
-header nav a {
+header nav a {	
 	margin-right: 5%;
 	text-decoration:none;
-	color: #000;
-	font-size: 16px;
-	line-height: 20px;
-	font-family: verdana;	
+	color: #000;	
 }
 
 header nav a:hover {
-	color: #0000FF;	
+	color: rgb(0,151,156);	
 }

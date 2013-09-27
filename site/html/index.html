@@ -28,74 +28,44 @@
 
         <script src="../script/syntax.js"></script>
         <script src="../script/modal.js"></script>
+
+        <style>        
+.comment { color: #999999; font-style: italic; }
+.pre { color: #000099; }
+.string { color: #009900; }
+.char { color: #009900; }
+.float { color: #996600; }
+.int { color: #999900; }
+.bool { color: #000000; font-weight: bold; }
+.type { color: #FF6633; }
+.flow { color: #FF0000; }
+.keyword { color: #990000; }
+.operator { color: #663300; font-weight: bold; }
+.operator { color: #663300; font-weight: bold; }
+        </style>
     </head>
     <body>
         <header>
-            Logo Image
+            <img class="logo" src="../image/logo.png"/>
             <nav>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">API</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/src">Source</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">Wiki</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/issues">Issues</a>
-                <a href="#" id="header-license">License</a>
-            </nav>  
+            </nav> 
+            <br clear="both" /> 
             <hr>          
         </header>
         <section class="indent-1">
             <section>
-                <div id="code-example">
-                    <div class="content">
-                        <pre class='brush: cpp; gutter: false;toolbar: false;'>
-                                #include "restbed.h"
-
-                                using namespace restbed;
-                                            
-                                Response get_handler( Request& request )
-                                {
-                                    Response response;
-                                    
-                                    response.set_content( "Hello, World!" );
-                                    
-                                    return response;
-                                }
-
-                                int main( int, char** )
-                                try
-                                {
-                                    Settings settings;
-                                    settings.set_port( 1984 );
-                                    settings.set_root( "resources" );
-                                    settings.set_log( "file:///tmp/restbed.XXXXX.log" );
-                                    settings.set_log_level( INFO | WARNING | SECURITY );
-                                    
-                                    Service service( settings );
-                                        
-                                    Resource resource;
-                                    resource.set_path( "events/{id:.*}" );
-                                    resource.set_content_type( "application/.*" );
-                                    resource.set_method_handler( "GET", &get_handler );
-                                    
-                                    service.publish( resource );
-                                    
-                                    service.start( );
-
-                                    return EXIT_SUCCESS;
-                                }
-                                catch ( ... )
-                                {
-                                    return EXIT_FAILURE;
-                                }
-                        </pre>
-                    </div>
+                <div id="code-example">                    
+                    <img src="../image/example.png" />                    
                 </div>
             </section>
             <section>
                 <div id="code-example">
-                    <div class="content2">
-                        <h1>
-                            Restbed
-                        </h1>
-                        <div class="content3">
+                    <div>                       
+                        <div>
                             Developing RESTful Web services that seamlessly support 
                             exposing your data in a variety of representations while abstracting
                             away the low-level details of the HTTP protocol is not an easy task
@@ -103,10 +73,10 @@
                             of such systems within the C++ development arena. It offers a clean, portable
                             interface to get RESTful Web Services up and running within a matter of minutes.
                         </div>
-
+                        <br />
                         <h1>
                             Features
-                        </h1>
+                        </h1>                        
                         <ul>
                             <li>HTTP Method, Path, and Content-Type request filteration</li>
                             <li>Path parameters</li>
@@ -132,7 +102,6 @@
                             </span>
                         </div>
                 </div>
-
             </section>
         </section>
         <section id="dialog-confirm" title="SOFTWARE LICENSE AGREEMENT" style="display: none">
