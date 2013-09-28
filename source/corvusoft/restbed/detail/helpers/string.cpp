@@ -90,34 +90,6 @@ namespace restbed
 			    return formatted;
 			}
 
-			string String::deduplicate( const string& value, const char target )
-			{
-			    string result = String::empty;
-
-			    stringstream stream( value );
-
-			    for ( string::size_type index = 0; index not_eq value.length( ); index++ )
-			    {       
-			        char character = stream.get( );
-
-			        if ( character == target )
-			        {
-			            char next_character = stream.peek( );
-
-			            if ( next_character not_eq target )
-			            {
-			                result.push_back( character );
-			            }
-			        }
-			        else
-			        {
-			            result.push_back( character );
-			        }
-			    }
-
-			    return result;
-			}
-
 	        vector< string > String::split(const string& value, const char delimiter )
 	        {
 	            vector< string > tokens;

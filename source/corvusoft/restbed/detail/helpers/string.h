@@ -66,8 +66,6 @@ namespace restbed
 
                     static std::string format( const std::string& format, ... );
 
-                    static std::string deduplicate( const std::string& value, const char target );
-
                     static std::vector< std::string > split( const std::string& text, const char delimiter );
 
                     static std::string trim( const std::string& value, const std::string& delimiter = " \t" );
