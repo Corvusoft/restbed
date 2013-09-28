@@ -22,6 +22,8 @@
 
 //System Includes
 #include <cstdarg>
+#include <sstream>
+ #include <iostream>
 
 //Project Includes
 #include "restbed/detail/helpers/string.h"
@@ -31,6 +33,7 @@
 //System Namespaces
 using std::string;
 using std::vector;
+using std::stringstream;
 
 //Project Namespaces
 
@@ -62,27 +65,31 @@ namespace restbed
 	            return result;
 	        }
 
-	        string String::join( const string& format, ... )
+	        string String::format( const string& format, ... )
 			{
 			    va_list arguments;
 
 			    va_start( arguments, format );
 
-			    string::size_type size = format.size( ) * 2;
+			    string::size_type size = 1024;
 
 			    char* formatted = new char[ size ];
 
-			    int written = vsprintf( formatted, format.data( ), arguments );
+			    string::size_type length = vsnprintf( formatted, size, format.data( ), arguments );
 
-			    while ( written < 0 )
+			    if ( length > size )
 			    {
-			       delete[ ] formatted;
+			    	va_end( arguments );
 
-			       size *= 2;
+			    	va_start( arguments, format );
 
-			       formatted = new char[ size ];
+			    	delete[ ] formatted;
 
-			       written = vsprintf( formatted, format.data( ), arguments );
+			    	size = length + 1;
+
+			    	formatted = new char[ size ];
+
+			    	vsnprintf( formatted, size, format.data( ), arguments );
 			    }
 
 			    va_end( arguments );
@@ -100,7 +107,7 @@ namespace restbed
 
 			    stringstream stream( value );
 
-			    for ( int index = 0; index not_eq value.length( ); index++ )
+			    for ( string::size_type index = 0; index not_eq value.length( ); index++ )
 			    {       
 			        char character = stream.get( );
 

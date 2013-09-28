@@ -63,7 +63,7 @@ namespace restbed
 
                     static std::string uppercase( const std::string& value );
 
-                    static std::string join( const std::string& format, ... );
+                    static std::string format( const std::string& format, ... );
 
                     static std::string deduplicate( const std::string& value, const char target );
 
