@@ -62,8 +62,6 @@ namespace restbed
                 virtual ~RequestImpl( void );
                 
                 //Functionality
-                static RequestImpl parse( std::istream& socket );
-                
                 bool has_header( const std::string& name ) const;
                 //has_query_parameter
                 //has_path_parameter
@@ -119,7 +117,7 @@ namespace restbed
                 
             protected:
                 //Friends
-                
+
                 //Definitions
                 
                 //Constructors
@@ -142,17 +140,6 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static double parse_http_version( std::istream& socket );
-
-                static std::string parse_http_path( std::istream& socket );
-
-                static std::string parse_http_body( std::istream& socket );
-                
-                static std::string parse_http_method( std::istream& socket );
-            
-                static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
-
-                static std::map< std::string, std::string > parse_http_query_parameters( std::istream& socket );
 
                 //Getters
                 

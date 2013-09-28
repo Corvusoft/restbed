@@ -64,8 +64,6 @@ namespace restbed
             virtual ~Request( void );
 
             //Functionality
-            static Request parse( std::istream& socket );
-            
             bool has_header( const std::string& name ) const;
 
             //Getters
@@ -120,7 +118,8 @@ namespace restbed
             //Operators
             
             //Properties
-            
+            std::unique_ptr< detail::RequestImpl > m_pimpl;
+
         private:
             //Friends
             
@@ -137,7 +136,6 @@ namespace restbed
             //Operators
 
             //Properties
-            std::unique_ptr< detail::RequestImpl > m_pimpl;
     };
 }
 

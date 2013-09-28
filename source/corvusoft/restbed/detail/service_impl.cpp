@@ -21,8 +21,6 @@
  */
 
 //System Includes
-#include <cstdarg>
-#include <sstream>
 #include <stdexcept>
 #include <functional>
 
@@ -36,29 +34,28 @@
 #include "restbed/status_code.h"
 #include "restbed/detail/service_impl.h"
 #include "restbed/detail/helpers/string.h"
+#include "restbed/detail/request_builder.h"
 #include "restbed/detail/resource_matcher.h"
 
 //External Includes
-using asio::buffer;
-using asio::ip::tcp;
-using asio::io_service;
-using asio::error_code;
-using asio::system_error;
 
 //System Namespaces
 using std::list;
 using std::string;
 using std::find_if;
-using std::istream;
 using std::exception;
 using std::shared_ptr;
-using std::stringstream;
 using std::placeholders::_1;
 
 //Project Namespaces
 using restbed::detail::helpers::String;
 
 //External Namespaces
+using asio::buffer;
+using asio::ip::tcp;
+using asio::io_service;
+using asio::error_code;
+using asio::system_error;
 
 namespace restbed
 {
@@ -167,26 +164,6 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
 
-        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
-        {
-            auto resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
-
-            return *resource;
-        }
-
-        Request ServiceImpl::parse_incoming_request( shared_ptr< tcp::socket >& socket ) const
-        {
-            error_code status;
-            
-            asio::streambuf buffer;
-            
-            asio::read_until( *socket, buffer, "\r\n", status );
-            
-            istream stream( &buffer );
-
-            return Request::parse( stream );
-        }
-
         Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
         {
             Method method = request.get_method( );  
@@ -194,6 +171,13 @@ namespace restbed
             auto handle = resource.get_method_handler( method );
                 
             return handle( request );
+        }
+
+        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
+        {
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
+
+            return *resource;
         }
            
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
@@ -208,7 +192,14 @@ namespace restbed
                     throw StatusCode::INTERNAL_SERVER_ERROR;
                 }
 
-                request = parse_incoming_request( socket );
+                RequestBuilder builder;
+                builder.parse( socket );
+                request = builder.build( );
+
+                Resource resource = resolve_resource_route( request );
+
+                builder.parse_path_parameters( resource.get_path( ) );
+                request = builder.build( );
 
                 authentication_handler( request, response );
 
@@ -216,8 +207,6 @@ namespace restbed
 
                 if ( status not_eq StatusCode::UNAUTHORIZED and status not_eq StatusCode::FORBIDDEN )
                 {
-                    const auto& resource = resolve_resource_route( request );
-
                     response = invoke_method_handler( request, resource );
                 }
             }

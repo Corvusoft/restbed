@@ -20,11 +20,11 @@
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _RESTBED_DETAIL_SERVICE_IMPL_H
-#define _RESTBED_DETAIL_SERVICE_IMPL_H 1
+#ifndef _RESTBED_DETAIL_REQUEST_BUILDER_H
+#define _RESTBED_DETAIL_REQUEST_BUILDER_H 1
 
 //System Includes
-#include <list>
+#include <map>
 #include <memory>
 #include <string>
 #include <istream>
@@ -42,18 +42,13 @@
 
 namespace restbed
 {
-    //Forward Declarations    
-    class Request;
-    class Resource;
-    class Settings;
-
-    enum LogLevel : int;
+    //Forward Declarations
     
     namespace detail
     {
         //Forward Declarations
-
-        class ServiceImpl
+        
+        class RequestBuilder : private Request
         {
             public:
                 //Friends
@@ -61,47 +56,30 @@ namespace restbed
                 //Definitions
 
                 //Constructors
-                ServiceImpl( const Settings& settings );
+                RequestBuilder( void );
                 
-                ServiceImpl( const ServiceImpl& original );
-
-                virtual ~ServiceImpl( void );
+                RequestBuilder( const RequestBuilder& original );
+                
+                virtual ~RequestBuilder( void );
                 
                 //Functionality
-                void start( void );
+                Request build( void ) const;
 
-                void stop( void );
-
-                void publish( const Resource& value );
-
-                void suppress( const Resource& value );
-
-                virtual void error_handler( const Request& request, Response& response );
-
-                virtual void log_handler( const LogLevel level, const std::string& format, ... );
-
-                virtual void authentication_handler( const Request& request, Response& response );
+                void parse( std::shared_ptr< asio::ip::tcp::socket >& socket );
+                                
+                void parse_path_parameters( const std::string& definition );
 
                 //Getters
                 
                 //Setters
 
                 //Operators
-                bool operator <( const ServiceImpl& rhs ) const;
                 
-                bool operator >( const ServiceImpl& rhs ) const;
-                
-                bool operator ==( const ServiceImpl& rhs ) const;
-                
-                bool operator !=( const ServiceImpl& rhs ) const;
-
-                ServiceImpl& operator =( const ServiceImpl& rhs );
-
                 //Properties
                 
             protected:
                 //Friends
-                
+
                 //Definitions
                 
                 //Constructors
@@ -118,40 +96,33 @@ namespace restbed
                 
             private:
                 //Friends
-
+                
                 //Definitions
                 
                 //Constructors
                 
                 //Functionality
-                void listen( void );
+                static double parse_http_version( std::istream& socket );
 
-                Response invoke_method_handler( const Request& request );
+                static std::string parse_http_path( std::istream& socket );
 
-                Resource resolve_resource_route( const Request& request ) const;
+                static std::string parse_http_body( std::istream& socket );
+                
+                static std::string parse_http_method( std::istream& socket );
+            
+                static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
 
-                Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
-
-                void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
+                static std::map< std::string, std::string > parse_http_query_parameters( std::istream& socket );
 
                 //Getters
                 
                 //Setters
-                
+
                 //Operators
-
+                
                 //Properties
-                uint16_t m_port;
-            
-                std::string m_root;
-
-                std::list< Resource > m_resources;
-
-                std::shared_ptr< asio::io_service > m_io_service;
-
-                std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;                
         };
     }
 }
 
-#endif  /* _RESTBED_DETAIL_SERVICE_IMPL_H */
+#endif  /* _RESTBED_DETAIL_REQUEST_BUILDER_H */

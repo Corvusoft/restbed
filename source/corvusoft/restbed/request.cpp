@@ -56,14 +56,6 @@ namespace restbed
         //n/a
     }
 
-    Request Request::parse( istream& socket )
-    {
-        Request request;
-        *request.m_pimpl = RequestImpl::parse( socket );
-        
-        return request;
-    }
-
     bool Request::has_header( const string& name ) const
     {
         return m_pimpl->has_header( name );
