@@ -21,7 +21,6 @@
  */
 
 //System Includes
-#include <cstdarg>
 #include <sstream>
  #include <iostream>
 
@@ -71,34 +70,24 @@ namespace restbed
 
 			    va_start( arguments, format );
 
-			    string::size_type size = 1024;
+			    string formatted = empty;
 
-			    char* formatted = new char[ size ];
+			    string::size_type length = 1024;
 
-			    string::size_type length = vsnprintf( formatted, size, format.data( ), arguments );
-
-			    if ( length > size )
-			    {
-			    	va_end( arguments );
-
-			    	va_start( arguments, format );
-
-			    	delete[ ] formatted;
-
-			    	size = length + 1;
-
-			    	formatted = new char[ size ];
-
-			    	vsnprintf( formatted, size, format.data( ), arguments );
-			    }
+			    string::size_type required_length = String::format( formatted, length + 1, format, arguments );
 
 			    va_end( arguments );
 
-			    string result = formatted;
+			    if ( required_length > length )
+			    {
+			    	va_start( arguments, format );
 
-			    delete[ ] formatted;
+			    	String::format( formatted, required_length + 1, format, arguments );
 
-			    return result;
+			    	va_end( arguments );
+			    }
+
+			    return formatted;
 			}
 
 			string String::deduplicate( const string& value, const char target )
@@ -211,6 +200,19 @@ namespace restbed
 
 	            return source;
 	        }
+
+			string::size_type String::format( string& output, const string::size_type length, const string& format, va_list arguments )
+			{
+				char* formatted = new char[ length + 1 ];
+
+				string::size_type required_length = vsnprintf( formatted, length + 1, format.data( ), arguments );
+
+				output = formatted;
+
+				delete[ ] formatted;
+
+				return required_length;
+			}
 		}
 	}
 }

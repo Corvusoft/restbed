@@ -26,6 +26,7 @@
 //System Includes
 #include <string>
 #include <vector>
+#include <cstdarg>
 
 //Project Includes
 
@@ -116,7 +117,8 @@ namespace restbed
                     virtual ~String( void ) = delete;
 
                     //Functionality
-                    
+                    static std::string::size_type format( /*out*/ std::string& output, const std::string::size_type length, const std::string& format, va_list arguments );
+
                     //Getters
                     
                     //Setters
