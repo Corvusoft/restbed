@@ -22,7 +22,6 @@
 
 //System Includes
 #include <sstream>
- #include <iostream>
 
 //Project Includes
 #include "restbed/detail/helpers/string.h"
