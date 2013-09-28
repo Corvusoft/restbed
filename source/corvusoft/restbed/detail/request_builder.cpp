@@ -21,6 +21,8 @@
  */
 
 //System Includes
+#include <regex>
+#include <vector>
 #include <sstream>
 #include <iostream> //debug
 
@@ -39,6 +41,7 @@
 using std::map;
 using std::stod;
 using std::string;
+using std::vector;
 using std::istream;
 using std::shared_ptr;
 using std::istreambuf_iterator;
@@ -96,9 +99,43 @@ namespace restbed
             m_pimpl->set_body( parse_http_body( stream ) );
         }
 
-        void RequestBuilder::parse_path_parameters( const string& definition )
+        void RequestBuilder::parse_path_parameters( const string& value )
         {
-            std::cout << "definition: " << definition << std::endl;
+            auto definitions = String::split( value, '/' );
+
+            auto path = String::split( get_path( ), '/' );
+
+            for ( vector< string >::size_type index = 0; index not_eq definitions.size( ); index++ )
+            {
+                string definition = definitions[ index ];
+
+                if ( definition.front( ) == '{' )
+                {
+                    if ( definition.back( ) == '}' )
+                    { 
+                        definition = String::trim( definition, "{" );
+                        definition = String::trim( definition, "}" ); 
+                        
+                        auto segments = String::split( definition, ':' );
+
+                        if ( segments.size( ) not_eq 2 )
+                        {
+                            //throw invalid_argument( String::empty );
+                        }
+                        
+                        definition = String::trim( segments[ 1 ] );
+
+                        std::cout << "definition: " << definition << std::endl;
+                    }
+                }
+
+                std::smatch match;
+
+                if ( std::regex_search( path[ index ], match, std::regex( definition ) ) )
+                {
+                    std::cout << "id: " << match[0] << std::endl;
+                }
+            }
         }
 
         double RequestBuilder::parse_http_version( istream& socket )
