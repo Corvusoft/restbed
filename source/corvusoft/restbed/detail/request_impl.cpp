@@ -81,24 +81,12 @@ namespace restbed
         RequestImpl RequestImpl::parse( istream& socket )
         {
             RequestImpl pimpl;
-
-            string method = parse_http_method( socket );
-            pimpl.set_method( method ); 
-
-            string path = parse_http_path( socket );
-            pimpl.set_path( path );
-
-            auto query_parameters = parse_http_query_parameters( socket );
-            pimpl.set_query_parameters( query_parameters );
-
-            double version = parse_http_version( socket );
-            pimpl.set_version( version );
-
-            auto headers = parse_http_headers( socket );
-            pimpl.set_headers( headers );
-
-            string body = parse_http_body( socket );
-            pimpl.set_body( body );
+            pimpl.set_method( parse_http_method( socket ) ); 
+            pimpl.set_path( parse_http_path( socket ) );
+            pimpl.set_query_parameters( parse_http_query_parameters( socket ) );
+            pimpl.set_version( parse_http_version( socket ) );
+            pimpl.set_headers( parse_http_headers( socket ) );
+            pimpl.set_body( parse_http_body( socket ) );
 
             return pimpl;
         }

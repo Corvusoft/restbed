@@ -50,9 +50,9 @@ using std::list;
 using std::string;
 using std::find_if;
 using std::istream;
+using std::exception;
 using std::shared_ptr;
 using std::stringstream;
-using std::runtime_error;
 using std::placeholders::_1;
 
 //Project Namespaces
@@ -115,13 +115,10 @@ namespace restbed
 
         void ServiceImpl::publish( const Resource& value )
         {
-            //when comparing... don't change user data!
-            //path = String::join( "%s/%s", m_root, value.get_path( ) );
-            //path = String::deduplicate( root, '/' );
-            //path = String::lowercase( path );
+            string path = String::format( "/%s/%s", m_root.data( ), value.get_path( ).data( ) );
 
             Resource resource( value );
-            resource.set_path( "/" + m_root + "/" + value.get_path( ) );
+            resource.set_path( path );
 
             m_resources.push_back( resource );
         }
@@ -130,7 +127,7 @@ namespace restbed
         {
             auto position = std::find( m_resources.begin( ), m_resources.end( ), value );
         
-            m_resources.erase( position ); //if async == true grab mutex first!
+            m_resources.erase( position );
         }
 
         void ServiceImpl::error_handler( const Request& request, Response& response )
@@ -146,6 +143,7 @@ namespace restbed
             //[Error 12:18:08] Headers
             //[Error 12:18:08] Url
 
+            //String::format
             //string message = "[" + LogLevel::to_string( level ) + time + "] " + format;
 
             va_list arguments;

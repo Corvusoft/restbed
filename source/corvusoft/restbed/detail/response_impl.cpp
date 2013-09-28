@@ -70,11 +70,9 @@ namespace restbed
 
         Bytes ResponseImpl::to_bytes( void ) const
         {
-            string sections = generate_status_section( );
-            sections += generate_header_section( );
-            sections += "\r\n";
+            string headers = String::format( "%s%s\r\n", generate_status_section( ).data( ), generate_header_section( ).data( ) );
 
-            Bytes bytes( sections.begin( ), sections.end( ) );
+            Bytes bytes( headers.begin( ), headers.end( ) );
             bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
 
             return bytes;
@@ -170,13 +168,7 @@ namespace restbed
 
         string ResponseImpl::generate_status_section( void ) const
         {
-            string section = "HTTP/1.1 ";
-            section += to_string( m_status_code );
-            section += " ";
-            section += StatusCode::to_string( m_status_code );
-            section += "\r\n";
-
-            return section;
+            return String::format( "HTTP/1.1 %i %s\r\n", m_status_code, StatusCode::to_string( m_status_code ).data( ) );
         }
 
         string ResponseImpl::generate_header_section( void ) const
@@ -189,7 +181,7 @@ namespace restbed
 
             for ( auto header : m_headers )
             {
-                section += header.first + ": " + header.second + "\r\n";
+                section += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
             }
 
             return section;
@@ -197,67 +189,67 @@ namespace restbed
 
         string ResponseImpl::generate_default_date_header( void ) const
         {
-            string section = String::empty;
+            string header = String::empty;
 
             if ( not has_header( "Date" ) )
             {
                 time_t time = system_clock::to_time_t( system_clock::now( ) );
 
-                section = "Date: " + string( ctime( &time ) );
-                section.erase( section.length( ) - 1 );
+                string date = ctime( &time );
+                date.erase( date.length( ) - 1 );
 
-                section += "\r\n";
+                header = String::format( "Date: %s\r\n", date.data( ) );
             }
 
-            return section;
+            return header;
         }
 
         string ResponseImpl::generate_default_server_header( void ) const
         {
-            string section = String::empty;
+            string header = String::empty;
 
             if ( not has_header( "Server" ) )
             {
-                section = "Server: Corvusoft - restbed/1.0\r\n";
+                header = "Server: Corvusoft - restbed/1.0\r\n";
             }
 
-            return section;
+            return header;
         }
         
         string ResponseImpl::generate_default_connection_header( void ) const
         {
-            string section = String::empty;
+            string header = String::empty;
 
             if ( not has_header( "Connection" ) )
             {
-                section = "Connection: close\r\n";
+                header = "Connection: close\r\n";
             }
 
-            return section;
+            return header;
         }
 
         string ResponseImpl::generate_default_content_type_header( void ) const
         {
-            string section = String::empty;
+            string header = String::empty;
 
             if ( not has_header( "Content-Type" ) )
             {
-                section = "Content-Type: application/json; charset=utf-8\r\n";
+                header = "Content-Type: application/json; charset=utf-8\r\n";
             }
 
-            return section;
+            return header;
         }
 
         string ResponseImpl::generate_default_content_length_header( void ) const
         {
-            string section = String::empty;
+            string header = String::empty;
 
             if ( not has_header( "Content-Length" ) )
             {
-                section = "Content-Length: " + to_string( m_body.size( ) ) + "\r\n";
+                header = String::format( "Content-Length: %i\r\n", m_body.size( ) );
             }
 
-            return section;
+            return header;
         }
     }
 }

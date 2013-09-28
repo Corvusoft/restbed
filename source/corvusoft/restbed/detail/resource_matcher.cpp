@@ -85,7 +85,7 @@ namespace restbed
 
                     if ( segments.size( ) not_eq 2 )
                     {
-                        throw invalid_argument( "" );
+                        throw invalid_argument( String::empty );
                     }
                     
                     definition = String::trim( segments[ 1 ] );
@@ -95,7 +95,7 @@ namespace restbed
             return regex( definition );  
         }
 
-        vector< string > parse_path_definition( const string& value ) const
+        vector< string > ResourceMatcher::parse_path_definition( const string& value ) const
         {
             return String::split( value, '/' );
         }

@@ -30,11 +30,16 @@ try
     Service service( settings );
 
     Resource resource;
-    resource.set_path( "events/{id: .*}" ); //make sure this check is also ignores case , remove space.
+    resource.set_path( "events///{id: .*}" ); //make sure this check is also ignores case , remove space.
     resource.set_header_filter( "Content-Type", "application/.*" ); //make sure this check is also ignores case.
     resource.set_method_handler( "GET", &get_handler );
 
+    std::cout << "path: " << resource.get_path( ) << std::endl;
+    //do we need deduplicate?
+
     service.publish( resource );
+
+    //String::join -> String::format
     
     service.start( );
 

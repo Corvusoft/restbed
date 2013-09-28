@@ -165,9 +165,7 @@ namespace restbed
 
                 if ( callback_address not_eq default_address )
                 {
-                    string method = handler.first;
-
-                    value += method + ", ";
+                    value += String::format( "%s, ", handler.first.data( ) );
                 }
             }
 
