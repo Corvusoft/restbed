@@ -101,6 +101,7 @@ namespace restbed
 
         void RequestBuilder::parse_path_parameters( const string& value )
         {
+            string name = String::empty;
             auto definitions = String::split( value, '/' );
 
             auto path = String::split( get_path( ), '/' );
@@ -123,9 +124,9 @@ namespace restbed
                             //throw invalid_argument( String::empty );
                         }
                         
+                        name = segments[ 0 ];
+                        
                         definition = String::trim( segments[ 1 ] );
-
-                        std::cout << "definition: " << definition << std::endl;
                     }
                 }
 
@@ -133,7 +134,7 @@ namespace restbed
 
                 if ( std::regex_search( path[ index ], match, std::regex( definition ) ) )
                 {
-                    std::cout << "id: " << match[0] << std::endl;
+                    std::cout << name << ": " << match[0] << std::endl;
                 }
             }
         }

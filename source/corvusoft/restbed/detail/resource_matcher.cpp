@@ -25,6 +25,7 @@
 #include <regex>
 #include <string>
 #include <stdexcept>
+ #include <iostream> //debug
 
 //Project Includes
 #include "restbed/request.h"
