@@ -1,11 +1,15 @@
+header {
+	padding-top: 1.5%;
+	padding-bottom: 2.5%;
+}
 header nav {
-	width: 20%;
+	width: 30%;
 	float: right;
 	padding-top: 5%;
 }
 
 header nav a {	
-	margin-right: 5%;
+	margin-right: 15%;
 	text-decoration:none;
 	color: #000;	
 }

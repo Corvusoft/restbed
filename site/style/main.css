@@ -24,7 +24,7 @@ body {
 	font-weight: normal;
 	font-style: normal;
 	text-transform: none;
-	padding: 2% 5%;
+	padding: 2% 10%;
 	background: #fff;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
@@ -48,8 +48,11 @@ body {
 
 #code-example {	
 	padding-top: 5%;
-	padding-left: 8%;
-	padding-right: 8%;
+}
+
+#code-example2 {	
+	padding-top: 5%;
+	padding-left: 10%;
 }
 
 .logo {
