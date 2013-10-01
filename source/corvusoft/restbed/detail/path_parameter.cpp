@@ -89,11 +89,11 @@ namespace restbed
                         declaration = String::trim( declaration, "{" );
                         declaration = String::trim( declaration, "}" ); 
                         
-                        auto segments = String::split( declaration, ':' ); //declaration
+                        auto segments = String::split( declaration, ':' );
 
                         if ( segments.size( ) not_eq 2 )
                         {
-                            //throw invalid_argument( String::empty );
+                            throw invalid_argument( String::empty );
                         }
                         
                         string name = String::trim( segments[ 0 ] );
@@ -106,7 +106,6 @@ namespace restbed
                         {
                             std::cout << "name: " << name << std::endl;
                             std::cout << "definition: " << pattern << std::endl;
-                            //std::cout << "id: " << match[0] << std::endl;
                         }
                     }
                 }

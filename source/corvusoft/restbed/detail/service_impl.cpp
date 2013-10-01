@@ -199,9 +199,7 @@ namespace restbed
 
                 Resource resource = resolve_resource_route( request );
 
-                //builder.parse_path_parameters( resource.get_path( ) );
                 auto parameters = PathParameter::parse( request.get_path( ), resource.get_path( ) );
-
                 //builder.set_path_parameters( parameters );
 
                 request = builder.build( );
