@@ -20,19 +20,16 @@
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _RESTBED_DETAIL_REQUEST_BUILDER_H
-#define _RESTBED_DETAIL_REQUEST_BUILDER_H 1
+#ifndef _RESTBED_DETAIL_PATH_PARAMETER_H
+#define _RESTBED_DETAIL_PATH_PARAMETER_H 1
 
 //System Includes
 #include <map>
-#include <memory>
 #include <string>
-#include <istream>
 
 //Project Includes
 
 //External Includes
-#include <asio.hpp>
 
 //System Namespaces
 
@@ -48,7 +45,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class RequestBuilder : private Request
+        class PathParameter
         {
             public:
                 //Friends
@@ -56,26 +53,16 @@ namespace restbed
                 //Definitions
 
                 //Constructors
-                RequestBuilder( void );
-                
-                RequestBuilder( const RequestBuilder& original );
-                
-                virtual ~RequestBuilder( void );
                 
                 //Functionality
-                Request build( void ) const;
-
-                void parse( std::shared_ptr< asio::ip::tcp::socket >& socket );
-                                
-                void parse_path_parameters( const std::string& definition );
+                static std::map< std::string, std::string > parse( const std::string& path, const std::string& definition );
 
                 //Getters
                 
                 //Setters
 
                 //Operators
-                RequestBuilder& operator =( const RequestBuilder& rhs );
-
+                
                 //Properties
                 
             protected:
@@ -101,29 +88,24 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                PathParameter( void ) = delete;
                 
+                PathParameter( const PathParameter& original ) = delete;
+                
+                virtual ~PathParameter( void ) = delete;
+
                 //Functionality
-                static double parse_http_version( std::istream& socket );
-
-                static std::string parse_http_path( std::istream& socket );
-
-                static std::string parse_http_body( std::istream& socket );
-                
-                static std::string parse_http_method( std::istream& socket );
-            
-                static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
-
-                static std::map< std::string, std::string > parse_http_query_parameters( std::istream& socket );
 
                 //Getters
                 
                 //Setters
 
                 //Operators
-                
+                PathParameter& operator =( const PathParameter& rhs ) = delete;
+
                 //Properties
         };
     }
 }
 
-#endif  /* _RESTBED_DETAIL_REQUEST_BUILDER_H */
+#endif  /* _RESTBED_DETAIL_PATH_PARAMETER_H */

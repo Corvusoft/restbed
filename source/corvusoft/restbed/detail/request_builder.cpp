@@ -139,6 +139,13 @@ namespace restbed
             }
         }
 
+        RequestBuilder& RequestBuilder::operator =( const RequestBuilder& rhs )
+        {
+            *m_pimpl = *rhs.m_pimpl;
+
+            return *this;
+        }
+
         double RequestBuilder::parse_http_version( istream& socket )
         {
             string version = String::empty;
