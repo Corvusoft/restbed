@@ -122,6 +122,10 @@ namespace restbed
                     }
                 }
             }
+            else
+            {
+                result = false;
+            }
 
             return result;
         }
