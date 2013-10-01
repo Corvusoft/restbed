@@ -25,6 +25,7 @@
 
 //System Includes
 #include <map>
+#include <regex>
 #include <string>
 
 //Project Includes
@@ -55,6 +56,8 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                static std::regex parse( const std::string& definition );
+
                 static std::map< std::string, std::string > parse( const std::string& path, const std::string& definition );
 
                 //Getters

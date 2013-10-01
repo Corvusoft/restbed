@@ -34,6 +34,7 @@
 #include "restbed/status_code.h"
 #include "restbed/detail/service_impl.h"
 #include "restbed/detail/helpers/string.h"
+#include "restbed/detail/path_parameter.h"
 #include "restbed/detail/request_builder.h"
 #include "restbed/detail/resource_matcher.h"
 
@@ -198,7 +199,11 @@ namespace restbed
 
                 Resource resource = resolve_resource_route( request );
 
-                builder.parse_path_parameters( resource.get_path( ) );
+                //builder.parse_path_parameters( resource.get_path( ) );
+                auto parameters = PathParameter::parse( request.get_path( ), resource.get_path( ) );
+
+                //builder.set_path_parameters( parameters );
+
                 request = builder.build( );
 
                 authentication_handler( request, response );

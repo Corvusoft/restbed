@@ -35,7 +35,7 @@ try
     Service service( settings );
 
     Resource resource;
-    resource.set_path( "events/{type: [a-z]*}/{id: [0-9]*}" ); //make sure this check is also ignores case , remove space. also check for valid regex else log warning!
+    resource.set_path( "events/{type: [a-z]*}/{id: [0-9]*}" ); //make sure this check is also ignores case , remove space. also check for valid regex
     resource.set_header_filter( "Content-Type", "application/.*" ); //make sure this check is also ignores case.
     resource.set_method_handler( "GET", &get_handler );
 

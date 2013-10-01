@@ -99,46 +99,6 @@ namespace restbed
             m_pimpl->set_body( parse_http_body( stream ) );
         }
 
-        void RequestBuilder::parse_path_parameters( const string& value )
-        {
-            string name = String::empty;
-            auto definitions = String::split( value, '/' );
-
-            auto path = String::split( get_path( ), '/' );
-
-            for ( vector< string >::size_type index = 0; index not_eq definitions.size( ); index++ )
-            {
-                string definition = definitions[ index ];
-
-                if ( definition.front( ) == '{' )
-                {
-                    if ( definition.back( ) == '}' )
-                    { 
-                        definition = String::trim( definition, "{" );
-                        definition = String::trim( definition, "}" ); 
-                        
-                        auto segments = String::split( definition, ':' );
-
-                        if ( segments.size( ) not_eq 2 )
-                        {
-                            //throw invalid_argument( String::empty );
-                        }
-                        
-                        name = segments[ 0 ];
-                        
-                        definition = String::trim( segments[ 1 ] );
-                    }
-                }
-
-                std::smatch match;
-
-                if ( std::regex_search( path[ index ], match, std::regex( definition ) ) )
-                {
-                    std::cout << name << ": " << match[0] << std::endl;
-                }
-            }
-        }
-
         RequestBuilder& RequestBuilder::operator =( const RequestBuilder& rhs )
         {
             *m_pimpl = *rhs.m_pimpl;

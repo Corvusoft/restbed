@@ -21,9 +21,9 @@
  */
 
 //System Includes
-#include <regex>
 #include <vector>
 #include <iostream> //debug
+#include <stdexcept>
 
 //Project Includes
 #include "restbed/detail/path_parameter.h"
@@ -33,8 +33,10 @@
 
 //System Namespaces
 using std::map;
+using std::regex;
 using std::string;
 using std::vector;
+using std::invalid_argument;
 
 //Project Namespaces
 using restbed::detail::helpers::String;
@@ -45,43 +47,72 @@ namespace restbed
 {
     namespace detail
     {
+        regex PathParameter::parse( const string& definition )
+        {
+            string declaration = definition;
+
+            if ( declaration.front( ) == '{' )
+            {
+                if ( declaration.back( ) == '}' )
+                { 
+                    declaration = String::trim( declaration, "{" );
+                    declaration = String::trim( declaration, "}" ); 
+                    
+                    auto segments = String::split( declaration, ':' );
+
+                    if ( segments.size( ) not_eq 2 )
+                    {
+                        throw invalid_argument( String::empty );
+                    }
+                    
+                    declaration = String::trim( segments[ 1 ] );
+                }
+            }
+
+            return regex( declaration );  
+        }
+
         map< string, string > PathParameter::parse( const string& path, const string& definition )
         {
             auto definitions = String::split( definition, '/' );
 
-            auto paths = String::split( get_path( ), '/' );
+            auto paths = String::split( path, '/' );
 
             for ( vector< string >::size_type index = 0; index not_eq definitions.size( ); index++ )
             {
-                string def = definitions[ index ];
+                string declaration = definitions[ index ];
 
-                if ( def.front( ) == '{' )
+                if ( declaration.front( ) == '{' )
                 {
-                    if ( def.back( ) == '}' )
+                    if ( declaration.back( ) == '}' )
                     { 
-                        def = String::trim( def, "{" );
-                        def = String::trim( def, "}" ); 
+                        declaration = String::trim( declaration, "{" );
+                        declaration = String::trim( declaration, "}" ); 
                         
-                        auto segments = String::split( def, ':' ); //declaration
+                        auto segments = String::split( declaration, ':' ); //declaration
 
                         if ( segments.size( ) not_eq 2 )
                         {
                             //throw invalid_argument( String::empty );
                         }
                         
-                        def = String::trim( segments[ 1 ] );
+                        string name = String::trim( segments[ 0 ] );
+                        string pattern = String::trim( segments[ 1 ] );
+                        
 
-                        std::cout << "definition: " << def << std::endl;
+                        std::smatch match;
+
+                        if ( std::regex_search( paths[ index ], match, std::regex( pattern ) ) )
+                        {
+                            std::cout << "name: " << name << std::endl;
+                            std::cout << "definition: " << pattern << std::endl;
+                            //std::cout << "id: " << match[0] << std::endl;
+                        }
                     }
                 }
-
-                std::smatch match;
-
-                if ( std::regex_search( paths[ index ], match, std::regex( def ) ) )
-                {
-                    std::cout << "id: " << match[0] << std::endl;
-                }
             }
+
+            return map< string, string >( );
         }
     }
 }

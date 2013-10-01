@@ -66,8 +66,6 @@ namespace restbed
                 Request build( void ) const;
 
                 void parse( std::shared_ptr< asio::ip::tcp::socket >& socket );
-                                
-                void parse_path_parameters( const std::string& definition );
 
                 //Getters
                 

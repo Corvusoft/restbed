@@ -31,6 +31,7 @@
 #include "restbed/request.h"
 #include "restbed/resource.h"
 #include "restbed/detail/helpers/string.h"
+#include "restbed/detail/path_parameter.h"
 #include "restbed/detail/resource_matcher.h"
 
 //External Includes
@@ -71,60 +72,22 @@ namespace restbed
             return compare_path( m_request, resource ) and compare_headers( m_request, resource );
         }
 
-        regex ResourceMatcher::parse_filter_definition( const string& value ) const
-        {
-            string definition = value;
-
-            if ( definition.front( ) == '{' )
-            {
-                if ( definition.back( ) == '}' )
-                { 
-                    definition = String::trim( definition, "{" );
-                    definition = String::trim( definition, "}" ); 
-                    
-                    auto segments = String::split( definition, ':' );
-
-                    if ( segments.size( ) not_eq 2 )
-                    {
-                        throw invalid_argument( String::empty );
-                    }
-                    
-                    definition = String::trim( segments[ 1 ] );
-                }
-            }
-
-            return regex( definition );  
-        }
-
-        vector< string > ResourceMatcher::parse_path_definition( const string& value ) const
-        {
-            return String::split( value, '/' );
-        }
-
         bool ResourceMatcher::compare_path( const Request& request, const Resource& resource ) const
         {
-            bool result = true;
-
-            auto path_filters = parse_path_definition( resource.get_path( ) );
-
             auto path_segments = String::split( request.get_path( ), '/' );
+            auto path_filters = String::split( resource.get_path( ), '/' );
 
-            if ( path_segments.size( ) == path_filters.size( ) )
+            bool result = ( path_segments.size( ) == path_filters.size( ) );
+
+            for ( vector< string >::size_type index = 0; index not_eq path_filters.size( ); index++ )
             {
-                for ( vector< string >::size_type index = 0; index not_eq path_filters.size( ); index++ )
+                regex pattern = PathParameter::parse( path_filters[ index ] );
+
+                if ( not regex_match( path_segments[ index ], pattern ) )
                 {
-                    regex pattern = parse_filter_definition( path_filters[ index ] );
-
-                    if ( not regex_match( path_segments[ index ], pattern ) )
-                    {
-                        result = false;
-                        break;
-                    }
+                    result = false;
+                    break;
                 }
-            }
-            else
-            {
-                result = false;
             }
 
             return result;
@@ -140,11 +103,11 @@ namespace restbed
 
                 if ( request.has_header( name ) )
                 {
-                    string header = request.get_header( name );
+                    string value = request.get_header( name );
 
                     regex pattern = regex( filter.second );
 
-                    if ( not regex_match( header, pattern ) )
+                    if ( not regex_match( value, pattern ) )
                     {
                         result = false;
                         break;

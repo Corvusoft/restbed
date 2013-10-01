@@ -97,10 +97,6 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                std::regex parse_filter_definition( const std::string& value ) const;
-
-                std::vector< std::string > parse_path_definition( const std::string& value ) const;
-
                 bool compare_path( const Request& request, const Resource& resource ) const;
 
                 bool compare_headers( const Request& request, const Resource& resource ) const;
