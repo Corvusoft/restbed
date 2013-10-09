@@ -126,13 +126,14 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
-                Response invoke_method_handler( const Request& request );
+                void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
+
+                std::string build_log_label( const LogLevel level ) const;
 
                 Resource resolve_resource_route( const Request& request ) const;
 
                 Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
 
-                void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
 
                 //Getters
                 

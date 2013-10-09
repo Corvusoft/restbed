@@ -46,8 +46,7 @@ namespace restbed
         FATAL    = 0x0000200,
         ERROR    = 0x0001000,
         WARNING  = 0x0008000,
-        SECURITY = 0x0040000,
-        VERBOSE  = 0xfffffff
+        SECURITY = 0x0040000
     };
 }
 

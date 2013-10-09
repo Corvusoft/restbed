@@ -21,6 +21,7 @@
  */
 
 //System Includes
+#include <ctime>
 #include <stdexcept>
 #include <functional>
 
@@ -130,24 +131,20 @@ namespace restbed
 
         void ServiceImpl::error_handler( const Request& request, Response& response )
         {
-            log_handler( LogLevel::ERROR, "Failed to process request." );
+            log_handler( LogLevel::ERROR, "Internal Server Error" );
 
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
         }
 
         void ServiceImpl::log_handler(  const LogLevel level, const string& format, ... )
         {
-            //[Error 12:18:08] Failed to process request.
-            //[Error 12:18:08] Headers
-            //[Error 12:18:08] Url
-
-            //String::format
-            //string message = "[" + LogLevel::to_string( level ) + time + "] " + format;
+            string label = build_log_label( level );
 
             va_list arguments;
             
             va_start( arguments, format );
-            
+
+            fprintf( stderr, "%s", label.data( ) );
             vfprintf( stderr, format.data( ), arguments );
             
             va_end( arguments );
@@ -158,6 +155,37 @@ namespace restbed
             response.set_status_code( StatusCode::OK );
         }
 
+        bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
+        {
+            return m_port < rhs.m_port;
+        }
+        
+        bool ServiceImpl::operator >( const ServiceImpl& rhs ) const
+        {
+            return m_port > rhs.m_port;
+        }
+        
+        bool ServiceImpl::operator ==( const ServiceImpl& rhs ) const
+        {
+            return m_port == rhs.m_port;
+        }
+        
+        bool ServiceImpl::operator !=( const ServiceImpl& rhs ) const
+        {
+            return m_port not_eq rhs.m_port;
+        }
+
+        ServiceImpl& ServiceImpl::operator =( const ServiceImpl& rhs )
+        {
+            m_port = rhs.m_port;
+
+            m_root = rhs.m_root;
+
+            m_resources = rhs.m_resources;
+
+            return *this;
+        }
+
         void ServiceImpl::listen( void )
         {
             shared_ptr< tcp::socket > socket( new tcp::socket( m_acceptor->get_io_service( ) ) );
@@ -165,22 +193,6 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
 
-        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
-        {
-            Method method = request.get_method( );  
-
-            auto handle = resource.get_method_handler( method );
-                
-            return handle( request );
-        }
-
-        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
-        {
-            auto resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
-
-            return *resource;
-        }
-           
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         {
             Request request;
@@ -225,35 +237,56 @@ namespace restbed
             listen( );
         }
 
-        bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
+        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
         {
-            return m_port < rhs.m_port;
-        }
-        
-        bool ServiceImpl::operator >( const ServiceImpl& rhs ) const
-        {
-            return m_port > rhs.m_port;
-        }
-        
-        bool ServiceImpl::operator ==( const ServiceImpl& rhs ) const
-        {
-            return m_port == rhs.m_port;
-        }
-        
-        bool ServiceImpl::operator !=( const ServiceImpl& rhs ) const
-        {
-            return m_port not_eq rhs.m_port;
+            auto resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
+
+            return *resource;
         }
 
-        ServiceImpl& ServiceImpl::operator =( const ServiceImpl& rhs )
+        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
         {
-            m_port = rhs.m_port;
+            Method method = request.get_method( );  
 
-            m_root = rhs.m_root;
+            auto handle = resource.get_method_handler( method );
+                
+            return handle( request );
+        }
 
-            m_resources = rhs.m_resources;
+        string ServiceImpl::build_log_label( const LogLevel level ) const
+        {
+            string tag = String::empty;
 
-            return *this;
+            switch ( level )
+            {
+                case INFO:
+                    tag = "INFO";
+                    break;
+                case DEBUG:
+                    tag = "DEBUG";
+                    break;
+                case FATAL:
+                    tag = "FATAL";
+                    break;
+                case ERROR:
+                    tag = "ERROR";
+                    break;
+                case WARNING:
+                    tag = "WARNING";
+                    break;
+                case SECURITY:
+                    tag = "SECURITY";
+                    break;
+                default:
+                    tag = "UNKNOWN";
+            }
+
+            time_t timestamp;
+            time( &timestamp );
+
+            string label = String::format( "[%s %s] ", "", asctime( localtime( &timestamp ) ) );
+    
+            return label;
         }
     }
 }
