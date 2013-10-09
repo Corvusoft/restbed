@@ -21,7 +21,6 @@
  */
 
 //System Includes
-#include <iostream> //debug
 
 //Project Includes
 #include "restbed/method.h"
@@ -177,18 +176,45 @@ namespace restbed
             return value;   
         }
 
+        string ResourceImpl::rebuild_path( const Request& request )
+        {
+            string query = "?";
+
+            for ( auto parameter : request.get_query_parameters( ) )
+            {
+                query += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+            }
+
+            query = String::trim( query, "&" );
+
+            string path = request.get_path( );
+            path += ( query.length( ) > 1 ) ? query : String::empty;
+
+            return path;
+        }
+
+        string ResourceImpl::rebuild_headers( const Request& request )
+        {
+            string headers = String::empty;
+
+            for ( auto header : request.get_headers( ) )
+            {
+                headers += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            }
+
+            return headers;
+        }
+
         Response ResourceImpl::default_options_handler( const Request& )
         {
             Response response;
             response.set_status_code( StatusCode::OK );
             response.set_header( "Allow", generate_allow_header_value( ) );
-
-            std::cout << "options handler: allow: " << generate_allow_header_value() << std::endl;
             
             return response;
         }
 
-        Response ResourceImpl::default_handler( const Request& ) //not_implemented_handler //make public!
+        Response ResourceImpl::default_handler( const Request& )
         {
             Response response;
             response.set_status_code( StatusCode::NOT_IMPLEMENTED );
@@ -196,14 +222,18 @@ namespace restbed
             return response;
         }
         
-        Response ResourceImpl::default_trace_handler( const Request& )
+        Response ResourceImpl::default_trace_handler( const Request& request )
         {
+            string path = rebuild_path( request );
+
+            string headers = rebuild_headers( request );
+
+            string body = String::format( "TRACE %s HTTP/1.1\r\n%s", path.data( ), headers.data( ) );
+
             Response response;
+            response.set_body( body );
             response.set_status_code( StatusCode::OK );
             response.set_header( "Content-Type", "message/http" );
-
-            //string body = "TRACE <res> HTTP/<ver>" + \r\n + "Host: this.machine.com"
-            //response.set_body( request.get_body( ) );
             
             return response;
         }

@@ -21,7 +21,6 @@
  */
 
 //System Includes
-#include <sstream>
 
 //Project Includes
 #include "restbed/detail/helpers/string.h"
@@ -31,7 +30,6 @@
 //System Namespaces
 using std::string;
 using std::vector;
-using std::stringstream;
 
 //Project Namespaces
 

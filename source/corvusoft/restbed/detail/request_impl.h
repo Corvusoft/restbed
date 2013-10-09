@@ -63,8 +63,6 @@ namespace restbed
                 
                 //Functionality
                 bool has_header( const std::string& name ) const;
-                //has_query_parameter
-                //has_path_parameter
                 
                 //Getters
                 double get_version( void ) const;

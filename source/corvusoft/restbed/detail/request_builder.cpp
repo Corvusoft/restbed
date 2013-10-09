@@ -24,12 +24,11 @@
 #include <regex>
 #include <vector>
 #include <sstream>
-#include <iostream> //debug
 
 //Project Includes
+#include "restbed/request.h"
 #include "restbed/status_code.h"
 #include "restbed/detail/helpers/map.h"
-#include "restbed/request.h"
 #include "restbed/detail/request_impl.h"
 #include "restbed/detail/request_builder.h"
 #include "restbed/detail/helpers/string.h"
