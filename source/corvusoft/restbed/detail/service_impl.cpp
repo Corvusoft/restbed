@@ -284,7 +284,7 @@ namespace restbed
             time_t timestamp;
             time( &timestamp );
 
-            string label = String::format( "[%s %s] ", label.data( ), asctime( localtime( &timestamp ) ) );
+            string label = String::format( "[%s %s] ", tag.data( ), asctime( localtime( &timestamp ) ) );
     
             return label;
         }
