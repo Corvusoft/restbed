@@ -27,6 +27,7 @@
 #include <map>
 #include <regex>
 #include <string>
+#include <utility>
 
 //Project Includes
 
@@ -98,6 +99,7 @@ namespace restbed
                 virtual ~PathParameter( void ) = delete;
 
                 //Functionality
+                static std::pair< std::string, std::string > parse_declaration( const std::string& declaration );
 
                 //Getters
                 

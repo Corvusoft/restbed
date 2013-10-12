@@ -22,7 +22,6 @@
 
 //System Includes
 #include <vector>
-#include <iostream> //debug
 #include <stdexcept>
 
 //Project Includes
@@ -33,9 +32,13 @@
 
 //System Namespaces
 using std::map;
+using std::pair;
 using std::regex;
 using std::string;
 using std::vector;
+using std::smatch;
+using std::make_pair;
+using std::regex_search;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -47,71 +50,62 @@ namespace restbed
 {
     namespace detail
     {
-        regex PathParameter::parse( const string& definition )
+        regex PathParameter::parse( const string& declaration )
         {
-            string declaration = definition;
+            auto definition = parse_declaration( declaration );
 
-            if ( declaration.front( ) == '{' )
+            return regex( definition.second );  
+        }
+
+        map< string, string > PathParameter::parse( const string& path, const string& declaration )
+        {
+            map< string, string > parameters;
+
+            auto declarations = String::split( declaration, '/' );
+
+            auto paths = String::split( path, '/' );
+
+            for ( vector< string >::size_type index = 0; index not_eq declarations.size( ); index++ )
             {
-                if ( declaration.back( ) == '}' )
+                auto definition = parse_declaration( declarations[ index ] );  
+
+                smatch match;
+
+                if ( not definition.first.empty( ) and regex_search( paths[ index ], match, regex( definition.second ) ) )
+                {
+                    parameters[ definition.first ] = definition.second;
+                }
+            }
+
+            return parameters;
+        }
+
+        pair< string, string > PathParameter::parse_declaration( const string& declaration )
+        {
+            string name = String::empty;
+            string pattern = ".*";
+            string definition = declaration;
+
+            if ( definition.front( ) == '{' )
+            {
+                if ( definition.back( ) == '}' )
                 { 
-                    declaration = String::trim( declaration, "{" );
-                    declaration = String::trim( declaration, "}" ); 
+                    definition = String::trim( definition, "{" );
+                    definition = String::trim( definition, "}" ); 
                     
-                    auto segments = String::split( declaration, ':' );
+                    auto segments = String::split( definition, ':' );
 
                     if ( segments.size( ) not_eq 2 )
                     {
                         throw invalid_argument( String::empty );
                     }
                     
-                    declaration = String::trim( segments[ 1 ] );
+                    name = String::trim( segments[ 0 ] );
+                    pattern = String::trim( segments[ 1 ] );
                 }
             }
 
-            return regex( declaration );  
-        }
-
-        map< string, string > PathParameter::parse( const string& path, const string& definition )
-        {
-            auto definitions = String::split( definition, '/' );
-
-            auto paths = String::split( path, '/' );
-
-            for ( vector< string >::size_type index = 0; index not_eq definitions.size( ); index++ )
-            {
-                string declaration = definitions[ index ];
-
-                if ( declaration.front( ) == '{' )
-                {
-                    if ( declaration.back( ) == '}' )
-                    { 
-                        declaration = String::trim( declaration, "{" );
-                        declaration = String::trim( declaration, "}" ); 
-                        
-                        auto segments = String::split( declaration, ':' );
-
-                        if ( segments.size( ) not_eq 2 )
-                        {
-                            throw invalid_argument( String::empty );
-                        }
-                        
-                        string name = String::trim( segments[ 0 ] );
-                        string pattern = String::trim( segments[ 1 ] );
-                        
-
-                        std::smatch match;
-
-                        if ( std::regex_search( paths[ index ], match, std::regex( pattern ) ) )
-                        {
-                            std::cout << "name: " << name << std::endl;
-                            std::cout << "definition: " << pattern << std::endl;
-                        }
-                    }
-                }
-            }
-
-            return map< string, string >( );
+            return make_pair( name, pattern );
         }
     }
 }
