@@ -73,7 +73,7 @@ namespace restbed
 
                 if ( not definition.first.empty( ) and regex_search( paths[ index ], match, regex( definition.second ) ) )
                 {
-                    parameters[ definition.first ] = definition.second;
+                    parameters[ definition.first ] = match.str( 0 );
                 }
             }
 
