@@ -181,19 +181,19 @@ namespace restbed
             m_method = value;
         }
         
-        void RequestImpl::set_headers( const map< string, string >& value )
+        void RequestImpl::set_headers( const map< string, string >& values )
         {
-            m_headers = value;
+            m_headers = values;
         }
 
-        void RequestImpl::set_path_parameter( const string& name, const string& value )
+        void RequestImpl::set_path_parameters( const map< string, string >& values )
         {
-            m_path_parameters[ name ] = value;
+            m_path_parameters = values;
         }
         
-        void RequestImpl::set_query_parameters( const map< string, string >& value )
+        void RequestImpl::set_query_parameters( const map< string, string >& values )
         {
-            m_query_parameters = value;
+            m_query_parameters = values;
         }
 
         bool RequestImpl::operator <( const RequestImpl& rhs ) const

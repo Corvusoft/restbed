@@ -98,6 +98,11 @@ namespace restbed
             m_pimpl->set_body( parse_http_body( stream ) );
         }
 
+        void RequestBuilder::set_path_parameters( const map< string, string >& parameters )
+        {
+            m_pimpl->set_path_parameters( parameters );
+        }
+
         RequestBuilder& RequestBuilder::operator =( const RequestBuilder& rhs )
         {
             *m_pimpl = *rhs.m_pimpl;

@@ -11,6 +11,12 @@ Response get_handler( const Request& request )
     response.set_status_code( StatusCode::CREATED );
 
     std::cout << "hello from get handler" << std::endl;
+
+    for ( auto parameter : request.get_path_parameters( ) )
+    {
+        std::cout << "parameter name: " << parameter.first << std::endl;
+        std::cout << "parameter value: " << parameter.second << std::endl;
+    }
     
     return response;
 }

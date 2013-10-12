@@ -70,6 +70,7 @@ namespace restbed
                 //Getters
                 
                 //Setters
+                void set_path_parameters( const std::map< std::string, std::string >& parameters );
 
                 //Operators
                 RequestBuilder& operator =( const RequestBuilder& rhs );

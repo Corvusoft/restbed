@@ -98,11 +98,11 @@ namespace restbed
                 
                 void set_method( const std::string& value );
                 
-                void set_headers( const std::map< std::string, std::string >& value );
+                void set_headers( const std::map< std::string, std::string >& values );
                 
-                void set_path_parameter( const std::string& name, const std::string& value );
+                void set_path_parameters( const std::map< std::string, std::string >& values );
 
-                void set_query_parameters( const std::map< std::string, std::string >& value );
+                void set_query_parameters( const std::map< std::string, std::string >& values );
 
                 //Operators
                 bool operator <( const RequestImpl& rhs ) const;
