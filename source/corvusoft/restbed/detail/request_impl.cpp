@@ -82,6 +82,16 @@ namespace restbed
         {
             return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
+
+        bool RequestImpl::has_path_parameter( const string& name ) const
+        {
+            return ( Map::find_key_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
+        }
+
+        bool RequestImpl::has_query_parameter( const string& name ) const
+        {
+            return ( Map::find_key_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
+        }
         
         double RequestImpl::get_version( void ) const
         {

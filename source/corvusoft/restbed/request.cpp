@@ -61,6 +61,16 @@ namespace restbed
         return m_pimpl->has_header( name );
     }
 
+    bool Request::has_path_parameter( const string& name ) const
+    {
+        return m_pimpl->has_path_parameter( name );
+    }
+
+    bool Request::has_query_parameter( const string& name ) const
+    {
+        return m_pimpl->has_query_parameter( name );
+    }
+
     Method Request::get_method( void ) const
     {
         return m_pimpl->get_method( );

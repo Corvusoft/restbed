@@ -66,6 +66,10 @@ namespace restbed
             //Functionality
             bool has_header( const std::string& name ) const;
 
+            bool has_path_parameter( const std::string& name ) const;
+
+            bool has_query_parameter( const std::string& name ) const;
+
             //Getters
             Method get_method( void ) const;
 
