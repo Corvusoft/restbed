@@ -11,8 +11,6 @@
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-        <link rel="stylesheet" href="../style/shCore.css"/>
-        <link rel="stylesheet" href="../style/shThemeDefault.css"/>
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
 
         <link rel="stylesheet" href="../style/main.css">
@@ -24,90 +22,65 @@
         <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
         <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
         <script src="../script/modal.js"></script>
-
-        <style>        
-.comment { color: #999999; font-style: italic; }
-.pre { color: #000099; }
-.string { color: #009900; }
-.char { color: #009900; }
-.float { color: #996600; }
-.int { color: #999900; }
-.bool { color: #000000; font-weight: bold; }
-.type { color: #FF6633; }
-.flow { color: #FF0000; }
-.keyword { color: #990000; }
-.operator { color: #663300; font-weight: bold; }
-.operator { color: #663300; font-weight: bold; }
-
-pre {
- white-space: pre-wrap;       /* css-3 */
- white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
- white-space: -pre-wrap;      /* Opera 4-6 */
- white-space: -o-pre-wrap;    /* Opera 7 */
- word-wrap: break-word;       /* Internet Explorer 5.5+ */
-}
-        </style>
     </head>
     <body>
         <header>
-            <img class="logo" src="../image/logo.png"/>
+            <img src="../image/logo.png"/>
             <nav>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">API</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/src">Source</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">Wiki</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/issues">Issues</a>
+                <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">Examples</a>
+                <a href="issues.html">Issues</a>
             </nav> 
-            <br clear="both" />       
-        </header>
-        <hr>    
-        <section class="indent-1">
-            <section>
-                <div id="code-example">                    
-                    <img src="../image/example.png" />                    
-                </div>
-            </section>
-            <section>
-                <div id="code-example2">
-                    <div>                       
-                        <div>
-                            Developing RESTful Web services that seamlessly support 
-                            exposing your data in a variety of representations while abstracting
-                            away the low-level details of the HTTP protocol is not an easy task
-                            without a good framework.  Restbed is an attempt to simplify the development
-                            of such systems within the C++ development arena. It offers a clean, portable
-                            interface to get RESTful Web Services up and running within a matter of minutes.
-                        </div>
-                        <br />
-                        <h1>
-                            Features
-                        </h1>                        
-                        <ul>
-                            <li>HTTP Method, Path, and Header request filteration</li>
-                            <li>Pattern Matching Path Parameters</li>
-                            <li>Latest C++11 Feature Support</li>
-                            <li>Linux, BSD, Mac OSX, and Windows platform support</li>
-                            <li>Two way SSL certificate authentication</li>
-                            <li>Designed with developer customisation in mind</li>
-                            <li>Built in logging functionality</li>
-                            <li>Thread Safety first</li>
-                        </ul>
+            <br clear="both" />
+            <hr>
+        </header>            
+        <section style="height: 1px;">
+            <div style="float:left;width:50%;">
+                <p>
+                    Developing RESTful Web services that seamlessly support 
+                    exposing your data in a variety of representations while abstracting
+                    away the low-level details of the HTTP protocol is not an easy task
+                    without a good framework.  Restbed is an attempt to simplify the development
+                    of such systems within the C++ development arena. It offers a clean, portable
+                    interface to get RESTful Web Services up and running within a matter of minutes.
+                </p>
+                <h1>
+                    Features
+                </h1>                        
+                <ul>
+                    <li>HTTP Method filteration</li>
+                    <li>Path Parameters</li>
+                    <li>Header request fliteration</li>
+                    <li>Latest C++11 Feature Support</li>
+                    <li>Linux, BSD, Mac OSX, and Windows platform support</li>
+                    <li>Two way SSL certificate authentication</li>
+                    <li>Designed with developer customisation in mind</li>
+                    <li>Built in logging functionality</li>
+                    <li>Thread Safe</li>
+                </ul>
 
-                        <div class="download">
-                            <a href="https://bitbucket.org/bcrowhurst/restbed/downloads">
-                                DOWNLOAD
-                                <span>
-                                    Version 1.0
-                                </span>
-                            </a>
-                        </div>
-                        <div class="license-warning">
-                            <span>
-                                per developer <a href="#" id="main-license">license</a> required for commercial use.
-                            </span>
-                        </div>
+                <div class="download">
+                    <a href="https://bitbucket.org/bcrowhurst/restbed/downloads">
+                        DOWNLOAD
+                        <span>
+                            Version 1.0
+                        </span>
+                    </a>
                 </div>
-            </section>
+
+                <div class="license-warning">
+                    <span>
+                        per developer <a href="#" id="main-license">license</a> required for commercial use.
+                    </span>
+                </div>
+            </div>
+
+            <div style="float:right;width:50%;height:50%">
+                <img style="float:right;height:auto;width:auto;max-width:100%;" src="../image/example.png" />
+            </div>
         </section>
+
         <section id="dialog-confirm" title="SOFTWARE LICENSE AGREEMENT" style="display: none">
             <pre>
 Corvusoft ltd
@@ -242,7 +215,7 @@ Wt Software License Agreement v2.2 Page 3 / 3
             </pre>
         </section>
         <footer>
-            
+            &copy; All rights reserved Corvusoft
         </footer>
     </body>
 </html>
