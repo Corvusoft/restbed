@@ -1,17 +1,18 @@
 header {
-	padding-top: 1.5%;
-	padding-bottom: 2.5%;
-}
-header nav {
-	width: 30%;
-	float: right;
-	padding-top: 5%;
+	padding-top: 1.5%;	
 }
 
-header nav a {	
-	margin-right: 15%;
+header nav {
+	width: 50%;	
+	float: right;
+	font-size: 13pt;
+}
+
+header nav a {
+	float: right;	
+	margin: 5% 0 5% 5%;
 	text-decoration:none;
-	color: #000;	
+	color: #6d6e70;	
 }
 
 header nav a:hover {

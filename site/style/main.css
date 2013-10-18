@@ -24,8 +24,7 @@ body {
 	font-weight: normal;
 	font-style: normal;
 	text-transform: none;
-	padding: 2% 10%;
-	background: #fff;
+	padding: 2% 10% 0 10%;
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -36,28 +35,10 @@ body {
     user-drag: none;
 }
 
-.indent-1 {
-    float: left;
-    width:100%;
+p {
+	margin-bottom: 5.5%;
 }
 
-.indent-1 section {
-	float: left;
-	width: 50%;
-}
-
-#code-example {	
-	padding-top: 5%;
-}
-
-#code-example2 {	
-	padding-top: 5%;
-	padding-left: 10%;
-}
-
-.logo {
-	float: left;
-}
 
 ul {
 	list-style-type: square;
@@ -128,12 +109,12 @@ li {
 
 .license-warning {
 	margin-left: 15%;
-	margin-top: 9%;
+	margin-top: 9%;	
 	background: url(../image/warning.png) no-repeat;
 }
 
 .license-warning span {
-	line-height: 16px;
+	line-height: 48px;
 	font-size: 8pt;
 	margin-left: 20px
 }                        

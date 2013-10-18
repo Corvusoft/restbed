@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Corvusoft - Restbed</title>
+        <meta charset="utf-8">  
+        <meta name="author" content="Corvusoft - Software Solutions"/>      
+        <meta name="copyright" content="&copy;" />
+        <meta name="description" content="C++ RESTful Web Service Framework"/>
+        <meta name="keywords" content="C++, RESTful, REST, Web Service, Embedded, Open Source, OpenSource, C/C++"/>
+        <meta name="viewport" content="width=device-width"/>
+        <link rel="shortcut icon" href="../image/favicon.ico" type="image/x-icon" />
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css"/>
+
+        <link rel="stylesheet" href="../style/main.css">
+        <link rel="stylesheet" href="../style/rule.css">
+        <link rel="stylesheet" href="../style/modal.css">
+        <link rel="stylesheet" href="../style/header.css">
+        <link rel="stylesheet" href="../style/footer.css">
+
+        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+        <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <script src="../script/modal.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#index a').next('div').siblings('div').slideUp();
+
+                $('#index a').click(function(e) {
+                    //Close all <div> but the <div> right after the clicked <a>
+                    $(e.target).next('div').siblings('div').slideUp();
+                    $(e.target).siblings('a').css('color', '#6d6e70');
+                    //Toggle open/close on the <div> after the <a>, opening it if not open.
+                    $(e.target).next('div').slideToggle();
+                    $(e.target).css('color', '#00979C');
+                });
+            });
+        </script>
+
+        <style>
+            #index a {
+                display: block;                
+                color: #6d6e70;
+                text-decoration: none;
+            }
+
+            #index a:hover {
+                color: rgb(0,151,156);  
+            }
+
+            .description {
+                font-size: 10pt;
+                padding-left: 3%;
+            }
+
+            .description.a {
+                color: rgb(0,151,156);
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <a href="index.html">
+                <img src="../image/logo.png"/>
+            </a>
+            <nav>
+                <a href="issues.html">Issues</a>
+                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Build</a>
+                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Features</a>
+                <a href="api.html">API</a>
+            </nav> 
+            <br clear="both" />
+            <hr>
+        </header>            
+        <section>
+        	<div id="index" style="float:left;width:25%;border-right:1px solid rgb(0,151,156);">                
+                    <a href="#">
+                        Request
+                    </a>
+                    <div class="description">
+                        <a href="#">
+                            constructor
+                        </a>
+                        <a href="#">
+                            destructor
+                        </a>
+                        <a href="#">
+                            has_header
+                        </a>
+                        <a href="#">
+                            has_path_parameter
+                        </a>
+                        <a href="#">
+                            has_query_parameter
+                        </a>
+                        <a href="#">
+                            get_method
+                        </a>
+                        <a href="#">
+                            get_version
+                        </a>
+                        <a href="#">
+                            get_path
+                        </a>
+                        <a href="#">
+                            get_body
+                        </a>
+                        <a href="#">
+                            get_header
+                        </a>
+                        <a href="#">
+                            get_headers
+                        </a>
+                        <a href="#">
+                            get_query_parameter
+                        </a>
+                        <a href="#">
+                            get_query_parameters
+                        </a>
+                        <a href="#">
+                            get_path_parameter
+                        </a>
+                        <a href="#">
+                            get_path_parameters
+                        </a>
+                        <a href="#">
+                            operator =
+                        </a>
+                        <a href="#">
+                            operator <
+                        </a>
+                        <a href="#">
+                            operator >
+                        </a>
+                        <a href="#">
+                            operator ==
+                        </a>
+                        <a href="#">
+                            operator !=
+                        </a>                        
+                    </div>
+                    <a href="#">
+                        Response
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        Method
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        Resource
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        Service
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        Settings
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        StatusCode
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        Byte
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        Bytes
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>
+                    <a href="#">
+                        LogLevel
+                    </a>
+                    <div class="description">
+                        <p> hello </p>
+                    </div>                
+        	</div>
+        	<div style="float:right;width:70%;height:50%">
+                <img style="height:auto;width:auto;max-width:100%;" src="../image/uml.png" />
+            </div>   
+        </section>
+        <footer>
+            &copy; All rights reserved Corvusoft
+            <br/>
+            <a style="float: right" href="https://twitter.com/Corvusoft" class="twitter-follow-button" data-show-count="false">Follow @Corvusoft</a>
+            <script>
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+            </script>
+        </footer>
+    </body>
+</html>

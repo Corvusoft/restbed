@@ -8,6 +8,7 @@
         <meta name="description" content="C++ RESTful Web Service Framework"/>
         <meta name="keywords" content="C++, RESTful, REST, Web Service, Embedded, Open Source, OpenSource, C/C++"/>
         <meta name="viewport" content="width=device-width"/>
+        <link rel="shortcut icon" href="../image/favicon.ico" type="image/x-icon" />
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
@@ -24,25 +25,44 @@
         <script src="../script/modal.js"></script>
 
         <style>
-        	section {
-        		font-size: 16pt;
-        	}
+            .label-value-pair {
+                display:block;
+                width: 50%;
+                
+            }
 
-        	input, textarea, select, a {
+            .label-value-pair label {
+
+            }
+
+            .label-value-pair input, select {
+                 
+            }
+         
+            input, select, label, textarea {
+                font-size: 12pt;                               
+            }
+
+        	textarea {
         		display: block;
-        		font-size: 16pt;
-        		padding: 1%;
-        	}
+        		font-size: 12pt;
+        		padding: 1%;        	
+                resize:none;
+                width: 600px;
+                height: 150px;
+            }
         </style>
     </head>
     <body>
         <header>
-            <img src="../image/logo.png"/>
+            <a href="index.html">
+                <img src="../image/logo.png"/>
+            </a>
             <nav>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">API</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Source</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/wiki/Home">Wiki</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/issues">Issues</a>
+                <a href="issues.html">Issues</a>
+                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Build</a>
+                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Features</a>
+                <a href="api.html">API</a>
             </nav> 
             <br clear="both" />
             <hr>
@@ -51,48 +71,59 @@
         	<div style="float:left;width:50%;">
 	        	<form>
 	        		<fieldset>
+                        <div style="float:left;width:50%;height:100%">
+                            <div class=".label-value-pair">
+        	        			<label for="">
+        	        				Product
+        	        			</label>                                
+        	        			<input type="text" disabled="disabled" value="Restbed" />
+                            </div>
+                            <div class=".label-value-pair">
+                                <label for="">
+                                    Category
+                                </label>                            
+                                <select>
+                                    <option>Feature Request</option>
+                                    <option>Bug</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class=".label-value-pair">
+                                <label for="">
+                                    Name
+                                </label>
+                                <input type="text" />
+                            </div>
+                        </div>
+
+                        <div style="float:right;width:50%;height:100%">
+                            <div class=".label-value-pair">
+        	        			<label for="">
+        	        				Version
+        	        			</label>
+        	        			<input type="text" disabled="disabled" value="1.0" />
+                            </div>
+                            <div class=".label-value-pair">
+                                <label for="">
+                                    Severity
+                                </label>
+                                <select>
+                                    <option>Inconvenience</option>
+                                    <option>Important</option>
+                                    <option>Show Stopper</option>
+                                </select>
+                            </div>
+                            <div class=".label-value-pair">
+                                <label for="">
+                                    Email
+                                </label>
+                                <input type="email"/>  
+                            </div>
+                        </div>
 	        			<label for="">
-	        				Product
+	        				Description
 	        			</label>
-	        			<input type="text" disabled="disabled" value="Restbed" />
-	        			<label for="">
-	        				Version
-	        			</label>
-	        			<input type="text" disabled="disabled" value="1.0" />
-	        			<label for="">
-	        				Email
-	        			</label>
-	        			<input type="email" />
-                        <label for="">
-                            Phone
-                        </label>
-                        <label for="">
-                            Severity
-                        </label>
-                        <select>
-                            <option>Inconvenience</option>
-                            <option>Important</option>
-                            <option>Show Stopper</option>
-                        </select>
-                        <label for="">
-                            Bounty
-                        </label>
-                        <select>
-                            <option>0</option>
-                            <option>25</option>
-                            <option>50 - weighted by severity</option>
-                        </select>
-                        <input type="tel" />
-	        			<label for="">
-	        				Error
-	        			</label>
-	        			<textarea type="textarea">
-                        </textarea>                        
-	        			<label for="">
-	        				Reproduce
-	        			</label>
-	        			<textarea type="textarea">
-	        			</textarea>
+	        			<textarea></textarea>
 	        			<input type="submit" />
 	        		</fieldset>
 	        	</form> 
@@ -104,6 +135,11 @@
         </section>
         <footer>
             &copy; All rights reserved Corvusoft
+            <br/>
+            <a href="https://twitter.com/Corvusoft" class="twitter-follow-button" data-show-count="false">Follow @Corvusoft</a>
+            <script>
+            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+            </script>
         </footer>
     </body>
 </html>
