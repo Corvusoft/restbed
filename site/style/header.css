@@ -10,9 +10,10 @@ header nav {
 
 header nav a {
 	float: right;	
-	margin: 5% 0 5% 5%;
+	margin: 5% 0 0 5%;
 	text-decoration:none;
-	color: #6d6e70;	
+	color: #6d6e70;
+	padding-top: 5%;
 }
 
 header nav a:hover {

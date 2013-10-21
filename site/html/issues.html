@@ -26,30 +26,51 @@
 
         <style>
             .label-value-pair {
-                display:block;
-                width: 50%;
-                
+                display: block;
+                float: left;
+                width: 100%;
+                padding: 3% 0 3% 0;
             }
 
             .label-value-pair label {
-
+                float: left;
             }
 
             .label-value-pair input, select {
-                 
+                float: right; 
             }
          
-            input, select, label, textarea {
-                font-size: 12pt;                               
+            input[type=text], input[type=email], select, label, textarea {
+                font-size: 12pt;
             }
 
-        	textarea {
-        		display: block;
-        		font-size: 12pt;
-        		padding: 1%;        	
+            input[type=text], input[type=email], select, label {
+                padding: 3% 0 3% 0;
+            }
+
+            input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
+                border-color: rgb(0,151,156);
+            }
+
+
+            label {
+                width: 9%;
+            }
+
+            input[type=text], input[type=email] {
+                width: 69%;
+            }
+
+            select {
+                width: 70.5%;
+            }
+
+            textarea {
+                display: block;
+                font-size: 12pt;
+                padding: 1%;            
                 resize:none;
-                width: 600px;
-                height: 150px;
+                width: 98%;
             }
         </style>
     </head>
@@ -60,7 +81,6 @@
             </a>
             <nav>
                 <a href="issues.html">Issues</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Build</a>
                 <a href="https://bitbucket.org/bcrowhurst/restbed/src">Features</a>
                 <a href="api.html">API</a>
             </nav> 
@@ -68,42 +88,41 @@
             <hr>
         </header>            
         <section>
-        	<div style="float:left;width:50%;">
-	        	<form>
-	        		<fieldset>
-                        <div style="float:left;width:50%;height:100%">
-                            <div class=".label-value-pair">
-        	        			<label for="">
-        	        				Product
-        	        			</label>                                
-        	        			<input type="text" disabled="disabled" value="Restbed" />
+            <div style="float:left;width:50%;">
+                <form>
+                    <fieldset>
+                        <div style="float:left;width:47.5%;height:100%;padding-right: 2.5%">
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Product
+                                </label>
+                                <input type="text" disabled="disabled" value="Restbed" />
                             </div>
-                            <div class=".label-value-pair">
+                            <div class="label-value-pair">
                                 <label for="">
                                     Category
-                                </label>                            
+                                </label>
                                 <select>
                                     <option>Feature Request</option>
                                     <option>Bug</option>
                                     <option>Other</option>
                                 </select>
                             </div>
-                            <div class=".label-value-pair">
+                            <div class="label-value-pair">
                                 <label for="">
                                     Name
                                 </label>
                                 <input type="text" />
                             </div>
                         </div>
-
-                        <div style="float:right;width:50%;height:100%">
-                            <div class=".label-value-pair">
-        	        			<label for="">
-        	        				Version
-        	        			</label>
-        	        			<input type="text" disabled="disabled" value="1.0" />
+                        <div style="float:right;width:47.5%;height:100%;padding-left: 2.5%">
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Version
+                                </label>
+                                <input type="text" disabled="disabled" value="1.0" />
                             </div>
-                            <div class=".label-value-pair">
+                            <div class="label-value-pair">
                                 <label for="">
                                     Severity
                                 </label>
@@ -113,23 +132,23 @@
                                     <option>Show Stopper</option>
                                 </select>
                             </div>
-                            <div class=".label-value-pair">
+                            <div class="label-value-pair">
                                 <label for="">
                                     Email
                                 </label>
                                 <input type="email"/>  
                             </div>
                         </div>
-	        			<label for="">
-	        				Description
-	        			</label>
-	        			<textarea></textarea>
-	        			<input type="submit" />
-	        		</fieldset>
-	        	</form> 
-        	</div>
+                        <label for="">
+                            Description
+                        </label>
+                        <textarea rows="15"></textarea>
+                        <input type="submit" />
+                    </fieldset>
+                </form> 
+            </div>
 
-        	<div style="float:right;width:50%;height:50%">
+            <div style="float:right;width:50%;height:50%">
                 <img style="float:right;height:auto;width:auto;max-width:100%;" src="../image/chart.png" />
             </div>   
         </section>
