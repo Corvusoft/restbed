@@ -229,8 +229,6 @@ namespace restbed
                 else
                 {
                     log_handler( LogLevel::SECURITY, "Unauthorized access attempted." );
-
-                    response.set_status_code( StatusCode::UNAUTHORIZED );
                 }
             }
             catch ( const int status_code )
