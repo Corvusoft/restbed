@@ -158,6 +158,8 @@ namespace restbed
 
             m_headers = rhs.m_headers;
 
+            m_status_code = rhs.m_status_code;
+
             return *this;
         }
 

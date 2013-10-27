@@ -134,6 +134,7 @@ namespace restbed
 
                 Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
 
+                static Response resource_not_found_handler( const Request& );
 
                 //Getters
                 
