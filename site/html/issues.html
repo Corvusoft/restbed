@@ -119,8 +119,11 @@
                             <div class="label-value-pair">
                                 <label for="">
                                     Version
-                                </label>
-                                <input type="text" disabled="disabled" value="1.0" />
+                                </label>                                
+                                <select>
+                                    <option>1.0</option>
+                                    <option>1.1</option>
+                                </select>
                             </div>
                             <div class="label-value-pair">
                                 <label for="">
@@ -139,10 +142,7 @@
                                 <input type="email"/>  
                             </div>
                         </div>
-                        <label for="">
-                            Description
-                        </label>
-                        <textarea rows="15"></textarea>
+                        <textarea rows="15" placeholder="description"></textarea>
                         <input type="submit" />
                     </fieldset>
                 </form> 
@@ -154,6 +154,7 @@
         </section>
         <footer>
             &copy; All rights reserved Corvusoft
+            <br/>
             <br/>
             <a href="https://twitter.com/Corvusoft" class="twitter-follow-button" data-show-count="false">Follow @Corvusoft</a>
             <script>
