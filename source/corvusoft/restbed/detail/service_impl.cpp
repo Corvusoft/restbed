@@ -132,6 +132,8 @@ namespace restbed
         void ServiceImpl::error_handler( const Request& request, Response& response )
         {
             log_handler( LogLevel::ERROR, "Internal Server Error" );
+            //log_handler( LogLevel::INFO, "Request\n%s", request.to_bytes( ).data( ) );
+            log_handler( LogLevel::INFO, "Response\n%s", response.to_bytes( ).data( ) );
 
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
         }
@@ -224,6 +226,10 @@ namespace restbed
                 {
                     response = invoke_method_handler( request, resource );
                 }
+                else
+                {
+                    log_handler( LogLevel::SECURITY, "Unauthorized access attempted." );
+                }
             }
             catch ( const int status_code )
             {
@@ -235,22 +241,6 @@ namespace restbed
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
 
             listen( );
-        }
-
-        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
-        {
-            auto resource = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
-
-            return *resource;
-        }
-
-        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
-        {
-            Method method = request.get_method( );  
-
-            auto handle = resource.get_method_handler( method );
-                
-            return handle( request );
         }
 
         string ServiceImpl::build_log_label( const LogLevel level ) const
@@ -287,6 +277,38 @@ namespace restbed
             string label = String::format( "[%s %s] ", tag.data( ), asctime( localtime( &timestamp ) ) );
     
             return label;
+        }
+
+        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
+        {
+            Resource resource;
+            resource.set_method_handler( request.get_method( ), ServiceImpl::resource_not_found_handler );
+
+            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
+
+            if ( iterator not_eq m_resources.end( ) )
+            {
+                resource = *iterator;
+            }
+
+            return resource;
+        }
+
+        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
+        {
+            Method method = request.get_method( );  
+
+            auto handle = resource.get_method_handler( method );
+            
+            return handle( request );
+        }
+
+        Response ServiceImpl::resource_not_found_handler( const Request& )
+        {
+            Response response;
+            response.set_status_code( StatusCode::NOT_FOUND );
+
+            return response;
         }
     }
 }

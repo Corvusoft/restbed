@@ -124,7 +124,9 @@ namespace restbed
 
         void ResponseImpl::set_header( const string& name, const string& value )
         {
-            m_headers[ name ] = value;
+            string key = String::lowercase( name );
+
+            m_headers[ key ] = value;
         }
 
         void ResponseImpl::set_headers( const map< std::string, string >& values )
@@ -157,6 +159,8 @@ namespace restbed
             m_body = rhs.m_body;
 
             m_headers = rhs.m_headers;
+
+            m_status_code = rhs.m_status_code;
 
             return *this;
         }
