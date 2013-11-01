@@ -22,7 +22,66 @@
 
         <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
         <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.1.2/ember.min.js"></script>
+
+
+        <script src="../script/application.js"></script>
+        <script src="../script/router.js"></script>
+
+        <script src="../script/view/api.js"></script>
+
         <script src="../script/modal.js"></script>
+
+        <style>
+            .label-value-pair {
+                display: block;
+                float: left;
+                width: 100%;
+                padding: 3% 0 3% 0;
+            }
+
+            .label-value-pair label {
+                float: left;
+            }
+
+            .label-value-pair input, select {
+                float: right; 
+            }
+         
+            input[type=text], input[type=email], select, label, textarea {
+                font-size: 12pt;
+            }
+
+            input[type=text], input[type=email], select, label {
+                padding: 3% 0 3% 0;
+            }
+
+            input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
+                border-color: rgb(0,151,156);
+            }
+
+
+            label {
+                width: 9%;
+            }
+
+            input[type=text], input[type=email] {
+                width: 69%;
+            }
+
+            select {
+                width: 70.5%;
+            }
+
+            textarea {
+                display: block;
+                font-size: 12pt;
+                padding: 1%;            
+                resize:none;
+                width: 98%;
+            }
+        </style>
 
         <script>
             $(document).ready(function() {
@@ -62,24 +121,138 @@
             #index div {
                 display:none;
             }
-
         </style>
+
+        <style>
+            .label-value-pair {
+                display: block;
+                float: left;
+                width: 100%;
+                padding: 3% 0 3% 0;
+            }
+
+            .label-value-pair label {
+                float: left;
+            }
+
+            .label-value-pair input, select {
+                float: right; 
+            }
+         
+            input[type=text], input[type=email], select, label, textarea {
+                font-size: 12pt;
+            }
+
+            input[type=text], input[type=email], select, label {
+                padding: 3% 0 3% 0;
+            }
+
+            input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
+                border-color: rgb(0,151,156);
+            }
+
+
+            select {
+                width: 70.5%;
+            }
+
+            textarea {
+                display: block;
+                font-size: 12pt;
+                padding: 1%;            
+                resize:none;
+                width: 98%;
+            }
+        </style>
+
+
     </head>
     <body>
-        <header>
-            <a href="index.html">
-                <img src="../image/logo.png"/>
-            </a>
-            <nav>
-                <a href="issues.html">Issues</a>
-                <a href="https://bitbucket.org/bcrowhurst/restbed/src">Features</a>
-                <a href="api.html">API</a>
-            </nav> 
-            <br clear="both" />
-            <hr>
-        </header>            
-        <section>
-        	<div id="index" style="min-height: 610px;float:left;width:25%;border-right:1px solid rgb(0,151,156);">                
+        <script data-template-name="application" type="text/x-handlebars">
+            <header>
+                {{#linkTo "index"}}
+                    <img src="../image/logo.png"/>
+                {{/linkTo}}
+                <nav>
+                    {{#linkTo "issues"}}Issues{{/linkTo}}
+                    {{#linkTo "features"}}Features{{/linkTo}}
+                    {{#linkTo "api"}}API{{/linkTo}}
+                </nav> 
+                <br clear="both" />
+                <hr>
+            </header> 
+
+            <section>
+                {{outlet}}
+            </section>
+
+            <footer>
+                &copy; All rights reserved Corvusoft
+                <br/>
+                <br/>
+                <a href="https://twitter.com/Corvusoft" class="twitter-follow-button" data-show-count="false">Follow @Corvusoft</a>
+                <script>
+                !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+                </script>
+            </footer>
+        </script>
+           
+        <script data-template-name="index" type="text/x-handlebars">
+            <section style="height: 1px;">
+                <div style="float:left;width:50%;">
+                    <p>
+                        stripe.com/gb/pricing
+                        Developing RESTful Web services that seamlessly support 
+                        exposing your data in a variety of representations while abstracting
+                        away the low-level details of the HTTP protocol is not an easy task
+                        without a good framework.  Restbed is an attempt to simplify the development
+                        of such systems within the C++ development arena. It offers a clean, portable
+                        interface to get RESTful Web Services up and running within a matter of minutes.
+                    </p>
+                    <h1>
+                        Features
+                    </h1>                        
+                    <ul>
+                        <li>HTTP Method filteration</li>
+                        <li>Path Parameters</li>
+                        <li>Header request fliteration</li>
+                        <li>Latest C++11 Feature Support</li>
+                        <li>Linux, BSD, Mac OSX, and Windows platform support</li>
+                        <li>Two way SSL certificate authentication</li>
+                        <li>Designed with developer customisation in mind</li>
+                        <li>Built in logging functionality</li>
+                        <li>Thread Safe</li>
+                    </ul>
+
+                    <div class="download">
+                        <a href="https://bitbucket.org/bcrowhurst/restbed/downloads">
+                            DOWNLOAD
+                            <span>
+                                Version 1.1
+                            </span>
+                        </a>
+                    </div>
+
+                    <div class="license-warning">
+                        <span>
+                            per developer <a href="#" id="main-license">license</a> required for commercial use.
+                        </span>
+                    </div>
+                </div>
+
+                <div style="float:right;width:50%;height:50%">
+                    <img style="float:right;height:auto;width:auto;max-width:100%;" src="../image/example.png" />
+                </div>
+            </section>
+
+            <section id="dialog-confirm" title="SOFTWARE LICENSE AGREEMENT" style="display: none">
+                <pre>
+                </pre>
+            </section> 
+        </script>
+
+        <script data-template-name="api" type="text/x-handlebars">
+            <div id="index" style="min-height: 610px;float:left;width:25%;border-right:1px solid rgb(0,151,156);">                
                     <a href="#">
                         Request
                     </a>
@@ -415,19 +588,76 @@
                             definition
                         </a>
                     </div>                
-        	</div>
-        	<div style="float:right;width:70%;height:50%">
+            </div>
+            <div style="float:right;width:70%;height:50%">
                 <img style="height:auto;width:auto;max-width:100%;" src="../image/uml.png" />
+            </div>
+        </script>
+
+        <script data-template-name="issues" type="text/x-handlebars">
+            <div style="float:left;width:50%;">
+                <form>
+                    <fieldset>
+                        <div style="float:left;width:47.5%;height:100%;padding-right: 2.5%">
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Product
+                                </label>
+                                <input type="text" disabled="disabled" value="Restbed" />
+                            </div>
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Category
+                                </label>
+                                <select>
+                                    <option>Feature Request</option>
+                                    <option>Bug</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Name
+                                </label>
+                                <input type="text" />
+                            </div>
+                        </div>
+                        <div style="float:right;width:47.5%;height:100%;padding-left: 2.5%">
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Version
+                                </label>                                
+                                <select>
+                                    <option>1.0</option>
+                                    <option>1.1</option>
+                                </select>
+                            </div>
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Severity
+                                </label>
+                                <select>
+                                    <option>Inconvenience</option>
+                                    <option>Important</option>
+                                    <option>Show Stopper</option>
+                                </select>
+                            </div>
+                            <div class="label-value-pair">
+                                <label for="">
+                                    Email
+                                </label>
+                                <input type="email"/>  
+                            </div>
+                        </div>
+                        <textarea rows="15" placeholder="description"></textarea>
+                        <input type="submit" />
+                    </fieldset>
+                </form> 
+            </div>
+
+            <div style="float:right;width:50%;height:50%">
+                <img style="float:right;height:auto;width:auto;max-width:100%;" src="../image/chart.png" />
             </div>   
-        </section>
-        <footer>
-            &copy; All rights reserved Corvusoft
-            <br/>
-            <br/>
-            <a style="float: right" href="https://twitter.com/Corvusoft" class="twitter-follow-button" data-show-count="false">Follow @Corvusoft</a>
-            <script>
-            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-            </script>
-        </footer>
+        </script>
     </body>
 </html>
