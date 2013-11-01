@@ -34,71 +34,6 @@
         <script src="../script/modal.js"></script>
 
         <style>
-            .label-value-pair {
-                display: block;
-                float: left;
-                width: 100%;
-                padding: 3% 0 3% 0;
-            }
-
-            .label-value-pair label {
-                float: left;
-            }
-
-            .label-value-pair input, select {
-                float: right; 
-            }
-         
-            input[type=text], input[type=email], select, label, textarea {
-                font-size: 12pt;
-            }
-
-            input[type=text], input[type=email], select, label {
-                padding: 3% 0 3% 0;
-            }
-
-            input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
-                border-color: rgb(0,151,156);
-            }
-
-
-            label {
-                width: 9%;
-            }
-
-            input[type=text], input[type=email] {
-                width: 69%;
-            }
-
-            select {
-                width: 70.5%;
-            }
-
-            textarea {
-                display: block;
-                font-size: 12pt;
-                padding: 1%;            
-                resize:none;
-                width: 98%;
-            }
-        </style>
-
-        <script>
-            $(document).ready(function() {
-                $('#index a').next('div').siblings('div').slideUp();
-
-                $('#index a').click(function(e) {
-                    //Close all <div> but the <div> right after the clicked <a>
-                    $(e.target).next('div').siblings('div').slideUp();
-                    $(e.target).siblings('a').css('color', '#6d6e70');
-                    //Toggle open/close on the <div> after the <a>, opening it if not open.
-                    $(e.target).next('div').slideToggle();
-                    $(e.target).css('color', '#00979C');
-                });
-            });
-        </script>
-
-        <style>
             #index a {
                 display: block;                
                 color: #6d6e70;
@@ -151,6 +86,14 @@
                 border-color: rgb(0,151,156);
             }
 
+
+            label {
+                width: 9%;
+            }
+
+            input[type=text], input[type=email] {
+                width: 69%;
+            }
 
             select {
                 width: 70.5%;
