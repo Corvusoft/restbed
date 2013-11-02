@@ -28,6 +28,7 @@
 #include "restbed/response.h"
 #include "restbed/status_code.h"
 #include "restbed/detail/resource_impl.h"
+#include "restbed/detail/helpers/regex.h"
 #include "restbed/detail/helpers/string.h"
 #include "restbed/detail/helpers/functional.h"
 
@@ -38,9 +39,11 @@ using std::map;
 using std::bind;
 using std::string;
 using std::function;
+using std::invalid_argument;
 using std::placeholders::_1;
 
 //Project Namespaces
+using restbed::detail::helpers::Regex;
 using restbed::detail::helpers::String;
 using restbed::detail::helpers::Functional;
 
@@ -93,11 +96,21 @@ namespace restbed
 
         void ResourceImpl::set_path( const string& value )
         {
+            if ( not Regex::is_valid( value ) )
+            {
+                throw invalid_argument( String::empty );
+            }
+
             m_path = value;
         }
 
         void ResourceImpl::set_header_filter( const string& name, const string& value )
         {
+            if ( not Regex::is_valid( value ) )
+            {
+                throw invalid_argument( String::empty );
+            }
+
             string key = String::uppercase(  name );
 
             m_header_filters[ key ] = value;
