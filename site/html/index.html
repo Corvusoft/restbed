@@ -28,8 +28,9 @@
 
         <script src="../script/application.js"></script>
         <script src="../script/router.js"></script>
+        <script src="../script/route/api_route.js"></script>
 
-        <script src="../script/view/api.js"></script>
+        <script src="../script/view/api_view.js"></script>
 
         <script src="../script/modal.js"></script>
 
@@ -45,16 +46,13 @@
             }
 
             .description {
+                display: none;
                 font-size: 10pt;
                 padding-left: 3%;
             }
 
             .description.a {
                 color: rgb(0,151,156);
-            }
-
-            #index div {
-                display:none;
             }
         </style>
 
@@ -195,12 +193,28 @@
         </script>
 
         <script data-template-name="api" type="text/x-handlebars">
-            <div id="index" style="min-height: 610px;float:left;width:25%;border-right:1px solid rgb(0,151,156);">                
-                    <a href="#">
+            <div id="index" style="min-height: 610px;float:left;width:25%;border-right:1px solid rgb(0,151,156);">
+                {{partial apiMenu}}
+            </div>
+            <div style="float:right;width:70%;height:50%">
+                {{yield}}
+            </div>
+        </script>
+
+<script data-template-name="request" type="text/x-handlebars">
+    request data template
+</script>
+
+<script data-template-name="request-constructor" type="text/x-handlebars">
+    request constructor data template
+</script>
+
+        <script data-template-name="apiMenu" type="text/x-handlebars">
+                    <a id="request" href="#" {{action menuSelection 'request' target='view'}}>
                         Request
                     </a>
                     <div class="description">
-                        <a href="#">
+                        <a href="#" {{action menuSelection 'request-constructor' target='view'}}>
                             constructor
                         </a>
                         <a href="#">
@@ -261,7 +275,7 @@
                             operator !=
                         </a>                        
                     </div>
-                    <a href="#">
+                    <a id="response" href="#" {{action menuSelection 'response' target='view'}}>
                         Response
                     </a>
                     <div class="description">
@@ -530,12 +544,15 @@
                         <a href="#">
                             definition
                         </a>
-                    </div>                
-            </div>
-            <div style="float:right;width:70%;height:50%">
-                <img style="height:auto;width:auto;max-width:100%;" src="../image/uml.png" />
-            </div>
+                    </div>   
         </script>
+
+
+        <script data-template-name="uml" type="text/x-handlebars">
+            <img style="height:auto;width:auto;max-width:100%;" src="../image/uml.png" />
+        </script>
+
+
 
         <script data-template-name="issues" type="text/x-handlebars">
             <div style="float:left;width:50%;">
