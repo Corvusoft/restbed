@@ -194,10 +194,10 @@
 
         <script data-template-name="api" type="text/x-handlebars">
             <div id="index" style="min-height: 610px;float:left;width:25%;border-right:1px solid rgb(0,151,156);">
-                {{partial apiMenu}}
+                {{view view.menu}}
             </div>
             <div style="float:right;width:70%;height:50%">
-                {{yield}}
+                {{view view.content viewName="contentViewInstance"}}
             </div>
         </script>
 
@@ -209,12 +209,12 @@
     request constructor data template
 </script>
 
-        <script data-template-name="apiMenu" type="text/x-handlebars">
-                    <a id="request" href="#" {{action menuSelection 'request' target='view'}}>
+        <script data-template-name="api-menu" type="text/x-handlebars">
+                    <a id="request" href="#">
                         Request
                     </a>
                     <div class="description">
-                        <a href="#" {{action menuSelection 'request-constructor' target='view'}}>
+                        <a id="request-constructor" href="#">
                             constructor
                         </a>
                         <a href="#">
@@ -275,7 +275,7 @@
                             operator !=
                         </a>                        
                     </div>
-                    <a id="response" href="#" {{action menuSelection 'response' target='view'}}>
+                    <a id="response" href="#">
                         Response
                     </a>
                     <div class="description">

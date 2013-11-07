@@ -1,6 +1,6 @@
-Ember.onerror = function(error) {
-	console.log('ember failed: ', error);
-}
+//Ember.onerror = function(error) {
+//	console.log('ember failed: ', error);
+//}
 
 window.Application = Ember.Application.create({
 	LOG_TRANSITIONS: true,

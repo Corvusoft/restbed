@@ -1,4 +1,4 @@
-Application.ApiRoute = Ember.Route.extend({
+//Application.ApiRoute = Ember.Route.extend({
 	// renderTemplate: function() {
 	// 	var route = this;
 
@@ -14,4 +14,4 @@ Application.ApiRoute = Ember.Route.extend({
 	// 	// 	outlet: 'main'
 	// 	// });
 	// }
-});
+//});
