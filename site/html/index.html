@@ -25,88 +25,15 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0/handlebars.min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.1.2/ember.min.js"></script>
 
-
         <script src="../script/application.js"></script>
         <script src="../script/router.js"></script>
         <script src="../script/route/api_route.js"></script>
 
+        <script src="../script/view/api_menu_view.js"></script>
+        <script src="../script/view/api_content_view.js"></script>
         <script src="../script/view/api_view.js"></script>
 
         <script src="../script/modal.js"></script>
-
-        <style>
-            #index a {
-                display: block;                
-                color: #6d6e70;
-                text-decoration: none;
-            }
-
-            #index a:hover {
-                color: rgb(0,151,156);  
-            }
-
-            .description {
-                display: none;
-                font-size: 10pt;
-                padding-left: 3%;
-            }
-
-            .description.a {
-                color: rgb(0,151,156);
-            }
-        </style>
-
-        <style>
-            .label-value-pair {
-                display: block;
-                float: left;
-                width: 100%;
-                padding: 3% 0 3% 0;
-            }
-
-            .label-value-pair label {
-                float: left;
-            }
-
-            .label-value-pair input, select {
-                float: right; 
-            }
-         
-            input[type=text], input[type=email], select, label, textarea {
-                font-size: 12pt;
-            }
-
-            input[type=text], input[type=email], select, label {
-                padding: 3% 0 3% 0;
-            }
-
-            input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
-                border-color: rgb(0,151,156);
-            }
-
-
-            label {
-                width: 9%;
-            }
-
-            input[type=text], input[type=email] {
-                width: 69%;
-            }
-
-            select {
-                width: 70.5%;
-            }
-
-            textarea {
-                display: block;
-                font-size: 12pt;
-                padding: 1%;            
-                resize:none;
-                width: 98%;
-            }
-        </style>
-
-
     </head>
     <body>
         <script data-template-name="application" type="text/x-handlebars">
@@ -139,7 +66,7 @@
         </script>
            
         <script data-template-name="index" type="text/x-handlebars">
-            <section style="height: 1px;">
+            <section>
                 <div style="float:left;width:50%;">
                     <p>
                         stripe.com/gb/pricing
@@ -209,342 +136,383 @@
     request constructor data template
 </script>
 
+        <script data-template-name="request-menu-options" type="text/x-handlebars">
+            <a id="request" href="#">
+                Request
+            </a>
+            <div class="description">
+                <a id="request-constructor" href="#">
+                    constructor
+                </a>
+                <a href="#">
+                    destructor
+                </a>
+                <a href="#">
+                    has_header
+                </a>
+                <a href="#">
+                    has_path_parameter
+                </a>
+                <a href="#">
+                    has_query_parameter
+                </a>
+                <a href="#">
+                    get_method
+                </a>
+                <a href="#">
+                    get_version
+                </a>
+                <a href="#">
+                    get_path
+                </a>
+                <a href="#">
+                    get_body
+                </a>
+                <a href="#">
+                    get_header
+                </a>
+                <a href="#">
+                    get_headers
+                </a>
+                <a href="#">
+                    get_query_parameter
+                </a>
+                <a href="#">
+                    get_query_parameters
+                </a>
+                <a href="#">
+                    get_path_parameter
+                </a>
+                <a href="#">
+                    get_path_parameters
+                </a>
+                <a href="#">
+                    operator =
+                </a>
+                <a href="#">
+                    operator <
+                </a>
+                <a href="#">
+                    operator >
+                </a>
+                <a href="#">
+                    operator ==
+                </a>
+                <a href="#">
+                    operator !=
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="response-menu-options" type="text/x-handlebars">
+            <a id="response" href="#">
+                Response
+            </a>
+            <div class="description">
+                <a href="#">
+                    constructor
+                </a>
+                <a href="#">
+                    destructor
+                </a>
+                <a href="#">
+                    to_bytes
+                </a>
+                <a href="#">
+                    get_body
+                </a>
+                <a href="#">
+                    get_status_code
+                </a>
+                <a href="#">
+                    get_header
+                </a>
+                <a href="#">
+                    get_headers
+                </a>
+                <a href="#">
+                    set_body
+                </a>
+                <a href="#">
+                    set_status_code
+                </a>
+                <a href="#">
+                    set_header
+                </a>
+                <a href="#">
+                    set_headers
+                </a>
+                <a href="#">
+                    operator =
+                </a>
+                <a href="#">
+                    operator <
+                </a>
+                <a href="#">
+                    operator >
+                </a>
+                <a href="#">
+                    operator ==
+                </a>
+                <a href="#">
+                    operator !=
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="method-menu-options" type="text/x-handlebars">
+            <a href="#">
+                Method
+            </a>
+            <div class="description">
+                <a href="#">
+                    constructor
+                </a>
+                <a href="#">
+                    destructor
+                </a>
+                <a href="#">
+                    to_string
+                </a>
+                <a href="#">
+                    parse
+                </a>
+                <a href="#">
+                    operator =
+                </a>
+                <a href="#">
+                    operator <
+                </a>
+                <a href="#">
+                    operator >
+                </a>
+                <a href="#">
+                    operator ==
+                </a>
+                <a href="#">
+                    operator !=
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="resource-menu-options" type="text/x-handlebars">
+            <a href="#">
+                Resource
+            </a>
+            <div class="description">
+                <a href="#">
+                    constructor
+                </a>
+                <a href="#">
+                    destructor
+                </a>
+                <a href="#">
+                    get_path
+                </a>
+                <a href="#">
+                    get_header_filter
+                </a>
+                <a href="#">
+                    get_header_filters
+                </a>
+                <a href="#">
+                    get_method_handler
+                </a>
+                <a href="#">
+                    set_path
+                </a>
+                <a href="#">
+                    set_header_filter
+                </a>
+                <a href="#">
+                    set_method_handler
+                </a>
+                <a href="#">
+                    operator =
+                </a>
+                <a href="#">
+                    operator <
+                </a>
+                <a href="#">
+                    operator >
+                </a>
+                <a href="#">
+                    operator ==
+                </a>
+                <a href="#">
+                    operator !=
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="service-menu-options" type="text/x-handlebars">
+            <a href="#">
+                Service
+            </a>
+            <div class="description">
+                <a href="#">
+                    constructor
+                </a>
+                <a href="#">
+                    destructor
+                </a>
+                <a href="#">
+                    start
+                </a>
+                <a href="#">
+                    stop
+                </a>
+                <a href="#">
+                    publish
+                </a>
+                <a href="#">
+                    suppress
+                </a>
+                <a href="#">
+                    operator =
+                </a>
+                <a href="#">
+                    operator <
+                </a>
+                <a href="#">
+                    operator >
+                </a>
+                <a href="#">
+                    operator ==
+                </a>
+                <a href="#">
+                    operator !=
+                </a>
+                <a href="#">
+                    error_handler
+                </a>
+                <a href="#">
+                    authentication_handler
+                </a>
+                <a href="#">
+                    log_handler
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="settings-menu-options" type="text/x-handlebars">
+            <a href="#">
+                Settings
+            </a>
+            <div class="description">
+                <a href="#">
+                    constructor
+                </a>
+                <a href="#">
+                    destructor
+                </a>
+                <a href="#">
+                    get_port
+                </a>
+                <a href="#">
+                    get_root
+                </a>
+                <a href="#">
+                    get_property
+                </a>
+                <a href="#">
+                    get_properties
+                </a>
+                <a href="#">
+                    set_port
+                </a>
+                <a href="#">
+                    set_root
+                </a>
+                <a href="#">
+                    set_property
+                </a>
+                <a href="#">
+                    set_properties
+                </a>
+                <a href="#">
+                    operator =
+                </a>
+                <a href="#">
+                    operator <
+                </a>
+                <a href="#">
+                    operator >
+                </a>
+                <a href="#">
+                    operator ==
+                </a>
+                <a href="#">
+                    operator !=
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="status-code-menu-options" type="text/x-handlebars">
+            <a href="#">
+                StatusCode
+            </a>
+            <div class="description">
+                <a href="#">
+                    parse
+                </a>
+                <a href="#">
+                    to_string
+                </a>
+                <a href="#">
+                    get_mappings
+                </a>
+                <a href="#">
+                    set_mappings
+                </a>
+            </div>
+        </script>
+
+
+        <script data-template-name="byte-menu-options" type="text/x-handlebars">
+            <a href="#">
+                Byte
+            </a>
+            <div class="description">
+                <a href="#">
+                    definition
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="bytes-menu-options" type="text/x-handlebars">
+            <a href="#">
+                Bytes
+            </a>
+            <div class="description">
+                <a href="#">
+                    definition
+                </a>
+            </div>
+        </script>
+
+        <script data-template-name="log-level-menu" type="text/x-handlebars">
+            <a href="#">
+                LogLevel
+            </a>
+            <div class="description">
+                <a href="#">
+                    definition
+                </a>
+            </div>
+        </script>
+
         <script data-template-name="api-menu" type="text/x-handlebars">
-                    <a id="request" href="#">
-                        Request
-                    </a>
-                    <div class="description">
-                        <a id="request-constructor" href="#">
-                            constructor
-                        </a>
-                        <a href="#">
-                            destructor
-                        </a>
-                        <a href="#">
-                            has_header
-                        </a>
-                        <a href="#">
-                            has_path_parameter
-                        </a>
-                        <a href="#">
-                            has_query_parameter
-                        </a>
-                        <a href="#">
-                            get_method
-                        </a>
-                        <a href="#">
-                            get_version
-                        </a>
-                        <a href="#">
-                            get_path
-                        </a>
-                        <a href="#">
-                            get_body
-                        </a>
-                        <a href="#">
-                            get_header
-                        </a>
-                        <a href="#">
-                            get_headers
-                        </a>
-                        <a href="#">
-                            get_query_parameter
-                        </a>
-                        <a href="#">
-                            get_query_parameters
-                        </a>
-                        <a href="#">
-                            get_path_parameter
-                        </a>
-                        <a href="#">
-                            get_path_parameters
-                        </a>
-                        <a href="#">
-                            operator =
-                        </a>
-                        <a href="#">
-                            operator <
-                        </a>
-                        <a href="#">
-                            operator >
-                        </a>
-                        <a href="#">
-                            operator ==
-                        </a>
-                        <a href="#">
-                            operator !=
-                        </a>                        
-                    </div>
-                    <a id="response" href="#">
-                        Response
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            constructor
-                        </a>
-                        <a href="#">
-                            destructor
-                        </a>
-                        <a href="#">
-                            to_bytes
-                        </a>
-                        <a href="#">
-                            get_body
-                        </a>
-                        <a href="#">
-                            get_status_code
-                        </a>
-                        <a href="#">
-                            get_header
-                        </a>
-                        <a href="#">
-                            get_headers
-                        </a>
-                        <a href="#">
-                            set_body
-                        </a>
-                        <a href="#">
-                            set_status_code
-                        </a>
-                        <a href="#">
-                            set_header
-                        </a>
-                        <a href="#">
-                            set_headers
-                        </a>                        
-                        <a href="#">
-                            operator =
-                        </a>
-                        <a href="#">
-                            operator <
-                        </a>
-                        <a href="#">
-                            operator >
-                        </a>
-                        <a href="#">
-                            operator ==
-                        </a>
-                        <a href="#">
-                            operator !=
-                        </a>                        
-                    </div>
-                    <a href="#">
-                        Method
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            constructor
-                        </a>
-                        <a href="#">
-                            destructor
-                        </a>
-                        <a href="#">
-                            to_string
-                        </a>
-                        <a href="#">
-                            parse
-                        </a>                       
-                        <a href="#">
-                            operator =
-                        </a>
-                        <a href="#">
-                            operator <
-                        </a>
-                        <a href="#">
-                            operator >
-                        </a>
-                        <a href="#">
-                            operator ==
-                        </a>
-                        <a href="#">
-                            operator !=
-                        </a>                        
-                    </div>
-                    <a href="#">
-                        Resource
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            constructor
-                        </a>
-                        <a href="#">
-                            destructor
-                        </a>
-                        <a href="#">
-                            get_path
-                        </a>
-                        <a href="#">
-                            get_header_filter
-                        </a>
-                        <a href="#">
-                            get_header_filters
-                        </a>
-                        <a href="#">
-                            get_method_handler
-                        </a>
-                        <a href="#">
-                            set_path
-                        </a>
-                        <a href="#">
-                            set_header_filter
-                        </a>
-                        <a href="#">
-                            set_method_handler
-                        </a>
-                        <a href="#">
-                            operator =
-                        </a>
-                        <a href="#">
-                            operator <
-                        </a>
-                        <a href="#">
-                            operator >
-                        </a>
-                        <a href="#">
-                            operator ==
-                        </a>
-                        <a href="#">
-                            operator !=
-                        </a>                        
-                    </div>
-                    <a href="#">
-                        Service
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            constructor
-                        </a>
-                        <a href="#">
-                            destructor
-                        </a>
-                        <a href="#">
-                            start
-                        </a>
-                        <a href="#">
-                            stop
-                        </a>
-                        <a href="#">
-                            publish
-                        </a>
-                        <a href="#">
-                            suppress
-                        </a>
-                        <a href="#">
-                            operator =
-                        </a>
-                        <a href="#">
-                            operator <
-                        </a>
-                        <a href="#">
-                            operator >
-                        </a>
-                        <a href="#">
-                            operator ==
-                        </a>
-                        <a href="#">
-                            operator !=
-                        </a>
-                        <a href="#">
-                            error_handler
-                        </a>
-                        <a href="#">
-                            authentication_handler
-                        </a>
-                        <a href="#">
-                            log_handler
-                        </a>                       
-                    </div>
-                    <a href="#">
-                        Settings
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            constructor
-                        </a>
-                        <a href="#">
-                            destructor
-                        </a>
-                        <a href="#">
-                            get_port
-                        </a>
-                        <a href="#">
-                            get_root
-                        </a>
-                        <a href="#">
-                            get_property
-                        </a>
-                        <a href="#">
-                            get_properties
-                        </a>
-                        <a href="#">
-                            set_port
-                        </a>
-                        <a href="#">
-                            set_root
-                        </a>
-                        <a href="#">
-                            set_property
-                        </a>
-                        <a href="#">
-                            set_properties
-                        </a>
-                        <a href="#">
-                            operator =
-                        </a>
-                        <a href="#">
-                            operator <
-                        </a>
-                        <a href="#">
-                            operator >
-                        </a>
-                        <a href="#">
-                            operator ==
-                        </a>
-                        <a href="#">
-                            operator !=
-                        </a>                        
-                    </div>
-                    <a href="#">
-                        StatusCode
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            parse
-                        </a>
-                        <a href="#">
-                            to_string
-                        </a>
-                        <a href="#">
-                            get_mappings
-                        </a>
-                        <a href="#">
-                            set_mappings
-                        </a>                      
-                    </div>
-                    <a href="#">
-                        Byte
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            definition
-                        </a>                     
-                    </div>
-                    <a href="#">
-                        Bytes
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            definition
-                        </a>                     
-                    </div>
-                    <a href="#">
-                        LogLevel
-                    </a>
-                    <div class="description">
-                        <a href="#">
-                            definition
-                        </a>
-                    </div>   
+            {{partial "request-menu-options"}}
+            {{partial "response-menu-options"}}
+            {{partial "method-menu-options"}}
+            {{partial "resource-menu-options"}}
+            {{partial "service-menu-options"}}
+            {{partial "settings-menu-options"}}
+            {{partial "status-code-menu-options"}}
+            {{partial "byte-menu-options"}}
+            {{partial "bytes-menu-options"}}
+            {{partial "log-level-menu-options"}}
         </script>
 
 
@@ -552,61 +520,59 @@
             <img style="height:auto;width:auto;max-width:100%;" src="../image/uml.png" />
         </script>
 
-
-
         <script data-template-name="issues" type="text/x-handlebars">
             <div style="float:left;width:50%;">
                 <form>
                     <fieldset>
                         <div style="float:left;width:47.5%;height:100%;padding-right: 2.5%">
                             <div class="label-value-pair">
-                                <label for="">
+                                <label for="product">
                                     Product
                                 </label>
-                                <input type="text" disabled="disabled" value="Restbed" />
+                                <input id="product" type="text" disabled="disabled" value="Restbed" />
                             </div>
                             <div class="label-value-pair">
-                                <label for="">
+                                <label for="category">
                                     Category
                                 </label>
-                                <select>
+                                <select id="category">
                                     <option>Feature Request</option>
                                     <option>Bug</option>
                                     <option>Other</option>
                                 </select>
                             </div>
                             <div class="label-value-pair">
-                                <label for="">
+                                <label for="name">
                                     Name
                                 </label>
-                                <input type="text" />
+                                <input id="name" type="text" />
                             </div>
                         </div>
                         <div style="float:right;width:47.5%;height:100%;padding-left: 2.5%">
                             <div class="label-value-pair">
-                                <label for="">
+                                <label for="version">
                                     Version
                                 </label>                                
-                                <select>
+                                <select id="version">
                                     <option>1.0</option>
                                     <option>1.1</option>
                                 </select>
                             </div>
                             <div class="label-value-pair">
-                                <label for="">
+                                <label for="severity">
                                     Severity
                                 </label>
-                                <select>
+                                <select id="severtiy">
                                     <option>Inconvenience</option>
                                     <option>Important</option>
                                     <option>Show Stopper</option>
                                 </select>
                             </div>
                             <div class="label-value-pair">
-                                <label for="">
+                                <label for="email">
                                     Email
                                 </label>
-                                <input type="email"/>  
+                                <input id="email" type="email"/>
                             </div>
                         </div>
                         <textarea rows="15" placeholder="description"></textarea>

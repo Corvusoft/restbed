@@ -125,4 +125,72 @@ pre {
  white-space: -pre-wrap;      /* Opera 4-6 */
  white-space: -o-pre-wrap;    /* Opera 7 */
  word-wrap: break-word;       /* Internet Explorer 5.5+ */
-}                      
+}
+
+#index a {
+    display: block;
+    color: #6d6e70;
+    text-decoration: none;
+}
+
+#index a:hover {
+    color: rgb(0,151,156);
+}
+
+.description {
+    display: none;
+    font-size: 10pt;
+    padding-left: 3%;
+}
+
+.description.a {
+    color: rgb(0,151,156);
+}
+
+.label-value-pair {
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 3% 0 3% 0;
+}
+
+.label-value-pair label {
+    float: left;
+}
+
+.label-value-pair input, select {
+    float: right;
+}
+
+input[type=text], input[type=email], select, label, textarea {
+    font-size: 12pt;
+}
+
+input[type=text], input[type=email], select, label {
+    padding: 3% 0 3% 0;
+}
+
+input[type=text]:focus, input[type=email]:focus, select:focus, textarea:focus {
+    border-color: rgb(0,151,156);
+}
+
+
+label {
+    width: 9%;
+}
+
+input[type=text], input[type=email] {
+    width: 69%;
+}
+
+select {
+    width: 70.5%;
+}
+
+textarea {
+    display: block;
+    font-size: 12pt;
+    padding: 1%;
+    resize:none;
+    width: 98%;
+}
