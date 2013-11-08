@@ -12,12 +12,15 @@ Application.ApiMenu = Ember.View.extend({
 	_setupAccordionMenu: function() {
 		$('#index a').next('div').siblings('div').slideUp();	
 	},
+	_isMainMenuItem: function(menuItemId) { //option
+		return (menuItemId.split('-').length == 1)
+	},
 	_accordionMenuClickHandler: function(evt) {
 		var view = this;
 		var parentView = view.get('parentView');
 		var menuItemId = $(evt.target).attr('id');
 		
-		if (menuItemId === this.get('_currentMenuItem')) {
+		if (menuItemId === view.get('_currentMenuItem') && view._isMainMenuItem(menuItemId)) {
 			view._setupAccordionMenu();
 			parentView._updateContentViewTemplate('uml');
 			view.set('_currentMenuItem', 'uml');
@@ -26,7 +29,10 @@ Application.ApiMenu = Ember.View.extend({
         	view._updateAccordionMenu(menuItemId);
         
 			parentView._updateContentViewTemplate(menuItemId);
-			view.set('_currentMenuItem', menuItemId);
+
+			if(view._isMainMenuItem(menuItemId)) {
+				view.set('_currentMenuItem', menuItemId);
+			}
 		}
 	},
 	_updateAccordionMenu: function(menuItemId) {
