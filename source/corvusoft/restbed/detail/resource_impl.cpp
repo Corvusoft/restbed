@@ -164,12 +164,12 @@ namespace restbed
 
         void ResourceImpl::setup( void )
         {
-            set_method_handler( "GET", &ResourceImpl::default_handler );
-            set_method_handler( "PUT", &ResourceImpl::default_handler );
-            set_method_handler( "POST", &ResourceImpl::default_handler );
-            set_method_handler( "HEAD", &ResourceImpl::default_handler );
-            set_method_handler( "DELETE", &ResourceImpl::default_handler );
-            set_method_handler( "CONNECT", &ResourceImpl::default_handler );
+            set_method_handler( "GET", &ResourceImpl::default_not_implemented_handler );
+            set_method_handler( "PUT", &ResourceImpl::default_not_implemented_handler );
+            set_method_handler( "POST", &ResourceImpl::default_not_implemented_handler );
+            set_method_handler( "HEAD", &ResourceImpl::default_not_implemented_handler );
+            set_method_handler( "DELETE", &ResourceImpl::default_not_implemented_handler );
+            set_method_handler( "CONNECT", &ResourceImpl::default_not_implemented_handler );
             set_method_handler( "TRACE", &ResourceImpl::default_trace_handler );
             set_method_handler( "OPTIONS", bind( &ResourceImpl::default_options_handler, this, _1 ) );
         }
@@ -181,7 +181,7 @@ namespace restbed
             for ( auto& handler : m_method_handlers )
             {
                 Functional::address_type callback_address = Functional::get_address( handler.second );
-                Functional::address_type default_address = ( Functional::address_type ) ResourceImpl::default_handler;
+                Functional::address_type default_address = ( Functional::address_type ) ResourceImpl::default_not_implemented_handler;
 
                 if ( callback_address not_eq default_address )
                 {
@@ -234,14 +234,6 @@ namespace restbed
             
             return response;
         }
-
-        Response ResourceImpl::default_handler( const Request& )
-        {
-            Response response;
-            response.set_status_code( StatusCode::NOT_IMPLEMENTED );
-
-            return response;
-        }
         
         Response ResourceImpl::default_trace_handler( const Request& request )
         {
@@ -256,6 +248,14 @@ namespace restbed
             response.set_status_code( StatusCode::OK );
             response.set_header( "Content-Type", "message/http" );
             
+            return response;
+        }
+
+        Response ResourceImpl::default_not_implemented_handler( const Request& )
+        {
+            Response response;
+            response.set_status_code( StatusCode::NOT_IMPLEMENTED );
+
             return response;
         }
     }

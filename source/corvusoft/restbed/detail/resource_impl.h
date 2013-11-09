@@ -129,9 +129,9 @@ namespace restbed
 
                 static std::string rebuild_headers( const Request& request );
 
-                static Response default_handler( const Request& request );
-
                 static Response default_trace_handler( const Request& request );
+
+                static Response default_not_implemented_handler( const Request& request );
                 
                 //Getters
                 

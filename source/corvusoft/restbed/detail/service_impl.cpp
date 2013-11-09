@@ -282,13 +282,16 @@ namespace restbed
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
         {
             Resource resource;
-            resource.set_method_handler( request.get_method( ), ServiceImpl::resource_not_found_handler );
-
+    
             auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
 
             if ( iterator not_eq m_resources.end( ) )
             {
                 resource = *iterator;
+            }
+            else
+            {
+                resource.set_method_handler( request.get_method( ), ServiceImpl::resource_not_found_handler );
             }
 
             return resource;
