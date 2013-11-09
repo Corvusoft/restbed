@@ -22,7 +22,7 @@
 
 //System Includes
 #include <regex>
-
+#include <iostream>
 //Project Includes
 #include "restbed/detail/helpers/regex.h"
 
@@ -49,10 +49,11 @@ namespace restbed
 
 	        	try
 	        	{
-	        		regex( value );
+	        		regex pattern( value );
 	        	}
 	        	catch ( regex_error const& re )
 	        	{
+	        		std::cout << "regex: " << re.what() << std::endl;
 	        		result = false;
 	        	}
 	        	
