@@ -78,6 +78,16 @@ namespace restbed
             //n/a
         }
 
+        Bytes RequestImpl::to_bytes( void ) const
+        {
+            string headers = String::format( "%s%s\r\n", generate_status_section( ).data( ), generate_header_section( ).data( ) );
+
+            Bytes bytes( headers.begin( ), headers.end( ) );
+            bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
+
+            return bytes;
+        }
+
         bool RequestImpl::has_header( const string& name ) const
         {
             return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
@@ -231,6 +241,35 @@ namespace restbed
             m_query_parameters = rhs.m_query_parameters;
 
             return *this;
+        }
+
+        string RequestImpl::generate_status_section( void ) const
+        {
+            return String::format( "%s %s HTTP/%.1f\r\n", m_method.data( ), generate_path_section( ).data( ), m_version );
+        }
+
+        string RequestImpl::generate_header_section( void ) const
+        {
+            string section = String::empty;
+
+            for ( auto header : m_headers )
+            {
+                section += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            }
+
+            return section;
+        }
+
+        string RequestImpl::generate_path_section( void ) const
+        {
+            string section = String::format( "%s?", m_path.data( ) );
+
+            for ( auto parameter : m_query_parameters )
+            {
+                section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+            }
+
+            return String::trim_lagging( section, "&" );
         }
     }
 }

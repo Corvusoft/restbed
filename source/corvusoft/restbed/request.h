@@ -30,6 +30,7 @@
 #include <istream>
  
 //Project Includes
+#include <corvusoft/restbed/bytes>
 
 //External Includes
 
@@ -64,6 +65,8 @@ namespace restbed
             virtual ~Request( void );
 
             //Functionality
+            Bytes to_bytes( void ) const;
+
             bool has_header( const std::string& name ) const;
 
             bool has_path_parameter( const std::string& name ) const;

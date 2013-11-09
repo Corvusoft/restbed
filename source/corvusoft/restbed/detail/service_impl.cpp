@@ -132,7 +132,7 @@ namespace restbed
         void ServiceImpl::error_handler( const Request& request, Response& response )
         {
             log_handler( LogLevel::ERROR, "Internal Server Error" );
-            //log_handler( LogLevel::INFO, "Request\n%s", request.to_bytes( ).data( ) );
+            log_handler( LogLevel::INFO, "Request\n%s", request.to_bytes( ).data( ) );
             log_handler( LogLevel::INFO, "Response\n%s", response.to_bytes( ).data( ) );
 
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );

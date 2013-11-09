@@ -17,6 +17,8 @@ Response get_handler( const Request& request )
         std::cout << "parameter name: " << parameter.first << std::endl;
         std::cout << "parameter value: " << parameter.second << std::endl;
     }
+
+    std::cout << "Request:\n" << request.to_bytes().data() << std::endl;
     
     return response;
 }
