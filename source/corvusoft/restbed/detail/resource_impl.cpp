@@ -96,9 +96,17 @@ namespace restbed
 
         void ResourceImpl::set_path( const string& value )
         {
-            if ( not Regex::is_valid( value ) )
+            auto path = String::split( value, '/' );
+
+            for ( auto directory : path )
             {
-                throw invalid_argument( String::empty );
+                string pattern = String::trim_leading( directory, "{" );
+                pattern = String::trim_lagging( directory, "}" );
+
+                if ( not Regex::is_valid( pattern ) )
+                {
+                    throw invalid_argument( String::empty );
+                }
             }
 
             m_path = value;
