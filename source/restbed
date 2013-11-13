@@ -20,6 +20,8 @@
  * along with Restbed.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "restbed/byte.h"
+#include "restbed/bytes.h"
 #include "restbed/method.h"
 #include "restbed/request.h"
 #include "restbed/service.h"
