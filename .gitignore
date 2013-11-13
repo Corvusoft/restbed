@@ -28,6 +28,7 @@ design/api/
 *.o
 *.so
 *.dylib
+*.pyc
 
 # Packages #
 ############
