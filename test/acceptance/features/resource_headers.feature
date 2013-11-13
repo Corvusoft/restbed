@@ -7,8 +7,8 @@ Feature: Default resource headers
 
 	Scenario Outline: Default method headers
 		Given I have published a default resource
-		When I perform a HTTP <method> request
-		Then I should see a status code of <status>
+		When I perform a HTTP "<method>" request
+		Then I should see a status code of "<status>"
 		And I should see a Server header value of corvusoft - restbed
 		And I should see a Date header value of NOW
 		And I should see a Connection header value of close
@@ -47,9 +47,9 @@ Feature: Default resource headers
 		And I should see a body of the form TRACE / HTTP/1.1 Host: localhost
 
 	Scenario Outline: Modify the default headers
-		Given I have configured a resource with a custom <method> handler
+		Given I have configured a resource with a custom "<method>" handler
 		And I have override the default headers
-		When I perform a HTTP <method> request
+		When I perform a HTTP "<method>" request
 		Then I should see a status code of 200
 		And I should see a Server header value of corvusoft.co.uk
 		And I should see a Date header value of Tue, 31 Oct 2012 03:01:44 GMT

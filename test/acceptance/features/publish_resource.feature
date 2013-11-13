@@ -6,9 +6,9 @@ Feature: Publishing resources
 	I want to create one or more resources
 
 	Scenario: Single resource
-		Given I have published a resource with a custom <method> handler
-		When I perform a HTTP <method> request
-		Then I should see a status code of <status>
+		Given I have published a resource with a custom "<method>" handler
+		When I perform a HTTP "<method>" request
+		Then I should see a status code of "<status>"
 		
 	Examples:
 		| method  | status |
@@ -22,9 +22,9 @@ Feature: Publishing resources
 		| OPTIONS | 200    |
 
 	Scenario: Multiple unique resources
-		Given I have published multiple unique resources with custom <method> handlers
-		When I perform HTTP <method> requests
-		Then I should see a status code of <status>
+		Given I have published multiple unique resources with custom "<method>" handlers
+		When I perform HTTP "<method>" requests
+		Then I should see a status code of "<status>"
 
 	Examples:
 		| method  | status |
@@ -39,8 +39,8 @@ Feature: Publishing resources
 
 	Scenario: Multiple duplicate resources
 		Given I have published multiple resources with a path of /api
-		When I perform a HTTP <method> request
-		Then I should see a status code of <status>
+		When I perform a HTTP "<method>" request
+		Then I should see a status code of "<status>"
 
 	Examples:
 		| method  | status |

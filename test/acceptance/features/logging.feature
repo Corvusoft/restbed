@@ -7,8 +7,8 @@ Feature: Custom logging handler
 
 	Scenario Outline: Override default log handler
 		Given I have configured a service with a custom logging handler
-		When I perform a HTTP <method> request
-		Then I should see [INFO 00:00:00] Incoming <method> request 127.0.0.1
+		When I perform a HTTP "<method>" request
+		Then I should see "[INFO 00:00:00]" Incoming "<method>" request 127.0.0.1
 
 	Examples:
 		| method  |

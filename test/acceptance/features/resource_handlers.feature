@@ -7,8 +7,8 @@ Feature: Resource HTTP method handlers
 
 	Scenario Outline: Default method handlers
 		Given I have published a default resource
-		When I perform a HTTP <method> request
-		Then I should see a status code of <status>
+		When I perform a HTTP "<method>" request
+		Then I should see a status code of "<status>"
 
 	Examples:
 		| method  | status |
@@ -32,9 +32,9 @@ Feature: Resource HTTP method handlers
 		And I should see a body of the form TRACE / HTTP/1.1 Host: localhost
 
 	Scenario Outline: Modify the default method handlers
-		Given I have configured a resource with a custom <method> handler
-		When I perform a HTTP <method> request
-		Then I should see a status code of <status>
+		Given I have configured a resource with a custom "<method>" handler
+		When I perform a HTTP "<method>" request
+		Then I should see a status code of "<status>"
 
 	Examples:
 		| method  | status |
