@@ -2,9 +2,6 @@
 
 using namespace restbed;
 
-//http://stackoverflow.com/questions/874245/python-ctypes-and-function-pointers
-//http://docs.python.org/2/library/ctypes.html#callback-functions
-
 extern "C"
 {
 	Resource* create_resource( const char* path )
@@ -25,7 +22,7 @@ extern "C"
 		resource->set_header_filter(name, value);
 	}
 
-	void add_resource_method_handler( Resource* resource, const char* method, void* handler )
+	void add_resource_method_handler( Resource* resource, const char* method, Response (*handler)(Request) )
 	{
 
 	}
