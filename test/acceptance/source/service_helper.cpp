@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2013 Corvusoft
+ */
+ 
 #include <restbed>
 
 using namespace restbed;
