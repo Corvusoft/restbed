@@ -57,17 +57,27 @@ namespace restbed
         {
             auto path_segments = String::split( request.get_path( ), '/' );
             auto path_filters = String::split( resource.get_path( ), '/' );
+            bool result = false;
 
-            bool result = ( path_segments.size( ) == path_filters.size( ) );
-
-            for ( vector< string >::size_type index = 0; index not_eq path_filters.size( ); index++ )
+            if ( path_segments.size( ) == path_filters.size( ) )
             {
-                regex pattern = PathParameter::parse( path_filters[ index ] );
-
-                if ( not regex_match( path_segments[ index ], pattern ) )
+                auto path_segments_it = path_segments.begin();
+                auto path_filters_it = path_filters.begin();
+                
+                for (; path_segments_it not_eq path_segments.end() and path_filters_it not_eq path_filters.end();
+                path_segments_it++, path_filters_it++)
                 {
-                    result = false;
-                    break;
+                    regex pattern = PathParameter::parse( *path_filters_it );   
+
+                    if ( not regex_match( *path_segments_it, pattern ) )
+                    {
+                        result = false;
+                        break;
+                    }
+                    else
+                    {
+                        result = true;
+                    }
                 }
             }
 
