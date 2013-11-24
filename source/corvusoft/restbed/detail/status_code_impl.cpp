@@ -6,8 +6,8 @@
 #include <stdexcept>
 
 //Project Includes
-#include "restbed/detail/helpers/string.h"
-#include "restbed/detail/status_code_impl.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/status_code_impl.h"
 
 //External Includes
 

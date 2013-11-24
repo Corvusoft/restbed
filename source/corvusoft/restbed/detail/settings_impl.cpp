@@ -5,8 +5,8 @@
 //System Includes
 
 //Project Includes
-#include "restbed/detail/settings_impl.h"
-#include "restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/settings_impl.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
 

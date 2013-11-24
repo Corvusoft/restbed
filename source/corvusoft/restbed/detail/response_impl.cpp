@@ -7,10 +7,10 @@
 #include <chrono>
 
 //Project Includes
-#include "restbed/status_code.h"
-#include "restbed/detail/response_impl.h"
-#include "restbed/detail/helpers/map.h"
-#include "restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/response_impl.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
 

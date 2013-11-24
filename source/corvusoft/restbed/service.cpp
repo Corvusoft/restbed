@@ -6,11 +6,11 @@
 #include <cstdarg>
 
 //Project Includes
-#include "restbed/service.h"
-#include "restbed/response.h"
-#include "restbed/settings.h"
-#include "restbed/log_level.h"
-#include "restbed/detail/service_impl.h"
+#include "corvusoft/restbed/service.h"
+#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/settings.h"
+#include "corvusoft/restbed/log_level.h"
+#include "corvusoft/restbed/detail/service_impl.h"
 
 //External Includes
 

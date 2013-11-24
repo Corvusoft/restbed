@@ -5,8 +5,8 @@
 //System Includes
 
 //Project Includes
-#include "restbed/status_code.h"
-#include "restbed/detail/status_code_impl.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/status_code_impl.h"
 
 //External Includes
 

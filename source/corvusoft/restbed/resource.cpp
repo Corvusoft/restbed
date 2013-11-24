@@ -5,11 +5,11 @@
 //System Includes
 
 //Project Includes
-#include "restbed/method.h"
-#include "restbed/request.h"
-#include "restbed/response.h"
-#include "restbed/resource.h"
-#include "restbed/detail/resource_impl.h"
+#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/resource.h"
+#include "corvusoft/restbed/detail/resource_impl.h"
 
 //External Includes
 

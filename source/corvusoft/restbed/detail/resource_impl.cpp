@@ -5,14 +5,14 @@
 //System Includes
 
 //Project Includes
-#include "restbed/method.h"
-#include "restbed/request.h"
-#include "restbed/response.h"
-#include "restbed/status_code.h"
-#include "restbed/detail/resource_impl.h"
-#include "restbed/detail/helpers/regex.h"
-#include "restbed/detail/helpers/string.h"
-#include "restbed/detail/helpers/functional.h"
+#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/resource_impl.h"
+#include "corvusoft/restbed/detail/helpers/regex.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/helpers/functional.h"
 
 //External Includes
 

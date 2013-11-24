@@ -8,13 +8,13 @@
 #include <sstream>
 
 //Project Includes
-#include "restbed/request.h"
-#include "restbed/status_code.h"
-#include "restbed/detail/helpers/map.h"
-#include "restbed/detail/request_impl.h"
-#include "restbed/detail/request_builder.h"
-#include "restbed/detail/helpers/string.h"
-#include "restbed/detail/helpers/istream.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
+#include "corvusoft/restbed/detail/request_impl.h"
+#include "corvusoft/restbed/detail/request_builder.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/helpers/istream.h"
 
 //External Includes
 

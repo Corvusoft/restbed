@@ -9,11 +9,11 @@
 #include <stdexcept>
 
 //Project Includes
-#include "restbed/request.h"
-#include "restbed/resource.h"
-#include "restbed/detail/helpers/string.h"
-#include "restbed/detail/path_parameter.h"
-#include "restbed/detail/resource_matcher.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/resource.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/path_parameter.h"
+#include "corvusoft/restbed/detail/resource_matcher.h"
 
 //External Includes
 

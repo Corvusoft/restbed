@@ -5,7 +5,7 @@
 //System Includes
 
 //Project Includes
-#include "restbed/detail/helpers/istream.h"
+#include "corvusoft/restbed/detail/helpers/istream.h"
 
 //External Includes
 
