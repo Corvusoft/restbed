@@ -75,7 +75,9 @@ TEST( Request, body_accessor )
 {
     const Request request;
 
-    EXPECT_TRUE( request.get_body( ) == "" );
+    vector< uint8_t > expection;
+
+    EXPECT_TRUE( request.get_body( ) == expection );
 }
 
 TEST( Request, header_accessor )
