@@ -11,6 +11,9 @@
 #include <stdexcept>
 
 //Project Includes
+#include <corvusoft/restbed/method>
+#include <corvusoft/restbed/request>
+#include <corvusoft/restbed/response>
 #include <corvusoft/restbed/resource>
 
 //External Includes
@@ -23,26 +26,46 @@ using std::invalid_argument;
 //Project Namespaces
 
 //External Namespaces
+using restbed::Method;
+using restbed::Request;
+using restbed::Response;
 using restbed::Resource;
+
+const static int method_handler_accessor_expection = 3349;
+
+Response test_method_handler( const Request& )
+{
+    Response response;
+    response.set_status_code( method_handler_accessor_expection );
+
+    return response;
+}
 
 TEST( Resource, copy_constructor )
 {
-    const string path = "/event/.*";
+    string method = "POST";
 
     Resource original;
-    original.set_path( path );
-    original.set_header_filters( filters );
-    origiinal.set_method_handler( "POST", func );
+    original.set_path( "/event/.*" );
+    original.set_header_filter( "Content-Type", "text/data" );
+    original.set_method_handler( method, &test_method_handler );
 
     const Resource copy( original );
     
-    EXPECT_TRUE( copy.get_path( ) == path );
+    EXPECT_TRUE( copy == original );
 }
 
 TEST( Resource, method_handler_accessor )
 {
-    Resource resource;
-    resource.set_method_handler( "GET", func );
+    string method = "GET";
 
-    EXPECT_TRUE( resource.get_method_handler( ) == func );
+    Resource resource;
+    resource.set_method_handler( method, &test_method_handler );
+
+    auto handler = resource.get_method_handler( method );
+
+    Request request;
+    Response response = handler( request );
+
+    EXPECT_TRUE( method_handler_accessor_expection == response.get_status_code( ) );
 }
