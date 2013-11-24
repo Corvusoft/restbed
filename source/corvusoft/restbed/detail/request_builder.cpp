@@ -92,6 +92,15 @@ namespace restbed
             return *this;
         }
 
+        Bytes RequestBuilder::parse_http_body( istream& socket )
+        {
+            istreambuf_iterator< char > end_of_stream;
+
+            Bytes body( istreambuf_iterator< char >( socket ), end_of_stream );
+
+            return body;
+        }
+
         double RequestBuilder::parse_http_version( istream& socket )
         {
             string version = String::empty;
@@ -114,15 +123,6 @@ namespace restbed
             }
 
             return path;
-        }
-
-        string RequestBuilder::parse_http_body( istream& socket )
-        {
-            istreambuf_iterator< char > end_of_stream;
-
-            string body( istreambuf_iterator< char >( socket ), end_of_stream );
-
-            return body;
         }
 
         string RequestBuilder::parse_http_method( istream& socket )

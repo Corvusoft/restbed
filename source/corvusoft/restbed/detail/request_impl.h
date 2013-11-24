@@ -54,11 +54,11 @@ namespace restbed
                 bool has_query_parameter( const std::string& name ) const;
                 
                 //Getters
+                Bytes get_body( void ) const;
+
                 double get_version( void ) const;
 
                 std::string get_path( void ) const;
-
-                std::string get_body( void ) const;
                 
                 std::string get_method( void ) const;
                 
@@ -75,11 +75,11 @@ namespace restbed
                 std::map< std::string, std::string > get_path_parameters( void ) const;
                 
                 //Setters
+                void set_body( const Bytes& value );
+                
                 void set_version( const double value );
 
                 void set_path( const std::string& value );
-
-                void set_body( const std::string& value );
                 
                 void set_method( const std::string& value );
                 
@@ -140,13 +140,12 @@ namespace restbed
                 //Operators
                 
                 //Properties
+                Bytes m_body;
 
                 double m_version;
 
                 std::string m_path;
 
-                std::string m_body;
-                
                 std::string m_method;
                 
                 std::map< std::string, std::string > m_headers;

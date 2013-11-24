@@ -56,13 +56,13 @@ namespace restbed
             bool has_query_parameter( const std::string& name ) const;
 
             //Getters
+            Bytes get_body( void ) const;
+            
             Method get_method( void ) const;
 
             double get_version( void ) const;
 
             std::string get_path( void ) const;
-
-            std::string get_body( void ) const;
             
             std::string get_header( const std::string& name ) const;
             

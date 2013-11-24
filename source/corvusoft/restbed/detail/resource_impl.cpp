@@ -10,6 +10,7 @@
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/helpers/regex.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/helpers/functional.h"
@@ -25,6 +26,7 @@ using std::invalid_argument;
 using std::placeholders::_1;
 
 //Project Namespaces
+using restbed::detail::helpers::Map;
 using restbed::detail::helpers::Regex;
 using restbed::detail::helpers::String;
 using restbed::detail::helpers::Functional;
@@ -61,9 +63,16 @@ namespace restbed
         
         string ResourceImpl::get_header_filter( const string& name ) const
         {
-            string key = String::uppercase( name );
+            string filter = String::empty;
 
-            return m_header_filters.at( key );
+            const auto iterator = Map::find_key_ignoring_case( name, m_header_filters );
+            
+            if ( iterator not_eq m_header_filters.end( ) )
+            {
+                filter = iterator->second;
+            }
+            
+            return filter;
         }
 
         map< string, string > ResourceImpl::get_header_filters( void ) const
@@ -71,9 +80,9 @@ namespace restbed
             return m_header_filters;
         }
 
-        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& method ) const
+        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& verb ) const
         {
-            return m_method_handlers.at( method.to_string( ) );
+            return m_method_handlers.at( verb.to_string( ) );
         }
 
         void ResourceImpl::set_path( const string& value )
@@ -101,16 +110,14 @@ namespace restbed
                 throw invalid_argument( String::empty );
             }
 
-            string key = String::uppercase(  name );
+            string key = String::lowercase( name );
 
             m_header_filters[ key ] = value;
         }
 
         void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
         {
-            string key = String::uppercase(  verb.to_string( ) );
-
-            m_method_handlers[ key ] = callback;
+            m_method_handlers[ verb.to_string( ) ] = callback;
         }
 
         bool ResourceImpl::operator <( const ResourceImpl& rhs ) const

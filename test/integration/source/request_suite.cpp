@@ -19,17 +19,19 @@
 
 //System Namespaces
 using std::map;
+using std::vector;
 using std::string;
 
 //Project Namespaces
+using restbed::Request;
 
 //External Namespaces
-using restbed::Request;
 
 TEST( Request, constructor )
 {
     const Request request;
     
+    EXPECT_TRUE( request.get_path( ) == "/" );
     EXPECT_TRUE( request.get_method( ) == "GET" );
     EXPECT_TRUE( request.get_version( ) == 1.1 );
 
@@ -38,4 +40,30 @@ TEST( Request, constructor )
     EXPECT_TRUE( request.get_headers( ) == expectation);
     EXPECT_TRUE( request.get_path_parameters( ) == expectation );
     EXPECT_TRUE( request.get_query_parameters( ) == expectation );
+}
+
+TEST( Request, bytes_accessor )
+{
+    const Request request;
+
+    string data = "GET / HTTP/1.1\r\n\r\n";
+    vector< uint8_t > expection( data.begin( ), data.end( ) );
+
+    EXPECT_TRUE( request.to_bytes( ) == expection );
+}
+
+TEST( Request, method_accessor )
+{
+    const Request request;
+    
+    EXPECT_TRUE( request.get_method( ) == "GET" );
+}
+
+TEST( Request, equality_operator )
+{
+    Request lhs;
+    
+    Request rhs;
+    
+    EXPECT_TRUE( lhs == rhs );
 }

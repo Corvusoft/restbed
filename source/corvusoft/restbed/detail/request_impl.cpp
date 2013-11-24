@@ -33,9 +33,9 @@ namespace restbed
 {
     namespace detail
     {
-        RequestImpl::RequestImpl( void ) : m_version( 1.1 ),
-                                           m_path( String::empty ),
-                                           m_body( String::empty ),
+        RequestImpl::RequestImpl( void ) : m_body( ),
+                                           m_version( 1.1 ),
+                                           m_path( "/" ),
                                            m_method( "GET" ),
                                            m_headers( ),
                                            m_path_parameters( ),
@@ -44,9 +44,9 @@ namespace restbed
             //n/a
         }
         
-        RequestImpl::RequestImpl( const RequestImpl& original ) : m_version( original.m_version ),
+        RequestImpl::RequestImpl( const RequestImpl& original ) : m_body( original.m_body ),
+                                                                  m_version( original.m_version ),
                                                                   m_path( original.m_path ),
-                                                                  m_body( original.m_body ),
                                                                   m_method( original.m_method ),
                                                                   m_headers( original.m_headers ),
                                                                   m_path_parameters( original.m_path_parameters ),
@@ -84,6 +84,11 @@ namespace restbed
         {
             return ( Map::find_key_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
         }
+
+        Bytes RequestImpl::get_body( void ) const
+        {
+            return m_body;
+        }
         
         double RequestImpl::get_version( void ) const
         {
@@ -93,11 +98,6 @@ namespace restbed
         string RequestImpl::get_path( void ) const
         {
             return m_path;
-        }
-        
-        string RequestImpl::get_body( void ) const
-        {
-            return m_body;
         }
 
         string RequestImpl::get_method( void ) const
@@ -126,9 +126,16 @@ namespace restbed
         
         string RequestImpl::get_query_parameter( const string& name ) const
         {
+            string parameter = String::empty;
+
             const auto iterator = Map::find_key_ignoring_case( name, m_query_parameters );
             
-            return iterator->second;
+            if ( iterator not_eq m_query_parameters.end( ) )
+            {
+                parameter = iterator->second;
+            }
+            
+            return parameter;
         }
         
         map< string, string > RequestImpl::get_query_parameters( void ) const
@@ -138,14 +145,26 @@ namespace restbed
         
         string RequestImpl::get_path_parameter( const string& name ) const
         {
+            string parameter = String::empty;
+
             const auto iterator = Map::find_key_ignoring_case( name, m_path_parameters );
             
-            return iterator->second;
+            if ( iterator not_eq m_path_parameters.end( ) )
+            {
+                parameter = iterator->second;
+            }
+
+            return parameter;
         }
         
         map< string, string > RequestImpl::get_path_parameters( void ) const
         {
             return m_path_parameters;
+        }
+
+        void RequestImpl::set_body( const Bytes& value )
+        {
+            m_body = value;
         }
 
         void RequestImpl::set_version( const double value )
@@ -161,11 +180,6 @@ namespace restbed
         void RequestImpl::set_path( const string& value )
         {
             m_path = value;
-        }
-        
-        void RequestImpl::set_body( const string& value )
-        {
-            m_body = value;
         }
 
         void RequestImpl::set_method( const string& value )
@@ -244,11 +258,16 @@ namespace restbed
 
         string RequestImpl::generate_path_section( void ) const
         {
-            string section = String::format( "%s?", m_path.data( ) );
+            string section = m_path;
 
-            for ( auto parameter : m_query_parameters )
+            if ( not m_path_parameters.empty( ) )
             {
-                section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+                section += "?";
+
+                for ( auto parameter : m_query_parameters )
+                {
+                    section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+                }
             }
 
             return String::trim_lagging( section, "&" );

@@ -58,6 +58,11 @@ namespace restbed
         return m_pimpl->has_query_parameter( name );
     }
 
+    Bytes Request::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
+    }
+
     Method Request::get_method( void ) const
     {
         return m_pimpl->get_method( );
@@ -71,11 +76,6 @@ namespace restbed
     string Request::get_path( void ) const
     {
         return m_pimpl->get_path( );
-    }
-
-    string Request::get_body( void ) const
-    {
-        return m_pimpl->get_body( );
     }
     
     string Request::get_header( const string& name ) const

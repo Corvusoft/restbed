@@ -84,11 +84,11 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                static Bytes parse_http_body( std::istream& socket );
+                
                 static double parse_http_version( std::istream& socket );
 
                 static std::string parse_http_path( std::istream& socket );
-
-                static std::string parse_http_body( std::istream& socket );
                 
                 static std::string parse_http_method( std::istream& socket );
             
