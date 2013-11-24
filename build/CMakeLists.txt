@@ -55,5 +55,5 @@ file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include/corvusoft" )
 
 include( build_artifacts.cmake )
 
-install( FILES ${FRAMEWORK_SOURCE} DESTINATION "include/" )
+install( FILES ${SOURCE_DIR}/restbed DESTINATION "include/" )
 install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
