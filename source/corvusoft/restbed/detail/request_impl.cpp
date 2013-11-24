@@ -36,7 +36,7 @@ namespace restbed
         RequestImpl::RequestImpl( void ) : m_version( 1.1 ),
                                            m_path( String::empty ),
                                            m_body( String::empty ),
-                                           m_method( String::empty ),
+                                           m_method( "GET" ),
                                            m_headers( ),
                                            m_path_parameters( ),
                                            m_query_parameters( )

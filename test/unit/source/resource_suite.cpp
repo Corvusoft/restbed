@@ -7,42 +7,34 @@
 #endif
 
 //System Includes
+#include <map>
 #include <string>
 #include <stdexcept>
 
 //Project Includes
+#include <corvusoft/restbed/resource>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/resource>
 
 //System Namespaces
+using std::map;
 using std::string;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::Resource;
 
 //External Namespaces
-using restbed::Resource;
 
 TEST( Resource, constructor )
 {
     const Resource resource;
     
-    EXPECT_TRUE( resource.get_path( ) == ".*" );
-    EXPECT_TRUE( resource.get_content_type( ) == ".*" );
-}
+    map< string, string > expections;
 
-TEST( Resource, copy_constructor )
-{
-    const string path = "/event/.*";
-
-    Resource original;
-    original.set_path( path );
-
-    const Resource copy( original );
-    
-    EXPECT_TRUE( copy.get_path( ) == path );
+    EXPECT_TRUE( resource.get_path( ) == "" );
+    EXPECT_TRUE( resource.get_header_filters( ) == expections );
 }
 
 TEST( Resource, default_destructor )
@@ -64,14 +56,24 @@ TEST( Resource, path_accessor )
     EXPECT_TRUE( resource.get_path( ) == path );
 }
 
-TEST( Resource, content_type_accessor )
+TEST( Resource, header_filter_accessor )
 {
     const string type = "application/json";
 
     Resource resource;
-    resource.set_content_type( type );
+    resource.set_header_filter( "Content-Type", type );
 
-    EXPECT_TRUE( resource.get_content_type( ) == type );
+    EXPECT_TRUE( resource.get_header_filter( "Content-Type" ) == type );
+}
+
+TEST( Resource, case_insensitive_header_filter_accessor )
+{
+    const string type = "application/json";
+
+    Resource resource;
+    resource.set_header_filter( "Content-Type", type );
+
+    EXPECT_TRUE( resource.get_header_filter( "content-type" ) == type );
 }
 
 TEST( Resource, less_than_operator )
@@ -122,7 +124,7 @@ TEST( Resource, assignment_operator )
 {
     Resource original;
     original.set_path( "/api/login" );
-    original.set_content_type( "text/data" );
+    original.set_header_filter( "Content-Type", "text/data" );
 
     Resource copy = original;
 

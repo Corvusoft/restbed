@@ -12,10 +12,10 @@
 #include <stdexcept>
 
 //Project Includes
+#include <corvusoft/restbed/status_code>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/status_code>
 
 //System Namespaces
 using std::map;
@@ -23,9 +23,9 @@ using std::string;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::StatusCode;
 
 //External Namespaces
-using restbed::StatusCode;
 
 TEST( StatusCode, to_string_with_valid_status_code )
 {
