@@ -6,6 +6,7 @@
 #define _RESTBED_BYTE_H 1
 
 //System Includes
+#include <cstdint>
 
 //Project Includes
 

@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <cstdint>
 
 //Project Includes
 #include <corvusoft/restbed/request>

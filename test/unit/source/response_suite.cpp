@@ -9,6 +9,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <cstdint>
 #include <stdexcept>
 
 //Project Includes
