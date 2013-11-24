@@ -9,47 +9,23 @@
 //System Includes
 #include <map>
 #include <string>
+#include <vector>
 
 //Project Includes
+#include <corvusoft/restbed/request>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/request>
 
 //System Namespaces
 using std::map;
+using std::vector;
 using std::string;
 
 //Project Namespaces
-
-//External Namespaces
 using restbed::Request;
 
-TEST( Request, constructor )
-{
-    const Request request;
-    
-    EXPECT_TRUE( request.get_method( ) == "" );
-    EXPECT_TRUE( request.get_version( ) == "" );
-
-    auto expectation = map< string, string >( );
-
-    EXPECT_TRUE( request.get_headers( ) == expectation);
-    EXPECT_TRUE( request.get_path_parameters( ) == expectation );
-    EXPECT_TRUE( request.get_query_parameters( ) == expectation );
-}
-
-TEST( Request, copy_constructor )
-{
-    const string version = "1.1";
-
-    Request original;
-    original.set_version( version );
-
-    const Request copy( original );
-    
-    EXPECT_TRUE( copy.get_version( ) == version );
-}
+//External Namespaces
 
 TEST( Request, default_destructor )
 {
@@ -60,45 +36,94 @@ TEST( Request, default_destructor )
     });
 }
 
-TEST( Request, method_accessor )
+TEST( Request, has_header )
 {
-    const string method = "GET";
-
-    Request request;
-    request.set_method( method );
-
-    EXPECT_TRUE( request.get_method( ) == method );
+    const Request request;
+    
+    EXPECT_TRUE( request.has_header( "Server" ) == false );
 }
 
+TEST( Request, has_path_parameter )
+{
+    const Request request;
+    
+    EXPECT_TRUE( request.has_header( "login" ) == false );
+}
+   
+TEST( Request, has_query_parameter )
+{
+    const Request request;
+    
+    EXPECT_TRUE( request.has_header( "event" ) == false );
+}         
+           
 TEST( Request, version_accessor )
 {
-    const string version = "1.1";
+    const Request request;
+    
+    EXPECT_TRUE( request.get_version( ) == 1.1 );
+}
 
-    Request request;
-    request.set_version( version );
+TEST( Request, path_accessor )
+{
+    const Request request;
+    
+    EXPECT_TRUE( request.get_path( ) == "/" );
+}
+            
+TEST( Request, body_accessor )
+{
+    const Request request;
 
-    EXPECT_TRUE( request.get_version( ) == version );
+    vector< uint8_t > expection;
+
+    EXPECT_TRUE( request.get_body( ) == expection );
+}
+
+TEST( Request, header_accessor )
+{
+    const Request request;
+    
+    EXPECT_TRUE( request.get_header( "Content-Type" ) == "" );
 }
 
 TEST( Request, headers_accessor )
 {
-    const map< string, string > headers = {
-        { "name", "value" }
-    };
+    const Request request;
 
-    Request request;
-    request.set_header( "name", "value" );
-
-    EXPECT_TRUE( request.get_headers( ) == headers );
+    map< string, string > expections;
+    
+    EXPECT_TRUE( request.get_headers( ) == expections );
 }
 
-TEST( Request, assignment_operator )
+TEST( Request, query_parameter_accessor )
 {
-    Request original;
-    original.set_method( "POST" );
-    original.set_version( "1.0" );
+    const Request request;
+    
+    EXPECT_TRUE( request.get_query_parameter( "age" ) == "" );
+}
 
-    Request copy = original;
+TEST( Request, query_parameters_accessor )
+{
+    const Request request;
 
-    EXPECT_TRUE( original == copy );
+    map< string, string > expections;
+    
+    EXPECT_TRUE( request.get_query_parameters( ) == expections );
+}
+
+TEST( Request, path_parameter_accessor )
+{
+    const Request request;
+    
+    EXPECT_TRUE( request.get_path_parameter( "sex" ) == "" );
+}
+
+TEST( Request, path_parameters_accessor )
+{
+    const Request request;
+
+    map< string, string > expections;
+    
+    EXPECT_TRUE( request.get_path_parameters( ) == expections );
 }

@@ -11,35 +11,39 @@
 #include <string>
 
 //Project Includes
+#include <corvusoft/restbed/settings>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/settings>
 
 //System Namespaces
 using std::map;
 using std::string;
 
 //Project Namespaces
+using restbed::Settings;
 
 //External Namespaces
-using restbed::Settings;
 
 TEST( Settings, default_constructor )
 {
     const Settings settings;
-    
-    SUCCEED();
+
+	ASSERT_TRUE( settings.get_port( ) == 80 );
+	ASSERT_TRUE( settings.get_root( ) == "/" );
 }
 
 TEST( Settings, copy_constructor )
 {
+	const string name = "Planet";
+	const string value = "earth";
+
     Settings original;
-    original.set_property( "Planet", "earth" );
+    original.set_property( name, value );
 
     const Settings copy( original );
     
-    ASSERT_TRUE( copy.get_property( "Planet" ) == "earth" );
+    ASSERT_TRUE( copy.get_property( name ) == value );
 }
 
 TEST( Settings, default_destructor )
@@ -51,7 +55,7 @@ TEST( Settings, default_destructor )
     });
 }
 
-TEST( Settings, set_port )
+TEST( Settings, port_accessor )
 {
 	Settings settings;
 	settings.set_port( 8989 );
@@ -59,7 +63,7 @@ TEST( Settings, set_port )
 	ASSERT_TRUE( settings.get_port( ) == 8989 );
 }
 
-TEST( Settings, set_root )
+TEST( Settings, root_accessor )
 {
 	const string value = "The Quest For Life";
 
@@ -69,33 +73,29 @@ TEST( Settings, set_root )
 	ASSERT_TRUE( settings.get_root( ) == value );
 }
 
-TEST( Settings, set_upper_case_property_name )
+TEST( Settings, property_accessor )
 {
-	Settings settings;
-	settings.set_property( "MIR", "1986" );
+	const string name = "MIR";
+	const string value = "1986";
 
-	ASSERT_TRUE( settings.get_property( "mir" ) == "1986" );
+	Settings settings;
+	settings.set_property( name, value );
+
+	ASSERT_TRUE( settings.get_property( name ) == value );
 }
 
-TEST( Settings, set_lower_case_property_name )
+TEST( Settings, case_insensitive_property_accessor )
 {
-	Settings settings;
-	settings.set_property( "solar", "eclipse" );
+	const string name = "MIR";
+	const string value = "1986";
 
-	ASSERT_TRUE( settings.get_property( "SOLAR" ) == "eclipse" );
+	Settings settings;
+	settings.set_property( name, value );
+
+	ASSERT_TRUE( settings.get_property( "mir" ) == value );
 }
 
-TEST( Settings, set_mixed_case_property_name )
-{
-	const string value = "Makemake is the third closest dwarf planet to the Sun and is the only one of the outer four dwarf planet to not have any moons.";
-	
-	Settings settings;
-	settings.set_property( "MakeMake",  value );
-
-	ASSERT_TRUE( settings.get_property( "maKemAke" ) == value );
-}
-
-TEST( Settings, set_defined_property )
+TEST( Settings, previously_defined_property_accessor )
 {
 	Settings settings;
 	settings.set_property( "Local Star Name", "Mars" );
@@ -104,7 +104,7 @@ TEST( Settings, set_defined_property )
 	ASSERT_TRUE( settings.get_property( "Local Star Name" ) == "Sun" );
 }
 
-TEST( Settings, set_default_property )
+TEST( Settings, default_defined_property_accessor )
 {
 	const string value = "black hole";
 
@@ -114,58 +114,14 @@ TEST( Settings, set_default_property )
 	ASSERT_TRUE( settings.get_root( ) == value );
 }
 
-TEST( Settings, get_defined_port )
-{
-	uint16_t port = 1984;
-
-	Settings settings;
-	settings.set_port( port );
-
-	ASSERT_TRUE( settings.get_port( ) == port );
-}
-
-TEST( Settings, get_default_port )
-{
-	const Settings settings;
-
-	ASSERT_TRUE( settings.get_port( ) == 80 );
-}
-
-TEST( Settings, get_defined_root )
-{
-	const string root = "/star/stuff";
-
-	Settings settings;
-	settings.set_root( root );
-
-	ASSERT_TRUE( settings.get_root( ) == root );
-}
-
-TEST( Settings, get_default_root )
-{
-	const Settings settings;
-
-	ASSERT_TRUE( settings.get_root( ) == "/" );
-}
-
-TEST( Settings, get_defined_property )
-{
-	const string value = "4.243 light years";
-
-	Settings settings;
-	settings.set_property( "Proxima Centauri", value );
-
-	ASSERT_TRUE( settings.get_property( "Proxima Centauri" ) == value );
-}
-
-TEST( Settings, get_undefined_property )
+TEST( Settings, undefined_property_accessor )
 {
 	const Settings settings;
 
 	ASSERT_TRUE( settings.get_property( "Alpha Centauri") == "" );
 }
 
-TEST( Settings, get_defined_properties )
+TEST( Settings, properties_accessor )
 {
 	Settings settings;
 	settings.set_property( "Voyager 1", "124 AU" );
@@ -181,7 +137,7 @@ TEST( Settings, get_defined_properties )
 	ASSERT_TRUE( settings.get_properties( ) == expectation );
 }
 
-TEST( Settings, get_default_properties )
+TEST( Settings, default_properties_accessor )
 {
 	const Settings settings;
 

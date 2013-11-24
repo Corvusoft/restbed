@@ -7,10 +7,10 @@
 #include <chrono>
 
 //Project Includes
-#include "restbed/status_code.h"
-#include "restbed/detail/response_impl.h"
-#include "restbed/detail/helpers/map.h"
-#include "restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/response_impl.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
 
@@ -118,22 +118,22 @@ namespace restbed
 
         bool ResponseImpl::operator <( const ResponseImpl& rhs ) const
         {
-            return m_body < rhs.m_body;
+            return m_status_code < rhs.m_status_code;
         }
         
         bool ResponseImpl::operator >( const ResponseImpl& rhs ) const
         {
-            return m_body > rhs.m_body;
+            return m_status_code > rhs.m_status_code;
         }
         
         bool ResponseImpl::operator ==( const ResponseImpl& rhs ) const
         {
-            return m_body == rhs.m_body and m_headers == rhs.m_headers;
+            return m_status_code == rhs.m_status_code and m_body == rhs.m_body and m_headers == rhs.m_headers;
         }
         
         bool ResponseImpl::operator !=( const ResponseImpl& rhs ) const
         {
-            return m_body not_eq rhs.m_body or m_headers not_eq rhs.m_headers;
+            return not ( *this == rhs );
         }
         
         ResponseImpl& ResponseImpl::operator =( const ResponseImpl& rhs )

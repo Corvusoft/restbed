@@ -22,8 +22,8 @@ endforeach( DEPENDENCY )
 #
 # Configuration
 #
-set( SOURCE_DIR "../source/corvusoft" )
-set( FRAMEWORK_SOURCE_DIR ${SOURCE_DIR}/restbed )
+set( SOURCE_DIR "../source" )
+set( FRAMEWORK_SOURCE_DIR ${SOURCE_DIR}/corvusoft/restbed )
 
 set( CMAKE_INSTALL_PREFIX "../distribution" )
 set( LIBRARY_OUTPUT_PATH    "${CMAKE_INSTALL_PREFIX}/library" )
@@ -51,9 +51,9 @@ target_link_libraries( main restbed )
 # Install
 #
 file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/library" )
-file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include" )
-file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/documentation" )
+file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include/corvusoft" )
 
 include( build_artifacts.cmake )
 
-install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/restbed" )
+install( FILES ${FRAMEWORK_SOURCE} DESTINATION "include/" )
+install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )

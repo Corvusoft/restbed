@@ -5,9 +5,9 @@
 //System Includes
  
 //Project Includes
-#include "restbed/method.h"
-#include "restbed/request.h"
-#include "restbed/detail/request_impl.h"
+#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes
 
@@ -58,6 +58,11 @@ namespace restbed
         return m_pimpl->has_query_parameter( name );
     }
 
+    Bytes Request::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
+    }
+
     Method Request::get_method( void ) const
     {
         return m_pimpl->get_method( );
@@ -71,11 +76,6 @@ namespace restbed
     string Request::get_path( void ) const
     {
         return m_pimpl->get_path( );
-    }
-
-    string Request::get_body( void ) const
-    {
-        return m_pimpl->get_body( );
     }
     
     string Request::get_header( const string& name ) const

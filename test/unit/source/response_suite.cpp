@@ -12,42 +12,44 @@
 #include <stdexcept>
 
 //Project Includes
+#include <corvusoft/restbed/response>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/response>
 
 //System Namespaces
 using std::map;
 using std::string;
+using std::vector;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::Response;
 
 //External Namespaces
-using restbed::Response;
 
 TEST( Response, constructor )
 {
     const Response response;
+
+    auto body_expection = vector< uint8_t > ( );
+    auto header_expectation = map< string, string >( );
     
-    EXPECT_TRUE( response.get_data( ) == "" );
-
-    auto expectation = map< string, string >( );
-
-    EXPECT_TRUE( response.get_headers( ) == expectation );
+    EXPECT_TRUE( response.get_status_code( ) == 200 );
+    EXPECT_TRUE( response.get_body( ) == body_expection );
+    EXPECT_TRUE( response.get_headers( ) == header_expectation );
 }
 
 TEST( Response, copy_constructor )
 {
-    const string data = "Test Data";
+    const vector< uint8_t > data = { 'T', 'e', 's', 't', ' ', 'D', 'a', 't', 'a' };
 
     Response original;
-    original.set_data( data );
+    original.set_body( data );
 
     const Response copy( original );
     
-    EXPECT_TRUE( copy.get_data( ) == data );
+    EXPECT_TRUE( copy.get_body( ) == data );
 }
 
 TEST( Response, default_destructor )
@@ -59,14 +61,25 @@ TEST( Response, default_destructor )
     });
 }
 
-TEST( Response, data_accessor )
+TEST( Response, body_accessor )
 {
     const string data = "Super important test data.";
+    const vector< uint8_t > body( data.begin( ), data.end( ) );
 
     Response response;
-    response.set_data( data );
+    response.set_body( body );
 
-    EXPECT_TRUE( response.get_data( ) == data );
+    EXPECT_TRUE( response.get_body( ) == body );
+}
+
+TEST( Response, status_code_accessor )
+{
+    const int status = 404;
+
+    Response response;
+    response.set_status_code( status );
+
+    EXPECT_TRUE( response.get_status_code( ) == status );
 }
 
 TEST( Response, header_accessor )
@@ -80,11 +93,22 @@ TEST( Response, header_accessor )
     EXPECT_TRUE( response.get_header( name ) == value );
 }
 
+TEST( Response, case_insensitive_header_accessor )
+{
+    const string name = "Test Name.";
+    const string value = "Test Value.";
+
+    Response response;
+    response.set_header( name, value );
+
+    EXPECT_TRUE( response.get_header( "test name." ) == value );
+}
+
 TEST( Response, headers_accessor )
 {
     const map< string, string > headers = {
-        {"1", "2"},
-        {"3", "4"}
+        { "1", "2" },
+        { "3", "4" }
     };
 
     Response response;
@@ -96,10 +120,10 @@ TEST( Response, headers_accessor )
 TEST( Response, less_than_operator )
 {
     Response lhs;
-    lhs.set_data( "a" );
+    lhs.set_status_code( 201 );
 
     Response rhs;
-    rhs.set_data( "abc" );
+    rhs.set_status_code( 301 );
 
     EXPECT_TRUE( lhs < rhs );
 }
@@ -107,10 +131,10 @@ TEST( Response, less_than_operator )
 TEST( Response, greater_than_operator )
 {
     Response lhs;
-    lhs.set_data( "123456" );
+    lhs.set_status_code( 500 );
 
     Response rhs;
-    rhs.set_data( "123" );
+    rhs.set_status_code( 401 );
 
     EXPECT_TRUE( lhs > rhs );
 }
@@ -129,10 +153,10 @@ TEST( Response, equality_operator )
 TEST( Response, negated_equality_operator )
 {
     Response lhs;
-    lhs.set_data( "some data" );
+    lhs.set_body( "some data" );
     
     Response rhs;
-    rhs.set_data( "data some" );
+    rhs.set_body( "data some" );
     
     EXPECT_TRUE( lhs != rhs );
 }

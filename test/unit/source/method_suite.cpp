@@ -11,19 +11,18 @@
 #include <stdexcept>
 
 //Project Includes
+#include <corvusoft/restbed/method>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/method>
 
 //System Namespaces
 using std::string;
-using std::invalid_argument;
 
 //Project Namespaces
+using restbed::Method;
 
 //External Namespaces
-using restbed::Method;
 
 TEST( Method, char_constructor )
 {
@@ -32,13 +31,6 @@ TEST( Method, char_constructor )
     const Method method( name );
     
     EXPECT_TRUE( method.to_string( ) == "GET" );
-}
-
-TEST( Method, invalid_char_constructor )
-{
-    const char* name = "Nova Delphini";
-    
-    EXPECT_THROW( Method method( name ), invalid_argument );
 }
 
 TEST( Method, lowercase_char_constructor )
@@ -50,6 +42,13 @@ TEST( Method, lowercase_char_constructor )
     EXPECT_TRUE( method.to_string( ) == "PUT" );
 }
 
+TEST( Method, invalid_char_constructor )
+{
+    const char* name = "Nova Delphini";
+    
+    EXPECT_ANY_THROW( Method method( name ) );
+}
+
 TEST( Method, string_constructor )
 {
     const string name = "POST";
@@ -59,13 +58,6 @@ TEST( Method, string_constructor )
     EXPECT_TRUE( method.to_string( ) == "POST" );
 }
 
-TEST( Method, invalid_string_constructor )
-{
-    const string name = "Magellanic cloud";
-    
-    EXPECT_THROW( Method method( name ), invalid_argument );
-}
-
 TEST( Method, lowercase_string_constructor )
 {
     const char* name = "get";
@@ -73,6 +65,13 @@ TEST( Method, lowercase_string_constructor )
     const Method method( name );
     
     EXPECT_TRUE( method.to_string( ) == "GET" );
+}
+
+TEST( Method, invalid_string_constructor )
+{
+    const string name = "Magellanic cloud";
+    
+    EXPECT_ANY_THROW( Method method( name ) );
 }
 
 TEST( Method, copy_constructor )
@@ -118,7 +117,7 @@ TEST( Method, parse )
 
 TEST( Method, invalid_parse )
 {
-    EXPECT_THROW( Method::parse( "Lagoon Nebula" ), invalid_argument );
+    EXPECT_ANY_THROW( Method::parse( "Lagoon Nebula" ) );
 }
 
 TEST( Method, assignment_operator )

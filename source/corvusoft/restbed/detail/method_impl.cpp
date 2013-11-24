@@ -7,9 +7,9 @@
 #include <algorithm>
 
 //Project Includes
-#include "restbed/status_code.h"
-#include "restbed/detail/method_impl.h"
-#include "restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/method_impl.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
  
 //External Includes
 

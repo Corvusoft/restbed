@@ -8,13 +8,13 @@
 #include <sstream>
 
 //Project Includes
-#include "restbed/request.h"
-#include "restbed/status_code.h"
-#include "restbed/detail/helpers/map.h"
-#include "restbed/detail/request_impl.h"
-#include "restbed/detail/request_builder.h"
-#include "restbed/detail/helpers/string.h"
-#include "restbed/detail/helpers/istream.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
+#include "corvusoft/restbed/detail/request_impl.h"
+#include "corvusoft/restbed/detail/request_builder.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/helpers/istream.h"
 
 //External Includes
 
@@ -92,6 +92,15 @@ namespace restbed
             return *this;
         }
 
+        Bytes RequestBuilder::parse_http_body( istream& socket )
+        {
+            istreambuf_iterator< char > end_of_stream;
+
+            Bytes body( istreambuf_iterator< char >( socket ), end_of_stream );
+
+            return body;
+        }
+
         double RequestBuilder::parse_http_version( istream& socket )
         {
             string version = String::empty;
@@ -114,15 +123,6 @@ namespace restbed
             }
 
             return path;
-        }
-
-        string RequestBuilder::parse_http_body( istream& socket )
-        {
-            istreambuf_iterator< char > end_of_stream;
-
-            string body( istreambuf_iterator< char >( socket ), end_of_stream );
-
-            return body;
         }
 
         string RequestBuilder::parse_http_method( istream& socket )

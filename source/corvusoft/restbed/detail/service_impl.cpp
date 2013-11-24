@@ -8,18 +8,18 @@
 #include <functional>
 
 //Project Includes
-#include "restbed/method.h"
-#include "restbed/request.h"
-#include "restbed/response.h"
-#include "restbed/resource.h"
-#include "restbed/settings.h"
-#include "restbed/log_level.h"
-#include "restbed/status_code.h"
-#include "restbed/detail/service_impl.h"
-#include "restbed/detail/helpers/string.h"
-#include "restbed/detail/path_parameter.h"
-#include "restbed/detail/request_builder.h"
-#include "restbed/detail/resource_matcher.h"
+#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/resource.h"
+#include "corvusoft/restbed/settings.h"
+#include "corvusoft/restbed/log_level.h"
+#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/service_impl.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/path_parameter.h"
+#include "corvusoft/restbed/detail/request_builder.h"
+#include "corvusoft/restbed/detail/resource_matcher.h"
 
 //External Includes
 

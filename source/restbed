@@ -2,13 +2,13 @@
  * Copyright (c) 2013 Corvusoft
  */
 
-#include "restbed/byte.h"
-#include "restbed/bytes.h"
-#include "restbed/method.h"
-#include "restbed/request.h"
-#include "restbed/service.h"
-#include "restbed/response.h"
-#include "restbed/resource.h"
-#include "restbed/settings.h"
-#include "restbed/log_level.h"
-#include "restbed/status_code.h"
+#include "corvusoft/restbed/byte.h"
+#include "corvusoft/restbed/bytes.h"
+#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/service.h"
+#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/resource.h"
+#include "corvusoft/restbed/settings.h"
+#include "corvusoft/restbed/log_level.h"
+#include "corvusoft/restbed/status_code.h"

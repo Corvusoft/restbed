@@ -5,8 +5,8 @@
 //System Includes
 
 //Project Includes
-#include "restbed/response.h"
-#include "restbed/detail/response_impl.h"
+#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/detail/response_impl.h"
 
 //External Includes
 
