@@ -9,19 +9,19 @@
 //System Includes
 
 //Project Includes
+#include <corvusoft/restbed/service>
+#include <corvusoft/restbed/settings>
 
 //External Includes
 #include <gtest/gtest.h>
-#include <restbed/service>
-#include <restbed/settings>
 
 //System Namespaces
 
 //Project Namespaces
-
-//External Namespaces
 using restbed::Service;
 using restbed::Settings;
+
+//External Namespaces
 
 TEST( Service, default_destructor )
 {
