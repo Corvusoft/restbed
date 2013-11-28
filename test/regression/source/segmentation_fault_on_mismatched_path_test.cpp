@@ -32,12 +32,12 @@ TEST_F( ServiceFixture, mismatched_resource_path )
 {
 	int status_code = Http::get( "http://localhost:1984/" );
 	
-	EXPECT_TRUE( status_code == 404 );
+	EXPECT_EQ( 404, status_code );
 }
 
 TEST_F( ServiceFixture, matched_resource_path )
 {
 	int status_code = Http::get( "http://localhost:1984/test" );
 	
-	EXPECT_TRUE( status_code == 200 );
+	EXPECT_EQ( 200, status_code );
 }

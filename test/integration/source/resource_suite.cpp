@@ -52,7 +52,7 @@ TEST( Resource, copy_constructor )
 
     const Resource copy( original );
     
-    EXPECT_TRUE( copy == original );
+    EXPECT_EQ( original, copy );
 }
 
 TEST( Resource, method_handler_accessor )
@@ -67,5 +67,5 @@ TEST( Resource, method_handler_accessor )
     Request request;
     Response response = handler( request );
 
-    EXPECT_TRUE( method_handler_accessor_expection == response.get_status_code( ) );
+    EXPECT_EQ( method_handler_accessor_expection, response.get_status_code( ) );
 }

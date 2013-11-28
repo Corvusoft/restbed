@@ -31,15 +31,15 @@ TEST( Request, constructor )
 {
     const Request request;
     
-    EXPECT_TRUE( request.get_path( ) == "/" );
-    EXPECT_TRUE( request.get_method( ) == "GET" );
-    EXPECT_TRUE( request.get_version( ) == 1.1 );
+    EXPECT_EQ( "/", request.get_path( ) );
+    EXPECT_EQ( "GET", request.get_method( ).to_string( ) );
+    EXPECT_EQ( 1.1, request.get_version( ) );
 
     auto expectation = map< string, string >( );
 
-    EXPECT_TRUE( request.get_headers( ) == expectation);
-    EXPECT_TRUE( request.get_path_parameters( ) == expectation );
-    EXPECT_TRUE( request.get_query_parameters( ) == expectation );
+    EXPECT_EQ( expectation, request.get_headers( ) );
+    EXPECT_EQ( expectation, request.get_path_parameters( ) );
+    EXPECT_EQ( expectation, request.get_query_parameters( ) );
 }
 
 TEST( Request, bytes_accessor )
@@ -47,16 +47,16 @@ TEST( Request, bytes_accessor )
     const Request request;
 
     string data = "GET / HTTP/1.1\r\n\r\n";
-    vector< uint8_t > expection( data.begin( ), data.end( ) );
+    vector< uint8_t > expectation( data.begin( ), data.end( ) );
 
-    EXPECT_TRUE( request.to_bytes( ) == expection );
+    EXPECT_EQ( expectation, request.to_bytes( ) );
 }
 
 TEST( Request, method_accessor )
 {
     const Request request;
     
-    EXPECT_TRUE( request.get_method( ) == "GET" );
+    EXPECT_EQ( "GET", request.get_method( ).to_string( ) );
 }
 
 TEST( Request, equality_operator )
