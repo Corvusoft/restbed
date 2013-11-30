@@ -30,7 +30,7 @@ TEST( Method, char_constructor )
 
     const Method method( name );
     
-    EXPECT_TRUE( method.to_string( ) == "GET" );
+    EXPECT_EQ( "GET", method.to_string( ) );
 }
 
 TEST( Method, lowercase_char_constructor )
@@ -39,7 +39,7 @@ TEST( Method, lowercase_char_constructor )
     
     const Method method( name );
     
-    EXPECT_TRUE( method.to_string( ) == "PUT" );
+    EXPECT_EQ( "PUT", method.to_string( ) );
 }
 
 TEST( Method, invalid_char_constructor )
@@ -55,7 +55,7 @@ TEST( Method, string_constructor )
     
     const Method method( name );
     
-    EXPECT_TRUE( method.to_string( ) == "POST" );
+    EXPECT_EQ( "POST", method.to_string( ) );
 }
 
 TEST( Method, lowercase_string_constructor )
@@ -64,7 +64,7 @@ TEST( Method, lowercase_string_constructor )
     
     const Method method( name );
     
-    EXPECT_TRUE( method.to_string( ) == "GET" );
+    EXPECT_EQ( "GET", method.to_string( ) );
 }
 
 TEST( Method, invalid_string_constructor )
@@ -80,7 +80,7 @@ TEST( Method, copy_constructor )
     
     const Method copy( original );
     
-    EXPECT_TRUE( copy.to_string( ) == "DELETE" );
+    EXPECT_EQ( "DELETE", copy.to_string( ) );
 }
 
 TEST( Method, lowercase_copy_constructor )
@@ -89,7 +89,7 @@ TEST( Method, lowercase_copy_constructor )
     
     const Method copy( original );
     
-    EXPECT_TRUE( copy.to_string( ) == "DELETE" );
+    EXPECT_EQ( "DELETE", copy.to_string( ) );
 }
 
 TEST( Method, default_destructor )
@@ -105,14 +105,14 @@ TEST( Method, to_string )
 {
     const Method method( "TRACE" );
 
-    EXPECT_TRUE( method.to_string( ) == "TRACE" );
+    EXPECT_EQ( "TRACE", method.to_string( ) );
 }
 
 TEST( Method, parse )
 {
     const Method method = Method::parse( "PUT" );
     
-    EXPECT_TRUE( method.to_string( ) == "PUT" );
+    EXPECT_EQ( "PUT", method.to_string( ) );
 }
 
 TEST( Method, invalid_parse )
@@ -126,7 +126,7 @@ TEST( Method, assignment_operator )
     
     const Method lhs = rhs;
     
-    EXPECT_TRUE( lhs.to_string( ) == "OPTIONS" );
+    EXPECT_EQ( "OPTIONS", lhs.to_string( ) );
 }
 
 TEST( Method, less_than_operator )

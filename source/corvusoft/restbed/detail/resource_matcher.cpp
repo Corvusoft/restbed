@@ -55,28 +55,23 @@ namespace restbed
 
         bool ResourceMatcher::compare_path( const Request& request, const Resource& resource ) const
         {
+            bool result = false;
+
             auto path_segments = String::split( request.get_path( ), '/' );
             auto path_filters = String::split( resource.get_path( ), '/' );
-            bool result = false;
 
             if ( path_segments.size( ) == path_filters.size( ) )
             {
-                auto path_segments_it = path_segments.begin();
-                auto path_filters_it = path_filters.begin();
-                
-                for (; path_segments_it not_eq path_segments.end() and path_filters_it not_eq path_filters.end();
-                path_segments_it++, path_filters_it++)
-                {
-                    regex pattern = PathParameter::parse( *path_filters_it );   
+                result = true;
 
-                    if ( not regex_match( *path_segments_it, pattern ) )
+                for ( size_t index = 0; index not_eq path_filters.size( ); index++ )
+                {
+                    regex pattern = PathParameter::parse( path_filters[ index ] );
+
+                    if ( not regex_match( path_segments[ index ], pattern ) )
                     {
                         result = false;
                         break;
-                    }
-                    else
-                    {
-                        result = true;
                     }
                 }
             }

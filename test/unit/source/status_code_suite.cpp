@@ -31,7 +31,7 @@ TEST( StatusCode, to_string_with_valid_status_code )
 {
     const string result = StatusCode::to_string( StatusCode::OK );
     
-    ASSERT_TRUE( result == "OK" );
+    EXPECT_EQ( "OK", result );
 }
 
 TEST( StatusCode, to_string_with_invalid_status_code )
@@ -48,5 +48,5 @@ TEST( StatusCode, set_status_code_strings )
 
     StatusCode::set_mappings( values );
     
-    ASSERT_TRUE( StatusCode::get_mappings( ) == values );
+    EXPECT_EQ( values, StatusCode::get_mappings( ) );
 }

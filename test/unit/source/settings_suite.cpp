@@ -29,8 +29,8 @@ TEST( Settings, default_constructor )
 {
     const Settings settings;
 
-	ASSERT_TRUE( settings.get_port( ) == 80 );
-	ASSERT_TRUE( settings.get_root( ) == "/" );
+	EXPECT_EQ( 80, settings.get_port( )  );
+	EXPECT_EQ( "/", settings.get_root( ) );
 }
 
 TEST( Settings, copy_constructor )
@@ -43,7 +43,7 @@ TEST( Settings, copy_constructor )
 
     const Settings copy( original );
     
-    ASSERT_TRUE( copy.get_property( name ) == value );
+    EXPECT_EQ( value, copy.get_property( name ) );
 }
 
 TEST( Settings, default_destructor )
@@ -60,7 +60,7 @@ TEST( Settings, port_accessor )
 	Settings settings;
 	settings.set_port( 8989 );
 
-	ASSERT_TRUE( settings.get_port( ) == 8989 );
+	EXPECT_EQ( 8989, settings.get_port( ) );
 }
 
 TEST( Settings, root_accessor )
@@ -70,7 +70,7 @@ TEST( Settings, root_accessor )
 	Settings settings;
 	settings.set_root( value );
 
-	ASSERT_TRUE( settings.get_root( ) == value );
+	EXPECT_EQ( value, settings.get_root( ) );
 }
 
 TEST( Settings, property_accessor )
@@ -81,7 +81,7 @@ TEST( Settings, property_accessor )
 	Settings settings;
 	settings.set_property( name, value );
 
-	ASSERT_TRUE( settings.get_property( name ) == value );
+	EXPECT_EQ( value, settings.get_property( name ) );
 }
 
 TEST( Settings, case_insensitive_property_accessor )
@@ -92,7 +92,7 @@ TEST( Settings, case_insensitive_property_accessor )
 	Settings settings;
 	settings.set_property( name, value );
 
-	ASSERT_TRUE( settings.get_property( "mir" ) == value );
+	EXPECT_EQ( value, settings.get_property( "mir" ) );
 }
 
 TEST( Settings, previously_defined_property_accessor )
@@ -101,7 +101,7 @@ TEST( Settings, previously_defined_property_accessor )
 	settings.set_property( "Local Star Name", "Mars" );
 	settings.set_property( "Local Star Name", "Sun" );
 
-	ASSERT_TRUE( settings.get_property( "Local Star Name" ) == "Sun" );
+	EXPECT_EQ( "Sun", settings.get_property( "Local Star Name" ) );
 }
 
 TEST( Settings, default_defined_property_accessor )
@@ -111,14 +111,14 @@ TEST( Settings, default_defined_property_accessor )
 	Settings settings;
 	settings.set_property( "root", value );
 
-	ASSERT_TRUE( settings.get_root( ) == value );
+	EXPECT_EQ( value, settings.get_root( ) );
 }
 
 TEST( Settings, undefined_property_accessor )
 {
 	const Settings settings;
 
-	ASSERT_TRUE( settings.get_property( "Alpha Centauri") == "" );
+	EXPECT_EQ( "", settings.get_property( "Alpha Centauri") );
 }
 
 TEST( Settings, properties_accessor )
@@ -134,7 +134,7 @@ TEST( Settings, properties_accessor )
 		{ "VOYAGER 2", "101 AU" }
 	};
 
-	ASSERT_TRUE( settings.get_properties( ) == expectation );
+	EXPECT_EQ( expectation, settings.get_properties( ) );
 }
 
 TEST( Settings, default_properties_accessor )
@@ -146,7 +146,7 @@ TEST( Settings, default_properties_accessor )
 		{ "PORT", "80" },
 	};
 
-	ASSERT_TRUE( settings.get_properties( ) == expectation );
+	EXPECT_EQ( expectation, settings.get_properties( ) );
 }
 
 TEST( Settings, assignment_operator )

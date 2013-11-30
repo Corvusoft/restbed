@@ -36,9 +36,9 @@ TEST( Response, constructor )
     auto body_expection = vector< uint8_t > ( );
     auto header_expectation = map< string, string >( );
     
-    EXPECT_TRUE( response.get_status_code( ) == 200 );
-    EXPECT_TRUE( response.get_body( ) == body_expection );
-    EXPECT_TRUE( response.get_headers( ) == header_expectation );
+    EXPECT_EQ( 200, response.get_status_code( ) );
+    EXPECT_EQ( body_expection, response.get_body( )  );
+    EXPECT_EQ( header_expectation, response.get_headers( ) );
 }
 
 TEST( Response, copy_constructor )
@@ -50,7 +50,7 @@ TEST( Response, copy_constructor )
 
     const Response copy( original );
     
-    EXPECT_TRUE( copy.get_body( ) == data );
+    EXPECT_EQ( data, copy.get_body( ) );
 }
 
 TEST( Response, default_destructor )
@@ -70,7 +70,7 @@ TEST( Response, body_accessor )
     Response response;
     response.set_body( body );
 
-    EXPECT_TRUE( response.get_body( ) == body );
+    EXPECT_EQ( body, response.get_body( ) );
 }
 
 TEST( Response, status_code_accessor )
@@ -80,7 +80,7 @@ TEST( Response, status_code_accessor )
     Response response;
     response.set_status_code( status );
 
-    EXPECT_TRUE( response.get_status_code( ) == status );
+    EXPECT_EQ( status, response.get_status_code( ) );
 }
 
 TEST( Response, header_accessor )
@@ -91,7 +91,7 @@ TEST( Response, header_accessor )
     Response response;
     response.set_header( name, value );
 
-    EXPECT_TRUE( response.get_header( name ) == value );
+    EXPECT_EQ( value, response.get_header( name ) );
 }
 
 TEST( Response, case_insensitive_header_accessor )
@@ -102,7 +102,7 @@ TEST( Response, case_insensitive_header_accessor )
     Response response;
     response.set_header( name, value );
 
-    EXPECT_TRUE( response.get_header( "test name." ) == value );
+    EXPECT_EQ( value, response.get_header( "test name." ) );
 }
 
 TEST( Response, headers_accessor )
@@ -115,7 +115,7 @@ TEST( Response, headers_accessor )
     Response response;
     response.set_headers( headers );
 
-    EXPECT_TRUE( response.get_headers( ) == headers );
+    EXPECT_EQ( headers, response.get_headers( ) );
 }
 
 TEST( Response, less_than_operator )

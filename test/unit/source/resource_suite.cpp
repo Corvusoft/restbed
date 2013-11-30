@@ -33,8 +33,8 @@ TEST( Resource, constructor )
     
     map< string, string > expections;
 
-    EXPECT_TRUE( resource.get_path( ) == "" );
-    EXPECT_TRUE( resource.get_header_filters( ) == expections );
+    EXPECT_EQ( "", resource.get_path( ) );
+    EXPECT_EQ( expections, resource.get_header_filters( ) );
 }
 
 TEST( Resource, default_destructor )
@@ -53,7 +53,7 @@ TEST( Resource, path_accessor )
     Resource resource;
     resource.set_path( path );
 
-    EXPECT_TRUE( resource.get_path( ) == path );
+    EXPECT_EQ( path, resource.get_path( ) );
 }
 
 TEST( Resource, header_filter_accessor )
@@ -63,7 +63,7 @@ TEST( Resource, header_filter_accessor )
     Resource resource;
     resource.set_header_filter( "Content-Type", type );
 
-    EXPECT_TRUE( resource.get_header_filter( "Content-Type" ) == type );
+    EXPECT_EQ( type, resource.get_header_filter( "Content-Type" ) );
 }
 
 TEST( Resource, case_insensitive_header_filter_accessor )
@@ -73,7 +73,7 @@ TEST( Resource, case_insensitive_header_filter_accessor )
     Resource resource;
     resource.set_header_filter( "Content-Type", type );
 
-    EXPECT_TRUE( resource.get_header_filter( "content-type" ) == type );
+    EXPECT_EQ( type, resource.get_header_filter( "content-type" ) );
 }
 
 TEST( Resource, less_than_operator )
