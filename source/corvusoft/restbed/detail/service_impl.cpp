@@ -32,6 +32,7 @@ using std::find_if;
 using std::to_string;
 using std::exception;
 using std::shared_ptr;
+using std::make_shared;
 using std::placeholders::_1;
 
 //Project Namespaces
@@ -86,9 +87,9 @@ namespace restbed
 
         void ServiceImpl::start( void )
         {
-            m_io_service = shared_ptr< io_service >( new io_service );
+            m_io_service = make_shared< io_service >( );
 
-            m_acceptor = shared_ptr< tcp::acceptor >( new tcp::acceptor( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) ) );
+            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
 
             listen( );
 
@@ -201,7 +202,7 @@ namespace restbed
 
         void ServiceImpl::listen( void )
         {
-            shared_ptr< tcp::socket > socket( new tcp::socket( m_acceptor->get_io_service( ) ) );
+            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
 
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
@@ -213,11 +214,11 @@ namespace restbed
 
         void ServiceImpl::start_asynchronous( void )
         {
-            m_work = shared_ptr< io_service::work >( new io_service::work( *m_io_service ) );
+            m_work = make_shared< io_service::work >( *m_io_service );
 
             auto task = static_cast< size_t ( io_service::* )( ) >( &io_service::run );
 
-            m_thread = shared_ptr< thread >( new thread( task, m_io_service ) );
+            m_thread = make_shared< thread >( task, m_io_service );
         }
 
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
