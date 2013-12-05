@@ -3,7 +3,8 @@
  */
 
 //System Includes
-#include <ctime>
+#include <cstdio>
+#include <chrono>
 #include <stdexcept>
 #include <functional>
 
@@ -16,8 +17,9 @@
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/status_code.h"
-#include "corvusoft/restbed/detail/service_impl.h"
+#include "corvusoft/restbed/detail/helpers/date.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/path_parameter.h"
 #include "corvusoft/restbed/detail/request_builder.h"
 #include "corvusoft/restbed/detail/resource_matcher.h"
@@ -34,8 +36,10 @@ using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 using std::placeholders::_1;
+using std::chrono::system_clock;
 
 //Project Namespaces
+using restbed::detail::helpers::Date;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -152,15 +156,32 @@ namespace restbed
 
         void ServiceImpl::log_handler(  const LogLevel level, const string& format, ... )
         {
+            FILE* descriptor = nullptr;
+
+            switch ( level )
+            {
+                case INFO:
+                case DEBUG:
+                    descriptor = stdout;
+                    break;
+                case FATAL:
+                case ERROR:
+                case WARNING:
+                case SECURITY:
+                default:
+                    descriptor = stderr;
+            }
+
             string label = build_log_label( level );
 
             va_list arguments;
             
             va_start( arguments, format );
 
-            fprintf( stderr, "%s", label.data( ) );
-            vfprintf( stderr, format.data( ), arguments );
-            
+            fprintf( descriptor, "%s", label.data( ) );
+            vfprintf( descriptor, format.data( ), arguments );
+            fprintf( descriptor, "\n" );
+
             va_end( arguments );
         }
 
@@ -297,10 +318,9 @@ namespace restbed
                     tag = "UNKNOWN";
             }
 
-            time_t timestamp;
-            time( &timestamp );
+            string timestamp = Date::format( system_clock::now( ) );
 
-            string label = String::format( "[%s %s] ", tag.data( ), asctime( localtime( &timestamp ) ) );
+            string label = String::format( "[%s %s] ", tag.data( ), timestamp.data( ) );
     
             return label;
         }
