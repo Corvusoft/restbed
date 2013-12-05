@@ -7,6 +7,7 @@
 //Project Includes
 #include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
@@ -18,6 +19,7 @@ using std::string;
 using std::to_string;
 
 //Project Namespaces
+using restbed::detail::helpers::Map;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -62,13 +64,11 @@ namespace restbed
         {
             string property = String::empty;
 
-            const string key = String::uppercase( name );
-
-            const auto& iterator = m_properties.find( key );
+            auto iterator = Map::find_key_ignoring_case( name, m_properties );
 
             if ( iterator not_eq m_properties.end( ) )
             {
-                property = m_properties.at( key );
+                property = m_properties.at( name );
             }
 
             return property;
