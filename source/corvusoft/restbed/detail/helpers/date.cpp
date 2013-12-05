@@ -27,11 +27,12 @@ namespace restbed
 		{
 	        string Date::format( const time_point< system_clock >& value )
 	        {
-            	auto datestamp = system_clock::to_time_t( value );
+	        	time_t time = system_clock::to_time_t( value );
 
-            	string result = ctime( &datestamp );
+                string date = ctime( &time );
+                date.erase( date.length( ) - 1 );
 
-	            return string( result.begin( ), result.end( ) - 1 );
+            	return date;
 	        }
 		}
 	}
