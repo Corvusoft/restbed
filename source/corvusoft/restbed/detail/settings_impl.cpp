@@ -68,7 +68,7 @@ namespace restbed
 
             if ( iterator not_eq m_properties.end( ) )
             {
-                property = m_properties.at( name );
+                property = iterator->second;
             }
 
             return property;
