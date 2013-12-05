@@ -20,7 +20,15 @@ Response get_handler( const Request& request )
         std::cout << "parameter value: " << parameter.second << std::endl;
     }
 
-    std::cout << "Request:\n" << request.to_bytes().data() << std::endl;
+    for ( auto parameter : request.get_query_parameters( ) )
+    {
+        std::cout << "query name: " << parameter.first << std::endl;
+        std::cout << "query value: " << parameter.second << std::endl;
+    }
+
+
+    std::cout << "Bytes" << std::endl;
+    std::cout << request.to_bytes().data() << std::endl;
     
     return response;
 }

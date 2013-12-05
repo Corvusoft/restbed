@@ -17,6 +17,8 @@ using std::vector;
 
 //External Namespaces
 
+#include <iostream>
+
 namespace restbed
 {
 	namespace detail
@@ -90,7 +92,7 @@ namespace restbed
 	            
 	            string token = value.substr( start );
 	            
-	            if ( not token.empty( ) and token not_eq value )
+	            if ( not token.empty( ) )
 	            {
 	                tokens.push_back( token );
 	            }
