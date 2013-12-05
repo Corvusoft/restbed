@@ -1,5 +1,7 @@
 #include <iostream>
 #include <restbed>
+#include <thread>
+#include <memory>
 
 using namespace restbed;
             
@@ -42,6 +44,8 @@ try
     service.publish( resource );
 
     service.start( );
+
+    std::cout << "out of start!" << std::endl;
 
     return EXIT_SUCCESS;
 }

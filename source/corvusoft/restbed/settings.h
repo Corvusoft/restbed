@@ -23,6 +23,8 @@
 namespace restbed
 {
     //Forward Declarations
+    enum Mode : int;
+
     namespace detail
     {
         class SettingsImpl;
@@ -45,6 +47,8 @@ namespace restbed
             //Functionality
 
             //Getters
+            Mode get_mode( void ) const;
+
             uint16_t get_port( void ) const;
 
             std::string get_root( void ) const;
@@ -53,7 +57,9 @@ namespace restbed
 
             std::map< std::string, std::string > get_properties( void ) const;
 
-            //Setters  
+            //Setters
+            void set_mode( const Mode value );
+
             void set_port( const uint16_t value );
             
             void set_root( const std::string& value );

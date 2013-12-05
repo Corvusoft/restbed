@@ -7,8 +7,6 @@
 #endif
 
 //System Includes
-#include <chrono>
-#include <thread>
 #include <memory>
 #include <functional>
 
@@ -20,10 +18,9 @@
 
 //System Namespaces
 using std::bind;
-using std::thread;
 using std::shared_ptr;
+using std::make_shared;
 using std::placeholders::_1;
-using std::chrono::milliseconds;
 
 //Project Namespaces
 using namespace restbed;
@@ -35,16 +32,14 @@ class ServiceFixture : public TestWithParam< int >
 {
 	public: 
 		ServiceFixture( void ) : m_port( 1984 ),
-				   			     m_service( nullptr ),
-								 m_service_thread( nullptr )
+				   			     m_service( nullptr )
 		{
 			//n/a
 		}
 
 		~ServiceFixture( void )
 		{
-			delete m_service;
-			delete m_service_thread;
+			//n/a
 		}
 
 	protected:
@@ -56,19 +51,17 @@ class ServiceFixture : public TestWithParam< int >
 		    Settings settings;
 		    settings.set_port( m_port );
 		    settings.set_root( "test" );
+		    settings.set_mode( ASYNCHRONOUS );
 
-		    m_service = new Service( settings );
+		    m_service = make_shared< Service >( settings );
 		    m_service->publish( resource );
 
-		    m_service_thread = new thread( &Service::start, m_service );
-
-		    std::this_thread::sleep_for( milliseconds( 1000 ) );
+		    m_service->start( );
 		}
 
 		void TearDown( void )
 		{
 			m_service->stop( );
-			m_service_thread->join( );
 		}
 
 	private:
@@ -82,7 +75,5 @@ class ServiceFixture : public TestWithParam< int >
 
 		int m_port;
 
-		Service* m_service;
-
-		thread* m_service_thread;
+		std::shared_ptr< Service > m_service;
 };

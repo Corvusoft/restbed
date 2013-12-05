@@ -129,6 +129,7 @@ TEST( Settings, properties_accessor )
 
 	map< string, string > expectation = {
 		{ "ROOT", "/" },
+		{ "MODE", "8" },
 		{ "PORT", "80" },
 		{ "VOYAGER 1", "124 AU" },
 		{ "VOYAGER 2", "101 AU" }
@@ -143,6 +144,7 @@ TEST( Settings, default_properties_accessor )
 
 	map< string, string > expectation = {
 		{ "ROOT", "/" },
+		{ "MODE", "8" },
 		{ "PORT", "80" },
 	};
 
