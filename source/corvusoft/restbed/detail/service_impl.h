@@ -136,6 +136,8 @@ namespace restbed
             
                 std::string m_root;
 
+                int m_maximum_connections;
+
                 std::list< Resource > m_resources;
 
                 std::shared_ptr< std::thread > m_thread;

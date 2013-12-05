@@ -33,6 +33,7 @@ namespace restbed
             m_properties[ "ROOT" ] = "/";
             m_properties[ "PORT" ] = "80";
             m_properties[ "MODE" ] = ::to_string( SYNCHRONOUS );
+            m_properties[ "MAXIMUM CONNECTIONS" ] = "1024";
         }
         
         SettingsImpl::SettingsImpl( const SettingsImpl& original ) : m_properties( original.m_properties )
@@ -58,6 +59,11 @@ namespace restbed
         string SettingsImpl::get_root( void ) const
         {
             return get_property( "ROOT" );
+        }
+
+        int SettingsImpl::get_maximum_connections( void ) const
+        {
+            return stoi( get_property( "MAXIMUM CONNECTIONS" ) );
         }
 
         string SettingsImpl::get_property( const string& name ) const
@@ -92,6 +98,11 @@ namespace restbed
         void SettingsImpl::set_root( const string& value )
         {
             set_property( "ROOT", value );
+        }
+
+        void SettingsImpl::set_maximum_connections( const int value )
+        {
+            set_property( "MAXIMUM CONNECTIONS", ::to_string( value ) );
         }
         
         void SettingsImpl::set_property( const string& name, const string& value )

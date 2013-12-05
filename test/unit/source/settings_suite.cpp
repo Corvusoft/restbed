@@ -73,6 +73,16 @@ TEST( Settings, root_accessor )
 	EXPECT_EQ( value, settings.get_root( ) );
 }
 
+TEST( Settings, maximum_connections_accessor )
+{
+	const int value = 88;
+
+	Settings settings;
+	settings.set_maximum_connections( value );
+
+	EXPECT_EQ( value, settings.get_maximum_connections( ) );
+}
+
 TEST( Settings, property_accessor )
 {
 	const string name = "MIR";
@@ -131,6 +141,7 @@ TEST( Settings, properties_accessor )
 		{ "ROOT", "/" },
 		{ "MODE", "8" },
 		{ "PORT", "80" },
+		{ "MAXIMUM CONNECTIONS", "1024" },
 		{ "VOYAGER 1", "124 AU" },
 		{ "VOYAGER 2", "101 AU" }
 	};
@@ -146,6 +157,7 @@ TEST( Settings, default_properties_accessor )
 		{ "ROOT", "/" },
 		{ "MODE", "8" },
 		{ "PORT", "80" },
+		{ "MAXIMUM CONNECTIONS", "1024" }
 	};
 
 	EXPECT_EQ( expectation, settings.get_properties( ) );

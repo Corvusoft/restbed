@@ -8,7 +8,7 @@ using namespace restbed;
 Response get_handler( const Request& request )
 {
     Response response;
-    //response.set_body( "hello from get handler" );
+    response.set_body( "hello from get handler" );
     response.set_header( "Forename", "Ben" );
     response.set_status_code( StatusCode::CREATED );
 
@@ -26,7 +26,6 @@ Response get_handler( const Request& request )
         std::cout << "query value: " << parameter.second << std::endl;
     }
 
-
     std::cout << "Request Bytes" << std::endl;
     Bytes body = request.to_bytes();
     std::cout << &body[0] << std::endl;
@@ -34,7 +33,7 @@ Response get_handler( const Request& request )
     std::cout << "Response Bytes" << std::endl;
     body = response.to_bytes( );
     std::cout << &body[0] << std::endl;
-    
+
     return response;
 }
 
@@ -44,6 +43,7 @@ try
     Settings settings;
     settings.set_port( 1984 );
     settings.set_root( "resources" );
+    settings.set_maximum_connections( 1 );
 
     Service service( settings );
 

@@ -52,6 +52,11 @@ namespace restbed
         return m_pimpl->get_root( );
     }
 
+    int Settings::get_maximum_connections( void ) const
+    {
+        return m_pimpl->get_maximum_connections( );
+    }
+
     string Settings::get_property( const string& name ) const
     {
         return m_pimpl->get_property( name );
@@ -75,6 +80,11 @@ namespace restbed
     void Settings::set_root( const string& value )
     {
         m_pimpl->set_root( value );
+    }
+
+    void Settings::set_maximum_connections( const int value )
+    {
+        m_pimpl->set_maximum_connections( value );
     }
     
     void Settings::set_property( const string& name, const string& value )
