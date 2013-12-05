@@ -8,7 +8,7 @@ using namespace restbed;
 Response get_handler( const Request& request )
 {
     Response response;
-    response.set_body( "hello from get handler" );
+    //response.set_body( "hello from get handler" );
     response.set_header( "Forename", "Ben" );
     response.set_status_code( StatusCode::CREATED );
 
@@ -27,8 +27,13 @@ Response get_handler( const Request& request )
     }
 
 
-    std::cout << "Bytes" << std::endl;
-    std::cout << request.to_bytes().data() << std::endl;
+    std::cout << "Request Bytes" << std::endl;
+    Bytes body = request.to_bytes();
+    std::cout << &body[0] << std::endl;
+
+    std::cout << "Response Bytes" << std::endl;
+    body = response.to_bytes( );
+    std::cout << &body[0] << std::endl;
     
     return response;
 }
