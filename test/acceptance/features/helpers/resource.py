@@ -1,8 +1,8 @@
 from ctypes import *
 
-library = cdll.LoadLibrary('./libhelpers.so')
+library = cdll.LoadLibrary('distribution/library/libhelpers.dylib')
 
-prototype = CFUNCTYPE(None, c_int)
+prototype = CFUNCTYPE(None, c_char_p)
 
 class Foo(object):
     def __init__(self):

@@ -18,7 +18,7 @@ extern "C"
 
 	void release_resource( Resource* resource )
 	{
-		free resource;
+		delete resource;
 	}
 
 	void add_resource_header_filter( Resource* resource, const char* name, const char* value )

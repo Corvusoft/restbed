@@ -1,10 +1,18 @@
 /*
  * Copyright (c) 2013 Corvusoft
  */
- 
+
 #include <restbed>
 
 using namespace restbed;
+
+Response callback_handler( const Request& )
+{
+	Response response;
+	response.set_status_code( 200 );
+
+	return response;
+}
 
 extern "C"
 {
@@ -12,22 +20,29 @@ extern "C"
 	{
 		Settings settings;
 		settings.set_port( port );
+		settings.set_mode( Mode::ASYNCHRONOUS );
 
-		return new Service( settings );
+		Service* service = new Service( settings );
+		service->start( );
+
+		return service;
 	}
 
 	void release_service( Service* service )
 	{
-		free service;
+		delete service;
 	}
 
-	void add_service_resource( Service* service, Resource* resource )
+	void publish_method_handler( Service* service, char* method )
 	{
-		service->publish( resource );
+	    Resource* resource = new Resource( );
+	    resource->set_method_handler( "GET", &callback_handler );
+
+	    service->publish( *resource );
 	}
 
-	void remove_service_resource( Service* service, Resource* resource )
+	void suppress_method_handler( Service* service, char* method )
 	{
-		service->suppress( resource );
+
 	}
 }

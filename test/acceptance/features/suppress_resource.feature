@@ -60,4 +60,3 @@ Feature: Suppresssing resources
 #Given I have created a service in synchroise mode
 #When I suppress a resource
 #Then...
-

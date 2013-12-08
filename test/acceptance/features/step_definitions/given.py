@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from lettuce import step
+# Copyright (c) 2013 Corvusoft
+
+from lettuce import step, world
 
 @step(u'Given I have configured a service with a custom authentication handler')
 def given_i_have_configured_a_service_with_a_custom_authentication_handler(step):
@@ -10,8 +12,8 @@ def given_i_have_configured_a_service_with_a_custom_logging_handler(step):
     assert False, 'This step must be implemented'
 
 @step(u'Given I have published a resource with a custom "([^"]*)" handler')
-def given_i_have_published_a_resource_with_a_custom_group1_handler(step, group1):
-    assert False, 'This step must be implemented'
+def given_i_have_published_a_resource_with_a_custom_method_handler(step, method):
+	world.service.publish_method_handler(method)
 
 @step(u'Given I have published multiple unique resources with custom "([^"]*)" handlers')
 def given_i_have_published_multiple_unique_resources_with_custom_group1_handlers(step, group1):

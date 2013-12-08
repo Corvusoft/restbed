@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Copyright (c) 2013 Corvusoft
+
 from lettuce import step
 
 @step(u'And I should see an Allow header of the form TRACE, OPTIONS')
