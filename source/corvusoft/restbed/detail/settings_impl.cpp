@@ -5,7 +5,9 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
+#include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
@@ -17,6 +19,7 @@ using std::string;
 using std::to_string;
 
 //Project Namespaces
+using restbed::detail::helpers::Map;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -29,6 +32,8 @@ namespace restbed
         {
             m_properties[ "ROOT" ] = "/";
             m_properties[ "PORT" ] = "80";
+            m_properties[ "MODE" ] = ::to_string( SYNCHRONOUS );
+            m_properties[ "MAXIMUM CONNECTIONS" ] = "1024";
         }
         
         SettingsImpl::SettingsImpl( const SettingsImpl& original ) : m_properties( original.m_properties )
@@ -41,6 +46,11 @@ namespace restbed
             //n/a
         }
 
+        Mode SettingsImpl::get_mode( void ) const
+        {
+            return static_cast< Mode >( stoi( get_property( "MODE" ) ) );
+        }
+
         uint16_t SettingsImpl::get_port( void ) const
         {
             return stoi( get_property( "PORT" ) );
@@ -51,17 +61,20 @@ namespace restbed
             return get_property( "ROOT" );
         }
 
+        int SettingsImpl::get_maximum_connections( void ) const
+        {
+            return stoi( get_property( "MAXIMUM CONNECTIONS" ) );
+        }
+
         string SettingsImpl::get_property( const string& name ) const
         {
             string property = String::empty;
 
-            const string key = String::uppercase( name );
-
-            const auto& iterator = m_properties.find( key );
+            auto iterator = Map::find_key_ignoring_case( name, m_properties );
 
             if ( iterator not_eq m_properties.end( ) )
             {
-                property = m_properties.at( key );
+                property = iterator->second;
             }
 
             return property;
@@ -72,6 +85,11 @@ namespace restbed
             return m_properties;
         }
 
+        void SettingsImpl::set_mode( const Mode value )
+        {
+            set_property( "MODE", ::to_string( value ) );
+        }
+
         void SettingsImpl::set_port( const uint16_t value )
         {
             set_property( "PORT", ::to_string( value ) );
@@ -80,6 +98,11 @@ namespace restbed
         void SettingsImpl::set_root( const string& value )
         {
             set_property( "ROOT", value );
+        }
+
+        void SettingsImpl::set_maximum_connections( const int value )
+        {
+            set_property( "MAXIMUM CONNECTIONS", ::to_string( value ) );
         }
         
         void SettingsImpl::set_property( const string& name, const string& value )

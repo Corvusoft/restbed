@@ -21,6 +21,7 @@ set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/detail/service_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/regex.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/map.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/helpers/date.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/string.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/istream.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher.cpp

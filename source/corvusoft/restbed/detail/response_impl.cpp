@@ -10,6 +10,7 @@
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/response_impl.h"
 #include "corvusoft/restbed/detail/helpers/map.h"
+#include "corvusoft/restbed/detail/helpers/date.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
@@ -23,6 +24,7 @@ using std::chrono::system_clock;
 
 //Project Namespaces
 using restbed::detail::helpers::Map;
+using restbed::detail::helpers::Date;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -179,10 +181,7 @@ namespace restbed
 
             if ( not has_header( "Date" ) )
             {
-                time_t time = system_clock::to_time_t( system_clock::now( ) );
-
-                string date = ctime( &time );
-                date.erase( date.length( ) - 1 );
+                string date = Date::format( system_clock::now( ) );
 
                 header = String::format( "Date: %s\r\n", date.data( ) );
             }

@@ -3,11 +3,13 @@
  */
 
 //System Includes
-#include <ctime>
+#include <cstdio>
+#include <chrono>
 #include <stdexcept>
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
@@ -15,8 +17,9 @@
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/status_code.h"
-#include "corvusoft/restbed/detail/service_impl.h"
+#include "corvusoft/restbed/detail/helpers/date.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/path_parameter.h"
 #include "corvusoft/restbed/detail/request_builder.h"
 #include "corvusoft/restbed/detail/resource_matcher.h"
@@ -25,13 +28,18 @@
 
 //System Namespaces
 using std::list;
+using std::thread;
 using std::string;
 using std::find_if;
+using std::to_string;
 using std::exception;
 using std::shared_ptr;
+using std::make_shared;
 using std::placeholders::_1;
+using std::chrono::system_clock;
 
 //Project Namespaces
+using restbed::detail::helpers::Date;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -45,18 +53,26 @@ namespace restbed
 {
     namespace detail
     {
-        ServiceImpl::ServiceImpl( const Settings& settings ) : m_port( settings.get_port( ) ),
+        ServiceImpl::ServiceImpl( const Settings& settings ) : m_mode( settings.get_mode( ) ),
+                                                               m_port( settings.get_port( ) ),
                                                                m_root( settings.get_root( ) ),
+                                                               m_maximum_connections( settings.get_maximum_connections( ) ),
                                                                m_resources( ),
+                                                               m_thread( nullptr ),
+                                                               m_work ( nullptr ),
                                                                m_io_service( nullptr ),
                                                                m_acceptor( nullptr )
         {
             //n/a
         }
         
-        ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_port( original.m_port ),
+        ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
+                                                                  m_port( original.m_port ),
                                                                   m_root( original.m_root ),
+                                                                  m_maximum_connections( original.m_maximum_connections ),
                                                                   m_resources( original.m_resources ),
+                                                                  m_thread( original.m_thread ),
+                                                                  m_work( original.m_work ),
                                                                   m_io_service( original.m_io_service ),
                                                                   m_acceptor( original.m_acceptor )
         {
@@ -77,20 +93,42 @@ namespace restbed
 
         void ServiceImpl::start( void )
         {
-            m_io_service = shared_ptr< io_service >( new io_service );
-                
-            m_acceptor = shared_ptr< tcp::acceptor >( new tcp::acceptor( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) ) );
+            m_io_service = make_shared< io_service >( );
+
+            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
+
+            m_acceptor->listen( m_maximum_connections );
 
             listen( );
 
-            m_io_service->run( );
+            switch ( m_mode )
+            {
+                case SYNCHRONOUS:
+                    start_synchronous( );
+                    break;
+                case ASYNCHRONOUS:
+                    start_asynchronous( );
+                    break;
+                default:
+                    log_handler( LogLevel::FATAL, "Service failed, unknown service mode: " + ::to_string( m_mode ) );
+            }
         }
 
         void ServiceImpl::stop( void )
         {
+            if ( m_work not_eq nullptr )
+            {
+                m_work.reset( );
+            }
+
             if ( m_io_service not_eq nullptr )
             {
                 m_io_service->stop( );
+            }
+
+            if ( m_thread not_eq nullptr and m_thread->joinable( ) )
+            {
+                m_thread->join( );
             }
         }
 
@@ -122,15 +160,32 @@ namespace restbed
 
         void ServiceImpl::log_handler(  const LogLevel level, const string& format, ... )
         {
+            FILE* descriptor = nullptr;
+
+            switch ( level )
+            {
+                case INFO:
+                case DEBUG:
+                    descriptor = stdout;
+                    break;
+                case FATAL:
+                case ERROR:
+                case WARNING:
+                case SECURITY:
+                default:
+                    descriptor = stderr;
+            }
+
             string label = build_log_label( level );
 
             va_list arguments;
             
             va_start( arguments, format );
 
-            fprintf( stderr, "%s", label.data( ) );
-            vfprintf( stderr, format.data( ), arguments );
-            
+            fprintf( descriptor, "%s", label.data( ) );
+            vfprintf( descriptor, format.data( ), arguments );
+            fprintf( descriptor, "\n" );
+
             va_end( arguments );
         }
 
@@ -172,9 +227,23 @@ namespace restbed
 
         void ServiceImpl::listen( void )
         {
-            shared_ptr< tcp::socket > socket( new tcp::socket( m_acceptor->get_io_service( ) ) );
-        
+            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
+        }
+
+        void ServiceImpl::start_synchronous( void )
+        {
+            m_io_service->run( );
+        }
+
+        void ServiceImpl::start_asynchronous( void )
+        {
+            m_work = make_shared< io_service::work >( *m_io_service );
+
+            auto task = static_cast< size_t ( io_service::* )( ) >( &io_service::run );
+
+            m_thread = make_shared< thread >( task, m_io_service );
         }
 
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
@@ -253,10 +322,9 @@ namespace restbed
                     tag = "UNKNOWN";
             }
 
-            time_t timestamp;
-            time( &timestamp );
+            string timestamp = Date::format( system_clock::now( ) );
 
-            string label = String::format( "[%s %s] ", tag.data( ), asctime( localtime( &timestamp ) ) );
+            string label = String::format( "[%s %s] ", tag.data( ), timestamp.data( ) );
     
             return label;
         }

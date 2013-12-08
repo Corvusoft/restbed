@@ -5,6 +5,7 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
 
@@ -36,6 +37,11 @@ namespace restbed
         //n/a
     }
 
+    Mode Settings::get_mode( void ) const
+    {
+        return m_pimpl->get_mode( );
+    }
+
     uint16_t Settings::get_port( void ) const
     {
         return m_pimpl->get_port( );
@@ -44,6 +50,11 @@ namespace restbed
     string Settings::get_root( void ) const
     {
         return m_pimpl->get_root( );
+    }
+
+    int Settings::get_maximum_connections( void ) const
+    {
+        return m_pimpl->get_maximum_connections( );
     }
 
     string Settings::get_property( const string& name ) const
@@ -56,6 +67,11 @@ namespace restbed
         return m_pimpl->get_properties( );
     }
 
+    void Settings::set_mode( const Mode value )
+    {
+        m_pimpl->set_mode( value );
+    }
+
     void Settings::set_port( const uint16_t value )
     {
         m_pimpl->set_port( value );
@@ -64,6 +80,11 @@ namespace restbed
     void Settings::set_root( const string& value )
     {
         m_pimpl->set_root( value );
+    }
+
+    void Settings::set_maximum_connections( const int value )
+    {
+        m_pimpl->set_maximum_connections( value );
     }
     
     void Settings::set_property( const string& name, const string& value )

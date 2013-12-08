@@ -260,7 +260,7 @@ namespace restbed
         {
             string section = m_path;
 
-            if ( not m_path_parameters.empty( ) )
+            if ( not m_query_parameters.empty( ) )
             {
                 section += "?";
 

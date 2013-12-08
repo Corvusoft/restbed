@@ -1,5 +1,7 @@
 #include <iostream>
 #include <restbed>
+#include <thread>
+#include <memory>
 
 using namespace restbed;
             
@@ -18,8 +20,20 @@ Response get_handler( const Request& request )
         std::cout << "parameter value: " << parameter.second << std::endl;
     }
 
-    std::cout << "Request:\n" << request.to_bytes().data() << std::endl;
-    
+    for ( auto parameter : request.get_query_parameters( ) )
+    {
+        std::cout << "query name: " << parameter.first << std::endl;
+        std::cout << "query value: " << parameter.second << std::endl;
+    }
+
+    std::cout << "Request Bytes" << std::endl;
+    Bytes body = request.to_bytes();
+    std::cout << &body[0] << std::endl;
+
+    std::cout << "Response Bytes" << std::endl;
+    body = response.to_bytes( );
+    std::cout << &body[0] << std::endl;
+
     return response;
 }
 
@@ -29,6 +43,7 @@ try
     Settings settings;
     settings.set_port( 1984 );
     settings.set_root( "resources" );
+    settings.set_maximum_connections( 1 );
 
     Service service( settings );
 
@@ -42,6 +57,8 @@ try
     service.publish( resource );
 
     service.start( );
+
+    std::cout << "out of start!" << std::endl;
 
     return EXIT_SUCCESS;
 }

@@ -7,9 +7,9 @@
 
 //System Includes
 #include <list>
+#include <thread>
 #include <memory>
 #include <string>
-#include <istream>
 
 //Project Includes
 
@@ -29,6 +29,7 @@ namespace restbed
     class Resource;
     class Settings;
 
+    enum Mode : int;
     enum LogLevel : int;
     
     namespace detail
@@ -108,6 +109,10 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
+                void start_synchronous( void );
+                
+                void start_asynchronous( void );
+
                 void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
 
                 std::string build_log_label( const LogLevel level ) const;
@@ -125,11 +130,19 @@ namespace restbed
                 //Operators
 
                 //Properties
+                Mode m_mode;
+
                 uint16_t m_port;
             
                 std::string m_root;
 
+                int m_maximum_connections;
+
                 std::list< Resource > m_resources;
+
+                std::shared_ptr< std::thread > m_thread;
+
+                std::shared_ptr< asio::io_service::work > m_work;
 
                 std::shared_ptr< asio::io_service > m_io_service;
 
