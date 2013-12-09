@@ -7,7 +7,7 @@ Feature: Custom authentication handler
 
 	Scenario Outline: Successful login
 		Given I have configured a service with a custom authentication handler
-		When I perform an authorised HTTP "<method>"" request
+		When I perform an basic-auth HTTP "<method>"" request
 		Then I should see a status code of 200
 
 	Examples:
@@ -23,8 +23,8 @@ Feature: Custom authentication handler
 
 	Scenario Outline: Unsuccessful login
 		Given I have configured a service with a custom authentication handler
-		When I perform an unauthorised HTTP "<method>" request
-		Then I should see a status code of 401
+		When I perform an unauthorised basic-auth HTTP "<method>" request
+		Then I should see a status code of 200
 
 	Examples:
 		| method  |
