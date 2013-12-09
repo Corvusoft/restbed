@@ -65,26 +65,22 @@ namespace restbed
         pair< string, string > PathParameter::parse_declaration( const string& declaration )
         {
             string name = String::empty;
-            string pattern = ".*";
-            string definition = declaration;
+            string pattern = declaration;
 
-            if ( definition.front( ) == '{' )
+            if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
             {
-                if ( definition.back( ) == '}' )
-                { 
-                    definition = String::trim( definition, "{" );
-                    definition = String::trim( definition, "}" ); 
-                    
-                    auto segments = String::split( definition, ':' );
+                string definition = String::trim( declaration, "{" );
+                definition = String::trim( definition, "}" ); 
+                
+                auto segments = String::split( definition, ':' );
 
-                    if ( segments.size( ) not_eq 2 )
-                    {
-                        throw invalid_argument( String::empty );
-                    }
-                    
-                    name = String::trim( segments[ 0 ] );
-                    pattern = String::trim( segments[ 1 ] );
+                if ( segments.size( ) not_eq 2 )
+                {
+                    throw invalid_argument( String::empty );
                 }
+                
+                name = String::trim( segments[ 0 ] );
+                pattern = String::trim( segments[ 1 ] );
             }
 
             return make_pair( name, pattern );
