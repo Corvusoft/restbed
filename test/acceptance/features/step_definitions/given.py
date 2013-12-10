@@ -13,6 +13,7 @@ def given_i_have_configured_a_service_with_a_custom_logging_handler(step):
 
 @step(u'Given I have published a resource with a custom "([^"]*)" handler')
 def given_i_have_published_a_resource_with_a_custom_method_handler(step, method):
+	print "setting method handler %s" % method
 	world.service.publish_method_handler(method)
 
 @step(u'Given I have published multiple unique resources with custom "([^"]*)" handlers')

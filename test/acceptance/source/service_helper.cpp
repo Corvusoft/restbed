@@ -36,7 +36,7 @@ extern "C"
 	void publish_method_handler( Service* service, char* method )
 	{
 	    Resource* resource = new Resource( );
-	    resource->set_method_handler( "GET", &callback_handler );
+	    resource->set_method_handler( method, &callback_handler );
 
 	    service->publish( *resource );
 	}
