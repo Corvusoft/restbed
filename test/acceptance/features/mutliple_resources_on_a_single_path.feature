@@ -12,3 +12,11 @@ Feature: Multiple resources on a single path
 		Then I should see JSON
 		And I perform a HTTP "GET" request to "/entity" with header "Content-type" set to "applicatin/xml"
 		Then I should see XML
+
+	Scenario: Resource versioning
+		Given I have published a resource on "/api" with a "api-version" header value of "1.0"
+		And I have published a resource on "/api" with a "api-version" header value of "1.1"
+		When I perform a HTTP "GET" request to "/api" with header "api-version" set to "1.0"
+		Then I should see "api version 1.0 response body"
+		And I perform a HTTP "GET" request to "/api" with header "api-version" set to "1.1"
+		Then I should see "api version 1.1 response body"
