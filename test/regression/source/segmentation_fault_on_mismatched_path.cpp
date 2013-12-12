@@ -2,6 +2,10 @@
  * Copyright (c) 2013 Corvusoft
  */
 
+/*
+ * See issue tracker bug #4 for details.
+ */
+
 #ifdef __APPLE__
 #define GTEST_USE_OWN_TR1_TUPLE 1 //See issue tracker #11
 #endif
