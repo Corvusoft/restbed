@@ -33,8 +33,6 @@ shared_ptr< Service > m_service;
 
 void setup( void );
 void teardown( void );
-Response initial_get_handler( const Request& );
-Response secondary_get_handler( const Request& );
 
 TEST( Resource, overwrite_existing_resource )
 {
@@ -70,7 +68,7 @@ void setup( void )
     initial_resource.set_method_handler( "GET", &initial_get_handler );
 
 	Resource secondary_resource;
-	initial_resource.set_path( "TestResource" );
+	secondary_resource.set_path( "TestResource" );
     secondary_resource.set_method_handler( "GET", &secondary_get_handler );
 
     Settings settings;

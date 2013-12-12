@@ -136,10 +136,23 @@ namespace restbed
         {
             string path = String::format( "/%s/%s", m_root.data( ), value.get_path( ).data( ) );
 
-            Resource resource( value );
-            resource.set_path( path );
+            auto iterator = find_if( m_resources.begin( ),
+                                     m_resources.end( ),
+                                    [&] ( const Resource& resource ) {
+                                        return resource.get_path( ) == path;
+                                    });
 
-            m_resources.push_back( resource );
+            if ( iterator not_eq m_resources.end( ) )
+            {
+                *iterator = value;
+            }
+            else
+            {
+                Resource resource( value );
+                resource.set_path( path );
+
+                m_resources.push_back( resource );
+            }
         }
 
         void ServiceImpl::suppress( const Resource& value )
