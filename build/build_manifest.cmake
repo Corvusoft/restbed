@@ -26,4 +26,5 @@ set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/istream.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/path_parameter.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/session_impl.cpp
 )
