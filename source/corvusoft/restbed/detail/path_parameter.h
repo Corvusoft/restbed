@@ -7,7 +7,6 @@
 
 //System Includes
 #include <map>
-#include <regex>
 #include <string>
 #include <utility>
 
@@ -39,7 +38,7 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static std::regex parse( const std::string& declaration );
+                static std::string parse( const std::string& declaration );
 
                 static std::map< std::string, std::string > parse( const std::string& path, const std::string& declaration );
 
