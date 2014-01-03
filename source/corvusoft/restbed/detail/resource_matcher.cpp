@@ -66,7 +66,7 @@ namespace restbed
 
                 for ( size_t index = 0; index not_eq path_filters.size( ); index++ )
                 {
-                    regex pattern = PathParameter::parse( path_filters[ index ] );
+                    regex pattern( PathParameter::parse( path_filters[ index ] ) );
 
                     if ( not regex_match( path_segments[ index ], pattern ) )
                     {

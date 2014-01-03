@@ -15,12 +15,9 @@
 //System Namespaces
 using std::map;
 using std::pair;
-using std::regex;
 using std::string;
 using std::vector;
-using std::smatch;
 using std::make_pair;
-using std::regex_search;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -32,11 +29,11 @@ namespace restbed
 {
     namespace detail
     {
-        regex PathParameter::parse( const string& declaration )
+        string PathParameter::parse( const string& declaration )
         {
             auto definition = parse_declaration( declaration );
 
-            return regex( definition.second );  
+            return definition.second;  
         }
 
         map< string, string > PathParameter::parse( const string& path, const string& declaration )
@@ -51,11 +48,9 @@ namespace restbed
             {
                 auto definition = parse_declaration( declarations[ index ] );  
 
-                smatch match;
-
-                if ( not definition.first.empty( ) and regex_search( paths[ index ], match, regex( definition.second ) ) )
+                if ( not definition.first.empty( ) and index < paths.size( ) )
                 {
-                    parameters[ definition.first ] = match.str( 0 );
+                    parameters[ definition.first ] = paths[ index ];
                 }
             }
 

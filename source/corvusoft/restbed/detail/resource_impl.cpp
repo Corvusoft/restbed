@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <regex>
 
 //Project Includes
 #include "corvusoft/restbed/method.h"
@@ -14,6 +15,7 @@
 #include "corvusoft/restbed/detail/helpers/regex.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/helpers/functional.h"
+#include "corvusoft/restbed/detail/path_parameter.h"
 
 //External Includes
 
@@ -24,6 +26,8 @@ using std::string;
 using std::function;
 using std::invalid_argument;
 using std::placeholders::_1;
+using std::regex;
+using std::regex_error;
 
 //Project Namespaces
 using restbed::detail::helpers::Map;
@@ -91,10 +95,7 @@ namespace restbed
 
             for ( auto directory : path )
             {
-                string pattern = String::trim_leading( directory, "{" );
-                pattern = String::trim_lagging( directory, "}" );
-
-                if ( not Regex::is_valid( pattern ) )
+                if( not Regex::is_valid( PathParameter::parse( directory ) ) )
                 {
                     throw invalid_argument( String::empty );
                 }
