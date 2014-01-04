@@ -11,23 +11,23 @@
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
+#include "corvusoft/restbed/detail/path_parameter.h"
 #include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/helpers/regex.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/helpers/functional.h"
-#include "corvusoft/restbed/detail/path_parameter.h"
 
 //External Includes
 
 //System Namespaces
 using std::map;
 using std::bind;
+using std::regex;
 using std::string;
 using std::function;
+using std::regex_error;
 using std::invalid_argument;
 using std::placeholders::_1;
-using std::regex;
-using std::regex_error;
 
 //Project Namespaces
 using restbed::detail::helpers::Map;
@@ -95,7 +95,9 @@ namespace restbed
 
             for ( auto directory : path )
             {
-                if( not Regex::is_valid( PathParameter::parse( directory ) ) )
+                string pattern = PathParameter::parse( directory );
+
+                if( not Regex::is_valid( pattern ) )
                 {
                     throw invalid_argument( String::empty );
                 }
@@ -133,7 +135,7 @@ namespace restbed
         
         bool ResourceImpl::operator ==( const ResourceImpl& rhs ) const
         {
-            return m_path == rhs.m_path;
+            return m_path == rhs.m_path and m_header_filters == rhs.m_header_filters;
         }
         
         bool ResourceImpl::operator !=( const ResourceImpl& rhs ) const

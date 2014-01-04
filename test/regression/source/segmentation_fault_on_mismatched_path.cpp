@@ -34,14 +34,14 @@ using namespace restbed;
 
 TEST_F( ServiceFixture, mismatched_resource_path )
 {
-	int status_code = Http::get( "http://localhost:1984/" );
+	auto response = Http::get( "http://localhost:1984/" );
 	
-	EXPECT_EQ( 404, status_code );
+	EXPECT_EQ( "404", response[ "Status Code" ] );
 }
 
 TEST_F( ServiceFixture, matched_resource_path )
 {
-	int status_code = Http::get( "http://localhost:1984/test" );
+	auto response = Http::get( "http://localhost:1984/test" );
 	
-	EXPECT_EQ( 200, status_code );
+	EXPECT_EQ( "200", response[ "Status Code" ] );
 }

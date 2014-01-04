@@ -34,21 +34,21 @@ using namespace restbed;
 
 TEST_F( ServiceFixture, mismatched_resource_path_of_equal_path_segments )
 {
-	int status_code = Http::get( "http://localhost:1984/tests" );
+	auto response = Http::get( "http://localhost:1984/tests" );
 	
-	EXPECT_EQ( 404, status_code );
+	EXPECT_EQ( "404", response[ "Status Code" ] );
 }
 
 TEST_F( ServiceFixture, mismatched_resource_path_of_unequal_path_segments )
 {
-	int status_code = Http::get( "http://localhost:1984/event/test" );
+	auto response = Http::get( "http://localhost:1984/event/test" );
 	
-	EXPECT_EQ( 404, status_code );
+	EXPECT_EQ( "404", response[ "Status Code" ] );
 }
 
 TEST_F( ServiceFixture, matched_resource_path )
 {
-	int status_code = Http::get( "http://localhost:1984/test" );
+	auto response = Http::get( "http://localhost:1984/test" );
 	
-	EXPECT_EQ( 200, status_code );
+	EXPECT_EQ( "200", response[ "Status Code" ] );
 }

@@ -35,7 +35,6 @@ namespace restbed
 	        	}
 	        	catch ( regex_error const& re )
 	        	{
-	        		std::cout << "regex: " << re.what() << std::endl;
 	        		result = false;
 	        	}
 	        	

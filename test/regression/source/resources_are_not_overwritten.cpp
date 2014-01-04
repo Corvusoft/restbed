@@ -31,45 +31,33 @@ using namespace restbed;
 
 shared_ptr< Service > m_service;
 
-void setup( void );
-void teardown( void );
-
-TEST( Resource, overwrite_existing_resource )
-{
-	setup( );
-
-	int status_code = Http::get( "http://localhost:1984/TestResource" );
-	
-	EXPECT_EQ( 401, status_code );
-
-	teardown( );
-}
-
-Response initial_get_handler( const Request& )
+Response json_get_handler( const Request& )
 {
 	Response response;
 	response.set_status_code( StatusCode::OK );
+	response.set_body( "{ name: \"value\" }" );
 
 	return response;
 }
 
-Response secondary_get_handler( const Request& )
+Response xml_get_handler( const Request& )
 {
 	Response response;
 	response.set_status_code( StatusCode::UNAUTHORIZED );
+	response.set_body( "<name>value</value>" );
 
 	return response;
 }
 
-void setup( void )
+TEST( Resource, overwrite_existing_resource )
 {
 	Resource initial_resource;
 	initial_resource.set_path( "TestResource" );
-    initial_resource.set_method_handler( "GET", &initial_get_handler );
+    initial_resource.set_method_handler( "GET", &json_get_handler );
 
 	Resource secondary_resource;
 	secondary_resource.set_path( "TestResource" );
-    secondary_resource.set_method_handler( "GET", &secondary_get_handler );
+    secondary_resource.set_method_handler( "GET", &xml_get_handler );
 
     Settings settings;
     settings.set_port( 1984 );
@@ -79,9 +67,38 @@ void setup( void )
     m_service->publish( initial_resource );
     m_service->publish( secondary_resource );
     m_service->start( );
+
+	auto response = Http::get( "http://localhost:1984/TestResource" );
+
+	EXPECT_EQ( "401", response[ "Status Code" ] );
+
+	m_service->stop( );
 }
 
-void teardown( void )
+TEST( Resource, add_alternative_resource )
 {
+	Resource initial_resource;
+	initial_resource.set_path( "TestResource" );
+	initial_resource.set_header_filter( "Content-Type", "application/json" );
+    initial_resource.set_method_handler( "GET", &json_get_handler );
+
+	Resource secondary_resource;
+	secondary_resource.set_path( "TestResource" );
+	secondary_resource.set_header_filter( "Content-Type", "application/xml" );
+    secondary_resource.set_method_handler( "GET", &xml_get_handler );
+
+    Settings settings;
+    settings.set_port( 1984 );
+    settings.set_mode( ASYNCHRONOUS );
+
+    m_service = make_shared< Service >( settings );
+    m_service->publish( initial_resource );
+    m_service->publish( secondary_resource );
+    m_service->start( );
+
+	auto response = Http::get( "http://localhost:1984/TestResource", { { "Content-Type", "application/xml" } } );
+	
+	EXPECT_EQ( "401", response[ "Status Code" ] );
+
 	m_service->stop( );
 }

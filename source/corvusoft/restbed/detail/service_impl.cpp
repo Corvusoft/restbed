@@ -141,13 +141,13 @@ namespace restbed
 
             auto iterator = find_if( m_resources.begin( ),
                                      m_resources.end( ),
-                                    [&] ( const Resource& item ) {
+                                     [&] ( const Resource& item ) {
                                         return item == resource;
-                                    });
+                                     });
 
             if ( iterator not_eq m_resources.end( ) )
             {
-                *iterator = value;
+                *iterator = resource;
             }
             else
             {
