@@ -14,7 +14,6 @@
 //Project Includes
 
 //External Includes
-#include <asio.hpp>
 
 //System Namespaces
 
@@ -38,7 +37,7 @@ namespace restbed
                 //Definitions
 
                 //Constructors
-                RequestBuilderImpl( void );
+                RequestBuilderImpl( std::istream& socket );
                 
                 RequestBuilderImpl( const RequestBuilderImpl& original );
                 
@@ -47,7 +46,7 @@ namespace restbed
                 //Functionality
                 Request build( void ) const;
 
-                void parse( std::shared_ptr< asio::ip::tcp::socket >& socket );
+                void parse( std::istream& socket );
 
                 //Getters
                 

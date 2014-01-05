@@ -34,19 +34,14 @@ using restbed::detail::helpers::String;
 using restbed::detail::helpers::IStream;
 
 //External Namespaces
-using asio::buffer;
-using asio::ip::tcp;
-using asio::io_service;
-using asio::error_code;
-using asio::system_error;
 
 namespace restbed
 {
     namespace detail
     {
-        RequestBuilderImpl::RequestBuilderImpl( void ) : Request( )
+        RequestBuilderImpl::RequestBuilderImpl( istream& socket ) : Request( )
         {
-            //n/a
+            parse( socket );
         }
         
         RequestBuilderImpl::RequestBuilderImpl( const RequestBuilderImpl& original ) : Request( original )
@@ -64,20 +59,14 @@ namespace restbed
             return *this;
         }
 
-        void RequestBuilderImpl::parse( shared_ptr< tcp::socket >& socket )
+        void RequestBuilderImpl::parse( istream& socket )
         {
-            asio::streambuf buffer;
-
-            asio::read_until( *socket, buffer, "\r\n" );
-
-            istream stream( &buffer );
-
-            m_pimpl->set_method( parse_http_method( stream ) ); 
-            m_pimpl->set_path( parse_http_path( stream ) );
-            m_pimpl->set_query_parameters( parse_http_query_parameters( stream ) );
-            m_pimpl->set_version( parse_http_version( stream ) );
-            m_pimpl->set_headers( parse_http_headers( stream ) );
-            m_pimpl->set_body( parse_http_body( stream ) );
+            m_pimpl->set_method( parse_http_method( socket ) ); 
+            m_pimpl->set_path( parse_http_path( socket ) );
+            m_pimpl->set_query_parameters( parse_http_query_parameters( socket ) );
+            m_pimpl->set_version( parse_http_version( socket ) );
+            m_pimpl->set_headers( parse_http_headers( socket ) );
+            m_pimpl->set_body( parse_http_body( socket ) );
         }
 
         void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )

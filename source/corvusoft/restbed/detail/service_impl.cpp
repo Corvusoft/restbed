@@ -5,6 +5,7 @@
 //System Includes
 #include <cstdio>
 #include <chrono>
+#include <sstream>
 #include <stdexcept>
 #include <functional>
 
@@ -30,6 +31,7 @@
 using std::list;
 using std::thread;
 using std::string;
+using std::istream;
 using std::find_if;
 using std::to_string;
 using std::exception;
@@ -271,8 +273,11 @@ namespace restbed
                     throw StatusCode::INTERNAL_SERVER_ERROR;
                 }
 
-                RequestBuilderImpl builder;
-                builder.parse( socket );
+                asio::streambuf buffer;
+                asio::read_until( *socket, buffer, "\r\n" );
+                istream stream( &buffer );
+
+                RequestBuilderImpl builder( stream );
                 request = builder.build( );
 
                 Resource resource = resolve_resource_route( request );
