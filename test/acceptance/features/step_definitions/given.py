@@ -4,8 +4,8 @@
 from lettuce import step, world
 import requests
 
-@step(u'Given I have published a resource at "([^"]*)" with a custom "([^"]*)" handler')
-def given_i_have_published_a_resource_with_a_custom_method_handler(step, path, method):
+@step(u'I have published a resource at "([^"]*)" with a custom "([^"]*)" handler')
+def i_have_published_a_resource_with_a_custom_method_handler(step, path, method):
 	world.service.publish_method_handler(path, method)
 
 @step(u'I have published a resource at "([^"]*)" with a "([^"]*)" header filter of "([^"]*)"')
@@ -35,12 +35,8 @@ def i_perform_a_http_request_to_path_with_header_set_to_value(step, method, path
 		world.service.response = requests.post(url, headers=headers)
 	elif verb == "HEAD":
 		world.service.response = requests.head(url, headers=headers)
-	elif verb == "TRACE":
-		world.service.response = requests.trace(url, headers=headers)
 	elif verb == "DELETE":
 		world.service.response = requests.delete(url, headers=headers)
-	elif verb == "CONNECT":
-		world.service.response = requests.connect(url, headers=headers)
 	elif verb == "OPTIONS":
 		world.service.response = requests.options(url, headers=headers)
 	else:
@@ -49,3 +45,11 @@ def i_perform_a_http_request_to_path_with_header_set_to_value(step, method, path
 @step(u'I should see a response body of "([^"]*)"')
 def i_should_see_a_response_body_of_data(step, data):
 	assert world.service.response.text == data, "Expected response: " + data + " Received response: " + world.service.response.text
+
+@step(u'I have published a default resource')
+def i_have_published_a_default_resource(step):
+    world.service.publish_default_resource()
+
+@step(u'I should see a "([^"]*)" header with a value of "([^"]*)"')
+def i_should_see_a_header_value_of(step, header, value):
+    assert world.service.response.headers[header] == value, "Expected " + header + " header value of " + value

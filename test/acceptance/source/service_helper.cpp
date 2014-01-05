@@ -41,6 +41,21 @@ extern "C"
 		delete service;
 	}
 
+	void publish_default_resource( Service* service )
+	{
+	    Resource* resource = new Resource( );
+	    resource->set_method_handler( "GET", &callback_handler );
+	    resource->set_method_handler( "PUT", &callback_handler );
+	    resource->set_method_handler( "POST", &callback_handler );
+	    resource->set_method_handler( "HEAD", &callback_handler );
+	    resource->set_method_handler( "TRACE", &callback_handler );
+	    resource->set_method_handler( "DELETE", &callback_handler );
+	    resource->set_method_handler( "CONNECT", &callback_handler );
+	    resource->set_method_handler( "OPTIONS", &callback_handler );
+
+	    service->publish( *resource );		
+	}
+
 	void publish_resource( Service* service, const char* path, const char* method )
 	{
 	    Resource* resource = new Resource( );

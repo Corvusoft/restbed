@@ -8,22 +8,19 @@ import requests
 @step(u'When I perform a HTTP "([^"]*)" request')
 def when_i_perform_a_http_method_request(step, method):
 	verb = method.upper()
+	url = world.service.url
 
-	if verb == "GET": 
-		world.service.response = requests.get('http://localhost:1984/') #world.service.url
+	if verb == "GET":
+		world.service.response = requests.get(url)
 	elif verb == "PUT":
-		world.service.response = requests.put('http://localhost:1984/')
+		world.service.response = requests.put(url)
 	elif verb == "POST":
-		world.service.response = requests.post('http://localhost:1984/')
+		world.service.response = requests.post(url)
 	elif verb == "HEAD":
-		world.service.response = requests.head('http://localhost:1984/')
-	elif verb == "TRACE":
-		world.service.response = requests.trace('http://localhost:1984/')
+		world.service.response = requests.head(url)
 	elif verb == "DELETE":
-		world.service.response = requests.delete('http://localhost:1984/')
-	elif verb == "CONNECT":
-		world.service.response = requests.connect('http://localhost:1984/')
+		world.service.response = requests.delete(url)
 	elif verb == "OPTIONS":
-		world.service.response = requests.options('http://localhost:1984/')
+		world.service.response = requests.options(url)
 	else:
 		assert False, 'Unknown HTTP method.'

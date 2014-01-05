@@ -1,6 +1,6 @@
 # language: en
 
-Feature: Multiple resources on a single path
+Feature: Filtering resources based on header values
 	In order to create a RESTful service that can serve varying content
 	As a developer
 	I want to create resources on the same path with differing filters

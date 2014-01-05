@@ -14,6 +14,10 @@ class Service(object):
     	library.release_service.argtypes = [c_void_p]
         library.release_service(self.obj)
 
+    def publish_default_resource(self):
+    	library.publish_default_resource.argtypes = [c_void_p]
+    	library.publish_default_resource(self.obj)
+
     def publish_method_handler(self, path, method):
         library.publish_method_handler.argtypes = [c_void_p, c_char_p, c_char_p]
     	library.publish_method_handler(self.obj, path, method)
