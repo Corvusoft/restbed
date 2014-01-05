@@ -17,31 +17,67 @@
 //Project Includes
 #include <restbed>
 #include "helpers/http.h"
-#include "fixtures/service_fixture.h"
 
 //External Includes
 #include <gtest/gtest.h>
 
 //System Namespaces
-using std::bind;
 using std::shared_ptr;
-using std::placeholders::_1;
+using std::make_shared;
 
 //Project Namespaces
 using namespace restbed;
 
 //External Namespaces
 
-TEST_F( ServiceFixture, mismatched_resource_path )
+Response get_handler( const Request& )
 {
+    Response response;
+    response.set_status_code( StatusCode::OK );
+
+    return response;
+}
+
+TEST( Service, mismatched_resource_path )
+{
+	Resource resource;
+    resource.set_method_handler( "GET", &get_handler );
+
+    Settings settings;
+    settings.set_port( 1984 );
+    settings.set_root( "test" );
+    settings.set_mode( ASYNCHRONOUS );
+
+    service = make_shared< Service >( settings );
+    service->publish( resource );
+
+    service->start( );
+
 	auto response = Http::get( "http://localhost:1984/" );
 	
 	EXPECT_EQ( "404", response[ "Status Code" ] );
+
+	service->stop( );
 }
 
-TEST_F( ServiceFixture, matched_resource_path )
+TEST( Service, matched_resource_path )
 {
-	auto response = Http::get( "http://localhost:1984/test" );
+	Resource resource;
+    resource.set_method_handler( "GET", &get_handler );
+
+    Settings settings;
+    settings.set_port( 1984 );
+    settings.set_root( "test" );
+    settings.set_mode( ASYNCHRONOUS );
+
+    service = make_shared< Service >( settings );
+    service->publish( resource );
+
+    service->start( );
+
+	auto response = Http::get( "http://localhost:1984/" );
 	
 	EXPECT_EQ( "200", response[ "Status Code" ] );
+
+	service->stop( );
 }
