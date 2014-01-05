@@ -2,17 +2,25 @@
  * Copyright (c) 2013, 2014 Corvusoft
  */
 
+//System Includes
+
+//Project Includes
 #include <restbed>
+#include "callbacks.h"
 
-using namespace restbed;
+//External Includes
 
-Response callback_handler( const Request& )
-{
-	Response response;
-	response.set_status_code( 200 );
+//System Namespaces
 
-	return response;
-}
+//Project Namespaces
+using restbed::Mode;
+using restbed::Service;
+using restbed::Request;
+using restbed::Response;
+using restbed::Resource;
+using restbed::Settings;
+
+//External Namespaces
 
 extern "C"
 {
@@ -33,16 +41,57 @@ extern "C"
 		delete service;
 	}
 
-	void publish_method_handler( Service* service, char* method )
+	void publish_resource( Service* service, const char* path, const char* method )
 	{
 	    Resource* resource = new Resource( );
+	    resource->set_path( path );
 	    resource->set_method_handler( method, &callback_handler );
 
 	    service->publish( *resource );
 	}
 
-	void suppress_method_handler( Service* service, char* method )
+	void suppress_method_handler( Service* service, const char* method )
 	{
 
+	}
+
+	void publish_json_resource( Service* service, const char* path )
+	{
+		Resource* resource = new Resource( );
+		resource->set_path( path );
+		resource->set_method_handler( "GET", &json_callback_handler );
+		resource->set_header_filter( "Content-Type", "application/json" );
+
+		service->publish( *resource );
+	}
+
+	void publish_xml_resource( Service* service, const char* path )
+	{
+		Resource* resource = new Resource( );
+		resource->set_path( path );
+		resource->set_method_handler( "GET", &xml_callback_handler );
+		resource->set_header_filter( "Content-Type", "application/xml" );
+
+		service->publish( *resource );
+	}
+
+	void publish_api_1_0_resource( Service* service, const char* path )
+	{
+		Resource* resource = new Resource( );
+		resource->set_path( path );
+		resource->set_method_handler( "GET", &api_1_0_callback_handler );
+		resource->set_header_filter( "api-version", "1.0" );
+
+		service->publish( *resource );
+	}
+		
+	void publish_api_1_1_resource( Service* service, const char* path )
+	{
+		Resource* resource = new Resource( );
+		resource->set_path( path );
+		resource->set_method_handler( "GET", &api_1_1_callback_handler );
+		resource->set_header_filter( "api-version", "1.1" );
+
+		service->publish( *resource );
 	}
 }

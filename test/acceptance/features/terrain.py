@@ -9,7 +9,10 @@ from helpers import *
 @before.all
 def before_all():
 	sys.path.append("./features")
-	world.service = Service(1984)
+
+	port = 1984
+	world.service = Service(port)
+	world.service.url = "http://localhost:" + str(port)
 
 @after.all
 def after_all(results):
