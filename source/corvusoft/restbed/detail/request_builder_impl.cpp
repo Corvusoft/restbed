@@ -12,9 +12,9 @@
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/request_impl.h"
-#include "corvusoft/restbed/detail/request_builder.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/helpers/istream.h"
+#include "corvusoft/restbed/detail/request_builder_impl.h"
 
 //External Includes
 
@@ -44,27 +44,27 @@ namespace restbed
 {
     namespace detail
     {
-        RequestBuilder::RequestBuilder( void ) : Request( )
+        RequestBuilderImpl::RequestBuilderImpl( void ) : Request( )
         {
             //n/a
         }
         
-        RequestBuilder::RequestBuilder( const RequestBuilder& original ) : Request( original )
+        RequestBuilderImpl::RequestBuilderImpl( const RequestBuilderImpl& original ) : Request( original )
         {
             //n/a
         }
         
-        RequestBuilder::~RequestBuilder( void )
+        RequestBuilderImpl::~RequestBuilderImpl( void )
         {
             //n/a
         }
 
-        Request RequestBuilder::build( void ) const
+        Request RequestBuilderImpl::build( void ) const
         {
             return *this;
         }
 
-        void RequestBuilder::parse( shared_ptr< tcp::socket >& socket )
+        void RequestBuilderImpl::parse( shared_ptr< tcp::socket >& socket )
         {
             asio::streambuf buffer;
 
@@ -80,19 +80,19 @@ namespace restbed
             m_pimpl->set_body( parse_http_body( stream ) );
         }
 
-        void RequestBuilder::set_path_parameters( const map< string, string >& parameters )
+        void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )
         {
             m_pimpl->set_path_parameters( parameters );
         }
 
-        RequestBuilder& RequestBuilder::operator =( const RequestBuilder& rhs )
+        RequestBuilderImpl& RequestBuilderImpl::operator =( const RequestBuilderImpl& rhs )
         {
             *m_pimpl = *rhs.m_pimpl;
 
             return *this;
         }
 
-        Bytes RequestBuilder::parse_http_body( istream& socket )
+        Bytes RequestBuilderImpl::parse_http_body( istream& socket )
         {
             istreambuf_iterator< char > end_of_stream;
 
@@ -101,7 +101,7 @@ namespace restbed
             return body;
         }
 
-        double RequestBuilder::parse_http_version( istream& socket )
+        double RequestBuilderImpl::parse_http_version( istream& socket )
         {
             string version = String::empty;
 
@@ -113,7 +113,7 @@ namespace restbed
             return stod( version );
         }
 
-        string RequestBuilder::parse_http_path( istream& socket )
+        string RequestBuilderImpl::parse_http_path( istream& socket )
         {
             string path = String::empty;
 
@@ -125,7 +125,7 @@ namespace restbed
             return path;
         }
 
-        string RequestBuilder::parse_http_method( istream& socket )
+        string RequestBuilderImpl::parse_http_method( istream& socket )
         {
             string method = String::empty;
 
@@ -135,7 +135,7 @@ namespace restbed
             return method;
         }
     
-        map< string, string > RequestBuilder::parse_http_headers( istream& socket )
+        map< string, string > RequestBuilderImpl::parse_http_headers( istream& socket )
         {
             map< string, string > headers;
                         
@@ -157,7 +157,7 @@ namespace restbed
             return headers;
         }
 
-        map< string, string > RequestBuilder::parse_http_query_parameters( istream& socket )
+        map< string, string > RequestBuilderImpl::parse_http_query_parameters( istream& socket )
         {
             map< string, string > parameters;
 

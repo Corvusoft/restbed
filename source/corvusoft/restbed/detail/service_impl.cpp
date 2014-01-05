@@ -20,9 +20,9 @@
 #include "corvusoft/restbed/detail/helpers/date.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/service_impl.h"
-#include "corvusoft/restbed/detail/path_parameter.h"
-#include "corvusoft/restbed/detail/request_builder.h"
-#include "corvusoft/restbed/detail/resource_matcher.h"
+#include "corvusoft/restbed/detail/path_parameter_impl.h"
+#include "corvusoft/restbed/detail/request_builder_impl.h"
+#include "corvusoft/restbed/detail/resource_matcher_impl.h"
 
 //External Includes
 
@@ -271,13 +271,13 @@ namespace restbed
                     throw StatusCode::INTERNAL_SERVER_ERROR;
                 }
 
-                RequestBuilder builder;
+                RequestBuilderImpl builder;
                 builder.parse( socket );
                 request = builder.build( );
 
                 Resource resource = resolve_resource_route( request );
 
-                auto parameters = PathParameter::parse( request.get_path( ), resource.get_path( ) );
+                auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
                 builder.set_path_parameters( parameters );
 
                 request = builder.build( );
@@ -346,7 +346,7 @@ namespace restbed
         {
             Resource resource;
     
-            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcher( request ) ); 
+            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) ); 
 
             if ( iterator not_eq m_resources.end( ) )
             {

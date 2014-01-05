@@ -8,8 +8,8 @@
 #include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/detail/path_parameter.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
+#include "corvusoft/restbed/detail/path_parameter_impl.h"
 
 //External Includes
 
@@ -30,14 +30,14 @@ namespace restbed
 {
     namespace detail
     {
-        string PathParameter::parse( const string& declaration )
+        string PathParameterImpl::parse( const string& declaration )
         {
             auto definition = parse_declaration( declaration );
 
             return definition.second;  
         }
 
-        map< string, string > PathParameter::parse( const string& path, const string& declaration )
+        map< string, string > PathParameterImpl::parse( const string& path, const string& declaration )
         {
             map< string, string > parameters;
 
@@ -58,7 +58,7 @@ namespace restbed
             return parameters;
         }
 
-        pair< string, string > PathParameter::parse_declaration( const string& declaration )
+        pair< string, string > PathParameterImpl::parse_declaration( const string& declaration )
         {
             string name = String::empty;
             string pattern = declaration;

@@ -11,7 +11,7 @@
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
-#include "corvusoft/restbed/detail/path_parameter.h"
+#include "corvusoft/restbed/detail/path_parameter_impl.h"
 #include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/helpers/regex.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
@@ -95,7 +95,7 @@ namespace restbed
 
             for ( auto directory : path )
             {
-                string pattern = PathParameter::parse( directory );
+                string pattern = PathParameterImpl::parse( directory );
 
                 if( not Regex::is_valid( pattern ) )
                 {

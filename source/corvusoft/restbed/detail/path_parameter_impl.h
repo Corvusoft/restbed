@@ -2,13 +2,13 @@
  * Copyright (c) 2013 Corvusoft
  */
 
-#ifndef _RESTBED_DETAIL_RESOURCE_MATCHER_H
-#define _RESTBED_DETAIL_RESOURCE_MATCHER_H 1
+#ifndef _RESTBED_DETAIL_PATH_PARAMETER_IMPL_H
+#define _RESTBED_DETAIL_PATH_PARAMETER_IMPL_H 1
 
 //System Includes
-#include <regex>
-#include <vector>
- 
+#include <map>
+#include <string>
+
 //Project Includes
 
 //External Includes
@@ -22,14 +22,12 @@
 namespace restbed
 {
     //Forward Declarations
-    class Request;
-    class Resource;
     
     namespace detail
     {
         //Forward Declarations
-
-        class ResourceMatcher
+        
+        class PathParameterImpl
         {
             public:
                 //Friends
@@ -37,26 +35,23 @@ namespace restbed
                 //Definitions
 
                 //Constructors
-                ResourceMatcher( const Request& request );
-            
-                ResourceMatcher( const ResourceMatcher& original );
-            
-                virtual ~ResourceMatcher( void );
-
+                
                 //Functionality
+                static std::string parse( const std::string& declaration );
+
+                static std::map< std::string, std::string > parse( const std::string& path, const std::string& declaration );
 
                 //Getters
-
+                
                 //Setters
 
                 //Operators
-                bool operator ( )( const Resource& resource ) const;
-
+                
                 //Properties
                 
             protected:
                 //Friends
-                
+
                 //Definitions
                 
                 //Constructors
@@ -77,23 +72,25 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                PathParameterImpl( void ) = delete;
                 
-                //Functionality
-                bool compare_path( const Request& request, const Resource& resource ) const;
+                PathParameterImpl( const PathParameterImpl& original ) = delete;
+                
+                virtual ~PathParameterImpl( void ) = delete;
 
-                bool compare_headers( const Request& request, const Resource& resource ) const;
+                //Functionality
+                static std::pair< std::string, std::string > parse_declaration( const std::string& declaration );
 
                 //Getters
                 
                 //Setters
-                
+
                 //Operators
-                ResourceMatcher& operator =( const ResourceMatcher& rhs ) = delete;
+                PathParameterImpl& operator =( const PathParameterImpl& rhs ) = delete;
 
                 //Properties
-                const Request& m_request;
         };
     }
 }
 
-#endif  /* _RESTBED_DETAIL_RESOURCE_MATCHER_H */
+#endif  /* _RESTBED_DETAIL_PATH_PARAMETER_IMPL_H */

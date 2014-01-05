@@ -14,7 +14,7 @@ set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/detail/resource_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/request.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/request_impl.cpp
-	${FRAMEWORK_SOURCE_DIR}/detail/request_builder.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/request_builder_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/response.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/response_impl.cpp
 	${FRAMEWORK_SOURCE_DIR}/service.cpp
@@ -24,6 +24,6 @@ set( MANIFEST
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/date.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/string.cpp
 	${FRAMEWORK_SOURCE_DIR}/detail/helpers/istream.cpp
-	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher.cpp
-	${FRAMEWORK_SOURCE_DIR}/detail/path_parameter.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher_impl.cpp
+	${FRAMEWORK_SOURCE_DIR}/detail/path_parameter_impl.cpp
 )

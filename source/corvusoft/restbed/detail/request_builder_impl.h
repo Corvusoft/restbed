@@ -2,8 +2,8 @@
  * Copyright (c) 2013 Corvusoft
  */
 
-#ifndef _RESTBED_DETAIL_REQUEST_BUILDER_H
-#define _RESTBED_DETAIL_REQUEST_BUILDER_H 1
+#ifndef _RESTBED_DETAIL_REQUEST_BUILDER_IMPL_H
+#define _RESTBED_DETAIL_REQUEST_BUILDER_IMPL_H 1
 
 //System Includes
 #include <map>
@@ -30,7 +30,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class RequestBuilder : private Request
+        class RequestBuilderImpl : private Request
         {
             public:
                 //Friends
@@ -38,11 +38,11 @@ namespace restbed
                 //Definitions
 
                 //Constructors
-                RequestBuilder( void );
+                RequestBuilderImpl( void );
                 
-                RequestBuilder( const RequestBuilder& original );
+                RequestBuilderImpl( const RequestBuilderImpl& original );
                 
-                virtual ~RequestBuilder( void );
+                virtual ~RequestBuilderImpl( void );
                 
                 //Functionality
                 Request build( void ) const;
@@ -55,7 +55,7 @@ namespace restbed
                 void set_path_parameters( const std::map< std::string, std::string >& parameters );
 
                 //Operators
-                RequestBuilder& operator =( const RequestBuilder& rhs );
+                RequestBuilderImpl& operator =( const RequestBuilderImpl& rhs );
 
                 //Properties
                 
@@ -107,4 +107,4 @@ namespace restbed
     }
 }
 
-#endif  /* _RESTBED_DETAIL_REQUEST_BUILDER_H */
+#endif  /* _RESTBED_DETAIL_REQUEST_BUILDER_IMPL_H */
