@@ -9,7 +9,7 @@ cmake_minimum_required( VERSION 2.8.1 )
 #
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules" )
 
-set( DEPENDENCIES gtest )
+set( DEPENDENCIES GTEST )
 
 foreach( DEPENDENCY ${DEPENDENCIES} )
     find_package( ${DEPENDENCY} REQUIRED )
