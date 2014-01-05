@@ -22,6 +22,14 @@ using restbed::Settings;
 
 //External Namespaces
 
+class AuthenticatedService : Service
+{
+	virtual void authentication_handler( const Request& request, /*out*/ Response& response )
+	{	
+	}
+};
+
+
 extern "C"
 {
 	Service* create_service( int port )
@@ -53,7 +61,7 @@ extern "C"
 	    resource->set_method_handler( "CONNECT", &callback_handler );
 	    resource->set_method_handler( "OPTIONS", &callback_handler );
 
-	    service->publish( *resource );		
+	    service->publish( *resource );	
 	}
 
 	void publish_resource( Service* service, const char* path, const char* method )
