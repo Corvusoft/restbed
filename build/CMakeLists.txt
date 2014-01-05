@@ -49,11 +49,6 @@ add_library( restbed SHARED ${MANIFEST} )
 
 target_link_libraries( restbed pthread )
 
-include_directories( ${SOURCE_DIR} "../source" )
-add_executable( main ../source/main.cpp )
-
-target_link_libraries( main restbed )
-
 #
 # Install
 #
