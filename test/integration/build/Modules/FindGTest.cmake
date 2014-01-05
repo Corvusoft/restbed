@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Corvusoft
+# Copyright (c) 2013, 2014 Corvusoft
 
 set( CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
 

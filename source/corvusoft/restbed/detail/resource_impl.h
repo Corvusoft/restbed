@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Corvusoft
+ * Copyright (c) 2013, 2014 Corvusoft
  */
 
 #ifndef _RESTBED_DETAIL_RESOURCE_IMPL_H

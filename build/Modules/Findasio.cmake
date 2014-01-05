@@ -1,4 +1,4 @@
-# Copyright (c) 2013 Corvusoft
+# Copyright (c) 2013, 2014 Corvusoft
 
 find_path( ASIO_INCLUDE_DIR asio.hpp "/usr/include" "/usr/local/include" )
 
