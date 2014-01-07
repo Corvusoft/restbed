@@ -24,7 +24,7 @@ Feature: Custom authentication handler
 	Scenario Outline: Unsuccessful login
 		Given I have configured a service with a custom authentication handler
 		When I perform an unauthorised basic-auth HTTP "<method>" request
-		Then I should see a status code of 200
+		Then I should see a status code of 401
 
 	Examples:
 		| method  |
