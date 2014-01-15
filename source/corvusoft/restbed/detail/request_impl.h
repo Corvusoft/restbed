@@ -61,6 +61,8 @@ namespace restbed
                 std::string get_path( void ) const;
                 
                 std::string get_method( void ) const;
+
+                std::string get_origin( void ) const;
                 
                 std::string get_header( const std::string& name ) const;
                 
@@ -82,6 +84,8 @@ namespace restbed
                 void set_path( const std::string& value );
                 
                 void set_method( const std::string& value );
+
+                void set_origin( const std::string& value );
                 
                 void set_headers( const std::map< std::string, std::string >& values );
                 
@@ -147,6 +151,8 @@ namespace restbed
                 std::string m_path;
 
                 std::string m_method;
+
+                std::string m_origin;
                 
                 std::map< std::string, std::string > m_headers;
                 

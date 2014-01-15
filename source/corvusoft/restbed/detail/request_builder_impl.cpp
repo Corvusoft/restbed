@@ -69,6 +69,11 @@ namespace restbed
             m_pimpl->set_body( parse_http_body( socket ) );
         }
 
+        void RequestBuilderImpl::set_origin( const string& value )
+        {
+            m_pimpl->set_origin( value );
+        }
+
         void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )
         {
             m_pimpl->set_path_parameters( parameters );

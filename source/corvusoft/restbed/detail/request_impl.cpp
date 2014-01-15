@@ -37,6 +37,7 @@ namespace restbed
                                            m_version( 1.1 ),
                                            m_path( "/" ),
                                            m_method( "GET" ),
+                                           m_origin( String::empty ),
                                            m_headers( ),
                                            m_path_parameters( ),
                                            m_query_parameters( )
@@ -48,6 +49,7 @@ namespace restbed
                                                                   m_version( original.m_version ),
                                                                   m_path( original.m_path ),
                                                                   m_method( original.m_method ),
+                                                                  m_origin( original.m_origin ),
                                                                   m_headers( original.m_headers ),
                                                                   m_path_parameters( original.m_path_parameters ),
                                                                   m_query_parameters( original.m_query_parameters )
@@ -103,6 +105,11 @@ namespace restbed
         string RequestImpl::get_method( void ) const
         {
             return m_method;
+        }
+
+        string RequestImpl::get_origin( void ) const
+        {
+            return m_origin;
         }
         
         string RequestImpl::get_header( const string& name ) const
@@ -185,6 +192,11 @@ namespace restbed
         void RequestImpl::set_method( const string& value )
         {
             m_method = value;
+        }
+
+        void RequestImpl::set_origin( const string& value )
+        {
+            m_origin = value;
         }
         
         void RequestImpl::set_headers( const map< string, string >& values )

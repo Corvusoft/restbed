@@ -77,6 +77,11 @@ namespace restbed
     {
         return m_pimpl->get_path( );
     }
+
+    string Request::get_origin( void ) const
+    {
+        return m_pimpl->get_origin( );
+    }
     
     string Request::get_header( const string& name ) const
     {

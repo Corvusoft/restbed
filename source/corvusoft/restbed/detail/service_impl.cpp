@@ -278,6 +278,7 @@ namespace restbed
                 istream stream( &buffer );
 
                 RequestBuilderImpl builder( stream );
+                builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
                 request = builder.build( );
 
                 Resource resource = resolve_resource_route( request );
