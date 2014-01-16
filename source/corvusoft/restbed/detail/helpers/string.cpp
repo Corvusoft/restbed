@@ -141,6 +141,11 @@ namespace restbed
 
 	        string String::remove( const string& needle, const string& haystack, bool case_insensitive )
 	        {
+	        	return replace( needle, empty, haystack, case_insensitive );
+	        }
+
+	        string String::replace( const string& needle, const string& substitute, const string& haystack, bool case_insensitive )
+	        {
 	            string target = case_insensitive ? String::lowercase( needle ) : needle;
 	            string source = case_insensitive ? String::lowercase( haystack ) : haystack;
 
@@ -148,7 +153,7 @@ namespace restbed
 
 	            if ( index not_eq string::npos )
 	            {
-	                source.replace( index, target.length( ), empty );
+	                source.replace( index, target.length( ), substitute );
 	            }
 
 	            return source;

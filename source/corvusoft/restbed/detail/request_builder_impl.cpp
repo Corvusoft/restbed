@@ -10,6 +10,7 @@
 //Project Includes
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/detail/helpers/uri.h"
 #include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/helpers/string.h"
@@ -29,6 +30,7 @@ using std::istreambuf_iterator;
 
 //Project Namespaces
 using restbed::Request;
+using restbed::detail::helpers::Uri;
 using restbed::detail::helpers::Map;
 using restbed::detail::helpers::String;
 using restbed::detail::helpers::IStream;
@@ -116,7 +118,7 @@ namespace restbed
                 path.push_back( character );
             }
 
-            return path;
+            return Uri::decode( path );
         }
 
         string RequestBuilderImpl::parse_http_method( istream& socket )
@@ -169,9 +171,9 @@ namespace restbed
                 {
                     string::size_type index = parameter.find_first_of( '=' );
                     
-                    string name = parameter.substr( 0, index );
+                    string name = Uri::decode_parameter( parameter.substr( 0, index ) );
                     
-                    string value = parameter.substr( index + 1, parameter.length( ) );
+                    string value = Uri::decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
 
                     parameters[ name ] = value;
                 }

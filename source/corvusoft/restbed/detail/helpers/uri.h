@@ -40,9 +40,9 @@ namespace restbed
                     //Constructors
                     
                     //Functionality
-                    static std::string encode( const std::string& value );
-
                     static std::string decode( const std::string& value );
+
+                    static std::string decode_parameter( const std::string& value );
 
                     //Getters
                     
@@ -82,6 +82,7 @@ namespace restbed
                     virtual ~Uri( void ) = delete;
 
                     //Functionality
+
                     //Getters
                     
                     //Setters

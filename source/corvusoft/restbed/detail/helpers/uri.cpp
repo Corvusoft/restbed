@@ -27,62 +27,6 @@ namespace restbed
 	{
 		namespace helpers
 		{
-			string Uri::encode( const string& value )
-			{
-                string encoded = String::empty;
-                
-            	for ( const char& character : value )
-                {
-                    char hexidecimal[ 4 ] = { 0 };
-                    
-                    switch ( character )
-                    {
-                            //unsafe carachters
-                        case ' ':
-                        case '\"':
-                        case '<':
-                        case '>':
-                        case '#':
-                        case '%':
-                        case '{':
-                        case '}':
-                        case '|':
-                        case '\\':
-                        case '^':
-                        case '~':
-                        case '[':
-                        case ']':
-                        case '`':
-                        
-                            //reserved characters
-                        case '$':
-                        case '&':
-                        case '+':
-                        case ',':
-                        case '/':
-                        case ':':
-                        case ';':
-                        case '=':
-                        case '?':
-                        case '@':
-                            snprintf( hexidecimal, sizeof( hexidecimal ), "%%%02X", character );
-                            
-                            encoded.append( hexidecimal );
-                            
-                            break;
-                            
-                        default:
-                            hexidecimal[ 0 ] = character;
-                            
-                            encoded.append( hexidecimal );
-                            
-                            break;
-                    }
-                }
-                
-                return encoded;
-			}
-
         	string Uri::decode( const string& value )
         	{
                 const int BASE16 = 16;
@@ -111,6 +55,13 @@ namespace restbed
                 
             	return result;
         	}
+
+            string Uri::decode_parameter( const string& value )
+            {
+                string source = String::replace( "+", " ", value );
+
+                return Uri::decode( value );
+            }
 		}
 	}
 }

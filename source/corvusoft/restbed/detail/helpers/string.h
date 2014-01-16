@@ -58,6 +58,8 @@ namespace restbed
 
                     static std::string remove( const std::string& needle, const std::string& haystack, bool case_insensitive = false );
 
+                    static std::string replace( const std::string& target, const std::string& substitute, const std::string& value, bool case_insensitive = false );
+
                     //Getters
                     
                     //Setters
