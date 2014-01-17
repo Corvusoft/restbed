@@ -60,7 +60,7 @@ namespace restbed
             {
                 string source = String::replace( "+", " ", value );
 
-                return Uri::decode( value );
+                return Uri::decode( source );
             }
 		}
 	}

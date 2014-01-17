@@ -3,7 +3,7 @@
  */
 
 /*
- * See issue tracker bug #4 for details.
+ * See issue tracker bug #9 for details.
  */
 
 #ifdef __APPLE__
@@ -30,22 +30,25 @@ using namespace restbed;
 
 //External Namespaces
 
-Response get_handler( const Request& )
+Response get_handler( const Request& request )
 {
+    EXPECT_EQ( "/uri test", request.get_path( ) );
+    EXPECT_EQ( "@30", request.get_query_parameter( "ben crowhurst" ) );
+
     Response response;
     response.set_status_code( StatusCode::OK );
 
     return response;
 }
 
-TEST( Service, mismatched_resource_path )
+TEST( Service, encoded_uri_test )
 {
 	Resource resource;
-    resource.set_path( "test" );
+    resource.set_path( "uri test" );
     resource.set_method_handler( "GET", &get_handler );
 
     Settings settings;
-    settings.set_port( 1984 );
+    settings.set_port( 8989 );
     settings.set_mode( ASYNCHRONOUS );
 
     auto service = make_shared< Service >( settings );
@@ -53,31 +56,9 @@ TEST( Service, mismatched_resource_path )
 
     service->start( );
 
-	auto response = Http::get( "http://localhost:1984/" );
-	
-	EXPECT_EQ( "404", response[ "Status Code" ] );
+	auto response = Http::get( "http://localhost:8989/uri%20test?ben+crowhurst=%4030" );
 
-	service->stop( );
-}
-
-TEST( Service, matched_resource_path )
-{
-	Resource resource;
-    resource.set_method_handler( "GET", &get_handler );
-
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_root( "test" );
-    settings.set_mode( ASYNCHRONOUS );
-
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
-
-    service->start( );
-
-	auto response = Http::get( "http://localhost:1984/test" );
-	
-	EXPECT_EQ( "200", response[ "Status Code" ] );
+    EXPECT_EQ( "200", response[ "Status Code" ] );
 
 	service->stop( );
 }

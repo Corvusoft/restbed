@@ -41,14 +41,14 @@ Response get_handler( const Request& )
 TEST( Service, mismatched_resource_path_of_equal_path_segments )
 {
 	Resource resource;
+    resource.set_path( "test" );
     resource.set_method_handler( "GET", &get_handler );
 
     Settings settings;
     settings.set_port( 1984 );
-    settings.set_root( "test" );
     settings.set_mode( ASYNCHRONOUS );
 
-    service = make_shared< Service >( settings );
+    auto service = make_shared< Service >( settings );
     service->publish( resource );
 
     service->start( );
@@ -63,14 +63,14 @@ TEST( Service, mismatched_resource_path_of_equal_path_segments )
 TEST( Service, mismatched_resource_path_of_unequal_path_segments )
 {
 	Resource resource;
+    resource.set_path( "test" );
     resource.set_method_handler( "GET", &get_handler );
 
     Settings settings;
     settings.set_port( 1984 );
-    settings.set_root( "test" );
     settings.set_mode( ASYNCHRONOUS );
 
-    service = make_shared< Service >( settings );
+    auto service = make_shared< Service >( settings );
     service->publish( resource );
 
     service->start( );
@@ -85,14 +85,14 @@ TEST( Service, mismatched_resource_path_of_unequal_path_segments )
 TEST( Service, matched_resource_path )
 {
 	Resource resource;
+    resource.set_path( "test" );
     resource.set_method_handler( "GET", &get_handler );
 
     Settings settings;
     settings.set_port( 1984 );
-    settings.set_root( "test" );
     settings.set_mode( ASYNCHRONOUS );
 
-    service = make_shared< Service >( settings );
+    auto service = make_shared< Service >( settings );
     service->publish( resource );
 
     service->start( );
