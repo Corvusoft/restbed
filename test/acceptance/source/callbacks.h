@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <string>
 
 //Project Includes
 #include <restbed>
@@ -10,6 +11,7 @@
 //External Includes
 
 //System Namespaces
+using std::string;
 
 //Project Namespaces
 using restbed::Request;
@@ -57,6 +59,15 @@ Response api_1_1_callback_handler( const Request& )
 	Response response;
 	response.set_status_code( 200 );
 	response.set_body( "api version 1.1" );
+
+	return response;
+}
+
+Response resource_with_response_header_handler( const Request&, const string& name, const string& value )
+{
+	Response response;
+	response.set_status_code( 200 );
+	response.set_header( name, value );
 
 	return response;
 }

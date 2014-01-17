@@ -18,9 +18,9 @@ class Service(object):
     	library.publish_default_resource.argtypes = [c_void_p]
     	library.publish_default_resource(self.obj)
 
-    def publish_method_handler(self, path, method):
-        library.publish_method_handler.argtypes = [c_void_p, c_char_p, c_char_p]
-    	library.publish_method_handler(self.obj, path, method)
+    def publish_resource(self, path, method):
+        library.publish_resource.argtypes = [c_void_p, c_char_p, c_char_p]
+    	library.publish_resource(self.obj, path, method)
 
     def publish_json_resource(self, path):
         library.publish_json_resource.argtypes = [c_void_p, c_char_p]
@@ -37,3 +37,7 @@ class Service(object):
     def publish_api_1_1_resource(self, path):
         library.publish_api_1_1_resource.argtypes = [c_void_p, c_char_p]
     	library.publish_api_1_1_resource(self.obj, path)
+
+    def publish_resource_with_response_header(self, name, value):
+        library.publish_resource_with_response_header.argtypes = [c_void_p, c_char_p, c_char_p]
+        library.publish_resource_with_response_header(self.obj, name, value)

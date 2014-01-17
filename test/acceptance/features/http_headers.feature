@@ -24,16 +24,15 @@ Feature: HTTP response headers
 
 
 	Scenario: Custom headers
-		Given I have published a resource with custom response headers
+		Given I have published a custom resource with response header "<name>" and a value of "<value>"
 		When I perform a HTTP "<method>" request
-		Then I should see a "<1st header>" response header with a value of "<1st value>"
-		And I should see a "<2nd header>" response header with a value of "<2nd value>"
+		Then I should see a "<name>" response header with a value of "<value>"
 
 	Examples:
-		| method  | 1st header  | 1st value | 2nd header | 2nd value   |
-		| GET     | api-version | beta      | platform   | desktop     |
-		| PUT     | api-version | beta      | platform   | desktop     |
-		| POST    | api-version | beta      | platform   | desktop     |
-		| HEAD    | api-version | beta      | platform   | desktop     |
-		| DELETE  | api-version | beta      | platform   | desktop     |
-		| OPTIONS | api-version | beta      | platform   | desktop     |
+		| method  | name        | value |
+		| GET     | api-version | beta  |
+		| PUT     | api-version | beta  |
+		| POST    | api-version | beta  |
+		| HEAD    | api-version | beta  |
+		| DELETE  | api-version | beta  |
+		| OPTIONS | api-version | beta  |

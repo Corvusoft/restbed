@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <string>
 
 //Project Includes
 #include <restbed>
@@ -11,6 +12,7 @@
 //External Includes
 
 //System Namespaces
+using std::string;
 
 //Project Namespaces
 using restbed::Mode;
@@ -52,14 +54,6 @@ extern "C"
 	void publish_default_resource( Service* service )
 	{
 	    Resource* resource = new Resource( );
-	    resource->set_method_handler( "GET", &callback_handler );
-	    resource->set_method_handler( "PUT", &callback_handler );
-	    resource->set_method_handler( "POST", &callback_handler );
-	    resource->set_method_handler( "HEAD", &callback_handler );
-	    resource->set_method_handler( "TRACE", &callback_handler );
-	    resource->set_method_handler( "DELETE", &callback_handler );
-	    resource->set_method_handler( "CONNECT", &callback_handler );
-	    resource->set_method_handler( "OPTIONS", &callback_handler );
 
 	    service->publish( *resource );	
 	}
@@ -71,11 +65,6 @@ extern "C"
 	    resource->set_method_handler( method, &callback_handler );
 
 	    service->publish( *resource );
-	}
-
-	void suppress_method_handler( Service* service, const char* method )
-	{
-
 	}
 
 	void publish_json_resource( Service* service, const char* path )
@@ -114,6 +103,19 @@ extern "C"
 		resource->set_path( path );
 		resource->set_method_handler( "GET", &api_1_1_callback_handler );
 		resource->set_header_filter( "api-version", "1.1" );
+
+		service->publish( *resource );
+	}
+
+	void publish_resource_with_response_header( Service* service, const char* name, const char* value ) //string?
+	{
+		Resource* resource = new Resource( );
+		resource->set_method_handler( "GET", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+		resource->set_method_handler( "PUT", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+		resource->set_method_handler( "POST", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+		resource->set_method_handler( "HEAD", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+		resource->set_method_handler( "DELETE", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+		resource->set_method_handler( "OPTIONS", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
 
 		service->publish( *resource );
 	}

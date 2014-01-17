@@ -31,13 +31,15 @@ Feature: HTTP method handlers
 		| GET     | 501    |
 		| PUT     | 501    |
 		| POST    | 501    |
-		| HEAD    | 200    |
+		| HEAD    | 501    |
+		| TRACE   | 200    |
 		| DELETE  | 501    |
 		| CONNECT | 501    |
+		| OPTIONS | 200    |
 
 	Scenario: Default OPTIONS method handler
 		Given I have published a default resource
-		When I perform a HTTP "TRACE" request
+		When I perform a HTTP "OPTIONS" request
 		Then I should see a status code of "200"
 		And I should see a "Allow" response header with a value of "TRACE, OPTIONS"
 
@@ -46,8 +48,10 @@ Feature: HTTP method handlers
 		When I perform a HTTP "TRACE" request
 		Then I should see a status code of "200"
 		And I should see a "Content-Type" response header with a value of "message/http"
-		And I should see a body of "TRACE / HTTP/1.1\r
-									Content-Length: 0\n
-									Connection: close\n
-									Content-Type: application/json; charset=utf-8\n
-									Server: Corvusoft - restbed/1.0\n"
+		And I should see a body of:
+		"""
+		TRACE / HTTP/1.1
+		Host: localhost:1984
+		accept-encoding: gzip, deflate
+		user-agent: acceptance tests
+		"""
