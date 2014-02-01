@@ -33,6 +33,7 @@ using std::thread;
 using std::string;
 using std::istream;
 using std::find_if;
+using std::function;
 using std::to_string;
 using std::exception;
 using std::shared_ptr;
@@ -49,6 +50,7 @@ using asio::buffer;
 using asio::ip::tcp;
 using asio::io_service;
 using asio::error_code;
+using asio::socket_base;
 using asio::system_error;
 
 namespace restbed
@@ -63,7 +65,9 @@ namespace restbed
                                                                m_thread( nullptr ),
                                                                m_work ( nullptr ),
                                                                m_io_service( nullptr ),
-                                                               m_acceptor( nullptr )
+                                                               m_acceptor( nullptr ),
+                                                               m_error_handler( ),
+                                                               m_authentication_handler( )
         {
             //n/a
         }
@@ -76,7 +80,9 @@ namespace restbed
                                                                   m_thread( original.m_thread ),
                                                                   m_work( original.m_work ),
                                                                   m_io_service( original.m_io_service ),
-                                                                  m_acceptor( original.m_acceptor )
+                                                                  m_acceptor( original.m_acceptor ),
+                                                                  m_error_handler( original.m_error_handler ),
+                                                                  m_authentication_handler( original.m_authentication_handler )
         {
             //n/a
         }
@@ -98,6 +104,8 @@ namespace restbed
             m_io_service = make_shared< io_service >( );
 
             m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
+
+            m_acceptor->set_option( socket_base::reuse_address( true ) );
 
             m_acceptor->listen( m_maximum_connections );
 
@@ -209,6 +217,16 @@ namespace restbed
             response.set_status_code( StatusCode::OK );
         }
 
+        void ServiceImpl::set_error_handler( function< void ( const Request&, Response& ) > value )
+        {
+            m_error_handler = value;
+        }
+
+        void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
+        {
+            m_authentication_handler = value;
+        }
+
         bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
         {
             return m_port < rhs.m_port;
@@ -273,6 +291,7 @@ namespace restbed
                     throw StatusCode::INTERNAL_SERVER_ERROR;
                 }
 
+                //move to build_request()
                 asio::streambuf buffer;
                 asio::read_until( *socket, buffer, "\r\n" );
                 istream stream( &buffer );
@@ -287,18 +306,19 @@ namespace restbed
                 builder.set_path_parameters( parameters );
 
                 request = builder.build( );
+                //end move
 
-                authentication_handler( request, response );
+                m_authentication_handler( request, response );
 
                 const int status = response.get_status_code( );
 
-                if ( status not_eq StatusCode::UNAUTHORIZED and status not_eq StatusCode::FORBIDDEN )
+                if ( status == StatusCode::OK )
                 {
                     response = invoke_method_handler( request, resource );
                 }
                 else
                 {
-                    log_handler( LogLevel::SECURITY, "Unauthorized access attempted." );
+                    log_handler( LogLevel::SECURITY, "Authentication failed." );
                 }
             }
             catch ( const int status_code )
@@ -338,7 +358,7 @@ namespace restbed
                     tag = "SECURITY";
                     break;
                 default:
-                    tag = "UNKNOWN";
+                    tag = String::format( "LOG LEVEL (%i)", level );
             }
 
             string timestamp = Date::format( system_clock::now( ) );

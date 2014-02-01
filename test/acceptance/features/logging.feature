@@ -5,6 +5,7 @@ Feature: Service logging
 	As a developer
 	I want to log service activity
 
+	@wip
 	Scenario Outline: Incoming request logging
 		Given I have configured a service with a custom logging handler
 		When I perform a HTTP "<method>" request
@@ -21,6 +22,7 @@ Feature: Service logging
 		| OPTIONS |
 		| CONNECT |
 
+	@wip
 	Scenario Outline: Unauthorised request logging
 		Given I have configured a secure service with a custom logging handler
 		When I perform a HTTP "<method>" request
@@ -37,11 +39,13 @@ Feature: Service logging
 		| OPTIONS |
 		| CONNECT |
 
+	@wip
 	Scenario Outline: Resource publication logging
 		Given I have configured a service with a custom logging handler
 		When I publish a new resource
 		Then I should see "[INFO 00:00:00]" /table resource published
 
+	@wip
 	Scenario Outline: Resource suppression logging
 		Given I have configured a service with a custom logging handler
 		When I publish a new resource

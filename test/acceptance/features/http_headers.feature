@@ -6,7 +6,7 @@ Feature: HTTP response headers
 	I want to be able to create HTTP response headers
 
 	Scenario: Default headers
-		Given I have published a default resource
+		Given I have configured a service with a default resource
 		When I perform a HTTP "<method>" request
 		Then I should see a "<1st header>" response header with a value of "<1st value>"
 		And I should see a "<2nd header>" response header with a value of "<2nd value>"
@@ -24,7 +24,7 @@ Feature: HTTP response headers
 
 
 	Scenario: Custom headers
-		Given I have published a custom resource with response header "<name>" and a value of "<value>"
+		Given I have configured a service with a custom resource and response header "<name>" and a value of "<value>"
 		When I perform a HTTP "<method>" request
 		Then I should see a "<name>" response header with a value of "<value>"
 

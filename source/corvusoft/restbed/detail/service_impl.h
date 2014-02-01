@@ -10,6 +10,8 @@
 #include <thread>
 #include <memory>
 #include <string>
+#include <cstdarg>
+#include <functional>
 
 //Project Includes
 
@@ -68,6 +70,9 @@ namespace restbed
                 //Getters
                 
                 //Setters
+                void set_error_handler( std::function< void ( const Request&, Response& ) > value );
+
+                void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
 
                 //Operators
                 bool operator <( const ServiceImpl& rhs ) const;
@@ -146,7 +151,13 @@ namespace restbed
 
                 std::shared_ptr< asio::io_service > m_io_service;
 
-                std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;                
+                std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
+
+                std::function< void ( const int, const std::string&, va_list ) > m_log_handler;
+
+                std::function< void ( const Request&, Response& ) > m_error_handler;
+
+                std::function< void ( const Request&, Response& ) > m_authentication_handler;                
         };
     }
 }

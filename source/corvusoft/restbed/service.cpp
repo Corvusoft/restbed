@@ -4,6 +4,7 @@
 
 //System Includes
 #include <cstdarg>
+#include <functional>
 
 //Project Includes
 #include "corvusoft/restbed/service.h"
@@ -15,7 +16,11 @@
 //External Includes
 
 //System Namespaces
+using std::bind;
 using std::string;
+using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
 
 //Project Namespaces
 using restbed::detail::ServiceImpl;
@@ -26,7 +31,9 @@ namespace restbed
 {
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
-        //n/a
+        m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2 ) );
+
+        m_pimpl->set_authentication_handler( bind( &Service::authentication_handler, this, _1, _2 ) );
     }
     
     Service::Service( const Service& original ) : m_pimpl( new ServiceImpl( *original.m_pimpl ) )

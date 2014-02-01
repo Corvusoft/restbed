@@ -24,11 +24,30 @@ using restbed::Settings;
 
 //External Namespaces
 
-class AuthenticatedService : Service
+//BasicAuthService
+class AuthenticatedService : public Service
 {
-	virtual void authentication_handler( const Request& request, /*out*/ Response& response )
-	{	
-	}
+	public:
+		AuthenticatedService( const Settings& settings ) : Service( settings )
+		{
+			//n/a
+		}
+
+	protected:
+		virtual void authentication_handler( const Request& request, /*out*/ Response& response )
+		{
+			auto authorisation = request.get_header( "Authorization" );
+
+			if ( authorisation == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" )
+			{
+				response.set_status_code( 200 );
+			}
+			else
+			{
+				response.set_status_code( 401 );
+				response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
+			}
+		}
 };
 
 
@@ -46,8 +65,22 @@ extern "C"
 		return service;
 	}
 
+	Service* create_authenticated_service( int port )
+	{
+		Settings settings;
+		settings.set_port( port );
+		settings.set_mode( Mode::ASYNCHRONOUS );
+
+		Service* service = new AuthenticatedService( settings );
+		service->start( );
+
+		return service;	
+	}
+
 	void release_service( Service* service )
 	{
+		service->stop( );
+		
 		delete service;
 	}
 
@@ -107,6 +140,7 @@ extern "C"
 		service->publish( *resource );
 	}
 
+	//really need to clean up these method names/options
 	void publish_resource_with_response_header( Service* service, const char* name, const char* value ) //string?
 	{
 		Resource* resource = new Resource( );
@@ -116,6 +150,7 @@ extern "C"
 		resource->set_method_handler( "HEAD", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
 		resource->set_method_handler( "DELETE", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
 		resource->set_method_handler( "OPTIONS", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+		resource->set_method_handler( "CONNECT", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
 
 		service->publish( *resource );
 	}

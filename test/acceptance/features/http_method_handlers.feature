@@ -6,7 +6,7 @@ Feature: HTTP method handlers
 	I want to create custom HTTP method handlers
 
 	Scenario: Custom method handlers
-		Given I have published a resource with a custom "<method>" handler
+		Given I have configured a service and a resource with a custom "<method>" handler
 		When I perform a HTTP "<method>" request
 		Then I should see a status code of "<status>"
 		
@@ -22,7 +22,7 @@ Feature: HTTP method handlers
 		| OPTIONS | 200    |
 
 	Scenario: Default method handlers
-		Given I have published a default resource
+		Given I have configured a service with a default resource
 		When I perform a HTTP "<method>" request
 		Then I should see a status code of "<status>"
 
@@ -37,14 +37,8 @@ Feature: HTTP method handlers
 		| CONNECT | 501    |
 		| OPTIONS | 200    |
 
-	Scenario: Default OPTIONS method handler
-		Given I have published a default resource
-		When I perform a HTTP "OPTIONS" request
-		Then I should see a status code of "200"
-		And I should see a "Allow" response header with a value of "TRACE, OPTIONS"
-
 	Scenario: Default TRACE method handler
-		Given I have published a default resource
+		Given I have configured a service with a default resource
 		When I perform a HTTP "TRACE" request
 		Then I should see a status code of "200"
 		And I should see a "Content-Type" response header with a value of "message/http"
@@ -55,3 +49,10 @@ Feature: HTTP method handlers
 		accept-encoding: gzip, deflate
 		user-agent: acceptance tests
 		"""
+
+    @ben
+	Scenario: Default OPTIONS method handler
+		Given I have configured a service with a default resource
+		When I perform a HTTP "OPTIONS" request
+		Then I should see a status code of "200"
+		And I should see a "Allow" response header with a value of "OPTIONS, TRACE"
