@@ -8,6 +8,7 @@
 //Project Includes
 #include <restbed>
 #include "callbacks.h"
+#include "basic_auth_service.h"
 
 //External Includes
 
@@ -24,36 +25,11 @@ using restbed::Settings;
 
 //External Namespaces
 
-//BasicAuthService
-class AuthenticatedService : public Service
-{
-	public:
-		AuthenticatedService( const Settings& settings ) : Service( settings )
-		{
-			//n/a
-		}
-
-	protected:
-		virtual void authentication_handler( const Request& request, /*out*/ Response& response )
-		{
-			auto authorisation = request.get_header( "Authorization" );
-
-			if ( authorisation == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" )
-			{
-				response.set_status_code( 200 );
-			}
-			else
-			{
-				response.set_status_code( 401 );
-				response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
-			}
-		}
-};
-
+const size_t NUMBER_OF_HTTP_METHODS = 8;
 
 extern "C"
 {
-	Service* create_service( int port )
+	Service* create_service( const int port )
 	{
 		Settings settings;
 		settings.set_port( port );
@@ -65,13 +41,13 @@ extern "C"
 		return service;
 	}
 
-	Service* create_authenticated_service( int port )
+	Service* create_authenticated_service( const int port )
 	{
 		Settings settings;
 		settings.set_port( port );
 		settings.set_mode( Mode::ASYNCHRONOUS );
 
-		Service* service = new AuthenticatedService( settings );
+		Service* service = new BasicAuthService( settings );
 		service->start( );
 
 		return service;	
@@ -91,57 +67,20 @@ extern "C"
 	    service->publish( *resource );	
 	}
 
-	void publish_resource( Service* service, const char* path, const char* method )
+	void publish_resource( Service* service, const char* path, const char** methods )
 	{
 	    Resource* resource = new Resource( );
 	    resource->set_path( path );
-	    resource->set_method_handler( method, &callback_handler );
+
+	    for ( size_t index = 0; index < NUMBER_OF_HTTP_METHODS and methods[ index ] not_eq nullptr; index++ ) 
+	    {
+	    	resource->set_method_handler( methods[ index ], &ok_callback_handler );
+	    }
 
 	    service->publish( *resource );
 	}
 
-	void publish_json_resource( Service* service, const char* path )
-	{
-		Resource* resource = new Resource( );
-		resource->set_path( path );
-		resource->set_method_handler( "GET", &json_callback_handler );
-		resource->set_header_filter( "Content-Type", "application/json" );
-
-		service->publish( *resource );
-	}
-
-	void publish_xml_resource( Service* service, const char* path )
-	{
-		Resource* resource = new Resource( );
-		resource->set_path( path );
-		resource->set_method_handler( "GET", &xml_callback_handler );
-		resource->set_header_filter( "Content-Type", "application/xml" );
-
-		service->publish( *resource );
-	}
-
-	void publish_api_1_0_resource( Service* service, const char* path )
-	{
-		Resource* resource = new Resource( );
-		resource->set_path( path );
-		resource->set_method_handler( "GET", &api_1_0_callback_handler );
-		resource->set_header_filter( "api-version", "1.0" );
-
-		service->publish( *resource );
-	}
-		
-	void publish_api_1_1_resource( Service* service, const char* path )
-	{
-		Resource* resource = new Resource( );
-		resource->set_path( path );
-		resource->set_method_handler( "GET", &api_1_1_callback_handler );
-		resource->set_header_filter( "api-version", "1.1" );
-
-		service->publish( *resource );
-	}
-
-	//really need to clean up these method names/options
-	void publish_resource_with_response_header( Service* service, const char* name, const char* value ) //string?
+	void publish_resource_with_response_header( Service* service, const char* name, const char* value )
 	{
 		Resource* resource = new Resource( );
 		resource->set_method_handler( "GET", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
@@ -151,6 +90,42 @@ extern "C"
 		resource->set_method_handler( "DELETE", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
 		resource->set_method_handler( "OPTIONS", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
 		resource->set_method_handler( "CONNECT", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
+
+		service->publish( *resource );
+	}
+
+	void publish_json_resource( Service* service, const char* path )
+	{
+		Resource* resource = new Resource( );
+		resource->set_path( path );
+		resource->set_method_handler( "GET", &json_callback_handler );
+
+		service->publish( *resource );
+	}
+
+	void publish_xml_resource( Service* service, const char* path )
+	{
+		Resource* resource = new Resource( );
+		resource->set_path( path );
+		resource->set_method_handler( "GET", &xml_callback_handler );
+
+		service->publish( *resource );
+	}
+
+	void publish_json_resource_with_header_filter( Service* service )
+	{
+		Resource* resource = new Resource( );
+		resource->set_method_handler( "GET", &json_callback_handler );
+		resource->set_header_filter( "Content-Type", "application/json" );
+
+		service->publish( *resource );
+	}
+
+	void publish_xml_resource_with_header_filter( Service* service )
+	{
+		Resource* resource = new Resource( );
+		resource->set_method_handler( "GET", &xml_callback_handler );
+		resource->set_header_filter( "Content-Type", "application/xml" );
 
 		service->publish( *resource );
 	}

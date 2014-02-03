@@ -12,7 +12,6 @@ def i_have_configured_a_service_with_a_default_resource(step):
 
 	world.service.publish_default_resource()
 
-
 @step(u'I have configured a service with a custom resource and response header "([^"]*)" and a value of "([^"]*)"$')
 def i_have_configured_a_service_with_a_custom_resource_and_response_header_name_and_a_value_of_value(step, name, value):
 	if not hasattr(world, 'service') or world.service == None:
@@ -26,53 +25,57 @@ def i_have_configured_a_service_with_a_custom_method_handler(step, method):
 	if not hasattr(world, 'service') or world.service == None:
 		world.service = Service(world.port)
 
-	world.service.publish_resource("/", method)
+	world.service.publish_resource("/", [method])
 
-@step(u'I have configured a service and published a resource at "([^"]*)" with a "([^"]*)" header filter of "([^"]*)"$')
-def i_have_published_a_resource_at_path_with_a_header_filter_of_value(step, path, header, value): #header and value aint used mofo
+@step(u'I have configured a service and published a resource with a "([^"]*)" header filter of "([^"]*)"$')
+def i_have_published_a_resource_at_path_with_a_header_filter_of_value(step, header, value): #header and value aint used mofo
 	if not hasattr(world, 'service') or world.service == None:
 		world.service = Service(world.port)
 
 	if value == "application/json":
-		world.service.publish_json_resource(path)
+		world.service.publish_json_resource_with_header_filter()
 	elif value == "application/xml":
-		world.service.publish_xml_resource(path)
-	elif value == "1.0":
-		world.service.publish_api_1_0_resource(path)
-	elif value == "1.1":
-		world.service.publish_api_1_1_resource(path)
+		world.service.publish_xml_resource_with_header_filter()
 	else:
 		assert False, "Unknown resource requested"
 
-@step(u'I have published a resource at "([^"]*)" with a "([^"]*)" header filter of "([^"]*)"$')
-def i_have_published_a_resource_at_path_with_a_header_filter_of_value(step, path, header, value):
+@step(u'I have published a resource with a "([^"]*)" header filter of "([^"]*)"$')
+def i_have_published_a_resource_at_path_with_a_header_filter_of_value(step, header, value):
 	if value == "application/json":
-		world.service.publish_json_resource(path)
+		world.service.publish_json_resource_with_header_filter()
 	elif value == "application/xml":
-		world.service.publish_xml_resource(path)
-	elif value == "1.0":
-		world.service.publish_api_1_0_resource(path)
-	elif value == "1.1":
-		world.service.publish_api_1_1_resource(path)
+		world.service.publish_xml_resource_with_header_filter()
 	else:
 		assert False, "Unknown resource requested"
 
+@step(u'I have configured a service and published a resource at "([^"]*)"$')
+def i_have_configured_a_service_and_published_a_resource_at_path(step, path):
+	if not hasattr(world, 'service') or world.service == None:
+		world.service = Service(world.port)
 
+	if path == "/json":
+		world.service.publish_json_resource(path)
+	elif path == "/xml":
+		world.service.publish_xml_resource(path)
+	else:
+		world.service.publish_resource(path, ["GET", "PUT", "POST", "HEAD", "TRACE", "DELETE", "OPTIONS", "CONNECT" ])
 
-# @step(u'I have published a resource at "([^"]*)" with a custom "([^"]*)" handler')
-# def i_have_published_a_resource_with_a_custom_method_handler(step, path, method):
-# 	world.service.publish_resource(path, method)
+@step(u'I have published a resource at "([^"]*)"$')
+def i_have_published_a_resource_at_path(step, path):
+	if path == "/json":
+		world.service.publish_json_resource(path)
+	elif path == "/xml":
+		world.service.publish_xml_resource(path)
+	else:
+		world.service.publish_resource(path, ["GET", "PUT", "POST", "HEAD", "TRACE", "DELETE", "OPTIONS", "CONNECT" ])
 
-
-@step(u'I perform a HTTP "([^"]*)" request to "([^"]*)" with header "([^"]*)" set to "([^"]*)"$')
-def i_perform_a_http_method_request_to_path_with_header_set_to_value(step, method, path, header, value):
+@step(u'I perform a HTTP "([^"]*)" request with header "([^"]*)" set to "([^"]*)"$')
+def i_perform_a_http_method_request_to_path_with_header_set_to_value(step, method, header, value):
 	http_method = method.upper()
-
-	url = world.url + path
 
 	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate', header:value}
 
-	world.service.response, world.service.response.body = world.http.request(url, http_method, headers=headers)
+	world.service.response, world.service.response.body = world.http.request(world.url, http_method, headers=headers)
 
 
 @step(u'I perform a HTTP "([^"]*)" request$')
@@ -82,6 +85,16 @@ def i_perform_a_http_method_request(step, method):
 	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate'}
 
 	world.service.response, world.service.response.body = world.http.request(world.url, http_method, headers=headers)
+
+@step(u'I perform a HTTP "([^"]*)" request to "([^"]*)"$')
+def i_perform_a_http_method_request_to_path(step, method, path):
+	http_method = method.upper()
+
+	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate'}
+
+	url = world.url + path
+
+	world.service.response, world.service.response.body = world.http.request(url, http_method, headers=headers)
 
 
 @step(u'I should see a response body of "([^"]*)"$')
@@ -111,7 +124,7 @@ def i_have_configured_a_service_with_a_custom_authentication_handler(step):
 	if not hasattr(world, 'service') or world.service == None:
 		world.service = BasicAuthService(world.port)
 
-	world.service.publish_resource_with_response_header("dummy", "header")
+	world.service.publish_resource("/", ["GET", "PUT", "POST", "HEAD", "TRACE", "DELETE", "OPTIONS", "CONNECT" ])
 
 #add username + password to cuke
 @step(u'I perform a basic-auth HTTP "([^"]*)" request$')
