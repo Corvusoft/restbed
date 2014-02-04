@@ -54,7 +54,7 @@ Feature: HTTP method handlers
 		"""
 
     @ben
-	Scenario: Default OPTIONS method handler
+	Scenario: Default OPTIONS Method Handler
 		Given I have configured a service
 		And published a default resource
 		When I perform a HTTP "OPTIONS" request
