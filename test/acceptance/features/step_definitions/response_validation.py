@@ -1,0 +1,26 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2013, 2014 Corvusoft
+
+from helpers import *
+from lettuce import step, world
+
+@step(u'I should see a status code of "([^"]*)"$')
+def i_should_see_a_status_code_of(step, status_code):
+	assert world.service.response.status == int(status_code), "Status code expectation of %s does not match %s" %(status_code, world.service.response.status)
+
+@step(u'I should see a "([^"]*)" response header with a value of "([^"]*)"$')
+def i_should_see_a_header_value_of(step, name, value):
+	header_name  = name if name in world.service.response else name.lower()
+	assert header_name in world.service.response, "No '%s' header found!" % name
+
+	header_value = world.service.response[header_name]
+	assert header_value == value, "Expected %s=%s, Actual %s=%s" % (name, value, header_name, header_value)
+
+@step(u'I should see a body of:$')
+def i_should_see_a_body_of(step):
+	expected = step.multiline;
+	expected = unicode.replace(expected, '\n', '\r\n')
+	expected += '\r\n'
+
+	assert "".join(expected.split()) == "".join(world.service.response.body.split())
+	

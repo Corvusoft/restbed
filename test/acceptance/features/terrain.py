@@ -3,7 +3,6 @@
 
 import sys
 import httplib2
-import time
 
 from lettuce import *
 from helpers import *
