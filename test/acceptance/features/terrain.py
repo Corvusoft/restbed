@@ -30,5 +30,5 @@ def before_each_scenario(scenario):
 	world.http = httplib2.Http()
 
 #@world.absorb
-#def my_project_wide_function():
+#def my_project_wide_function(): username=username, password=password
     # do something

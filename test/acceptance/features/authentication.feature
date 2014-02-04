@@ -3,11 +3,12 @@
 Feature: Custom authentication handler
 	In order to create a secure RESTful service
 	As a developer
-	I want to authenticate incoming connections
+	I want to authenticate incoming requests
 
-	Scenario Outline: Successful login
-		Given I have configured a service with a custom authentication handler
-		When I perform a basic-auth HTTP "<method>" request
+
+	Scenario Outline: Authenticated Request
+		Given I have configured a Basic Auth service
+		When I perform a HTTP "<method>" request with username "Aladdin" and password "open sesame"
 		Then I should see a status code of "200"
 
 	Examples:
@@ -21,9 +22,9 @@ Feature: Custom authentication handler
 		| OPTIONS |
 		| CONNECT |
 
-	Scenario Outline: Unsuccessful login
-		Given I have configured a service with a custom authentication handler
-		When I perform an unauthorised basic-auth HTTP "<method>" request
+	Scenario Outline: Unauthenticated Request
+		Given I have configured a Basic Auth service
+		When I perform a HTTP "<method>" request with username "Glasgow" and password "open sesame"
 		Then I should see a status code of "401"
 
 	Examples:

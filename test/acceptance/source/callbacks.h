@@ -27,7 +27,7 @@ Response ok_callback_handler( const Request& )
 	return response;
 }
 
-Response json_callback_handler( const Request& )
+Response json_ok_callback_handler( const Request& )
 {
 	Response response;
 	response.set_status_code( 200 );
@@ -36,7 +36,7 @@ Response json_callback_handler( const Request& )
 	return response;
 }
 
-Response xml_callback_handler( const Request& )
+Response xml_ok_callback_handler( const Request& )
 {
 	Response response;
 	response.set_status_code( 200 );
@@ -44,24 +44,6 @@ Response xml_callback_handler( const Request& )
 
 	return response;
 }
-
-// Response api_1_0_callback_handler( const Request& )
-// {
-// 	Response response;
-// 	response.set_status_code( 200 );
-// 	response.set_body( "api version 1.0" );
-
-// 	return response;
-// }
-
-// Response api_1_1_callback_handler( const Request& )
-// {
-// 	Response response;
-// 	response.set_status_code( 200 );
-// 	response.set_body( "api version 1.1" );
-
-// 	return response;
-// }
 
 Response resource_with_response_header_handler( const Request&, const string& name, const string& value )
 {

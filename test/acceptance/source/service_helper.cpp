@@ -98,7 +98,7 @@ extern "C"
 	{
 		Resource* resource = new Resource( );
 		resource->set_path( path );
-		resource->set_method_handler( "GET", &json_callback_handler );
+		resource->set_method_handler( "GET", &json_ok_callback_handler );
 
 		service->publish( *resource );
 	}
@@ -107,7 +107,7 @@ extern "C"
 	{
 		Resource* resource = new Resource( );
 		resource->set_path( path );
-		resource->set_method_handler( "GET", &xml_callback_handler );
+		resource->set_method_handler( "GET", &xml_ok_callback_handler );
 
 		service->publish( *resource );
 	}
@@ -115,7 +115,7 @@ extern "C"
 	void publish_json_resource_with_header_filter( Service* service )
 	{
 		Resource* resource = new Resource( );
-		resource->set_method_handler( "GET", &json_callback_handler );
+		resource->set_method_handler( "GET", &json_ok_callback_handler );
 		resource->set_header_filter( "Content-Type", "application/json" );
 
 		service->publish( *resource );
@@ -124,7 +124,7 @@ extern "C"
 	void publish_xml_resource_with_header_filter( Service* service )
 	{
 		Resource* resource = new Resource( );
-		resource->set_method_handler( "GET", &xml_callback_handler );
+		resource->set_method_handler( "GET", &xml_ok_callback_handler );
 		resource->set_header_filter( "Content-Type", "application/xml" );
 
 		service->publish( *resource );

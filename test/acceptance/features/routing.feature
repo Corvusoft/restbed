@@ -5,21 +5,47 @@ Feature: Route incoming requests based on header, path, and http method values
 	As a developer
 	I want to route requests based on header, path, and method filters
 
-	Scenario: Header routing
-		Given I have configured a service and published a resource with a "Content-Type" header filter of "application/json"
-		And I have published a resource with a "Content-Type" header filter of "application/xml"
+	Scenario: Header Routing
+		Given I have configured a service
+		And published a resource with "Content-Type" header filter of "application/json"
+		And published a resource with "Content-Type" header filter of "application/xml"
 		When I perform a HTTP "GET" request with header "Content-Type" set to "application/json"
-		Then I should see a response body of "{string:'Hello World'}"
+		Then I should see a body of:
+		"""
+		{
+			string: 'Hello World'
+		}
+		"""
 		And I perform a HTTP "GET" request with header "Content-Type" set to "application/xml"
-		Then I should see a response body of "<response><string>Hello World</string></response>"
+		Then I should see a body of:
+		"""
+		<response>
+			<string>
+				Hello World
+			</string>
+		</response>
+		"""
 
-	Scenario: Path routing
-		Given I have configured a service and published a resource at "/json"
-		And I have published a resource at "/xml"
+	Scenario: Path Routing
+		Given I have configured a service
+		And published a resource at "/json"
+		And published a resource at "/xml"
 		When I perform a HTTP "GET" request to "/json"
-		Then I should see a response body of "{string:'Hello World'}"
+		Then I should see a body of:
+		"""
+		{
+			string: 'Hello World'
+		}
+		"""
 		And I perform a HTTP "GET" request to "/xml"
-		Then I should see a response body of "<response><string>Hello World</string></response>"
+		Then I should see a body of:
+		"""
+		<response>
+			<string>
+				Hello World
+			</string>
+		</response>
+		"""
 
 	@wip
 	Scenario: Method routing

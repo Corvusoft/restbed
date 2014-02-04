@@ -5,34 +5,36 @@ Feature: HTTP response headers
 	As a developer
 	I want to be able to create HTTP response headers
 
-	Scenario: Default headers
-		Given I have configured a service with a default resource
+	Scenario: Default Headers
+		Given I have configured a service
+		And published a default resource
 		When I perform a HTTP "<method>" request
-		Then I should see a "<1st header>" response header with a value of "<1st value>"
-		And I should see a "<2nd header>" response header with a value of "<2nd value>"
-		And I should see a "<3rd header>" response header with a value of "<3rd value>"
-		And I should see a "<4th header>" response header with a value of "<4th value>"
+		Then I should see a "Content-Length" response header with a value of "0"
+		And I should see a "Connection" response header with a value of "close"
+		And I should see a "Content-Type" response header with a value of "application/json; charset=utf-8"
+		And I should see a "Server" response header with a value of "Corvusoft - restbed/1.0"
 
 	Examples:
-		| method  | 1st header     | 1st value | 2nd header | 2nd value | 3rd header   | 3rd value                       | 4th header | 4th value               |
-		| GET     | Content-Length | 0         | Connection | close     | Content-Type | application/json; charset=utf-8 | Server     | Corvusoft - restbed/1.0 |
-		| PUT     | Content-Length | 0         | Connection | close     | Content-Type | application/json; charset=utf-8 | Server     | Corvusoft - restbed/1.0 |
-		| POST    | Content-Length | 0         | Connection | close     | Content-Type | application/json; charset=utf-8 | Server     | Corvusoft - restbed/1.0 |
-		| HEAD    | Content-Length | 0         | Connection | close     | Content-Type | application/json; charset=utf-8 | Server     | Corvusoft - restbed/1.0 |
-		| DELETE  | Content-Length | 0         | Connection | close     | Content-Type | application/json; charset=utf-8 | Server     | Corvusoft - restbed/1.0 |
-		| OPTIONS | Content-Length | 0         | Connection | close     | Content-Type | application/json; charset=utf-8 | Server     | Corvusoft - restbed/1.0 |
+		| method  |
+		| GET     |
+		| PUT     |
+		| POST    |
+		| HEAD    |
+		| DELETE  |
+		| OPTIONS |
 
 
-	Scenario: Custom headers
-		Given I have configured a service with a custom resource and response header "<name>" and a value of "<value>"
+	Scenario: Custom Headers
+		Given I have configured a service
+		And published a resource with "api-version" response header set to "beta"
 		When I perform a HTTP "<method>" request
-		Then I should see a "<name>" response header with a value of "<value>"
+		Then I should see a "api-version" response header with a value of "beta"
 
 	Examples:
-		| method  | name        | value |
-		| GET     | api-version | beta  |
-		| PUT     | api-version | beta  |
-		| POST    | api-version | beta  |
-		| HEAD    | api-version | beta  |
-		| DELETE  | api-version | beta  |
-		| OPTIONS | api-version | beta  |
+		| method  |
+		| GET     |
+		| PUT     |
+		| POST    |
+		| HEAD    |
+		| DELETE  |
+		| OPTIONS |
