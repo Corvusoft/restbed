@@ -4,44 +4,26 @@
 from helpers import *
 from lettuce import step, world
 
-import base64
+
+@step( u'I perform a HTTP "([^"]*)" request$' )
+def i_perform_a_http_method_request( step, method ):
+	world.response = world.perform_http_request( method = method )
 
 
-@step(u'I perform a HTTP "([^"]*)" request$')
-def i_perform_a_http_method_request(step, method):
-	http_method = method.upper()
-
-	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate'}
-
-	world.service.response, world.service.response.body = world.http.request(world.url, http_method, headers=headers)
+@step( u'I perform a HTTP "([^"]*)" request with username "([^"]*)" and password "([^"]*)"$' )
+def i_perform_a_http_method_request_with_username_and_password( step, method, username, password ):
+	world.response = world.perform_http_request( method = method, username = username, password = password )
 
 
-@step(u'I perform a HTTP "([^"]*)" request with username "([^"]*)" and password "([^"]*)"$')
-def i_perform_a_http_method_request_with_username_and_password(step, method, username, password):
-	http_method = method.upper()
+@step( u'I perform a HTTP "([^"]*)" request with header "([^"]*)" set to "([^"]*)"$' )
+def i_perform_a_http_method_request_to_path_with_header_set_to_value( step, method, header, value ):
+	headers = { header : value }
 
-	authorisation = base64.encodestring( username + ':' + password )
-
-	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate', 'Authorization' : 'Basic ' + authorisation }
-
-	world.service.response, world.service.response.body = world.http.request(world.url, http_method, headers=headers)
+	world.response = world.perform_http_request( method = method, headers = { header : value } )
 
 
-@step(u'I perform a HTTP "([^"]*)" request with header "([^"]*)" set to "([^"]*)"$')
-def i_perform_a_http_method_request_to_path_with_header_set_to_value(step, method, header, value):
-	http_method = method.upper()
-
-	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate', header:value}
-
-	world.service.response, world.service.response.body = world.http.request(world.url, http_method, headers=headers)
-
-
-@step(u'I perform a HTTP "([^"]*)" request to "([^"]*)"$')
-def i_perform_a_http_method_request_to_path(step, method, path):
-	http_method = method.upper()
-
-	headers = {'User-Agent':'acceptance tests', 'accept-encoding': 'gzip, deflate'}
-
+@step( u'I perform a HTTP "([^"]*)" request to "([^"]*)"$' )
+def i_perform_a_http_method_request_to_path( step, method, path ):
 	url = world.url + path
 
-	world.service.response, world.service.response.body = world.http.request(url, http_method, headers=headers)
+	world.response = world.perform_http_request( url, method )

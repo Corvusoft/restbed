@@ -50,7 +50,7 @@ Feature: HTTP method handlers
 		TRACE / HTTP/1.1
 		Host: localhost:1984
 		accept-encoding: gzip, deflate
-		user-agent: acceptance tests
+		user-agent: Restbed Acceptance Tests
 		"""
 
     @ben
