@@ -8,7 +8,6 @@ import httplib2
 from lettuce import *
 from helpers import *
 
-
 @before.all
 def before_all( ):
 	sys.path.append( "./features" )
@@ -16,14 +15,10 @@ def before_all( ):
 	world.port = 1984
 	world.url = "http://localhost:" + str( world.port )
 
-	#httplib2.debuglevel = 1 #cmd line arg
-
-
 @after.each_scenario
 def after_each_scenraio( scenario ):
-	if hasattr( world, 'service'):
+	if hasattr( world, 'service' ):
 		del world.service
-
 
 @before.each_scenario
 def before_each_scenario( scenario ):
@@ -31,7 +26,6 @@ def before_each_scenario( scenario ):
 		del world.http
 
 	world.http = httplib2.Http( )
-
 
 @world.absorb
 def perform_http_request( url = None, method = "GET", body = None, headers = None, username = None, password = None ):

@@ -31,7 +31,7 @@ class BasicAuthService : public Service
 		}
 
 	protected:
-		virtual void log_handler( const LogLevel level, const std::string& format, ... )
+		virtual void log_handler( const LogLevel, const std::string&, ... )
 		{
 			//n/a
 		}

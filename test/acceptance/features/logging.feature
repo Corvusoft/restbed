@@ -7,7 +7,7 @@ Feature: Service logging
 
 	@wip
 	Scenario Outline: Incoming request logging
-		Given I have configured a service with a custom logging handler
+		Given I have configured a service with a custom log handler
 		When I perform a HTTP "<method>" request
 		Then I should see "[INFO 00:00:00]" Incoming "<method>" request for /table resource from 127.0.0.1
 

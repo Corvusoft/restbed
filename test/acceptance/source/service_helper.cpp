@@ -60,72 +60,52 @@ extern "C"
 		delete service;
 	}
 
-	void publish_default_resource( Service* service )
+	void publish_resource( Service* service, const char* path, const char** methods, const char* header, const char* value )
 	{
-	    Resource* resource = new Resource( );
+	    string response_header = "";
+	    string response_header_value = "";
 
-	    service->publish( *resource );	
-	}
+	    if ( header not_eq nullptr and value not_eq nullptr )
+	    {
+	    	response_header = header;
+	    	response_header_value = value;
+	    }
 
-	void publish_resource( Service* service, const char* path, const char** methods )
-	{
 	    Resource* resource = new Resource( );
 	    resource->set_path( path );
 
 	    for ( size_t index = 0; index < NUMBER_OF_HTTP_METHODS and methods[ index ] not_eq nullptr; index++ ) 
 	    {
-	    	resource->set_method_handler( methods[ index ], &ok_callback_handler );
+	    	resource->set_method_handler( methods[ index ], std::bind( &ok_callback_handler, std::placeholders::_1, response_header, response_header_value ) );
 	    }
 
 	    service->publish( *resource );
 	}
 
-	void publish_resource_with_response_header( Service* service, const char* name, const char* value )
-	{
-		Resource* resource = new Resource( );
-		resource->set_method_handler( "GET", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-		resource->set_method_handler( "PUT", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-		resource->set_method_handler( "POST", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-		resource->set_method_handler( "HEAD", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-		resource->set_method_handler( "DELETE", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-		resource->set_method_handler( "OPTIONS", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-		resource->set_method_handler( "CONNECT", std::bind( &resource_with_response_header_handler, std::placeholders::_1, string( name ), string( value ) ) );
-
-		service->publish( *resource );
-	}
-
-	void publish_json_resource( Service* service, const char* path )
+	void publish_json_resource( Service* service, const char* path, const char* header, const char* filter )
 	{
 		Resource* resource = new Resource( );
 		resource->set_path( path );
 		resource->set_method_handler( "GET", &json_ok_callback_handler );
 
+		if ( header not_eq nullptr and filter not_eq nullptr )
+		{
+			resource->set_header_filter( header, filter );
+		}
+
 		service->publish( *resource );
 	}
 
-	void publish_xml_resource( Service* service, const char* path )
+	void publish_xml_resource( Service* service, const char* path, const char* header, const char* filter )
 	{
 		Resource* resource = new Resource( );
 		resource->set_path( path );
 		resource->set_method_handler( "GET", &xml_ok_callback_handler );
 
-		service->publish( *resource );
-	}
-
-	void publish_json_resource_with_header_filter( Service* service )
-	{
-		Resource* resource = new Resource( );
-		resource->set_method_handler( "GET", &json_ok_callback_handler );
-		resource->set_header_filter( "Content-Type", "application/json" );
-
-		service->publish( *resource );
-	}
-
-	void publish_xml_resource_with_header_filter( Service* service )
-	{
-		Resource* resource = new Resource( );
-		resource->set_method_handler( "GET", &xml_ok_callback_handler );
-		resource->set_header_filter( "Content-Type", "application/xml" );
+		if ( header not_eq nullptr and filter not_eq nullptr )
+		{
+			resource->set_header_filter( header, filter );
+		}
 
 		service->publish( *resource );
 	}
