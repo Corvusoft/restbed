@@ -29,6 +29,8 @@
 
 //System Namespaces
 using std::list;
+using std::pair;
+using std::find;
 using std::thread;
 using std::string;
 using std::istream;
@@ -36,6 +38,7 @@ using std::find_if;
 using std::function;
 using std::to_string;
 using std::exception;
+using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 using std::placeholders::_1;
@@ -53,6 +56,8 @@ using asio::error_code;
 using asio::socket_base;
 using asio::system_error;
 
+#define log (*m_log_handler.first.*m_log_handler.second)
+
 namespace restbed
 {
     namespace detail
@@ -67,7 +72,8 @@ namespace restbed
                                                                m_io_service( nullptr ),
                                                                m_acceptor( nullptr ),
                                                                m_error_handler( ),
-                                                               m_authentication_handler( )
+                                                               m_authentication_handler( ),
+                                                               m_log_handler( )
         {
             //n/a
         }
@@ -82,7 +88,8 @@ namespace restbed
                                                                   m_io_service( original.m_io_service ),
                                                                   m_acceptor( original.m_acceptor ),
                                                                   m_error_handler( original.m_error_handler ),
-                                                                  m_authentication_handler( original.m_authentication_handler )
+                                                                  m_authentication_handler( original.m_authentication_handler ),
+                                                                  m_log_handler( original.m_log_handler )
         {
             //n/a
         }
@@ -95,7 +102,7 @@ namespace restbed
             }
             catch ( const exception& ex )
             {
-                log_handler( LogLevel::WARNING, "Service failed graceful shutdown: " + string( ex.what( ) ) );
+                log( LogLevel::WARNING, "Service failed graceful shutdown: " + string( ex.what( ) ) );
             }
         }
 
@@ -120,7 +127,7 @@ namespace restbed
                     start_asynchronous( );
                     break;
                 default:
-                    log_handler( LogLevel::FATAL, "Service failed, unknown service mode: " + ::to_string( m_mode ) );
+                    log( LogLevel::FATAL, "Service failed, unknown service mode: " + ::to_string( m_mode ) );
             }
         }
 
@@ -167,16 +174,16 @@ namespace restbed
 
         void ServiceImpl::suppress( const Resource& value )
         {
-            auto position = std::find( m_resources.begin( ), m_resources.end( ), value );
+            auto position = find( m_resources.begin( ), m_resources.end( ), value );
         
             m_resources.erase( position );
         }
 
         void ServiceImpl::error_handler( const Request& request, Response& response )
         {
-            log_handler( LogLevel::ERROR, "Internal Server Error" );
-            log_handler( LogLevel::INFO, "Request\n%s", request.to_bytes( ).data( ) );
-            log_handler( LogLevel::INFO, "Response\n%s", response.to_bytes( ).data( ) );
+            log( LogLevel::ERROR, "Internal Server Error" );
+            log( LogLevel::INFO, "Request\n%s", request.to_bytes( ).data( ) );
+            log( LogLevel::INFO, "Response\n%s", response.to_bytes( ).data( ) );
 
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
         }
@@ -225,6 +232,11 @@ namespace restbed
         void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
         {
             m_authentication_handler = value;
+        }
+
+        void ServiceImpl::set_log_handler( Service* service, void (Service::*value)( const LogLevel, const string&, ... ) )
+        {
+            m_log_handler = make_pair( service, value );
         }
 
         bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
@@ -318,7 +330,7 @@ namespace restbed
                 }
                 else
                 {
-                    log_handler( LogLevel::SECURITY, "Authentication failed." );
+                    log( LogLevel::SECURITY, "Authentication failed." );
                 }
             }
             catch ( const int status_code )

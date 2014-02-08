@@ -10,6 +10,7 @@
 #include <thread>
 #include <memory>
 #include <string>
+#include <utility>
 #include <cstdarg>
 #include <functional>
 
@@ -27,6 +28,7 @@
 namespace restbed
 {
     //Forward Declarations    
+    class Service;
     class Request;
     class Resource;
     class Settings;
@@ -74,6 +76,8 @@ namespace restbed
 
                 void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
 
+                void set_log_handler( Service* service, void (Service::*value)( const LogLevel, const std::string&, ... ) );
+                
                 //Operators
                 bool operator <( const ServiceImpl& rhs ) const;
                 
@@ -153,11 +157,11 @@ namespace restbed
 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
 
-                std::function< void ( const int, const std::string&, va_list ) > m_log_handler;
-
                 std::function< void ( const Request&, Response& ) > m_error_handler;
 
-                std::function< void ( const Request&, Response& ) > m_authentication_handler;                
+                std::function< void ( const Request&, Response& ) > m_authentication_handler;
+
+                std::pair< Service*, void (Service::*)( const LogLevel, const std::string&, ... ) > m_log_handler;
         };
     }
 }

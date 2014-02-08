@@ -84,9 +84,9 @@ namespace restbed
             //Functionality
             virtual void error_handler( const Request& request, /*out*/ Response& response );
 
-            virtual void authentication_handler( const Request& request, /*out*/ Response& response );
-
             virtual void log_handler(  const LogLevel level, const std::string& format, ... );
+
+            virtual void authentication_handler( const Request& request, /*out*/ Response& response );
 
             //Getters
             

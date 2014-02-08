@@ -18,6 +18,7 @@ using restbed::Service;
 using restbed::Request;
 using restbed::Response;
 using restbed::Settings;
+using restbed::LogLevel;
 
 //External Namespaces
 
@@ -30,6 +31,11 @@ class BasicAuthService : public Service
 		}
 
 	protected:
+		virtual void log_handler( const LogLevel level, const std::string& format, ... )
+		{
+			//n/a
+		}
+
 		virtual void authentication_handler( const Request& request, /*out*/ Response& response )
 		{
 			auto authorisation = request.get_header( "Authorization" );

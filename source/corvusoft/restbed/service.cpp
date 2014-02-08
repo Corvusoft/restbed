@@ -31,6 +31,8 @@ namespace restbed
 {
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
+        m_pimpl->set_log_handler( this, &Service::log_handler );
+
         m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2 ) );
 
         m_pimpl->set_authentication_handler( bind( &Service::authentication_handler, this, _1, _2 ) );
@@ -98,11 +100,6 @@ namespace restbed
         m_pimpl->error_handler( request, response );
     }
     
-    void Service::authentication_handler( const Request& request, Response& response )
-    {
-        m_pimpl->authentication_handler( request, response );
-    }
-
     void Service::log_handler( const LogLevel level, const string& format, ... )
     {
         va_list arguments;
@@ -112,5 +109,10 @@ namespace restbed
         m_pimpl->log_handler( level, format, arguments );
             
         va_end( arguments );
+    }
+
+    void Service::authentication_handler( const Request& request, Response& response )
+    {
+        m_pimpl->authentication_handler( request, response );
     }
 }
