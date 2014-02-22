@@ -12,15 +12,15 @@
 //Project Includes
 #include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/status_code.h"
-#include "corvusoft/restbed/detail/helpers/date.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/service_impl.h"
+#include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
 #include "corvusoft/restbed/detail/resource_matcher_impl.h"
@@ -29,7 +29,6 @@
 
 //System Namespaces
 using std::list;
-using std::pair;
 using std::find;
 using std::thread;
 using std::string;
@@ -38,14 +37,12 @@ using std::find_if;
 using std::function;
 using std::to_string;
 using std::exception;
-using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 using std::placeholders::_1;
 using std::chrono::system_clock;
 
 //Project Namespaces
-using restbed::detail::helpers::Date;
 using restbed::detail::helpers::String;
 
 //External Namespaces
@@ -56,8 +53,6 @@ using asio::error_code;
 using asio::socket_base;
 using asio::system_error;
 
-#define log (*m_log_handler.first.*m_log_handler.second)
-
 namespace restbed
 {
     namespace detail
@@ -65,6 +60,7 @@ namespace restbed
         ServiceImpl::ServiceImpl( const Settings& settings ) : m_mode( settings.get_mode( ) ),
                                                                m_port( settings.get_port( ) ),
                                                                m_root( settings.get_root( ) ),
+                                                               m_log_handler( nullptr ),
                                                                m_maximum_connections( settings.get_maximum_connections( ) ),
                                                                m_resources( ),
                                                                m_thread( nullptr ),
@@ -72,8 +68,7 @@ namespace restbed
                                                                m_io_service( nullptr ),
                                                                m_acceptor( nullptr ),
                                                                m_error_handler( ),
-                                                               m_authentication_handler( ),
-                                                               m_log_handler( )
+                                                               m_authentication_handler( )
         {
             //n/a
         }
@@ -81,6 +76,7 @@ namespace restbed
         ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
                                                                   m_port( original.m_port ),
                                                                   m_root( original.m_root ),
+                                                                  m_log_handler( original.m_log_handler ),
                                                                   m_maximum_connections( original.m_maximum_connections ),
                                                                   m_resources( original.m_resources ),
                                                                   m_thread( original.m_thread ),
@@ -88,8 +84,7 @@ namespace restbed
                                                                   m_io_service( original.m_io_service ),
                                                                   m_acceptor( original.m_acceptor ),
                                                                   m_error_handler( original.m_error_handler ),
-                                                                  m_authentication_handler( original.m_authentication_handler ),
-                                                                  m_log_handler( original.m_log_handler )
+                                                                  m_authentication_handler( original.m_authentication_handler )
         {
             //n/a
         }
@@ -102,7 +97,7 @@ namespace restbed
             }
             catch ( const exception& ex )
             {
-                log( LogLevel::WARNING, "Service failed graceful shutdown: " + string( ex.what( ) ) );
+                log( LogLevel::WARNING, String::format( "Service failed graceful shutdown: %s",  ex.what( ) ) );
             }
         }
 
@@ -127,7 +122,7 @@ namespace restbed
                     start_asynchronous( );
                     break;
                 default:
-                    log( LogLevel::FATAL, "Service failed, unknown service mode: " + ::to_string( m_mode ) );
+                    log( LogLevel::FATAL, String::format( "Service failed, unknown service mode: %i",  m_mode ) );
             }
         }
 
@@ -147,6 +142,8 @@ namespace restbed
             {
                 m_thread->join( );
             }
+
+            log( LogLevel::INFO, "Service stopped" );
         }
 
         void ServiceImpl::publish( const Resource& value )
@@ -182,46 +179,20 @@ namespace restbed
         void ServiceImpl::error_handler( const Request& request, Response& response )
         {
             log( LogLevel::ERROR, "Internal Server Error" );
-            log( LogLevel::INFO, "Request\n%s", request.to_bytes( ).data( ) );
-            log( LogLevel::INFO, "Response\n%s", response.to_bytes( ).data( ) );
+            log( LogLevel::INFO, String::format( "Request\n%s", request.to_bytes( ).data( ) ) );
+            log( LogLevel::INFO, String::format( "Response\n%s", response.to_bytes( ).data( ) ) );
 
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
-        }
-
-        void ServiceImpl::log_handler(  const LogLevel level, const string& format, ... )
-        {
-            FILE* descriptor = nullptr;
-
-            switch ( level )
-            {
-                case INFO:
-                case DEBUG:
-                    descriptor = stdout;
-                    break;
-                case FATAL:
-                case ERROR:
-                case WARNING:
-                case SECURITY:
-                default:
-                    descriptor = stderr;
-            }
-
-            string label = build_log_label( level );
-
-            va_list arguments;
-            
-            va_start( arguments, format );
-
-            fprintf( descriptor, "%s", label.data( ) );
-            vfprintf( descriptor, format.data( ), arguments );
-            fprintf( descriptor, "\n" );
-
-            va_end( arguments );
         }
 
         void ServiceImpl::authentication_handler( const Request&, Response& response )
         {
             response.set_status_code( StatusCode::OK );
+        }
+
+        void ServiceImpl::set_log_handler(  Logger& value )
+        {
+            m_log_handler = &value;
         }
 
         void ServiceImpl::set_error_handler( function< void ( const Request&, Response& ) > value )
@@ -232,11 +203,6 @@ namespace restbed
         void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
         {
             m_authentication_handler = value;
-        }
-
-        void ServiceImpl::set_log_handler( Service* service, void (Service::*value)( const LogLevel, const string&, ... ) )
-        {
-            m_log_handler = make_pair( service, value );
         }
 
         bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
@@ -261,11 +227,21 @@ namespace restbed
 
         ServiceImpl& ServiceImpl::operator =( const ServiceImpl& rhs )
         {
+            m_mode = rhs.m_mode;
+
             m_port = rhs.m_port;
 
             m_root = rhs.m_root;
 
             m_resources = rhs.m_resources;
+
+            m_log_handler = rhs.m_log_handler;
+
+            m_maximum_connections = rhs.m_maximum_connections;
+
+            m_error_handler = rhs.m_error_handler;
+
+            m_authentication_handler = rhs.m_authentication_handler;
 
             return *this;
         }
@@ -280,6 +256,8 @@ namespace restbed
         void ServiceImpl::start_synchronous( void )
         {
             m_io_service->run( );
+
+            log( LogLevel::INFO, "Synchronous Service Started" );
         }
 
         void ServiceImpl::start_asynchronous( void )
@@ -289,6 +267,8 @@ namespace restbed
             auto task = static_cast< size_t ( io_service::* )( ) >( &io_service::run );
 
             m_thread = make_shared< thread >( task, m_io_service );
+
+            log( LogLevel::INFO, "Asynchronous Service Started" );
         }
 
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
@@ -345,41 +325,6 @@ namespace restbed
             listen( );
         }
 
-        string ServiceImpl::build_log_label( const LogLevel level ) const
-        {
-            string tag = String::empty;
-
-            switch ( level )
-            {
-                case INFO:
-                    tag = "INFO";
-                    break;
-                case DEBUG:
-                    tag = "DEBUG";
-                    break;
-                case FATAL:
-                    tag = "FATAL";
-                    break;
-                case ERROR:
-                    tag = "ERROR";
-                    break;
-                case WARNING:
-                    tag = "WARNING";
-                    break;
-                case SECURITY:
-                    tag = "SECURITY";
-                    break;
-                default:
-                    tag = String::format( "LOG LEVEL (%i)", level );
-            }
-
-            string timestamp = Date::format( system_clock::now( ) );
-
-            string label = String::format( "[%s %s] ", tag.data( ), timestamp.data( ) );
-    
-            return label;
-        }
-
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
         {
             Resource resource;
@@ -413,6 +358,14 @@ namespace restbed
             response.set_status_code( StatusCode::NOT_FOUND );
 
             return response;
+        }
+
+        void ServiceImpl::log( const LogLevel level, const string& message )
+        {
+            if ( m_log_handler not_eq nullptr )
+            {
+                m_log_handler->log( level, "%s", message.data( ) );
+            }
         }
     }
 }

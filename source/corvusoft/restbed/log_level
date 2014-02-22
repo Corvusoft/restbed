@@ -1,5 +1,25 @@
 /*
- * Copyright (c) 2013, 2014 Corvusoft
+ * File: log_level
+ * Site: code.google.com/p/application-on
+ * Author: Ben Crowhurst
+ * Project: Application On (AppOn) Event Reaction System
+ *
+ * Copyright (c) 2013 AppOn Core Development Team and Community Contributors
+ *
+ * This file is part of AppOn (Application On).
+ *
+ * AppOn is free software: you can redistribute it and/or modify
+ * it under the terms of the Lesser GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * AppOn is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * Lesser GNU General Public License for more details.
+ *
+ * You should have received a copy of the Lesser GNU General Public License
+ * along with AppOn.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "log_level.h"

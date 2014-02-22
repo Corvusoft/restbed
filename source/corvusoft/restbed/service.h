@@ -60,6 +60,7 @@ namespace restbed
             //Getters
 
             //Setters
+            void set_logger( Logger& value );
 
             //Operators
             Service& operator =( const Service& rhs );
@@ -83,8 +84,6 @@ namespace restbed
             
             //Functionality
             virtual void error_handler( const Request& request, /*out*/ Response& response );
-
-            virtual void log_handler(  const LogLevel level, const std::string& format, ... );
 
             virtual void authentication_handler( const Request& request, /*out*/ Response& response );
 

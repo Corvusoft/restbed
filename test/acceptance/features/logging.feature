@@ -5,11 +5,10 @@ Feature: Service logging
 	As a developer
 	I want to log service activity
 
-	@wip
 	Scenario Outline: Incoming request logging
-		Given I have configured a service with a custom log handler
+		Given I have configured a service
 		When I perform a HTTP "<method>" request
-		Then I should see "[INFO 00:00:00]" Incoming "<method>" request for /table resource from 127.0.0.1
+		Then I should see a log entry of "[INFO 00:00:00] Incoming <method> request for /table resource from 127.0.0.1"
 
 	Examples:
 		| method  |

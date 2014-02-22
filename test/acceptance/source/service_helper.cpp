@@ -8,6 +8,7 @@
 //Project Includes
 #include <restbed>
 #include "callbacks.h"
+#include "test_service.h"
 #include "basic_auth_service.h"
 
 //External Includes
@@ -17,6 +18,7 @@ using std::string;
 
 //Project Namespaces
 using restbed::Mode;
+using restbed::Logger;
 using restbed::Service;
 using restbed::Request;
 using restbed::Response;
@@ -29,38 +31,41 @@ const size_t NUMBER_OF_HTTP_METHODS = 8;
 
 extern "C"
 {
-	Service* create_service( const int port )
+	TestService* create_service( const uint16_t port )
 	{
 		Settings settings;
 		settings.set_port( port );
 		settings.set_mode( Mode::ASYNCHRONOUS );
 
-		Service* service = new Service( settings );
+		TestService* service = new TestService( settings );
 		service->start( );
 
 		return service;
 	}
 
-	Service* create_authenticated_service( const int port )
+	TestService* create_authenticated_service( const uint16_t port )
 	{
 		Settings settings;
 		settings.set_port( port );
 		settings.set_mode( Mode::ASYNCHRONOUS );
 
-		Service* service = new BasicAuthService( settings );
+		TestService* service = new BasicAuthService( settings );
 		service->start( );
 
 		return service;	
 	}
 
-	void release_service( Service* service )
+	void release_service( TestService* service )
 	{
-		service->stop( );
-		
 		delete service;
 	}
 
-	void publish_resource( Service* service, const char* path, const char** methods, const char* header, const char* value )
+	const char* get_log_entry( TestService* service )
+	{
+		return service->get_log_entry( );
+	}
+
+	void publish_resource( TestService* service, const char* path, const char** methods, const char* header, const char* value )
 	{
 	    string response_header = "";
 	    string response_header_value = "";
@@ -82,7 +87,7 @@ extern "C"
 	    service->publish( *resource );
 	}
 
-	void publish_json_resource( Service* service, const char* path, const char* header, const char* filter )
+	void publish_json_resource( TestService* service, const char* path, const char* header, const char* filter )
 	{
 		Resource* resource = new Resource( );
 		resource->set_path( path );
@@ -96,7 +101,7 @@ extern "C"
 		service->publish( *resource );
 	}
 
-	void publish_xml_resource( Service* service, const char* path, const char* header, const char* filter )
+	void publish_xml_resource( TestService* service, const char* path, const char* header, const char* filter )
 	{
 		Resource* resource = new Resource( );
 		resource->set_path( path );

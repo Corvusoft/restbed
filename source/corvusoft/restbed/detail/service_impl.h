@@ -10,7 +10,6 @@
 #include <thread>
 #include <memory>
 #include <string>
-#include <utility>
 #include <cstdarg>
 #include <functional>
 
@@ -27,7 +26,8 @@
 
 namespace restbed
 {
-    //Forward Declarations    
+    //Forward Declarations
+    class Logger;    
     class Service;
     class Request;
     class Resource;
@@ -65,18 +65,16 @@ namespace restbed
 
                 virtual void error_handler( const Request& request, Response& response );
 
-                virtual void log_handler( const LogLevel level, const std::string& format, ... );
-
                 virtual void authentication_handler( const Request& request, Response& response );
 
                 //Getters
                 
                 //Setters
+                void set_log_handler( Logger& value );
+
                 void set_error_handler( std::function< void ( const Request&, Response& ) > value );
 
                 void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
-
-                void set_log_handler( Service* service, void (Service::*value)( const LogLevel, const std::string&, ... ) );
                 
                 //Operators
                 bool operator <( const ServiceImpl& rhs ) const;
@@ -124,13 +122,13 @@ namespace restbed
 
                 void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
 
-                std::string build_log_label( const LogLevel level ) const;
-
                 Resource resolve_resource_route( const Request& request ) const;
 
                 Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
 
                 static Response resource_not_found_handler( const Request& );
+
+                void log( const LogLevel level, const std::string& message );
 
                 //Getters
                 
@@ -144,6 +142,8 @@ namespace restbed
                 uint16_t m_port;
             
                 std::string m_root;
+
+                Logger* m_log_handler;
 
                 int m_maximum_connections;
 
@@ -160,8 +160,6 @@ namespace restbed
                 std::function< void ( const Request&, Response& ) > m_error_handler;
 
                 std::function< void ( const Request&, Response& ) > m_authentication_handler;
-
-                std::pair< Service*, void (Service::*)( const LogLevel, const std::string&, ... ) > m_log_handler;
         };
     }
 }

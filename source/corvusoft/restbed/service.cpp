@@ -7,6 +7,7 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/service.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/settings.h"
@@ -31,8 +32,6 @@ namespace restbed
 {
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
-        m_pimpl->set_log_handler( this, &Service::log_handler );
-
         m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2 ) );
 
         m_pimpl->set_authentication_handler( bind( &Service::authentication_handler, this, _1, _2 ) );
@@ -68,6 +67,11 @@ namespace restbed
         m_pimpl->suppress( value );
     }
 
+    void Service::set_logger( Logger& value )
+    {
+        m_pimpl->set_log_handler( value );
+    }
+
     Service& Service::operator =( const Service& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
@@ -98,17 +102,6 @@ namespace restbed
     void Service::error_handler( const Request& request, Response& response )
     {
         m_pimpl->error_handler( request, response );
-    }
-    
-    void Service::log_handler( const LogLevel level, const string& format, ... )
-    {
-        va_list arguments;
-            
-        va_start( arguments, format );
-            
-        m_pimpl->log_handler( level, format, arguments );
-            
-        va_end( arguments );
     }
 
     void Service::authentication_handler( const Request& request, Response& response )

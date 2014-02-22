@@ -22,20 +22,15 @@ using restbed::LogLevel;
 
 //External Namespaces
 
-class BasicAuthService : public Service
+class BasicAuthService : public TestService
 {
 	public:
-		BasicAuthService( const Settings& settings ) : Service( settings )
+		BasicAuthService( const Settings& settings ) : TestService( settings )
 		{
 			//n/a
 		}
 
 	protected:
-		virtual void log_handler( const LogLevel, const std::string&, ... )
-		{
-			//n/a
-		}
-
 		virtual void authentication_handler( const Request& request, /*out*/ Response& response )
 		{
 			auto authorisation = request.get_header( "Authorization" );
