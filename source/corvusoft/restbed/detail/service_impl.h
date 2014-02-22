@@ -70,7 +70,7 @@ namespace restbed
                 //Getters
                 
                 //Setters
-                void set_log_handler( Logger& value );
+                void set_log_handler( const std::shared_ptr< Logger >& value );
 
                 void set_error_handler( std::function< void ( const Request&, Response& ) > value );
 
@@ -143,11 +143,11 @@ namespace restbed
             
                 std::string m_root;
 
-                Logger* m_log_handler;
-
                 int m_maximum_connections;
 
                 std::list< Resource > m_resources;
+
+                std::shared_ptr< Logger > m_log_handler;
 
                 std::shared_ptr< std::thread > m_thread;
 

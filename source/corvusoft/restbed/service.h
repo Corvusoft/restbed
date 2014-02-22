@@ -60,7 +60,7 @@ namespace restbed
             //Getters
 
             //Setters
-            void set_logger( Logger& value );
+            void set_logger( const std::shared_ptr< Logger >& value );
 
             //Operators
             Service& operator =( const Service& rhs );

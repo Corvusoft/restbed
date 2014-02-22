@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <memory>
 
 //Project Includes
 #include <restbed>
@@ -13,6 +14,7 @@
 //System Namespaces
 using std::string;
 using std::vector;
+using std::shared_ptr;
 
 //Project Namespaces
 using restbed::Service;
@@ -27,16 +29,16 @@ class TestService : public Service
 {
 	public:
 		TestService( const Settings& settings ) : Service( settings ),
-												  m_logger( )
+												  m_logger( new TestLogger )
 		{
 			set_logger( m_logger );
 		}
 
 		const char* get_log_entry( void ) const
 		{
-			return m_logger.get_log_entry( );
+			return m_logger->get_log_entry( );
 		}
 
-	private:
-		TestLogger m_logger;
+	 private:
+	 	shared_ptr< TestLogger > m_logger;
 };

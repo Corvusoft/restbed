@@ -60,9 +60,9 @@ namespace restbed
         ServiceImpl::ServiceImpl( const Settings& settings ) : m_mode( settings.get_mode( ) ),
                                                                m_port( settings.get_port( ) ),
                                                                m_root( settings.get_root( ) ),
-                                                               m_log_handler( nullptr ),
                                                                m_maximum_connections( settings.get_maximum_connections( ) ),
                                                                m_resources( ),
+                                                               m_log_handler( nullptr ),
                                                                m_thread( nullptr ),
                                                                m_work ( nullptr ),
                                                                m_io_service( nullptr ),
@@ -76,9 +76,9 @@ namespace restbed
         ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
                                                                   m_port( original.m_port ),
                                                                   m_root( original.m_root ),
-                                                                  m_log_handler( original.m_log_handler ),
                                                                   m_maximum_connections( original.m_maximum_connections ),
                                                                   m_resources( original.m_resources ),
+                                                                  m_log_handler( original.m_log_handler ),
                                                                   m_thread( original.m_thread ),
                                                                   m_work( original.m_work ),
                                                                   m_io_service( original.m_io_service ),
@@ -190,9 +190,9 @@ namespace restbed
             response.set_status_code( StatusCode::OK );
         }
 
-        void ServiceImpl::set_log_handler(  Logger& value )
+        void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
         {
-            m_log_handler = &value;
+            m_log_handler = value;
         }
 
         void ServiceImpl::set_error_handler( function< void ( const Request&, Response& ) > value )

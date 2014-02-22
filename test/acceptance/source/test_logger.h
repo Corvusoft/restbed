@@ -33,25 +33,24 @@ class TestLogger : public Logger
 
         void log( const LogLevel, const string& format, ... ) noexcept
         {
-        	fprintf(stderr, "babababab" );
-			// va_list arguments;
+			va_list arguments;
 
-			// va_start( arguments, format );
+			va_start( arguments, format );
 
-			// char* entry = nullptr;
+			char* entry = nullptr;
 
-			// int status = vasprintf( &entry, format.data( ), arguments );
+			int status = vasprintf( &entry, format.data( ), arguments );
 
-			// if ( status == -1 )
-			// {
-			// 	throw "Failed to copy log entry!";
-			// } 
+			if ( status == -1 )
+			{
+				throw "Failed to copy log entry!";
+			} 
 
-			// m_log_entries.push_back( entry );
+			m_log_entries.push_back( entry );
 
-			// free( entry );
+			free( entry );
 
-			// va_end( arguments );
+			va_end( arguments );
         }
         
 		const char* get_log_entry( void ) const

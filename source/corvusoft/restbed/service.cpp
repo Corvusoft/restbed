@@ -19,6 +19,7 @@
 //System Namespaces
 using std::bind;
 using std::string;
+using std::shared_ptr;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
@@ -67,7 +68,7 @@ namespace restbed
         m_pimpl->suppress( value );
     }
 
-    void Service::set_logger( Logger& value )
+    void Service::set_logger( const shared_ptr< Logger >& value )
     {
         m_pimpl->set_log_handler( value );
     }
