@@ -239,6 +239,8 @@ namespace restbed
             m_path = rhs.m_path;
                                 
             m_method = rhs.m_method;
+
+            m_origin = rhs.m_origin;
             
             m_version = rhs.m_version;
             
