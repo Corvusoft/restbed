@@ -65,6 +65,11 @@ extern "C"
 		return service->get_log_entry( );
 	}
 
+	void suppress_resource( TestService* service )
+	{
+		service->suppress_resource( );
+	}
+
 	void publish_resource( TestService* service, const char* path, const char** methods, const char* header, const char* value )
 	{
 	    string response_header = "";
@@ -84,7 +89,7 @@ extern "C"
 	    	resource->set_method_handler( methods[ index ], std::bind( &ok_callback_handler, std::placeholders::_1, response_header, response_header_value ) );
 	    }
 
-	    service->publish( *resource );
+	    service->publish_resource( *resource );
 	}
 
 	void publish_json_resource( TestService* service, const char* path, const char* header, const char* filter )
@@ -98,7 +103,7 @@ extern "C"
 			resource->set_header_filter( header, filter );
 		}
 
-		service->publish( *resource );
+		service->publish_resource( *resource );
 	}
 
 	void publish_xml_resource( TestService* service, const char* path, const char* header, const char* filter )
@@ -112,6 +117,6 @@ extern "C"
 			resource->set_header_filter( header, filter );
 		}
 
-		service->publish( *resource );
+		service->publish_resource( *resource );
 	}
 }

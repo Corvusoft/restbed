@@ -7,7 +7,7 @@ Feature: HTTP response headers
 
 	Scenario: Default Headers
 		Given I have configured a service
-		And published a default resource
+		And publish a default resource
 		When I perform a HTTP "<method>" request
 		Then I should see a "Content-Length" response header with a value of "0"
 		And I should see a "Connection" response header with a value of "close"
@@ -26,7 +26,7 @@ Feature: HTTP response headers
 
 	Scenario: Custom Headers
 		Given I have configured a service
-		And published a resource with "api-version" response header set to "beta"
+		And publish a resource with "api-version" response header set to "beta"
 		When I perform a HTTP "<method>" request
 		Then I should see a "api-version" response header with a value of "beta"
 

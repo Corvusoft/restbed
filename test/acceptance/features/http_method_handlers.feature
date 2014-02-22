@@ -7,7 +7,7 @@ Feature: HTTP method handlers
 
 	Scenario: Custom Method Handlers
 		Given I have configured a service
-		And published a resource with a custom "<method>" handler
+		And publish a resource with a custom "<method>" handler
 		When I perform a HTTP "<method>" request
 		Then I should see a status code of "<status>"
 		
@@ -24,7 +24,7 @@ Feature: HTTP method handlers
 
 	Scenario: Default Method Handlers
 		Given I have configured a service
-		And published a default resource
+		And publish a default resource
 		When I perform a HTTP "<method>" request
 		Then I should see a status code of "<status>"
 
@@ -41,7 +41,7 @@ Feature: HTTP method handlers
 
 	Scenario: Default TRACE Method Handler
 		Given I have configured a service
-		And published a default resource
+		And publish a default resource
 		When I perform a HTTP "TRACE" request
 		Then I should see a status code of "200"
 		And I should see a "Content-Type" response header with a value of "message/http"
@@ -56,7 +56,7 @@ Feature: HTTP method handlers
     @ben
 	Scenario: Default OPTIONS Method Handler
 		Given I have configured a service
-		And published a default resource
+		And publish a default resource
 		When I perform a HTTP "OPTIONS" request
 		Then I should see a status code of "200"
 		And I should see a "Allow" response header with a value of "OPTIONS, TRACE"

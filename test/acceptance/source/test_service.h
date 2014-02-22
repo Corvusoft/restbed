@@ -20,6 +20,7 @@ using std::shared_ptr;
 using restbed::Service;
 using restbed::Request;
 using restbed::Response;
+using restbed::Resource;
 using restbed::Settings;
 using restbed::LogLevel;
 
@@ -29,9 +30,22 @@ class TestService : public Service
 {
 	public:
 		TestService( const Settings& settings ) : Service( settings ),
+												  m_resource( ),
 												  m_logger( new TestLogger )
 		{
 			set_logger( m_logger );
+		}
+
+		void publish_resource( Resource& resource )
+		{
+			m_resource = resource;
+
+			publish( resource );
+		}
+
+		void suppress_resource( )
+		{
+			suppress( m_resource );
 		}
 
 		const char* get_log_entry( void ) const
@@ -40,5 +54,6 @@ class TestService : public Service
 		}
 
 	 private:
+	 	Resource m_resource;
 	 	shared_ptr< TestLogger > m_logger;
 };

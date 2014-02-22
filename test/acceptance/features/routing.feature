@@ -7,8 +7,8 @@ Feature: Route incoming requests based on header, path, and http method values
 
 	Scenario: Header Routing
 		Given I have configured a service
-		And published a JSON resource with "Content-Type" header filter of "application/json"
-		And published a XML resource with "Content-Type" header filter of "application/xml"
+		And publish a JSON resource with "Content-Type" header filter of "application/json"
+		And publish a XML resource with "Content-Type" header filter of "application/xml"
 		When I perform a HTTP "GET" request with header "Content-Type" set to "application/json"
 		Then I should see a body of:
 		"""
@@ -28,8 +28,8 @@ Feature: Route incoming requests based on header, path, and http method values
 
 	Scenario: Path Routing
 		Given I have configured a service
-		And published a JSON resource at "/json"
-		And published a XML resource at "/xml"
+		And publish a JSON resource at "/json"
+		And publish a XML resource at "/xml"
 		When I perform a HTTP "GET" request to "/json"
 		Then I should see a body of:
 		"""

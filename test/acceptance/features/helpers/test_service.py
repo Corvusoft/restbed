@@ -20,6 +20,11 @@ class TestService( object ):
         self.library.get_log_entry.argtypes = [ c_void_p ]
 
         return self.library.get_log_entry( self.obj )
+
+    def suppress_resource( self ):
+        self.library.suppress_resource.argtypes = [ c_void_p ]
+        self.library.suppress_resource( self.obj )
+
     def publish_resource( self, path = "/", methods = [ ], header = None, value = None ):
         length = len( methods )
 
