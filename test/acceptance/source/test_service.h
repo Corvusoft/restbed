@@ -2,59 +2,87 @@
  * Copyright (c) 2013, 2014 Corvusoft
  */
 
+#ifndef _TEST_SERVICE_H
+#define _TEST_SERVICE_H 1
+
 //System Includes
 #include <memory>
 
 //Project Includes
 #include <restbed>
-#include "test_logger.h"
 
 //External Includes
 
 //System Namespaces
-using std::string;
-using std::vector;
-using std::shared_ptr;
 
 //Project Namespaces
-using restbed::Service;
-using restbed::Request;
-using restbed::Response;
-using restbed::Resource;
-using restbed::Settings;
-using restbed::LogLevel;
 
 //External Namespaces
 
-class TestService : public Service
+class TestService : public restbed::Service
 {
 	public:
-		TestService( const Settings& settings ) : Service( settings ),
-												  m_resource( ),
-												  m_logger( new TestLogger )
-		{
-			set_logger( m_logger );
-		}
+	    //Friends
+	    
+	    //Definitions
 
-		void publish_resource( Resource& resource )
-		{
-			m_resource = resource;
+	    //Constructors
+	    TestService( const restbed::Settings& settings );
+	    
+	    virtual ~TestService( void );
 
-			publish( resource );
-		}
+	    //Functionality
+	    void suppress_resource( void );
 
-		void suppress_resource( )
-		{
-			suppress( m_resource );
-		}
+		void publish_resource( restbed::Resource& resource );
 
-		const char* get_log_entry( void ) const
-		{
-			return m_logger->get_log_entry( );
-		}
+	    //Getters
+		const char* get_log_entry( void ) const;
 
-	 private:
-	 	Resource m_resource;
+	    //Setters
+
+	    //Operators
+
+	    //Properties
+	    
+	protected:
+	    //Friends
+	    
+	    //Definitions
+	    
+	    //Constructors
+	    
+	    //Functionality
+	    
+	    //Getters
+	    
+	    //Setters
+	    
+	    //Operators
+	    
+	    //Properties
+	    
+	private:
+	    //Friends
+	    
+	    //Definitions
+	    
+	    //Constructors
+	    TestService( const TestService& original ) = delete;
+
+	    //Functionality
+	    
+	    //Getters
+	    
+	    //Setters
+	    
+	    //Operators
+	    TestService& operator =( const TestService& rhs ) = delete;
+
+	    //Properties
+	 	restbed::Resource m_resource;
 	 	
-	 	shared_ptr< TestLogger > m_logger;
+	 	std::shared_ptr< class TestLogger > m_logger;
 };
+
+#endif  /* _TEST_SERVICE_H */

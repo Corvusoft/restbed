@@ -18,10 +18,6 @@ using std::string;
 
 //Project Namespaces
 using restbed::Mode;
-using restbed::Logger;
-using restbed::Service;
-using restbed::Request;
-using restbed::Response;
 using restbed::Resource;
 using restbed::Settings;
 

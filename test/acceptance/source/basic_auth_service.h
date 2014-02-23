@@ -2,47 +2,81 @@
  * Copyright (c) 2013, 2014 Corvusoft
  */
 
+#ifndef _BASIC_AUTH_SERVICE_H
+#define _BASIC_AUTH_SERVICE_H 1
+
 //System Includes
-#include <string>
 
 //Project Includes
 #include <restbed>
+#include "test_service.h"
 
 //External Includes
 
 //System Namespaces
-using std::string;
 
 //Project Namespaces
-using restbed::Service;
-using restbed::Request;
-using restbed::Response;
-using restbed::Settings;
-using restbed::LogLevel;
 
 //External Namespaces
 
 class BasicAuthService : public TestService
 {
 	public:
-		BasicAuthService( const Settings& settings ) : TestService( settings )
-		{
-			//n/a
-		}
+	    //Friends
+	    
+	    //Definitions
 
+	    //Constructors
+	    BasicAuthService( const restbed::Settings& settings );
+	    
+	    virtual ~BasicAuthService( void );
+
+	    //Functionality
+	    virtual void authentication_handler( const restbed::Request& request, /*out*/ restbed::Response& response );
+
+	    //Getters
+
+	    //Setters
+
+	    //Operators
+
+	    //Properties
+	    
 	protected:
-		virtual void authentication_handler( const Request& request, /*out*/ Response& response )
-		{
-			auto authorisation = request.get_header( "Authorization" );
+	    //Friends
+	    
+	    //Definitions
+	    
+	    //Constructors
+	    
+	    //Functionality
+	    
+	    //Getters
+	    
+	    //Setters
+	    
+	    //Operators
+	    
+	    //Properties
+	    
+	private:
+	    //Friends
+	    
+	    //Definitions
+	    
+	    //Constructors
+	    BasicAuthService( const BasicAuthService& original ) = delete;
 
-			if ( authorisation == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" )
-			{
-				response.set_status_code( 200 );
-			}
-			else
-			{
-				response.set_status_code( 401 );
-				response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
-			}
-		}
+	    //Functionality
+	    
+	    //Getters
+	    
+	    //Setters
+	    
+	    //Operators
+	    BasicAuthService& operator =( const BasicAuthService& rhs ) = delete;
+
+	    //Properties
 };
+
+#endif  /* _BASIC_AUTH_SERVICE_H */
