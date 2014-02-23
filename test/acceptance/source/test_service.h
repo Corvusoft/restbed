@@ -55,5 +55,6 @@ class TestService : public Service
 
 	 private:
 	 	Resource m_resource;
+	 	
 	 	shared_ptr< TestLogger > m_logger;
 };
