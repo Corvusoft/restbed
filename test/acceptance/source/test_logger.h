@@ -2,6 +2,9 @@
  * Copyright (c) 2013, 2014 Corvusoft
  */
 
+#ifndef _TEST_LOGGER_H
+#define _TEST_LOGGER_H 1
+
 //System Includes
 #include <string>
 #include <vector>
@@ -13,60 +16,71 @@
 //External Includes
 
 //System Namespaces
-using std::string;
-using std::vector;
 
 //Project Namespaces
-using restbed::Logger;
-using restbed::LogLevel;
 
 //External Namespaces
 
-class TestLogger : public Logger
+class TestLogger : public restbed::Logger
 {
 	public:
-		TestLogger( void ) : Logger( ),
-							 m_log_entries( )
-		{
-			//n/a
-		}
+	    //Friends
+	    
+	    //Definitions
 
-        void log( const LogLevel, const string& format, ... ) noexcept
-        {
-			va_list arguments;
+	    //Constructors
+	    TestLogger( void );
+	    
+	    virtual ~TestLogger( void );
 
-			va_start( arguments, format );
+	    //Functionality
+	    void log( const restbed::LogLevel level, const std::string& format, ... ) noexcept;
 
-			char* entry = nullptr;
+	    //Getters
+		const char* get_log_entry( void ) const;
 
-			int status = vasprintf( &entry, format.data( ), arguments );
+	    //Setters
 
-			if ( status == -1 )
-			{
-				throw "Failed to copy log entry!";
-			} 
+	    //Operators
 
-			m_log_entries.push_back( entry );
-
-			free( entry );
-
-			va_end( arguments );
-        }
-        
-		const char* get_log_entry( void ) const
-		{
-			string entry = "";
-
-			auto size = m_log_entries.size( );
-
-			if ( size not_eq 0 )
-			{
-				entry = m_log_entries.at( size - 1 );
-			}
-
-			return entry.data( );
-		}
-
+	    //Properties
+	    
+	protected:
+	    //Friends
+	    
+	    //Definitions
+	    
+	    //Constructors
+	    
+	    //Functionality
+	    
+	    //Getters
+	    
+	    //Setters
+	    
+	    //Operators
+	    
+	    //Properties
+	    
 	private:
-		vector< string > m_log_entries;
+	    //Friends
+	    
+	    //Definitions
+	    
+	    //Constructors
+	    TestLogger( const TestLogger& original ) = delete;
+
+	    //Functionality
+	    
+	    //Getters
+	    
+	    //Setters
+	    
+	    //Operators
+	    TestLogger& operator =( const TestLogger& rhs ) = delete;
+
+	    //Properties
+	    std::vector< std::string > m_log_entries;
 };
+
+#endif  /* _TEST_LOGGER_H */

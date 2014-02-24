@@ -26,7 +26,4 @@ def i_should_see_a_body_of( step ):
 
 @step( u'I should see a log entry of "([^"]*)"$' )
 def i_should_see_a_log_entry_of( step, expectation ):
-	print "A: " + expectation
-	print "B: " + world.service.get_log_entry()
-	print "C: "
 	assert world.service.get_log_entry( ) == expectation

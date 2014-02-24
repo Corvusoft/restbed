@@ -178,17 +178,19 @@ namespace restbed
 
         void ServiceImpl::suppress( const Resource& value )
         {
-            auto position = find( m_resources.begin( ), m_resources.end( ), value );
+            auto position = find( m_resources.begin( ), m_resources.end( ), value ); 
         
             if ( position not_eq m_resources.end( ) )
             {
+                string path = position->get_path( );
+
                 m_resources.erase( position );
 
-                log( LogLevel::INFO, String::format( "Suppressed '%s' resource.", position->get_path( ).data( ) ) );
+                log( LogLevel::INFO, String::format( "Suppressed '%s' resource.", path.data( ) ) );
             }
             else
             {
-                log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found.", position->get_path( ).data( ) ) );
+                log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found.", value.get_path( ).data( ) ) );
             }
         }
 
