@@ -42,7 +42,7 @@ if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
 elseif( ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" )
 
 	if( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.3 )
-		message( FATAL_ERROR "\nGCC version < 3.3\nYour systems default compiler is clang. This project makes use of c++11 features present only in versions of clang >= 3.3. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
+		message( FATAL_ERROR "\nClang version < 3.3\nYour systems default compiler is clang. This project makes use of c++11 features present only in versions of clang >= 3.3. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
 	else()
 		set( CMAKE_CXX_FLAGS "-stdlib=libc++" )
 	endif()
