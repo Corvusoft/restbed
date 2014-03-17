@@ -29,8 +29,8 @@ using restbed::Settings;
 
 TEST( Settings, port_accessor )
 {
-	Settings settings;
-	settings.set_mode( Mode::ASYNCHRONOUS );
-
-	EXPECT_EQ( Mode::ASYNCHRONOUS, settings.get_mode( ) );
+    Settings settings;
+    settings.set_mode( Mode::ASYNCHRONOUS );
+    
+    EXPECT_EQ( Mode::ASYNCHRONOUS, settings.get_mode( ) );
 }

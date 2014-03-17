@@ -41,11 +41,12 @@ TEST( StatusCode, to_string_with_invalid_status_code )
 
 TEST( StatusCode, set_status_code_strings )
 {
-    const map< int, string > values = {
-    	{ 109, "Custom Error Message" },
-    	{ 222, "Inhouse Error Message" }
+    const map< int, string > values =
+    {
+        { 109, "Custom Error Message" },
+        { 222, "Inhouse Error Message" }
     };
-
+    
     StatusCode::set_mappings( values );
     
     EXPECT_EQ( values, StatusCode::get_mappings( ) );

@@ -21,25 +21,25 @@ using restbed::Settings;
 
 BasicAuthService::BasicAuthService( const Settings& settings ) : TestService( settings )
 {
-	//n/a
+    //n/a
 }
 
 BasicAuthService::~BasicAuthService( void )
 {
-	//n/a
+    //n/a
 }
 
 void BasicAuthService::authentication_handler( const Request& request, /*out*/ Response& response )
 {
-	auto authorisation = request.get_header( "Authorization" );
-
-	if ( authorisation == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" )
-	{
-		response.set_status_code( 200 );
-	}
-	else
-	{
-		response.set_status_code( 401 );
-		response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
-	}
+    auto authorisation = request.get_header( "Authorization" );
+    
+    if ( authorisation == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" )
+    {
+        response.set_status_code( 200 );
+    }
+    else
+    {
+        response.set_status_code( 401 );
+        response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
+    }
 }

@@ -37,19 +37,19 @@ Response test_method_handler( const Request& )
 {
     Response response;
     response.set_status_code( method_handler_accessor_expection );
-
+    
     return response;
 }
 
 TEST( Resource, copy_constructor )
 {
     string method = "POST";
-
+    
     Resource original;
     original.set_path( "/event/.*" );
     original.set_header_filter( "Content-Type", "text/data" );
     original.set_method_handler( method, &test_method_handler );
-
+    
     const Resource copy( original );
     
     EXPECT_EQ( original, copy );
@@ -58,14 +58,14 @@ TEST( Resource, copy_constructor )
 TEST( Resource, method_handler_accessor )
 {
     string method = "GET";
-
+    
     Resource resource;
     resource.set_method_handler( method, &test_method_handler );
-
+    
     auto handler = resource.get_method_handler( method );
-
+    
     Request request;
     Response response = handler( request );
-
+    
     EXPECT_EQ( method_handler_accessor_expection, response.get_status_code( ) );
 }

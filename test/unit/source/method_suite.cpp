@@ -27,7 +27,7 @@ using restbed::Method;
 TEST( Method, char_constructor )
 {
     const char* name = "GET";
-
+    
     const Method method( name );
     
     EXPECT_EQ( "GET", method.to_string( ) );
@@ -94,17 +94,18 @@ TEST( Method, lowercase_copy_constructor )
 
 TEST( Method, default_destructor )
 {
-    ASSERT_NO_THROW({
+    ASSERT_NO_THROW(
+    {
         Method* method = new Method( "CONNECT" );
         
         delete method;
-    });
+    } );
 }
 
 TEST( Method, to_string )
 {
     const Method method( "TRACE" );
-
+    
     EXPECT_EQ( "TRACE", method.to_string( ) );
 }
 
