@@ -8,7 +8,7 @@
 //System Includes
 #include <memory>
 #include <string>
- 
+
 //Project Includes
 
 //External Includes
@@ -26,35 +26,35 @@ namespace restbed
     {
         class MethodImpl;
     }
-
+    
     class Method
     {
         public:
             //Friends
             
             //Definitions
-
+            
             //Constructors
             Method( const char* value );
             
             Method( const std::string& value );
             
             Method( const Method& original );
-
+            
             virtual ~Method( void );
-
+            
             //Functionality
             std::string to_string( void ) const;
-        
+            
             static Method parse( const std::string& value );
-
+            
             //Getters
-
+            
             //Setters
-
+            
             //Operators
             Method& operator =( const Method& rhs );
-
+            
             bool operator <( const Method& rhs ) const;
             
             bool operator >( const Method& rhs ) const;
@@ -62,7 +62,7 @@ namespace restbed
             bool operator ==( const Method& rhs ) const;
             
             bool operator !=( const Method& rhs ) const;
-
+            
             //Properties
             
         protected:
@@ -91,13 +91,13 @@ namespace restbed
             
             //Functionality
             Method( void );
-        
+            
             //Getters
             
             //Setters
             
             //Operators
-
+            
             //Properties
             std::unique_ptr< detail::MethodImpl > m_pimpl;
     };

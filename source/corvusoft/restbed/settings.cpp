@@ -36,42 +36,42 @@ namespace restbed
     {
         //n/a
     }
-
+    
     Mode Settings::get_mode( void ) const
     {
         return m_pimpl->get_mode( );
     }
-
+    
     uint16_t Settings::get_port( void ) const
     {
         return m_pimpl->get_port( );
     }
-
+    
     string Settings::get_root( void ) const
     {
         return m_pimpl->get_root( );
     }
-
+    
     int Settings::get_maximum_connections( void ) const
     {
         return m_pimpl->get_maximum_connections( );
     }
-
+    
     string Settings::get_property( const string& name ) const
     {
         return m_pimpl->get_property( name );
     }
-
+    
     map< string, string > Settings::get_properties( void ) const
     {
         return m_pimpl->get_properties( );
     }
-
+    
     void Settings::set_mode( const Mode value )
     {
         m_pimpl->set_mode( value );
     }
-
+    
     void Settings::set_port( const uint16_t value )
     {
         m_pimpl->set_port( value );
@@ -81,7 +81,7 @@ namespace restbed
     {
         m_pimpl->set_root( value );
     }
-
+    
     void Settings::set_maximum_connections( const int value )
     {
         m_pimpl->set_maximum_connections( value );
@@ -89,21 +89,21 @@ namespace restbed
     
     void Settings::set_property( const string& name, const string& value )
     {
-    	m_pimpl->set_property( name, value );
+        m_pimpl->set_property( name, value );
     }
     
     void Settings::set_properties( const map< string, string >& values )
     {
         m_pimpl->set_properties( values );
     }
-
+    
     Settings& Settings::operator =( const Settings& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
-
+        
         return *this;
     }
-
+    
     bool Settings::operator <( const Settings& rhs ) const
     {
         return *m_pimpl < *rhs.m_pimpl;

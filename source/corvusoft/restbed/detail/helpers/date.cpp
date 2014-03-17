@@ -21,19 +21,19 @@ using std::chrono::system_clock;
 
 namespace restbed
 {
-	namespace detail
-	{
-		namespace helpers
-		{
-	        string Date::format( const time_point< system_clock >& value )
-	        {
-	        	time_t time = system_clock::to_time_t( value );
-
+    namespace detail
+    {
+        namespace helpers
+        {
+            string Date::format( const time_point< system_clock >& value )
+            {
+                time_t time = system_clock::to_time_t( value );
+                
                 string date = ctime( &time );
                 date.erase( date.length( ) - 1 );
-
-            	return date;
-	        }
-		}
-	}
+                
+                return date;
+            }
+        }
+    }
 }

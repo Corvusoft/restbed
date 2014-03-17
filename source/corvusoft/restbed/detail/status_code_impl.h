@@ -33,17 +33,17 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 
                 //Functionality
                 static int parse( const std::string& value );
-            
+                
                 static std::string to_string( const int code );
-            
+                
                 //Getters
                 static std::map< int, std::string > get_mappings( void );
-            
+                
                 //Setters
                 static void set_mappings( const std::map< int, std::string >& values );
                 
@@ -79,7 +79,7 @@ namespace restbed
                 StatusCodeImpl( const StatusCodeImpl& original ) = delete;
                 
                 virtual ~StatusCodeImpl( void ) = delete;
-
+                
                 //Functionality
                 
                 //Getters
@@ -88,7 +88,7 @@ namespace restbed
                 
                 //Operators
                 StatusCodeImpl& operator =( const StatusCodeImpl& rhs ) = delete;
-
+                
                 //Properties
                 static std::map< int, std::string > m_mappings;
         };

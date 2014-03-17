@@ -24,21 +24,21 @@ namespace restbed
     {
         namespace helpers
         {
-		    Map::const_iterator Map::find_key_ignoring_case( const string& key, const map< string, string >& container )
-		    {
-		        string identifier = String::lowercase( key );
-
-		        for ( auto value : container )
-		        {
-		            if ( identifier == String::lowercase( value.first ) )
-		            {
-		                identifier = value.first;
-		                break;
-		            }
-		        }
-
-		        return ( identifier not_eq String::empty ) ? container.find( identifier ) : container.end( );
-		    }
+            Map::const_iterator Map::find_key_ignoring_case( const string& key, const map< string, string >& container )
+            {
+                string identifier = String::lowercase( key );
+                
+                for ( auto value : container )
+                {
+                    if ( identifier == String::lowercase( value.first ) )
+                    {
+                        identifier = value.first;
+                        break;
+                    }
+                }
+                
+                return ( identifier not_eq String::empty ) ? container.find( identifier ) : container.end( );
+            }
         }
     }
 }

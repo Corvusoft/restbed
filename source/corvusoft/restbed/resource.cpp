@@ -39,42 +39,42 @@ namespace restbed
     {
         //n/a
     }
-
+    
     string Resource::get_path( void ) const
     {
         return m_pimpl->get_path( );
     }
-
+    
     string Resource::get_header_filter( const string& name ) const
     {
         return m_pimpl->get_header_filter( name );
     }
-
+    
     map< string, string > Resource::get_header_filters( void ) const
     {
         return m_pimpl->get_header_filters( );
     }
-
+    
     function< Response ( const Request& ) > Resource::get_method_handler( const Method& method ) const
     {
         return m_pimpl->get_method_handler( method );
     }
-
+    
     void Resource::set_path( const string& value )
     {
         m_pimpl->set_path( value );
     }
-
+    
     void Resource::set_header_filter( const string& name, const string& value )
     {
         m_pimpl->set_header_filter( name, value );
     }
-
+    
     void Resource::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
     {
         m_pimpl->set_method_handler( verb, callback );
     }
-
+    
     bool Resource::operator <( const Resource& rhs ) const
     {
         return *m_pimpl < *rhs.m_pimpl;
@@ -94,11 +94,11 @@ namespace restbed
     {
         return *m_pimpl != *rhs.m_pimpl;
     }
-
+    
     Resource& Resource::operator =( const Resource& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
-
+        
         return *this;
     }
 }

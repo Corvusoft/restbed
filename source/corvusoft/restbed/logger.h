@@ -22,7 +22,8 @@
 namespace restbed
 {
     //Forward Declarations
-    enum LogLevel : int;
+    enum LogLevel :
+    int;
     
     namespace detail
     {
@@ -45,7 +46,7 @@ namespace restbed
             
             //Functionality
             virtual void log( const LogLevel level, const std::string& format, ... ) noexcept;
-
+            
             virtual void log_if( bool expression, const LogLevel level, const std::string& format, ... ) noexcept;
             
             //Getters

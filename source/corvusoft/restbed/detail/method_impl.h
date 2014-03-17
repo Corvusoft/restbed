@@ -7,7 +7,7 @@
 
 //System Includes
 #include <string>
- 
+
 //Project Includes
 
 //External Includes
@@ -32,23 +32,23 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 MethodImpl( const char* value );
                 
                 MethodImpl( const std::string& value );
                 
                 MethodImpl( const MethodImpl& original );
-
+                
                 virtual ~MethodImpl( void );
                 
                 //Functionality
                 std::string to_string( void ) const;
-
+                
                 //Getters
                 
                 //Setters
-
+                
                 //Operators
                 bool operator <( const MethodImpl& rhs ) const;
                 
@@ -57,9 +57,9 @@ namespace restbed
                 bool operator ==( const MethodImpl& rhs ) const;
                 
                 bool operator !=( const MethodImpl& rhs ) const;
-
+                
                 MethodImpl& operator =( const MethodImpl& rhs );
-
+                
                 //Properties
                 
             protected:
@@ -94,7 +94,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
-
+                
                 //Properties
                 std::string m_value;
         };

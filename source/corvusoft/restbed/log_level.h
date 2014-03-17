@@ -21,7 +21,8 @@ namespace restbed
 {
     //Forward Declarations
     
-    enum LogLevel : int
+    enum LogLevel :
+    int
     {
         INFO = 0000,
         DEBUG = 1000,

@@ -21,25 +21,25 @@ using std::regex_error;
 
 namespace restbed
 {
-	namespace detail
-	{
-		namespace helpers
-		{
-	        bool Regex::is_valid( const string& value )
-	        {
-	        	bool result = true;
-
-	        	try
-	        	{
-	        		regex pattern( value );
-	        	}
-	        	catch ( regex_error const& re )
-	        	{
-	        		result = false;
-	        	}
-	        	
-	        	return result;
-	        }
-		}
-	}
+    namespace detail
+    {
+        namespace helpers
+        {
+            bool Regex::is_valid( const string& value )
+            {
+                bool result = true;
+                
+                try
+                {
+                    regex pattern( value );
+                }
+                catch ( regex_error const& re )
+                {
+                    result = false;
+                }
+                
+                return result;
+            }
+        }
+    }
 }

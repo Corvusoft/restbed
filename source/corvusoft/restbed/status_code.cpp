@@ -35,7 +35,7 @@ namespace restbed
     {
         return StatusCodeImpl::get_mappings( );
     }
-
+    
     void StatusCode::set_mappings( const map< int, string >& values )
     {
         StatusCodeImpl::set_mappings( values );

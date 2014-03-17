@@ -33,25 +33,25 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 
                 //Functionality
                 static std::string parse( const std::string& declaration );
-
+                
                 static std::map< std::string, std::string > parse( const std::string& path, const std::string& declaration );
-
+                
                 //Getters
                 
                 //Setters
-
+                
                 //Operators
                 
                 //Properties
                 
             protected:
                 //Friends
-
+                
                 //Definitions
                 
                 //Constructors
@@ -77,17 +77,17 @@ namespace restbed
                 PathParameterImpl( const PathParameterImpl& original ) = delete;
                 
                 virtual ~PathParameterImpl( void ) = delete;
-
+                
                 //Functionality
                 static std::pair< std::string, std::string > parse_declaration( const std::string& declaration );
-
+                
                 //Getters
                 
                 //Setters
-
+                
                 //Operators
                 PathParameterImpl& operator =( const PathParameterImpl& rhs ) = delete;
-
+                
                 //Properties
         };
     }

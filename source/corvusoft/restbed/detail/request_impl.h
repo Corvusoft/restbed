@@ -36,7 +36,7 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 RequestImpl( void );
                 
@@ -46,22 +46,22 @@ namespace restbed
                 
                 //Functionality
                 Bytes to_bytes( void ) const;
-
+                
                 bool has_header( const std::string& name ) const;
-
+                
                 bool has_path_parameter( const std::string& name ) const;
-
+                
                 bool has_query_parameter( const std::string& name ) const;
                 
                 //Getters
                 Bytes get_body( void ) const;
-
+                
                 double get_version( void ) const;
-
+                
                 std::string get_path( void ) const;
                 
                 std::string get_method( void ) const;
-
+                
                 std::string get_origin( void ) const;
                 
                 std::string get_header( const std::string& name ) const;
@@ -80,19 +80,19 @@ namespace restbed
                 void set_body( const Bytes& value );
                 
                 void set_version( const double value );
-
+                
                 void set_path( const std::string& value );
                 
                 void set_method( const std::string& value );
-
+                
                 void set_origin( const std::string& value );
                 
                 void set_headers( const std::map< std::string, std::string >& values );
                 
                 void set_path_parameters( const std::map< std::string, std::string >& values );
-
+                
                 void set_query_parameters( const std::map< std::string, std::string >& values );
-
+                
                 //Operators
                 bool operator <( const RequestImpl& rhs ) const;
                 
@@ -108,7 +108,7 @@ namespace restbed
                 
             protected:
                 //Friends
-
+                
                 //Definitions
                 
                 //Constructors
@@ -132,26 +132,26 @@ namespace restbed
                 
                 //Functionality
                 std::string generate_status_section( void ) const;
-
+                
                 std::string generate_header_section( void ) const;
-
+                
                 std::string generate_path_section( void ) const;
-
+                
                 //Getters
                 
                 //Setters
-
+                
                 //Operators
                 
                 //Properties
                 Bytes m_body;
-
+                
                 double m_version;
-
+                
                 std::string m_path;
-
+                
                 std::string m_method;
-
+                
                 std::string m_origin;
                 
                 std::map< std::string, std::string > m_headers;

@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 #include <functional>
- 
+
 //Project Includes
 
 //External Includes
@@ -26,43 +26,43 @@ namespace restbed
     class Method;
     class Request;
     class Response;
-
+    
     namespace detail
     {
         //Forward Declarations
-
+        
         class ResourceImpl
         {
             public:
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 ResourceImpl( void );
-            
+                
                 ResourceImpl( const ResourceImpl& original );
-            
+                
                 virtual ~ResourceImpl( void );
-
+                
                 //Functionality
-
+                
                 //Getters
                 std::string get_path( void ) const;
-
+                
                 std::string get_header_filter( const std::string& name ) const;
-
+                
                 std::map< std::string, std::string > get_header_filters( void ) const;
-
+                
                 std::function< Response ( const Request& ) > get_method_handler( const Method& verb ) const;
-
+                
                 //Setters
                 void set_path( const std::string& value );
-
+                
                 void set_header_filter( const std::string& name, const std::string& value );
-
+                
                 void set_method_handler( const Method& verb, const std::function< Response ( const Request& ) >& callback );
-
+                
                 //Operators
                 bool operator <( const ResourceImpl& rhs ) const;
                 
@@ -71,9 +71,9 @@ namespace restbed
                 bool operator ==( const ResourceImpl& rhs ) const;
                 
                 bool operator !=( const ResourceImpl& rhs ) const;
-
+                
                 ResourceImpl& operator =( const ResourceImpl& rhs );
-
+                
                 //Properties
                 
             protected:
@@ -102,17 +102,17 @@ namespace restbed
                 
                 //Functionality
                 void setup( void );
-
+                
                 std::string generate_allow_header_value( void );
-
+                
                 Response default_options_handler( const Request& request );
-
+                
                 static std::string rebuild_path( const Request& request );
-
+                
                 static std::string rebuild_headers( const Request& request );
-
+                
                 static Response default_trace_handler( const Request& request );
-
+                
                 static Response default_not_implemented_handler( const Request& request );
                 
                 //Getters
@@ -120,12 +120,12 @@ namespace restbed
                 //Setters
                 
                 //Operators
-
+                
                 //Properties
                 std::string m_path;
-
+                
                 std::map< std::string, std::string > m_header_filters;
-            
+                
                 std::map< std::string, std::function< Response ( const Request& ) > > m_method_handlers;
         };
     }

@@ -23,12 +23,12 @@ using std::snprintf;
 
 namespace restbed
 {
-	namespace detail
-	{
-		namespace helpers
-		{
-        	string Uri::decode( const string& value )
-        	{
+    namespace detail
+    {
+        namespace helpers
+        {
+            string Uri::decode( const string& value )
+            {
                 const int BASE16 = 16;
                 
                 string result = String::empty;
@@ -53,15 +53,15 @@ namespace restbed
                     }
                 }
                 
-            	return result;
-        	}
-
+                return result;
+            }
+            
             string Uri::decode_parameter( const string& value )
             {
                 string source = String::replace( "+", " ", value );
-
+                
                 return Uri::decode( source );
             }
-		}
-	}
+        }
+    }
 }

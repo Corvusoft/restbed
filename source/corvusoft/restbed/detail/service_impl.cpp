@@ -58,33 +58,33 @@ namespace restbed
     namespace detail
     {
         ServiceImpl::ServiceImpl( const Settings& settings ) : m_mode( settings.get_mode( ) ),
-                                                               m_port( settings.get_port( ) ),
-                                                               m_root( settings.get_root( ) ),
-                                                               m_maximum_connections( settings.get_maximum_connections( ) ),
-                                                               m_resources( ),
-                                                               m_log_handler( nullptr ),
-                                                               m_thread( nullptr ),
-                                                               m_work ( nullptr ),
-                                                               m_io_service( nullptr ),
-                                                               m_acceptor( nullptr ),
-                                                               m_error_handler( ),
-                                                               m_authentication_handler( )
+            m_port( settings.get_port( ) ),
+            m_root( settings.get_root( ) ),
+            m_maximum_connections( settings.get_maximum_connections( ) ),
+            m_resources( ),
+            m_log_handler( nullptr ),
+            m_thread( nullptr ),
+            m_work ( nullptr ),
+            m_io_service( nullptr ),
+            m_acceptor( nullptr ),
+            m_error_handler( ),
+            m_authentication_handler( )
         {
             //n/a
         }
         
         ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
-                                                                  m_port( original.m_port ),
-                                                                  m_root( original.m_root ),
-                                                                  m_maximum_connections( original.m_maximum_connections ),
-                                                                  m_resources( original.m_resources ),
-                                                                  m_log_handler( original.m_log_handler ),
-                                                                  m_thread( original.m_thread ),
-                                                                  m_work( original.m_work ),
-                                                                  m_io_service( original.m_io_service ),
-                                                                  m_acceptor( original.m_acceptor ),
-                                                                  m_error_handler( original.m_error_handler ),
-                                                                  m_authentication_handler( original.m_authentication_handler )
+            m_port( original.m_port ),
+            m_root( original.m_root ),
+            m_maximum_connections( original.m_maximum_connections ),
+            m_resources( original.m_resources ),
+            m_log_handler( original.m_log_handler ),
+            m_thread( original.m_thread ),
+            m_work( original.m_work ),
+            m_io_service( original.m_io_service ),
+            m_acceptor( original.m_acceptor ),
+            m_error_handler( original.m_error_handler ),
+            m_authentication_handler( original.m_authentication_handler )
         {
             //n/a
         }
@@ -100,70 +100,73 @@ namespace restbed
                 log( LogLevel::WARNING, String::format( "Service failed graceful shutdown: %s!",  ex.what( ) ) );
             }
         }
-
+        
         void ServiceImpl::start( void )
         {
             m_io_service = make_shared< io_service >( );
-
+            
             m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
-
+            
             m_acceptor->set_option( socket_base::reuse_address( true ) );
-
+            
             m_acceptor->listen( m_maximum_connections );
-
+            
             listen( );
-
+            
             switch ( m_mode )
             {
                 case SYNCHRONOUS:
                     start_synchronous( );
                     break;
+                    
                 case ASYNCHRONOUS:
                     start_asynchronous( );
                     break;
+                    
                 default:
                     log( LogLevel::FATAL, String::format( "Service failed, unknown service mode: %i!",  m_mode ) );
             }
         }
-
+        
         void ServiceImpl::stop( void )
         {
             if ( m_work not_eq nullptr )
             {
                 m_work.reset( );
             }
-
+            
             if ( m_io_service not_eq nullptr )
             {
                 m_io_service->stop( );
             }
-
+            
             if ( m_thread not_eq nullptr and m_thread->joinable( ) )
             {
                 m_thread->join( );
             }
-
+            
             log( LogLevel::INFO, "Service stopped." );
         }
-
+        
         void ServiceImpl::publish( const Resource& value )
         {
             string path = value.get_path( );
-
+            
             if ( m_root not_eq "/" )
             {
                 path = String::format( "/%s/%s", m_root.data( ), value.get_path( ).data( ) );
             }
-
+            
             Resource resource( value );
             resource.set_path( path );
-
+            
             auto iterator = find_if( m_resources.begin( ),
                                      m_resources.end( ),
-                                     [&] ( const Resource& item ) {
-                                        return item == resource;
-                                     });
-
+                                     [&] ( const Resource & item )
+            {
+                return item == resource;
+            } );
+            
             if ( iterator not_eq m_resources.end( ) )
             {
                 *iterator = resource;
@@ -172,20 +175,20 @@ namespace restbed
             {
                 m_resources.push_back( resource );
             }
-
+            
             log( LogLevel::INFO, String::format( "Published '%s' resource.", resource.get_path( ).data( ) ) );
         }
-
+        
         void ServiceImpl::suppress( const Resource& value )
         {
-            auto position = find( m_resources.begin( ), m_resources.end( ), value ); 
-        
+            auto position = find( m_resources.begin( ), m_resources.end( ), value );
+            
             if ( position not_eq m_resources.end( ) )
             {
                 string path = position->get_path( );
-
+                
                 m_resources.erase( position );
-
+                
                 log( LogLevel::INFO, String::format( "Suppressed '%s' resource.", path.data( ) ) );
             }
             else
@@ -193,36 +196,36 @@ namespace restbed
                 log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found.", value.get_path( ).data( ) ) );
             }
         }
-
+        
         void ServiceImpl::error_handler( const Request& request, Response& response )
         {
             log( LogLevel::ERROR, "Internal Server Error!" );
             log( LogLevel::ERROR, String::format( "Request\n%s", request.to_bytes( ).data( ) ) );
             log( LogLevel::ERROR, String::format( "Response\n%s", response.to_bytes( ).data( ) ) );
-
+            
             response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
         }
-
+        
         void ServiceImpl::authentication_handler( const Request&, Response& response )
         {
             response.set_status_code( StatusCode::OK );
         }
-
+        
         void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
         {
             m_log_handler = value;
         }
-
+        
         void ServiceImpl::set_error_handler( function< void ( const Request&, Response& ) > value )
         {
             m_error_handler = value;
         }
-
+        
         void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
         {
             m_authentication_handler = value;
         }
-
+        
         bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
         {
             return m_port < rhs.m_port;
@@ -242,121 +245,121 @@ namespace restbed
         {
             return m_port not_eq rhs.m_port;
         }
-
+        
         ServiceImpl& ServiceImpl::operator =( const ServiceImpl& rhs )
         {
             m_mode = rhs.m_mode;
-
+            
             m_port = rhs.m_port;
-
+            
             m_root = rhs.m_root;
-
+            
             m_resources = rhs.m_resources;
-
+            
             m_log_handler = rhs.m_log_handler;
-
+            
             m_maximum_connections = rhs.m_maximum_connections;
-
+            
             m_error_handler = rhs.m_error_handler;
-
+            
             m_authentication_handler = rhs.m_authentication_handler;
-
+            
             return *this;
         }
-
+        
         void ServiceImpl::listen( void )
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
-
+            
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
-
+        
         void ServiceImpl::start_synchronous( void )
         {
             m_io_service->run( );
-
+            
             log( LogLevel::INFO, "Synchronous Service Started." );
         }
-
+        
         void ServiceImpl::start_asynchronous( void )
         {
             m_work = make_shared< io_service::work >( *m_io_service );
-
+            
             auto task = static_cast< size_t ( io_service::* )( ) >( &io_service::run );
-
+            
             m_thread = make_shared< thread >( task, m_io_service );
-
+            
             log( LogLevel::INFO, "Asynchronous Service Started." );
         }
-
+        
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         {
             Request request;
             Response response;
-
+            
             try
             {
                 if ( error )
                 {
                     throw StatusCode::INTERNAL_SERVER_ERROR;
                 }
-
+                
                 //move to build_request()
                 asio::streambuf buffer;
                 asio::read_until( *socket, buffer, "\r\n" );
                 istream stream( &buffer );
-
+                
                 RequestBuilderImpl builder( stream );
                 builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
                 request = builder.build( );
-
+                
                 Resource resource = resolve_resource_route( request );
-
+                
                 auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
                 builder.set_path_parameters( parameters );
-
+                
                 request = builder.build( );
                 //end move
-
+                
                 m_authentication_handler( request, response );
-
+                
                 const int status = response.get_status_code( );
-
+                
                 if ( status == StatusCode::OK )
                 {
                     log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s.",
                                                          request.get_method( ).to_string( ).data( ),
                                                          request.get_path( ).data( ),
                                                          request.get_origin( ).data( ) ) );
-
+                                                         
                     response = invoke_method_handler( request, resource );
                 }
                 else
                 {
                     log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s.",
-                                                             request.get_method( ).to_string( ).data( ),
-                                                             request.get_path( ).data( ),
-                                                             request.get_origin( ).data( ) ) );
+                            request.get_method( ).to_string( ).data( ),
+                            request.get_path( ).data( ),
+                            request.get_origin( ).data( ) ) );
                 }
             }
             catch ( const int status_code )
             {
                 response.set_status_code( status_code );
-
+                
                 error_handler( request, response );
             }
-
+            
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
-
+            
             listen( );
         }
-
+        
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
         {
             Resource resource;
-    
-            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) ); 
-
+            
+            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) );
+            
             if ( iterator not_eq m_resources.end( ) )
             {
                 resource = *iterator;
@@ -365,27 +368,27 @@ namespace restbed
             {
                 resource.set_method_handler( request.get_method( ), ServiceImpl::resource_not_found_handler );
             }
-
+            
             return resource;
         }
-
+        
         Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
         {
-            Method method = request.get_method( );  
-
+            Method method = request.get_method( );
+            
             auto handle = resource.get_method_handler( method );
             
             return handle( request );
         }
-
+        
         Response ServiceImpl::resource_not_found_handler( const Request& )
         {
             Response response;
             response.set_status_code( StatusCode::NOT_FOUND );
-
+            
             return response;
         }
-
+        
         void ServiceImpl::log( const LogLevel level, const string& message )
         {
             if ( m_log_handler not_eq nullptr )

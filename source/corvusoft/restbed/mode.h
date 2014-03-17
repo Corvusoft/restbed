@@ -6,7 +6,7 @@
 #define _RESTBED_MODE_H 1
 
 //System Includes
- 
+
 //Project Includes
 
 //External Includes
@@ -20,10 +20,11 @@
 namespace restbed
 {
     //Forward Declarations
-
-    enum Mode : int
+    
+    enum Mode :
+    int
     {
-        SYNCHRONOUS  = 0x0000008,     
+        SYNCHRONOUS  = 0x0000008,
         ASYNCHRONOUS = 0x0000040,
     };
 }

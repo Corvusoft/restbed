@@ -33,43 +33,43 @@ namespace restbed
         string PathParameterImpl::parse( const string& declaration )
         {
             auto definition = parse_declaration( declaration );
-
-            return definition.second;  
+            
+            return definition.second;
         }
-
+        
         map< string, string > PathParameterImpl::parse( const string& path, const string& declaration )
         {
             map< string, string > parameters;
-
+            
             auto declarations = String::split( declaration, '/' );
-
+            
             auto paths = String::split( path, '/' );
-
+            
             for ( vector< string >::size_type index = 0; index not_eq declarations.size( ); index++ )
             {
-                auto definition = parse_declaration( declarations[ index ] );  
-
+                auto definition = parse_declaration( declarations[ index ] );
+                
                 if ( not definition.first.empty( ) and index < paths.size( ) )
                 {
                     parameters[ definition.first ] = paths[ index ];
                 }
             }
-
+            
             return parameters;
         }
-
+        
         pair< string, string > PathParameterImpl::parse_declaration( const string& declaration )
         {
             string name = String::empty;
             string pattern = declaration;
-
+            
             if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
             {
                 string definition = String::trim( declaration, "{" );
-                definition = String::trim( definition, "}" ); 
+                definition = String::trim( definition, "}" );
                 
                 auto segments = String::split( definition, ':' );
-
+                
                 if ( segments.size( ) not_eq 2 )
                 {
                     throw invalid_argument( String::empty );
@@ -78,7 +78,7 @@ namespace restbed
                 name = String::trim( segments[ 0 ] );
                 pattern = String::trim( segments[ 1 ] );
             }
-
+            
             return make_pair( name, pattern );
         }
     }

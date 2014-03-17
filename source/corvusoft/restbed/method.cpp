@@ -24,7 +24,7 @@ namespace restbed
     {
         //n/a
     }
-
+    
     Method::Method( const string& value ) : m_pimpl( new MethodImpl( value ) )
     {
         //n/a
@@ -39,7 +39,7 @@ namespace restbed
     {
         //n/a
     }
-
+    
     string Method::to_string( void ) const
     {
         return m_pimpl->to_string( );
@@ -51,14 +51,14 @@ namespace restbed
         
         return method;
     }
-
+    
     Method& Method::operator =( const Method& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
-
+        
         return *this;
     }
-
+    
     bool Method::operator <( const Method& rhs ) const
     {
         return *m_pimpl < *rhs.m_pimpl;

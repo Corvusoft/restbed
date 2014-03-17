@@ -42,15 +42,15 @@ namespace restbed
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_path( String::empty ),
-                                             m_header_filters( ),
-                                             m_method_handlers( )
+            m_header_filters( ),
+            m_method_handlers( )
         {
             setup( );
         }
         
         ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
-                                                                     m_header_filters( original.m_header_filters ),
-                                                                     m_method_handlers( original.m_method_handlers )
+            m_header_filters( original.m_header_filters ),
+            m_method_handlers( original.m_method_handlers )
         {
             //n/a
         }
@@ -59,7 +59,7 @@ namespace restbed
         {
             //n/a
         }
-
+        
         string ResourceImpl::get_path( void ) const
         {
             return m_path;
@@ -68,7 +68,7 @@ namespace restbed
         string ResourceImpl::get_header_filter( const string& name ) const
         {
             string filter = String::empty;
-
+            
             const auto iterator = Map::find_key_ignoring_case( name, m_header_filters );
             
             if ( iterator not_eq m_header_filters.end( ) )
@@ -78,51 +78,51 @@ namespace restbed
             
             return filter;
         }
-
+        
         map< string, string > ResourceImpl::get_header_filters( void ) const
         {
             return m_header_filters;
         }
-
+        
         function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& verb ) const
         {
             return m_method_handlers.at( verb.to_string( ) );
         }
-
+        
         void ResourceImpl::set_path( const string& value )
         {
             auto path = String::split( value, '/' );
-
+            
             for ( auto directory : path )
             {
                 string pattern = PathParameterImpl::parse( directory );
-
-                if( not Regex::is_valid( pattern ) )
+                
+                if ( not Regex::is_valid( pattern ) )
                 {
                     throw invalid_argument( String::empty );
                 }
             }
-
+            
             m_path = value;
         }
-
+        
         void ResourceImpl::set_header_filter( const string& name, const string& value )
         {
             if ( not Regex::is_valid( value ) )
             {
                 throw invalid_argument( String::empty );
             }
-
+            
             string key = String::lowercase( name );
-
+            
             m_header_filters[ key ] = value;
         }
-
+        
         void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
         {
             m_method_handlers[ verb.to_string( ) ] = callback;
         }
-
+        
         bool ResourceImpl::operator <( const ResourceImpl& rhs ) const
         {
             return m_path < rhs.m_path;
@@ -142,18 +142,18 @@ namespace restbed
         {
             return m_path not_eq rhs.m_path;
         }
-
+        
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& rhs )
         {
             m_path = rhs.m_path;
-
+            
             m_header_filters = rhs.m_header_filters;
-
+            
             m_method_handlers = rhs.m_method_handlers;
-
+            
             return *this;
         }
-
+        
         void ResourceImpl::setup( void )
         {
             set_method_handler( "GET", &ResourceImpl::default_not_implemented_handler );
@@ -165,59 +165,59 @@ namespace restbed
             set_method_handler( "TRACE", &ResourceImpl::default_trace_handler );
             set_method_handler( "OPTIONS", bind( &ResourceImpl::default_options_handler, this, _1 ) );
         }
-
+        
         string ResourceImpl::generate_allow_header_value( void )
         {
             string value = String::empty;
-
+            
             for ( auto& handler : m_method_handlers )
             {
                 Functional::address_type callback_address = Functional::get_address( handler.second );
                 Functional::address_type default_address = ( Functional::address_type ) ResourceImpl::default_not_implemented_handler;
-
+                
                 if ( callback_address not_eq default_address )
                 {
                     value += String::format( "%s, ", handler.first.data( ) );
                 }
             }
-
+            
             if ( not value.empty( ) )
             {
                 value = value.substr( 0, value.length( ) - 2 );
             }
-
-            return value;   
+            
+            return value;
         }
-
+        
         string ResourceImpl::rebuild_path( const Request& request )
         {
             string query = "?";
-
+            
             for ( auto parameter : request.get_query_parameters( ) )
             {
                 query += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
             }
-
+            
             query = String::trim( query, "&" );
-
+            
             string path = request.get_path( );
             path += ( query.length( ) > 1 ) ? query : String::empty;
-
+            
             return path;
         }
-
+        
         string ResourceImpl::rebuild_headers( const Request& request )
         {
             string headers = String::empty;
-
+            
             for ( auto header : request.get_headers( ) )
             {
                 headers += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
             }
-
+            
             return headers;
         }
-
+        
         Response ResourceImpl::default_options_handler( const Request& )
         {
             Response response;
@@ -230,11 +230,11 @@ namespace restbed
         Response ResourceImpl::default_trace_handler( const Request& request )
         {
             string path = rebuild_path( request );
-
+            
             string headers = rebuild_headers( request );
-
+            
             string body = String::format( "TRACE %s HTTP/1.1\r\n%s", path.data( ), headers.data( ) );
-
+            
             Response response;
             response.set_body( body );
             response.set_status_code( StatusCode::OK );
@@ -242,12 +242,12 @@ namespace restbed
             
             return response;
         }
-
+        
         Response ResourceImpl::default_not_implemented_handler( const Request& )
         {
             Response response;
             response.set_status_code( StatusCode::NOT_IMPLEMENTED );
-
+            
             return response;
         }
     }

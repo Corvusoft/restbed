@@ -45,51 +45,51 @@ namespace restbed
         {
             //n/a
         }
-
+        
         Mode SettingsImpl::get_mode( void ) const
         {
             return static_cast< Mode >( stoi( get_property( "MODE" ) ) );
         }
-
+        
         uint16_t SettingsImpl::get_port( void ) const
         {
             return stoi( get_property( "PORT" ) );
         }
-
+        
         string SettingsImpl::get_root( void ) const
         {
             return get_property( "ROOT" );
         }
-
+        
         int SettingsImpl::get_maximum_connections( void ) const
         {
             return stoi( get_property( "MAXIMUM CONNECTIONS" ) );
         }
-
+        
         string SettingsImpl::get_property( const string& name ) const
         {
             string property = String::empty;
-
+            
             auto iterator = Map::find_key_ignoring_case( name, m_properties );
-
+            
             if ( iterator not_eq m_properties.end( ) )
             {
                 property = iterator->second;
             }
-
+            
             return property;
         }
-
+        
         map< string, string > SettingsImpl::get_properties( void ) const
         {
             return m_properties;
         }
-
+        
         void SettingsImpl::set_mode( const Mode value )
         {
             set_property( "MODE", ::to_string( value ) );
         }
-
+        
         void SettingsImpl::set_port( const uint16_t value )
         {
             set_property( "PORT", ::to_string( value ) );
@@ -99,7 +99,7 @@ namespace restbed
         {
             set_property( "ROOT", value );
         }
-
+        
         void SettingsImpl::set_maximum_connections( const int value )
         {
             set_property( "MAXIMUM CONNECTIONS", ::to_string( value ) );
@@ -108,7 +108,7 @@ namespace restbed
         void SettingsImpl::set_property( const string& name, const string& value )
         {
             const string key = String::uppercase( name );
-
+            
             m_properties[ key ] = value;
         }
         
@@ -119,7 +119,7 @@ namespace restbed
                 set_property( value.first, value.second );
             }
         }
-
+        
         bool SettingsImpl::operator <( const SettingsImpl& rhs ) const
         {
             return m_properties.size( ) < rhs.m_properties.size( );
@@ -139,11 +139,11 @@ namespace restbed
         {
             return m_properties not_eq rhs.m_properties;
         }
-
+        
         SettingsImpl& SettingsImpl::operator =( const SettingsImpl& rhs )
         {
             m_properties = rhs.m_properties;
-
+            
             return *this;
         }
     }

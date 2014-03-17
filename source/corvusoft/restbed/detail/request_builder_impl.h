@@ -35,7 +35,7 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 RequestBuilderImpl( std::istream& socket );
                 
@@ -45,24 +45,24 @@ namespace restbed
                 
                 //Functionality
                 Request build( void ) const;
-
+                
                 void parse( std::istream& socket );
-
+                
                 //Getters
                 
                 //Setters
                 void set_origin( const std::string& value );
                 
                 void set_path_parameters( const std::map< std::string, std::string >& parameters );
-
+                
                 //Operators
                 RequestBuilderImpl& operator =( const RequestBuilderImpl& rhs );
-
+                
                 //Properties
                 
             protected:
                 //Friends
-
+                
                 //Definitions
                 
                 //Constructors
@@ -88,19 +88,19 @@ namespace restbed
                 static Bytes parse_http_body( std::istream& socket );
                 
                 static double parse_http_version( std::istream& socket );
-
+                
                 static std::string parse_http_path( std::istream& socket );
                 
                 static std::string parse_http_method( std::istream& socket );
-            
+                
                 static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
-
+                
                 static std::map< std::string, std::string > parse_http_query_parameters( std::istream& socket );
-
+                
                 //Getters
                 
                 //Setters
-
+                
                 //Operators
                 
                 //Properties

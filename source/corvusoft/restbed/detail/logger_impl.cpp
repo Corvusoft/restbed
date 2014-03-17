@@ -53,15 +53,16 @@ namespace restbed
             string timestamp = string( ctime( &now ), 0, 24 ); //removes ctime supplied new line character.
             
             string label = build_log_label( level );
-
+            
             FILE* descriptor = nullptr;
-
+            
             switch ( level )
             {
                 case INFO:
                 case DEBUG:
                     descriptor = stdout;
                     break;
+                    
                 case FATAL:
                 case ERROR:
                 case WARNING:
@@ -69,19 +70,19 @@ namespace restbed
                 default:
                     descriptor = stderr;
             }
-
+            
             static mutex mtx;
-                
+            
             mtx.lock( );
-                
+            
             fprintf( descriptor, label.data( ), timestamp.data( ) );
-                
+            
             vfprintf( descriptor, format.data( ), arguments );
-
+            
             fprintf( descriptor, "\n" );
             
             fflush( descriptor );
-
+            
             mtx.unlock( );
         }
         
@@ -94,42 +95,48 @@ namespace restbed
         }
         
         LoggerImpl& LoggerImpl::operator =( const LoggerImpl& )
-        {            
+        {
             return *this;
         }
-
+        
         string LoggerImpl::build_log_label( const LogLevel level ) const
         {
             string tag = String::empty;
-
+            
             switch ( level )
             {
                 case INFO:
                     tag = "INFO";
                     break;
+                    
                 case DEBUG:
                     tag = "DEBUG";
                     break;
+                    
                 case FATAL:
                     tag = "FATAL";
                     break;
+                    
                 case ERROR:
                     tag = "ERROR";
                     break;
+                    
                 case WARNING:
                     tag = "WARNING";
                     break;
+                    
                 case SECURITY:
                     tag = "SECURITY";
                     break;
+                    
                 default:
                     tag = String::format( "LOG LEVEL (%i)", level );
             }
-
+            
             string timestamp = Date::format( system_clock::now( ) );
-
+            
             string label = String::format( "[%s %s] ", tag.data( ), timestamp.data( ) );
-    
+            
             return label;
         }
     }

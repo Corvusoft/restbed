@@ -53,9 +53,9 @@ namespace restbed
         string StatusCodeImpl::to_string( const int code )
         {
             string value = String::empty;
-
+            
             const auto& iterator = m_mappings.find( code );
-
+            
             if ( iterator not_eq m_mappings.end( ) )
             {
                 value = m_mappings.at( code );
@@ -64,7 +64,7 @@ namespace restbed
             {
                 throw invalid_argument( String::empty );
             }
-
+            
             return value;
         }
         
@@ -77,8 +77,9 @@ namespace restbed
         {
             m_mappings = values;
         }
-
-        map< int, string > StatusCodeImpl::m_mappings = {
+        
+        map< int, string > StatusCodeImpl::m_mappings =
+        {
             { 100, "Continue" },
             { 101, "Switching Protocols" },
             { 102, "Processing" },

@@ -22,27 +22,27 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     namespace detail
     {
         //Forward Declarations
-
+        
         namespace helpers
         {
             //Forward Declarations
-
+            
             class Date
             {
                 public:
                     //Friends
                     
                     //Definitions
-
+                    
                     //Constructors
                     
                     //Functionality
                     static std::string format( const std::chrono::time_point< std::chrono::system_clock >& value );
-
+                    
                     //Getters
                     
                     //Setters
@@ -50,7 +50,7 @@ namespace restbed
                     //Operators
                     
                     //Properties
-                
+                    
                 protected:
                     //Friends
                     
@@ -79,7 +79,7 @@ namespace restbed
                     Date( const Date& original ) = delete;
                     
                     virtual ~Date( void ) = delete;
-
+                    
                     //Functionality
                     //Getters
                     
@@ -87,7 +87,7 @@ namespace restbed
                     
                     //Operators
                     Date& operator =( const Date& rhs ) = delete;
-
+                    
                     //Properties
             };
         }

@@ -22,14 +22,15 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     class StatusCode
     {
         public:
             //Friends
             
             //Definitions
-            enum : int
+            enum :
+            int
             {
                 CONTINUE = 100,
                 SWITCHING_PROTOCOLS = 101,
@@ -90,20 +91,20 @@ namespace restbed
                 NOT_EXTENDED = 510,
                 NETWORK_AUTHENTICATION_REQUIRED = 511
             };
-
+            
             //Constructors
             
             //Functionality
             static int parse( const std::string& value );
-        
+            
             static std::string to_string( const int code );
-
+            
             //Getters
             static std::map< int, std::string > get_mappings( void );
-        
+            
             //Setters
             static void set_mappings( const std::map< int, std::string >& values );
-        
+            
             //Operators
             
             //Properties
@@ -136,7 +137,7 @@ namespace restbed
             StatusCode( const StatusCode& original ) = delete;
             
             virtual ~StatusCode( void ) = delete;
-
+            
             //Functionality
             
             //Getters
@@ -145,7 +146,7 @@ namespace restbed
             
             //Operators
             StatusCode& operator =( const StatusCode& rhs ) = delete;
-
+            
             //Properties
     };
 }

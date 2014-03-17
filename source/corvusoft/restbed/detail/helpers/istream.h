@@ -20,12 +20,12 @@
 
 namespace restbed
 {
-	//Forward Declarations
-
+    //Forward Declarations
+    
     namespace detail
     {
-    	//Forward Declarations
-
+        //Forward Declarations
+        
         namespace helpers
         {
             //Forward Declarations
@@ -36,12 +36,12 @@ namespace restbed
                     //Friends
                     
                     //Definitions
-
+                    
                     //Constructors
                     
                     //Functionality
-			        static char reverse_peek( std::istream& socket );
-
+                    static char reverse_peek( std::istream& socket );
+                    
                     //Getters
                     
                     //Setters
@@ -49,7 +49,7 @@ namespace restbed
                     //Operators
                     
                     //Properties
-                
+                    
                 protected:
                     //Friends
                     
@@ -78,7 +78,7 @@ namespace restbed
                     IStream( const IStream& original ) = delete;
                     
                     virtual ~IStream( void ) = delete;
-
+                    
                     //Functionality
                     
                     //Getters
@@ -87,7 +87,7 @@ namespace restbed
                     
                     //Operators
                     IStream& operator =( const IStream& rhs ) = delete;
-
+                    
                     //Properties
             };
         }

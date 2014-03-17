@@ -26,7 +26,7 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
-
+        
         namespace helpers
         {
             //Forward Declarations
@@ -38,12 +38,12 @@ namespace restbed
                     
                     //Definitions
                     typedef std::map< std::string, std::string >::const_iterator const_iterator;
-
+                    
                     //Constructors
                     
                     //Functionality
                     static const_iterator find_key_ignoring_case( const std::string& key, const std::map< std::string, std::string >& container );
-
+                    
                     //Getters
                     
                     //Setters
@@ -51,7 +51,7 @@ namespace restbed
                     //Operators
                     
                     //Properties
-                
+                    
                 protected:
                     //Friends
                     
@@ -80,7 +80,7 @@ namespace restbed
                     Map( const Map& original ) = delete;
                     
                     virtual ~Map( void ) = delete;
-
+                    
                     //Functionality
                     
                     //Getters
@@ -89,7 +89,7 @@ namespace restbed
                     
                     //Operators
                     Map& operator =( const Map& rhs ) = delete;
-
+                    
                     //Properties
             };
         }

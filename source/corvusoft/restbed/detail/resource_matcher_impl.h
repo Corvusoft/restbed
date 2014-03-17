@@ -8,7 +8,7 @@
 //System Includes
 #include <regex>
 #include <vector>
- 
+
 //Project Includes
 
 //External Includes
@@ -28,30 +28,30 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
-
+        
         class ResourceMatcherImpl
         {
             public:
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 ResourceMatcherImpl( const Request& request );
-            
+                
                 ResourceMatcherImpl( const ResourceMatcherImpl& original );
-            
+                
                 virtual ~ResourceMatcherImpl( void );
-
+                
                 //Functionality
-
+                
                 //Getters
-
+                
                 //Setters
-
+                
                 //Operators
                 bool operator ( )( const Resource& resource ) const;
-
+                
                 //Properties
                 
             protected:
@@ -80,16 +80,16 @@ namespace restbed
                 
                 //Functionality
                 bool compare_path( const Request& request, const Resource& resource ) const;
-
+                
                 bool compare_headers( const Request& request, const Resource& resource ) const;
-
+                
                 //Getters
                 
                 //Setters
                 
                 //Operators
                 ResourceMatcherImpl& operator =( const ResourceMatcherImpl& rhs ) = delete;
-
+                
                 //Properties
                 const Request& m_request;
         };

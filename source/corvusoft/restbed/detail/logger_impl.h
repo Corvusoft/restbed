@@ -23,8 +23,9 @@
 namespace restbed
 {
     //Forward Declarations
-    enum LogLevel : int;
-
+    enum LogLevel :
+    int;
+    
     namespace detail
     {
         //Forward Declarations
@@ -83,7 +84,7 @@ namespace restbed
                 
                 //Functionality
                 std::string build_log_label( const LogLevel level ) const;
-
+                
                 //Getters
                 
                 //Setters

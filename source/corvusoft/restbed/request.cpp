@@ -3,7 +3,7 @@
  */
 
 //System Includes
- 
+
 //Project Includes
 #include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
@@ -42,42 +42,42 @@ namespace restbed
     {
         return m_pimpl->to_bytes( );
     }
-
+    
     bool Request::has_header( const string& name ) const
     {
         return m_pimpl->has_header( name );
     }
-
+    
     bool Request::has_path_parameter( const string& name ) const
     {
         return m_pimpl->has_path_parameter( name );
     }
-
+    
     bool Request::has_query_parameter( const string& name ) const
     {
         return m_pimpl->has_query_parameter( name );
     }
-
+    
     Bytes Request::get_body( void ) const
     {
         return m_pimpl->get_body( );
     }
-
+    
     Method Request::get_method( void ) const
     {
         return m_pimpl->get_method( );
     }
-
+    
     double Request::get_version( void ) const
     {
         return m_pimpl->get_version( );
     }
-
+    
     string Request::get_path( void ) const
     {
         return m_pimpl->get_path( );
     }
-
+    
     string Request::get_origin( void ) const
     {
         return m_pimpl->get_origin( );
@@ -112,14 +112,14 @@ namespace restbed
     {
         return m_pimpl->get_path_parameters( );
     }
-
+    
     Request& Request::operator =( const Request& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
-
+        
         return *this;
     }
-
+    
     bool Request::operator <( const Request& rhs ) const
     {
         return *m_pimpl < *rhs.m_pimpl;

@@ -21,27 +21,27 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     namespace detail
     {
         //Forward Declarations
-
+        
         namespace helpers
         {
             //Forward Declarations
-
+            
             class Regex
             {
                 public:
                     //Friends
                     
                     //Definitions
-
+                    
                     //Constructors
                     
                     //Functionality
                     static bool is_valid( const std::string& value );
-
+                    
                     //Getters
                     
                     //Setters
@@ -49,7 +49,7 @@ namespace restbed
                     //Operators
                     
                     //Properties
-                
+                    
                 protected:
                     //Friends
                     
@@ -78,16 +78,16 @@ namespace restbed
                     Regex( const Regex& original ) = delete;
                     
                     virtual ~Regex( void ) = delete;
-
+                    
                     //Functionality
-
+                    
                     //Getters
                     
                     //Setters
                     
                     //Operators
                     Regex& operator =( const Regex& rhs ) = delete;
-
+                    
                     //Properties
             };
         }

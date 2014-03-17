@@ -21,29 +21,29 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     namespace detail
     {
         //Forward Declarations
-
+        
         namespace helpers
         {
             //Forward Declarations
-
+            
             class Uri
             {
                 public:
                     //Friends
                     
                     //Definitions
-
+                    
                     //Constructors
                     
                     //Functionality
                     static std::string decode( const std::string& value );
-
+                    
                     static std::string decode_parameter( const std::string& value );
-
+                    
                     //Getters
                     
                     //Setters
@@ -51,7 +51,7 @@ namespace restbed
                     //Operators
                     
                     //Properties
-                
+                    
                 protected:
                     //Friends
                     
@@ -80,16 +80,16 @@ namespace restbed
                     Uri( const Uri& original ) = delete;
                     
                     virtual ~Uri( void ) = delete;
-
+                    
                     //Functionality
-
+                    
                     //Getters
                     
                     //Setters
                     
                     //Operators
                     Uri& operator =( const Uri& rhs ) = delete;
-
+                    
                     //Properties
             };
         }

@@ -34,7 +34,7 @@ namespace restbed
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
         m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2 ) );
-
+        
         m_pimpl->set_authentication_handler( bind( &Service::authentication_handler, this, _1, _2 ) );
     }
     
@@ -47,39 +47,39 @@ namespace restbed
     {
         //n/a
     }
-
+    
     void Service::start( void )
     {
         m_pimpl->start( );
     }
-
+    
     void Service::stop( void )
     {
         m_pimpl->stop( );
     }
-
+    
     void Service::publish( const Resource& value )
     {
         m_pimpl->publish( value );
     }
-
+    
     void Service::suppress( const Resource& value )
     {
         m_pimpl->suppress( value );
     }
-
+    
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
         m_pimpl->set_log_handler( value );
     }
-
+    
     Service& Service::operator =( const Service& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
-
+        
         return *this;
     }
-
+    
     bool Service::operator <( const Service& rhs ) const
     {
         return *m_pimpl < *rhs.m_pimpl;
@@ -99,12 +99,12 @@ namespace restbed
     {
         return *m_pimpl != *rhs.m_pimpl;
     }
-
+    
     void Service::error_handler( const Request& request, Response& response )
     {
         m_pimpl->error_handler( request, response );
     }
-
+    
     void Service::authentication_handler( const Request& request, Response& response )
     {
         m_pimpl->authentication_handler( request, response );

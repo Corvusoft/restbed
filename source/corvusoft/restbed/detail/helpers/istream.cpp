@@ -18,18 +18,18 @@ using std::istream;
 
 namespace restbed
 {
-	namespace detail
-	{
-		namespace helpers
-		{
-	        char IStream::reverse_peek( istream& socket )
-	        {
-	            socket.unget( );
-
-	            char previous_byte = socket.get( );
-
-	            return previous_byte;
-	        }
+    namespace detail
+    {
+        namespace helpers
+        {
+            char IStream::reverse_peek( istream& socket )
+            {
+                socket.unget( );
+                
+                char previous_byte = socket.get( );
+                
+                return previous_byte;
+            }
         }
     }
 }

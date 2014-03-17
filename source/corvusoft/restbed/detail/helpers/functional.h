@@ -25,7 +25,7 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
-
+        
         namespace helpers
         {
             //Forward Declarations
@@ -37,7 +37,7 @@ namespace restbed
                     
                     //Definitions
                     typedef std::size_t address_type;
- 
+                    
                     //Constructors
                     
                     //Functionality
@@ -45,14 +45,14 @@ namespace restbed
                     static address_type get_address( std::function< Type( Arguments... ) > function )
                     {
                         typedef Type( function_decl )( Arguments... );
-
+                        
                         function_decl** ptr = function.template target< function_decl* >( );
-
-                        address_type address = ( ptr not_eq nullptr ) ? ( address_type ) *ptr : 0;
+                        
+                        address_type address = ( ptr not_eq nullptr ) ? ( address_type ) * ptr : 0;
                         
                         return address;
                     }
-
+                    
                     //Getters
                     
                     //Setters
@@ -60,7 +60,7 @@ namespace restbed
                     //Operators
                     
                     //Properties
-                
+                    
                 protected:
                     //Friends
                     
@@ -89,7 +89,7 @@ namespace restbed
                     Functional( const Functional& original ) = delete;
                     
                     virtual ~Functional( void ) = delete;
-
+                    
                     //Functionality
                     
                     //Getters
@@ -98,7 +98,7 @@ namespace restbed
                     
                     //Operators
                     Functional& operator =( const Functional& rhs ) = delete;
-
+                    
                     //Properties
             };
         }

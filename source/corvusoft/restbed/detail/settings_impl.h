@@ -8,7 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
- 
+
 //Project Includes
 
 //External Includes
@@ -22,7 +22,8 @@
 namespace restbed
 {
     //Forward Declarations
-    enum Mode : int;
+    enum Mode :
+    int;
     
     namespace detail
     {
@@ -34,7 +35,7 @@ namespace restbed
                 //Friends
                 
                 //Definitions
-
+                
                 //Constructors
                 SettingsImpl( void );
                 
@@ -43,33 +44,33 @@ namespace restbed
                 virtual ~SettingsImpl( void );
                 
                 //Functionality
-
+                
                 //Getters
                 Mode get_mode( void ) const;
-
+                
                 uint16_t get_port( void ) const;
-
+                
                 std::string get_root( void ) const;
-
+                
                 int get_maximum_connections( void ) const;
-
+                
                 std::string get_property( const std::string& name ) const;
-
+                
                 std::map< std::string, std::string > get_properties( void ) const;
-
+                
                 //Setters
                 void set_mode( const Mode value );
-
+                
                 void set_port( const uint16_t value );
                 
                 void set_root( const std::string& value );
-
+                
                 void set_maximum_connections( const int value );
                 
                 void set_property( const std::string& name, const std::string& value );
                 
                 void set_properties( const std::map< std::string, std::string >& values );
-
+                
                 //Operators
                 bool operator <( const SettingsImpl& rhs ) const;
                 
@@ -78,9 +79,9 @@ namespace restbed
                 bool operator ==( const SettingsImpl& rhs ) const;
                 
                 bool operator !=( const SettingsImpl& rhs ) const;
-
+                
                 SettingsImpl& operator =( const SettingsImpl& rhs );
-
+                
                 //Properties
                 
             protected:
@@ -114,7 +115,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
-
+                
                 //Properties
                 std::map< std::string, std::string > m_properties;
         };
