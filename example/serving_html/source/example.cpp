@@ -13,6 +13,7 @@ Response get_method_handler( const Request& request )
     ifstream stream( "../../resource/" + filename, ifstream::in );
 
     Response response;
+    response.set_header( "Content-Type", "text/html" );
 
     if ( stream.is_open( ) )
     {
