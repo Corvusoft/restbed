@@ -51,7 +51,7 @@ fi
 
 ASTYLE=astyle
 
-ASTYLE_PARAMETERS="--options=tools/astyle/configuration"
+ASTYLE_PARAMETERS="--options=tool/astyle/configuration"
 
 echo "Formating source code..."
 
