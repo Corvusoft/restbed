@@ -1,6 +1,5 @@
 #include "restbed"
 
-using namespace std;
 using namespace restbed;
 
 Response get_method_handler( const Request& )
