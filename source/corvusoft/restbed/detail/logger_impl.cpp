@@ -77,6 +77,8 @@ namespace restbed
             fprintf( descriptor, label.data( ), timestamp.data( ) );
                 
             vfprintf( descriptor, format.data( ), arguments );
+
+            fprintf( descriptor, "\n" );
             
             fflush( descriptor );
 
