@@ -46,7 +46,7 @@ namespace restbed
                     
                     static std::string uppercase( const std::string& value );
                     
-                    static std::string format( const std::string& format, ... );
+                    static std::string format( const std::string format, ... );
                     
                     static std::vector< std::string > split( const std::string& text, const char delimiter );
                     
@@ -99,7 +99,7 @@ namespace restbed
                     virtual ~String( void ) = delete;
                     
                     //Functionality
-                    static std::string::size_type format( /*out*/ std::string& output, const std::string::size_type length, const std::string& format, va_list arguments );
+                    static std::string::size_type format( /*out*/ std::string& output, const std::string::size_type length, const std::string format, va_list arguments );
                     
                     //Getters
                     

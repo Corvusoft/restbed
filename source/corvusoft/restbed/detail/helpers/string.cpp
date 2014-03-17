@@ -45,7 +45,7 @@ namespace restbed
                 return result;
             }
             
-            string String::format( const string& format, ... )
+            string String::format( const string format, ... )
             {
                 va_list arguments;
                 
@@ -159,7 +159,7 @@ namespace restbed
                 return source;
             }
             
-            string::size_type String::format( string& output, const string::size_type length, const string& format, va_list arguments )
+            string::size_type String::format( string& output, const string::size_type length, const string format, va_list arguments )
             {
                 char* formatted = new char[ length + 1 ];
                 

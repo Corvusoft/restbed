@@ -45,9 +45,9 @@ namespace restbed
                 virtual ~LoggerImpl( void );
                 
                 //Functionality
-                void log( const LogLevel level, const std::string& format, va_list arguments ) const;
+                void log( const LogLevel level, const std::string format, va_list arguments ) const;
                 
-                void log_if( bool expression, const LogLevel level, const std::string& format, va_list arguments ) const;
+                void log_if( bool expression, const LogLevel level, const std::string format, va_list arguments ) const;
                 
                 //Getters
                 

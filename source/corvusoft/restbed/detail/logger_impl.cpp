@@ -46,7 +46,7 @@ namespace restbed
             //n/a
         }
         
-        void LoggerImpl::log( const LogLevel level, const string& format, va_list arguments ) const
+        void LoggerImpl::log( const LogLevel level, const string format, va_list arguments ) const
         {
             time_t now = system_clock::to_time_t( system_clock::now( ) );
             
@@ -86,7 +86,7 @@ namespace restbed
             mtx.unlock( );
         }
         
-        void LoggerImpl::log_if( bool expression, const LogLevel level, const string& format, va_list arguments ) const
+        void LoggerImpl::log_if( bool expression, const LogLevel level, const string format, va_list arguments ) const
         {
             if ( expression == true )
             {

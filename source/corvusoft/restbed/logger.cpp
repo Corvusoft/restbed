@@ -36,7 +36,7 @@ namespace restbed
         //n/a
     }
     
-    void Logger::log( const LogLevel level, const string& format, ... ) noexcept
+    void Logger::log( const LogLevel level, const string format, ... ) noexcept
     {
         va_list arguments;
         
@@ -47,7 +47,7 @@ namespace restbed
         va_end( arguments );
     }
     
-    void Logger::log_if( bool expression, const LogLevel level, const string& format, ... ) noexcept
+    void Logger::log_if( bool expression, const LogLevel level, const string format, ... ) noexcept
     {
         va_list arguments;
         

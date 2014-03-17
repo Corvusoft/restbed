@@ -30,7 +30,7 @@ TestLogger::~TestLogger( void )
     //n/a
 }
 
-void TestLogger::log( const LogLevel, const string& format, ... ) noexcept
+void TestLogger::log( const LogLevel, const string format, ... ) noexcept
 {
     va_list arguments;
     

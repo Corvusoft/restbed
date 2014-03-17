@@ -45,9 +45,9 @@ namespace restbed
             virtual ~Logger( void );
             
             //Functionality
-            virtual void log( const LogLevel level, const std::string& format, ... ) noexcept;
+            virtual void log( const LogLevel level, const std::string format, ... ) noexcept;
             
-            virtual void log_if( bool expression, const LogLevel level, const std::string& format, ... ) noexcept;
+            virtual void log_if( bool expression, const LogLevel level, const std::string format, ... ) noexcept;
             
             //Getters
             

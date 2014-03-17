@@ -34,7 +34,7 @@ class TestLogger : public restbed::Logger
         virtual ~TestLogger( void );
         
         //Functionality
-        void log( const restbed::LogLevel level, const std::string& format, ... ) noexcept;
+        void log( const restbed::LogLevel level, const std::string format, ... ) noexcept;
         
         //Getters
         const char* get_log_entry( void ) const;
