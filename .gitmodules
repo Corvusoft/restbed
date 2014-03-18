@@ -1,3 +1,12 @@
 [submodule "dependency/asio"]
 	path = dependency/asio
 	url = https://ben-crowhurst@bitbucket.org/Corvusoft/asio-dependency.git
+[submodule "test/integration/dependency/gtest"]
+	path = test/integration/dependency/gtest
+	url = https://ben-crowhurst@bitbucket.org/Corvusoft/gtest-dependency.git
+[submodule "test/regression/dependency/gtest"]
+	path = test/regression/dependency/gtest
+	url = https://ben-crowhurst@bitbucket.org/Corvusoft/gtest-dependency.git
+[submodule "test/unit/dependency/gtest"]
+	path = test/unit/dependency/gtest
+	url = https://ben-crowhurst@bitbucket.org/Corvusoft/gtest-dependency.git
