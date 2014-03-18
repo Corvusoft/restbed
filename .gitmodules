@@ -10,3 +10,6 @@
 [submodule "test/unit/dependency/gtest"]
 	path = test/unit/dependency/gtest
 	url = https://ben-crowhurst@bitbucket.org/Corvusoft/gtest-dependency.git
+[submodule "test/regression/dependency/curl"]
+	path = test/regression/dependency/curl
+	url = https://ben-crowhurst@bitbucket.org/Corvusoft/libcurl-dependency.git
