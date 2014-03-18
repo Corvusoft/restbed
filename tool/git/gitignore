@@ -7,10 +7,6 @@ CMakeFiles/
 install_manifest.txt
 Doxyfile
 
-# Dependencies #
-################
-dependency/
-
 # Distribution #
 ###############
 distribution/
