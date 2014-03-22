@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <algorithm>
 
 //Project Includes
 #include "corvusoft/restbed/detail/helpers/string.h"
@@ -12,6 +13,7 @@
 //System Namespaces
 using std::string;
 using std::vector;
+using std::transform;
 
 //Project Namespaces
 
