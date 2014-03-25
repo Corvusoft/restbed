@@ -17,7 +17,7 @@ foreach( DEPENDENCY ${DEPENDENCIES} )
     if ( ${DEPENDENCY}_NOTFOUND )
         message( "Failed to find dependency: " ${DEPENDENCY} )
     else( )
-    	include_directories( ${ASIO_INCLUDE_DIR} )
+    	include_directories( ${GTEST_INCLUDE_DIR} )
     endif ( ${DEPENDENCY}_NOTFOUND )
 endforeach( DEPENDENCY )
 
