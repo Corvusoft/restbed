@@ -5,10 +5,6 @@ project( "Acceptance Test Suite" )
 cmake_minimum_required( VERSION 2.8.10 )
 
 #
-# Dependencies
-#
-
-#
 # Configuration
 #
 set( SOURCE_DIR "../source" )

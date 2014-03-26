@@ -9,17 +9,8 @@ cmake_minimum_required( VERSION 2.8.10 )
 #
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules" )
 
-set( DEPENDENCIES GTEST )
-
-foreach( DEPENDENCY ${DEPENDENCIES} )
-    find_package( ${DEPENDENCY} REQUIRED )
-
-    if ( ${DEPENDENCY}_NOTFOUND )
-        message( "Failed to find dependency: " ${DEPENDENCY} )
-    else( )
-    	include_directories( ${GTEST_INCLUDE_DIR} )
-    endif ( ${DEPENDENCY}_NOTFOUND )
-endforeach( DEPENDENCY )
+find_package( gtest REQUIRED )
+include_directories( ${GTEST_INCLUDE_DIRS} )
 
 #
 # Configuration
