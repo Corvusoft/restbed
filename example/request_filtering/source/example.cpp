@@ -2,9 +2,25 @@
 
 using namespace restbed;
 
-Response get_xml_method_handler( const Request& );
-Response get_json_method_handler( const Request& );
+Response get_xml_method_handler( const Request& )
+{
+    Response response;
+    response.set_body( "<hello><world></world></hello>" );
+    response.set_header( "Content-Type", "application/xml" );
+    response.set_status_code( StatusCode::OK );
+    
+    return response;
+}
 
+Response get_json_method_handler( const Request& )
+{
+    Response response;
+    response.set_body( "{ \"Hello\": \", World!\" }" );
+    response.set_header( "Content-Type", "application/json" );
+    response.set_status_code( StatusCode::OK );
+    
+    return response;
+}
 int main( int, char** )
 {
     Resource xml;
@@ -26,24 +42,4 @@ int main( int, char** )
     service.start( );
     
     return EXIT_SUCCESS;
-}
-
-Response get_xml_method_handler( const Request& )
-{
-    Response response;
-    response.set_body( "<hello><world></world></hello>" );
-    response.set_header( "Content-Type", "application/xml" );
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
-}
-
-Response get_json_method_handler( const Request& )
-{
-    Response response;
-    response.set_body( "{ \"Hello\": \", World!\" }" );
-    response.set_header( "Content-Type", "application/json" );
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
 }

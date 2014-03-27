@@ -2,7 +2,14 @@
 
 using namespace restbed;
 
-Response get_method_handler( const Request& );
+Response get_method_handler( const Request& )
+{
+    Response response;
+    response.set_body( "Hello, World!" );
+    response.set_status_code( StatusCode::OK );
+    
+    return response;
+}
 
 int main( int, char** )
 {
@@ -18,13 +25,4 @@ int main( int, char** )
     service.start( );
     
     return EXIT_SUCCESS;
-}
-
-Response get_method_handler( const Request& )
-{
-    Response response;
-    response.set_body( "Hello, World!" );
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
 }
