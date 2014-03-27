@@ -30,6 +30,7 @@
 //System Namespaces
 using std::list;
 using std::find;
+using std::bind;
 using std::thread;
 using std::string;
 using std::istream;
@@ -40,6 +41,8 @@ using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 using std::placeholders::_1;
+using std::placeholders::_2;
+using std::placeholders::_3;
 using std::chrono::system_clock;
 
 //Project Namespaces
@@ -67,8 +70,8 @@ namespace restbed
             m_work ( nullptr ),
             m_io_service( nullptr ),
             m_acceptor( nullptr ),
-            m_authentication_handler( ),
-            m_error_handler( )
+            m_authentication_handler( bind( &ServiceImpl::authentication_handler, this, _1, _2 ) ),
+            m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2, _3 ) )
         {
             //n/a
         }
@@ -195,24 +198,6 @@ namespace restbed
             {
                 log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found.", value.get_path( ).data( ) ) );
             }
-        }
-        
-        void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
-        {
-            string status_description = StatusCode::to_string( status_code );
-
-            log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
-                                                  status_code,
-                                                  status_description.data( ),
-                                                  request.get_path( ).data( ) ) );
-            
-            response.set_status_code( status_code );
-            response.set_body( status_description );
-        }
-        
-        void ServiceImpl::authentication_handler( const Request&, Response& response )
-        {
-            response.set_status_code( StatusCode::OK );
         }
         
         void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
@@ -395,6 +380,24 @@ namespace restbed
             {
                 m_log_handler->log( level, "%s", message.data( ) );
             }
+        }
+
+        void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
+        {
+            string status_description = StatusCode::to_string( status_code );
+
+            log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
+                                                  status_code,
+                                                  status_description.data( ),
+                                                  request.get_path( ).data( ) ) );
+            
+            response.set_status_code( status_code );
+            response.set_body( status_description );
+        }
+        
+        void ServiceImpl::authentication_handler( const Request&, Response& response )
+        {
+            response.set_status_code( StatusCode::OK );
         }
     }
 }

@@ -49,3 +49,18 @@ Response xml_ok_callback_handler( const Request& )
     
     return response;
 }
+
+void authentication_handler( const Request& request, /*out*/ Response& response )
+{
+    auto authorisation = request.get_header( "Authorization" );
+    
+    if ( authorisation == "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" )
+    {
+        response.set_status_code( 200 );
+    }
+    else
+    {
+        response.set_status_code( 401 );
+        response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
+    }
+}

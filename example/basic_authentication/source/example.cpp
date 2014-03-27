@@ -2,34 +2,20 @@
 
 using namespace restbed;
 
-class BasicAuthService : public Service
+void authentication_handler( const Request& request, /*out*/ Response& response )
 {
-    public:
-        BasicAuthService( const Settings& settings ) : Service( settings )
-        {
-            //n/a
-        }
-        
-        virtual ~BasicAuthService( void )
-        {
-            //n/a
-        }
-        
-        void authentication_handler( const Request& request, /*out*/ Response& response )
-        {
-            auto authorisation = request.get_header( "Authorization" );
-            
-            if ( authorisation == "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" )
-            {
-                response.set_status_code( 200 );
-            }
-            else
-            {
-                response.set_status_code( 401 );
-                response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
-            }
-        }
-};
+    auto authorisation = request.get_header( "Authorization" );
+
+    if ( authorisation == "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" )
+    {
+        response.set_status_code( 200 );
+    }
+    else
+    {
+        response.set_status_code( 401 );
+        response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
+    }
+}
 
 Response get_method_handler( const Request& )
 {
@@ -49,7 +35,8 @@ int main( int, char** )
     Settings settings;
     settings.set_port( 1984 );
     
-    BasicAuthService service( settings );
+    Service service( settings );
+    service.set_authentication_handler( &authentication_handler );
     service.publish( resource );
     service.start( );
     

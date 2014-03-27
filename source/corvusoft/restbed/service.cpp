@@ -3,7 +3,6 @@
  */
 
 //System Includes
-#include <cstdarg>
 #include <functional>
 
 //Project Includes
@@ -17,12 +16,9 @@
 //External Includes
 
 //System Namespaces
-using std::bind;
 using std::string;
+using std::function;
 using std::shared_ptr;
-using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
 
 //Project Namespaces
 using restbed::detail::ServiceImpl;
@@ -33,9 +29,7 @@ namespace restbed
 {
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
-        m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2, _3 ) );
-        
-        m_pimpl->set_authentication_handler( bind( &Service::authentication_handler, this, _1, _2 ) );
+        //n/a
     }
     
     Service::Service( const Service& original ) : m_pimpl( new ServiceImpl( *original.m_pimpl ) )
@@ -72,7 +66,17 @@ namespace restbed
     {
         m_pimpl->set_log_handler( value );
     }
-    
+
+    void Service::set_authentication_handler( function< void ( const Request&, Response& ) > value )
+    {
+         m_pimpl->set_authentication_handler( value );
+    }
+
+    void Service::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
+    {
+        m_pimpl->set_error_handler( value );
+    }
+
     Service& Service::operator =( const Service& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;
@@ -98,15 +102,5 @@ namespace restbed
     bool Service::operator !=( const Service& rhs ) const
     {
         return *m_pimpl != *rhs.m_pimpl;
-    }
-    
-    void Service::authentication_handler( const Request& request, Response& response )
-    {
-        m_pimpl->authentication_handler( request, response );
-    }
-
-    void Service::error_handler( const int status_code, const Request& request, Response& response )
-    {
-        m_pimpl->error_handler( status_code, request, response );
     }
 }

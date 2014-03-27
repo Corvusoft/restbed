@@ -8,6 +8,7 @@
 //System Includes
 #include <memory>
 #include <string>
+#include <functional>
 
 //Project Includes
 
@@ -64,6 +65,10 @@ namespace restbed
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
             
+            void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
+                
+            void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
+
             //Operators
             Service& operator =( const Service& rhs );
             
@@ -85,9 +90,6 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual void authentication_handler( const Request& request, /*out*/ Response& response );
-        
-            virtual void error_handler( const int status_code, const Request& request, /*out*/ Response& response );
 
             //Getters
             

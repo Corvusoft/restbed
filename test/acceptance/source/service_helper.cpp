@@ -9,7 +9,6 @@
 #include <restbed>
 #include "callbacks.h"
 #include "test_service.h"
-#include "basic_auth_service.h"
 
 //External Includes
 
@@ -45,7 +44,8 @@ extern "C"
         settings.set_port( port );
         settings.set_mode( Mode::ASYNCHRONOUS );
         
-        TestService* service = new BasicAuthService( settings );
+        TestService* service = new TestService( settings );
+        service->set_authentication_handler( &authentication_handler );
         service->start( );
         
         return service;

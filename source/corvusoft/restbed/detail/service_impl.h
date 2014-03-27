@@ -10,7 +10,6 @@
 #include <thread>
 #include <memory>
 #include <string>
-#include <cstdarg>
 #include <functional>
 
 //Project Includes
@@ -64,10 +63,6 @@ namespace restbed
                 void publish( const Resource& value );
                 
                 void suppress( const Resource& value );
-                
-                virtual void error_handler( const int status_code, const Request& request, Response& response );
-                
-                virtual void authentication_handler( const Request& request, Response& response );
                 
                 //Getters
                 
@@ -129,6 +124,10 @@ namespace restbed
                 Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
                 
                 void log( const LogLevel level, const std::string& message );
+
+                void authentication_handler( const Request& request, Response& response );
+                
+                void error_handler( const int status_code, const Request& request, Response& response );
                 
                 //Getters
                 
