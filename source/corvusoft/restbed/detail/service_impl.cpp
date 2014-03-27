@@ -67,8 +67,8 @@ namespace restbed
             m_work ( nullptr ),
             m_io_service( nullptr ),
             m_acceptor( nullptr ),
-            m_error_handler( ),
-            m_authentication_handler( )
+            m_authentication_handler( ),
+            m_error_handler( )
         {
             //n/a
         }
@@ -83,8 +83,8 @@ namespace restbed
             m_work( original.m_work ),
             m_io_service( original.m_io_service ),
             m_acceptor( original.m_acceptor ),
-            m_error_handler( original.m_error_handler ),
-            m_authentication_handler( original.m_authentication_handler )
+            m_authentication_handler( original.m_authentication_handler ),
+            m_error_handler( original.m_error_handler )
         {
             //n/a
         }
@@ -197,13 +197,17 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::error_handler( const Request& request, Response& response )
+        void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
         {
-            log( LogLevel::ERROR, "Internal Server Error!" );
-            log( LogLevel::ERROR, String::format( "Request\n%s", request.to_bytes( ).data( ) ) );
-            log( LogLevel::ERROR, String::format( "Response\n%s", response.to_bytes( ).data( ) ) );
+            string status_description = StatusCode::to_string( status_code );
+
+            log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
+                                                  status_code,
+                                                  status_description.data( ),
+                                                  request.get_path( ).data( ) ) );
             
-            response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
+            response.set_status_code( status_code );
+            response.set_body( status_description );
         }
         
         void ServiceImpl::authentication_handler( const Request&, Response& response )
@@ -216,14 +220,14 @@ namespace restbed
             m_log_handler = value;
         }
         
-        void ServiceImpl::set_error_handler( function< void ( const Request&, Response& ) > value )
-        {
-            m_error_handler = value;
-        }
-        
         void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
         {
             m_authentication_handler = value;
+        }
+
+        void ServiceImpl::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
+        {
+            m_error_handler = value;
         }
         
         bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
@@ -337,16 +341,20 @@ namespace restbed
                 else
                 {
                     log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s.",
-                            request.get_method( ).to_string( ).data( ),
-                            request.get_path( ).data( ),
-                            request.get_origin( ).data( ) ) );
+                                                             request.get_method( ).to_string( ).data( ),
+                                                             request.get_path( ).data( ),
+                                                             request.get_origin( ).data( ) ) );
                 }
             }
-            catch ( const int status_code )
+            catch ( const StatusCode::Value status_code )
             {
-                response.set_status_code( status_code );
-                
-                error_handler( request, response );
+                error_handler( status_code, request, response );
+            }
+            catch ( ... )
+            {
+                log( LogLevel::FATAL, "Unexpected/Unknown exception occurred, please contact Corvusoft with details." );
+
+                error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
             }
             
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
@@ -366,7 +374,7 @@ namespace restbed
             }
             else
             {
-                resource.set_method_handler( request.get_method( ), ServiceImpl::resource_not_found_handler );
+                throw StatusCode::NOT_FOUND;
             }
             
             return resource;
@@ -379,14 +387,6 @@ namespace restbed
             auto handle = resource.get_method_handler( method );
             
             return handle( request );
-        }
-        
-        Response ServiceImpl::resource_not_found_handler( const Request& )
-        {
-            Response response;
-            response.set_status_code( StatusCode::NOT_FOUND );
-            
-            return response;
         }
         
         void ServiceImpl::log( const LogLevel level, const string& message )

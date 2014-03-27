@@ -65,7 +65,7 @@ namespace restbed
                 
                 void suppress( const Resource& value );
                 
-                virtual void error_handler( const Request& request, Response& response );
+                virtual void error_handler( const int status_code, const Request& request, Response& response );
                 
                 virtual void authentication_handler( const Request& request, Response& response );
                 
@@ -74,10 +74,10 @@ namespace restbed
                 //Setters
                 void set_log_handler( const std::shared_ptr< Logger >& value );
                 
-                void set_error_handler( std::function< void ( const Request&, Response& ) > value );
-                
                 void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
                 
+                void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
+
                 //Operators
                 bool operator <( const ServiceImpl& rhs ) const;
                 
@@ -128,8 +128,6 @@ namespace restbed
                 
                 Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
                 
-                static Response resource_not_found_handler( const Request& );
-                
                 void log( const LogLevel level, const std::string& message );
                 
                 //Getters
@@ -159,9 +157,9 @@ namespace restbed
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 
-                std::function< void ( const Request&, Response& ) > m_error_handler;
-                
                 std::function< void ( const Request&, Response& ) > m_authentication_handler;
+
+                std::function< void ( const int, const Request&, Response& ) > m_error_handler;
         };
     }
 }

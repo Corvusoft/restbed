@@ -22,8 +22,8 @@ using restbed::Settings;
 //External Namespaces
 
 TestService::TestService( const Settings& settings ) : Service( settings ),
-    m_resource( ),
-    m_logger( new TestLogger )
+                                                       m_resource( ),
+                                                       m_logger( new TestLogger )
 {
     set_logger( m_logger );
 }

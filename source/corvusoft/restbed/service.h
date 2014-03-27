@@ -85,10 +85,10 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual void error_handler( const Request& request, /*out*/ Response& response );
-            
             virtual void authentication_handler( const Request& request, /*out*/ Response& response );
-            
+        
+            virtual void error_handler( const int status_code, const Request& request, /*out*/ Response& response );
+
             //Getters
             
             //Setters

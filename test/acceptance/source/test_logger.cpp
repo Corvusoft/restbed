@@ -20,7 +20,7 @@ using restbed::LogLevel;
 //External Namespaces
 
 TestLogger::TestLogger( void ) : Logger( ),
-    m_log_entries( )
+                                 m_log_entries( )
 {
     //n/a
 }

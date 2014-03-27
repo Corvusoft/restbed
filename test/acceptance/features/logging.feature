@@ -7,6 +7,7 @@ Feature: Service logging
 
 	Scenario Outline: Incoming request logging
 		Given I have configured a service
+		And I publish a resource at "/table"
 		When I perform a HTTP "<method>" request to "/table"
 		Then I should see a log entry of "Incoming <method> request for '/table' resource from ::1."
 

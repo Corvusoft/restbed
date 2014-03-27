@@ -68,7 +68,7 @@ namespace restbed
             
             Bytes bytes( headers.begin( ), headers.end( ) );
             bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
-            
+
             return bytes;
         }
         

@@ -53,7 +53,6 @@ Feature: HTTP method handlers
 		user-agent: Restbed Acceptance Tests
 		"""
 
-    @ben
 	Scenario: Default OPTIONS Method Handler
 		Given I have configured a service
 		And publish a default resource

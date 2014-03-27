@@ -33,7 +33,7 @@ namespace restbed
 {
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
-        m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2 ) );
+        m_pimpl->set_error_handler( bind( &Service::error_handler, this, _1, _2, _3 ) );
         
         m_pimpl->set_authentication_handler( bind( &Service::authentication_handler, this, _1, _2 ) );
     }
@@ -100,13 +100,13 @@ namespace restbed
         return *m_pimpl != *rhs.m_pimpl;
     }
     
-    void Service::error_handler( const Request& request, Response& response )
-    {
-        m_pimpl->error_handler( request, response );
-    }
-    
     void Service::authentication_handler( const Request& request, Response& response )
     {
         m_pimpl->authentication_handler( request, response );
+    }
+
+    void Service::error_handler( const int status_code, const Request& request, Response& response )
+    {
+        m_pimpl->error_handler( status_code, request, response );
     }
 }
