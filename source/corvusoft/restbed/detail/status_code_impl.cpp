@@ -44,7 +44,7 @@ namespace restbed
             
             if ( result == -1 )
             {
-                throw invalid_argument( String::empty );
+                throw invalid_argument( "Unknown HTTP Status Message" );
             }
             
             return result;
@@ -62,7 +62,7 @@ namespace restbed
             }
             else
             {
-                throw invalid_argument( String::empty );
+                throw invalid_argument( "Unknown HTTP Status Code" );
             }
             
             return value;

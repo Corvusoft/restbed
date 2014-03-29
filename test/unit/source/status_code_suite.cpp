@@ -39,6 +39,18 @@ TEST( StatusCode, to_string_with_invalid_status_code )
     ASSERT_THROW( StatusCode::to_string( 9999 ), invalid_argument );
 }
 
+TEST( StatusCode, parse_with_valid_status_code )
+{
+    const int result = StatusCode::parse( "Unprocessable Entity" );
+    
+    EXPECT_EQ( 422, result );
+}
+
+TEST( StatusCode, parse_with_invalid_status_code )
+{
+    ASSERT_THROW( StatusCode::parse( "Missing Error Message" ), invalid_argument );
+}
+
 TEST( StatusCode, set_status_code_strings )
 {
     const map< int, string > values =
