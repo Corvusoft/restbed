@@ -40,6 +40,7 @@ using std::to_string;
 using std::exception;
 using std::shared_ptr;
 using std::make_shared;
+using std::invalid_argument;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
@@ -384,15 +385,25 @@ namespace restbed
 
         void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
         {
-            string status_description = StatusCode::to_string( status_code );
+            string status_message = String::empty;
+
+            try 
+            {
+                status_message = StatusCode::to_string( status_code );
+            }
+            catch ( const invalid_argument& ia )
+            {
+                status_message = ia.what( );
+            }
 
             log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
                                                   status_code,
-                                                  status_description.data( ),
+                                                  status_message.data( ),
                                                   request.get_path( ).data( ) ) );
             
             response.set_status_code( status_code );
-            response.set_body( status_description );
+            response.set_header( "Content-Type", "text/plain" );
+            response.set_body( status_message );
         }
         
         void ServiceImpl::authentication_handler( const Request&, Response& response )
