@@ -294,10 +294,9 @@ namespace restbed
                     throw StatusCode::INTERNAL_SERVER_ERROR;
                 }
                 
-                //move to build_request()
-                asio::streambuf buffer;
-                asio::read_until( *socket, buffer, "\r\n" );
-                istream stream( &buffer );
+                asio::streambuf data;
+                asio::read_until( *socket, data, "\r\n" );
+                istream stream( &data );
                 
                 RequestBuilderImpl builder( stream );
                 builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
@@ -309,7 +308,6 @@ namespace restbed
                 builder.set_path_parameters( parameters );
                 
                 request = builder.build( );
-                //end move
                 
                 m_authentication_handler( request, response );
                 
@@ -331,6 +329,10 @@ namespace restbed
                                                              request.get_path( ).data( ),
                                                              request.get_origin( ).data( ) ) );
                 }
+
+                asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
+            
+                listen( );
             }
             catch ( const StatusCode::Value status_code )
             {
@@ -341,11 +343,11 @@ namespace restbed
                 log( LogLevel::FATAL, "Unexpected/Unknown exception occurred, please contact Corvusoft with details" );
 
                 error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
+
+                asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
+
+                throw;
             }
-            
-            asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
-            
-            listen( );
         }
         
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
