@@ -286,18 +286,37 @@ namespace restbed
         {
             Request request;
             Response response;
+            asio::streambuf data;    
             
             try
-            {
+            {   
                 if ( error )
                 {
-                    throw StatusCode::INTERNAL_SERVER_ERROR;
+                    throw asio::system_error( error );
                 }
-                
-                asio::streambuf data;
+
                 asio::read_until( *socket, data, "\r\n" );
+            }
+            catch ( const asio::system_error &asio_error )
+            {
+                if ( asio_error.code() == asio::error::eof )
+                {
+                    log( LogLevel::INFO, "Connection closed by peer." );   
+                }
+                else
+                {
+                    string error_description = String::format("ASIO system error: %s %u", asio_error.what(), asio_error.code() );
+
+                    log( LogLevel::FATAL, error_description );
+                }
+
+                listen( );
+                return;
+            }
+
+            try
+            {
                 istream stream( &data );
-                
                 RequestBuilderImpl builder( stream );
                 builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
                 request = builder.build( );
@@ -333,16 +352,6 @@ namespace restbed
             catch ( const StatusCode::Value status_code )
             {
                 error_handler( status_code, request, response );
-            }
-            catch ( ... )
-            {
-                log( LogLevel::FATAL, "Unexpected/Unknown exception occurred, please contact Corvusoft with details" );
-
-                error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
-
-                asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
-
-                throw;
             }
 
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
