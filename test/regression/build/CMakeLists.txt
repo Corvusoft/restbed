@@ -50,11 +50,13 @@ include_directories( "../../../distribution/include" ${GTEST_INCLUDE_DIR} )
 # Build
 #
 add_executable( resources_are_not_overwritten ${SOURCE_DIR}/resources_are_not_overwritten.cpp )
+add_executable( missing_regex_support_on_gcc_4.8 ${SOURCE_DIR}/missing_regex_support_on_gcc_4.8.cpp )
 add_executable( request_uris_are_not_being_decoded ${SOURCE_DIR}/request_uris_are_not_being_decoded.cpp )
 add_executable( resource_responding_on_invalid_path ${SOURCE_DIR}/resource_responding_on_invalid_path.cpp )
 add_executable( segmentation_fault_on_mismatched_path ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 
-target_link_libraries( request_uris_are_not_being_decoded restbed curl ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( resources_are_not_overwritten restbed curl ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
+target_link_libraries( missing_regex_support_on_gcc_4.8 restbed curl ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
+target_link_libraries( request_uris_are_not_being_decoded restbed curl ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( resource_responding_on_invalid_path restbed curl ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
 target_link_libraries( segmentation_fault_on_mismatched_path restbed curl ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
