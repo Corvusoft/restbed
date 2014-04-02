@@ -101,7 +101,7 @@ namespace restbed
             }
             catch ( const exception& ex )
             {
-                log( LogLevel::WARNING, String::format( "Service failed graceful shutdown: %s!",  ex.what( ) ) );
+                log( LogLevel::WARNING, String::format( "Service failed graceful shutdown: %s",  ex.what( ) ) );
             }
         }
         
@@ -128,7 +128,7 @@ namespace restbed
                     break;
                     
                 default:
-                    log( LogLevel::FATAL, String::format( "Service failed, unknown service mode: %i!",  m_mode ) );
+                    log( LogLevel::FATAL, String::format( "Service failed, unknown service mode: %i",  m_mode ) );
             }
         }
         
@@ -149,7 +149,7 @@ namespace restbed
                 m_thread->join( );
             }
             
-            log( LogLevel::INFO, "Service stopped." );
+            log( LogLevel::INFO, "Service stopped" );
         }
         
         void ServiceImpl::publish( const Resource& value )
@@ -180,7 +180,7 @@ namespace restbed
                 m_resources.push_back( resource );
             }
             
-            log( LogLevel::INFO, String::format( "Published '%s' resource.", resource.get_path( ).data( ) ) );
+            log( LogLevel::INFO, String::format( "Published '%s' resource", resource.get_path( ).data( ) ) );
         }
         
         void ServiceImpl::suppress( const Resource& value )
@@ -193,11 +193,11 @@ namespace restbed
                 
                 m_resources.erase( position );
                 
-                log( LogLevel::INFO, String::format( "Suppressed '%s' resource.", path.data( ) ) );
+                log( LogLevel::INFO, String::format( "Suppressed '%s' resource", path.data( ) ) );
             }
             else
             {
-                log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found.", value.get_path( ).data( ) ) );
+                log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found", value.get_path( ).data( ) ) );
             }
         }
         
@@ -268,7 +268,7 @@ namespace restbed
         {
             m_io_service->run( );
             
-            log( LogLevel::INFO, "Synchronous Service Started." );
+            log( LogLevel::INFO, "Synchronous Service Started" );
         }
         
         void ServiceImpl::start_asynchronous( void )
@@ -279,7 +279,7 @@ namespace restbed
             
             m_thread = make_shared< thread >( task, m_io_service );
             
-            log( LogLevel::INFO, "Asynchronous Service Started." );
+            log( LogLevel::INFO, "Asynchronous Service Started" );
         }
         
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
@@ -317,7 +317,7 @@ namespace restbed
                 
                 if ( status == StatusCode::OK )
                 {
-                    log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s.",
+                    log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
                                                          request.get_method( ).to_string( ).data( ),
                                                          request.get_path( ).data( ),
                                                          request.get_origin( ).data( ) ) );
@@ -326,7 +326,7 @@ namespace restbed
                 }
                 else
                 {
-                    log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s.",
+                    log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
                                                              request.get_method( ).to_string( ).data( ),
                                                              request.get_path( ).data( ),
                                                              request.get_origin( ).data( ) ) );
@@ -338,7 +338,7 @@ namespace restbed
             }
             catch ( ... )
             {
-                log( LogLevel::FATAL, "Unexpected/Unknown exception occurred, please contact Corvusoft with details." );
+                log( LogLevel::FATAL, "Unexpected/Unknown exception occurred, please contact Corvusoft with details" );
 
                 error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
             }

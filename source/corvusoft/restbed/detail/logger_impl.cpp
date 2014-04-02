@@ -50,7 +50,7 @@ namespace restbed
         {
             time_t now = system_clock::to_time_t( system_clock::now( ) );
             
-            string timestamp = string( ctime( &now ), 0, 24 ); //removes ctime supplied new line character.
+            string timestamp = string( ctime( &now ), 0, 24 );
             
             string label = build_log_label( level );
             
@@ -79,9 +79,12 @@ namespace restbed
             
             vfprintf( descriptor, format.data( ), arguments );
             
-            fprintf( descriptor, "\n" );
-            
-            fflush( descriptor );
+            if ( level == INFO or level == DEBUG )
+            {
+                fprintf( descriptor, "\n" );
+
+                fflush( descriptor );
+            }
             
             mtx.unlock( );
         }
@@ -106,23 +109,23 @@ namespace restbed
             switch ( level )
             {
                 case INFO:
-                    tag = "INFO";
+                    tag = "INFO    ";
                     break;
                     
                 case DEBUG:
-                    tag = "DEBUG";
+                    tag = "DEBUG   ";
                     break;
                     
                 case FATAL:
-                    tag = "FATAL";
+                    tag = "FATAL   ";
                     break;
                     
                 case ERROR:
-                    tag = "ERROR";
+                    tag = "ERROR   ";
                     break;
                     
                 case WARNING:
-                    tag = "WARNING";
+                    tag = "WARNING ";
                     break;
                     
                 case SECURITY:
