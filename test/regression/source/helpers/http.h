@@ -21,9 +21,6 @@ using std::to_string;
 
 //External Namespaces
 
-#include <iostream>
-using namespace std;
-
 class Http
 {
     public:
@@ -57,6 +54,10 @@ class Http
                 int status_code = 0;
                 curl_easy_getinfo( request, CURLINFO_RESPONSE_CODE, &status_code );
                 result[ "Status Code" ] = ::to_string( status_code );
+            }
+            else
+            {
+                fprintf( stderr, "Failed to perform HTTP GET request, curl response code: %i\n", response );
             }
             
             curl_easy_cleanup( request );

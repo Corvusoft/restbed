@@ -329,10 +329,6 @@ namespace restbed
                                                              request.get_path( ).data( ),
                                                              request.get_origin( ).data( ) ) );
                 }
-
-                asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
-            
-                listen( );
             }
             catch ( const StatusCode::Value status_code )
             {
@@ -348,6 +344,10 @@ namespace restbed
 
                 throw;
             }
+
+            asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
+            
+            listen( );
         }
         
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
