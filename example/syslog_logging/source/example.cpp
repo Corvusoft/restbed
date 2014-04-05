@@ -20,7 +20,7 @@ class SyslogLogger : public Logger
         {
             setlogmask( LOG_UPTO( LOG_DEBUG ) );
 
-            openlog( "Corvusoft restbed", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1 );
+            openlog( "Corvusoft Restbed", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1 );
 
             int priority = 0;
 
