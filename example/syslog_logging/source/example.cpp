@@ -1,3 +1,4 @@
+#include <memory>
 #include <cstdarg>
 #include <syslog.h>
 #include <unistd.h>
