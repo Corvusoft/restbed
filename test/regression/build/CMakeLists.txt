@@ -9,7 +9,14 @@ cmake_minimum_required( VERSION 2.8.10 )
 #
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules" )
 
+include( ${CMAKE_MODULE_PATH}/build_curl.cmake )
+
 find_package( GTest REQUIRED )
+find_package( curl  REQUIRED )
+
+if( NOT curl_FOUND )
+	build_curl( ${curl_DEPENDENCY_DIR} )
+endif()
 
 #
 # Configuration
@@ -19,8 +26,7 @@ set( SOURCE_DIR "../source" )
 set( CMAKE_INSTALL_PREFIX "../distribution" )
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_INSTALL_PREFIX}/binary"  )
 
-set( RESTBED_INCLUDE_DIR "../../../distribution/include" )
-set( RESTBED_LIBRARY_DIR "../../../distribution/library" )
+set( RESTBED_INCLUDE_DIR "../../../source" )
 
 if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
 	if( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.9 )
@@ -44,12 +50,13 @@ else( )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -pedantic -D GTest_USE_OWN_TR1_TUPLE=1" )
 endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
-link_directories( ${RESTBED_LIBRARY_DIR} )
-
-include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} )
+include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} )
 
 add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
-#add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build")
+
+add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
+
+link_directories( ${curl_LIBRARY_DIR} )
 
 #
 # Build
@@ -60,8 +67,16 @@ add_executable( request_uris_are_not_being_decoded ${SOURCE_DIR}/request_uris_ar
 add_executable( resource_responding_on_invalid_path ${SOURCE_DIR}/resource_responding_on_invalid_path.cpp )
 add_executable( segmentation_fault_on_mismatched_path ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 
-target_link_libraries( resources_are_not_overwritten gtest_main restbed curl pthread )
-target_link_libraries( missing_regex_support_on_gcc_4.8 gtest_main restbed curl pthread )
-target_link_libraries( request_uris_are_not_being_decoded gtest_main restbed curl pthread )
-target_link_libraries( resource_responding_on_invalid_path gtest_main restbed curl pthread )
-target_link_libraries( segmentation_fault_on_mismatched_path gtest_main restbed curl pthread )
+if( BUILD_CURL_FROM_SCRATCH MATCHES TRUE )
+	add_dependencies( resources_are_not_overwritten curl )
+	add_dependencies( missing_regex_support_on_gcc_4.8 curl )
+	add_dependencies( request_uris_are_not_being_decoded curl )
+	add_dependencies( resource_responding_on_invalid_path curl )
+	add_dependencies( segmentation_fault_on_mismatched_path curl )
+endif()
+
+target_link_libraries( resources_are_not_overwritten gtest_main restbed ${curl_LIBRARY} pthread )
+target_link_libraries( missing_regex_support_on_gcc_4.8 gtest_main restbed ${curl_LIBRARY} pthread )
+target_link_libraries( request_uris_are_not_being_decoded gtest_main restbed ${curl_LIBRARY} pthread )
+target_link_libraries( resource_responding_on_invalid_path gtest_main restbed ${curl_LIBRARY} pthread )
+target_link_libraries( segmentation_fault_on_mismatched_path gtest_main restbed ${curl_LIBRARY} pthread )
