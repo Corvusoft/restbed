@@ -66,3 +66,19 @@ target_link_libraries( settings_suite restbed gtest_main )
 target_link_libraries( response_suite restbed gtest_main )
 target_link_libraries( resource_suite restbed gtest_main )
 target_link_libraries( status_code_suite restbed gtest_main )
+
+#
+# Setup Tests
+#
+
+enable_testing()
+
+add_test( run_method_suite ${EXECUTABLE_OUTPUT_PATH}/method_suite )
+add_test( run_request_suite ${EXECUTABLE_OUTPUT_PATH}/request_suite )
+add_test( run_settings_suite ${EXECUTABLE_OUTPUT_PATH}/settings_suite )
+add_test( run_response_suite ${EXECUTABLE_OUTPUT_PATH}/response_suite )
+add_test( run_resource_suite ${EXECUTABLE_OUTPUT_PATH}/resource_suite )
+add_test( run_status_code_suite ${EXECUTABLE_OUTPUT_PATH}/status_code_suite )
+
+
+
