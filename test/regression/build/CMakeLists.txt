@@ -80,3 +80,15 @@ target_link_libraries( missing_regex_support_on_gcc_4.8 gtest_main restbed ${cur
 target_link_libraries( request_uris_are_not_being_decoded gtest_main restbed ${curl_LIBRARY} pthread )
 target_link_libraries( resource_responding_on_invalid_path gtest_main restbed ${curl_LIBRARY} pthread )
 target_link_libraries( segmentation_fault_on_mismatched_path gtest_main restbed ${curl_LIBRARY} pthread )
+
+#
+# Setup tests
+#
+enable_testing()
+
+add_test( run_resources_are_not_overwritten ${EXECUTABLE_OUTPUT_PATH}/resources_are_not_overwritten )
+add_test( run_missing_regex_support_on_gcc_4.8 ${EXECUTABLE_OUTPUT_PATH}/missing_regex_support_on_gcc_4.8 )
+add_test( run_request_uris_are_not_being_decoded ${EXECUTABLE_OUTPUT_PATH}/request_uris_are_not_being_decoded )
+add_test( run_resource_responding_on_invalid_path ${EXECUTABLE_OUTPUT_PATH}/resource_responding_on_invalid_path )
+add_test( run_segmentation_fault_on_mismatched_path ${EXECUTABLE_OUTPUT_PATH}/segmentation_fault_on_mismatched_path )
+
