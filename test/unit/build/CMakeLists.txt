@@ -20,6 +20,8 @@ set( SOURCE_DIR "../source" )
 set( CMAKE_INSTALL_PREFIX "../distribution" )
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_INSTALL_PREFIX}/binary"  )
 
+set( RESTBED_INCLUDE_DIR "../../../source" )
+
 if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
 	if( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.9 )
 		message( FATAL_ERROR "\nGCC version < 4.9\nYour systems default compiler is GCC. This project makes use of c++11 features present only in versions of gcc >= 4.9. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
@@ -42,9 +44,11 @@ else( )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -pedantic" )
 endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
-link_directories( "../../../distribution/library" )
+include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} )
 
-include_directories( "../../../distribution/include" ${GTEST_INCLUDE_DIR} )
+add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
+
+add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
 
 #
 # Build
@@ -56,9 +60,9 @@ add_executable( response_suite ${SOURCE_DIR}/response_suite.cpp )
 add_executable( resource_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( status_code_suite ${SOURCE_DIR}/status_code_suite.cpp )
 
-target_link_libraries( method_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
-target_link_libraries( request_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
-target_link_libraries( settings_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
-target_link_libraries( response_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
-target_link_libraries( resource_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
-target_link_libraries( status_code_suite restbed ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} )
+target_link_libraries( method_suite restbed gtest_main )
+target_link_libraries( request_suite restbed gtest_main )
+target_link_libraries( settings_suite restbed gtest_main )
+target_link_libraries( response_suite restbed gtest_main )
+target_link_libraries( resource_suite restbed gtest_main )
+target_link_libraries( status_code_suite restbed gtest_main )

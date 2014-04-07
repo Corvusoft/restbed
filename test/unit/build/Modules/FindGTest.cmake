@@ -1,33 +1,23 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-set( CMAKE_FIND_LIBRARY_SUFFIXES ".a" )
+find_path( GTest_SOURCE_DIR "CMakeLists.txt" "../dependency/gtest" )
+find_path( GTest_INCLUDE_DIR "gtest.h" "${GTest_SOURCE_DIR}/include/gtest")
+find_path( GTest_CC_FILE "gtest.cc" "${GTest_SOURCE_DIR}/src")
 
-find_path( GTEST_INCLUDE_DIR gtest/gtest.h "/usr/include" "/usr/local/include" )
+if ( NOT GTest_INCLUDE_DIR OR NOT GTest_SOURCE_DIR OR NOT GTest_CC_FILE )
 
-find_library( GTEST_LIBRARY NAMES gtest PATHS "/usr/lib" "/usr/local/lib" ) 
+    if ( GTest_FIND_REQUIRED )
+        message( FATAL_ERROR "Could not find gtest source directory or the directory has missing files." )
+    endif ( GTest_FIND_REQUIRED )
 
-find_library( GTEST_MAIN_LIBRARY gtest_main PATHS "/usr/lib" "/usr/local/lib" ) 
+else( )
 
-if ( GTEST_INCLUDE_DIR AND GTEST_LIBRARY AND GTEST_MAIN_LIBRARY )
-    set( GTEST_FOUND TRUE )
-endif ( GTEST_INCLUDE_DIR AND GTEST_LIBRARY AND GTEST_MAIN_LIBRARY )
+    if ( NOT GTest_FIND_QUIETLY )
+        message( STATUS "Found gtest: ${GTest_SOURCE_DIR}" )
+    endif ( NOT  GTest_FIND_QUIETLY )
 
-if ( GTEST_FOUND )
-    if ( NOT GTEST_FIND_QUIETLY )
-		message( STATUS "Found gtest: ${GTEST_LIBRARY}" )
-    endif ( NOT  GTEST_FIND_QUIETLY )
-else ( GTEST_FOUND )
-    if ( GTEST_FIND_REQUIRED )
-		if ( NOT GTEST_INCLUDE_DIR )
-	    	message( FATAL_ERROR "Could not find gtest.h header file!" )
-		endif ( NOT GTEST_INCLUDE_DIR )
+    set( GTest_FOUND TRUE )
+    set( GTest_INCLUDE_DIR "${GTest_SOURCE_DIR}/include" )
 
-		if ( NOT GTEST_LIBRARY )
-	    	message(FATAL_ERROR "Could not find gtest library file!")
-		endif ( NOT GTEST_LIBRARY )
+endif ( )
 
-		if ( NOT GTEST_MAIN_LIBRARY )
-	    	message(FATAL_ERROR "Could not find gtest_main library file!")
-		endif ( NOT GTEST_MAIN_LIBRARY )
-    endif ( GTEST_FIND_REQUIRED )
-endif ( GTEST_FOUND )
