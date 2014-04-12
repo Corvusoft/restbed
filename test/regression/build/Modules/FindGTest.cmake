@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-find_path( GTest_SOURCE_DIR "CMakeLists.txt" "../dependency/gtest" )
+find_path( GTest_SOURCE_DIR "CMakeLists.txt" "../../../dependency/gtest" )
 find_path( GTest_INCLUDE_DIR "gtest.h" "${GTest_SOURCE_DIR}/include/gtest")
 find_path( GTest_CC_FILE "gtest.cc" "${GTest_SOURCE_DIR}/src")
 

@@ -42,8 +42,8 @@ else()
 
 	# Not found in system paths so check that git submodule has been run and inform
 	# the user if not.
-	find_path( curl_DEPENDENCY_DIR CMakeLists.txt "../dependency/curl" )
-	find_path( curl_DEPENDENCY_INCLUDE_DIR curl/curl.h "../dependency/curl/include" )
+	find_path( curl_DEPENDENCY_DIR CMakeLists.txt "../../../dependency/curl" )
+	find_path( curl_DEPENDENCY_INCLUDE_DIR curl/curl.h "../../../dependency/curl/include" )
 
 	message( STATUS "DIR INCLUDE ${curl_DEPENDENCY_DIR} ${curl_DEPENDENCY_INCLUDE_DIR}" )
 
@@ -53,6 +53,6 @@ else()
 		message( STATUS "Found curl: ${curl_DEPENDENCY_DIR}" )
 	endif()
 
-	set( curl_INCLUDE_DIR "../dependency/curl/include" )
+	set( curl_INCLUDE_DIR "../../../dependency/curl/include" )
 
 endif()
