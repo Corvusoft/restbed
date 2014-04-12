@@ -46,30 +46,32 @@ endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} )
 
-add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
-
-add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
+# Prevent circular dependencies when building tests from elsewhere.
+if( "${CMAKE_PROJECT_NAME}" STREQUAL "Integration Test Suite" )
+	add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
+	add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
+endif()
 
 #
 # Build
 #
-add_executable( request_suite ${SOURCE_DIR}/request_suite.cpp )
-add_executable( service_suite ${SOURCE_DIR}/service_suite.cpp )
-add_executable( resource_suite ${SOURCE_DIR}/resource_suite.cpp )
-add_executable( settings_suite ${SOURCE_DIR}/settings_suite.cpp )
+add_executable( integration_request_suite ${SOURCE_DIR}/request_suite.cpp )
+add_executable( integration_service_suite ${SOURCE_DIR}/service_suite.cpp )
+add_executable( integration_resource_suite ${SOURCE_DIR}/resource_suite.cpp )
+add_executable( integration_settings_suite ${SOURCE_DIR}/settings_suite.cpp )
 
-target_link_libraries( request_suite restbed gtest_main )
-target_link_libraries( service_suite restbed gtest_main )
-target_link_libraries( resource_suite restbed gtest_main )
-target_link_libraries( settings_suite restbed gtest_main )
+target_link_libraries( integration_request_suite restbed gtest_main )
+target_link_libraries( integration_service_suite restbed gtest_main )
+target_link_libraries( integration_resource_suite restbed gtest_main )
+target_link_libraries( integration_settings_suite restbed gtest_main )
 
 #
 # Setup Tests
 #
 enable_testing()
 
-add_test( run_request_suite ${EXECUTABLE_OUTPUT_PATH}/request_suite )
-add_test( run_service_suite ${EXECUTABLE_OUTPUT_PATH}/service_suite )
-add_test( run_resource_suite ${EXECUTABLE_OUTPUT_PATH}/resource_suite )
-add_test( run_settings_suite ${EXECUTABLE_OUTPUT_PATH}/settings_suite )
+add_test( run_integration_request_suite ${EXECUTABLE_OUTPUT_PATH}/integration_request_suite )
+add_test( run_integration_service_suite ${EXECUTABLE_OUTPUT_PATH}/integration_service_suite )
+add_test( run_integration_resource_suite ${EXECUTABLE_OUTPUT_PATH}/integration_resource_suite )
+add_test( run_integration_settings_suite ${EXECUTABLE_OUTPUT_PATH}/integration_settings_suite )
 

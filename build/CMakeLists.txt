@@ -5,6 +5,11 @@ project( "Restbed" )
 cmake_minimum_required( VERSION 2.8.10 )
 
 #
+# Build Options
+#
+option( BUILD_TESTS "Build all test suites using CTest." OFF )
+
+#
 # Dependencies
 #
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules" )
@@ -64,3 +69,15 @@ include( build_artifacts.cmake )
 
 install( FILES ${SOURCE_DIR}/restbed DESTINATION "include/" )
 install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
+
+#
+# Test
+#
+if( BUILD_TESTS )
+	find_package( GTest REQUIRED )
+	add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
+	enable_testing()
+	add_subdirectory( "../test/integration/build" "integration-build" )
+	add_subdirectory( "../test/regression/build" "regression-build" )
+	add_subdirectory( "../test/unit/build" "unit-build" )
+endif()

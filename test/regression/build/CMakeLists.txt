@@ -52,9 +52,11 @@ endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} )
 
-add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
-
-add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
+# Prevent circular dependencies when building tests from elsewhere.
+if( "${CMAKE_PROJECT_NAME}" STREQUAL "Regression Test Suite" )
+	add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
+	add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
+endif()
 
 link_directories( ${curl_LIBRARY_DIR} )
 
@@ -85,7 +87,6 @@ target_link_libraries( segmentation_fault_on_mismatched_path gtest_main restbed 
 # Setup tests
 #
 enable_testing()
-
 add_test( run_resources_are_not_overwritten ${EXECUTABLE_OUTPUT_PATH}/resources_are_not_overwritten )
 add_test( run_missing_regex_support_on_gcc_4.8 ${EXECUTABLE_OUTPUT_PATH}/missing_regex_support_on_gcc_4.8 )
 add_test( run_request_uris_are_not_being_decoded ${EXECUTABLE_OUTPUT_PATH}/request_uris_are_not_being_decoded )
