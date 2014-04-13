@@ -13,6 +13,7 @@ include( ${CMAKE_MODULE_PATH}/build_curl.cmake )
 
 find_package( GTest REQUIRED )
 find_package( curl  REQUIRED )
+find_package( asio  REQUIRED )
 
 if( NOT curl_FOUND )
 	build_curl( ${curl_DEPENDENCY_DIR} )
@@ -50,7 +51,7 @@ else( )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -pedantic -D GTest_USE_OWN_TR1_TUPLE=1" )
 endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
-include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} )
+include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} ${ASIO_INCLUDE_DIRS} )
 
 # Prevent circular dependencies when building tests from elsewhere.
 if( "${CMAKE_PROJECT_NAME}" STREQUAL "Regression Test Suite" )
@@ -68,6 +69,7 @@ add_executable( missing_regex_support_on_gcc_4.8 ${SOURCE_DIR}/missing_regex_sup
 add_executable( request_uris_are_not_being_decoded ${SOURCE_DIR}/request_uris_are_not_being_decoded.cpp )
 add_executable( resource_responding_on_invalid_path ${SOURCE_DIR}/resource_responding_on_invalid_path.cpp )
 add_executable( segmentation_fault_on_mismatched_path ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
+add_executable( uncaught_exception_when_peer_closes_connection ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
 
 if( BUILD_CURL_FROM_SCRATCH MATCHES TRUE )
 	add_dependencies( resources_are_not_overwritten curl )
@@ -82,6 +84,7 @@ target_link_libraries( missing_regex_support_on_gcc_4.8 gtest_main restbed ${cur
 target_link_libraries( request_uris_are_not_being_decoded gtest_main restbed ${curl_LIBRARY} pthread )
 target_link_libraries( resource_responding_on_invalid_path gtest_main restbed ${curl_LIBRARY} pthread )
 target_link_libraries( segmentation_fault_on_mismatched_path gtest_main restbed ${curl_LIBRARY} pthread )
+target_link_libraries( uncaught_exception_when_peer_closes_connection gtest_main restbed pthread )
 
 #
 # Setup tests
@@ -92,4 +95,5 @@ add_test( run_missing_regex_support_on_gcc_4.8 ${EXECUTABLE_OUTPUT_PATH}/missing
 add_test( run_request_uris_are_not_being_decoded ${EXECUTABLE_OUTPUT_PATH}/request_uris_are_not_being_decoded )
 add_test( run_resource_responding_on_invalid_path ${EXECUTABLE_OUTPUT_PATH}/resource_responding_on_invalid_path )
 add_test( run_segmentation_fault_on_mismatched_path ${EXECUTABLE_OUTPUT_PATH}/segmentation_fault_on_mismatched_path )
+add_test( uncaught_exception_when_peer_closes_connection ${EXECUTABLE_OUTPUT_PATH}/uncaught_exception_when_peer_closes_connection )
 
