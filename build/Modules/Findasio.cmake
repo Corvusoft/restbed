@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-find_path( ASIO_INCLUDE_DIR asio.hpp "/usr/include" "/usr/local/include" )
+find_path( ASIO_INCLUDE_DIR asio.hpp PATHS "/usr/include" "/usr/local/include" "/opt/local/include" "../dependency/asio/include")
 
 if ( ASIO_INCLUDE_DIR )
 
