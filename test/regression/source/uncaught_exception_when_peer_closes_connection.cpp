@@ -5,46 +5,46 @@
  */
 
 //System Includes
-#include <memory>
-#include <functional>
 #include <thread>
+#include <memory>
 #include <unistd.h>
+#include <functional>
 
 //Project Includes
 #include <restbed>
 #include "helpers/http.h"
 
 //External Includes
-#include <gtest/gtest.h>
 #include <asio.hpp>
+#include <gtest/gtest.h>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
-using asio::ip::tcp;
-using std::thread;
 
 //Project Namespaces
 using namespace restbed;
 
 //External Namespaces
+using asio::ip::tcp;
+using asio::system_error;
 
 bool exception_was_thrown = false;
 
-void worker( shared_ptr<Service> service )
+void worker( shared_ptr< Service > service )
 {
     try
     {   
         service->start( );
     }
-    catch( const asio::system_error &asio_error )
+    catch( const system_error& se )
     {
-        if ( asio_error.code() == asio::error::eof )
+        if ( se.code( ) == asio::error::eof )
         {
             exception_was_thrown = true;  
         }
     }
-
 }
 
 TEST( Service, peer_closes_connection_without_sending_data )
@@ -62,16 +62,15 @@ TEST( Service, peer_closes_connection_without_sending_data )
     thread restbed_thread( worker, service );
 
     asio::io_service io_service;
-    tcp::socket s( io_service );
+    tcp::socket socket( io_service );
     tcp::resolver resolver( io_service );
-    asio::connect( s, resolver.resolve( { "localhost", "1984" } ) );
-    
-    sleep(1);
-    s.close( );
+    asio::connect( socket, resolver.resolve( { "localhost", "1984" } ) );
 
-    service->stop();
-    restbed_thread.join();
+    socket.close( );
+
+    service->stop( );
+
+    restbed_thread.join( );
 
     ASSERT_FALSE( exception_was_thrown );
-
 }
