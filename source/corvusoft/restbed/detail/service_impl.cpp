@@ -286,37 +286,18 @@ namespace restbed
         {
             Request request;
             Response response;
-            asio::streambuf data;    
-            
+
             try
-            {   
+            {
                 if ( error )
                 {
                     throw asio::system_error( error );
                 }
 
+                asio::streambuf data;
                 asio::read_until( *socket, data, "\r\n" );
-            }
-            catch ( const asio::system_error &asio_error )
-            {
-                if ( asio_error.code() == asio::error::eof )
-                {
-                    log( LogLevel::INFO, "Connection closed by peer." );   
-                }
-                else
-                {
-                    string error_description = String::format("ASIO system error: %s %u", asio_error.what(), asio_error.code() );
-
-                    log( LogLevel::FATAL, error_description );
-                }
-
-                listen( );
-                return;
-            }
-
-            try
-            {
                 istream stream( &data );
+
                 RequestBuilderImpl builder( stream );
                 builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
                 request = builder.build( );
@@ -348,6 +329,10 @@ namespace restbed
                                                              request.get_path( ).data( ),
                                                              request.get_origin( ).data( ) ) );
                 }
+            }
+            catch ( const asio::system_error& se )
+            {
+                log( LogLevel::FATAL, se.what( ) );
             }
             catch ( const StatusCode::Value status_code )
             {
