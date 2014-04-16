@@ -6,6 +6,8 @@ Makefile
 CMakeFiles/
 install_manifest.txt
 Doxyfile
+CTestTestfile.cmake
+*-build/
 
 # Distribution #
 ###############
