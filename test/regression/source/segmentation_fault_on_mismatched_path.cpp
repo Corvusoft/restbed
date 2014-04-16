@@ -1,14 +1,8 @@
 /*
  * Copyright (c) 2013, 2014 Corvusoft
+ *
+ * bug tracker issue #4
  */
-
-/*
- * See issue tracker bug #4 for details.
- */
-
-#ifdef __APPLE__
-#define GTEST_USE_OWN_TR1_TUPLE 1 //See issue tracker #11
-#endif
 
 //System Includes
 #include <memory>
