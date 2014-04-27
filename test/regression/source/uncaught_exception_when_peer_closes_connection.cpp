@@ -61,6 +61,10 @@ TEST( Service, peer_closes_connection_without_sending_data )
 
     thread restbed_thread( worker, service );
 
+    // A short delay is required to allow threaded service to initialise.
+    // Without this, the test will ALWAYS pass.
+    sleep(1); 
+
     asio::io_service io_service;
     tcp::socket socket( io_service );
     tcp::resolver resolver( io_service );
