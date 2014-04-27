@@ -22,6 +22,6 @@ macro( build_curl  CURL_ROOT_DIR )
 
 	get_filename_component( curl_LIBRARY "${curl_LIBRARY_PATH}" NAME )
 
-	set( BUILD_CURL_FROM_SCRATCH TRUE )
+	set( BUILD_CURL_FROM_SOURCE TRUE )
 
 endmacro()

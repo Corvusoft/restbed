@@ -8,11 +8,12 @@ cmake_minimum_required( VERSION 2.8.10 )
 # Build Options
 #
 option( BUILD_TESTS "Build all test suites using CTest." OFF )
+option( BUILD_EXAMPLES "Build the examples." OFF )
 
 #
 # Dependencies
 #
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules" )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake" )
 
 find_package( asio REQUIRED )
 include_directories( ${ASIO_INCLUDE_DIRS} )
@@ -20,10 +21,10 @@ include_directories( ${ASIO_INCLUDE_DIRS} )
 #
 # Configuration
 #
-set( SOURCE_DIR "../source" )
-set( FRAMEWORK_SOURCE_DIR ${SOURCE_DIR}/corvusoft/restbed )
+set( SOURCE_DIR "${CMAKE_SOURCE_DIR}/source" )
+set( FRAMEWORK_SOURCE_DIR "${SOURCE_DIR}/corvusoft/restbed" )
 
-set( CMAKE_INSTALL_PREFIX "../distribution" )
+set( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/distribution" )
 set( LIBRARY_OUTPUT_PATH    "${CMAKE_INSTALL_PREFIX}/library" )
 
 if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
@@ -51,7 +52,7 @@ endif( CMAKE_BUILD_TYPE MATCHES Debug )
 #
 # Build
 #
-include( build_manifest.cmake )
+include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 
 include_directories( ${SOURCE_DIR} )
 
@@ -59,13 +60,18 @@ add_library( restbed SHARED ${MANIFEST} )
 
 target_link_libraries( restbed pthread )
 
+# Build examples
+if( BUILD_EXAMPLES )
+	add_subdirectory( "${CMAKE_SOURCE_DIR}/example" "examples" )
+endif()
+
 #
 # Install
 #
 file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/library" )
 file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include/corvusoft" )
 
-include( build_artifacts.cmake )
+include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
 
 install( FILES ${SOURCE_DIR}/restbed DESTINATION "include/" )
 install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
@@ -75,9 +81,17 @@ install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
 #
 if( BUILD_TESTS )
 	find_package( GTest REQUIRED )
+	find_package( curl REQUIRED )
+
+	if( NOT curl_FOUND )
+		include( ${CMAKE_SOURCE_DIR}/cmake/build_curl.cmake )
+		build_curl( ${curl_DEPENDENCY_DIR} )
+	endif()
+
 	add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
 	enable_testing()
-	add_subdirectory( "../test/integration/build" "integration-build" )
-	add_subdirectory( "../test/regression/build" "regression-build" )
-	add_subdirectory( "../test/unit/build" "unit-build" )
+	add_subdirectory( "${CMAKE_SOURCE_DIR}/test/acceptance" "acceptance-tests" )
+	add_subdirectory( "${CMAKE_SOURCE_DIR}/test/integration" "integration-tests" )
+	add_subdirectory( "${CMAKE_SOURCE_DIR}/test/regression" "regression-tests" )
+	add_subdirectory( "${CMAKE_SOURCE_DIR}/test/unit" "unit-tests" )
 endif()

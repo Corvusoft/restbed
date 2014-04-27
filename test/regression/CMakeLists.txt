@@ -5,61 +5,14 @@ project( "Regression Test Suite" )
 cmake_minimum_required( VERSION 2.8.10 )
 
 #
-# Dependencies
-#
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/Modules" )
-
-include( ${CMAKE_MODULE_PATH}/build_curl.cmake )
-
-find_package( GTest REQUIRED )
-find_package( curl  REQUIRED )
-find_package( asio  REQUIRED )
-
-if( NOT curl_FOUND )
-	build_curl( ${curl_DEPENDENCY_DIR} )
-endif()
-
-#
 # Configuration
 #
-set( SOURCE_DIR "../source" )
+set( SOURCE_DIR "source" )
 
-set( CMAKE_INSTALL_PREFIX "../distribution" )
+set( CMAKE_INSTALL_PREFIX "distribution" )
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_INSTALL_PREFIX}/binary"  )
 
-set( RESTBED_INCLUDE_DIR "../../../source" )
-
-if( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
-	if( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.9 )
-		message( FATAL_ERROR "\nGCC version < 4.9\nYour systems default compiler is GCC. This project makes use of c++11 features present only in versions of gcc >= 4.9. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
-	else()
-		set( CMAKE_CXX_FLAGS "" )
-	endif()
-elseif( ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" )
-	if( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.3 )
-		message( FATAL_ERROR "\nClang version < 3.3\nYour systems default compiler is clang. This project makes use of c++11 features present only in versions of clang >= 3.3. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
-	else()
-		set( CMAKE_CXX_FLAGS "-stdlib=libc++" )
-	endif()
-else()
-	message( FATAL_ERROR "Compiler not supported")
-endif()
-
-if( CMAKE_BUILD_TYPE MATCHES Debug )
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -O0 -Wall -Wextra -Weffc++ -pedantic -D GTest_USE_OWN_TR1_TUPLE=1" )
-else( )
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -pedantic -D GTest_USE_OWN_TR1_TUPLE=1" )
-endif( CMAKE_BUILD_TYPE MATCHES Debug )
-
-include_directories( ${RESTBED_INCLUDE_DIR} ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} ${ASIO_INCLUDE_DIRS} )
-
-# Prevent circular dependencies when building tests from elsewhere.
-if( "${CMAKE_PROJECT_NAME}" STREQUAL "Regression Test Suite" )
-	add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
-	add_subdirectory( "../../../build" "${CMAKE_BINARY_DIR}/restbed-build" )
-endif()
-
-link_directories( ${curl_LIBRARY_DIR} )
+include_directories( ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} ${ASIO_INCLUDE_DIRS} )
 
 #
 # Build
@@ -71,7 +24,7 @@ add_executable( resource_responding_on_invalid_path ${SOURCE_DIR}/resource_respo
 add_executable( segmentation_fault_on_mismatched_path ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 add_executable( uncaught_exception_when_peer_closes_connection ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
 
-if( BUILD_CURL_FROM_SCRATCH MATCHES TRUE )
+if( BUILD_CURL_FROM_SOURCE MATCHES TRUE )	
 	add_dependencies( resources_are_not_overwritten curl )
 	add_dependencies( missing_regex_support_on_gcc_4.8 curl )
 	add_dependencies( request_uris_are_not_being_decoded curl )
