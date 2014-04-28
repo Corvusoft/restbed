@@ -31,6 +31,7 @@ using asio::ip::tcp;
 using asio::system_error;
 
 bool exception_was_thrown = false;
+const unsigned int service_init_time_seconds = 1;
 
 void worker( shared_ptr< Service > service )
 {
@@ -47,6 +48,11 @@ void worker( shared_ptr< Service > service )
     }
 }
 
+void wait_for_service_initialisation( void )
+{
+    sleep(service_init_time_seconds);
+}
+
 TEST( Service, peer_closes_connection_without_sending_data )
 {
     Resource resource;
@@ -61,9 +67,7 @@ TEST( Service, peer_closes_connection_without_sending_data )
 
     thread restbed_thread( worker, service );
 
-    // A short delay is required to allow threaded service to initialise.
-    // Without this, the test will ALWAYS pass.
-    sleep(1); 
+    wait_for_service_initialisation( );
 
     asio::io_service io_service;
     tcp::socket socket( io_service );
