@@ -6,6 +6,7 @@
 
 //System Includes
 #include <thread>
+#include <chrono>
 #include <memory>
 #include <unistd.h>
 #include <functional>
@@ -22,6 +23,7 @@
 using std::thread;
 using std::shared_ptr;
 using std::make_shared;
+using std::chrono::seconds;
 
 //Project Namespaces
 using namespace restbed;
@@ -31,7 +33,6 @@ using asio::ip::tcp;
 using asio::system_error;
 
 bool exception_was_thrown = false;
-const unsigned int service_init_time_seconds = 1;
 
 void worker( shared_ptr< Service > service )
 {
@@ -50,7 +51,7 @@ void worker( shared_ptr< Service > service )
 
 void wait_for_service_initialisation( void )
 {
-    sleep(service_init_time_seconds);
+    std::this_thread::sleep_for( seconds( 1 ) );
 }
 
 TEST( Service, peer_closes_connection_without_sending_data )
