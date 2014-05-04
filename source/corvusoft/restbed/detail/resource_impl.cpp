@@ -246,6 +246,7 @@ namespace restbed
         Response ResourceImpl::default_not_implemented_handler( const Request& )
         {
             Response response;
+            response.set_header( "Allow", generate_allow_header_value( ) );
             response.set_status_code( StatusCode::NOT_IMPLEMENTED );
             
             return response;
