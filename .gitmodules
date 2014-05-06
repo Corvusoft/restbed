@@ -1,9 +1,9 @@
 [submodule "dependency/asio"]
 	path = dependency/asio
-	url = http://source.corvusoft.co.uk/Corvusoft/asio-dependency.git
+	url = http://source.corvusoft.co.uk/asio-dependency.git
 [submodule "dependency/gtest"]
 	path = dependency/gtest
-	url = http://source.corvusoft.co.uk/Corvusoft/gtest-dependency.git
+	url = http://source.corvusoft.co.uk/gtest-dependency.git
 [submodule "dependency/curl"]
 	path = dependency/curl
-	url = http://source.corvusoft.co.uk/Corvusoft/libcurl-dependency.git
+	url = http://source.corvusoft.co.uk/libcurl-dependency.git
