@@ -24,12 +24,12 @@ add_executable( unit_response_suite ${SOURCE_DIR}/response_suite.cpp )
 add_executable( unit_resource_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( unit_status_code_suite ${SOURCE_DIR}/status_code_suite.cpp )
 
-target_link_libraries( unit_method_suite restbed gtest_main )
-target_link_libraries( unit_request_suite restbed gtest_main )
-target_link_libraries( unit_settings_suite restbed gtest_main )
-target_link_libraries( unit_response_suite restbed gtest_main )
-target_link_libraries( unit_resource_suite restbed gtest_main )
-target_link_libraries( unit_status_code_suite restbed gtest_main )
+target_link_libraries( unit_method_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( unit_request_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( unit_settings_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( unit_response_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( unit_resource_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( unit_status_code_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
 
 #
 # Setup Tests

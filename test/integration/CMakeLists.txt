@@ -22,10 +22,10 @@ add_executable( integration_service_suite ${SOURCE_DIR}/service_suite.cpp )
 add_executable( integration_resource_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( integration_settings_suite ${SOURCE_DIR}/settings_suite.cpp )
 
-target_link_libraries( integration_request_suite restbed gtest_main )
-target_link_libraries( integration_service_suite restbed gtest_main )
-target_link_libraries( integration_resource_suite restbed gtest_main )
-target_link_libraries( integration_settings_suite restbed gtest_main )
+target_link_libraries( integration_request_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( integration_service_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( integration_resource_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
+target_link_libraries( integration_settings_suite restbed ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} )
 
 #
 # Setup Tests

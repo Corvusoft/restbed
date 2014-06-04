@@ -24,20 +24,12 @@ add_executable( resource_responding_on_invalid_path ${SOURCE_DIR}/resource_respo
 add_executable( segmentation_fault_on_mismatched_path ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 add_executable( uncaught_exception_when_peer_closes_connection ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
 
-if( BUILD_CURL_FROM_SOURCE MATCHES TRUE )	
-	add_dependencies( resources_are_not_overwritten curl )
-	add_dependencies( missing_regex_support_on_gcc_4.8 curl )
-	add_dependencies( request_uris_are_not_being_decoded curl )
-	add_dependencies( resource_responding_on_invalid_path curl )
-	add_dependencies( segmentation_fault_on_mismatched_path curl )
-endif()
-
-target_link_libraries( resources_are_not_overwritten gtest_main restbed ${curl_LIBRARY} pthread )
-target_link_libraries( missing_regex_support_on_gcc_4.8 gtest_main restbed ${curl_LIBRARY} pthread )
-target_link_libraries( request_uris_are_not_being_decoded gtest_main restbed ${curl_LIBRARY} pthread )
-target_link_libraries( resource_responding_on_invalid_path gtest_main restbed ${curl_LIBRARY} pthread )
-target_link_libraries( segmentation_fault_on_mismatched_path gtest_main restbed ${curl_LIBRARY} pthread )
-target_link_libraries( uncaught_exception_when_peer_closes_connection gtest_main restbed pthread )
+target_link_libraries( resources_are_not_overwritten ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( missing_regex_support_on_gcc_4.8 ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( request_uris_are_not_being_decoded ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( resource_responding_on_invalid_path ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( segmentation_fault_on_mismatched_path ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( uncaught_exception_when_peer_closes_connection ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed pthread )
 
 #
 # Setup tests
