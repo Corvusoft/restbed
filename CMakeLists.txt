@@ -49,6 +49,8 @@ else( )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -pedantic" )
 endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE=YES" )
+
 #
 # Build
 #
@@ -83,12 +85,6 @@ if( BUILD_TESTS )
 	find_package( GTest REQUIRED )
 	find_package( curl REQUIRED )
 
-	if( NOT curl_FOUND )
-		include( ${CMAKE_SOURCE_DIR}/cmake/build_curl.cmake )
-		build_curl( ${curl_DEPENDENCY_DIR} )
-	endif()
-
-	add_subdirectory( ${GTest_SOURCE_DIR} "${CMAKE_BINARY_DIR}/gtest-build" )
 	enable_testing()
 	add_subdirectory( "${CMAKE_SOURCE_DIR}/test/acceptance" "acceptance-tests" )
 	add_subdirectory( "${CMAKE_SOURCE_DIR}/test/integration" "integration-tests" )
