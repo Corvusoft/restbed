@@ -66,9 +66,9 @@ namespace restbed
             void set_logger( const std::shared_ptr< Logger >& value );
             
             void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
-                
+            
             void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
-
+            
             //Operators
             Service& operator =( const Service& rhs );
             
@@ -90,7 +90,7 @@ namespace restbed
             //Constructors
             
             //Functionality
-
+            
             //Getters
             
             //Setters

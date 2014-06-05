@@ -29,7 +29,7 @@ namespace restbed
             //Friends
             
             //Definitions
-            enum Value:
+            enum Value :
             int
             {
                 CONTINUE = 100,

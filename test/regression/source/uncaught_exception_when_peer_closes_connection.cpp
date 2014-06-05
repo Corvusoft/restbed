@@ -37,14 +37,14 @@ bool exception_was_thrown = false;
 void worker( shared_ptr< Service > service )
 {
     try
-    {   
+    {
         service->start( );
     }
-    catch( const system_error& se )
+    catch ( const system_error& se )
     {
         if ( se.code( ) == asio::error::eof )
         {
-            exception_was_thrown = true;  
+            exception_was_thrown = true;
         }
     }
 }
@@ -57,29 +57,29 @@ void wait_for_service_initialisation( void )
 TEST( Service, peer_closes_connection_without_sending_data )
 {
     Resource resource;
-    resource.set_path( "test" );    
-
+    resource.set_path( "test" );
+    
     Settings settings;
     settings.set_port( 1984 );
-    settings.set_mode( SYNCHRONOUS );  
-
+    settings.set_mode( SYNCHRONOUS );
+    
     auto service = make_shared< Service >( settings );
     service->publish( resource );
-
+    
     thread restbed_thread( worker, service );
-
+    
     wait_for_service_initialisation( );
-
+    
     asio::io_service io_service;
     tcp::socket socket( io_service );
     tcp::resolver resolver( io_service );
     asio::connect( socket, resolver.resolve( { "localhost", "1984" } ) );
-
+    
     socket.close( );
-
+    
     service->stop( );
-
+    
     restbed_thread.join( );
-
+    
     ASSERT_FALSE( exception_was_thrown );
 }

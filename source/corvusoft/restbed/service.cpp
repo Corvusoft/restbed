@@ -66,17 +66,17 @@ namespace restbed
     {
         m_pimpl->set_log_handler( value );
     }
-
+    
     void Service::set_authentication_handler( function< void ( const Request&, Response& ) > value )
     {
-         m_pimpl->set_authentication_handler( value );
+        m_pimpl->set_authentication_handler( value );
     }
-
+    
     void Service::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
     {
         m_pimpl->set_error_handler( value );
     }
-
+    
     Service& Service::operator =( const Service& rhs )
     {
         *m_pimpl = *rhs.m_pimpl;

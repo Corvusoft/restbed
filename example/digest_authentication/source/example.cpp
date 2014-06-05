@@ -12,7 +12,7 @@ string build_authenticate_header( void )
     header += "stale=false,";
     header += "opaque=\"0000000000000000\",";
     header += "nonce=\"Ny8yLzIwMDIgMzoyNjoyNCBQTQ\"";
-
+    
     return header;
 }
 
@@ -21,9 +21,9 @@ void authentication_handler( const Request& request, /*out*/ Response& response 
     if ( request.has_header( "Authorization" ) )
     {
         auto authorisation = request.get_header( "Authorization" );
-
+        
         bool authorised = regex_match( authorisation, regex( ".*response=\"02863beb15feb659dfe4703d610d1b73\".*" ) );
-
+        
         if ( authorised )
         {
             response.set_status_code( 200 );

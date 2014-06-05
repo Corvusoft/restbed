@@ -15,9 +15,9 @@ int main( int, char** )
 {
     auto status_code_mappings = StatusCode::get_mappings( );
     status_code_mappings[ 418 ] = "I'm a teapot";
-
+    
     StatusCode::set_mappings( status_code_mappings );
-
+    
     Resource resource;
     resource.set_method_handler( "GET", &get_method_handler );
     

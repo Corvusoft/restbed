@@ -5,7 +5,7 @@ using namespace restbed;
 void authentication_handler( const Request& request, /*out*/ Response& response )
 {
     auto authorisation = request.get_header( "Authorization" );
-
+    
     if ( authorisation == "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" )
     {
         response.set_status_code( 200 );

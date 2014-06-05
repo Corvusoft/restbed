@@ -210,7 +210,7 @@ namespace restbed
         {
             m_authentication_handler = value;
         }
-
+        
         void ServiceImpl::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
         {
             m_error_handler = value;
@@ -286,18 +286,18 @@ namespace restbed
         {
             Request request;
             Response response;
-
+            
             try
             {
                 if ( error )
                 {
                     throw asio::system_error( error );
                 }
-
+                
                 asio::streambuf data;
                 asio::read_until( *socket, data, "\r\n" );
                 istream stream( &data );
-
+                
                 RequestBuilderImpl builder( stream );
                 builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
                 request = builder.build( );
@@ -325,9 +325,9 @@ namespace restbed
                 else
                 {
                     log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-                                                             request.get_method( ).to_string( ).data( ),
-                                                             request.get_path( ).data( ),
-                                                             request.get_origin( ).data( ) ) );
+                            request.get_method( ).to_string( ).data( ),
+                            request.get_path( ).data( ),
+                            request.get_origin( ).data( ) ) );
                 }
             }
             catch ( const asio::system_error& se )
@@ -338,7 +338,7 @@ namespace restbed
             {
                 error_handler( status_code, request, response );
             }
-
+            
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
             
             listen( );
@@ -378,12 +378,12 @@ namespace restbed
                 m_log_handler->log( level, "%s", message.data( ) );
             }
         }
-
+        
         void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
         {
             string status_message = String::empty;
-
-            try 
+            
+            try
             {
                 status_message = StatusCode::to_string( status_code );
             }
@@ -391,12 +391,12 @@ namespace restbed
             {
                 status_message = ia.what( );
             }
-
+            
             log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
                                                   status_code,
                                                   status_message.data( ),
                                                   request.get_path( ).data( ) ) );
-            
+                                                  
             response.set_status_code( status_code );
             response.set_header( "Content-Type", "text/plain" );
             response.set_body( status_message );

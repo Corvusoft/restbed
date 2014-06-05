@@ -82,7 +82,7 @@ namespace restbed
             if ( level == INFO or level == DEBUG )
             {
                 fprintf( descriptor, "\n" );
-
+                
                 fflush( descriptor );
             }
             

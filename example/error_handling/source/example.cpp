@@ -5,7 +5,7 @@ using namespace restbed;
 Response faulty_method_handler( const Request& )
 {
     throw StatusCode::SERVICE_UNAVAILABLE;
-
+    
     Response response;
     return response;
 }
