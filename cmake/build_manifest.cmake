@@ -1,30 +1,30 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
 set( MANIFEST
-     ${FRAMEWORK_SOURCE_DIR}/settings.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/settings_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/status_code.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/status_code_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/method.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/method_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/resource.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/resource_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/request.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/request_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/request_builder_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/response.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/response_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/service.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/service_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/logger.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/logger_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/helpers/uri.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/helpers/regex.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/helpers/map.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/helpers/date.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/helpers/string.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/helpers/istream.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/resource_matcher_impl.cpp
-     ${FRAMEWORK_SOURCE_DIR}/detail/path_parameter_impl.cpp
+     ${SOURCE_DIR}/settings.cpp
+     ${SOURCE_DIR}/detail/settings_impl.cpp
+     ${SOURCE_DIR}/status_code.cpp
+     ${SOURCE_DIR}/detail/status_code_impl.cpp
+     ${SOURCE_DIR}/method.cpp
+     ${SOURCE_DIR}/detail/method_impl.cpp
+     ${SOURCE_DIR}/resource.cpp
+     ${SOURCE_DIR}/detail/resource_impl.cpp
+     ${SOURCE_DIR}/request.cpp
+     ${SOURCE_DIR}/detail/request_impl.cpp
+     ${SOURCE_DIR}/detail/request_builder_impl.cpp
+     ${SOURCE_DIR}/response.cpp
+     ${SOURCE_DIR}/detail/response_impl.cpp
+     ${SOURCE_DIR}/service.cpp
+     ${SOURCE_DIR}/detail/service_impl.cpp
+     ${SOURCE_DIR}/logger.cpp
+     ${SOURCE_DIR}/detail/logger_impl.cpp
+     ${SOURCE_DIR}/detail/helpers/uri.cpp
+     ${SOURCE_DIR}/detail/helpers/regex.cpp
+     ${SOURCE_DIR}/detail/helpers/map.cpp
+     ${SOURCE_DIR}/detail/helpers/date.cpp
+     ${SOURCE_DIR}/detail/helpers/string.cpp
+     ${SOURCE_DIR}/detail/helpers/istream.cpp
+     ${SOURCE_DIR}/detail/resource_matcher_impl.cpp
+     ${SOURCE_DIR}/detail/path_parameter_impl.cpp
 )
 

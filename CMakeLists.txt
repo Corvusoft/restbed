@@ -21,8 +21,8 @@ include_directories( ${ASIO_INCLUDE_DIRS} )
 #
 # Configuration
 #
-set( SOURCE_DIR "${CMAKE_SOURCE_DIR}/source" )
-set( FRAMEWORK_SOURCE_DIR "${SOURCE_DIR}/corvusoft/restbed" )
+set( INCLUDE_DIR "${CMAKE_SOURCE_DIR}/source" )
+set( SOURCE_DIR "${INCLUDE_DIR}/corvusoft/restbed" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE=YES" )
 set( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/distribution" )
 set( LIBRARY_OUTPUT_PATH    "${CMAKE_INSTALL_PREFIX}/library" )
@@ -52,7 +52,7 @@ endif ( )
 #
 include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 
-include_directories( ${SOURCE_DIR} )
+include_directories( ${INCLUDE_DIR} )
 
 add_library( restbed SHARED ${MANIFEST} )
 
@@ -71,7 +71,7 @@ file( MAKE_DIRECTORY "${CMAKE_INSTALL_PREFIX}/include/corvusoft" )
 
 include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
 
-install( FILES ${SOURCE_DIR}/restbed DESTINATION "include/" )
+install( FILES ${INCLUDE_DIR}/restbed DESTINATION "include/" )
 install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
 
 #
