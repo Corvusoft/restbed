@@ -165,7 +165,12 @@ namespace restbed
             {
                 char* formatted = new char[ length + 1 ];
                 
-                string::size_type required_length = vsnprintf( formatted, length + 1, format.data( ), arguments );
+                int required_length = vsnprintf( formatted, length + 1, format.data( ), arguments );
+                
+                if ( required_length == -1 )
+                {
+                    required_length = 0;
+                }
                 
                 output = formatted;
                 
