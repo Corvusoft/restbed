@@ -1,8 +1,5 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-#
-# Install artifacts
-#
 set( FRAMEWORK_ARTIFACTS
      ${FRAMEWORK_SOURCE_DIR}/byte
      ${FRAMEWORK_SOURCE_DIR}/byte.h
