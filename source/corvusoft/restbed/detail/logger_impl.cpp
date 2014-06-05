@@ -48,10 +48,6 @@ namespace restbed
         
         void LoggerImpl::log( const LogLevel level, const string format, va_list arguments ) const
         {
-            time_t now = system_clock::to_time_t( system_clock::now( ) );
-            
-            string timestamp = string( ctime( &now ), 0, 24 );
-            
             string label = build_log_label( level );
             
             FILE* descriptor = nullptr;
@@ -75,7 +71,7 @@ namespace restbed
             
             mtx.lock( );
             
-            fprintf( descriptor, label.data( ), timestamp.data( ) );
+            fprintf( descriptor, "%s", label.data( ) );
             
             vfprintf( descriptor, format.data( ), arguments );
             
