@@ -41,3 +41,4 @@ target_link_libraries( serving_html restbed )
 
 add_executable( syslog_logging syslog_logging/source/example.cpp )
 target_link_libraries( syslog_logging restbed )
+

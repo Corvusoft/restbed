@@ -32,7 +32,7 @@ target_link_libraries( status_code_unit_test_suite restbed ${GTest_LIBRARY} ${GT
 #
 # Setup Tests
 #
-enable_testing()
+enable_testing( )
 add_test( method_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/method_unit_test_suite )
 add_test( request_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/request_unit_test_suite )
 add_test( settings_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/settings_unit_test_suite )

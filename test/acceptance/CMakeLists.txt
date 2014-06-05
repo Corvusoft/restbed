@@ -19,3 +19,4 @@ include( cmake/build_manifest.cmake )
 add_library( helpers SHARED ${MANIFEST} )
 
 target_link_libraries( helpers restbed )
+

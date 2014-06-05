@@ -32,7 +32,7 @@ target_link_libraries( uncaught_exception_when_peer_closes_connection_regression
 #
 # Setup tests
 #
-enable_testing()
+enable_testing( )
 add_test( resources_are_not_overwritten_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/resources_are_not_overwritten_regression_test_suite )
 add_test( missing_regex_support_on_gcc_4.8_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/missing_regex_support_on_gcc_4.8_regression_test_suite )
 add_test( request_uris_are_not_being_decoded_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/request_uris_are_not_being_decoded_regression_test_suite )
