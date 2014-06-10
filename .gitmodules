@@ -7,3 +7,6 @@
 [submodule "dependency/curl"]
 	path = dependency/curl
 	url = http://source.corvusoft.co.uk/libcurl-dependency.git
+[submodule "dependency/framework"]
+	path = dependency/framework
+	url = http://source.corvusoft.co.uk/cpp-framework.git
