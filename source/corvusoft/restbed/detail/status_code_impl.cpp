@@ -6,10 +6,10 @@
 #include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/status_code_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -17,9 +17,9 @@ using std::string;
 using std::invalid_argument;
 
 //Project Namespaces
-using restbed::detail::helpers::String;
 
 //External Namespaces
+using framework::String;
 
 namespace restbed
 {

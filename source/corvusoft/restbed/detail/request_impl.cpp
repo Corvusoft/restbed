@@ -7,12 +7,12 @@
 
 //Project Includes
 #include "corvusoft/restbed/status_code.h"
-#include "corvusoft/restbed/detail/helpers/map.h"
 #include "corvusoft/restbed/detail/request_impl.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
-#include "corvusoft/restbed/detail/helpers/istream.h"
 
 //External Includes
+#include <corvusoft/framework/map>
+#include <corvusoft/framework/string>
+#include <corvusoft/framework/istream>
 
 //System Namespaces
 using std::map;
@@ -23,11 +23,12 @@ using std::istreambuf_iterator;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
-using restbed::detail::helpers::Map;
-using restbed::detail::helpers::String;
-using restbed::detail::helpers::IStream;
 
 //External Namespaces
+using framework::Map;
+using framework::Bytes;
+using framework::String;
+using framework::IStream;
 
 namespace restbed
 {

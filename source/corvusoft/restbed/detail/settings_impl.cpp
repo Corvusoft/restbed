@@ -7,10 +7,10 @@
 //Project Includes
 #include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
-#include "corvusoft/restbed/detail/helpers/map.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
+#include <corvusoft/framework/map>
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -19,10 +19,10 @@ using std::string;
 using std::to_string;
 
 //Project Namespaces
-using restbed::detail::helpers::Map;
-using restbed::detail::helpers::String;
 
 //External Namespaces
+using framework::Map;
+using framework::String;
 
 namespace restbed
 {

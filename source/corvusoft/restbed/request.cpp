@@ -20,6 +20,7 @@ using std::istream;
 using restbed::detail::RequestImpl;
 
 //External Namespaces
+using framework::Bytes;
 
 namespace restbed
 {

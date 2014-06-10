@@ -9,9 +9,9 @@
 //Project Includes
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/method_impl.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::find;
@@ -20,7 +20,7 @@ using std::string;
 using std::invalid_argument;
 
 //Project Namespaces
-using restbed::detail::helpers::String;
+using framework::String;
 
 //External Namespaces
 

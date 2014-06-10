@@ -3,8 +3,6 @@
  */
 
 #include "corvusoft/restbed/mode.h"
-#include "corvusoft/restbed/byte.h"
-#include "corvusoft/restbed/bytes.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"

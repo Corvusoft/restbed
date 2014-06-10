@@ -9,11 +9,11 @@
 //Project Includes
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/response_impl.h"
-#include "corvusoft/restbed/detail/helpers/map.h"
-#include "corvusoft/restbed/detail/helpers/date.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
+#include <corvusoft/framework/map>
+#include <corvusoft/framework/date>
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -23,11 +23,12 @@ using std::to_string;
 using std::chrono::system_clock;
 
 //Project Namespaces
-using restbed::detail::helpers::Map;
-using restbed::detail::helpers::Date;
-using restbed::detail::helpers::String;
 
 //External Namespaces
+using framework::Map;
+using framework::Date;
+using framework::Bytes;
+using framework::String;
 
 namespace restbed
 {

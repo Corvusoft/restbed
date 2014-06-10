@@ -12,12 +12,12 @@
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
-#include "corvusoft/restbed/detail/helpers/map.h"
-#include "corvusoft/restbed/detail/helpers/regex.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
-#include "corvusoft/restbed/detail/helpers/functional.h"
 
 //External Includes
+#include <corvusoft/framework/map>
+#include <corvusoft/framework/regex>
+#include <corvusoft/framework/string>
+#include <corvusoft/framework/functional>
 
 //System Namespaces
 using std::map;
@@ -30,12 +30,12 @@ using std::invalid_argument;
 using std::placeholders::_1;
 
 //Project Namespaces
-using restbed::detail::helpers::Map;
-using restbed::detail::helpers::Regex;
-using restbed::detail::helpers::String;
-using restbed::detail::helpers::Functional;
 
 //External Namespaces
+using framework::Map;
+using framework::Regex;
+using framework::String;
+using framework::Functional;
 
 namespace restbed
 {

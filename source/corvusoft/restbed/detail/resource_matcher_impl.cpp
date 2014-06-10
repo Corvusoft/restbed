@@ -11,11 +11,11 @@
 //Project Includes
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/resource.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 #include "corvusoft/restbed/detail/resource_matcher_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -25,9 +25,9 @@ using std::vector;
 using std::invalid_argument;
 
 //Project Namespaces
-using restbed::detail::helpers::String;
 
 //External Namespaces
+using framework::String;
 
 namespace restbed
 {

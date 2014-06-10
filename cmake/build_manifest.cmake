@@ -18,12 +18,6 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/service_impl.cpp
      ${SOURCE_DIR}/logger.cpp
      ${SOURCE_DIR}/detail/logger_impl.cpp
-     ${SOURCE_DIR}/detail/helpers/uri.cpp
-     ${SOURCE_DIR}/detail/helpers/regex.cpp
-     ${SOURCE_DIR}/detail/helpers/map.cpp
-     ${SOURCE_DIR}/detail/helpers/date.cpp
-     ${SOURCE_DIR}/detail/helpers/string.cpp
-     ${SOURCE_DIR}/detail/helpers/istream.cpp
      ${SOURCE_DIR}/detail/resource_matcher_impl.cpp
      ${SOURCE_DIR}/detail/path_parameter_impl.cpp
 )

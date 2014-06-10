@@ -8,10 +8,10 @@
 #include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -22,7 +22,7 @@ using std::make_pair;
 using std::invalid_argument;
 
 //Project Namespaces
-using restbed::detail::helpers::String;
+using framework::String;
 
 //External Namespaces
 

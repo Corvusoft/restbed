@@ -18,6 +18,7 @@ using std::string;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
+using framework::Bytes;
 
 namespace restbed
 {

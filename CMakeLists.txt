@@ -16,7 +16,9 @@ option( BUILD_EXAMPLES "Build the examples." OFF )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( asio REQUIRED )
-include_directories( ${ASIO_INCLUDE_DIRS} )
+find_package( framework REQUIRED )
+
+include_directories( ${framework_INCLUDE} ${ASIO_INCLUDE_DIRS} )
 
 #
 # Configuration
@@ -56,7 +58,7 @@ include_directories( ${INCLUDE_DIR} )
 
 add_library( restbed SHARED ${MANIFEST} )
 
-target_link_libraries( restbed pthread )
+target_link_libraries( restbed pthread ${framework_LIBRARY} )
 
 # Build examples
 if ( BUILD_EXAMPLES )

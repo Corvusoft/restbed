@@ -1,10 +1,6 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
 set( FRAMEWORK_ARTIFACTS
-     ${SOURCE_DIR}/byte
-     ${SOURCE_DIR}/byte.h
-     ${SOURCE_DIR}/bytes
-     ${SOURCE_DIR}/bytes.h
      ${SOURCE_DIR}/mode
      ${SOURCE_DIR}/mode.h
      ${SOURCE_DIR}/settings

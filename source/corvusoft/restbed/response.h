@@ -11,9 +11,9 @@
 #include <string>
 
 //Project Includes
-#include <corvusoft/restbed/bytes>
 
 //External Includes
+#include <corvusoft/framework/bytes>
 
 //System Namespaces
 
@@ -44,10 +44,10 @@ namespace restbed
             virtual ~Response( void );
             
             //Functionality
-            Bytes to_bytes( void ) const;
+            framework::Bytes to_bytes( void ) const;
             
             //Getters
-            Bytes get_body( void ) const;
+            framework::Bytes get_body( void ) const;
             
             int get_status_code( void ) const;
             
@@ -56,7 +56,7 @@ namespace restbed
             std::map< std::string, std::string > get_headers( void ) const;
             
             //Setters
-            void set_body( const Bytes& value );
+            void set_body( const framework::Bytes& value );
             
             void set_body( const std::string& value );
             

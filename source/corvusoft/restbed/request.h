@@ -12,9 +12,9 @@
 #include <istream>
 
 //Project Includes
-#include <corvusoft/restbed/bytes>
 
 //External Includes
+#include <corvusoft/framework/bytes>
 
 //System Namespaces
 
@@ -47,7 +47,7 @@ namespace restbed
             virtual ~Request( void );
             
             //Functionality
-            Bytes to_bytes( void ) const;
+            framework::Bytes to_bytes( void ) const;
             
             bool has_header( const std::string& name ) const;
             
@@ -56,7 +56,7 @@ namespace restbed
             bool has_query_parameter( const std::string& name ) const;
             
             //Getters
-            Bytes get_body( void ) const;
+            framework::Bytes get_body( void ) const;
             
             Method get_method( void ) const;
             

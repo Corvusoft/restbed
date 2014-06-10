@@ -14,6 +14,7 @@
 //Project Includes
 
 //External Includes
+#include <corvusoft/framework/bytes>
 
 //System Namespaces
 
@@ -85,7 +86,7 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static Bytes parse_http_body( std::istream& socket );
+                static framework::Bytes parse_http_body( std::istream& socket );
                 
                 static double parse_http_version( std::istream& socket );
                 

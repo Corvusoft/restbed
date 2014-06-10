@@ -11,10 +11,10 @@
 //Project Includes
 #include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/detail/logger_impl.h"
-#include "corvusoft/restbed/detail/helpers/date.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 
 //External Includes
+#include <corvusoft/framework/date>
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::mutex;
@@ -22,10 +22,10 @@ using std::string;
 using std::chrono::system_clock;
 
 //Project Namespaces
-using restbed::detail::helpers::Date;
-using restbed::detail::helpers::String;
 
 //External Namespaces
+using framework::Date;
+using framework::String;
 
 namespace restbed
 {

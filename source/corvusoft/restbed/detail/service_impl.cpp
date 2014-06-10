@@ -20,12 +20,12 @@
 #include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/service_impl.h"
-#include "corvusoft/restbed/detail/helpers/string.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
 #include "corvusoft/restbed/detail/resource_matcher_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::list;
@@ -47,7 +47,6 @@ using std::placeholders::_3;
 using std::chrono::system_clock;
 
 //Project Namespaces
-using restbed::detail::helpers::String;
 
 //External Namespaces
 using asio::buffer;
@@ -56,6 +55,7 @@ using asio::io_service;
 using asio::error_code;
 using asio::socket_base;
 using asio::system_error;
+using framework::String;
 
 namespace restbed
 {
