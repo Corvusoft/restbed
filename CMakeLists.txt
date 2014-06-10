@@ -60,7 +60,6 @@ add_library( restbed SHARED ${MANIFEST} )
 
 target_link_libraries( restbed pthread ${framework_LIBRARY} )
 
-# Build examples
 if ( BUILD_EXAMPLES )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/example" "examples" )
 endif ( )
