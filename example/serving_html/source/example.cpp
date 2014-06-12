@@ -1,6 +1,8 @@
 #include <string>
+#include <cstdlib>
 #include <fstream>
 #include <streambuf>
+
 #include "restbed"
 
 using namespace std;

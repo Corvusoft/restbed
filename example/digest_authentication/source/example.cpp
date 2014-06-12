@@ -1,5 +1,7 @@
 #include <regex>
 #include <string>
+#include <cstdlib>
+
 #include "restbed"
 
 using namespace std;

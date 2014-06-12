@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #include "restbed"
 
 using namespace restbed;
