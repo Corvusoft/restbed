@@ -237,6 +237,8 @@ namespace restbed
         
         RequestImpl& RequestImpl::operator =( const RequestImpl& rhs )
         {
+            m_body = rhs.m_body;
+            
             m_path = rhs.m_path;
             
             m_method = rhs.m_method;
