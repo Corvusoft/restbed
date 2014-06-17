@@ -74,15 +74,15 @@ namespace restbed
             void set_properties( const std::map< std::string, std::string >& values );
             
             //Operators
-            Settings& operator =( const Settings& rhs );
+            Settings& operator =( const Settings& value );
             
-            bool operator <( const Settings& rhs ) const;
+            bool operator <( const Settings& value ) const;
             
-            bool operator >( const Settings& rhs ) const;
+            bool operator >( const Settings& value ) const;
             
-            bool operator ==( const Settings& rhs ) const;
+            bool operator ==( const Settings& value ) const;
             
-            bool operator !=( const Settings& rhs ) const;
+            bool operator !=( const Settings& value ) const;
             
             //Properties
             

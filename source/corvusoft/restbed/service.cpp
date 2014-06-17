@@ -77,30 +77,30 @@ namespace restbed
         m_pimpl->set_error_handler( value );
     }
     
-    Service& Service::operator =( const Service& rhs )
+    Service& Service::operator =( const Service& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }
     
-    bool Service::operator <( const Service& rhs ) const
+    bool Service::operator <( const Service& value ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return *m_pimpl < *value.m_pimpl;
     }
     
-    bool Service::operator >( const Service& rhs ) const
+    bool Service::operator >( const Service& value ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return *m_pimpl > *value.m_pimpl;
     }
     
-    bool Service::operator ==( const Service& rhs ) const
+    bool Service::operator ==( const Service& value ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return *m_pimpl == *value.m_pimpl;
     }
     
-    bool Service::operator !=( const Service& rhs ) const
+    bool Service::operator !=( const Service& value ) const
     {
-        return *m_pimpl != *rhs.m_pimpl;
+        return *m_pimpl != *value.m_pimpl;
     }
 }

@@ -64,15 +64,15 @@ namespace restbed
                 void set_method_handler( const Method& verb, const std::function< Response ( const Request& ) >& callback );
                 
                 //Operators
-                bool operator <( const ResourceImpl& rhs ) const;
+                bool operator <( const ResourceImpl& value ) const;
                 
-                bool operator >( const ResourceImpl& rhs ) const;
+                bool operator >( const ResourceImpl& value ) const;
                 
-                bool operator ==( const ResourceImpl& rhs ) const;
+                bool operator ==( const ResourceImpl& value ) const;
                 
-                bool operator !=( const ResourceImpl& rhs ) const;
+                bool operator !=( const ResourceImpl& value ) const;
                 
-                ResourceImpl& operator =( const ResourceImpl& rhs );
+                ResourceImpl& operator =( const ResourceImpl& value );
                 
                 //Properties
                 

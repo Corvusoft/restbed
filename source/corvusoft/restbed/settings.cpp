@@ -97,30 +97,30 @@ namespace restbed
         m_pimpl->set_properties( values );
     }
     
-    Settings& Settings::operator =( const Settings& rhs )
+    Settings& Settings::operator =( const Settings& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }
     
-    bool Settings::operator <( const Settings& rhs ) const
+    bool Settings::operator <( const Settings& value ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return *m_pimpl < *value.m_pimpl;
     }
     
-    bool Settings::operator >( const Settings& rhs ) const
+    bool Settings::operator >( const Settings& value ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return *m_pimpl > *value.m_pimpl;
     }
     
-    bool Settings::operator ==( const Settings& rhs ) const
+    bool Settings::operator ==( const Settings& value ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return *m_pimpl == *value.m_pimpl;
     }
     
-    bool Settings::operator !=( const Settings& rhs ) const
+    bool Settings::operator !=( const Settings& value ) const
     {
-        return *m_pimpl != *rhs.m_pimpl;
+        return *m_pimpl != *value.m_pimpl;
     }
 }

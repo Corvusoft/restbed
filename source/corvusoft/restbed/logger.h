@@ -54,7 +54,7 @@ namespace restbed
             //Setters
             
             //Operators
-            Logger& operator =( const Logger& rhs );
+            Logger& operator =( const Logger& value );
             
             //Properties
             

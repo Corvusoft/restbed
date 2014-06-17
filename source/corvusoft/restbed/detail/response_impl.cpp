@@ -119,33 +119,33 @@ namespace restbed
             m_headers = values;
         }
         
-        bool ResponseImpl::operator <( const ResponseImpl& rhs ) const
+        bool ResponseImpl::operator <( const ResponseImpl& value ) const
         {
-            return m_status_code < rhs.m_status_code;
+            return m_status_code < value.m_status_code;
         }
         
-        bool ResponseImpl::operator >( const ResponseImpl& rhs ) const
+        bool ResponseImpl::operator >( const ResponseImpl& value ) const
         {
-            return m_status_code > rhs.m_status_code;
+            return m_status_code > value.m_status_code;
         }
         
-        bool ResponseImpl::operator ==( const ResponseImpl& rhs ) const
+        bool ResponseImpl::operator ==( const ResponseImpl& value ) const
         {
-            return m_status_code == rhs.m_status_code and m_body == rhs.m_body and m_headers == rhs.m_headers;
+            return m_status_code == value.m_status_code and m_body == value.m_body and m_headers == value.m_headers;
         }
         
-        bool ResponseImpl::operator !=( const ResponseImpl& rhs ) const
+        bool ResponseImpl::operator !=( const ResponseImpl& value ) const
         {
-            return not ( *this == rhs );
+            return not ( *this == value );
         }
         
-        ResponseImpl& ResponseImpl::operator =( const ResponseImpl& rhs )
+        ResponseImpl& ResponseImpl::operator =( const ResponseImpl& value )
         {
-            m_body = rhs.m_body;
+            m_body = value.m_body;
             
-            m_headers = rhs.m_headers;
+            m_headers = value.m_headers;
             
-            m_status_code = rhs.m_status_code;
+            m_status_code = value.m_status_code;
             
             return *this;
         }

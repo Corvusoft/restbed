@@ -88,7 +88,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
-                ResourceMatcherImpl& operator =( const ResourceMatcherImpl& rhs ) = delete;
+                ResourceMatcherImpl& operator =( const ResourceMatcherImpl& value ) = delete;
                 
                 //Properties
                 const Request& m_request;

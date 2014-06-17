@@ -123,33 +123,33 @@ namespace restbed
             m_method_handlers[ verb.to_string( ) ] = callback;
         }
         
-        bool ResourceImpl::operator <( const ResourceImpl& rhs ) const
+        bool ResourceImpl::operator <( const ResourceImpl& value ) const
         {
-            return m_path < rhs.m_path;
+            return m_path < value.m_path;
         }
         
-        bool ResourceImpl::operator >( const ResourceImpl& rhs ) const
+        bool ResourceImpl::operator >( const ResourceImpl& value ) const
         {
-            return m_path > rhs.m_path;
+            return m_path > value.m_path;
         }
         
-        bool ResourceImpl::operator ==( const ResourceImpl& rhs ) const
+        bool ResourceImpl::operator ==( const ResourceImpl& value ) const
         {
-            return m_path == rhs.m_path and m_header_filters == rhs.m_header_filters;
+            return m_path == value.m_path and m_header_filters == value.m_header_filters;
         }
         
-        bool ResourceImpl::operator !=( const ResourceImpl& rhs ) const
+        bool ResourceImpl::operator !=( const ResourceImpl& value ) const
         {
-            return m_path not_eq rhs.m_path;
+            return m_path not_eq value.m_path;
         }
         
-        ResourceImpl& ResourceImpl::operator =( const ResourceImpl& rhs )
+        ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
         {
-            m_path = rhs.m_path;
+            m_path = value.m_path;
             
-            m_header_filters = rhs.m_header_filters;
+            m_header_filters = value.m_header_filters;
             
-            m_method_handlers = rhs.m_method_handlers;
+            m_method_handlers = value.m_method_handlers;
             
             return *this;
         }

@@ -74,15 +74,15 @@ namespace restbed
                 void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
                 
                 //Operators
-                bool operator <( const ServiceImpl& rhs ) const;
+                bool operator <( const ServiceImpl& value ) const;
                 
-                bool operator >( const ServiceImpl& rhs ) const;
+                bool operator >( const ServiceImpl& value ) const;
                 
-                bool operator ==( const ServiceImpl& rhs ) const;
+                bool operator ==( const ServiceImpl& value ) const;
                 
-                bool operator !=( const ServiceImpl& rhs ) const;
+                bool operator !=( const ServiceImpl& value ) const;
                 
-                ServiceImpl& operator =( const ServiceImpl& rhs );
+                ServiceImpl& operator =( const ServiceImpl& value );
                 
                 //Properties
                 

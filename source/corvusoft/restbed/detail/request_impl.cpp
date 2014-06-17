@@ -215,43 +215,43 @@ namespace restbed
             m_query_parameters = values;
         }
         
-        bool RequestImpl::operator <( const RequestImpl& rhs ) const
+        bool RequestImpl::operator <( const RequestImpl& value ) const
         {
-            return m_path < rhs.m_path;
+            return m_path < value.m_path;
         }
         
-        bool RequestImpl::operator >( const RequestImpl& rhs ) const
+        bool RequestImpl::operator >( const RequestImpl& value ) const
         {
-            return m_path > rhs.m_path;
+            return m_path > value.m_path;
         }
         
-        bool RequestImpl::operator ==( const RequestImpl& rhs ) const
+        bool RequestImpl::operator ==( const RequestImpl& value ) const
         {
-            return m_path == rhs.m_path;
+            return m_path == value.m_path;
         }
         
-        bool RequestImpl::operator !=( const RequestImpl& rhs ) const
+        bool RequestImpl::operator !=( const RequestImpl& value ) const
         {
-            return m_path not_eq rhs.m_path;
+            return m_path not_eq value.m_path;
         }
         
-        RequestImpl& RequestImpl::operator =( const RequestImpl& rhs )
+        RequestImpl& RequestImpl::operator =( const RequestImpl& value )
         {
-            m_body = rhs.m_body;
+            m_body = value.m_body;
             
-            m_path = rhs.m_path;
+            m_path = value.m_path;
             
-            m_method = rhs.m_method;
+            m_method = value.m_method;
             
-            m_origin = rhs.m_origin;
+            m_origin = value.m_origin;
             
-            m_version = rhs.m_version;
+            m_version = value.m_version;
             
-            m_headers = rhs.m_headers;
+            m_headers = value.m_headers;
             
-            m_path_parameters = rhs.m_path_parameters;
+            m_path_parameters = value.m_path_parameters;
             
-            m_query_parameters = rhs.m_query_parameters;
+            m_query_parameters = value.m_query_parameters;
             
             return *this;
         }

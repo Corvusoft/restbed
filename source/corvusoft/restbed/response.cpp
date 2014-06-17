@@ -87,30 +87,30 @@ namespace restbed
         m_pimpl->set_headers( values );
     }
     
-    Response& Response::operator =( const Response& rhs )
+    Response& Response::operator =( const Response& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }
     
-    bool Response::operator <( const Response& rhs ) const
+    bool Response::operator <( const Response& value ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return *m_pimpl < *value.m_pimpl;
     }
     
-    bool Response::operator >( const Response& rhs ) const
+    bool Response::operator >( const Response& value ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return *m_pimpl > *value.m_pimpl;
     }
     
-    bool Response::operator ==( const Response& rhs ) const
+    bool Response::operator ==( const Response& value ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return *m_pimpl == *value.m_pimpl;
     }
     
-    bool Response::operator !=( const Response& rhs ) const
+    bool Response::operator !=( const Response& value ) const
     {
-        return *m_pimpl != *rhs.m_pimpl;
+        return *m_pimpl != *value.m_pimpl;
     }
 }

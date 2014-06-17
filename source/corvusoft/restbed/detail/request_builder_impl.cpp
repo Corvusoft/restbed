@@ -82,9 +82,9 @@ namespace restbed
             m_pimpl->set_path_parameters( parameters );
         }
         
-        RequestBuilderImpl& RequestBuilderImpl::operator =( const RequestBuilderImpl& rhs )
+        RequestBuilderImpl& RequestBuilderImpl::operator =( const RequestBuilderImpl& value )
         {
-            *m_pimpl = *rhs.m_pimpl;
+            *m_pimpl = *value.m_pimpl;
             
             return *this;
         }

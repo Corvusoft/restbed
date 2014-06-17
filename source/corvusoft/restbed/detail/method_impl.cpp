@@ -53,29 +53,29 @@ namespace restbed
             return m_value;
         }
         
-        bool MethodImpl::operator <( const MethodImpl& rhs ) const
+        bool MethodImpl::operator <( const MethodImpl& value ) const
         {
-            return m_value < rhs.m_value;
+            return m_value < value.m_value;
         }
         
-        bool MethodImpl::operator >( const MethodImpl& rhs ) const
+        bool MethodImpl::operator >( const MethodImpl& value ) const
         {
-            return m_value > rhs.m_value;
+            return m_value > value.m_value;
         }
         
-        bool MethodImpl::operator ==( const MethodImpl& rhs ) const
+        bool MethodImpl::operator ==( const MethodImpl& value ) const
         {
-            return m_value == rhs.m_value;
+            return m_value == value.m_value;
         }
         
-        bool MethodImpl::operator !=( const MethodImpl& rhs ) const
+        bool MethodImpl::operator !=( const MethodImpl& value ) const
         {
-            return m_value not_eq rhs.m_value;
+            return m_value not_eq value.m_value;
         }
         
-        MethodImpl& MethodImpl::operator =( const MethodImpl& rhs )
+        MethodImpl& MethodImpl::operator =( const MethodImpl& value )
         {
-            m_value = rhs.m_value;
+            m_value = value.m_value;
             
             return *this;
         }

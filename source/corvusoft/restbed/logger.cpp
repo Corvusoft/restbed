@@ -58,9 +58,9 @@ namespace restbed
         va_end( arguments );
     }
     
-    Logger& Logger::operator =( const Logger& rhs )
+    Logger& Logger::operator =( const Logger& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }

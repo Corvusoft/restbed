@@ -53,15 +53,15 @@ namespace restbed
             //Setters
             
             //Operators
-            Method& operator =( const Method& rhs );
+            Method& operator =( const Method& value );
             
-            bool operator <( const Method& rhs ) const;
+            bool operator <( const Method& value ) const;
             
-            bool operator >( const Method& rhs ) const;
+            bool operator >( const Method& value ) const;
             
-            bool operator ==( const Method& rhs ) const;
+            bool operator ==( const Method& value ) const;
             
-            bool operator !=( const Method& rhs ) const;
+            bool operator !=( const Method& value ) const;
             
             //Properties
             

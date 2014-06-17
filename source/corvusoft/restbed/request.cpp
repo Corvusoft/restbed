@@ -114,30 +114,30 @@ namespace restbed
         return m_pimpl->get_path_parameters( );
     }
     
-    Request& Request::operator =( const Request& rhs )
+    Request& Request::operator =( const Request& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }
     
-    bool Request::operator <( const Request& rhs ) const
+    bool Request::operator <( const Request& value ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return *m_pimpl < *value.m_pimpl;
     }
     
-    bool Request::operator >( const Request& rhs ) const
+    bool Request::operator >( const Request& value ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return *m_pimpl > *value.m_pimpl;
     }
     
-    bool Request::operator ==( const Request& rhs ) const
+    bool Request::operator ==( const Request& value ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return *m_pimpl == *value.m_pimpl;
     }
     
-    bool Request::operator !=( const Request& rhs ) const
+    bool Request::operator !=( const Request& value ) const
     {
-        return *m_pimpl != *rhs.m_pimpl;
+        return *m_pimpl != *value.m_pimpl;
     }
 }

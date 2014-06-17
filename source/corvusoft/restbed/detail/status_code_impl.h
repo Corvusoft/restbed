@@ -87,7 +87,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
-                StatusCodeImpl& operator =( const StatusCodeImpl& rhs ) = delete;
+                StatusCodeImpl& operator =( const StatusCodeImpl& value ) = delete;
                 
                 //Properties
                 static std::map< int, std::string > m_mappings;

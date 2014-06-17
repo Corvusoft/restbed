@@ -57,7 +57,7 @@ namespace restbed
                 void set_path_parameters( const std::map< std::string, std::string >& parameters );
                 
                 //Operators
-                RequestBuilderImpl& operator =( const RequestBuilderImpl& rhs );
+                RequestBuilderImpl& operator =( const RequestBuilderImpl& value );
                 
                 //Properties
                 

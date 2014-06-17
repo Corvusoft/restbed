@@ -216,43 +216,43 @@ namespace restbed
             m_error_handler = value;
         }
         
-        bool ServiceImpl::operator <( const ServiceImpl& rhs ) const
+        bool ServiceImpl::operator <( const ServiceImpl& value ) const
         {
-            return m_port < rhs.m_port;
+            return m_port < value.m_port;
         }
         
-        bool ServiceImpl::operator >( const ServiceImpl& rhs ) const
+        bool ServiceImpl::operator >( const ServiceImpl& value ) const
         {
-            return m_port > rhs.m_port;
+            return m_port > value.m_port;
         }
         
-        bool ServiceImpl::operator ==( const ServiceImpl& rhs ) const
+        bool ServiceImpl::operator ==( const ServiceImpl& value ) const
         {
-            return m_port == rhs.m_port;
+            return m_port == value.m_port;
         }
         
-        bool ServiceImpl::operator !=( const ServiceImpl& rhs ) const
+        bool ServiceImpl::operator !=( const ServiceImpl& value ) const
         {
-            return m_port not_eq rhs.m_port;
+            return m_port not_eq value.m_port;
         }
         
-        ServiceImpl& ServiceImpl::operator =( const ServiceImpl& rhs )
+        ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
         {
-            m_mode = rhs.m_mode;
+            m_mode = value.m_mode;
             
-            m_port = rhs.m_port;
+            m_port = value.m_port;
             
-            m_root = rhs.m_root;
+            m_root = value.m_root;
             
-            m_resources = rhs.m_resources;
+            m_resources = value.m_resources;
             
-            m_log_handler = rhs.m_log_handler;
+            m_log_handler = value.m_log_handler;
             
-            m_maximum_connections = rhs.m_maximum_connections;
+            m_maximum_connections = value.m_maximum_connections;
             
-            m_error_handler = rhs.m_error_handler;
+            m_error_handler = value.m_error_handler;
             
-            m_authentication_handler = rhs.m_authentication_handler;
+            m_authentication_handler = value.m_authentication_handler;
             
             return *this;
         }

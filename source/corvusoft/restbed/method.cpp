@@ -52,31 +52,31 @@ namespace restbed
         return method;
     }
     
-    Method& Method::operator =( const Method& rhs )
+    Method& Method::operator =( const Method& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }
     
-    bool Method::operator <( const Method& rhs ) const
+    bool Method::operator <( const Method& value ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return *m_pimpl < *value.m_pimpl;
     }
     
-    bool Method::operator >( const Method& rhs ) const
+    bool Method::operator >( const Method& value ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return *m_pimpl > *value.m_pimpl;
     }
     
-    bool Method::operator ==( const Method& rhs ) const
+    bool Method::operator ==( const Method& value ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return *m_pimpl == *value.m_pimpl;
     }
     
-    bool Method::operator !=( const Method& rhs ) const
+    bool Method::operator !=( const Method& value ) const
     {
-        return *m_pimpl != *rhs.m_pimpl;
+        return *m_pimpl != *value.m_pimpl;
     }
     
     Method::Method( void ) : m_pimpl( nullptr )

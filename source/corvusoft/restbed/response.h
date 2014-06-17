@@ -67,15 +67,15 @@ namespace restbed
             void set_headers( const std::map< std::string, std::string >& values );
             
             //Operators
-            Response& operator =( const Response& rhs );
+            Response& operator =( const Response& value );
             
-            bool operator <( const Response& rhs ) const;
+            bool operator <( const Response& value ) const;
             
-            bool operator >( const Response& rhs ) const;
+            bool operator >( const Response& value ) const;
             
-            bool operator ==( const Response& rhs ) const;
+            bool operator ==( const Response& value ) const;
             
-            bool operator !=( const Response& rhs ) const;
+            bool operator !=( const Response& value ) const;
             
             //Properties
             

@@ -81,15 +81,15 @@ namespace restbed
             //Setters
             
             //Operators
-            Request& operator =( const Request& rhs );
+            Request& operator =( const Request& value );
             
-            bool operator <( const Request& rhs ) const;
+            bool operator <( const Request& value ) const;
             
-            bool operator >( const Request& rhs ) const;
+            bool operator >( const Request& value ) const;
             
-            bool operator ==( const Request& rhs ) const;
+            bool operator ==( const Request& value ) const;
             
-            bool operator !=( const Request& rhs ) const;
+            bool operator !=( const Request& value ) const;
             
             //Properties
             

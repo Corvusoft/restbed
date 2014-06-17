@@ -145,7 +145,7 @@ namespace restbed
             //Setters
             
             //Operators
-            StatusCode& operator =( const StatusCode& rhs ) = delete;
+            StatusCode& operator =( const StatusCode& value ) = delete;
             
             //Properties
     };

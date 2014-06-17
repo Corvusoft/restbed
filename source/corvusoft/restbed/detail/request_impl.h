@@ -94,15 +94,15 @@ namespace restbed
                 void set_query_parameters( const std::map< std::string, std::string >& values );
                 
                 //Operators
-                bool operator <( const RequestImpl& rhs ) const;
+                bool operator <( const RequestImpl& value ) const;
                 
-                bool operator >( const RequestImpl& rhs ) const;
+                bool operator >( const RequestImpl& value ) const;
                 
-                bool operator ==( const RequestImpl& rhs ) const;
+                bool operator ==( const RequestImpl& value ) const;
                 
-                bool operator !=( const RequestImpl& rhs ) const;
+                bool operator !=( const RequestImpl& value ) const;
                 
-                RequestImpl& operator =( const RequestImpl& rhs );
+                RequestImpl& operator =( const RequestImpl& value );
                 
                 //Properties
                 

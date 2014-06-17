@@ -75,29 +75,29 @@ namespace restbed
         m_pimpl->set_method_handler( verb, callback );
     }
     
-    bool Resource::operator <( const Resource& rhs ) const
+    bool Resource::operator <( const Resource& value ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return *m_pimpl < *value.m_pimpl;
     }
     
-    bool Resource::operator >( const Resource& rhs ) const
+    bool Resource::operator >( const Resource& value ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return *m_pimpl > *value.m_pimpl;
     }
     
-    bool Resource::operator ==( const Resource& rhs ) const
+    bool Resource::operator ==( const Resource& value ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return *m_pimpl == *value.m_pimpl;
     }
     
-    bool Resource::operator !=( const Resource& rhs ) const
+    bool Resource::operator !=( const Resource& value ) const
     {
-        return *m_pimpl != *rhs.m_pimpl;
+        return *m_pimpl != *value.m_pimpl;
     }
     
-    Resource& Resource::operator =( const Resource& rhs )
+    Resource& Resource::operator =( const Resource& value )
     {
-        *m_pimpl = *rhs.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
         
         return *this;
     }

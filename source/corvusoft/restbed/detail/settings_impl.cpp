@@ -120,29 +120,29 @@ namespace restbed
             }
         }
         
-        bool SettingsImpl::operator <( const SettingsImpl& rhs ) const
+        bool SettingsImpl::operator <( const SettingsImpl& value ) const
         {
-            return m_properties.size( ) < rhs.m_properties.size( );
+            return m_properties.size( ) < value.m_properties.size( );
         }
         
-        bool SettingsImpl::operator >( const SettingsImpl& rhs ) const
+        bool SettingsImpl::operator >( const SettingsImpl& value ) const
         {
-            return m_properties.size( ) > rhs.m_properties.size( );
+            return m_properties.size( ) > value.m_properties.size( );
         }
         
-        bool SettingsImpl::operator ==( const SettingsImpl& rhs ) const
+        bool SettingsImpl::operator ==( const SettingsImpl& value ) const
         {
-            return m_properties == rhs.m_properties;
+            return m_properties == value.m_properties;
         }
         
-        bool SettingsImpl::operator !=( const SettingsImpl& rhs ) const
+        bool SettingsImpl::operator !=( const SettingsImpl& value ) const
         {
-            return m_properties not_eq rhs.m_properties;
+            return m_properties not_eq value.m_properties;
         }
         
-        SettingsImpl& SettingsImpl::operator =( const SettingsImpl& rhs )
+        SettingsImpl& SettingsImpl::operator =( const SettingsImpl& value )
         {
-            m_properties = rhs.m_properties;
+            m_properties = value.m_properties;
             
             return *this;
         }

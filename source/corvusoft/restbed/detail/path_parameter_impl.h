@@ -86,7 +86,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
-                PathParameterImpl& operator =( const PathParameterImpl& rhs ) = delete;
+                PathParameterImpl& operator =( const PathParameterImpl& value ) = delete;
                 
                 //Properties
         };
