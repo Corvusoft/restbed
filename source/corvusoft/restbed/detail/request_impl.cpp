@@ -136,10 +136,10 @@ namespace restbed
         {
             string parameter = String::empty;
             
-            const auto iterator = Map::find_key_ignoring_case( name, m_query_parameters );
-            
-            if ( iterator not_eq m_query_parameters.end( ) )
+            if ( has_query_parameter( name ) )
             {
+                const auto iterator = Map::find_key_ignoring_case( name, m_query_parameters );
+                
                 parameter = iterator->second;
             }
             
@@ -155,10 +155,10 @@ namespace restbed
         {
             string parameter = String::empty;
             
-            const auto iterator = Map::find_key_ignoring_case( name, m_path_parameters );
-            
-            if ( iterator not_eq m_path_parameters.end( ) )
+            if ( has_path_parameter( name ) )
             {
+                const auto iterator = Map::find_key_ignoring_case( name, m_path_parameters );
+                
                 parameter = iterator->second;
             }
             
