@@ -1,18 +1,17 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-include(ExternalProject)
+find_path( curl_INCLUDE curl/curl.h HINTS "/usr/include" "/usr/local/include" "/opt/local/include" "${CMAKE_SOURCE_DIR}/dependency/curl/include" )
+find_library( curl_LIBRARY NAMES curl HINTS "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${CMAKE_SOURCE_DIR}/dependency/curl/lib" )
 
-find_library( curl_LIBRARY_PATH NAMES curl )
-find_path( curl_INCLUDE_DIR NAMES curl/curl.h )
+if ( curl_INCLUDE AND curl_LIBRARY )
+    set( CURL_FOUND TRUE )
 
-if( curl_LIBRARY_PATH AND curl_INCLUDE_DIR )
-    set( curl_FOUND TRUE )
-
-    get_filename_component( curl_LIBRARY_DIR "${curl_LIBRARY_PATH}" PATH )
-    get_filename_component( curl_LIBRARY "${curl_LIBRARY_PATH}" NAME )
-
-    message( STATUS "Found curl: ${curl_LIBRARY} ${curl_INCLUDE_DIR}/curl/curl.h" )
-else( )
-    message( FATAL_ERROR "Could not find curl." )
+    if ( NOT CURL_FIND_QUIETLY )
+        message( STATUS "Found curl header: ${curl_INCLUDE}" )
+        message( STATUS "Found curl library: ${curl_LIBRARY}" )
+    endif ( )
+else ( )
+    if ( CURL_FIND_REQUIRED )
+        message( FATAL_ERROR "Failed to locate curl!" )
+    endif ( )
 endif ( )
-

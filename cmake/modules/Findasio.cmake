@@ -1,22 +1,15 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-find_path( ASIO_INCLUDE_DIR asio.hpp PATHS "/usr/include" "/usr/local/include" "/opt/local/include" "${CMAKE_SOURCE_DIR}/dependency/asio/include")
+find_path( asio_INCLUDE asio.hpp HINTS "/usr/include" "/usr/local/include" "/opt/local/include" "${CMAKE_SOURCE_DIR}/dependency/asio/include" )
 
-if ( ASIO_INCLUDE_DIR )
+if ( asio_INCLUDE )
     set( ASIO_FOUND TRUE )
-endif ( )
 
-if ( ASIO_FOUND )
     if ( NOT ASIO_FIND_QUIETLY )
-        message( STATUS "Found asio.hpp header file: ${ASIO_INCLUDE_DIR}" )
+        message( STATUS "Found asio header: ${asio_INCLUDE}" )
     endif ( )
-
-    set(ASIO_INCLUDE_DIRS ${ASIO_INCLUDE_DIR} )
 else ( )
     if ( ASIO_FIND_REQUIRED )
-        if ( NOT ASIO_INCLUDE_DIR )
-            message( FATAL_ERROR "Could not find asio.hpp header file!" )
-        endif ( )
+        message( FATAL_ERROR "Failed to locate asio!" )
     endif ( )
 endif ( )
-

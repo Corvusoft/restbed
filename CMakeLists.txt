@@ -18,7 +18,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" 
 find_package( asio REQUIRED )
 find_package( framework REQUIRED )
 
-include_directories( ${framework_INCLUDE} ${ASIO_INCLUDE_DIRS} )
+include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
 
 #
 # Configuration
@@ -79,7 +79,7 @@ install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
 # Test
 #
 if ( BUILD_TESTS )
-    find_package( GTest REQUIRED )
+    find_package( gtest REQUIRED )
     find_package( curl REQUIRED )
 
     enable_testing( )
@@ -88,4 +88,3 @@ if ( BUILD_TESTS )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/test/regression" "regression-tests" )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/test/unit" "unit-tests" )
 endif ( )
-

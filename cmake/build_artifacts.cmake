@@ -24,4 +24,3 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/log_level
      ${SOURCE_DIR}/log_level.h
 )
-

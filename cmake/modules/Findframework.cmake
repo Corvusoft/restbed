@@ -5,18 +5,13 @@ find_library( framework_LIBRARY NAMES framework HINTS "/usr/lib" "/usr/local/lib
 
 if ( framework_INCLUDE AND framework_LIBRARY )
     set( FRAMEWORK_FOUND TRUE )
-    set( framework_INCLUDE ${framework_INCLUDE} )
-    set( framework_LIBRARY ${framework_LIBRARY} )
-endif ( )
 
-if ( FRAMEWORK_FOUND )
     if ( NOT FRAMEWORK_FIND_QUIETLY )
-        message( STATUS "Found framework header file: ${framework_INCLUDE}" )
-        message( STATUS "Found framework library file: ${framework_LIBRARY}" )
+        message( STATUS "Found framework header: ${framework_INCLUDE}" )
+        message( STATUS "Found framework library: ${framework_LIBRARY}" )
     endif ( )
 else ( )
     if ( FRAMEWORK_FIND_REQUIRED )
-        message( FATAL_ERROR "Could not find framework header file!" )
+        message( FATAL_ERROR "Failed to locate framework!" )
     endif ( )
 endif ( )
-

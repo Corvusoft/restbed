@@ -21,4 +21,3 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/resource_matcher_impl.cpp
      ${SOURCE_DIR}/detail/path_parameter_impl.cpp
 )
-

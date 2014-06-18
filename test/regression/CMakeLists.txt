@@ -10,7 +10,7 @@ cmake_minimum_required( VERSION 2.8.10 )
 set( SOURCE_DIR "source" )
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/test"  )
 
-include_directories( ${GTest_INCLUDE_DIR} ${curl_INCLUDE_DIR} ${ASIO_INCLUDE_DIRS} )
+include_directories( ${gtest_INCLUDE} ${curl_INCLUDE} ${asio_INCLUDE} )
 
 #
 # Build
@@ -22,15 +22,15 @@ add_executable( resource_responding_on_invalid_path_regression_test_suite ${SOUR
 add_executable( segmentation_fault_on_mismatched_path_regression_test_suite ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 add_executable( uncaught_exception_when_peer_closes_connection_regression_test_suite ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
 
-target_link_libraries( resources_are_not_overwritten_regression_test_suite ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( request_uris_are_not_being_decoded_regression_test_suite ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( resource_responding_on_invalid_path_regression_test_suite ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${GTest_LIBRARY} ${GTest_MAIN_LIBRARY} restbed pthread )
+target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( request_uris_are_not_being_decoded_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( resource_responding_on_invalid_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
+target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed pthread )
 
 #
-# Setup tests
+# Setup
 #
 enable_testing( )
 add_test( resources_are_not_overwritten_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/resources_are_not_overwritten_regression_test_suite )
@@ -39,4 +39,3 @@ add_test( request_uris_are_not_being_decoded_regression_test_suite ${EXECUTABLE_
 add_test( resource_responding_on_invalid_path_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_responding_on_invalid_path_regression_test_suite )
 add_test( segmentation_fault_on_mismatched_path_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/segmentation_fault_on_mismatched_path_regression_test_suite )
 add_test( uncaught_exception_when_peer_closes_connection_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/uncaught_exception_when_peer_closes_connection_regression_test_suite )
-
