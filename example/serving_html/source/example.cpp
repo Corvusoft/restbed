@@ -12,7 +12,7 @@ Response get_method_handler( const Request& request )
 {
     string filename = request.get_path_parameter( "filename" );
     
-    ifstream stream( "../../resource/" + filename, ifstream::in );
+    ifstream stream( "./resource/serving_html/" + filename, ifstream::in );
     
     Response response;
     response.set_header( "Content-Type", "text/html" );
