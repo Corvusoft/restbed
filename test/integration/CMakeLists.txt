@@ -20,10 +20,10 @@ add_executable( service_integration_test_suite ${SOURCE_DIR}/service_suite.cpp )
 add_executable( resource_integration_test_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( settings_integration_test_suite ${SOURCE_DIR}/settings_suite.cpp )
 
-target_link_libraries( request_integration_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( service_integration_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( resource_integration_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( settings_integration_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( request_integration_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( service_integration_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( resource_integration_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( settings_integration_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
 
 #
 # Setup

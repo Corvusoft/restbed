@@ -22,12 +22,12 @@ add_executable( resource_responding_on_invalid_path_regression_test_suite ${SOUR
 add_executable( segmentation_fault_on_mismatched_path_regression_test_suite ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 add_executable( uncaught_exception_when_peer_closes_connection_regression_test_suite ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
 
-target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( request_uris_are_not_being_decoded_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( resource_responding_on_invalid_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed ${curl_LIBRARY} pthread )
-target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} restbed pthread )
+target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( request_uris_are_not_being_decoded_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( resource_responding_on_invalid_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
 
 #
 # Setup

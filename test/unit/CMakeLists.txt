@@ -22,12 +22,12 @@ add_executable( response_unit_test_suite ${SOURCE_DIR}/response_suite.cpp )
 add_executable( resource_unit_test_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( status_code_unit_test_suite ${SOURCE_DIR}/status_code_suite.cpp )
 
-target_link_libraries( method_unit_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( request_unit_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( settings_unit_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( response_unit_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( resource_unit_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( status_code_unit_test_suite restbed ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( method_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( request_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( settings_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( response_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( resource_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( status_code_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
 
 #
 # Setup
