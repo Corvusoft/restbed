@@ -227,12 +227,18 @@ namespace restbed
         
         bool RequestImpl::operator ==( const RequestImpl& value ) const
         {
-            return m_path == value.m_path;
+            return ( m_path == value.m_path and
+                     m_method == value.m_method and
+                     m_origin == value.m_origin and
+                     m_version == value.m_version and
+                     m_headers == value.m_headers and
+                     m_path_parameters == value.m_path_parameters and
+                     m_query_parameters == value.m_query_parameters );
         }
         
         bool RequestImpl::operator !=( const RequestImpl& value ) const
         {
-            return m_path not_eq value.m_path;
+            return not ( *this == value );
         }
         
         RequestImpl& RequestImpl::operator =( const RequestImpl& value )
