@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-project( "Regression Test Suite" )
+project( "regression test suite" )
 
 cmake_minimum_required( VERSION 2.8.10 )
 

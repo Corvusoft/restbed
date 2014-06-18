@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-project( "Integration Test Suite" )
+project( "integration test suite" )
 
 cmake_minimum_required( VERSION 2.8.10 )
 
