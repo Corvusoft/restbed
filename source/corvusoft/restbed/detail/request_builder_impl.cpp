@@ -6,6 +6,7 @@
 #include <regex>
 #include <vector>
 #include <sstream>
+#include <stdexcept>
 
 //Project Includes
 #include "corvusoft/restbed/request.h"
@@ -26,6 +27,7 @@ using std::string;
 using std::vector;
 using std::istream;
 using std::shared_ptr;
+using std::invalid_argument;
 using std::istreambuf_iterator;
 
 //Project Namespaces
@@ -107,7 +109,18 @@ namespace restbed
             
             version = String::remove( "HTTP/", version, true );
             
-            return stod( version );
+            double result = 0;
+            
+            try
+            {
+                result = stod( version );
+            }
+            catch ( const invalid_argument& ia )
+            {
+                throw StatusCode::BAD_REQUEST;
+            }
+            
+            return result;
         }
         
         string RequestBuilderImpl::parse_http_path( istream& socket )
