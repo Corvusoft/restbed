@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <cstdlib>
 
 //Project Includes
 #include "test_logger.h"
