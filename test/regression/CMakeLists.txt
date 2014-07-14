@@ -22,6 +22,7 @@ add_executable( resource_responding_on_invalid_path_regression_test_suite ${SOUR
 add_executable( segmentation_fault_on_mismatched_path_regression_test_suite ${SOURCE_DIR}/segmentation_fault_on_mismatched_path.cpp )
 add_executable( exception_thrown_with_space_in_resource_path_regression_test_suite ${SOURCE_DIR}/exception_thrown_with_space_in_resource_path.cpp )
 add_executable( uncaught_exception_when_peer_closes_connection_regression_test_suite ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
+add_executable( error_handler_not_overwritten_test_suite ${SOURCE_DIR}/error_handler_not_overwritten.cpp )
 
 target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
@@ -30,6 +31,7 @@ target_link_libraries( resource_responding_on_invalid_path_regression_test_suite
 target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 target_link_libraries( exception_thrown_with_space_in_resource_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( error_handler_not_overwritten_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 
 #
 # Setup
@@ -42,3 +44,4 @@ add_test( resource_responding_on_invalid_path_regression_test_suite ${EXECUTABLE
 add_test( segmentation_fault_on_mismatched_path_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/segmentation_fault_on_mismatched_path_regression_test_suite )
 add_test( exception_thrown_with_space_in_resource_path_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/exception_thrown_with_space_in_resource_path_regression_test_suite )
 add_test( uncaught_exception_when_peer_closes_connection_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/uncaught_exception_when_peer_closes_connection_regression_test_suite )
+add_test( error_handler_not_overwritten_test_suite ${EXECUTABLE_OUTPUT_PATH}/error_handler_not_overwritten_test_suite )

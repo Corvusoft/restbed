@@ -336,7 +336,7 @@ namespace restbed
             }
             catch ( const StatusCode::Value status_code )
             {
-                error_handler( status_code, request, response );
+                m_error_handler( status_code, request, response );
             }
             
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
