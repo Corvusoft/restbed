@@ -18,7 +18,7 @@ void error_handler( const int status_code, const Request&, /*out*/ Response& res
     response.set_body( StatusCode::to_string( status_code ) );
 }
 
-int main( int, char** )
+int main( const int, const char** )
 {
     Resource resource;
     resource.set_method_handler( "GET", &faulty_method_handler );

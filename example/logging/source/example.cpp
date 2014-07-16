@@ -13,7 +13,7 @@ Response get_method_handler( const Request& )
     return response;
 }
 
-int main( int, char** )
+int main( const int, const char** )
 {
     Resource resource;
     resource.set_path( "/resource" );

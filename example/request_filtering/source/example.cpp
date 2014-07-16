@@ -23,7 +23,7 @@ Response get_json_method_handler( const Request& )
     
     return response;
 }
-int main( int, char** )
+int main( const int, const char** )
 {
     Resource xml;
     xml.set_path( "/resource" );
