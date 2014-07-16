@@ -43,6 +43,8 @@ namespace restbed
             Request( void );
             
             Request( const Request& original );
+        
+            Request( const detail::RequestImpl& implementation );
             
             virtual ~Request( void );
             

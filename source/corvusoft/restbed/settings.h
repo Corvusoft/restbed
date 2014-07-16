@@ -42,6 +42,8 @@ namespace restbed
             Settings( void );
             
             Settings( const Settings& original );
+        
+            Settings( const detail::SettingsImpl& implementation );
             
             virtual ~Settings( void );
             

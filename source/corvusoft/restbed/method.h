@@ -40,6 +40,8 @@ namespace restbed
             Method( const std::string& value );
             
             Method( const Method& original );
+        
+            Method( const detail::MethodImpl& implementation );
             
             virtual ~Method( void );
             

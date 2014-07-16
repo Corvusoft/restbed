@@ -31,6 +31,11 @@ namespace restbed
         //n/a
     }
     
+    Logger::Logger( const LoggerImpl& implementation ) : m_pimpl( new LoggerImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Logger::~Logger( void )
     {
         //n/a

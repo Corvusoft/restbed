@@ -34,6 +34,11 @@ namespace restbed
         //n/a
     }
     
+    Request::Request( const RequestImpl& implementation ) : m_pimpl( new RequestImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Request::~Request( void )
     {
         //n/a

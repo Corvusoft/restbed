@@ -32,6 +32,11 @@ namespace restbed
         //n/a
     }
     
+    Response::Response( const ResponseImpl& implementation ) : m_pimpl( new ResponseImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Response::~Response( void )
     {
         //n/a

@@ -44,6 +44,8 @@ namespace restbed
             Resource( void );
             
             Resource( const Resource& original );
+        
+            Resource( const detail::ResourceImpl& implementation );
             
             virtual ~Resource( void );
             

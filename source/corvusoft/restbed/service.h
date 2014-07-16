@@ -48,6 +48,8 @@ namespace restbed
             Service( const Settings& settings );
             
             Service( const Service& original );
+        
+            Service( const detail::ServiceImpl& implementation );
             
             virtual ~Service( void );
             

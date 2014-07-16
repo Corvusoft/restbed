@@ -35,6 +35,11 @@ namespace restbed
         //n/a
     }
     
+    Method::Method( const MethodImpl& implementation ) : m_pimpl( new MethodImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Method::~Method( void )
     {
         //n/a

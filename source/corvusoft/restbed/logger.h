@@ -41,7 +41,9 @@ namespace restbed
             Logger( void );
             
             Logger( const Logger& original );
-            
+        
+            Logger( const detail::LoggerImpl& implementation );
+        
             virtual ~Logger( void );
             
             //Functionality

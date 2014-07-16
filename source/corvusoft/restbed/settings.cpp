@@ -32,6 +32,11 @@ namespace restbed
         //n/a
     }
     
+    Settings::Settings( const SettingsImpl& implementation ) : m_pimpl( new SettingsImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Settings::~Settings( void )
     {
         //n/a

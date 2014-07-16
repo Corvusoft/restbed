@@ -37,6 +37,11 @@ namespace restbed
         //n/a
     }
     
+    Service::Service( const ServiceImpl& implementation ) : m_pimpl( new ServiceImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Service::~Service( void )
     {
         //n/a

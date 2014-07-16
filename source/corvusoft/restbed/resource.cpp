@@ -35,6 +35,11 @@ namespace restbed
         //n/a
     }
     
+    Resource::Resource( const ResourceImpl& implementation ) : m_pimpl( new ResourceImpl( implementation ) )
+    {
+        //n/a
+    }
+    
     Resource::~Resource( void )
     {
         //n/a
