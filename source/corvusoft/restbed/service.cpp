@@ -88,24 +88,4 @@ namespace restbed
         
         return *this;
     }
-    
-    bool Service::operator <( const Service& value ) const
-    {
-        return *m_pimpl < *value.m_pimpl;
-    }
-    
-    bool Service::operator >( const Service& value ) const
-    {
-        return *m_pimpl > *value.m_pimpl;
-    }
-    
-    bool Service::operator ==( const Service& value ) const
-    {
-        return *m_pimpl == *value.m_pimpl;
-    }
-    
-    bool Service::operator !=( const Service& value ) const
-    {
-        return *m_pimpl != *value.m_pimpl;
-    }
 }

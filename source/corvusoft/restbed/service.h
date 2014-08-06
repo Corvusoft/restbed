@@ -74,14 +74,6 @@ namespace restbed
             //Operators
             Service& operator =( const Service& value );
             
-            bool operator <( const Service& value ) const;
-            
-            bool operator >( const Service& value ) const;
-            
-            bool operator ==( const Service& value ) const;
-            
-            bool operator !=( const Service& value ) const;
-            
             //Properties
             
         protected:

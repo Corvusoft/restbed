@@ -216,26 +216,6 @@ namespace restbed
             m_error_handler = value;
         }
         
-        bool ServiceImpl::operator <( const ServiceImpl& value ) const
-        {
-            return m_port < value.m_port;
-        }
-        
-        bool ServiceImpl::operator >( const ServiceImpl& value ) const
-        {
-            return m_port > value.m_port;
-        }
-        
-        bool ServiceImpl::operator ==( const ServiceImpl& value ) const
-        {
-            return m_port == value.m_port;
-        }
-        
-        bool ServiceImpl::operator !=( const ServiceImpl& value ) const
-        {
-            return m_port not_eq value.m_port;
-        }
-        
         ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
         {
             m_mode = value.m_mode;
