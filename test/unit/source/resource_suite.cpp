@@ -25,15 +25,31 @@ using restbed::Resource;
 
 TEST( Resource, constructor )
 {
-    const Resource resource;
+    string path = "";
+    map< string, string > filters;
     
-    map< string, string > expections;
+    Resource resource;
     
-    EXPECT_EQ( "", resource.get_path( ) );
-    EXPECT_EQ( expections, resource.get_header_filters( ) );
+    EXPECT_EQ( path, resource.get_path( ) );
+    EXPECT_EQ( filters, resource.get_header_filters( ) );
 }
 
-TEST( Resource, default_destructor )
+TEST( Resource, copy_constructor )
+{
+    string path = "/events";
+    map< string, string > filters = { { "Content-Language", "en_GB" } };
+    
+    Resource original;
+    original.set_path( path );
+    original.set_header_filters( filters );
+    
+    Resource copy( original );
+    
+    EXPECT_EQ( path, copy.get_path( ) );
+    EXPECT_EQ( filters, copy.get_header_filters( ) );
+}
+
+TEST( Resource, destructor )
 {
     ASSERT_NO_THROW(
     {
@@ -43,9 +59,9 @@ TEST( Resource, default_destructor )
     } );
 }
 
-TEST( Resource, path_accessor )
+TEST( Resource, modify_path )
 {
-    const string path = "Super important test data.";
+    string path = "Super important test data.";
     
     Resource resource;
     resource.set_path( path );
@@ -53,9 +69,9 @@ TEST( Resource, path_accessor )
     EXPECT_EQ( path, resource.get_path( ) );
 }
 
-TEST( Resource, header_filter_accessor )
+TEST( Resource, modify_header_filter )
 {
-    const string type = "application/json";
+    string type = "application/json";
     
     Resource resource;
     resource.set_header_filter( "Content-Type", type );
@@ -63,14 +79,39 @@ TEST( Resource, header_filter_accessor )
     EXPECT_EQ( type, resource.get_header_filter( "Content-Type" ) );
 }
 
-TEST( Resource, case_insensitive_header_filter_accessor )
+TEST( Resource, modify_case_insensitive_header_filter )
 {
-    const string type = "application/json";
+    string type = "application/json";
     
     Resource resource;
     resource.set_header_filter( "Content-Type", type );
     
     EXPECT_EQ( type, resource.get_header_filter( "content-type" ) );
+}
+
+TEST( Resource, modify_header_filters )
+{
+    map< string, string > filters = { { "Content-Language", "en_GB" } };
+    
+    Resource resource;
+    resource.set_header_filters( filters );
+    
+    EXPECT_EQ( filters, resource.get_header_filters( ) );
+}
+
+TEST( Resource, assignment_operator )
+{
+    string path = "/events";
+    map< string, string > filters = { { "Content-Language", "en_GB" } };
+    
+    Resource original;
+    original.set_path( path );
+    original.set_header_filters( filters );
+    
+    Resource copy = original;
+    
+    EXPECT_EQ( path, copy.get_path( ) );
+    EXPECT_EQ( filters, copy.get_header_filters( ) );
 }
 
 TEST( Resource, less_than_operator )
@@ -106,7 +147,7 @@ TEST( Resource, equality_operator )
     EXPECT_TRUE( lhs == rhs );
 }
 
-TEST( Resource, negated_equality_operator )
+TEST( Resource, inequality_operator )
 {
     Resource lhs;
     lhs.set_path( "/api" );
@@ -115,15 +156,4 @@ TEST( Resource, negated_equality_operator )
     rhs.set_path( "/resources" );
     
     EXPECT_TRUE( lhs != rhs );
-}
-
-TEST( Resource, assignment_operator )
-{
-    Resource original;
-    original.set_path( "/api/login" );
-    original.set_header_filter( "Content-Type", "text/data" );
-    
-    Resource copy = original;
-    
-    EXPECT_TRUE( original == copy );
 }

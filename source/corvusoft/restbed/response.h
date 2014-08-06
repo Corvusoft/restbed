@@ -50,9 +50,13 @@ namespace restbed
             
             //Getters
             framework::Bytes get_body( void ) const;
-            
+        
+            double get_version( void ) const;
+        
             int get_status_code( void ) const;
-            
+        
+            std::string get_status_message( void ) const;
+        
             std::string get_header( const std::string& name ) const;
             
             std::map< std::string, std::string > get_headers( void ) const;
@@ -61,9 +65,13 @@ namespace restbed
             void set_body( const framework::Bytes& value );
             
             void set_body( const std::string& value );
+        
+            void set_version( const double value );
             
             void set_status_code( const int value );
-            
+        
+            void set_status_message( const std::string& value );
+        
             void set_header( const std::string& name, const std::string& value );
             
             void set_headers( const std::map< std::string, std::string >& values );

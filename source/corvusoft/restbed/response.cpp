@@ -52,9 +52,19 @@ namespace restbed
         return m_pimpl->get_body( );
     }
     
+    double Response::get_version( void ) const
+    {
+        return m_pimpl->get_version( );
+    }
+    
     int Response::get_status_code( void ) const
     {
         return m_pimpl->get_status_code( );
+    }
+
+    string Response::get_status_message( void ) const
+    {
+        return m_pimpl->get_status_message( );
     }
     
     string Response::get_header( const string& name ) const
@@ -77,9 +87,19 @@ namespace restbed
         m_pimpl->set_body( value );
     }
     
+    void Response::set_version( const double value )
+    {
+        m_pimpl->set_version( value );
+    }
+    
     void Response::set_status_code( const int value )
     {
         m_pimpl->set_status_code( value );
+    }
+    
+    void Response::set_status_message( const string& value )
+    {
+        m_pimpl->set_status_message( value );
     }
     
     void Response::set_header( const string& name, const string& value )

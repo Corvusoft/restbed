@@ -12,7 +12,7 @@ Feature: HTTP response headers
 		Then I should see a "Content-Length" response header with a value of "0"
 		And I should see a "Connection" response header with a value of "close"
 		And I should see a "Content-Type" response header with a value of "application/json; charset=utf-8"
-		And I should see a "Server" response header with a value of "Corvusoft - restbed/1.0"
+		And I should see a "Server" response header with a value of "Corvusoft - restbed"
 
 	Examples:
 		| method  |

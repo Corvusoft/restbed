@@ -120,26 +120,6 @@ namespace restbed
             }
         }
         
-        bool SettingsImpl::operator <( const SettingsImpl& value ) const
-        {
-            return m_properties.size( ) < value.m_properties.size( );
-        }
-        
-        bool SettingsImpl::operator >( const SettingsImpl& value ) const
-        {
-            return m_properties.size( ) > value.m_properties.size( );
-        }
-        
-        bool SettingsImpl::operator ==( const SettingsImpl& value ) const
-        {
-            return m_properties == value.m_properties;
-        }
-        
-        bool SettingsImpl::operator !=( const SettingsImpl& value ) const
-        {
-            return m_properties not_eq value.m_properties;
-        }
-        
         SettingsImpl& SettingsImpl::operator =( const SettingsImpl& value )
         {
             m_properties = value.m_properties;

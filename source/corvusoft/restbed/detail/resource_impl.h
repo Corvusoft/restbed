@@ -60,7 +60,9 @@ namespace restbed
                 void set_path( const std::string& value );
                 
                 void set_header_filter( const std::string& name, const std::string& value );
-                
+            
+                void set_header_filters( const std::map< std::string, std::string >& values );
+            
                 void set_method_handler( const Method& verb, const std::function< Response ( const Request& ) >& callback );
                 
                 //Operators

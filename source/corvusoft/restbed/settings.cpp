@@ -108,24 +108,4 @@ namespace restbed
         
         return *this;
     }
-    
-    bool Settings::operator <( const Settings& value ) const
-    {
-        return *m_pimpl < *value.m_pimpl;
-    }
-    
-    bool Settings::operator >( const Settings& value ) const
-    {
-        return *m_pimpl > *value.m_pimpl;
-    }
-    
-    bool Settings::operator ==( const Settings& value ) const
-    {
-        return *m_pimpl == *value.m_pimpl;
-    }
-    
-    bool Settings::operator !=( const Settings& value ) const
-    {
-        return *m_pimpl != *value.m_pimpl;
-    }
 }

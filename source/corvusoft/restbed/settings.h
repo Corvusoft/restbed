@@ -78,14 +78,6 @@ namespace restbed
             //Operators
             Settings& operator =( const Settings& value );
             
-            bool operator <( const Settings& value ) const;
-            
-            bool operator >( const Settings& value ) const;
-            
-            bool operator ==( const Settings& value ) const;
-            
-            bool operator !=( const Settings& value ) const;
-            
             //Properties
             
         protected:

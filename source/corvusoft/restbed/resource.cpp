@@ -75,9 +75,21 @@ namespace restbed
         m_pimpl->set_header_filter( name, value );
     }
     
+    void Resource::set_header_filters( const map< string, string >& values )
+    {
+        m_pimpl->set_header_filters( values );
+    }
+    
     void Resource::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
     {
         m_pimpl->set_method_handler( verb, callback );
+    }
+    
+    Resource& Resource::operator =( const Resource& value )
+    {
+        *m_pimpl = *value.m_pimpl;
+        
+        return *this;
     }
     
     bool Resource::operator <( const Resource& value ) const
@@ -98,12 +110,5 @@ namespace restbed
     bool Resource::operator !=( const Resource& value ) const
     {
         return *m_pimpl != *value.m_pimpl;
-    }
-    
-    Resource& Resource::operator =( const Resource& value )
-    {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
     }
 }

@@ -5,123 +5,330 @@
 //System Includes
 #include <map>
 #include <string>
-#include <vector>
-#include <cstdint>
 
 //Project Includes
+#include "request_fixture.h"
 #include <corvusoft/restbed/request>
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/bytes>
 
 //System Namespaces
 using std::map;
-using std::vector;
 using std::string;
 
 //Project Namespaces
 using restbed::Request;
+using framework::Bytes;
 
 //External Namespaces
+
+TEST( Request, constructor )
+{
+    Bytes body;
+    double version = 1.1;
+    string path = "/";
+    string origin = "";
+    map< string, string > headers;
+    map< string, string > query_parameters;
+    map< string, string > path_parameters;
+    
+    RequestFixture request;
+    
+    EXPECT_EQ( body, request.get_body( ) );
+    EXPECT_EQ( version, request.get_version( ) );
+    EXPECT_EQ( path, request.get_path( ) );
+    EXPECT_EQ( origin, request.get_origin( ) );
+    EXPECT_EQ( headers, request.get_headers( ) );
+    EXPECT_EQ( path_parameters, request.get_path_parameters( ) );
+    EXPECT_EQ( query_parameters, request.get_query_parameters( ) );
+}
+
+TEST( Request, copy_constructor )
+{
+    Bytes body = { 'b', 'o', 'd', 'y' };
+    double version = 1.0;
+    string path = "/events";
+    string origin = "localhost";
+    map< string, string > headers = { { "api", "1.0v" } };
+    map< string, string > query_parameters = { { "q", "cats" } };
+    map< string, string > path_parameters = { { "name", "value" } };
+    
+    RequestFixture original;
+    original.set_body( body );
+    original.set_version( version );
+    original.set_path( path );
+    original.set_origin( origin );
+    original.set_headers( headers );
+    original.set_path_parameters( path_parameters );
+    original.set_query_parameters( query_parameters );
+    
+    RequestFixture copy( original );
+    
+    EXPECT_EQ( body, copy.get_body( ) );
+    EXPECT_EQ( version, copy.get_version( ) );
+    EXPECT_EQ( path, copy.get_path( ) );
+    EXPECT_EQ( origin, copy.get_origin( ) );
+    EXPECT_EQ( headers, copy.get_headers( ) );
+    EXPECT_EQ( path_parameters, copy.get_path_parameters( ) );
+    EXPECT_EQ( query_parameters, copy.get_query_parameters( ) );
+}
 
 TEST( Request, default_destructor )
 {
     ASSERT_NO_THROW(
     {
-        Request* request = new Request( );
+        RequestFixture* request = new RequestFixture( );
         
         delete request;
     } );
 }
 
+TEST( Request, to_bytes )
+{
+    Bytes body = { 'b', 'o', 'd', 'y' };
+    double version = 1.0;
+    string path = "/events";
+    string origin = "localhost";
+    map< string, string > headers = { { "api", "1.0v" } };
+    map< string, string > query_parameters = { { "q", "cats" } };
+    map< string, string > path_parameters = { { "name", "value" } };
+    
+    RequestFixture request;
+    request.set_body( body );
+    request.set_version( version );
+    request.set_path( path );
+    request.set_origin( origin );
+    request.set_headers( headers );
+    request.set_path_parameters( path_parameters );
+    request.set_query_parameters( query_parameters );
+    
+    string bytes = "GET /events?q=cats HTTP/1.0\r\napi: 1.0v\r\n\r\nbody";
+    
+    EXPECT_EQ( Bytes( bytes.begin( ), bytes.end( ) ), request.to_bytes( ) );
+}
+
 TEST( Request, has_header )
 {
-    const Request request;
+    RequestFixture request;
     
     EXPECT_EQ( false, request.has_header( "Server" ) );
+    
+    map< string, string > headers = { { "Server", "restbed" } };
+    request.set_headers( headers );
+    
+    EXPECT_EQ( true, request.has_header( "Server" ) );
 }
 
 TEST( Request, has_path_parameter )
 {
-    const Request request;
+    RequestFixture request;
     
-    EXPECT_EQ( false, request.has_header( "login" ) );
+    EXPECT_EQ( false, request.has_path_parameter( "login" ) );
+    
+    map< string, string > parameters = { { "login", "benc" } };
+    request.set_path_parameters( parameters );
+    
+    EXPECT_EQ( true, request.has_path_parameter( "login" ) );
 }
 
 TEST( Request, has_query_parameter )
 {
-    const Request request;
+    RequestFixture request;
     
-    EXPECT_EQ( false, request.has_header( "event" ) );
+    EXPECT_EQ( false, request.has_query_parameter( "event" ) );
+    
+    map< string, string > parameters = { { "event", "cpu-overload" } };
+    request.set_query_parameters( parameters );
+    
+    EXPECT_EQ( true, request.has_query_parameter( "event" ) );
 }
 
-TEST( Request, version_accessor )
+TEST( Request, modify_body )
 {
-    const Request request;
+    Bytes body = { 'b', 'o', 'd', 'y' };
     
-    EXPECT_EQ( 1.1, request.get_version( ) );
+    RequestFixture request;
+    request.set_body( body );
+    
+    EXPECT_EQ( body, request.get_body( ) );
 }
 
-TEST( Request, path_accessor )
+TEST( Request, modify_version )
 {
-    const Request request;
+    RequestFixture request;
+    request.set_version( 1.0 );
     
-    EXPECT_EQ( "/", request.get_path( ) );
+    EXPECT_EQ( 1.0, request.get_version( ) );
 }
 
-TEST( Request, body_accessor )
+TEST( Request, modify_path )
 {
-    const Request request;
+    RequestFixture request;
+    request.set_path( "/events" );
     
-    vector< uint8_t > expectation;
-    
-    EXPECT_EQ( expectation, request.get_body( ) );
+    EXPECT_EQ( "/events", request.get_path( ) );
 }
 
-TEST( Request, header_accessor )
+TEST( Request, modify_origin )
 {
-    const Request request;
+    RequestFixture request;
+    request.set_origin( "localhost" );
     
-    EXPECT_EQ( "", request.get_header( "Content-Type" ) );
+    EXPECT_EQ( "localhost", request.get_origin( ) );
 }
 
-TEST( Request, headers_accessor )
+TEST( Request, modify_header )
 {
-    const Request request;
+    map< string, string > headers = { { "name", "value" } };
     
-    map< string, string > expectation;
+    RequestFixture request;
+    request.set_headers( headers );
     
-    EXPECT_EQ( expectation, request.get_headers( ) );
+    EXPECT_EQ( "value", request.get_header( "name" ) );
 }
 
-TEST( Request, query_parameter_accessor )
+TEST( Request, modify_headers )
 {
-    const Request request;
+    map< string, string > headers = { { "name", "value" } };
     
-    EXPECT_EQ( "", request.get_query_parameter( "age" ) );
+    RequestFixture request;
+    request.set_headers( headers );
+    
+    EXPECT_EQ( headers, request.get_headers( ) );
 }
 
-TEST( Request, query_parameters_accessor )
+TEST( Request, modify_query_parameter )
 {
-    const Request request;
+    map< string, string > parameters = { { "name", "value" } };
     
-    map< string, string > expectation;
+    RequestFixture request;
+    request.set_query_parameters( parameters );
     
-    EXPECT_EQ( expectation, request.get_query_parameters( ) );
+    EXPECT_EQ( "value", request.get_query_parameter( "name" ) );
 }
 
-TEST( Request, path_parameter_accessor )
+TEST( Request, modify_query_parameters )
 {
-    const Request request;
+    map< string, string > parameters = { { "name", "value" } };
     
-    EXPECT_EQ( "", request.get_path_parameter( "sex" ) );
+    RequestFixture request;
+    request.set_query_parameters( parameters );
+    
+    EXPECT_EQ( parameters, request.get_query_parameters( ) );
 }
 
-TEST( Request, path_parameters_accessor )
+TEST( Request, modify_path_parameter )
 {
-    const Request request;
+    map< string, string > parameters = { { "name", "value" } };
     
-    map< string, string > expectation;
+    RequestFixture request;
+    request.set_path_parameters( parameters );
     
-    EXPECT_EQ( expectation, request.get_path_parameters( ) );
+    EXPECT_EQ( "value", request.get_path_parameter( "name" ) );
+}
+
+TEST( Request, modify_path_parameters )
+{
+    map< string, string > parameters = { { "name", "value" } };
+    
+    RequestFixture request;
+    request.set_path_parameters( parameters );
+    
+    EXPECT_EQ( parameters, request.get_path_parameters( ) );
+}
+
+TEST( Request, assignment_operator )
+{
+    Bytes body = { 'b', 'o', 'd', 'y' };
+    double version = 1.0;
+    string path = "/events";
+    string origin = "localhost";
+    map< string, string > headers = { { "api", "1.0v" } };
+    map< string, string > query_parameters = { { "q", "cats" } };
+    map< string, string > path_parameters = { { "name", "value" } };
+    
+    RequestFixture original;
+    original.set_body( body );
+    original.set_version( version );
+    original.set_path( path );
+    original.set_origin( origin );
+    original.set_headers( headers );
+    original.set_path_parameters( path_parameters );
+    original.set_query_parameters( query_parameters );
+    
+    RequestFixture copy = original;
+    
+    EXPECT_EQ( body, copy.get_body( ) );
+    EXPECT_EQ( version, copy.get_version( ) );
+    EXPECT_EQ( path, copy.get_path( ) );
+    EXPECT_EQ( origin, copy.get_origin( ) );
+    EXPECT_EQ( headers, copy.get_headers( ) );
+    EXPECT_EQ( path_parameters, copy.get_path_parameters( ) );
+    EXPECT_EQ( query_parameters, copy.get_query_parameters( ) );
+}
+
+TEST( Request, less_than_operator )
+{
+    RequestFixture lhs;
+    lhs.set_path( "1" );
+    
+    RequestFixture rhs;
+    rhs.set_path( "2" );
+    
+    EXPECT_TRUE( lhs < rhs );
+}
+
+TEST( Request, greater_than_operator )
+{
+    RequestFixture lhs;
+    lhs.set_path( "2" );
+    
+    RequestFixture rhs;
+    rhs.set_path( "1" );
+    
+    EXPECT_TRUE( lhs > rhs );
+}
+
+TEST( Request, equality_operator )
+{
+    Bytes body = { 'b', 'o', 'd', 'y' };
+    double version = 1.0;
+    string path = "/events";
+    string origin = "localhost";
+    map< string, string > headers = { { "api", "1.0v" } };
+    map< string, string > query_parameters = { { "q", "cats" } };
+    map< string, string > path_parameters = { { "name", "value" } };
+    
+    RequestFixture lhs;
+    lhs.set_body( body );
+    lhs.set_version( version );
+    lhs.set_path( path );
+    lhs.set_origin( origin );
+    lhs.set_headers( headers );
+    lhs.set_path_parameters( path_parameters );
+    lhs.set_query_parameters( query_parameters );
+    
+    RequestFixture rhs;
+    rhs.set_body( body );
+    rhs.set_version( version );
+    rhs.set_path( path );
+    rhs.set_origin( origin );
+    rhs.set_headers( headers );
+    rhs.set_path_parameters( path_parameters );
+    rhs.set_query_parameters( query_parameters );
+    
+    EXPECT_TRUE( lhs == rhs );
+}
+
+TEST( Request, inequality_operator )
+{
+    RequestFixture lhs;
+    lhs.set_version( 1.1 );
+    
+    RequestFixture rhs;
+    rhs.set_version( 1.0 );
+    
+    EXPECT_TRUE( lhs != rhs );
 }

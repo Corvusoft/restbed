@@ -113,9 +113,24 @@ namespace restbed
                 throw invalid_argument( String::empty );
             }
             
-            string key = String::lowercase( name );
+            auto entry = Map::find_key_ignoring_case( name, m_header_filters );
             
-            m_header_filters[ key ] = value;
+            if ( entry not_eq m_header_filters.end( ) )
+            {
+                entry->second = value;
+            }
+            else
+            {
+                m_header_filters[ name ] = value;
+            }
+        }
+        
+        void ResourceImpl::set_header_filters( const map< string, string >& values )
+        {
+            for ( auto value : values )
+            {
+                set_header_filter( value.first, value.second );
+            }
         }
         
         void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )

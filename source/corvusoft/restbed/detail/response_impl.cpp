@@ -35,14 +35,18 @@ namespace restbed
     namespace detail
     {
         ResponseImpl::ResponseImpl( void ) : m_body( ),
+            m_version( 1.1 ),
             m_status_code( StatusCode::OK ),
+            m_status_message( String::empty ),
             m_headers( )
         {
             //n/a
         }
         
         ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_body( original.m_body ),
+            m_version( original.m_version ),
             m_status_code( original.m_status_code ),
+            m_status_message( original.m_status_message ),
             m_headers( original.m_headers )
         {
             //n/a
@@ -68,9 +72,19 @@ namespace restbed
             return m_body;
         }
         
+        double ResponseImpl::get_version( void ) const
+        {
+            return m_version;
+        }
+        
         int ResponseImpl::get_status_code( void ) const
         {
             return m_status_code;
+        }
+        
+        string ResponseImpl::get_status_message( void ) const
+        {
+            return m_status_message;
         }
         
         string ResponseImpl::get_header( const string& name ) const
@@ -102,9 +116,19 @@ namespace restbed
             m_body = Bytes( value.begin( ), value.end( ) );
         }
         
+        void ResponseImpl::set_version( const double value )
+        {
+            m_version = value;
+        }
+        
         void ResponseImpl::set_status_code( const int value )
         {
             m_status_code = value;
+        }
+        
+        void ResponseImpl::set_status_message( const string& value )
+        {
+            m_status_message = value;
         }
         
         void ResponseImpl::set_header( const string& name, const string& value )
@@ -143,9 +167,13 @@ namespace restbed
         {
             m_body = value.m_body;
             
-            m_headers = value.m_headers;
+            m_version = value.m_version;
             
             m_status_code = value.m_status_code;
+            
+            m_status_message = value.m_status_message;
+            
+            m_headers = value.m_headers;
             
             return *this;
         }
@@ -157,7 +185,14 @@ namespace restbed
         
         string ResponseImpl::generate_status_section( void ) const
         {
-            return String::format( "HTTP/1.1 %i %s\r\n", m_status_code, StatusCode::to_string( m_status_code ).data( ) );
+            string status_message = String::empty;
+            
+            if ( m_status_message.empty( ) )
+            {
+                status_message = StatusCode::to_string( m_status_code );
+            }
+            
+            return String::format( "HTTP/%.1f %i %s\r\n", m_version, m_status_code, m_status_message.data( ) );
         }
         
         string ResponseImpl::generate_header_section( void ) const
@@ -196,7 +231,7 @@ namespace restbed
             
             if ( not has_header( "Server" ) )
             {
-                header = "Server: Corvusoft - restbed/1.0\r\n";
+                header = "Server: Corvusoft - restbed\r\n";
             }
             
             return header;

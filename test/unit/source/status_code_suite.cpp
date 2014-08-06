@@ -25,7 +25,7 @@ using restbed::StatusCode;
 
 TEST( StatusCode, to_string_with_valid_status_code )
 {
-    const string result = StatusCode::to_string( StatusCode::OK );
+    string result = StatusCode::to_string( StatusCode::OK );
     
     EXPECT_EQ( "OK", result );
 }
@@ -37,7 +37,7 @@ TEST( StatusCode, to_string_with_invalid_status_code )
 
 TEST( StatusCode, parse_with_valid_status_code )
 {
-    const int result = StatusCode::parse( "Unprocessable Entity" );
+    int result = StatusCode::parse( "Unprocessable Entity" );
     
     EXPECT_EQ( 422, result );
 }
@@ -47,9 +47,9 @@ TEST( StatusCode, parse_with_invalid_status_code )
     ASSERT_THROW( StatusCode::parse( "Missing Error Message" ), invalid_argument );
 }
 
-TEST( StatusCode, set_status_code_strings )
+TEST( StatusCode, modify_mappings )
 {
-    const map< int, string > values =
+    map< int, string > values =
     {
         { 109, "Custom Error Message" },
         { 222, "Inhouse Error Message" }

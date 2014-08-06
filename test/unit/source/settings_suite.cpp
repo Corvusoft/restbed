@@ -21,28 +21,31 @@ using restbed::Settings;
 
 //External Namespaces
 
-TEST( Settings, default_constructor )
+TEST( Settings, constructor )
 {
-    const Settings settings;
+    Settings settings;
     
-    EXPECT_EQ( 80, settings.get_port( )  );
+    EXPECT_EQ( 80, settings.get_port( ) );
     EXPECT_EQ( "/", settings.get_root( ) );
+    EXPECT_EQ( 1024, settings.get_maximum_connections( ) );
 }
 
 TEST( Settings, copy_constructor )
 {
-    const string name = "Planet";
-    const string value = "earth";
-    
     Settings original;
-    original.set_property( name, value );
+    original.set_port( 33 );
+    original.set_root( "/events" );
+    original.set_maximum_connections( 23 );
+    original.set_property( "name", "value" );
     
-    const Settings copy( original );
-    
-    EXPECT_EQ( value, copy.get_property( name ) );
+    Settings copy( original );
+    EXPECT_EQ( 33, copy.get_port( ) );
+    EXPECT_EQ( "/events", copy.get_root( ) );
+    EXPECT_EQ( 23, copy.get_maximum_connections( ) );
+    EXPECT_EQ( "value", copy.get_property( "name" ) );
 }
 
-TEST( Settings, default_destructor )
+TEST( Settings, destructor )
 {
     ASSERT_NO_THROW(
     {
@@ -52,7 +55,22 @@ TEST( Settings, default_destructor )
     } );
 }
 
-TEST( Settings, port_accessor )
+TEST( Settings, assignment_operator )
+{
+    Settings original;
+    original.set_port( 33 );
+    original.set_root( "/events" );
+    original.set_maximum_connections( 23 );
+    original.set_property( "name", "value" );
+    
+    Settings copy = original;
+    EXPECT_EQ( 33, copy.get_port( ) );
+    EXPECT_EQ( "/events", copy.get_root( ) );
+    EXPECT_EQ( 23, copy.get_maximum_connections( ) );
+    EXPECT_EQ( "value", copy.get_property( "name" ) );
+}
+
+TEST( Settings, modify_port )
 {
     Settings settings;
     settings.set_port( 8989 );
@@ -60,81 +78,33 @@ TEST( Settings, port_accessor )
     EXPECT_EQ( 8989, settings.get_port( ) );
 }
 
-TEST( Settings, root_accessor )
-{
-    const string value = "The Quest For Life";
-    
-    Settings settings;
-    settings.set_root( value );
-    
-    EXPECT_EQ( value, settings.get_root( ) );
-}
-
-TEST( Settings, maximum_connections_accessor )
-{
-    const int value = 88;
-    
-    Settings settings;
-    settings.set_maximum_connections( value );
-    
-    EXPECT_EQ( value, settings.get_maximum_connections( ) );
-}
-
-TEST( Settings, property_accessor )
-{
-    const string name = "MIR";
-    const string value = "1986";
-    
-    Settings settings;
-    settings.set_property( name, value );
-    
-    EXPECT_EQ( value, settings.get_property( name ) );
-}
-
-TEST( Settings, case_insensitive_property_accessor )
-{
-    const string name = "MIR";
-    const string value = "1986";
-    
-    Settings settings;
-    settings.set_property( name, value );
-    
-    EXPECT_EQ( value, settings.get_property( "mir" ) );
-}
-
-TEST( Settings, previously_defined_property_accessor )
+TEST( Settings, modify_root )
 {
     Settings settings;
-    settings.set_property( "Local Star Name", "Mars" );
-    settings.set_property( "Local Star Name", "Sun" );
+    settings.set_root( "/events" );
     
-    EXPECT_EQ( "Sun", settings.get_property( "Local Star Name" ) );
+    EXPECT_EQ( "/events", settings.get_root( ) );
 }
 
-TEST( Settings, default_defined_property_accessor )
-{
-    const string value = "black hole";
-    
-    Settings settings;
-    settings.set_property( "root", value );
-    
-    EXPECT_EQ( value, settings.get_root( ) );
-}
-
-TEST( Settings, undefined_property_accessor )
-{
-    const Settings settings;
-    
-    EXPECT_EQ( "", settings.get_property( "Alpha Centauri" ) );
-}
-
-TEST( Settings, properties_accessor )
+TEST( Settings, modify_maximum_connections )
 {
     Settings settings;
-    settings.set_property( "Voyager 1", "124 AU" );
-    settings.set_property( "Voyager 2", "101 AU" );
+    settings.set_maximum_connections( 120 );
     
-    map< string, string > expectation =
+    EXPECT_EQ( 120, settings.get_maximum_connections( ) );
+}
+
+TEST( Settings, modify_property )
+{
+    Settings settings;
+    settings.set_property( "Local Star", "Sun" );
+    
+    EXPECT_EQ( "Sun", settings.get_property( "Local Star" ) );
+}
+
+TEST( Settings, modify_properties )
+{
+    map< string, string > values =
     {
         { "ROOT", "/" },
         { "MODE", "8" },
@@ -144,33 +114,33 @@ TEST( Settings, properties_accessor )
         { "VOYAGER 2", "101 AU" }
     };
     
-    EXPECT_EQ( expectation, settings.get_properties( ) );
+    Settings settings;
+    settings.set_properties( values );
+    
+    EXPECT_EQ( values, settings.get_properties( ) );
 }
 
-TEST( Settings, default_properties_accessor )
+TEST( Settings, ignore_property_case )
+{
+    Settings settings;
+    settings.set_property( "MIR", "1986" );
+    
+    EXPECT_EQ( "1986", settings.get_property( "mir" ) );
+}
+
+TEST( Settings, overwrite_property )
+{
+    Settings settings;
+    settings.set_property( "Fourth Planet", "Sun" );
+    settings.set_property( "Fourth Planet", "Mars" );
+    
+    EXPECT_EQ( "Mars", settings.get_property( "Fourth Planet" ) );
+}
+
+TEST( Settings, non_existent_property )
 {
     const Settings settings;
     
-    map< string, string > expectation =
-    {
-        { "ROOT", "/" },
-        { "MODE", "8" },
-        { "PORT", "80" },
-        { "MAXIMUM CONNECTIONS", "1024" }
-    };
-    
-    EXPECT_EQ( expectation, settings.get_properties( ) );
-}
-
-TEST( Settings, assignment_operator )
-{
-    Settings rhs;
-    rhs.set_property( "species", "30+ Million on Earth" );
-    
-    const Settings lhs = rhs;
-    
-    const auto& rhs_properties = rhs.get_properties( );
-    const auto& lhs_properties = lhs.get_properties( );
-    
-    EXPECT_TRUE( lhs_properties == rhs_properties );
+    EXPECT_NO_THROW( settings.get_property( "Alpha Centauri" ) );
+    EXPECT_EQ( "", settings.get_property( "Alpha Centauri" ) );
 }
