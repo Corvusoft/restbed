@@ -3,63 +3,72 @@
  */
 
 //System Includes
-#include <map>
 #include <string>
 
 //Project Includes
+#include "request_fixture.h"
 #include <corvusoft/restbed/method>
 #include <corvusoft/restbed/request>
+#include <corvusoft/restbed/status_code>
 
 //External Includes
 #include <gtest/gtest.h>
 
 //System Namespaces
-using std::map;
-using std::vector;
 using std::string;
 
 //Project Namespaces
+using restbed::Method;
 using restbed::Request;
+using restbed::StatusCode;
 
 //External Namespaces
 
 TEST( Request, constructor )
 {
-    const Request request;
+    RequestFixture request;
     
-    EXPECT_EQ( "/", request.get_path( ) );
-    EXPECT_EQ( "GET", request.get_method( ).to_string( ) );
-    EXPECT_EQ( 1.1, request.get_version( ) );
-    
-    auto expectation = map< string, string >( );
-    
-    EXPECT_EQ( expectation, request.get_headers( ) );
-    EXPECT_EQ( expectation, request.get_path_parameters( ) );
-    EXPECT_EQ( expectation, request.get_query_parameters( ) );
+    EXPECT_EQ( Method( "GET" ), request.get_method( ) );
 }
 
-TEST( Request, bytes_accessor )
+TEST( Request, copy_constructor )
 {
-    const Request request;
+    RequestFixture original;
+    original.set_method( "POST" );
     
-    string data = "GET / HTTP/1.1\r\n\r\n";
-    vector< uint8_t > expectation( data.begin( ), data.end( ) );
+    RequestFixture copy( original );
     
-    EXPECT_EQ( expectation, request.to_bytes( ) );
+    EXPECT_EQ( Method( "POST" ), copy.get_method( ) );
 }
 
-TEST( Request, method_accessor )
+TEST( Request, modify_method )
 {
-    const Request request;
+    RequestFixture request;
+    request.set_method( "POST" );
     
-    EXPECT_EQ( "GET", request.get_method( ).to_string( ) );
+    EXPECT_EQ( Method( "POST" ), request.get_method( ) );
 }
 
-TEST( Request, equality_operator )
+TEST( Request, modify_version )
 {
-    Request lhs;
+    RequestFixture request;
     
-    Request rhs;
+    try
+    {
+        request.set_version( 2.0 );
+    }
+    catch ( StatusCode::Value code )
+    {
+        EXPECT_EQ( code, StatusCode::HTTP_VERSION_NOT_SUPPORTED );
+    }
+}
+
+TEST( Request, assignment_operator )
+{
+    RequestFixture original;
+    original.set_method( "POST" );
     
-    EXPECT_TRUE( lhs == rhs );
+    RequestFixture copy = original;
+    
+    EXPECT_EQ( Method( "POST" ), copy.get_method( ) );
 }

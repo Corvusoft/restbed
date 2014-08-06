@@ -23,7 +23,7 @@ using restbed::Settings;
 
 //External Namespaces
 
-TEST( Settings, port_accessor )
+TEST( Settings, modify_mode )
 {
     Settings settings;
     settings.set_mode( Mode::ASYNCHRONOUS );

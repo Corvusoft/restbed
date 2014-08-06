@@ -19,9 +19,18 @@ using restbed::Settings;
 
 //External Namespaces
 
+TEST( Service, constructor )
+{
+    Settings settings;
+    
+    Service service( settings );
+    
+    EXPECT_TRUE( true );
+}
+
 TEST( Service, destructor )
 {
-    const Settings settings;
+    Settings settings;
     
     ASSERT_NO_THROW(
     {
@@ -29,16 +38,4 @@ TEST( Service, destructor )
         
         delete service;
     } );
-}
-
-TEST( Service, assignment_operator )
-{
-    Settings settings;
-    settings.set_port( 8732 );
-    
-    const Service lhs( settings );
-    
-    const Service rhs = lhs;
-    
-    EXPECT_TRUE( true );
 }

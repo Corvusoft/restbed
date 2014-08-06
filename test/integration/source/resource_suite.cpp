@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <string>
 #include <stdexcept>
 
@@ -16,6 +17,7 @@
 #include <gtest/gtest.h>
 
 //System Namespaces
+using std::map;
 using std::string;
 using std::invalid_argument;
 
@@ -27,28 +29,14 @@ using restbed::Request;
 using restbed::Response;
 using restbed::Resource;
 
-const static int method_handler_accessor_expection = 3349;
+const static int method_handler_accessor_expectation = 3349;
 
 Response test_method_handler( const Request& )
 {
     Response response;
-    response.set_status_code( method_handler_accessor_expection );
+    response.set_status_code( method_handler_accessor_expectation );
     
     return response;
-}
-
-TEST( Resource, copy_constructor )
-{
-    string method = "POST";
-    
-    Resource original;
-    original.set_path( "/event/.*" );
-    original.set_header_filter( "Content-Type", "text/data" );
-    original.set_method_handler( method, &test_method_handler );
-    
-    const Resource copy( original );
-    
-    EXPECT_EQ( original, copy );
 }
 
 TEST( Resource, method_handler_accessor )
@@ -63,5 +51,5 @@ TEST( Resource, method_handler_accessor )
     Request request;
     Response response = handler( request );
     
-    EXPECT_EQ( method_handler_accessor_expection, response.get_status_code( ) );
+    EXPECT_EQ( method_handler_accessor_expectation, response.get_status_code( ) );
 }
