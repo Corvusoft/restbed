@@ -64,3 +64,16 @@ for file in $files; do
         git add $file
     fi
 done
+
+REINDENT="tool/python/reindent/reindent.py"
+
+REINDENT_PARAMETERS=`cat tool/python/reindent/configuration`
+
+for file in $files; do
+   x=`echo $file |grep -E '(\.py)'`
+   if test "x$x" != "x"; then
+       $REINDENT ${REINDENT_PARAMETERS} $file
+       git add $file
+   fi
+done
+
