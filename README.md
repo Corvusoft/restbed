@@ -1,5 +1,3 @@
-# README #
-
 ### What is this repository for? ###
 
 Restbed is a C++ framework that enables you to embed RESTful services within your application. Restbed is designed
