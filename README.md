@@ -2,8 +2,6 @@
 
 ### What is this repository for? ###
 
-Version: [Release Candidate 1](https://bitbucket.org/Corvusoft/restbed/wiki/Software%20Versions)
-
 Restbed is a C++ framework that enables you to embed RESTful services within your application. Restbed is designed
 to get out of your way; it enables you to bring RESTful functionality to your product without imposing design 
 decisions upon you.
