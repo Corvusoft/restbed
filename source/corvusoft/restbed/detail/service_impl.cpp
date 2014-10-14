@@ -274,9 +274,16 @@ namespace restbed
                     throw asio::system_error( error );
                 }
                 
-                asio::streambuf data;
-                asio::read_until( *socket, data, "\r\n" );
-                istream stream( &data );
+                error_code code;
+                asio::streambuf buffer;
+                read( *socket, buffer, asio::transfer_at_least( socket->available( ) ), code );
+                
+                if ( code )
+                {
+                    throw asio::system_error( code );
+                }
+                
+                istream stream( &buffer );
                 
                 RequestBuilderImpl builder( stream );
                 builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );

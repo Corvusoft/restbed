@@ -64,7 +64,34 @@ class Http
             
             return result;
         }
-        
+
+        static map< string, string > post( const string& url, const char* body )
+        {
+            map< string, string > result;
+            
+            CURL* request = curl_easy_init( );
+            curl_easy_setopt( request, CURLOPT_URL, url.data( ) );
+            curl_easy_setopt( request, CURLOPT_WRITEDATA, fopen( "/dev/null", "wb" ) );
+            curl_easy_setopt( request, CURLOPT_POSTFIELDS, body );
+            
+            CURLcode response = curl_easy_perform( request );
+            
+            if ( response == CURLE_OK )
+            {
+                int status_code = 0;
+                curl_easy_getinfo( request, CURLINFO_RESPONSE_CODE, &status_code );
+                result[ "Status Code" ] = ::to_string( status_code );
+            }
+            else
+            {
+                fprintf( stderr, "Failed to perform HTTP GET request, curl response code: %i\n", response );
+            }
+            
+            curl_easy_cleanup( request );
+            
+            return result;
+        }
+    
     private:
         Http( void ) = delete;
         ~Http( void ) = delete;
