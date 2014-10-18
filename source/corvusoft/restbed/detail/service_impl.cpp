@@ -44,6 +44,7 @@ using std::invalid_argument;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
+using std::chrono::milliseconds;
 using std::chrono::system_clock;
 
 //Project Namespaces
@@ -275,9 +276,20 @@ namespace restbed
                 }
                 
                 error_code code;
+                
+                while ( socket->available( code ) == 0 )
+                {
+                    if ( code )
+                    {
+                        throw asio::system_error( code );
+                    }
+                    
+                    std::this_thread::sleep_for( milliseconds( 250 ) );
+                }
+                
                 asio::streambuf buffer;
                 read( *socket, buffer, asio::transfer_at_least( socket->available( ) ), code );
-                
+
                 if ( code )
                 {
                     throw asio::system_error( code );
@@ -312,14 +324,16 @@ namespace restbed
                 else
                 {
                     log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-                            request.get_method( ).to_string( ).data( ),
-                            request.get_path( ).data( ),
-                            request.get_origin( ).data( ) ) );
+                                                             request.get_method( ).to_string( ).data( ),
+                                                             request.get_path( ).data( ),
+                                                             request.get_origin( ).data( ) ) );
                 }
             }
             catch ( const asio::system_error& se )
             {
                 log( LogLevel::FATAL, se.what( ) );
+                
+                response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
             }
             catch ( const StatusCode::Value status_code )
             {
