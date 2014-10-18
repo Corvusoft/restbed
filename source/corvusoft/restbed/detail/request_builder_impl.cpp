@@ -19,6 +19,7 @@
 #include <corvusoft/framework/map>
 #include <corvusoft/framework/string>
 #include <corvusoft/framework/istream>
+#include <corvusoft/framework/string_option>
 
 //System Namespaces
 using std::map;
@@ -39,6 +40,7 @@ using framework::Map;
 using framework::Bytes;
 using framework::String;
 using framework::IStream;
+using framework::StringOption;
 
 namespace restbed
 {
@@ -107,7 +109,7 @@ namespace restbed
             socket >> version;
             socket.ignore( 2 );
             
-            version = String::remove( "HTTP/", version, true );
+            version = String::remove( "HTTP/", version, StringOption::CASE_SENSITIVE );
             
             double result = 0;
             

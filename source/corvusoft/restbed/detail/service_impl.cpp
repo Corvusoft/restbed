@@ -69,7 +69,7 @@ namespace restbed
             m_resources( ),
             m_log_handler( nullptr ),
             m_thread( nullptr ),
-            m_work ( nullptr ),
+            m_work( nullptr ),
             m_io_service( nullptr ),
             m_acceptor( nullptr ),
             m_authentication_handler( bind( &ServiceImpl::authentication_handler, this, _1, _2 ) ),
