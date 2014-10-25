@@ -1,12 +1,16 @@
 [submodule "dependency/asio"]
+        branch = master
 	path = dependency/asio
 	url = http://source.corvusoft.co.uk/asio-dependency.git
 [submodule "dependency/gtest"]
+        branch = master
 	path = dependency/gtest
 	url = http://source.corvusoft.co.uk/gtest-dependency.git
 [submodule "dependency/curl"]
+        branch = master
 	path = dependency/curl
 	url = http://source.corvusoft.co.uk/libcurl-dependency.git
 [submodule "dependency/framework"]
+        branch = master
 	path = dependency/framework
 	url = http://source.corvusoft.co.uk/cpp-framework.git
