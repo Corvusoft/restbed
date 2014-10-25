@@ -14,7 +14,6 @@
 //System Namespaces
 using std::map;
 using std::string;
-using std::istream;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;

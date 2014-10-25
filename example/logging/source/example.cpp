@@ -1,4 +1,6 @@
 #include <memory>
+#include <cstdlib>
+
 #include "restbed"
 
 using namespace std;

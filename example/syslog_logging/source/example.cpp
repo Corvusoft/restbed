@@ -1,5 +1,6 @@
 #include <memory>
 #include <cstdarg>
+#include <cstdlib>
 #include <syslog.h>
 #include <unistd.h>
 #include <sys/types.h>
