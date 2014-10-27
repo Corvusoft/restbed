@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <stdexcept>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restbed/method>
@@ -19,6 +20,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::function;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -52,4 +54,21 @@ TEST( Resource, method_handler_accessor )
     Response response = handler( request );
     
     EXPECT_EQ( method_handler_accessor_expectation, response.get_status_code( ) );
+}
+
+TEST( Resource, method_handlers_accessor )
+{
+    map< Method, function< Response ( const Request& ) > > expectation;
+    expectation[ "GET" ] = &test_method_handler;
+    expectation[ "PUT" ] = &test_method_handler;
+    expectation[ "DELETE" ] = &test_method_handler;
+    
+    Resource resource;
+    resource.set_method_handlers( expectation );
+    
+    auto actual = resource.get_method_handlers( );
+    
+    EXPECT_TRUE( actual.count( "GET" ) );
+    EXPECT_TRUE( actual.count( "PUT" ) );
+    EXPECT_TRUE( actual.count( "DELETE" ) );
 }

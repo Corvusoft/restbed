@@ -89,6 +89,18 @@ namespace restbed
             return m_method_handlers.at( verb.to_string( ) );
         }
         
+        map< Method, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
+        {
+            map< Method, function< Response ( const Request& ) > > handlers;
+            
+            for ( auto method_handler : m_method_handlers )
+            {
+                handlers[ method_handler.first ] = method_handler.second;
+            }
+            
+            return handlers;
+        }
+        
         void ResourceImpl::set_path( const string& value )
         {
             auto path = String::split( value, '/' );
@@ -136,6 +148,14 @@ namespace restbed
         void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
         {
             m_method_handlers[ verb.to_string( ) ] = callback;
+        }
+        
+        void ResourceImpl::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
+        {
+            for ( const auto value : values )
+            {
+                set_method_handler( value.first, value.second );
+            }
         }
         
         bool ResourceImpl::operator <( const ResourceImpl& value ) const

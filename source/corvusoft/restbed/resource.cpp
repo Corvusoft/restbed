@@ -65,6 +65,11 @@ namespace restbed
         return m_pimpl->get_method_handler( method );
     }
     
+    map< Method, function< Response ( const Request& ) > > Resource::get_method_handlers( void ) const
+    {
+        return m_pimpl->get_method_handlers( );
+    }
+    
     void Resource::set_path( const string& value )
     {
         m_pimpl->set_path( value );
@@ -83,6 +88,11 @@ namespace restbed
     void Resource::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
     {
         m_pimpl->set_method_handler( verb, callback );
+    }
+    
+    void Resource::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
+    {
+        m_pimpl->set_method_handlers( values );
     }
     
     Resource& Resource::operator =( const Resource& value )
