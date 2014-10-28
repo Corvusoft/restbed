@@ -6,10 +6,10 @@
 #include <string>
 
 //Project Includes
-#include "request_fixture.h"
 #include <corvusoft/restbed/method>
 #include <corvusoft/restbed/request>
 #include <corvusoft/restbed/status_code>
+#include <corvusoft/restbed/detail/request_impl.h>
 
 //External Includes
 #include <gtest/gtest.h>
@@ -21,29 +21,30 @@ using std::string;
 using restbed::Method;
 using restbed::Request;
 using restbed::StatusCode;
+using restbed::detail::RequestImpl;
 
 //External Namespaces
 
 TEST( Request, constructor )
 {
-    RequestFixture request;
+    Request request;
     
     EXPECT_EQ( Method( "GET" ), request.get_method( ) );
 }
 
 TEST( Request, copy_constructor )
 {
-    RequestFixture original;
+    RequestImpl original;
     original.set_method( "POST" );
     
-    RequestFixture copy( original );
+    Request copy( original );
     
     EXPECT_EQ( Method( "POST" ), copy.get_method( ) );
 }
 
 TEST( Request, modify_method )
 {
-    RequestFixture request;
+    RequestImpl request;
     request.set_method( "POST" );
     
     EXPECT_EQ( Method( "POST" ), request.get_method( ) );
@@ -51,7 +52,7 @@ TEST( Request, modify_method )
 
 TEST( Request, modify_version )
 {
-    RequestFixture request;
+    RequestImpl request;
     
     try
     {
@@ -65,10 +66,10 @@ TEST( Request, modify_version )
 
 TEST( Request, assignment_operator )
 {
-    RequestFixture original;
+    RequestImpl original;
     original.set_method( "POST" );
     
-    RequestFixture copy = original;
+    RequestImpl copy = original;
     
     EXPECT_EQ( Method( "POST" ), copy.get_method( ) );
 }

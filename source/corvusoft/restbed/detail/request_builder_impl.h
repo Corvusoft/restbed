@@ -12,6 +12,7 @@
 #include <istream>
 
 //Project Includes
+#include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes
 #include <corvusoft/framework/bytes>
@@ -30,7 +31,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class RequestBuilderImpl : private Request
+        class RequestBuilderImpl : private RequestImpl
         {
             public:
                 //Friends

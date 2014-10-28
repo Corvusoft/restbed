@@ -7,8 +7,8 @@
 #include <string>
 
 //Project Includes
-#include "request_fixture.h"
 #include <corvusoft/restbed/request>
+#include <corvusoft/restbed/detail/request_impl.h>
 
 //External Includes
 #include <gtest/gtest.h>
@@ -20,6 +20,7 @@ using std::string;
 
 //Project Namespaces
 using restbed::Request;
+using restbed::detail::RequestImpl;
 using framework::Bytes;
 
 //External Namespaces
@@ -34,7 +35,7 @@ TEST( Request, constructor )
     map< string, string > query_parameters;
     map< string, string > path_parameters;
     
-    RequestFixture request;
+    Request request;
     
     EXPECT_EQ( body, request.get_body( ) );
     EXPECT_EQ( version, request.get_version( ) );
@@ -55,7 +56,7 @@ TEST( Request, copy_constructor )
     map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
     
-    RequestFixture original;
+    RequestImpl original;
     original.set_body( body );
     original.set_version( version );
     original.set_path( path );
@@ -64,7 +65,7 @@ TEST( Request, copy_constructor )
     original.set_path_parameters( path_parameters );
     original.set_query_parameters( query_parameters );
     
-    RequestFixture copy( original );
+    Request copy( original );
     
     EXPECT_EQ( body, copy.get_body( ) );
     EXPECT_EQ( version, copy.get_version( ) );
@@ -79,7 +80,7 @@ TEST( Request, default_destructor )
 {
     ASSERT_NO_THROW(
     {
-        RequestFixture* request = new RequestFixture( );
+        Request* request = new Request( );
         
         delete request;
     } );
@@ -95,7 +96,7 @@ TEST( Request, to_bytes )
     map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_body( body );
     request.set_version( version );
     request.set_path( path );
@@ -111,7 +112,7 @@ TEST( Request, to_bytes )
 
 TEST( Request, has_header )
 {
-    RequestFixture request;
+    RequestImpl request;
     
     EXPECT_EQ( false, request.has_header( "Server" ) );
     
@@ -123,7 +124,7 @@ TEST( Request, has_header )
 
 TEST( Request, has_path_parameter )
 {
-    RequestFixture request;
+    RequestImpl request;
     
     EXPECT_EQ( false, request.has_path_parameter( "login" ) );
     
@@ -135,7 +136,7 @@ TEST( Request, has_path_parameter )
 
 TEST( Request, has_query_parameter )
 {
-    RequestFixture request;
+    RequestImpl request;
     
     EXPECT_EQ( false, request.has_query_parameter( "event" ) );
     
@@ -149,7 +150,7 @@ TEST( Request, modify_body )
 {
     Bytes body = { 'b', 'o', 'd', 'y' };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_body( body );
     
     EXPECT_EQ( body, request.get_body( ) );
@@ -157,7 +158,7 @@ TEST( Request, modify_body )
 
 TEST( Request, modify_version )
 {
-    RequestFixture request;
+    RequestImpl request;
     request.set_version( 1.0 );
     
     EXPECT_EQ( 1.0, request.get_version( ) );
@@ -165,7 +166,7 @@ TEST( Request, modify_version )
 
 TEST( Request, modify_path )
 {
-    RequestFixture request;
+    RequestImpl request;
     request.set_path( "/events" );
     
     EXPECT_EQ( "/events", request.get_path( ) );
@@ -173,7 +174,7 @@ TEST( Request, modify_path )
 
 TEST( Request, modify_origin )
 {
-    RequestFixture request;
+    RequestImpl request;
     request.set_origin( "localhost" );
     
     EXPECT_EQ( "localhost", request.get_origin( ) );
@@ -183,7 +184,7 @@ TEST( Request, modify_header )
 {
     map< string, string > headers = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_headers( headers );
     
     EXPECT_EQ( "value", request.get_header( "name" ) );
@@ -193,7 +194,7 @@ TEST( Request, modify_headers )
 {
     map< string, string > headers = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_headers( headers );
     
     EXPECT_EQ( headers, request.get_headers( ) );
@@ -203,7 +204,7 @@ TEST( Request, modify_query_parameter )
 {
     map< string, string > parameters = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_query_parameters( parameters );
     
     EXPECT_EQ( "value", request.get_query_parameter( "name" ) );
@@ -213,7 +214,7 @@ TEST( Request, modify_query_parameters )
 {
     map< string, string > parameters = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_query_parameters( parameters );
     
     EXPECT_EQ( parameters, request.get_query_parameters( ) );
@@ -223,7 +224,7 @@ TEST( Request, modify_path_parameter )
 {
     map< string, string > parameters = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_path_parameters( parameters );
     
     EXPECT_EQ( "value", request.get_path_parameter( "name" ) );
@@ -233,7 +234,7 @@ TEST( Request, modify_path_parameters )
 {
     map< string, string > parameters = { { "name", "value" } };
     
-    RequestFixture request;
+    RequestImpl request;
     request.set_path_parameters( parameters );
     
     EXPECT_EQ( parameters, request.get_path_parameters( ) );
@@ -249,7 +250,7 @@ TEST( Request, assignment_operator )
     map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
     
-    RequestFixture original;
+    RequestImpl original;
     original.set_body( body );
     original.set_version( version );
     original.set_path( path );
@@ -258,7 +259,7 @@ TEST( Request, assignment_operator )
     original.set_path_parameters( path_parameters );
     original.set_query_parameters( query_parameters );
     
-    RequestFixture copy = original;
+    RequestImpl copy = original;
     
     EXPECT_EQ( body, copy.get_body( ) );
     EXPECT_EQ( version, copy.get_version( ) );
@@ -271,10 +272,10 @@ TEST( Request, assignment_operator )
 
 TEST( Request, less_than_operator )
 {
-    RequestFixture lhs;
+    RequestImpl lhs;
     lhs.set_path( "1" );
     
-    RequestFixture rhs;
+    RequestImpl rhs;
     rhs.set_path( "2" );
     
     EXPECT_TRUE( lhs < rhs );
@@ -282,10 +283,10 @@ TEST( Request, less_than_operator )
 
 TEST( Request, greater_than_operator )
 {
-    RequestFixture lhs;
+    RequestImpl lhs;
     lhs.set_path( "2" );
     
-    RequestFixture rhs;
+    RequestImpl rhs;
     rhs.set_path( "1" );
     
     EXPECT_TRUE( lhs > rhs );
@@ -301,7 +302,7 @@ TEST( Request, equality_operator )
     map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
     
-    RequestFixture lhs;
+    RequestImpl lhs;
     lhs.set_body( body );
     lhs.set_version( version );
     lhs.set_path( path );
@@ -310,7 +311,7 @@ TEST( Request, equality_operator )
     lhs.set_path_parameters( path_parameters );
     lhs.set_query_parameters( query_parameters );
     
-    RequestFixture rhs;
+    RequestImpl rhs;
     rhs.set_body( body );
     rhs.set_version( version );
     rhs.set_path( path );
@@ -324,11 +325,11 @@ TEST( Request, equality_operator )
 
 TEST( Request, inequality_operator )
 {
-    RequestFixture lhs;
+    RequestImpl lhs;
     lhs.set_version( 1.1 );
     
-    RequestFixture rhs;
+    RequestImpl rhs;
     rhs.set_version( 1.0 );
     
-    EXPECT_TRUE( lhs != rhs );
+    EXPECT_TRUE( lhs not_eq rhs );
 }

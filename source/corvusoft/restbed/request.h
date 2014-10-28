@@ -110,7 +110,6 @@ namespace restbed
             //Operators
             
             //Properties
-            std::unique_ptr< detail::RequestImpl > m_pimpl;
             
         private:
             //Friends
@@ -128,6 +127,7 @@ namespace restbed
             //Operators
             
             //Properties
+            std::unique_ptr< detail::RequestImpl > m_pimpl;
     };
 }
 

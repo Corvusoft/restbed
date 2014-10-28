@@ -11,7 +11,6 @@
 //Project Includes
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/status_code.h"
-#include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
 
 //External Includes
@@ -46,12 +45,12 @@ namespace restbed
 {
     namespace detail
     {
-        RequestBuilderImpl::RequestBuilderImpl( istream& socket ) : Request( )
+        RequestBuilderImpl::RequestBuilderImpl( istream& socket ) : RequestImpl( )
         {
             parse( socket );
         }
         
-        RequestBuilderImpl::RequestBuilderImpl( const RequestBuilderImpl& original ) : Request( original )
+        RequestBuilderImpl::RequestBuilderImpl( const RequestBuilderImpl& original ) : RequestImpl( original )
         {
             //n/a
         }
@@ -68,27 +67,27 @@ namespace restbed
         
         void RequestBuilderImpl::parse( istream& socket )
         {
-            m_pimpl->set_method( parse_http_method( socket ) );
-            m_pimpl->set_path( parse_http_path( socket ) );
-            m_pimpl->set_query_parameters( parse_http_query_parameters( socket ) );
-            m_pimpl->set_version( parse_http_version( socket ) );
-            m_pimpl->set_headers( parse_http_headers( socket ) );
-            m_pimpl->set_body( parse_http_body( socket ) );
+            set_method( parse_http_method( socket ) );
+            set_path( parse_http_path( socket ) );
+            set_query_parameters( parse_http_query_parameters( socket ) );
+            set_version( parse_http_version( socket ) );
+            set_headers( parse_http_headers( socket ) );
+            set_body( parse_http_body( socket ) );
         }
         
         void RequestBuilderImpl::set_origin( const string& value )
         {
-            m_pimpl->set_origin( value );
+            RequestImpl::set_origin( value );
         }
         
         void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )
         {
-            m_pimpl->set_path_parameters( parameters );
+            RequestImpl::set_path_parameters( parameters );
         }
         
         RequestBuilderImpl& RequestBuilderImpl::operator =( const RequestBuilderImpl& value )
         {
-            *m_pimpl = *value.m_pimpl;
+            *this = value;
             
             return *this;
         }
