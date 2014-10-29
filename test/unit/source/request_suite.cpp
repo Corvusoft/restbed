@@ -184,10 +184,19 @@ TEST( Request, modify_header )
 {
     map< string, string > headers = { { "name", "value" } };
     
-    RequestImpl request;
-    request.set_headers( headers );
+    RequestImpl request_impl;
+    request_impl.set_headers( headers );
+    
+    Request request( request_impl );
     
     EXPECT_EQ( "value", request.get_header( "name" ) );
+}
+
+TEST( Request, modify_header_default_value )
+{
+    Request request;
+    
+    EXPECT_EQ( "corvusoft", request.get_header( "name", "corvusoft" ) );
 }
 
 TEST( Request, modify_headers )
@@ -204,10 +213,19 @@ TEST( Request, modify_query_parameter )
 {
     map< string, string > parameters = { { "name", "value" } };
     
-    RequestImpl request;
-    request.set_query_parameters( parameters );
+    RequestImpl request_impl;
+    request_impl.set_query_parameters( parameters );
+    
+    Request request( request_impl );
     
     EXPECT_EQ( "value", request.get_query_parameter( "name" ) );
+}
+
+TEST( Request, modify_query_parameter_default_value )
+{
+    Request request;
+    
+    EXPECT_EQ( "corvusoft", request.get_query_parameter( "name", "corvusoft" ) );
 }
 
 TEST( Request, modify_query_parameters )
@@ -224,10 +242,19 @@ TEST( Request, modify_path_parameter )
 {
     map< string, string > parameters = { { "name", "value" } };
     
-    RequestImpl request;
-    request.set_path_parameters( parameters );
+    RequestImpl request_impl;
+    request_impl.set_path_parameters( parameters );
+    
+    Request request( request_impl );
     
     EXPECT_EQ( "value", request.get_path_parameter( "name" ) );
+}
+
+TEST( Request, modify_path_parameter_default_value )
+{
+    Request request;
+    
+    EXPECT_EQ( "corvusoft", request.get_path_parameter( "name", "corvusoft" ) );
 }
 
 TEST( Request, modify_path_parameters )

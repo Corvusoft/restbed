@@ -88,9 +88,9 @@ namespace restbed
         return m_pimpl->get_origin( );
     }
     
-    string Request::get_header( const string& name ) const
+    string Request::get_header( const string& name, const string& default_value ) const
     {
-        return m_pimpl->get_header( name );
+        return m_pimpl->get_header( name, default_value );
     }
     
     map< string, string > Request::get_headers( void ) const
@@ -98,9 +98,9 @@ namespace restbed
         return m_pimpl->get_headers( );
     }
     
-    string Request::get_query_parameter( const string& name ) const
+    string Request::get_query_parameter( const string& name, const string& default_value ) const
     {
-        return m_pimpl->get_query_parameter( name );
+        return m_pimpl->get_query_parameter( name, default_value );
     }
     
     map< string, string > Request::get_query_parameters( void ) const
@@ -108,9 +108,9 @@ namespace restbed
         return m_pimpl->get_query_parameters( );
     }
     
-    string Request::get_path_parameter( const string& name ) const
+    string Request::get_path_parameter( const string& name, const string& default_value ) const
     {
-        return m_pimpl->get_path_parameter( name );
+        return m_pimpl->get_path_parameter( name, default_value );
     }
     
     map< string, string > Request::get_path_parameters( void ) const

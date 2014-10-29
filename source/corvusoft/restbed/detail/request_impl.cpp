@@ -108,9 +108,9 @@ namespace restbed
             return m_origin;
         }
         
-        string RequestImpl::get_header( const string& name ) const
+        string RequestImpl::get_header( const string& name, const string& default_value ) const
         {
-            string value = String::empty;
+            string value = default_value;
             
             if ( has_header( name ) )
             {
@@ -127,9 +127,9 @@ namespace restbed
             return m_headers;
         }
         
-        string RequestImpl::get_query_parameter( const string& name ) const
+        string RequestImpl::get_query_parameter( const string& name, const string& default_value ) const
         {
-            string parameter = String::empty;
+            string parameter = default_value;
             
             if ( has_query_parameter( name ) )
             {
@@ -146,9 +146,9 @@ namespace restbed
             return m_query_parameters;
         }
         
-        string RequestImpl::get_path_parameter( const string& name ) const
+        string RequestImpl::get_path_parameter( const string& name, const string& default_value ) const
         {
-            string parameter = String::empty;
+            string parameter = default_value;
             
             if ( has_path_parameter( name ) )
             {
