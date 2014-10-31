@@ -69,7 +69,9 @@ namespace restbed
                 
                 std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
                 
-                std::map< std::string, std::string > get_query_parameters( void ) const;
+                std::multimap< std::string, std::string > get_query_parameters( void ) const;
+            
+                std::multimap< std::string, std::string > get_query_parameters( const std::string& name ) const;
                 
                 std::string get_path_parameter( const std::string& name, const std::string& default_value ) const;
                 
@@ -90,7 +92,7 @@ namespace restbed
                 
                 void set_path_parameters( const std::map< std::string, std::string >& values );
                 
-                void set_query_parameters( const std::map< std::string, std::string >& values );
+                void set_query_parameters( const std::multimap< std::string, std::string >& values );
                 
                 //Operators
                 bool operator <( const RequestImpl& value ) const;
@@ -157,7 +159,7 @@ namespace restbed
                 
                 std::map< std::string, std::string > m_path_parameters;
                 
-                std::map< std::string, std::string > m_query_parameters;
+                std::multimap< std::string, std::string > m_query_parameters;
         };
     }
 }

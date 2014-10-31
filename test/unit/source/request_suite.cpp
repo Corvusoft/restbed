@@ -17,6 +17,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::multimap;
 
 //Project Namespaces
 using restbed::Request;
@@ -32,8 +33,8 @@ TEST( Request, constructor )
     string path = "/";
     string origin = "";
     map< string, string > headers;
-    map< string, string > query_parameters;
     map< string, string > path_parameters;
+    multimap< string, string > query_parameters;
     
     Request request;
     
@@ -53,8 +54,8 @@ TEST( Request, copy_constructor )
     string path = "/events";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
+    multimap< string, string > query_parameters = { { "q", "cats" } };
     
     RequestImpl original;
     original.set_body( body );
@@ -93,8 +94,8 @@ TEST( Request, to_bytes )
     string path = "/events";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
+    multimap< string, string > query_parameters = { { "q", "cats" } };
     
     RequestImpl request;
     request.set_body( body );
@@ -140,7 +141,7 @@ TEST( Request, has_query_parameter )
     
     EXPECT_EQ( false, request.has_query_parameter( "event" ) );
     
-    map< string, string > parameters = { { "event", "cpu-overload" } };
+    multimap< string, string > parameters = { { "event", "cpu-overload" } };
     request.set_query_parameters( parameters );
     
     EXPECT_EQ( true, request.has_query_parameter( "event" ) );
@@ -211,7 +212,7 @@ TEST( Request, modify_headers )
 
 TEST( Request, modify_query_parameter )
 {
-    map< string, string > parameters = { { "name", "value" } };
+    multimap< string, string > parameters = { { "name", "value" } };
     
     RequestImpl request_impl;
     request_impl.set_query_parameters( parameters );
@@ -230,12 +231,24 @@ TEST( Request, modify_query_parameter_default_value )
 
 TEST( Request, modify_query_parameters )
 {
-    map< string, string > parameters = { { "name", "value" } };
+    multimap< string, string > parameters = { { "name", "value" } };
     
     RequestImpl request;
     request.set_query_parameters( parameters );
     
     EXPECT_EQ( parameters, request.get_query_parameters( ) );
+}
+
+TEST( Request, modify_query_subset_parameters )
+{
+    multimap< string, string > parameters = { { "name", "value1" }, { "name", "value2" }, { "age", "30yo" } };
+    
+    RequestImpl request;
+    request.set_query_parameters( parameters );
+    
+    multimap< string, string > expectation = { { "name", "value1" }, { "name", "value2" } };
+    
+    EXPECT_EQ( expectation, request.get_query_parameters( "name" ) );
 }
 
 TEST( Request, modify_path_parameter )
@@ -274,8 +287,8 @@ TEST( Request, assignment_operator )
     string path = "/events";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
+    multimap< string, string > query_parameters = { { "q", "cats" } };
     
     RequestImpl original;
     original.set_body( body );
@@ -326,8 +339,8 @@ TEST( Request, equality_operator )
     string path = "/events";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > query_parameters = { { "q", "cats" } };
     map< string, string > path_parameters = { { "name", "value" } };
+    multimap< string, string > query_parameters = { { "q", "cats" } };
     
     RequestImpl lhs;
     lhs.set_body( body );

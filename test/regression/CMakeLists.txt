@@ -24,6 +24,7 @@ add_executable( exception_thrown_with_space_in_resource_path_regression_test_sui
 add_executable( uncaught_exception_when_peer_closes_connection_regression_test_suite ${SOURCE_DIR}/uncaught_exception_when_peer_closes_connection.cpp )
 add_executable( error_handler_not_overwritten_test_suite ${SOURCE_DIR}/error_handler_not_overwritten.cpp )
 add_executable( large_request_bodies_being_trimmed_test_suite ${SOURCE_DIR}/large_request_bodies_being_trimmed.cpp )
+add_executable( fails_to_parse_identical_query_parameters_test_suite ${SOURCE_DIR}/fails_to_parse_identical_query_parameters.cpp )
 
 target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
@@ -34,6 +35,7 @@ target_link_libraries( exception_thrown_with_space_in_resource_path_regression_t
 target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( error_handler_not_overwritten_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 target_link_libraries( large_request_bodies_being_trimmed_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( fails_to_parse_identical_query_parameters_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
 
 #
 # Setup
@@ -48,3 +50,4 @@ add_test( exception_thrown_with_space_in_resource_path_regression_test_suite ${E
 add_test( uncaught_exception_when_peer_closes_connection_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/uncaught_exception_when_peer_closes_connection_regression_test_suite )
 add_test( error_handler_not_overwritten_test_suite ${EXECUTABLE_OUTPUT_PATH}/error_handler_not_overwritten_test_suite )
 add_test( large_request_bodies_being_trimmed_test_suite ${EXECUTABLE_OUTPUT_PATH}/large_request_bodies_being_trimmed_test_suite )
+add_test( fails_to_parse_identical_query_parameters_test_suite ${EXECUTABLE_OUTPUT_PATH}/fails_to_parse_identical_query_parameters_test_suite )

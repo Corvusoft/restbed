@@ -16,6 +16,7 @@
 using std::map;
 using std::stod;
 using std::string;
+using std::multimap;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -80,7 +81,7 @@ namespace restbed
         
         bool RequestImpl::has_query_parameter( const string& name ) const
         {
-            return ( Map::find_key_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
+            return ( m_query_parameters.find( name ) not_eq m_query_parameters.end( ) );
         }
         
         Bytes RequestImpl::get_body( void ) const
@@ -133,7 +134,7 @@ namespace restbed
             
             if ( has_query_parameter( name ) )
             {
-                const auto iterator = Map::find_key_ignoring_case( name, m_query_parameters );
+                const auto iterator = m_query_parameters.find( name );
                 
                 parameter = iterator->second;
             }
@@ -141,9 +142,24 @@ namespace restbed
             return parameter;
         }
         
-        map< string, string > RequestImpl::get_query_parameters( void ) const
+        multimap< string, string > RequestImpl::get_query_parameters( void ) const
         {
             return m_query_parameters;
+        }
+
+        multimap< string, string > RequestImpl::get_query_parameters( const string& name ) const
+        {
+            multimap< string, string > parameters;
+            
+            for ( auto parameter : m_query_parameters )
+            {
+                if ( parameter.first == name )
+                {
+                    parameters.insert( parameter );
+                }
+            }
+            
+            return parameters;
         }
         
         string RequestImpl::get_path_parameter( const string& name, const string& default_value ) const
@@ -205,7 +221,7 @@ namespace restbed
             m_path_parameters = values;
         }
         
-        void RequestImpl::set_query_parameters( const map< string, string >& values )
+        void RequestImpl::set_query_parameters( const multimap< string, string >& values )
         {
             m_query_parameters = values;
         }

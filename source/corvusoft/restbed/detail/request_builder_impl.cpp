@@ -5,6 +5,7 @@
 //System Includes
 #include <regex>
 #include <vector>
+#include <utility>
 #include <sstream>
 #include <stdexcept>
 
@@ -26,6 +27,8 @@ using std::stod;
 using std::string;
 using std::vector;
 using std::istream;
+using std::multimap;
+using std::make_pair;
 using std::shared_ptr;
 using std::invalid_argument;
 using std::istreambuf_iterator;
@@ -168,9 +171,9 @@ namespace restbed
             return headers;
         }
         
-        map< string, string > RequestBuilderImpl::parse_http_query_parameters( istream& socket )
+        multimap< string, string > RequestBuilderImpl::parse_http_query_parameters( istream& socket )
         {
-            map< string, string > parameters;
+            multimap< string, string > parameters;
             
             char previous_byte = IStream::reverse_peek( socket );
             
@@ -190,7 +193,7 @@ namespace restbed
                     
                     string value = Uri::decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
                     
-                    parameters[ name ] = value;
+                    parameters.insert( make_pair( name, value ) );
                 }
             }
             

@@ -72,8 +72,10 @@ namespace restbed
             std::map< std::string, std::string > get_headers( void ) const;
             
             std::string get_query_parameter( const std::string& name, const std::string& value = ""  ) const;
-            
-            std::map< std::string, std::string > get_query_parameters( void ) const;
+        
+            std::multimap< std::string, std::string > get_query_parameters( void ) const;
+        
+            std::multimap< std::string, std::string > get_query_parameters( const std::string& name ) const;
             
             std::string get_path_parameter( const std::string& name, const std::string& value = ""  ) const;
             

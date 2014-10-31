@@ -14,6 +14,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::multimap;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -102,10 +103,15 @@ namespace restbed
     {
         return m_pimpl->get_query_parameter( name, default_value );
     }
-    
-    map< string, string > Request::get_query_parameters( void ) const
+
+    multimap< string, string > Request::get_query_parameters( void ) const
     {
         return m_pimpl->get_query_parameters( );
+    }
+    
+    multimap< string, string > Request::get_query_parameters( const string& name ) const
+    {
+        return m_pimpl->get_query_parameters( name );
     }
     
     string Request::get_path_parameter( const string& name, const string& default_value ) const
