@@ -1,7 +1,7 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-find_path( framework_INCLUDE framework HINTS "/usr/include" "/usr/local/include" "/opt/local/include" "${CMAKE_SOURCE_DIR}/dependency/framework/distribution/include" )
-find_library( framework_LIBRARY NAMES framework HINTS "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${CMAKE_SOURCE_DIR}/dependency/framework/distribution/library" )
+find_path( framework_INCLUDE framework HINTS "${CMAKE_SOURCE_DIR}/dependency/framework/distribution/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_library( framework_LIBRARY NAMES framework HINTS "${CMAKE_SOURCE_DIR}/dependency/framework/distribution/library" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
 
 if ( framework_INCLUDE AND framework_LIBRARY )
     set( FRAMEWORK_FOUND TRUE )

@@ -1,7 +1,7 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-find_path( curl_INCLUDE curl/curl.h HINTS "/usr/include" "/usr/local/include" "/opt/local/include" "${CMAKE_SOURCE_DIR}/dependency/curl/include" )
-find_library( curl_LIBRARY NAMES curl HINTS "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${CMAKE_SOURCE_DIR}/dependency/curl/lib" )
+find_path( curl_INCLUDE curl/curl.h HINTS "${CMAKE_SOURCE_DIR}/dependency/curl/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_library( curl_LIBRARY NAMES curl HINTS "${CMAKE_SOURCE_DIR}/dependency/curl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
 
 if ( curl_INCLUDE AND curl_LIBRARY )
     set( CURL_FOUND TRUE )

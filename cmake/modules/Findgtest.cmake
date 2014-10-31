@@ -1,8 +1,8 @@
 # Copyright (c) 2013, 2014 Corvusoft
 
-find_path( gtest_INCLUDE gtest/gtest.h HINTS "/usr/include" "/usr/local/include" "/opt/local/include" "${CMAKE_SOURCE_DIR}/dependency/gtest/include" )
-find_library( gtest_LIBRARY NAMES gtest HINTS "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${CMAKE_SOURCE_DIR}/dependency/gtest" )
-find_library( gtest_MAIN_LIBRARY NAMES gtest_main HINTS "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${CMAKE_SOURCE_DIR}/dependency/gtest" ) 
+find_path( gtest_INCLUDE gtest/gtest.h HINTS "${CMAKE_SOURCE_DIR}/dependency/gtest/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_library( gtest_LIBRARY NAMES gtest HINTS "${CMAKE_SOURCE_DIR}/dependency/gtest" "${CMAKE_SOURCE_DIR}/dependency/gtest/build" "${CMAKE_SOURCE_DIR}/dependency/gtest/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
+find_library( gtest_MAIN_LIBRARY NAMES gtest_main HINTS "${CMAKE_SOURCE_DIR}/dependency/gtest" "${CMAKE_SOURCE_DIR}/dependency/gtest/build" "${CMAKE_SOURCE_DIR}/dependency/gtest/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" ) 
 
 if ( gtest_INCLUDE AND gtest_LIBRARY AND gtest_MAIN_LIBRARY )
     set( GTEST_FOUND TRUE )
