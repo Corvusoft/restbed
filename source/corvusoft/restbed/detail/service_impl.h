@@ -34,6 +34,7 @@ namespace restbed
     
     enum Mode :
     int;
+    
     enum LogLevel :
     int;
     
@@ -57,6 +58,8 @@ namespace restbed
                 
                 //Functionality
                 void start( void );
+            
+                void start( const Mode& value );
                 
                 void stop( void );
                 

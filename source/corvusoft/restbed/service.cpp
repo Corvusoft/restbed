@@ -6,6 +6,7 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/service.h"
 #include "corvusoft/restbed/response.h"
@@ -50,6 +51,11 @@ namespace restbed
     void Service::start( void )
     {
         m_pimpl->start( );
+    }
+    
+    void Service::start( const Mode& value )
+    {
+        m_pimpl->start( value );
     }
     
     void Service::stop( void )

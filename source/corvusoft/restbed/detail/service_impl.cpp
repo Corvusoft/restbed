@@ -108,6 +108,11 @@ namespace restbed
         
         void ServiceImpl::start( void )
         {
+            start( m_mode );
+        }
+
+        void ServiceImpl::start( const Mode& value )
+        {
             m_io_service = make_shared< io_service >( );
             
             m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
@@ -118,7 +123,7 @@ namespace restbed
             
             listen( );
             
-            switch ( m_mode )
+            switch ( value )
             {
                 case SYNCHRONOUS:
                     start_synchronous( );
