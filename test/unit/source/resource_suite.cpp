@@ -5,6 +5,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <vector>
 #include <stdexcept>
 
 //Project Includes
@@ -16,6 +17,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::vector;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -26,11 +28,13 @@ using restbed::Resource;
 TEST( Resource, constructor )
 {
     string path = "";
+    vector< string > paths;
     map< string, string > filters;
     
     Resource resource;
     
     EXPECT_EQ( path, resource.get_path( ) );
+    EXPECT_EQ( paths, resource.get_paths( ) );
     EXPECT_EQ( filters, resource.get_header_filters( ) );
 }
 
@@ -67,6 +71,18 @@ TEST( Resource, modify_path )
     resource.set_path( path );
     
     EXPECT_EQ( path, resource.get_path( ) );
+}
+
+TEST( Resource, modify_paths )
+{
+    vector< string > paths;
+    paths.push_back( "/one" );
+    paths.push_back( "/two" );
+    
+    Resource resource;
+    resource.set_paths( paths );
+    
+    EXPECT_EQ( paths, resource.get_paths( ) );
 }
 
 TEST( Resource, modify_header_filter )

@@ -160,15 +160,22 @@ namespace restbed
         
         void ServiceImpl::publish( const Resource& value )
         {
-            string path = value.get_path( );
+            auto paths = value.get_paths( );
             
-            if ( m_root not_eq "/" )
+            if ( paths.empty( ) )
             {
-                path = String::format( "/%s/%s", m_root.data( ), value.get_path( ).data( ) );
+                paths.push_back( m_root );
+            }
+            else if ( m_root not_eq "/" )
+            {
+                for ( auto& path : paths )
+                {
+                    path = String::format( "/%s/%s", m_root.data( ), path.data( ) );
+                }
             }
             
             Resource resource( value );
-            resource.set_path( path );
+            resource.set_paths( paths );
             
             auto iterator = find_if( m_resources.begin( ),
                                      m_resources.end( ),

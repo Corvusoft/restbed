@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <memory>
+#include <vector>
 #include <string>
 #include <functional>
 
@@ -53,7 +54,9 @@ namespace restbed
             
             //Getters
             std::string get_path( void ) const;
-            
+        
+            std::vector< std::string > get_paths( void ) const;
+        
             std::string get_header_filter( const std::string& name ) const;
             
             std::map< std::string, std::string > get_header_filters( void ) const;
@@ -64,6 +67,8 @@ namespace restbed
         
             //Setters
             void set_path( const std::string& value );
+        
+            void set_paths( const std::vector< std::string >& values );
             
             void set_header_filter( const std::string& name, const std::string& value );
         

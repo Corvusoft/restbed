@@ -55,30 +55,40 @@ namespace restbed
         
         bool ResourceMatcherImpl::compare_path( const Request& request, const Resource& resource ) const
         {
-            bool result = false;
+            bool found_matching_path = false;
             
+            auto resource_paths = resource.get_paths( );
             auto path_segments = String::split( request.get_path( ), '/' );
-            auto path_filters = String::split( resource.get_path( ), '/' );
             
-            if ( path_segments.size( ) == path_filters.size( ) )
+            for ( auto path : resource_paths )
             {
-                result = true;
+                auto path_filters = String::split( path, '/' );
                 
-                for ( size_t index = 0; index not_eq path_filters.size( ); index++ )
+                if ( path_segments.size( ) == path_filters.size( ) )
                 {
-                    string filter = PathParameterImpl::parse( path_filters[ index ] );
+                    found_matching_path = true;
                     
-                    regex pattern( filter );
-                    
-                    if ( not regex_match( path_segments[ index ], pattern ) )
+                    for ( size_t index = 0; index not_eq path_filters.size( ); index++ )
                     {
-                        result = false;
-                        break;
+                        string filter = PathParameterImpl::parse( path_filters[ index ] );
+                        
+                        regex pattern( filter );
+                        
+                        if ( not regex_match( path_segments[ index ], pattern ) )
+                        {
+                            found_matching_path = false;
+                            break;
+                        }
                     }
+                }
+                
+                if ( found_matching_path )
+                {
+                    break;
                 }
             }
             
-            return result;
+            return found_matching_path;
         }
         
         bool ResourceMatcherImpl::compare_headers( const Request& request, const Resource& resource ) const

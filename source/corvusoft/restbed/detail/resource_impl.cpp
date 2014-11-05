@@ -24,6 +24,7 @@ using std::map;
 using std::bind;
 using std::regex;
 using std::string;
+using std::vector;
 using std::function;
 using std::regex_error;
 using std::invalid_argument;
@@ -41,14 +42,14 @@ namespace restbed
 {
     namespace detail
     {
-        ResourceImpl::ResourceImpl( void ) : m_path( String::empty ),
+        ResourceImpl::ResourceImpl( void ) : m_paths( ),
             m_header_filters( ),
             m_method_handlers( )
         {
             setup( );
         }
         
-        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_path( original.m_path ),
+        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_paths( original.m_paths ),
             m_header_filters( original.m_header_filters ),
             m_method_handlers( original.m_method_handlers )
         {
@@ -59,10 +60,15 @@ namespace restbed
         {
             //n/a
         }
-        
+
         string ResourceImpl::get_path( void ) const
         {
-            return m_path;
+            return m_paths.empty( ) ? String::empty : m_paths.front( );
+        }
+        
+        vector< string > ResourceImpl::get_paths( void ) const
+        {
+            return m_paths;
         }
         
         string ResourceImpl::get_header_filter( const string& name ) const
@@ -103,19 +109,29 @@ namespace restbed
         
         void ResourceImpl::set_path( const string& value )
         {
-            auto path = String::split( value, '/' );
-            
-            for ( auto directory : path )
+            m_paths.clear( );
+            m_paths.push_back( value );
+        }
+        
+        void ResourceImpl::set_paths( const vector< string >& values )
+        {
+            for ( auto value : values )
             {
-                string pattern = PathParameterImpl::parse( directory );
+                auto path = String::split( value, '/' );
                 
-                if ( not Regex::is_valid( pattern ) )
+                for ( auto directory : path )
                 {
-                    throw invalid_argument( String::empty );
+                    string pattern = PathParameterImpl::parse( directory );
+                    
+                    if ( not Regex::is_valid( pattern ) )
+                    {
+                        throw invalid_argument( String::empty );
+                    }
                 }
+                
+                
+                m_paths.push_back( value );
             }
-            
-            m_path = value;
         }
         
         void ResourceImpl::set_header_filter( const string& name, const string& value )
@@ -160,27 +176,27 @@ namespace restbed
         
         bool ResourceImpl::operator <( const ResourceImpl& value ) const
         {
-            return m_path < value.m_path;
+            return m_paths < value.m_paths;
         }
         
         bool ResourceImpl::operator >( const ResourceImpl& value ) const
         {
-            return m_path > value.m_path;
+            return m_paths > value.m_paths;
         }
         
         bool ResourceImpl::operator ==( const ResourceImpl& value ) const
         {
-            return m_path == value.m_path and m_header_filters == value.m_header_filters;
+            return m_paths == value.m_paths and m_header_filters == value.m_header_filters;
         }
         
         bool ResourceImpl::operator !=( const ResourceImpl& value ) const
         {
-            return m_path not_eq value.m_path;
+            return m_paths not_eq value.m_paths;
         }
         
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
         {
-            m_path = value.m_path;
+            m_paths = value.m_paths;
             
             m_header_filters = value.m_header_filters;
             

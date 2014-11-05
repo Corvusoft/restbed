@@ -15,6 +15,7 @@
 
 //System Namespaces
 using std::map;
+using std::vector;
 using std::string;
 using std::function;
 
@@ -49,6 +50,11 @@ namespace restbed
     {
         return m_pimpl->get_path( );
     }
+
+    vector< string > Resource::get_paths( void ) const
+    {
+        return m_pimpl->get_paths( );
+    }
     
     string Resource::get_header_filter( const string& name ) const
     {
@@ -73,6 +79,11 @@ namespace restbed
     void Resource::set_path( const string& value )
     {
         m_pimpl->set_path( value );
+    }
+
+    void Resource::set_paths( const vector< string >& values )
+    {
+        m_pimpl->set_paths( values );
     }
     
     void Resource::set_header_filter( const string& name, const string& value )
