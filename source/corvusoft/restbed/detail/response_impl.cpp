@@ -265,7 +265,7 @@ namespace restbed
         {
             string header = String::empty;
             
-            if ( not has_header( "Content-Length" ) )
+            if ( not has_header( "Content-Length" ) and not m_body.empty( ) )
             {
                 header = String::format( "Content-Length: %i\r\n", m_body.size( ) );
             }
