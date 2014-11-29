@@ -117,14 +117,14 @@ namespace restbed
                 std::string generate_allow_header_value( void );
                 
                 Response default_options_handler( const Request& request );
-                
+            
+                Response default_method_not_allowed_handler( const Request& request );
+            
                 static std::string rebuild_path( const Request& request );
                 
                 static std::string rebuild_headers( const Request& request );
                 
                 static Response default_trace_handler( const Request& request );
-                
-                static Response default_not_implemented_handler( const Request& request );
                 
                 //Getters
                 
@@ -134,7 +134,9 @@ namespace restbed
                 
                 //Properties
                 std::vector< std::string > m_paths;
-                
+            
+                std::vector< std::string > m_allow_methods;
+            
                 std::map< std::string, std::string > m_header_filters;
                 
                 std::map< std::string, std::function< Response ( const Request& ) > > m_method_handlers;

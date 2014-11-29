@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <algorithm>
 
 //Project Includes
 #include "corvusoft/restbed/method.h"
@@ -17,11 +18,11 @@
 #include <corvusoft/framework/map>
 #include <corvusoft/framework/regex>
 #include <corvusoft/framework/string>
-#include <corvusoft/framework/functional>
 
 //System Namespaces
 using std::map;
 using std::bind;
+using std::find;
 using std::regex;
 using std::string;
 using std::vector;
@@ -36,13 +37,13 @@ using std::placeholders::_1;
 using framework::Map;
 using framework::Regex;
 using framework::String;
-using framework::Functional;
 
 namespace restbed
 {
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
+            m_allow_methods( { "OPTIONS", "TRACE" } ),
             m_header_filters( ),
             m_method_handlers( )
         {
@@ -50,6 +51,7 @@ namespace restbed
         }
         
         ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_paths( original.m_paths ),
+            m_allow_methods( original.m_allow_methods ),
             m_header_filters( original.m_header_filters ),
             m_method_handlers( original.m_method_handlers )
         {
@@ -163,7 +165,16 @@ namespace restbed
         
         void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
         {
-            m_method_handlers[ verb.to_string( ) ] = callback;
+            auto method = verb.to_string( );
+            
+            m_method_handlers[ method ] = callback;
+            
+            auto iterator = find( m_allow_methods.begin( ), m_allow_methods.end( ), method );
+            
+            if ( iterator == m_allow_methods.end( ) )
+            {
+                m_allow_methods.push_back( method );
+            }
         }
         
         void ResourceImpl::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
@@ -207,35 +218,26 @@ namespace restbed
         
         void ResourceImpl::setup( void )
         {
-            set_method_handler( "GET", &ResourceImpl::default_not_implemented_handler );
-            set_method_handler( "PUT", &ResourceImpl::default_not_implemented_handler );
-            set_method_handler( "POST", &ResourceImpl::default_not_implemented_handler );
-            set_method_handler( "HEAD", &ResourceImpl::default_not_implemented_handler );
-            set_method_handler( "DELETE", &ResourceImpl::default_not_implemented_handler );
-            set_method_handler( "CONNECT", &ResourceImpl::default_not_implemented_handler );
-            set_method_handler( "TRACE", &ResourceImpl::default_trace_handler );
-            set_method_handler( "OPTIONS", bind( &ResourceImpl::default_options_handler, this, _1 ) );
+            m_method_handlers[ "TRACE" ] = &ResourceImpl::default_trace_handler;
+            m_method_handlers[ "OPTIONS" ] = bind( &ResourceImpl::default_options_handler, this, _1 );
+            m_method_handlers[ "GET" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
+            m_method_handlers[ "PUT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
+            m_method_handlers[ "POST" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
+            m_method_handlers[ "HEAD" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
+            m_method_handlers[ "DELETE" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
+            m_method_handlers[ "CONNECT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
         }
         
         string ResourceImpl::generate_allow_header_value( void )
         {
             string value = String::empty;
             
-            for ( auto& handler : m_method_handlers )
+            for ( auto& method : m_allow_methods )
             {
-                Functional::address_type callback_address = Functional::get_address( handler.second );
-                Functional::address_type default_address = ( Functional::address_type ) ResourceImpl::default_not_implemented_handler;
-                
-                if ( callback_address not_eq default_address )
-                {
-                    value += String::format( "%s, ", handler.first.data( ) );
-                }
+                value += String::format( "%s, ", method.data( ) );
             }
             
-            if ( not value.empty( ) )
-            {
-                value = value.substr( 0, value.length( ) - 2 );
-            }
+            value = String::trim_lagging( value, ", " );
             
             return value;
         }
@@ -278,6 +280,15 @@ namespace restbed
             return response;
         }
         
+        Response ResourceImpl::default_method_not_allowed_handler( const Request& )
+        {
+            Response response;
+            response.set_status_code( StatusCode::METHOD_NOT_ALLOWED );
+            response.set_header( "Allow", generate_allow_header_value( ) );
+            
+            return response;
+        }
+        
         Response ResourceImpl::default_trace_handler( const Request& request )
         {
             string path = rebuild_path( request );
@@ -290,14 +301,6 @@ namespace restbed
             response.set_body( body );
             response.set_status_code( StatusCode::OK );
             response.set_header( "Content-Type", "message/http" );
-            
-            return response;
-        }
-        
-        Response ResourceImpl::default_not_implemented_handler( const Request& )
-        {
-            Response response;
-            response.set_status_code( StatusCode::NOT_IMPLEMENTED );
             
             return response;
         }

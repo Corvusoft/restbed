@@ -30,13 +30,13 @@ Feature: HTTP method handlers
 
 	Examples:
 		| method  | status |
-		| GET     | 501    |
-		| PUT     | 501    |
-		| POST    | 501    |
-		| HEAD    | 501    |
+		| GET     | 405    |
+		| PUT     | 405    |
+		| POST    | 405    |
+		| HEAD    | 405    |
 		| TRACE   | 200    |
-		| DELETE  | 501    |
-		| CONNECT | 501    |
+		| DELETE  | 405    |
+		| CONNECT | 405    |
 		| OPTIONS | 200    |
 
 	Scenario: Default TRACE Method Handler
