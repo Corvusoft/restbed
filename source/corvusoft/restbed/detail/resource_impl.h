@@ -122,8 +122,6 @@ namespace restbed
             
                 static std::string rebuild_path( const Request& request );
                 
-                static std::string rebuild_headers( const Request& request );
-                
                 static Response default_trace_handler( const Request& request );
                 
                 //Getters

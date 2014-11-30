@@ -235,31 +235,14 @@ namespace restbed
         
         string ResourceImpl::rebuild_path( const Request& request )
         {
-            string query = "?";
+            string query = String::join( request.get_query_parameters( ), "=", "&" );
             
-            for ( auto parameter : request.get_query_parameters( ) )
+            if ( not query.empty( ) )
             {
-                query += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+                query = "?" + query;
             }
             
-            query = String::trim( query, "&" );
-            
-            string path = request.get_path( );
-            path += ( query.length( ) > 1 ) ? query : String::empty;
-            
-            return path;
-        }
-        
-        string ResourceImpl::rebuild_headers( const Request& request )
-        {
-            string headers = String::empty;
-            
-            for ( auto header : request.get_headers( ) )
-            {
-                headers += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
-            }
-            
-            return headers;
+            return request.get_path( ) + query;
         }
         
         Response ResourceImpl::default_options_handler( const Request& )
@@ -284,7 +267,7 @@ namespace restbed
         {
             string path = rebuild_path( request );
             
-            string headers = rebuild_headers( request );
+            string headers = String::join( request.get_headers( ), ": ", "\r\n" );
             
             string body = String::format( "TRACE %s HTTP/1.1\r\n%s", path.data( ), headers.data( ) );
             
