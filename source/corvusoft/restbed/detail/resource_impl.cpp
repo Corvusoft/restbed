@@ -230,16 +230,7 @@ namespace restbed
         
         string ResourceImpl::generate_allow_header_value( void )
         {
-            string value = String::empty;
-            
-            for ( auto& method : m_allow_methods )
-            {
-                value += String::format( "%s, ", method.data( ) );
-            }
-            
-            value = String::trim_lagging( value, ", " );
-            
-            return value;
+            return String::join( m_allow_methods, ", " );
         }
         
         string ResourceImpl::rebuild_path( const Request& request )
