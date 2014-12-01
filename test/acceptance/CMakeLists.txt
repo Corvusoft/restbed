@@ -8,13 +8,13 @@ cmake_minimum_required( VERSION 2.8.10 )
 # Configuration
 #
 set( SOURCE_DIR "source" )
-set( LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/test/acceptance/distribution/library" )
+set( LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/library" )
 
 include( cmake/build_manifest.cmake )
 
 #
 # Build
 #
-add_library( helpers SHARED ${MANIFEST} )
+add_library( acceptance_test_helpers SHARED ${MANIFEST} )
 
-target_link_libraries( helpers ${CMAKE_PROJECT_NAME} )
+target_link_libraries( acceptance_test_helpers ${CMAKE_PROJECT_NAME} )

@@ -10,8 +10,6 @@ from helpers import *
 
 @before.all
 def before_all( ):
-	sys.path.append( "./features" )
-
 	world.port = 1984
 	world.url = "http://localhost:" + str( world.port )
 

@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2013, 2014 Corvusoft
 
+import os.path
 from ctypes import *
 
 class TestService( object ):
     def __init__( self, port ):
-        self.library = cdll.LoadLibrary( 'distribution/library/libhelpers.dylib' )
+        dll_name = 'libacceptance_test_helpers.dylib'
+        dll_path = os.path.dirname( os.path.abspath( __file__ ) ) + '/../../../../distribution/library/' + dll_name
+        
+        self.library = cdll.LoadLibrary( dll_path )
         self.library.create_service.restype = c_void_p
         self.library.create_service.argtypes = [ c_int ]
 
