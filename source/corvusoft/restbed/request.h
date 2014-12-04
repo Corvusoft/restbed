@@ -66,6 +66,8 @@ namespace restbed
             std::string get_path( void ) const;
             
             std::string get_origin( void ) const;
+        
+            std::string get_protocol( void ) const;
             
             std::string get_header( const std::string& name, const std::string& value = "" ) const;
             

@@ -73,6 +73,7 @@ namespace restbed
             set_method( parse_http_method( socket ) );
             set_path( parse_http_path( socket ) );
             set_query_parameters( parse_http_query_parameters( socket ) );
+            set_protocol( parse_http_protocol( socket ) );
             set_version( parse_http_version( socket ) );
             set_headers( parse_http_headers( socket ) );
             set_body( parse_http_body( socket ) );
@@ -111,8 +112,6 @@ namespace restbed
             socket >> version;
             socket.ignore( 2 );
             
-            version = String::remove( "HTTP/", version, StringOption::CASE_SENSITIVE );
-            
             double result = 0;
             
             try
@@ -147,6 +146,18 @@ namespace restbed
             socket.ignore( 1 );
             
             return method;
+        }
+        
+        string RequestBuilderImpl::parse_http_protocol( istream& socket )
+        {
+            string protocol = String::empty;
+            
+            for ( char character = socket.get( ); character not_eq '/'; character = socket.get( ) )
+            {
+                protocol.push_back( character );
+            }
+            
+            return String::trim( protocol );
         }
         
         map< string, string > RequestBuilderImpl::parse_http_headers( istream& socket )

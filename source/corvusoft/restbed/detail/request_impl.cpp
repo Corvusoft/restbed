@@ -35,6 +35,7 @@ namespace restbed
             m_path( "/" ),
             m_method( "GET" ),
             m_origin( String::empty ),
+            m_protocol( "HTTP" ),
             m_headers( ),
             m_path_parameters( ),
             m_query_parameters( )
@@ -47,6 +48,7 @@ namespace restbed
             m_path( original.m_path ),
             m_method( original.m_method ),
             m_origin( original.m_origin ),
+            m_protocol( original.m_protocol ),
             m_headers( original.m_headers ),
             m_path_parameters( original.m_path_parameters ),
             m_query_parameters( original.m_query_parameters )
@@ -107,6 +109,11 @@ namespace restbed
         string RequestImpl::get_origin( void ) const
         {
             return m_origin;
+        }
+
+        string RequestImpl::get_protocol( void ) const
+        {
+            return m_protocol;
         }
         
         string RequestImpl::get_header( const string& name, const string& default_value ) const
@@ -210,6 +217,18 @@ namespace restbed
         {
             m_origin = value;
         }
+
+        void RequestImpl::set_protocol( const string& value )
+        {
+            auto protocol = String::uppercase( value );
+
+            if ( protocol not_eq "HTTP" and protocol not_eq "HTTPS" )
+            {
+                throw StatusCode::BAD_REQUEST;
+            }
+            
+            m_protocol = value;
+        }
         
         void RequestImpl::set_headers( const map< string, string >& values )
         {
@@ -243,6 +262,7 @@ namespace restbed
                      m_origin == value.m_origin and
                      m_version == value.m_version and
                      m_headers == value.m_headers and
+                     m_protocol == value.m_protocol and
                      m_path_parameters == value.m_path_parameters and
                      m_query_parameters == value.m_query_parameters );
         }
@@ -266,6 +286,8 @@ namespace restbed
             
             m_headers = value.m_headers;
             
+            m_protocol = value.m_protocol;
+            
             m_path_parameters = value.m_path_parameters;
             
             m_query_parameters = value.m_query_parameters;
@@ -275,7 +297,7 @@ namespace restbed
         
         string RequestImpl::generate_status_section( void ) const
         {
-            return String::format( "%s %s HTTP/%.1f\r\n", m_method.data( ), generate_path_section( ).data( ), m_version );
+            return String::format( "%s %s %s/%.1f\r\n", m_method.data( ), generate_path_section( ).data( ), m_protocol.data( ), m_version );
         }
         
         string RequestImpl::generate_header_section( void ) const

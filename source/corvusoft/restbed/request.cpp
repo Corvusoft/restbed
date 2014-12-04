@@ -88,6 +88,11 @@ namespace restbed
     {
         return m_pimpl->get_origin( );
     }
+
+    string Request::get_protocol( void ) const
+    {
+        return m_pimpl->get_protocol( );
+    }
     
     string Request::get_header( const string& name, const string& default_value ) const
     {

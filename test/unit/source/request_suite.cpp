@@ -32,6 +32,7 @@ TEST( Request, constructor )
     double version = 1.1;
     string path = "/";
     string origin = "";
+    string protocol = "HTTP";
     map< string, string > headers;
     map< string, string > path_parameters;
     multimap< string, string > query_parameters;
@@ -43,6 +44,7 @@ TEST( Request, constructor )
     EXPECT_EQ( path, request.get_path( ) );
     EXPECT_EQ( origin, request.get_origin( ) );
     EXPECT_EQ( headers, request.get_headers( ) );
+    EXPECT_EQ( protocol, request.get_protocol( ) );
     EXPECT_EQ( path_parameters, request.get_path_parameters( ) );
     EXPECT_EQ( query_parameters, request.get_query_parameters( ) );
 }
@@ -53,6 +55,7 @@ TEST( Request, copy_constructor )
     double version = 1.0;
     string path = "/events";
     string origin = "localhost";
+    string protocol = "HTTPS";
     map< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
     multimap< string, string > query_parameters = { { "q", "cats" } };
@@ -63,6 +66,7 @@ TEST( Request, copy_constructor )
     original.set_path( path );
     original.set_origin( origin );
     original.set_headers( headers );
+    original.set_protocol( protocol );
     original.set_path_parameters( path_parameters );
     original.set_query_parameters( query_parameters );
     
@@ -73,6 +77,7 @@ TEST( Request, copy_constructor )
     EXPECT_EQ( path, copy.get_path( ) );
     EXPECT_EQ( origin, copy.get_origin( ) );
     EXPECT_EQ( headers, copy.get_headers( ) );
+    EXPECT_EQ( protocol, copy.get_protocol( ) );
     EXPECT_EQ( path_parameters, copy.get_path_parameters( ) );
     EXPECT_EQ( query_parameters, copy.get_query_parameters( ) );
 }
@@ -92,6 +97,7 @@ TEST( Request, to_bytes )
     Bytes body = { 'b', 'o', 'd', 'y' };
     double version = 1.0;
     string path = "/events";
+    string protocol = "HTTPS";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
@@ -103,10 +109,11 @@ TEST( Request, to_bytes )
     request.set_path( path );
     request.set_origin( origin );
     request.set_headers( headers );
+    request.set_protocol( protocol );
     request.set_path_parameters( path_parameters );
     request.set_query_parameters( query_parameters );
     
-    string bytes = "GET /events?q=cats HTTP/1.0\r\napi: 1.0v\r\n\r\nbody";
+    string bytes = "GET /events?q=cats HTTPS/1.0\r\napi: 1.0v\r\n\r\nbody";
     
     EXPECT_EQ( Bytes( bytes.begin( ), bytes.end( ) ), request.to_bytes( ) );
 }
@@ -180,6 +187,15 @@ TEST( Request, modify_origin )
     
     EXPECT_EQ( "localhost", request.get_origin( ) );
 }
+
+TEST( Request, modify_protocol )
+{
+    RequestImpl request;
+    request.set_protocol( "HTTPS" );
+    
+    EXPECT_EQ( "HTTPS", request.get_protocol( ) );
+}
+
 
 TEST( Request, modify_header )
 {
@@ -285,6 +301,7 @@ TEST( Request, assignment_operator )
     Bytes body = { 'b', 'o', 'd', 'y' };
     double version = 1.0;
     string path = "/events";
+    string protocol = "HTTPS";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
@@ -296,6 +313,7 @@ TEST( Request, assignment_operator )
     original.set_path( path );
     original.set_origin( origin );
     original.set_headers( headers );
+    original.set_protocol( protocol );
     original.set_path_parameters( path_parameters );
     original.set_query_parameters( query_parameters );
     
@@ -306,6 +324,7 @@ TEST( Request, assignment_operator )
     EXPECT_EQ( path, copy.get_path( ) );
     EXPECT_EQ( origin, copy.get_origin( ) );
     EXPECT_EQ( headers, copy.get_headers( ) );
+    EXPECT_EQ( protocol, copy.get_protocol( ) );
     EXPECT_EQ( path_parameters, copy.get_path_parameters( ) );
     EXPECT_EQ( query_parameters, copy.get_query_parameters( ) );
 }
@@ -337,6 +356,7 @@ TEST( Request, equality_operator )
     Bytes body = { 'b', 'o', 'd', 'y' };
     double version = 1.0;
     string path = "/events";
+    string protocol = "HTTPS";
     string origin = "localhost";
     map< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
@@ -348,6 +368,7 @@ TEST( Request, equality_operator )
     lhs.set_path( path );
     lhs.set_origin( origin );
     lhs.set_headers( headers );
+    lhs.set_protocol( protocol );
     lhs.set_path_parameters( path_parameters );
     lhs.set_query_parameters( query_parameters );
     
@@ -357,6 +378,7 @@ TEST( Request, equality_operator )
     rhs.set_path( path );
     rhs.set_origin( origin );
     rhs.set_headers( headers );
+    rhs.set_protocol( protocol );
     rhs.set_path_parameters( path_parameters );
     rhs.set_query_parameters( query_parameters );
     

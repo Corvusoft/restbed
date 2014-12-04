@@ -90,10 +90,12 @@ namespace restbed
                 static framework::Bytes parse_http_body( std::istream& socket );
                 
                 static double parse_http_version( std::istream& socket );
-                
+            
                 static std::string parse_http_path( std::istream& socket );
                 
                 static std::string parse_http_method( std::istream& socket );
+            
+                static std::string parse_http_protocol( std::istream& socket );
                 
                 static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
                 

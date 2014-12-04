@@ -64,6 +64,20 @@ TEST( Request, modify_version )
     }
 }
 
+TEST( Request, modify_protocol )
+{
+    RequestImpl request;
+    
+    try
+    {
+        request.set_protocol( "SPDY" );
+    }
+    catch ( StatusCode::Value code )
+    {
+        EXPECT_EQ( code, StatusCode::BAD_REQUEST );
+    }
+}
+
 TEST( Request, assignment_operator )
 {
     RequestImpl original;
