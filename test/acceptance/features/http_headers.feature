@@ -10,7 +10,7 @@ Feature: HTTP response headers
 		And publish a default resource
 		When I perform a HTTP "<method>" request 
 		Then I should see a "Connection" response header with a value of "close"
-		And I should see a "Content-Type" response header with a value of "application/json; charset=utf-8"
+		And I should see a "Content-Type" response header with a value of "text/plain; charset=us-ascii"
 		And I should see a "Server" response header with a value of "Corvusoft - restbed"
 
 	Examples:

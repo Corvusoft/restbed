@@ -93,7 +93,7 @@ TEST( Response, to_bytes )
     response.set_status_message( message );
     response.set_headers( headers );
     
-    string bytes = "HTTP/1.0 201 CUSTOM-CREATED\r\nConnection: close\r\nServer: Corvusoft - restbed\r\nContent-Type: application/json; charset=utf-8\r\nContent-Length: 9\r\nDate: ignore\r\napi: 1.1v\r\n\r\nTest Data";
+    string bytes = "HTTP/1.0 201 CUSTOM-CREATED\r\nConnection: close\r\nServer: Corvusoft - restbed\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Length: 9\r\nDate: ignore\r\napi: 1.1v\r\n\r\nTest Data";
     
     EXPECT_EQ( Bytes( bytes.begin( ), bytes.end( ) ), response.to_bytes( ) );
 }

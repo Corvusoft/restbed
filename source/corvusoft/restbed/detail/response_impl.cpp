@@ -255,7 +255,7 @@ namespace restbed
             
             if ( not has_header( "Content-Type" ) )
             {
-                header = "Content-Type: application/json; charset=utf-8\r\n";
+                header = "Content-Type: text/plain; charset=us-ascii\r\n";
             }
             
             return header;
