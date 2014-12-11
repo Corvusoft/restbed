@@ -228,12 +228,12 @@ TEST( Request, modify_headers )
 
 TEST( Request, modify_headers_subset_values )
 {
-    multimap< string, string > headers = { { "name", "value1" }, { "NAME", "value2" }, { "Age", "30yo" } };
+    multimap< string, string > headers = { { "name", "value1" }, { "NAME", "value2" }, { "name", "value3" }, { "Age", "30yo" } };
     
     RequestImpl request;
     request.set_headers( headers );
     
-    multimap< string, string > expectation = { { "name", "value1" }, { "NAME", "value2" } };
+    multimap< string, string > expectation = { { "name", "value1" }, { "NAME", "value2" }, { "name", "value3" } };
     
     EXPECT_EQ( expectation, request.get_headers( "name" ) );
 }
