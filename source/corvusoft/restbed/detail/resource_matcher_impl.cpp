@@ -98,23 +98,16 @@ namespace restbed
             for ( auto filter : resource.get_header_filters( ) )
             {
                 string name = filter.first;
+                regex pattern = regex( filter.second );
                 
-                if ( request.has_header( name ) )
+                for ( auto header : request.get_headers( name ) )
                 {
-                    string value = request.get_header( name );
-                    
-                    regex pattern = regex( filter.second );
+                    string value = header.second;
                     
                     if ( not regex_match( value, pattern ) )
                     {
-                        result = false;
-                        break;
+                        return false;
                     }
-                }
-                else
-                {
-                    result = false;
-                    break;
                 }
             }
             
