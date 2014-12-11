@@ -130,9 +130,26 @@ namespace restbed
             return value;
         }
         
-        map< string, string > RequestImpl::get_headers( void ) const
+        multimap< string, string > RequestImpl::get_headers( void ) const
         {
             return m_headers;
+        }
+        
+        multimap< string, string > RequestImpl::get_headers( const string& name ) const
+        {
+            multimap< string, string > headers;
+            
+            auto key = String::lowercase( name );
+            
+            for ( auto header : m_headers )
+            {
+                if ( String::lowercase( header.first ) == key )
+                {
+                    headers.insert( header );
+                }
+            }
+            
+            return headers;
         }
         
         string RequestImpl::get_query_parameter( const string& name, const string& default_value ) const
@@ -230,7 +247,7 @@ namespace restbed
             m_protocol = value;
         }
         
-        void RequestImpl::set_headers( const map< string, string >& values )
+        void RequestImpl::set_headers( const multimap< string, string >& values )
         {
             m_headers = values;
         }

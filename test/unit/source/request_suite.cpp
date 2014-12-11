@@ -33,7 +33,7 @@ TEST( Request, constructor )
     string path = "/";
     string origin = "";
     string protocol = "HTTP";
-    map< string, string > headers;
+    multimap< string, string > headers;
     map< string, string > path_parameters;
     multimap< string, string > query_parameters;
     
@@ -56,7 +56,7 @@ TEST( Request, copy_constructor )
     string path = "/events";
     string origin = "localhost";
     string protocol = "HTTPS";
-    map< string, string > headers = { { "api", "1.0v" } };
+    multimap< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
     multimap< string, string > query_parameters = { { "q", "cats" } };
     
@@ -99,7 +99,7 @@ TEST( Request, to_bytes )
     string path = "/events";
     string protocol = "HTTPS";
     string origin = "localhost";
-    map< string, string > headers = { { "api", "1.0v" } };
+    multimap< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
     multimap< string, string > query_parameters = { { "q", "cats" } };
     
@@ -124,7 +124,7 @@ TEST( Request, has_header )
     
     EXPECT_EQ( false, request.has_header( "Server" ) );
     
-    map< string, string > headers = { { "Server", "restbed" } };
+    multimap< string, string > headers = { { "Server", "restbed" } };
     request.set_headers( headers );
     
     EXPECT_EQ( true, request.has_header( "Server" ) );
@@ -199,7 +199,7 @@ TEST( Request, modify_protocol )
 
 TEST( Request, modify_header )
 {
-    map< string, string > headers = { { "name", "value" } };
+    multimap< string, string > headers = { { "name", "value" } };
     
     RequestImpl request_impl;
     request_impl.set_headers( headers );
@@ -218,12 +218,24 @@ TEST( Request, modify_header_default_value )
 
 TEST( Request, modify_headers )
 {
-    map< string, string > headers = { { "name", "value" } };
+    multimap< string, string > headers = { { "name", "value" } };
     
     RequestImpl request;
     request.set_headers( headers );
     
     EXPECT_EQ( headers, request.get_headers( ) );
+}
+
+TEST( Request, modify_headers_subset_values )
+{
+    multimap< string, string > headers = { { "name", "value1" }, { "NAME", "value2" }, { "Age", "30yo" } };
+    
+    RequestImpl request;
+    request.set_headers( headers );
+    
+    multimap< string, string > expectation = { { "name", "value1" }, { "NAME", "value2" } };
+    
+    EXPECT_EQ( expectation, request.get_headers( "name" ) );
 }
 
 TEST( Request, modify_query_parameter )
@@ -303,7 +315,7 @@ TEST( Request, assignment_operator )
     string path = "/events";
     string protocol = "HTTPS";
     string origin = "localhost";
-    map< string, string > headers = { { "api", "1.0v" } };
+    multimap< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
     multimap< string, string > query_parameters = { { "q", "cats" } };
     
@@ -358,7 +370,7 @@ TEST( Request, equality_operator )
     string path = "/events";
     string protocol = "HTTPS";
     string origin = "localhost";
-    map< string, string > headers = { { "api", "1.0v" } };
+    multimap< string, string > headers = { { "api", "1.0v" } };
     map< string, string > path_parameters = { { "name", "value" } };
     multimap< string, string > query_parameters = { { "q", "cats" } };
     

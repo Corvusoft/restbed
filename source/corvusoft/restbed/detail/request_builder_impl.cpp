@@ -160,9 +160,9 @@ namespace restbed
             return String::trim( protocol );
         }
         
-        map< string, string > RequestBuilderImpl::parse_http_headers( istream& socket )
+        multimap< string, string > RequestBuilderImpl::parse_http_headers( istream& socket )
         {
-            map< string, string > headers;
+            multimap< string, string > headers;
             
             string header = String::empty;
             
@@ -176,7 +176,7 @@ namespace restbed
                 
                 string value = String::trim( header.substr( index + 1 ) );
                 
-                headers[ name ] = value;
+                headers.insert( make_pair( name, value ) );
             }
             
             return headers;

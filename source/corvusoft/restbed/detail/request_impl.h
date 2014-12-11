@@ -67,7 +67,9 @@ namespace restbed
                 
                 std::string get_header( const std::string& name, const std::string& default_value ) const;
                 
-                std::map< std::string, std::string > get_headers( void ) const;
+                std::multimap< std::string, std::string > get_headers( void ) const;
+            
+                std::multimap< std::string, std::string > get_headers( const std::string& name ) const;
                 
                 std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
                 
@@ -92,7 +94,7 @@ namespace restbed
             
                 void set_protocol( const std::string& value );
                 
-                void set_headers( const std::map< std::string, std::string >& values );
+                void set_headers( const std::multimap< std::string, std::string >& values );
                 
                 void set_path_parameters( const std::map< std::string, std::string >& values );
                 
@@ -161,7 +163,7 @@ namespace restbed
             
                 std::string m_protocol;
             
-                std::map< std::string, std::string > m_headers;
+                std::multimap< std::string, std::string > m_headers;
                 
                 std::map< std::string, std::string > m_path_parameters;
                 

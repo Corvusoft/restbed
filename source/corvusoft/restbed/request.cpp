@@ -99,9 +99,14 @@ namespace restbed
         return m_pimpl->get_header( name, default_value );
     }
     
-    map< string, string > Request::get_headers( void ) const
+    multimap< string, string > Request::get_headers( void ) const
     {
         return m_pimpl->get_headers( );
+    }
+    
+    multimap< string, string > Request::get_headers( const string& name ) const
+    {
+        return m_pimpl->get_headers( name );
     }
     
     string Request::get_query_parameter( const string& name, const string& default_value ) const

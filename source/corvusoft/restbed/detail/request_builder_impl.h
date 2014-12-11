@@ -97,7 +97,7 @@ namespace restbed
             
                 static std::string parse_http_protocol( std::istream& socket );
                 
-                static std::map< std::string, std::string > parse_http_headers( std::istream& socket );
+                static std::multimap< std::string, std::string > parse_http_headers( std::istream& socket );
                 
                 static std::multimap< std::string, std::string > parse_http_query_parameters( std::istream& socket );
                 
