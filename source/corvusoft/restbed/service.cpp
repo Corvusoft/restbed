@@ -9,6 +9,7 @@
 #include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/service.h"
+#include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/log_level.h"
