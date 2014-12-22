@@ -20,6 +20,22 @@ using restbed::detail::MethodImpl;
 
 namespace restbed
 {
+    const Method Method::GET( "GET" );
+    
+    const Method Method::PUT( "PUT" );
+    
+    const Method Method::HEAD( "HEAD" );
+    
+    const Method Method::POST( "POST" );
+    
+    const Method Method::TRACE( "TRACE" );
+    
+    const Method Method::DELETE( "DELETE" );
+    
+    const Method Method::CONNECT( "CONNECT" );
+    
+    const Method Method::OPTIONS( "OPTIONS" );
+    
     Method::Method( const char* value ) : m_pimpl( new MethodImpl( value ) )
     {
         //n/a

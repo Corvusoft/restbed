@@ -14,9 +14,9 @@
 #include <corvusoft/framework/string>
 
 //System Namespaces
-using std::find;
 using std::array;
 using std::string;
+using std::none_of;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -94,11 +94,14 @@ namespace restbed
                 }
             };
             
-            string method = String::uppercase( value );
+            const string method = String::uppercase( value );
             
-            auto iterator = find( methods.begin( ), methods.end( ), method );
+            auto validation_failed = none_of( methods.begin( ), methods.end( ), [ &method ] ( const string& value )
+            {
+                return method == value;
+            } );
             
-            if ( iterator == methods.end( ) )
+            if ( validation_failed )
             {
                 throw StatusCode::METHOD_NOT_ALLOWED;
             }

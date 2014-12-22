@@ -66,6 +66,21 @@ namespace restbed
             bool operator !=( const Method& value ) const;
             
             //Properties
+            static const Method GET;
+        
+            static const Method PUT;
+        
+            static const Method HEAD;
+            
+            static const Method POST;
+            
+            static const Method TRACE;
+            
+            static const Method DELETE;
+            
+            static const Method OPTIONS;
+            
+            static const Method CONNECT;
             
         protected:
             //Friends
