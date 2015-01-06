@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST( Service, query_parameters_are_case_insensitive )
+TEST( Service, content_length_present_on_empty_response_body )
 {
     Resource resource;
     resource.set_path( "test" );

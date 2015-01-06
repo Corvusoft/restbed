@@ -199,11 +199,10 @@ namespace restbed
                 for ( const auto& parameter : query )
                 {
                     string::size_type index = parameter.find_first_of( '=' );
-                    
+
                     string name = Uri::decode_parameter( parameter.substr( 0, index ) );
-                    
                     string value = Uri::decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
-                    
+
                     parameters.insert( make_pair( name, value ) );
                 }
             }
