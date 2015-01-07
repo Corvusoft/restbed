@@ -253,7 +253,7 @@ namespace restbed
         {
             string header = String::empty;
             
-            if ( not has_header( "Content-Type" ) )
+            if ( not has_header( "Content-Type" ) and not m_body.empty( ) )
             {
                 header = "Content-Type: text/plain; charset=us-ascii\r\n";
             }
