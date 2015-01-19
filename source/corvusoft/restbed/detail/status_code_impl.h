@@ -10,6 +10,7 @@
 #include <string>
 
 //Project Includes
+#include "corvusoft/restbed/status_code.h"
 
 //External Includes
 
@@ -37,6 +38,16 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                static bool is_successful( const StatusCode::Value value );
+
+                static bool is_redirection( const StatusCode::Value value );
+
+                static bool is_informational( const StatusCode::Value value );
+
+                static bool is_client_error( const StatusCode::Value value );
+
+                static bool is_server_error( const StatusCode::Value value );
+
                 static int parse( const std::string& value );
                 
                 static std::string to_string( const int code );

@@ -25,6 +25,31 @@ namespace restbed
 {
     namespace detail
     {
+        bool StatusCodeImpl::is_successful( const StatusCode::Value value )
+        {
+            return value > 199 and value < 299;
+        }
+
+        bool StatusCodeImpl::is_redirection( const StatusCode::Value value )
+        {
+            return value > 299 and value < 399;
+        }
+
+        bool StatusCodeImpl::is_informational( const StatusCode::Value value )
+        {
+            return value > 99 and value < 199;
+        }
+
+        bool StatusCodeImpl::is_client_error( const StatusCode::Value value )
+        {
+            return value > 399 and value < 499;
+        }
+
+        bool StatusCodeImpl::is_server_error( const StatusCode::Value value )
+        {
+            return value > 499 and value <= 511;
+        }
+
         int StatusCodeImpl::parse( const string& value )
         {
             int result = -1;
