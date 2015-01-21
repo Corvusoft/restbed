@@ -5,11 +5,11 @@ find_path( asio_INCLUDE asio.hpp HINTS "${CMAKE_SOURCE_DIR}/dependency/asio/incl
 if ( asio_INCLUDE )
     set( ASIO_FOUND TRUE )
 
-    if ( NOT ASIO_FIND_QUIETLY )
+    if ( NOT asio_FIND_QUIETLY )
         message( STATUS "Found asio header: ${asio_INCLUDE}" )
     endif ( )
 else ( )
-    if ( ASIO_FIND_REQUIRED )
+    if ( asio_FIND_REQUIRED )
         message( FATAL_ERROR "Failed to locate asio!" )
     endif ( )
 endif ( )
