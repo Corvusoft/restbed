@@ -1,4 +1,8 @@
+#include <map>
+#include <string>
 #include <cstdlib>
+
+using namespace std;
 
 #include "restbed"
 
@@ -28,11 +32,16 @@ int main( const int, const char** )
     Resource xml;
     xml.set_path( "/resource" );
     xml.set_header_filter( "Accept", "application/xml" );
+    xml.set_header_filter( "Content-Type", "application/xml" );
     xml.set_method_handler( "GET", &get_xml_method_handler );
-    
+
+    map< string, string > filters;
+    filters[ "Accept" ] = "application/json";
+    filters[ "Content-Type" ] = "application/json";
+
     Resource json;
     json.set_path( "/resource" );
-    json.set_header_filter( "Accept", "application/json" );
+    json.set_header_filters( filters );
     json.set_method_handler( "GET", &get_json_method_handler );
     
     Settings settings;
