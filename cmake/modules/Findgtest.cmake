@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014 Corvusoft
+# Copyright (c) 2013, 2014, 2015 Corvusoft
 
 find_path( gtest_INCLUDE gtest/gtest.h HINTS "${CMAKE_SOURCE_DIR}/dependency/gtest/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 find_library( gtest_LIBRARY NAMES gtest HINTS "${CMAKE_SOURCE_DIR}/dependency/gtest" "${CMAKE_SOURCE_DIR}/dependency/gtest/build" "${CMAKE_SOURCE_DIR}/dependency/gtest/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )

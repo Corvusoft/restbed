@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014 Corvusoft
+# Copyright (c) 2013, 2014, 2015 Corvusoft
 
 find_path( curl_INCLUDE curl/curl.h HINTS "${CMAKE_SOURCE_DIR}/dependency/curl/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 find_library( curl_LIBRARY NAMES curl HINTS "${CMAKE_SOURCE_DIR}/dependency/curl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )

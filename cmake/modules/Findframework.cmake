@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014 Corvusoft
+# Copyright (c) 2013, 2014, 2015 Corvusoft
 
 find_path( framework_INCLUDE framework HINTS "${CMAKE_SOURCE_DIR}/dependency/framework/distribution/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 find_library( framework_LIBRARY NAMES framework HINTS "${CMAKE_SOURCE_DIR}/dependency/framework/distribution/library" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )

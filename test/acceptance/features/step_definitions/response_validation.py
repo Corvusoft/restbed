@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2013, 2014 Corvusoft
+# Copyright (c) 2013, 2014, 2015 Corvusoft
 
 from helpers import *
 from lettuce import step, world
@@ -26,11 +26,5 @@ def i_should_see_a_body_of( step ):
 
 @step( u'I should see a log entry of "([^"]*)"$' )
 def i_should_see_a_log_entry_of( step, expectation ):
-    if "::1" in expectation:
-    	expectation = expectation.replace( "::1", "" )
-        
-    	actual = world.service.get_log_entry( ).replace( "::1", "" )
-    	actual = actual.replace( "127.0.0.1", "" )
-    	actual = actual.replace( "::ffff:127.0.0.1", "" )
-
-	assert actual == expectation, "Failed to find matching log entry"
+    actual = world.service.get_log_entry( )
+    assert actual not in [ "::1", "127.0.0.1", "::ffff:", "::ffff:127.0.0.1", "localhost", "localhost.localdomain" ], "Failed to find matching log entry %s" % actual
