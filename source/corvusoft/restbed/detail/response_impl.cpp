@@ -138,7 +138,7 @@ namespace restbed
             m_headers[ key ] = value;
         }
         
-        void ResponseImpl::set_headers( const map< std::string, string >& values )
+        void ResponseImpl::set_headers( const map< string, string >& values )
         {
             m_headers = values;
         }

@@ -107,7 +107,7 @@ namespace restbed
         m_pimpl->set_header( name, value );
     }
     
-    void Response::set_headers( const map< std::string, string >& values )
+    void Response::set_headers( const map< string, string >& values )
     {
         m_pimpl->set_headers( values );
     }
