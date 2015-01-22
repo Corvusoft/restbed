@@ -12,6 +12,9 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/example"  )
 #
 # Build
 #
+add_executable( pam_authentication pam_authentication/source/example.cpp )
+target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )
+
 add_executable( basic_authentication basic_authentication/source/example.cpp )
 target_link_libraries( basic_authentication ${CMAKE_PROJECT_NAME} )
 
