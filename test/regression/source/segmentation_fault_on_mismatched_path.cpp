@@ -10,10 +10,10 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/http>
 
 //System Namespaces
 using std::shared_ptr;
@@ -23,6 +23,7 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
+using namespace framework;
 
 Response get_handler( const Request& )
 {
@@ -46,10 +47,16 @@ TEST( Service, mismatched_resource_path )
     service->publish( resource );
     
     service->start( );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/";
+
+    auto response = Http::get( request );
     
-    auto response = Http::get( "http://localhost:1984/" );
-    
-    EXPECT_EQ( "404", response[ "Status Code" ] );
+    EXPECT_EQ( 404, response.status_code );
     
     service->stop( );
 }
@@ -68,10 +75,16 @@ TEST( Service, matched_resource_path )
     service->publish( resource );
     
     service->start( );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/test";
+
+    auto response = Http::get( request );
     
-    auto response = Http::get( "http://localhost:1984/test" );
-    
-    EXPECT_EQ( "200", response[ "Status Code" ] );
+    EXPECT_EQ( 200, response.status_code );
     
     service->stop( );
 }

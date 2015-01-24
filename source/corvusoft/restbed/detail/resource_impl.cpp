@@ -77,7 +77,7 @@ namespace restbed
         {
             string filter = String::empty;
             
-            const auto iterator = Map::find_key_ignoring_case( name, m_header_filters );
+            const auto iterator = Map::find_ignoring_case( name, m_header_filters );
             
             if ( iterator not_eq m_header_filters.end( ) )
             {
@@ -143,7 +143,7 @@ namespace restbed
                 throw invalid_argument( String::empty );
             }
             
-            auto entry = Map::find_key_ignoring_case( name, m_header_filters );
+            auto entry = Map::find_ignoring_case( name, m_header_filters );
             
             if ( entry not_eq m_header_filters.end( ) )
             {

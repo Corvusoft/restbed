@@ -13,7 +13,6 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <asio.hpp>
@@ -31,6 +30,7 @@ using namespace restbed;
 //External Namespaces
 using asio::ip::tcp;
 using asio::system_error;
+using namespace framework;
 
 bool exception_was_thrown = false;
 

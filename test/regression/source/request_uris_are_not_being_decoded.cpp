@@ -10,10 +10,10 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/http>
 
 //System Namespaces
 using std::shared_ptr;
@@ -23,6 +23,7 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
+using namespace framework;
 
 Response get_handler( const Request& request )
 {
@@ -49,10 +50,16 @@ TEST( Service, encoded_uri_test )
     service->publish( resource );
     
     service->start( );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 8989;
+    request.host = "localhost";
+    request.path = "/uri%20test?ben+crowhurst=%4030";
+
+    auto response = Http::get( request );
     
-    auto response = Http::get( "http://localhost:8989/uri%20test?ben+crowhurst=%4030" );
-    
-    EXPECT_EQ( "200", response[ "Status Code" ] );
+    EXPECT_EQ( 200, response.status_code );
     
     service->stop( );
 }

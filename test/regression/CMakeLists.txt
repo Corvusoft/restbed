@@ -10,7 +10,7 @@ cmake_minimum_required( VERSION 2.8.10 )
 set( SOURCE_DIR "source" )
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/test"  )
 
-include_directories( ${gtest_INCLUDE} ${curl_INCLUDE} ${asio_INCLUDE} )
+include_directories( ${gtest_INCLUDE} ${asio_INCLUDE} )
 
 #
 # Build
@@ -28,18 +28,18 @@ add_executable( fails_to_parse_identical_query_parameters_test_suite ${SOURCE_DI
 add_executable( content_length_present_on_empty_response_body_test_suite ${SOURCE_DIR}/content_length_present_on_empty_response_body.cpp )
 add_executable( content_type_present_on_empty_response_body_test_suite ${SOURCE_DIR}/content_type_present_on_empty_response_body.cpp )
 
-target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( request_uris_are_not_being_decoded_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( resource_responding_on_invalid_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( exception_thrown_with_space_in_resource_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( resources_are_not_overwritten_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( missing_regex_support_on_gcc_4.8_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( request_uris_are_not_being_decoded_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( resource_responding_on_invalid_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( segmentation_fault_on_mismatched_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( exception_thrown_with_space_in_resource_path_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( uncaught_exception_when_peer_closes_connection_regression_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
-target_link_libraries( error_handler_not_overwritten_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( large_request_bodies_being_trimmed_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( fails_to_parse_identical_query_parameters_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( content_length_present_on_empty_response_body_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
-target_link_libraries( content_type_present_on_empty_response_body_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} ${curl_LIBRARY} pthread )
+target_link_libraries( error_handler_not_overwritten_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( large_request_bodies_being_trimmed_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( fails_to_parse_identical_query_parameters_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( content_length_present_on_empty_response_body_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( content_type_present_on_empty_response_body_test_suite ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} ${CMAKE_PROJECT_NAME} pthread )
 
 
 #

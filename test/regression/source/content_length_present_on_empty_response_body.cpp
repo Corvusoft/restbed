@@ -21,15 +21,15 @@ using std::make_shared;
 
 //Project Namespaces
 using namespace restbed;
-using namespace framework;
 
 //External Namespaces
+using namespace framework;
 
 Response get_handler( const Request& )
 {
     Response response;
     response.set_status_code( StatusCode::OK );
-    
+
     return response;
 }
 
@@ -50,7 +50,9 @@ TEST( Service, content_length_present_on_empty_response_body )
     
     Http::Request request;
     request.method = "GET";
-    request.uri = "http://localhost:1984/test";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/test";
     
     auto response = Http::get( request );
     

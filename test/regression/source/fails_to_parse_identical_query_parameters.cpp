@@ -6,6 +6,7 @@
 
 //System Includes
 #include <map>
+#include <string>
 #include <memory>
 #include <utility>
 #include <algorithm>
@@ -13,12 +14,13 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/http>
 
 //System Namespaces
+using std::string;
 using std::multimap;
 using std::make_pair;
 using std::shared_ptr;
@@ -28,6 +30,7 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
+using namespace framework;
 
 Response get_handler( const Request& request )
 {
@@ -62,10 +65,16 @@ TEST( Service, fails_to_parse_identical_query_parameters )
     service->publish( resource );
     
     service->start( );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/test?echo=false&echo=true";
+
+    auto response = Http::get( request );
     
-    auto response = Http::get( "http://localhost:1984/test?echo=false&echo=true" );
-    
-    EXPECT_EQ( "200", response[ "Status Code" ] );
+    EXPECT_EQ( 200, response.status_code );
     
     service->stop( );
 }

@@ -80,7 +80,6 @@ install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
 #
 if ( BUILD_TESTS )
     find_package( gtest REQUIRED )
-    find_package( curl REQUIRED )
 
     enable_testing( )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/test/acceptance" "acceptance-tests" )

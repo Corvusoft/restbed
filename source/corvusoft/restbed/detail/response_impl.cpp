@@ -93,7 +93,7 @@ namespace restbed
             
             if ( has_header( name ) )
             {
-                const auto iterator = Map::find_key_ignoring_case( name, m_headers );
+                const auto iterator = Map::find_ignoring_case( name, m_headers );
                 
                 value = iterator->second;
             }
@@ -180,7 +180,7 @@ namespace restbed
         
         bool ResponseImpl::has_header( const string& name ) const
         {
-            return ( Map::find_key_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
+            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
         
         string ResponseImpl::generate_status_section( void ) const

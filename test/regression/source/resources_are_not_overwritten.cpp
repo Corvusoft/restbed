@@ -9,10 +9,10 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/http>
 
 //System Namespaces
 using std::shared_ptr;
@@ -22,6 +22,7 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
+using namespace framework;
 
 shared_ptr< Service > m_service;
 
@@ -61,10 +62,16 @@ TEST( Resource, overwrite_existing_resource )
     m_service->publish( initial_resource );
     m_service->publish( secondary_resource );
     m_service->start( );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/TestResource";
+
+    auto response = Http::get( request );
     
-    auto response = Http::get( "http://localhost:1984/TestResource" );
-    
-    EXPECT_EQ( "401", response[ "Status Code" ] );
+    EXPECT_EQ( 401, response.status_code );
     
     m_service->stop( );
 }
@@ -89,10 +96,17 @@ TEST( Resource, add_alternative_resource )
     m_service->publish( initial_resource );
     m_service->publish( secondary_resource );
     m_service->start( );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/TestResource";
+    request.headers = { { "Content-Type", "application/xml" } };
+
+    auto response = Http::get( request );
     
-    auto response = Http::get( "http://localhost:1984/TestResource", { { "Content-Type", "application/xml" } } );
-    
-    EXPECT_EQ( "401", response[ "Status Code" ] );
+    EXPECT_EQ( 401, response.status_code );
     
     m_service->stop( );
 }

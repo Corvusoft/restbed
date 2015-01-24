@@ -70,7 +70,7 @@ namespace restbed
         {
             string property = String::empty;
             
-            auto iterator = Map::find_key_ignoring_case( name, m_properties );
+            auto iterator = Map::find_ignoring_case( name, m_properties );
             
             if ( iterator not_eq m_properties.end( ) )
             {

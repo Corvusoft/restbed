@@ -11,10 +11,11 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/http>
+#include <corvusoft/framework/bytes>
 
 //System Namespaces
 using std::vector;
@@ -25,6 +26,7 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
+using namespace framework;
 
 const char* body = R"(
  { "queues": [
@@ -38,7 +40,7 @@ const char* body = R"(
 
 Response post_handler( const Request& request )
 {
-    vector< unsigned char > expectation( body, body + 492 );
+    Bytes expectation( body, body + 492 );
     
     Response response;
     response.set_status_code( ( request.get_body( ) == expectation ) ? StatusCode::CREATED : StatusCode::BAD_REQUEST );
@@ -60,10 +62,17 @@ TEST( Service, large_request_bodies_being_trimmed )
     service->publish( resource );
     
     service->start( );
+
+    Http::Request request;
+    request.method = "POST";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/test";
+    request.body = Bytes( body, body + 492 );
+
+    auto response = Http::post( request );
     
-    auto response = Http::post( "http://localhost:1984/test", body );
-    
-    EXPECT_EQ( "201", response[ "Status Code" ] );
+    EXPECT_EQ( 201, response.status_code );
     
     service->stop( );
 }

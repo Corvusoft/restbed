@@ -10,10 +10,10 @@
 
 //Project Includes
 #include <restbed>
-#include "helpers/http.h"
 
 //External Includes
 #include <gtest/gtest.h>
+#include <corvusoft/framework/http>
 
 //System Namespaces
 using std::shared_ptr;
@@ -23,6 +23,7 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
+using namespace framework;
 
 shared_ptr< Service > m_service;
 bool error_handler_called = false;
@@ -57,8 +58,14 @@ TEST( Resource, overwrite_existing_resource )
     m_service->set_error_handler( &error_handler );
     m_service->publish( resource );
     m_service->start( );
-    
-    auto response = Http::get( "http://localhost:1984/TestResource" );
+
+    Http::Request request;
+    request.method = "GET";
+    request.port = 1984;
+    request.host = "localhost";
+    request.path = "/TestResource";
+
+    auto response = Http::get( request );
     
     EXPECT_EQ( true, error_handler_called );
     
