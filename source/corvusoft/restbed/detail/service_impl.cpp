@@ -371,7 +371,7 @@ namespace restbed
             {
                 throw StatusCode::NOT_FOUND;
             }
-            
+
             return resource;
         }
         

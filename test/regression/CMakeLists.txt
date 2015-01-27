@@ -42,7 +42,6 @@ target_link_libraries( fails_to_parse_identical_query_parameters_regression_test
 target_link_libraries( content_length_present_on_empty_response_body_regression_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( content_type_present_on_empty_response_body_regression_test_suite ${CMAKE_PROJECT_NAME} pthread )
 
-
 #
 # Setup
 #

@@ -202,7 +202,7 @@ namespace restbed
         
         bool ResourceImpl::operator !=( const ResourceImpl& value ) const
         {
-            return m_paths not_eq value.m_paths;
+            return not ( *this == value );
         }
         
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
