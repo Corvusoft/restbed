@@ -10,7 +10,7 @@
 //Project Includes
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
 
@@ -19,7 +19,7 @@ using std::regex;
 
 //External Namespaces
 
-TEST( Service, missing_regex_support )
+TEST_CASE( "missing regex support", "[stdlib]" )
 {
-    ASSERT_NO_THROW( regex( "(abc[1234])" ) );
+    REQUIRE_NOTHROW( regex( "(abc[1234])" ) );
 }

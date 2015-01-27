@@ -3,87 +3,70 @@
  */
 
 //System Includes
-#include <string>
 
 //Project Includes
 #include <corvusoft/restbed/method>
 #include <corvusoft/restbed/request>
-#include <corvusoft/restbed/status_code>
-#include <corvusoft/restbed/detail/request_impl.h>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
-using std::string;
 
 //Project Namespaces
 using restbed::Method;
 using restbed::Request;
-using restbed::StatusCode;
-using restbed::detail::RequestImpl;
 
 //External Namespaces
 
-TEST( Request, constructor )
+SCENARIO( "constructor", "[request]" )
 {
-    Request request;
-    
-    EXPECT_EQ( Method( "GET" ), request.get_method( ) );
-}
-
-TEST( Request, copy_constructor )
-{
-    RequestImpl original;
-    original.set_method( "POST" );
-    
-    Request copy( original );
-    
-    EXPECT_EQ( Method( "POST" ), copy.get_method( ) );
-}
-
-TEST( Request, modify_method )
-{
-    RequestImpl request;
-    request.set_method( "POST" );
-    
-    EXPECT_EQ( Method( "POST" ), request.get_method( ) );
-}
-
-TEST( Request, modify_version )
-{
-    RequestImpl request;
-    
-    try
+    GIVEN( "i want to instantiate a default request" )
     {
-        request.set_version( 2.0 );
-    }
-    catch ( StatusCode::Value code )
-    {
-        EXPECT_EQ( code, StatusCode::HTTP_VERSION_NOT_SUPPORTED );
+        WHEN( "i construct the object" )
+        {
+            Request request;
+
+            THEN( "i should see default properties" )
+            {
+                REQUIRE( request.get_method( ) == Method( "GET" ) );
+            }
+        }
     }
 }
 
-TEST( Request, modify_protocol )
+SCENARIO( "copy constructor", "[request]" )
 {
-    RequestImpl request;
-    
-    try
+    GIVEN( "i want to copy an existing request" )
     {
-        request.set_protocol( "SPDY" );
-    }
-    catch ( StatusCode::Value code )
-    {
-        EXPECT_EQ( code, StatusCode::BAD_REQUEST );
+        Request request;
+
+        WHEN( "i instantiate the object with the copy-constructor" )
+        {
+            Request copy( request );
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( request.get_method( ) == Method( "GET" ) );
+            }
+        }
     }
 }
 
-TEST( Request, assignment_operator )
+SCENARIO( "assignment-operator", "[request]" )
 {
-    RequestImpl original;
-    original.set_method( "POST" );
-    
-    RequestImpl copy = original;
-    
-    EXPECT_EQ( Method( "POST" ), copy.get_method( ) );
+    GIVEN( "i want to copy an existing request" )
+    {
+        Request request;
+
+        WHEN( "i instantiate the object with the assignment-operator" )
+        {
+            Request copy = request;
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( request.get_method( ) == Method( "GET" ) );
+            }
+        }
+    }
 }

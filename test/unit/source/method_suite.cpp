@@ -4,13 +4,12 @@
 
 //System Includes
 #include <string>
-#include <stdexcept>
 
 //Project Includes
 #include <corvusoft/restbed/method>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
 using std::string;
@@ -20,144 +19,283 @@ using restbed::Method;
 
 //External Namespaces
 
-TEST( Method, char_constructor )
+SCENARIO( "string constructor", "[method]" )
 {
-    const char* name = "GET";
-    
-    Method method( name );
-    
-    EXPECT_EQ( "GET", method.to_string( ) );
-}
-
-TEST( Method, lowercase_char_constructor )
-{
-    const char* name = "put";
-    
-    Method method( name );
-    
-    EXPECT_EQ( "PUT", method.to_string( ) );
-}
-
-TEST( Method, invalid_char_constructor )
-{
-    const char* name = "Nova Delphini";
-    
-    EXPECT_ANY_THROW( Method method( name ) );
-}
-
-TEST( Method, string_constructor )
-{
-    string name = "POST";
-    
-    Method method( name );
-    
-    EXPECT_EQ( "POST", method.to_string( ) );
-}
-
-TEST( Method, lowercase_string_constructor )
-{
-    const char* name = "get";
-    
-    Method method( name );
-    
-    EXPECT_EQ( "GET", method.to_string( ) );
-}
-
-TEST( Method, invalid_string_constructor )
-{
-    string name = "Magellanic cloud";
-    
-    EXPECT_ANY_THROW( Method method( name ) );
-}
-
-TEST( Method, copy_constructor )
-{
-    Method original( "DELETE" );
-    
-    Method copy( original );
-    
-    EXPECT_EQ( "DELETE", copy.to_string( ) );
-}
-
-TEST( Method, lowercase_copy_constructor )
-{
-    Method original( "delete" );
-    
-    Method copy( original );
-    
-    EXPECT_EQ( "DELETE", copy.to_string( ) );
-}
-
-TEST( Method, destructor )
-{
-    ASSERT_NO_THROW(
+    GIVEN( "i want to instantiate a method from a string value" )
     {
-        Method* method = new Method( "CONNECT" );
-        
-        delete method;
-    } );
+        Method method( "GET" );
+
+        WHEN( "i construct the object with 'GET'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'GET'" )
+            {
+                REQUIRE( value == "GET" );
+            }
+        }
+    }
 }
 
-TEST( Method, to_string )
+SCENARIO( "character pointer constructor", "[method]" )
 {
-    Method method( "TRACE" );
-    
-    EXPECT_EQ( "TRACE", method.to_string( ) );
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        const char* verb = "GET";
+        Method method( verb );
+
+        WHEN( "i construct the object with 'GET'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'GET'" )
+            {
+                REQUIRE( value == "GET" );
+            }
+        }
+    }
 }
 
-TEST( Method, parse )
+SCENARIO( "lowercase constructor", "[method]" )
 {
-    Method method = Method::parse( "PUT" );
-    
-    EXPECT_EQ( "PUT", method.to_string( ) );
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        Method method( "put" );
+
+        WHEN( "i construct the object with 'put'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'PUT'" )
+            {
+                REQUIRE( value == "PUT" );
+            }
+        }
+    }
 }
 
-TEST( Method, invalid_parse )
+SCENARIO( "uppercase constructor", "[method]" )
 {
-    EXPECT_ANY_THROW( Method::parse( "Lagoon Nebula" ) );
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        Method method( "OPTIONS" );
+
+        WHEN( "i construct the object with 'OPTIONS'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'OPTIONS'" )
+            {
+                REQUIRE( value == "OPTIONS" );
+            }
+        }
+    }
 }
 
-TEST( Method, assignment_operator )
+SCENARIO( "mixedcase constructor", "[method]" )
 {
-    Method rhs( "OPTIONS" );
-    
-    Method lhs = rhs;
-    
-    EXPECT_EQ( "OPTIONS", lhs.to_string( ) );
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        Method method( "DeLeTE" );
+
+        WHEN( "i construct the object with 'DeLeTE'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'DELETE'" )
+            {
+                REQUIRE( value == "DELETE" );
+            }
+        }
+    }
 }
 
-TEST( Method, less_than_operator )
+SCENARIO( "copy constructor", "[method]" )
 {
-    Method lhs( "GET" );
-    
-    Method rhs( "POST" );
-    
-    EXPECT_TRUE( lhs < rhs );
+    GIVEN( "i want to copy an existing method" )
+    {
+        Method method( "CONNECT" );
+
+        WHEN( "i instantiate the object with the copy-constructor" )
+        {
+            Method copy( method );
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.to_string( ) == method.to_string( ) );
+            }
+        }
+    }
 }
 
-TEST( Method, greater_than_operator )
+SCENARIO( "destructor", "[method]" )
 {
-    Method lhs( "POST" );
-    
-    Method rhs( "GET" );
-    
-    EXPECT_TRUE( lhs > rhs );
+    GIVEN( "i instantiate a new object" )
+    {
+        Method* method = new Method( "TRACE" );
+
+        WHEN( "i deallocate the object" )
+        {
+            THEN( "i should not see any exceptions" )
+            {
+                REQUIRE_NOTHROW( delete method );
+            }
+        }
+    }
 }
 
-TEST( Method, equality_operator )
+SCENARIO( "assignment-operator", "[method]" )
 {
-    Method lhs( "HEAD" );
-    
-    Method rhs( "HEAD" );
-    
-    EXPECT_TRUE( lhs == rhs );
+    GIVEN( "i want to copy an existing method" )
+    {
+        Method method( "POST" );
+
+        WHEN( "i instantiate the object with the assignment-operator" )
+        {
+            Method copy = method;
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.to_string( ) == method.to_string( ) );
+            }
+        }
+    }
 }
 
-TEST( Method, inequality_operator )
+SCENARIO( "less-than-operator", "[method]" )
 {
-    Method lhs( "HEAD" );
-    
-    Method rhs( "CONNECT" );
-    
-    EXPECT_TRUE( lhs != rhs );
+    GIVEN( "i want to compare two objects" )
+    {
+        Method lhs( "GET" );
+        Method rhs( "POST" );
+
+        WHEN( "i perform a comparison with the less-than-operator" )
+        {
+            THEN( "i should see the lhs is less than the rhs" )
+            {
+                REQUIRE( lhs < rhs );
+            }
+        }
+    }
+}
+
+SCENARIO( "greater-than-operator", "[method]" )
+{
+    GIVEN( "i want to compare two objects" )
+    {
+        Method lhs( "POST" );
+        Method rhs( "GET" );
+
+        WHEN( "i perform a comparison with the greater-than-operator" )
+        {
+            THEN( "i should see the lhs is greater than the rhs" )
+            {
+                REQUIRE( lhs > rhs );
+            }
+        }
+    }
+}
+
+SCENARIO( "equality-operator", "[method]" )
+{
+    GIVEN( "i want to compare two objects" )
+    {
+        Method lhs( "CONNECT" );
+        Method rhs( "CONNECT" );
+
+        WHEN( "i perform a comparison with the equality-operator" )
+        {
+            THEN( "i should see identical instances" )
+            {
+                REQUIRE( lhs == rhs );
+            }
+        }
+    }
+}
+
+SCENARIO( "inequality-operator", "[method]" )
+{
+    GIVEN( "i want to compare two objects" )
+    {
+        Method lhs( "CONNECT" );
+        Method rhs( "PUT" );
+
+        WHEN( "i perform a comparison with the inequality-operator" )
+        {
+            THEN( "i should see differing instances" )
+            {
+                REQUIRE( lhs not_eq rhs );
+            }
+        }
+    }
+}
+
+SCENARIO( "to_string", "[method]" )
+{
+    GIVEN( "an object with example data" )
+    {
+        Method method( "OPTIONS" );
+
+        WHEN( "i invoke to_string" )
+        {
+            THEN( "i should a string representation" )
+            {
+                REQUIRE( method.to_string( ) == "OPTIONS" );
+            }
+        }
+    }
+}
+
+SCENARIO( "uppercase parse", "[method]" )
+{
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        Method method = Method::parse( "PUT" );
+
+        WHEN( "i invoke parse with 'PUT'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'PUT'" )
+            {
+                REQUIRE( value == "PUT" );
+            }
+        }
+    }
+}
+
+SCENARIO( "lowercase parse", "[method]" )
+{
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        Method method = Method::parse( "put" );
+
+        WHEN( "i invoke parse with 'put'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'PUT'" )
+            {
+                REQUIRE( value == "PUT" );
+            }
+        }
+    }
+}
+
+SCENARIO( "mixedcase parse", "[method]" )
+{
+    GIVEN( "i want to instantiate a method from a string value" )
+    {
+        Method method = Method::parse( "pUt" );
+
+        WHEN( "i invoke parse with 'put'" )
+        {
+            const string value = method.to_string( );
+
+            THEN( "i should see 'PUT'" )
+            {
+                REQUIRE( value == "PUT" );
+            }
+        }
+    }
 }

@@ -12,7 +12,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -27,8 +27,8 @@ using namespace framework;
 
 Response get_handler( const Request& request )
 {
-    EXPECT_EQ( "/uri test", request.get_path( ) );
-    EXPECT_EQ( "@30", request.get_query_parameter( "ben crowhurst" ) );
+    REQUIRE( "/uri test" == request.get_path( ) );
+    REQUIRE( "@30" == request.get_query_parameter( "ben crowhurst" ) );
     
     Response response;
     response.set_status_code( StatusCode::OK );
@@ -36,7 +36,7 @@ Response get_handler( const Request& request )
     return response;
 }
 
-TEST( Service, encoded_uri_test )
+TEST_CASE( "encoded uri test", "[service]" )
 {
     Resource resource;
     resource.set_path( "uri test" );
@@ -59,7 +59,7 @@ TEST( Service, encoded_uri_test )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 200, response.status_code );
+    REQUIRE( 200 == response.status_code );
     
     service->stop( );
 }

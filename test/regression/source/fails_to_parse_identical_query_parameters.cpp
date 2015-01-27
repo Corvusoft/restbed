@@ -16,7 +16,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -51,7 +51,7 @@ Response get_handler( const Request& request )
     return response;
 }
 
-TEST( Service, fails_to_parse_identical_query_parameters )
+TEST_CASE( "fails to parse identical query parameters", "[service]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -74,7 +74,7 @@ TEST( Service, fails_to_parse_identical_query_parameters )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 200, response.status_code );
+    REQUIRE( 200 == response.status_code );
     
     service->stop( );
 }

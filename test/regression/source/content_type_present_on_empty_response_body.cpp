@@ -12,7 +12,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST( Service, content_type_present_on_empty_response_body )
+TEST_CASE( "content type present on empty response body", "[service]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -56,7 +56,7 @@ TEST( Service, content_type_present_on_empty_response_body )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( response.headers.end( ), response.headers.find( "Content-Type" ) );
+    REQUIRE( response.headers.end( ) == response.headers.find( "Content-Type" ) );
     
     service->stop( );
 }

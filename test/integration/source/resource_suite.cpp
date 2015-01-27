@@ -15,13 +15,12 @@
 #include <corvusoft/restbed/resource>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
 using std::map;
 using std::string;
 using std::function;
-using std::invalid_argument;
 
 //Project Namespaces
 
@@ -41,34 +40,48 @@ Response test_method_handler( const Request& )
     return response;
 }
 
-TEST( Resource, method_handler_accessor )
+SCENARIO( "method handler", "[resource]" )
 {
-    string method = "GET";
-    
-    Resource resource;
-    resource.set_method_handler( method, &test_method_handler );
-    
-    auto handler = resource.get_method_handler( method );
-    
-    Request request;
-    Response response = handler( request );
-    
-    EXPECT_EQ( method_handler_accessor_expectation, response.get_status_code( ) );
+    GIVEN( "i setup a 'GET' method handler" )
+    {
+        Resource resource;
+        resource.set_method_handler( "GET", &test_method_handler );
+
+        WHEN( "i invoke the 'GET' method handler" )
+        {
+            auto handler = resource.get_method_handler( "GET" );
+
+            Request request;
+            Response response = handler( request );
+
+            THEN( "i should see '3349' status code" )
+            {
+                REQUIRE( response.get_status_code( ) == method_handler_accessor_expectation );
+            }
+        }
+    }
 }
 
-TEST( Resource, method_handlers_accessor )
+SCENARIO( "method handlers", "[resource]" )
 {
-    map< Method, function< Response ( const Request& ) > > expectation;
-    expectation[ "GET" ] = &test_method_handler;
-    expectation[ "PUT" ] = &test_method_handler;
-    expectation[ "DELETE" ] = &test_method_handler;
-    
-    Resource resource;
-    resource.set_method_handlers( expectation );
-    
-    auto actual = resource.get_method_handlers( );
-    
-    EXPECT_TRUE( actual.count( "GET" ) );
-    EXPECT_TRUE( actual.count( "PUT" ) );
-    EXPECT_TRUE( actual.count( "DELETE" ) );
+    GIVEN( "i setup a method handlers" )
+    {
+        map< Method, function< Response ( const Request& ) > > handlers;
+        handlers[ "GET" ] = &test_method_handler;
+        handlers[ "PUT" ] = &test_method_handler;
+        handlers[ "DELETE" ] = &test_method_handler;
+
+        Resource resource;
+        resource.set_method_handlers( handlers );
+
+        WHEN( "i invoke get_method_handlers" )
+        {
+            THEN( "i should see 3 entries 'GET, PUT, DELETE'" )
+            {
+                REQUIRE( handlers.find( "GET" ) not_eq handlers.end( ) );
+                REQUIRE( handlers.find( "PUT" ) not_eq handlers.end( ) );
+                REQUIRE( handlers.find( "DELETE" ) not_eq handlers.end( ) );
+            }
+        }
+    }
 }

@@ -9,8 +9,9 @@ cmake_minimum_required( VERSION 2.8.10 )
 #
 set( SOURCE_DIR "source" )
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/test"  )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
 
-include_directories( ${gtest_INCLUDE} )
+include_directories( ${catch_INCLUDE} )
 
 #
 # Build
@@ -22,12 +23,12 @@ add_executable( response_unit_test_suite ${SOURCE_DIR}/response_suite.cpp )
 add_executable( resource_unit_test_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( status_code_unit_test_suite ${SOURCE_DIR}/status_code_suite.cpp )
 
-target_link_libraries( method_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( request_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( settings_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( response_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( resource_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
-target_link_libraries( status_code_unit_test_suite ${CMAKE_PROJECT_NAME} ${gtest_LIBRARY} ${gtest_MAIN_LIBRARY} )
+target_link_libraries( method_unit_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( request_unit_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( settings_unit_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( response_unit_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( resource_unit_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( status_code_unit_test_suite ${CMAKE_PROJECT_NAME} )
 
 #
 # Setup

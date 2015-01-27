@@ -12,7 +12,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST( Service, mismatched_resource_path )
+TEST_CASE( "mismatched resource path", "[service]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -56,12 +56,12 @@ TEST( Service, mismatched_resource_path )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 404, response.status_code );
+    REQUIRE( 404 == response.status_code );
     
     service->stop( );
 }
 
-TEST( Service, matched_resource_path )
+TEST_CASE( "matched resource path", "[service]" )
 {
     Resource resource;
     resource.set_method_handler( "GET", &get_handler );
@@ -84,7 +84,7 @@ TEST( Service, matched_resource_path )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 200, response.status_code );
+    REQUIRE( 200 == response.status_code );
     
     service->stop( );
 }

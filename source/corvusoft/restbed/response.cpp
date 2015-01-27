@@ -11,8 +11,8 @@
 //External Includes
 
 //System Namespaces
-using std::map;
 using std::string;
+using std::multimap;
 
 //Project Namespaces
 using restbed::detail::ResponseImpl;
@@ -72,11 +72,16 @@ namespace restbed
         return m_pimpl->get_header( name );
     }
     
-    map< string, string > Response::get_headers( void ) const
+    multimap< string, string > Response::get_headers( void ) const
     {
         return m_pimpl->get_headers( );
     }
-    
+
+    multimap< string, string > Response::get_headers( const string& name ) const
+    {
+        return m_pimpl->get_headers( name );
+    }
+
     void Response::set_body( const Bytes& value )
     {
         m_pimpl->set_body( value );
@@ -107,7 +112,7 @@ namespace restbed
         m_pimpl->set_header( name, value );
     }
     
-    void Response::set_headers( const map< string, string >& values )
+    void Response::set_headers( const multimap< string, string >& values )
     {
         m_pimpl->set_headers( values );
     }

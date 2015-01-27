@@ -16,9 +16,9 @@
 #include <corvusoft/framework/string>
 
 //System Namespaces
-using std::map;
 using std::string;
 using std::time_t;
+using std::multimap;
 using std::to_string;
 using std::chrono::system_clock;
 
@@ -84,7 +84,14 @@ namespace restbed
         
         string ResponseImpl::get_status_message( void ) const
         {
-            return m_status_message;
+            string status_message = m_status_message;
+
+            if ( m_status_message.empty( ) )
+            {
+                status_message = StatusCode::to_string( m_status_code );
+            }
+
+            return status_message;
         }
         
         string ResponseImpl::get_header( const string& name ) const
@@ -100,10 +107,27 @@ namespace restbed
             
             return value;
         }
-        
-        map< string, string > ResponseImpl::get_headers( void ) const
+
+        multimap< string, string > ResponseImpl::get_headers( void ) const
         {
             return m_headers;
+        }
+
+        multimap< string, string > ResponseImpl::get_headers( const string& name ) const
+        {
+            multimap< string, string > headers;
+
+            auto key = String::lowercase( name );
+
+            for ( auto header : m_headers )
+            {
+                if ( String::lowercase( header.first ) == key )
+                {
+                    headers.insert( header );
+                }
+            }
+
+            return headers;
         }
         
         void ResponseImpl::set_body( const Bytes& value )
@@ -133,12 +157,19 @@ namespace restbed
         
         void ResponseImpl::set_header( const string& name, const string& value )
         {
-            string key = String::lowercase( name );
-            
-            m_headers[ key ] = value;
+            if ( has_header( name ) )
+            {
+                const auto iterator = Map::find_ignoring_case( name, m_headers );
+
+                iterator->second = value;
+            }
+            else
+            {
+                m_headers.insert( make_pair( name, value ) );
+            }
         }
         
-        void ResponseImpl::set_headers( const map< string, string >& values )
+        void ResponseImpl::set_headers( const multimap< string, string >& values )
         {
             m_headers = values;
         }
@@ -185,12 +216,7 @@ namespace restbed
         
         string ResponseImpl::generate_status_section( void ) const
         {
-            string status_message = String::empty;
-            
-            if ( m_status_message.empty( ) )
-            {
-                status_message = StatusCode::to_string( m_status_code );
-            }
+            string status_message = get_status_message( );
             
             return String::format( "HTTP/%.1f %i %s\r\n", m_version, m_status_code, m_status_message.data( ) );
         }

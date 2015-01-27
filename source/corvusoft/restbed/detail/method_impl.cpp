@@ -30,6 +30,11 @@ namespace restbed
     {
         MethodImpl::MethodImpl( const char* value ) : m_value( String::empty )
         {
+            if ( value == nullptr )
+            {
+                throw StatusCode::METHOD_NOT_ALLOWED;
+            }
+
             setup( string( value ) );
         }
         

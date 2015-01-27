@@ -79,11 +79,11 @@ install( FILES ${FRAMEWORK_ARTIFACTS} DESTINATION "include/corvusoft/restbed" )
 # Test
 #
 if ( BUILD_TESTS )
-    find_package( gtest REQUIRED )
+    find_package( catch REQUIRED )
 
     enable_testing( )
-    add_subdirectory( "${CMAKE_SOURCE_DIR}/test/acceptance" "acceptance-tests" )
-    add_subdirectory( "${CMAKE_SOURCE_DIR}/test/integration" "integration-tests" )
-    add_subdirectory( "${CMAKE_SOURCE_DIR}/test/regression" "regression-tests" )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/test/unit" "unit-tests" )
+    add_subdirectory( "${CMAKE_SOURCE_DIR}/test/acceptance" "acceptance-tests" )
+    add_subdirectory( "${CMAKE_SOURCE_DIR}/test/regression" "regression-tests" )
+    add_subdirectory( "${CMAKE_SOURCE_DIR}/test/integration" "integration-tests" )
 endif ( )

@@ -11,7 +11,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -44,7 +44,7 @@ Response xml_get_handler( const Request& )
     return response;
 }
 
-TEST( Resource, overwrite_existing_resource )
+TEST_CASE( "overwrite existing resource", "resource" )
 {
     Resource initial_resource;
     initial_resource.set_path( "TestResource" );
@@ -71,12 +71,12 @@ TEST( Resource, overwrite_existing_resource )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 401, response.status_code );
+    REQUIRE( 401 == response.status_code );
     
     m_service->stop( );
 }
 
-TEST( Resource, add_alternative_resource )
+TEST_CASE( "add alternative resource", "[resource]" )
 {
     Resource initial_resource;
     initial_resource.set_path( "TestResource" );
@@ -106,7 +106,7 @@ TEST( Resource, add_alternative_resource )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 401, response.status_code );
+    REQUIRE( 401 == response.status_code );
     
     m_service->stop( );
 }

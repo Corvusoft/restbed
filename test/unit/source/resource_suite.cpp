@@ -12,7 +12,7 @@
 #include <corvusoft/restbed/resource>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
 using std::map;
@@ -25,151 +25,189 @@ using restbed::Resource;
 
 //External Namespaces
 
-TEST( Resource, constructor )
+SCENARIO( "constructor", "[resource]" )
 {
-    string path = "";
-    vector< string > paths;
-    map< string, string > filters;
-    
-    Resource resource;
-    
-    EXPECT_EQ( path, resource.get_path( ) );
-    EXPECT_EQ( paths, resource.get_paths( ) );
-    EXPECT_EQ( filters, resource.get_header_filters( ) );
+    GIVEN( "i want to instantiate a default resource" )
+    {
+        Resource resource;
+
+        WHEN( "i construct the object" )
+        {
+            THEN( "i should see the default properties" )
+            {
+                string path = "";
+                vector< string > paths;
+                map< string, string > filters;
+
+                REQUIRE( resource.get_path( ) == path );
+                REQUIRE( resource.get_paths( ) == paths );
+                REQUIRE( resource.get_header_filters( ) == filters );
+            }
+        }
+    }
 }
 
-TEST( Resource, copy_constructor )
+SCENARIO( "copy constructor", "[resource]" )
 {
-    string path = "/events";
-    map< string, string > filters = { { "Content-Language", "en_GB" } };
-    
-    Resource original;
-    original.set_path( path );
-    original.set_header_filters( filters );
-    
-    Resource copy( original );
-    
-    EXPECT_EQ( path, copy.get_path( ) );
-    EXPECT_EQ( filters, copy.get_header_filters( ) );
+    GIVEN( "i want to copy an existing resource" )
+    {
+        string path = "/events";
+        map< string, string > filters = { { "Content-Language", "en_GB" } };
+
+        Resource resource;
+        resource.set_path( path );
+        resource.set_header_filters( filters );
+
+        WHEN( "i instantiate the object with the copy-constructor" )
+        {
+            Resource copy( resource );
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.get_path( ) == path );
+                REQUIRE( copy.get_header_filters( ) == filters );
+            }
+        }
+    }
 }
 
-TEST( Resource, destructor )
+SCENARIO( "destructor", "[resource]" )
 {
-    ASSERT_NO_THROW(
+    GIVEN( "i instantiate a new object" )
     {
         Resource* resource = new Resource( );
-        
-        delete resource;
-    } );
+
+        WHEN( "i deallocate the object" )
+        {
+            THEN( "i should not see any exceptions" )
+            {
+                REQUIRE_NOTHROW( delete resource );
+            }
+        }
+    }
 }
 
-TEST( Resource, modify_path )
+SCENARIO( "assignment-operator", "[resource]" )
 {
-    string path = "Super important test data.";
-    
-    Resource resource;
-    resource.set_path( path );
-    
-    EXPECT_EQ( path, resource.get_path( ) );
+    GIVEN( "i want to copy an existing resource" )
+    {
+        string path = "/events";
+        vector< string > paths = { "/events" };
+        map< string, string > filters = { { "Content-Language", "en_GB" } };
+
+        Resource resource;
+        resource.set_path( path );
+        resource.set_header_filters( filters );
+
+        WHEN( "i instantiate the object with the assignment-operator" )
+        {
+            Resource copy = resource;
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( resource.get_path( ) == path );
+                REQUIRE( resource.get_paths( ) == paths );
+                REQUIRE( resource.get_header_filters( ) == filters );
+            }
+        }
+    }
 }
 
-TEST( Resource, modify_paths )
+SCENARIO( "less-than-operator", "[resource]" )
 {
-    vector< string > paths;
-    paths.push_back( "/one" );
-    paths.push_back( "/two" );
-    
-    Resource resource;
-    resource.set_paths( paths );
-    
-    EXPECT_EQ( paths, resource.get_paths( ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Resource lhs;
+        lhs.set_path( "/api/1.1" );
+
+        Resource rhs;
+        rhs.set_path( "/api/1.2" );
+
+        WHEN( "i perform a comparison with the less-than-operator" )
+        {
+            THEN( "i should see the lhs is less than the rhs" )
+            {
+                REQUIRE( lhs < rhs );
+            }
+        }
+    }
 }
 
-TEST( Resource, modify_header_filter )
+SCENARIO( "greater-than-operator", "[resource]" )
 {
-    string type = "application/json";
-    
-    Resource resource;
-    resource.set_header_filter( "Content-Type", type );
-    
-    EXPECT_EQ( type, resource.get_header_filter( "Content-Type" ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Resource lhs;
+        lhs.set_path( "/api/1.2" );
+
+        Resource rhs;
+        rhs.set_path( "/api/1.1" );
+
+        WHEN( "i perform a comparison with the greater-than-operator" )
+        {
+            THEN( "i should see the lhs is greater than the rhs" )
+            {
+                REQUIRE( lhs > rhs );
+            }
+        }
+    }
 }
 
-TEST( Resource, modify_case_insensitive_header_filter )
+SCENARIO( "equality-operator", "[resource]" )
 {
-    string type = "application/json";
-    
-    Resource resource;
-    resource.set_header_filter( "Content-Type", type );
-    
-    EXPECT_EQ( type, resource.get_header_filter( "content-type" ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Resource lhs;
+        lhs.set_path( "/api" );
+
+        Resource rhs;
+        rhs.set_path( "/api" );
+
+        WHEN( "i perform a comparison with the equality-operator" )
+        {
+            THEN( "i should see identical instances" )
+            {
+                REQUIRE( lhs == rhs );
+            }
+        }
+    }
 }
 
-TEST( Resource, modify_header_filters )
+SCENARIO( "inequality-operator", "[resource]" )
 {
-    map< string, string > filters = { { "Content-Language", "en_GB" } };
-    
-    Resource resource;
-    resource.set_header_filters( filters );
-    
-    EXPECT_EQ( filters, resource.get_header_filters( ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Resource lhs;
+        lhs.set_path( "/api/1.1" );
+
+        Resource rhs;
+        lhs.set_path( "/api/1.2" );
+
+        WHEN( "i perform a comparison with the inequality-operator" )
+        {
+            THEN( "i should see differing instances" )
+            {
+                REQUIRE( lhs not_eq rhs );
+            }
+        }
+    }
 }
 
-TEST( Resource, assignment_operator )
+SCENARIO( "header filter case sensitivity", "[resource]" )
 {
-    string path = "/events";
-    map< string, string > filters = { { "Content-Language", "en_GB" } };
-    
-    Resource original;
-    original.set_path( path );
-    original.set_header_filters( filters );
-    
-    Resource copy = original;
-    
-    EXPECT_EQ( path, copy.get_path( ) );
-    EXPECT_EQ( filters, copy.get_header_filters( ) );
-}
+    GIVEN( "i want to read header filter field 'Content-Type'" )
+    {
+        map< string, string > filters = { { "Content-Type", "application/xml" } };
 
-TEST( Resource, less_than_operator )
-{
-    Resource lhs;
-    lhs.set_path( "a" );
-    
-    Resource rhs;
-    rhs.set_path( "abc" );
-    
-    EXPECT_TRUE( lhs < rhs );
-}
+        Resource resource;
+        resource.set_header_filters( filters );
 
-TEST( Resource, greater_than_operator )
-{
-    Resource lhs;
-    lhs.set_path( "123456" );
-    
-    Resource rhs;
-    rhs.set_path( "123" );
-    
-    EXPECT_TRUE( lhs > rhs );
-}
-
-TEST( Resource, equality_operator )
-{
-    Resource lhs;
-    lhs.set_path( "/api" );
-    
-    Resource rhs;
-    rhs.set_path( "/api" );
-    
-    EXPECT_TRUE( lhs == rhs );
-}
-
-TEST( Resource, inequality_operator )
-{
-    Resource lhs;
-    lhs.set_path( "/api" );
-    
-    Resource rhs;
-    rhs.set_path( "/resources" );
-    
-    EXPECT_TRUE( lhs != rhs );
+        WHEN( "i invoke get_header_filter with 'CoNtEnt-TYPE' example data" )
+        {
+            THEN( "i should see 'application/xml'" )
+            {
+                REQUIRE( resource.get_header_filter( "CoNtEnt-TYPE" ) == "application/xml" );
+            }
+        }
+    }
 }

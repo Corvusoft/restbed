@@ -9,7 +9,7 @@
 #include <corvusoft/restbed/settings>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
 
@@ -19,23 +19,34 @@ using restbed::Settings;
 
 //External Namespaces
 
-TEST( Service, constructor )
+SCENARIO( "constructor", "[service]" )
 {
-    Settings settings;
-    
-    Service service( settings );
-    
-    EXPECT_TRUE( true );
+    GIVEN( "i wish to allocate a new service" )
+    {
+        WHEN( "i allocate the object" )
+        {
+            THEN( "i should not see any exceptions" )
+            {
+                Settings settings;
+                REQUIRE_NOTHROW( Service service( settings ) );
+            }
+        }
+    }
 }
 
-TEST( Service, destructor )
+SCENARIO( "destructor", "[service]" )
 {
-    Settings settings;
-    
-    ASSERT_NO_THROW(
+    GIVEN( "i instantiate a new object" )
     {
+        Settings settings;
         Service* service = new Service( settings );
-        
-        delete service;
-    } );
+
+        WHEN( "i deallocate the object" )
+        {
+            THEN( "i should not see any exceptions" )
+            {
+                REQUIRE_NOTHROW( delete service );
+            }
+        }
+    }
 }

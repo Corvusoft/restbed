@@ -12,7 +12,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -44,7 +44,7 @@ void error_handler( const int status_code, const Request&, /*out*/ Response& res
     response.set_body( StatusCode::to_string( status_code ) );
 }
 
-TEST( Resource, overwrite_existing_resource )
+TEST_CASE( "overwrite existing resource", "[service]" )
 {
     Resource resource;
     resource.set_path( "TestResource" );
@@ -67,7 +67,7 @@ TEST( Resource, overwrite_existing_resource )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( true, error_handler_called );
+    REQUIRE( error_handler_called );
     
     m_service->stop( );
 }

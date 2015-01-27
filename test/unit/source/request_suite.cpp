@@ -8,10 +8,9 @@
 
 //Project Includes
 #include <corvusoft/restbed/request>
-#include <corvusoft/restbed/detail/request_impl.h>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/bytes>
 
 //System Namespaces
@@ -21,389 +20,240 @@ using std::multimap;
 
 //Project Namespaces
 using restbed::Request;
-using restbed::detail::RequestImpl;
-using framework::Bytes;
 
 //External Namespaces
+using framework::Bytes;
 
-TEST( Request, constructor )
+SCENARIO( "constructor", "[request]" )
 {
-    Bytes body;
-    double version = 1.1;
-    string path = "/";
-    string origin = "";
-    string protocol = "HTTP";
-    multimap< string, string > headers;
-    map< string, string > path_parameters;
-    multimap< string, string > query_parameters;
-    
-    Request request;
-    
-    EXPECT_EQ( body, request.get_body( ) );
-    EXPECT_EQ( version, request.get_version( ) );
-    EXPECT_EQ( path, request.get_path( ) );
-    EXPECT_EQ( origin, request.get_origin( ) );
-    EXPECT_EQ( headers, request.get_headers( ) );
-    EXPECT_EQ( protocol, request.get_protocol( ) );
-    EXPECT_EQ( path_parameters, request.get_path_parameters( ) );
-    EXPECT_EQ( query_parameters, request.get_query_parameters( ) );
+    GIVEN( "a default object" )
+    {
+        Request request;
+
+        WHEN( "the properties are retrieved" )
+        {
+            const Bytes body = request.get_body( );
+            const string path = request.get_path( );
+            const string origin = request.get_origin( );
+            const string protocol = request.get_protocol( );
+            const double version = request.get_version( );
+            const multimap< string, string > headers = request.get_headers( );
+            const map< string, string > path_parameters = request.get_path_parameters( );
+            const multimap< string, string > query_parameters = request.get_query_parameters( );
+
+            THEN( "i should see default values" )
+            {
+                REQUIRE( body.empty( ) );
+                REQUIRE( path == "/" );
+                REQUIRE( origin.empty( ) );
+                REQUIRE( version == 1.1 );
+                REQUIRE( headers.empty( ) );
+                REQUIRE( protocol == "HTTP" );
+                REQUIRE( path_parameters.empty( ) );
+                REQUIRE( query_parameters.empty( ) );
+            }
+        }
+    }
 }
 
-TEST( Request, copy_constructor )
+SCENARIO( "copy constructor", "[request]" )
 {
-    Bytes body = { 'b', 'o', 'd', 'y' };
-    double version = 1.0;
-    string path = "/events";
-    string origin = "localhost";
-    string protocol = "HTTPS";
-    multimap< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > path_parameters = { { "name", "value" } };
-    multimap< string, string > query_parameters = { { "q", "cats" } };
-    
-    RequestImpl original;
-    original.set_body( body );
-    original.set_version( version );
-    original.set_path( path );
-    original.set_origin( origin );
-    original.set_headers( headers );
-    original.set_protocol( protocol );
-    original.set_path_parameters( path_parameters );
-    original.set_query_parameters( query_parameters );
-    
-    Request copy( original );
-    
-    EXPECT_EQ( body, copy.get_body( ) );
-    EXPECT_EQ( version, copy.get_version( ) );
-    EXPECT_EQ( path, copy.get_path( ) );
-    EXPECT_EQ( origin, copy.get_origin( ) );
-    EXPECT_EQ( headers, copy.get_headers( ) );
-    EXPECT_EQ( protocol, copy.get_protocol( ) );
-    EXPECT_EQ( path_parameters, copy.get_path_parameters( ) );
-    EXPECT_EQ( query_parameters, copy.get_query_parameters( ) );
+    GIVEN( "i want to copy an existing request" )
+    {
+        Request request;
+
+
+        WHEN( "i instantiate the object with the copy-constructor" )
+        {
+            Request copy( request );
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.get_body( ).empty( ) );
+                REQUIRE( copy.get_path( ) == "/" );
+                REQUIRE( copy.get_origin( ).empty( ) );
+                REQUIRE( copy.get_version( ) == 1.1 );
+                REQUIRE( copy.get_headers( ).empty( ) );
+                REQUIRE( copy.get_protocol( ) == "HTTP" );
+                REQUIRE( copy.get_path_parameters( ).empty( ) );
+                REQUIRE( copy.get_query_parameters( ).empty( ) );
+            }
+        }
+    }
 }
 
-TEST( Request, default_destructor )
+SCENARIO( "destructor", "[request]" )
 {
-    ASSERT_NO_THROW(
+    GIVEN( "i instantiate a new object" )
     {
         Request* request = new Request( );
-        
-        delete request;
-    } );
+
+        WHEN( "i deallocate the object" )
+        {
+            THEN( "i should not see any exceptions" )
+            {
+                REQUIRE_NOTHROW( delete request );
+            }
+        }
+    }
 }
 
-TEST( Request, to_bytes )
+SCENARIO( "assignment-operator", "[request]" )
 {
-    Bytes body = { 'b', 'o', 'd', 'y' };
-    double version = 1.0;
-    string path = "/events";
-    string protocol = "HTTPS";
-    string origin = "localhost";
-    multimap< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > path_parameters = { { "name", "value" } };
-    multimap< string, string > query_parameters = { { "q", "cats" } };
-    
-    RequestImpl request;
-    request.set_body( body );
-    request.set_version( version );
-    request.set_path( path );
-    request.set_origin( origin );
-    request.set_headers( headers );
-    request.set_protocol( protocol );
-    request.set_path_parameters( path_parameters );
-    request.set_query_parameters( query_parameters );
-    
-    string bytes = "GET /events?q=cats HTTPS/1.0\r\napi: 1.0v\r\n\r\nbody";
-    
-    EXPECT_EQ( Bytes( bytes.begin( ), bytes.end( ) ), request.to_bytes( ) );
+    GIVEN( "i want to copy an existing request" )
+    {
+        Request request;
+
+        WHEN( "i instantiate the object with the assignment-operator" )
+        {
+            Request copy = request;
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.get_body( ).empty( ) );
+                REQUIRE( copy.get_path( ) == "/" );
+                REQUIRE( copy.get_origin( ).empty( ) );
+                REQUIRE( copy.get_version( ) == 1.1 );
+                REQUIRE( copy.get_headers( ).empty( ) );
+                REQUIRE( copy.get_protocol( ) == "HTTP" );
+                REQUIRE( copy.get_path_parameters( ).empty( ) );
+                REQUIRE( copy.get_query_parameters( ).empty( ) );
+            }
+        }
+    }
 }
 
-TEST( Request, has_header )
+SCENARIO( "less-than-operator", "[request]" )
 {
-    RequestImpl request;
-    
-    EXPECT_EQ( false, request.has_header( "Server" ) );
-    
-    multimap< string, string > headers = { { "Server", "restbed" } };
-    request.set_headers( headers );
-    
-    EXPECT_EQ( true, request.has_header( "Server" ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Request lhs;
+        Request rhs;
+
+        WHEN( "i perform a comparison with the less-than-operator" )
+        {
+            THEN( "i should see the lhs is not less than the rhs" )
+            {
+                REQUIRE( not ( lhs < rhs ) );
+            }
+        }
+    }
 }
 
-TEST( Request, has_path_parameter )
+SCENARIO( "greater-than-operator", "[request]" )
 {
-    RequestImpl request;
-    
-    EXPECT_EQ( false, request.has_path_parameter( "login" ) );
-    
-    map< string, string > parameters = { { "login", "benc" } };
-    request.set_path_parameters( parameters );
-    
-    EXPECT_EQ( true, request.has_path_parameter( "login" ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Request lhs;
+        Request rhs;
+
+        WHEN( "i perform a comparison with the greater-than-operator" )
+        {
+            THEN( "i should see the lhs is not greater than the rhs" )
+            {
+                REQUIRE( not ( lhs > rhs ) );
+            }
+        }
+    }
 }
 
-TEST( Request, has_query_parameter )
+SCENARIO( "equality-operator", "[request]" )
 {
-    RequestImpl request;
-    
-    EXPECT_EQ( false, request.has_query_parameter( "event" ) );
-    
-    multimap< string, string > parameters = { { "event", "cpu-overload" } };
-    request.set_query_parameters( parameters );
-    
-    EXPECT_EQ( true, request.has_query_parameter( "event" ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Request lhs;
+        Request rhs;
+
+        WHEN( "i perform a comparison with the equality-operator" )
+        {
+            THEN( "i should see identical instances" )
+            {
+                REQUIRE( lhs == rhs );
+            }
+        }
+    }
 }
 
-TEST( Request, modify_body )
+SCENARIO( "inequality-operator", "[request]" )
 {
-    Bytes body = { 'b', 'o', 'd', 'y' };
-    
-    RequestImpl request;
-    request.set_body( body );
-    
-    EXPECT_EQ( body, request.get_body( ) );
+    GIVEN( "i want to compare two objects" )
+    {
+        Request lhs;
+        Request rhs;
+
+        WHEN( "i perform a comparison with the inequality-operator" )
+        {
+            THEN( "i should not see differing instances" )
+            {
+                REQUIRE( not ( lhs not_eq rhs ) );
+            }
+        }
+    }
 }
 
-TEST( Request, modify_version )
+SCENARIO( "to_bytes", "[request]" )
 {
-    RequestImpl request;
-    request.set_version( 1.0 );
-    
-    EXPECT_EQ( 1.0, request.get_version( ) );
+    GIVEN( "i want to convert a request to bytes" )
+    {
+        Request request;
+
+        WHEN( "i invoke to_bytes" )
+        {
+            THEN( "i should see bytes" )
+            {
+                string data = "GET / HTTP/1.1\r\n\r\n";
+                Bytes bytes( data.begin( ), data.end( ) );
+
+                REQUIRE( request.to_bytes( ) == bytes );
+            }
+        }
+    }
 }
 
-TEST( Request, modify_path )
+SCENARIO( "has_header", "[request]" )
 {
-    RequestImpl request;
-    request.set_path( "/events" );
-    
-    EXPECT_EQ( "/events", request.get_path( ) );
+    GIVEN( "i want to test for an available request header" )
+    {
+        Request request;
+
+        WHEN( "i invoke has_header on a default request with 'Content-Type'" )
+        {
+            THEN( "i should see false" )
+            {
+                REQUIRE( request.has_header( "Content-Type" ) == false );
+            }
+        }
+    }
 }
 
-TEST( Request, modify_origin )
+SCENARIO( "has_path_parameter", "[request]" )
 {
-    RequestImpl request;
-    request.set_origin( "localhost" );
-    
-    EXPECT_EQ( "localhost", request.get_origin( ) );
+    GIVEN( "i want to test for an available request header" )
+    {
+        Request request;
+
+        WHEN( "i invoke has_path_parameter on a default request with 'keys'" )
+        {
+            THEN( "i should see false" )
+            {
+                REQUIRE( request.has_path_parameter( "keys" ) == false );
+            }
+        }
+    }
 }
 
-TEST( Request, modify_protocol )
+SCENARIO( "has_query_parameter", "[request]" )
 {
-    RequestImpl request;
-    request.set_protocol( "HTTPS" );
-    
-    EXPECT_EQ( "HTTPS", request.get_protocol( ) );
-}
+    GIVEN( "i want to test for an available request header" )
+    {
+        Request request;
 
-
-TEST( Request, modify_header )
-{
-    multimap< string, string > headers = { { "name", "value" } };
-    
-    RequestImpl request_impl;
-    request_impl.set_headers( headers );
-    
-    Request request( request_impl );
-    
-    EXPECT_EQ( "value", request.get_header( "name" ) );
-}
-
-TEST( Request, modify_header_default_value )
-{
-    Request request;
-    
-    EXPECT_EQ( "corvusoft", request.get_header( "name", "corvusoft" ) );
-}
-
-TEST( Request, modify_headers )
-{
-    multimap< string, string > headers = { { "name", "value" } };
-    
-    RequestImpl request;
-    request.set_headers( headers );
-    
-    EXPECT_EQ( headers, request.get_headers( ) );
-}
-
-TEST( Request, modify_headers_subset_values )
-{
-    multimap< string, string > headers = { { "name", "value1" }, { "NAME", "value2" }, { "name", "value3" }, { "Age", "30yo" } };
-    
-    RequestImpl request;
-    request.set_headers( headers );
-    
-    multimap< string, string > expectation = { { "name", "value1" }, { "NAME", "value2" }, { "name", "value3" } };
-    
-    EXPECT_EQ( expectation, request.get_headers( "name" ) );
-}
-
-TEST( Request, modify_query_parameter )
-{
-    multimap< string, string > parameters = { { "name", "value" } };
-    
-    RequestImpl request_impl;
-    request_impl.set_query_parameters( parameters );
-    
-    Request request( request_impl );
-    
-    EXPECT_EQ( "value", request.get_query_parameter( "name" ) );
-}
-
-TEST( Request, modify_query_parameter_default_value )
-{
-    Request request;
-    
-    EXPECT_EQ( "corvusoft", request.get_query_parameter( "name", "corvusoft" ) );
-}
-
-TEST( Request, modify_query_parameters )
-{
-    multimap< string, string > parameters = { { "name", "value" } };
-    
-    RequestImpl request;
-    request.set_query_parameters( parameters );
-    
-    EXPECT_EQ( parameters, request.get_query_parameters( ) );
-}
-
-TEST( Request, modify_query_subset_parameters )
-{
-    multimap< string, string > parameters = { { "name", "value1" }, { "name", "value2" }, { "age", "30yo" } };
-    
-    RequestImpl request;
-    request.set_query_parameters( parameters );
-    
-    multimap< string, string > expectation = { { "name", "value1" }, { "name", "value2" } };
-    
-    EXPECT_EQ( expectation, request.get_query_parameters( "name" ) );
-}
-
-TEST( Request, modify_path_parameter )
-{
-    map< string, string > parameters = { { "name", "value" } };
-    
-    RequestImpl request_impl;
-    request_impl.set_path_parameters( parameters );
-    
-    Request request( request_impl );
-    
-    EXPECT_EQ( "value", request.get_path_parameter( "name" ) );
-}
-
-TEST( Request, modify_path_parameter_default_value )
-{
-    Request request;
-    
-    EXPECT_EQ( "corvusoft", request.get_path_parameter( "name", "corvusoft" ) );
-}
-
-TEST( Request, modify_path_parameters )
-{
-    map< string, string > parameters = { { "name", "value" } };
-    
-    RequestImpl request;
-    request.set_path_parameters( parameters );
-    
-    EXPECT_EQ( parameters, request.get_path_parameters( ) );
-}
-
-TEST( Request, assignment_operator )
-{
-    Bytes body = { 'b', 'o', 'd', 'y' };
-    double version = 1.0;
-    string path = "/events";
-    string protocol = "HTTPS";
-    string origin = "localhost";
-    multimap< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > path_parameters = { { "name", "value" } };
-    multimap< string, string > query_parameters = { { "q", "cats" } };
-    
-    RequestImpl original;
-    original.set_body( body );
-    original.set_version( version );
-    original.set_path( path );
-    original.set_origin( origin );
-    original.set_headers( headers );
-    original.set_protocol( protocol );
-    original.set_path_parameters( path_parameters );
-    original.set_query_parameters( query_parameters );
-    
-    RequestImpl copy = original;
-    
-    EXPECT_EQ( body, copy.get_body( ) );
-    EXPECT_EQ( version, copy.get_version( ) );
-    EXPECT_EQ( path, copy.get_path( ) );
-    EXPECT_EQ( origin, copy.get_origin( ) );
-    EXPECT_EQ( headers, copy.get_headers( ) );
-    EXPECT_EQ( protocol, copy.get_protocol( ) );
-    EXPECT_EQ( path_parameters, copy.get_path_parameters( ) );
-    EXPECT_EQ( query_parameters, copy.get_query_parameters( ) );
-}
-
-TEST( Request, less_than_operator )
-{
-    RequestImpl lhs;
-    lhs.set_path( "1" );
-    
-    RequestImpl rhs;
-    rhs.set_path( "2" );
-    
-    EXPECT_TRUE( lhs < rhs );
-}
-
-TEST( Request, greater_than_operator )
-{
-    RequestImpl lhs;
-    lhs.set_path( "2" );
-    
-    RequestImpl rhs;
-    rhs.set_path( "1" );
-    
-    EXPECT_TRUE( lhs > rhs );
-}
-
-TEST( Request, equality_operator )
-{
-    Bytes body = { 'b', 'o', 'd', 'y' };
-    double version = 1.0;
-    string path = "/events";
-    string protocol = "HTTPS";
-    string origin = "localhost";
-    multimap< string, string > headers = { { "api", "1.0v" } };
-    map< string, string > path_parameters = { { "name", "value" } };
-    multimap< string, string > query_parameters = { { "q", "cats" } };
-    
-    RequestImpl lhs;
-    lhs.set_body( body );
-    lhs.set_version( version );
-    lhs.set_path( path );
-    lhs.set_origin( origin );
-    lhs.set_headers( headers );
-    lhs.set_protocol( protocol );
-    lhs.set_path_parameters( path_parameters );
-    lhs.set_query_parameters( query_parameters );
-    
-    RequestImpl rhs;
-    rhs.set_body( body );
-    rhs.set_version( version );
-    rhs.set_path( path );
-    rhs.set_origin( origin );
-    rhs.set_headers( headers );
-    rhs.set_protocol( protocol );
-    rhs.set_path_parameters( path_parameters );
-    rhs.set_query_parameters( query_parameters );
-    
-    EXPECT_TRUE( lhs == rhs );
-}
-
-TEST( Request, inequality_operator )
-{
-    RequestImpl lhs;
-    lhs.set_version( 1.1 );
-    
-    RequestImpl rhs;
-    rhs.set_version( 1.0 );
-    
-    EXPECT_TRUE( lhs not_eq rhs );
+        WHEN( "i invoke has_query_parameter on a default request with 'version'" )
+        {
+            THEN( "i should see false" )
+            {
+                REQUIRE( request.has_query_parameter( "version" ) == false );
+            }
+        }
+    }
 }

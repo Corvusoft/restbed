@@ -13,7 +13,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 #include <corvusoft/framework/bytes>
 
@@ -48,7 +48,7 @@ Response post_handler( const Request& request )
     return response;
 }
 
-TEST( Service, large_request_bodies_being_trimmed )
+TEST_CASE( "large request bodies being trimmed", "[service]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -72,7 +72,7 @@ TEST( Service, large_request_bodies_being_trimmed )
 
     auto response = Http::post( request );
     
-    EXPECT_EQ( 201, response.status_code );
+    REQUIRE( 201 == response.status_code );
     
     service->stop( );
 }

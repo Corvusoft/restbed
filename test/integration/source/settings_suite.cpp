@@ -3,7 +3,6 @@
  */
 
 //System Includes
-#include <map>
 #include <string>
 
 //Project Includes
@@ -11,10 +10,9 @@
 #include <corvusoft/restbed/settings>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
-using std::map;
 using std::string;
 
 //Project Namespaces
@@ -23,10 +21,19 @@ using restbed::Settings;
 
 //External Namespaces
 
-TEST( Settings, modify_mode )
+SCENARIO( "constructor", "[settings]" )
 {
-    Settings settings;
-    settings.set_mode( Mode::ASYNCHRONOUS );
-    
-    EXPECT_EQ( Mode::ASYNCHRONOUS, settings.get_mode( ) );
+    GIVEN( "i want to instantiate a default settings instance" )
+    {
+        Settings settings;
+        settings.set_mode( Mode::ASYNCHRONOUS );
+
+        WHEN( "i construct the object" )
+        {
+            THEN( "i should see the default mode of 'asynchronous'" )
+            {
+                REQUIRE( settings.get_mode( ) == Mode::ASYNCHRONOUS );
+            }
+        }
+    }
 }

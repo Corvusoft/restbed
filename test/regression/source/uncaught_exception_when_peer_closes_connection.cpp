@@ -16,7 +16,7 @@
 
 //External Includes
 #include <asio.hpp>
-#include <gtest/gtest.h>
+#include <catch.hpp>
 
 //System Namespaces
 using std::thread;
@@ -54,7 +54,7 @@ void wait_for_service_initialisation( void )
     std::this_thread::sleep_for( seconds( 1 ) );
 }
 
-TEST( Service, peer_closes_connection_without_sending_data )
+TEST_CASE( "peer closes connection without sending data", "[service]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -81,5 +81,5 @@ TEST( Service, peer_closes_connection_without_sending_data )
     
     restbed_thread.join( );
     
-    ASSERT_FALSE( exception_was_thrown );
+    REQUIRE_FALSE( exception_was_thrown );
 }

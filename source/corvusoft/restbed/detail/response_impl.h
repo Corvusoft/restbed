@@ -55,7 +55,9 @@ namespace restbed
             
                 std::string get_header( const std::string& name ) const;
                 
-                std::map< std::string, std::string > get_headers( void ) const;
+                std::multimap< std::string, std::string > get_headers( void ) const;
+
+                std::multimap< std::string, std::string > get_headers( const std::string& name ) const;
                 
                 //Setters
                 void set_body( const framework::Bytes& value );
@@ -70,7 +72,7 @@ namespace restbed
                 
                 void set_header( const std::string& name, const std::string& value );
                 
-                void set_headers( const std::map< std::string, std::string >& values );
+                void set_headers( const std::multimap< std::string, std::string >& values );
                 
                 //Operators
                 bool operator <( const ResponseImpl& value ) const;
@@ -141,7 +143,7 @@ namespace restbed
             
                 std::string m_status_message;
             
-                std::map< std::string, std::string > m_headers;
+                std::multimap< std::string, std::string > m_headers;
         };
     }
 }

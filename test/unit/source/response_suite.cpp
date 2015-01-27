@@ -6,239 +6,252 @@
 #include <map>
 #include <string>
 #include <cstdint>
-#include <stdexcept>
 
 //Project Includes
 #include <corvusoft/restbed/response>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/bytes>
 
 //System Namespaces
-using std::map;
 using std::string;
-using std::vector;
-using std::invalid_argument;
+using std::multimap;
 
 //Project Namespaces
 using restbed::Response;
-using framework::Bytes;
 
 //External Namespaces
+using framework::Bytes;
 
-TEST( Response, constructor )
+SCENARIO( "constructor", "[response]" )
 {
-    Bytes body;
-    double version = 1.1;
-    int status = 200;
-    string message = "";
-    map< string, string > headers;
-    
-    Response response;
-    
-    EXPECT_EQ( status, response.get_status_code( ) );
-    EXPECT_EQ( body, response.get_body( )  );
-    EXPECT_EQ( headers, response.get_headers( ) );
-    EXPECT_EQ( message, response.get_status_message( ) );
-    EXPECT_EQ( version, response.get_version( ) );
-}
-
-TEST( Response, copy_constructor )
-{
-    int status = 201;
-    Bytes body = { 'T', 'e', 's', 't', ' ', 'D', 'a', 't', 'a' };
-    map< string, string > headers = { { "api", "1.1v" } };
-    string message = "CUSTOM-CREATED";
-    double version = 1.0;
-    
-    Response original;
-    original.set_body( body );
-    original.set_version( version );
-    original.set_status_code( status );
-    original.set_status_message( message );
-    original.set_headers( headers );
-    
-    Response copy( original );
-    
-    EXPECT_EQ( status, copy.get_status_code( ) );
-    EXPECT_EQ( body, copy.get_body( )  );
-    EXPECT_EQ( headers, copy.get_headers( ) );
-    EXPECT_EQ( message, copy.get_status_message( ) );
-    EXPECT_EQ( version, copy.get_version( ) );
-}
-
-TEST( Response, destructor )
-{
-    ASSERT_NO_THROW(
+    GIVEN( "i want to instantiate a default response" )
     {
-        Response* response = new Response( );
-        
-        delete response;
-    } );
+        Response response;
+
+        WHEN( "i construct the object" )
+        {
+            Bytes body;
+            double version = 1.1;
+            int status = 200;
+            string message = "OK";
+            multimap< string, string > headers;
+
+            THEN( "i should see default properties" )
+            {
+                REQUIRE( response.get_body( ) == body );
+                REQUIRE( response.get_version( ) == version );
+                REQUIRE( response.get_status_code( ) == status );
+                REQUIRE( response.get_headers( ) == headers );
+            }
+        }
+    }
 }
 
-TEST( Response, to_bytes )
+SCENARIO( "copy constructor", "[response]" )
 {
-    int status = 201;
-    Bytes body = { 'T', 'e', 's', 't', ' ', 'D', 'a', 't', 'a' };
-    map< string, string > headers = { { "api", "1.1v" }, { "Date", "ignore" } };
-    string message = "CUSTOM-CREATED";
-    double version = 1.0;
-    
-    Response response;
-    response.set_body( body );
-    response.set_version( version );
-    response.set_status_code( status );
-    response.set_status_message( message );
-    response.set_headers( headers );
-    
-    string bytes = "HTTP/1.0 201 CUSTOM-CREATED\r\nConnection: close\r\nServer: Corvusoft - restbed\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Length: 9\r\nDate: ignore\r\napi: 1.1v\r\n\r\nTest Data";
-    
-    EXPECT_EQ( Bytes( bytes.begin( ), bytes.end( ) ), response.to_bytes( ) );
-}
-
-TEST( Response, modify_body )
-{
-    string data = "Super important test data.";
-    Bytes body( data.begin( ), data.end( ) );
-    
-    Response response;
-    response.set_body( body );
-    
-    EXPECT_EQ( body, response.get_body( ) );
-}
-
-TEST( Response, modify_version )
-{
-    double version = 1.2;
-    
-    Response response;
-    response.set_version( version );
-    
-    EXPECT_EQ( version, response.get_version( ) );
-}
-
-TEST( Response, modify_status_code )
-{
-    int status = 404;
-    
-    Response response;
-    response.set_status_code( status );
-    
-    EXPECT_EQ( status, response.get_status_code( ) );
-}
-
-TEST( Response, modify_status_message )
-{
-    string message = "CUSTOM-STATUS";
-    
-    Response response;
-    response.set_status_message( message );
-    
-    EXPECT_EQ( message, response.get_status_message( ) );
-}
-
-TEST( Response, modify_header )
-{
-    string name = "Test Name.";
-    string value = "Test Value.";
-    
-    Response response;
-    response.set_header( name, value );
-    
-    EXPECT_EQ( value, response.get_header( name ) );
-}
-
-TEST( Response, modify_case_insensitive_header )
-{
-    string name = "Test Name.";
-    string value = "Test Value.";
-    
-    Response response;
-    response.set_header( name, value );
-    
-    EXPECT_EQ( value, response.get_header( "test name." ) );
-}
-
-TEST( Response, modify_headers )
-{
-    map< string, string > headers =
+    GIVEN( "i want to copy an existing checksum" )
     {
-        { "1", "2" },
-        { "3", "4" }
-    };
-    
-    Response response;
-    response.set_headers( headers );
-    
-    EXPECT_EQ( headers, response.get_headers( ) );
+        Bytes body = { 'a', 'b', 'c' };
+        double version = 1.0;
+        int status = 201;
+        string message = "Corvusoft";
+        multimap< string, string > headers = { { "accept", "application/csv" } };
+
+        Response response;
+        response.set_body( body );
+        response.set_version( version );
+        response.set_status_code( status );
+        response.set_status_message( message );
+        response.set_headers( headers );
+
+        WHEN( "i instantiate the object with the copy-constructor" )
+        {
+            Response copy( response );
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.get_body( ) == body );
+                REQUIRE( copy.get_version( ) == version );
+                REQUIRE( copy.get_status_code( ) == status );
+                REQUIRE( copy.get_status_message( ) == message );
+                REQUIRE( response.get_headers( ) == headers );
+            }
+        }
+    }
 }
 
-TEST( Response, assignment_operator )
+SCENARIO( "destructor", "[response]" )
 {
-    int status = 201;
-    Bytes body = { 'T', 'e', 's', 't', ' ', 'D', 'a', 't', 'a' };
-    map< string, string > headers = { { "api", "1.1v" } };
-    string message = "CUSTOM-CREATED";
-    double version = 1.0;
-    
-    Response original;
-    original.set_body( body );
-    original.set_version( version );
-    original.set_status_code( status );
-    original.set_status_message( message );
-    original.set_headers( headers );
-    
-    Response copy = original;
-    
-    EXPECT_EQ( status, copy.get_status_code( ) );
-    EXPECT_EQ( body, copy.get_body( )  );
-    EXPECT_EQ( headers, copy.get_headers( ) );
-    EXPECT_EQ( message, copy.get_status_message( ) );
-    EXPECT_EQ( version, copy.get_version( ) );
+    GIVEN( "i instantiate a new object" )
+    {
+        Response* response= new Response( );
+
+        WHEN( "i deallocate the object" )
+        {
+            THEN( "i should not see any exceptions" )
+            {
+                REQUIRE_NOTHROW( delete response );
+            }
+        }
+    }
 }
 
-TEST( Response, less_than_operator )
+SCENARIO( "assignment-operator", "[response]" )
 {
-    Response lhs;
-    lhs.set_status_code( 201 );
-    
-    Response rhs;
-    rhs.set_status_code( 301 );
-    
-    EXPECT_TRUE( lhs < rhs );
+    GIVEN( "i want to copy an existing response" )
+    {
+        Bytes body = { 'a', 'b', 'c' };
+        double version = 1.0;
+        int status = 201;
+        string message = "Corvusoft";
+        multimap< string, string > headers = { { "accept", "application/csv" } };
+
+        Response response;
+        response.set_body( body );
+        response.set_version( version );
+        response.set_status_code( status );
+        response.set_status_message( message );
+        response.set_headers( headers );
+
+        WHEN( "i instantiate the object with the assignment-operator" )
+        {
+            Response copy = response;
+
+            THEN( "i should see the same properties" )
+            {
+                REQUIRE( copy.get_body( ) == body );
+                REQUIRE( copy.get_version( ) == version );
+                REQUIRE( copy.get_status_code( ) == status );
+                REQUIRE( copy.get_status_message( ) == message );
+                REQUIRE( copy.get_headers( ) == headers );
+            }
+        }
+    }
 }
 
-TEST( Response, greater_than_operator )
+SCENARIO( "less-than-operator", "[response]" )
 {
-    Response lhs;
-    lhs.set_status_code( 500 );
-    
-    Response rhs;
-    rhs.set_status_code( 401 );
-    
-    EXPECT_TRUE( lhs > rhs );
+    GIVEN( "i want to compare two objects" )
+    {
+        Response lhs;
+        lhs.set_status_code( 200 );
+
+        Response rhs;
+        rhs.set_status_code( 201 );
+
+        WHEN( "i perform a comparison with the less-than-operator" )
+        {
+            THEN( "i should see the lhs is less than the rhs" )
+            {
+                REQUIRE( lhs < rhs );
+            }
+        }
+    }
 }
 
-TEST( Response, equality_operator )
+SCENARIO( "greater-than-operator", "[response]" )
 {
-    Response lhs;
-    lhs.set_header( "name", "value" );
-    
-    Response rhs;
-    rhs.set_header( "name", "value" );
-    
-    EXPECT_TRUE( lhs == rhs );
+    GIVEN( "i want to compare two objects" )
+    {
+        Response lhs;
+        lhs.set_status_code( 201 );
+
+        Response rhs;
+        rhs.set_status_code( 200 );
+
+        WHEN( "i perform a comparison with the greater-than-operator" )
+        {
+            THEN( "i should see the lhs is greater than the rhs" )
+            {
+                REQUIRE( lhs > rhs );
+            }
+        }
+    }
 }
 
-TEST( Response, inequality_operator )
+SCENARIO( "equality-operator", "[response]" )
 {
-    Response lhs;
-    lhs.set_body( "some data" );
-    
-    Response rhs;
-    rhs.set_body( "data some" );
-    
-    EXPECT_TRUE( lhs != rhs );
+    GIVEN( "i want to compare two objects" )
+    {
+        Response lhs;
+        Response rhs;
+
+        WHEN( "i perform a comparison with the equality-operator" )
+        {
+            THEN( "i should see identical instances" )
+            {
+                REQUIRE( lhs == rhs );
+            }
+        }
+    }
+}
+
+SCENARIO( "inequality-operator", "[response]" )
+{
+    GIVEN( "i want to compare two objects" )
+    {
+        Response lhs;
+        lhs.set_header( "name", "1" );
+
+        Response rhs;
+        rhs.set_header( "name", "2" );
+
+        WHEN( "i perform a comparison with the inequality-operator" )
+        {
+            THEN( "i should see differing instances" )
+            {
+                REQUIRE( lhs not_eq rhs );
+            }
+        }
+    }
+}
+
+SCENARIO( "to_bytes", "[response]" )
+{
+    GIVEN( "an object with example data" )
+    {
+        int status = 201;
+        Bytes body = { 'T', 'e', 's', 't', ' ', 'D', 'a', 't', 'a' };
+        string message = "CUSTOM-CREATED";
+        double version = 1.0;
+        multimap< string, string > headers = { { "api", "1.1v" }, { "Date", "ignore" } };
+
+        Response response;
+        response.set_body( body );
+        response.set_version( version );
+        response.set_status_code( status );
+        response.set_status_message( message );
+        response.set_headers( headers );
+
+        WHEN( "i invoke to_bytes" )
+        {
+            THEN( "i should a byte representation" )
+            {
+                string data = "HTTP/1.0 201 CUSTOM-CREATED\r\nConnection: close\r\nServer: Corvusoft - restbed\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Length: 9\r\nDate: ignore\r\napi: 1.1v\r\n\r\nTest Data";
+
+                REQUIRE( response.to_bytes( ) == Bytes( data.begin( ), data.end( ) ) );
+            }
+        }
+    }
+}
+
+SCENARIO( "header filter case sensitivity", "[response]" )
+{
+    GIVEN( "i want to read header filter field 'Content-Type'" )
+    {
+        multimap< string, string > headers = { { "Content-Type", "application/xml" } };
+
+        Response response;
+        response.set_headers( headers );
+
+        WHEN( "i invoke get_header with 'CoNtEnt-TYPE' example data" )
+        {
+            THEN( "i should see 'application/xml'" )
+            {
+                REQUIRE( response.get_header( "CoNtEnt-TYPE" ) == "application/xml" );
+            }
+        }
+    }
 }

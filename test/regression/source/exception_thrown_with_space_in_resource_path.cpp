@@ -12,7 +12,7 @@
 #include <restbed>
 
 //External Includes
-#include <gtest/gtest.h>
+#include <catch.hpp>
 #include <corvusoft/framework/http>
 
 //System Namespaces
@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST( Service, with_space_in_path )
+TEST_CASE( "with space in path", "[service]" )
 {
     Resource resource;
     resource.set_path( "test queue" );
@@ -57,12 +57,12 @@ TEST( Service, with_space_in_path )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 400, response.status_code );
+    REQUIRE( 400 == response.status_code );
     
     service->stop( );
 }
 
-TEST( Service, without_space_in_path )
+TEST_CASE( "without space in path", "[service]" )
 {
     Resource resource;
     resource.set_path( "testQueue" );
@@ -86,7 +86,7 @@ TEST( Service, without_space_in_path )
 
     auto response = Http::get( request );
     
-    EXPECT_EQ( 200, response.status_code );
+    REQUIRE( 200 == response.status_code );
     
     service->stop( );
 }
