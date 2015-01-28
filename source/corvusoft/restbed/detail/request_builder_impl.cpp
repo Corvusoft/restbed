@@ -89,7 +89,9 @@ namespace restbed
             set_version( parse_http_version( stream ) );
             set_headers( parse_http_headers( stream ) );
 
-            auto length = stoi( get_header( "Content-Length", "0" ) );
+            auto header = get_header( "Content-Length", "0" );
+
+            auto length = header.empty( ) ? 0 : stoi( header );
 
             length -= ( buffer.size( ) );
             length = asio::read( *socket, buffer, asio::transfer_at_least( length ) );
