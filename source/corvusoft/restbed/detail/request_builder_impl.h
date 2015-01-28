@@ -15,6 +15,7 @@
 #include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes
+#include <asio.hpp>
 #include <corvusoft/framework/bytes>
 
 //System Namespaces
@@ -39,7 +40,7 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                RequestBuilderImpl( std::istream& socket );
+                RequestBuilderImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket );
                 
                 RequestBuilderImpl( const RequestBuilderImpl& original );
                 
@@ -48,7 +49,7 @@ namespace restbed
                 //Functionality
                 Request build( void ) const;
                 
-                void parse( std::istream& socket );
+                void parse( const std::shared_ptr< asio::ip::tcp::socket >& socket );
                 
                 //Getters
                 
@@ -88,7 +89,7 @@ namespace restbed
                 
                 //Functionality
                 static framework::Bytes parse_http_body( std::istream& socket );
-                
+
                 static double parse_http_version( std::istream& socket );
             
                 static std::string parse_http_path( std::istream& socket );

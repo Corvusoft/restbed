@@ -4,8 +4,6 @@
 
 //System Includes
 #include <cstdio>
-#include <chrono>
-#include <sstream>
 #include <stdexcept>
 #include <functional>
 
@@ -33,7 +31,6 @@ using std::find;
 using std::bind;
 using std::thread;
 using std::string;
-using std::istream;
 using std::find_if;
 using std::function;
 using std::to_string;
@@ -44,8 +41,6 @@ using std::invalid_argument;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
-using std::chrono::milliseconds;
-using std::chrono::system_clock;
 
 //Project Namespaces
 
@@ -287,30 +282,7 @@ namespace restbed
                     throw asio::system_error( error );
                 }
                 
-                error_code code;
-                
-                while ( socket->available( code ) == 0 )
-                {
-                    if ( code )
-                    {
-                        throw asio::system_error( code );
-                    }
-                    
-                    std::this_thread::sleep_for( milliseconds( 250 ) );
-                }
-                
-                asio::streambuf buffer;
-                read( *socket, buffer, asio::transfer_at_least( socket->available( ) ), code );
-
-                if ( code )
-                {
-                    throw asio::system_error( code );
-                }
-                
-                istream stream( &buffer );
-                
-                RequestBuilderImpl builder( stream );
-                builder.set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
+                RequestBuilderImpl builder( socket );
                 request = builder.build( );
                 
                 Resource resource = resolve_resource_route( request );

@@ -6,6 +6,7 @@
 
 //System Includes
 #include <memory>
+#include <string>
 #include <vector>
 #include <functional>
 
@@ -19,6 +20,7 @@
 
 //System Namespaces
 using std::vector;
+using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -44,7 +46,7 @@ Response post_handler( const Request& request )
     
     Response response;
     response.set_status_code( ( request.get_body( ) == expectation ) ? StatusCode::CREATED : StatusCode::BAD_REQUEST );
-    
+
     return response;
 }
 
@@ -69,6 +71,7 @@ TEST_CASE( "large request bodies being trimmed", "[service]" )
     request.host = "localhost";
     request.path = "/test";
     request.body = Bytes( body, body + 492 );
+    request.headers = { { "Content-Length", ::to_string( request.body.size( ) ) } };
 
     auto response = Http::post( request );
     

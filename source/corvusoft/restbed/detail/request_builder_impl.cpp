@@ -37,6 +37,7 @@ using std::istreambuf_iterator;
 using restbed::Request;
 
 //External Namespaces
+using asio::ip::tcp;
 using framework::Uri;
 using framework::Map;
 using framework::Bytes;
@@ -48,7 +49,7 @@ namespace restbed
 {
     namespace detail
     {
-        RequestBuilderImpl::RequestBuilderImpl( istream& socket ) : RequestImpl( )
+        RequestBuilderImpl::RequestBuilderImpl( const shared_ptr< tcp::socket >& socket ) : RequestImpl( )
         {
             parse( socket );
         }
@@ -68,15 +69,35 @@ namespace restbed
             return *this;
         }
         
-        void RequestBuilderImpl::parse( istream& socket )
+        void RequestBuilderImpl::parse( const shared_ptr< tcp::socket >& socket )
         {
-            set_method( parse_http_method( socket ) );
-            set_path( parse_http_path( socket ) );
-            set_query_parameters( parse_http_query_parameters( socket ) );
-            set_protocol( parse_http_protocol( socket ) );
-            set_version( parse_http_version( socket ) );
-            set_headers( parse_http_headers( socket ) );
-            set_body( parse_http_body( socket ) );
+            asio::error_code code;
+            asio::streambuf buffer;
+            asio::read_until( *socket, buffer, "\r\n\r\n", code );
+
+            if ( code )
+            {
+                throw asio::system_error( code );
+            }
+
+            istream stream( &buffer );
+
+            set_method( parse_http_method( stream ) );
+            set_path( parse_http_path( stream ) );
+            set_query_parameters( parse_http_query_parameters( stream ) );
+            set_protocol( parse_http_protocol( stream ) );
+            set_version( parse_http_version( stream ) );
+            set_headers( parse_http_headers( stream ) );
+
+            auto length = stoi( get_header( "Content-Length", "0" ) );
+
+            length -= ( buffer.size( ) );
+            length = asio::read( *socket, buffer, asio::transfer_at_least( length ) );
+
+            if ( length > 0 )
+            {
+                set_body( parse_http_body( stream ) );
+            }
         }
         
         void RequestBuilderImpl::set_origin( const string& value )
