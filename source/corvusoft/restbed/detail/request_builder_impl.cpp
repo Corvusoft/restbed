@@ -90,15 +90,17 @@ namespace restbed
             set_headers( parse_http_headers( stream ) );
 
             auto header = get_header( "Content-Length", String::empty );
-            long length = header.empty( ) ? 0 : stoi( header ) - buffer.size( );
+            long length = header.empty( ) ? 0 : stoi( header );
 
-            if ( length < 0 )
+            if ( length not_eq 0 )
             {
-                throw StatusCode::BAD_REQUEST;
-            }
+                length -= buffer.size( );
 
-            if ( length > 0 )
-            {
+                if ( length < 0 )
+                {
+                    throw StatusCode::BAD_REQUEST;
+                }
+
                 asio::read( *socket, buffer, asio::transfer_at_least( length ) );
                 set_body( parse_http_body( stream ) );
             }
