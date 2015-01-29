@@ -291,7 +291,7 @@ namespace restbed
                 builder.set_path_parameters( parameters );
                 
                 request = builder.build( );
-                
+
                 m_authentication_handler( request, response );
                 
                 const int status = response.get_status_code( );
@@ -316,12 +316,16 @@ namespace restbed
             catch ( const asio::system_error& se )
             {
                 log( LogLevel::FATAL, se.what( ) );
-                
                 response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
             }
             catch ( const StatusCode::Value status_code )
             {
                 m_error_handler( status_code, request, response );
+            }
+            catch ( const exception& ex )
+            {
+                log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n", ex.what( ), request.to_bytes( ).data( ) ) );
+                m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
             }
             
             asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
@@ -383,7 +387,7 @@ namespace restbed
                                                   request.get_path( ).data( ) ) );
                                                   
             response.set_status_code( status_code );
-            response.set_header( "Content-Type", "text/plain" );
+            response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
             response.set_body( status_message );
         }
         
