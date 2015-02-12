@@ -28,22 +28,22 @@ namespace restbed
 {
     Resource::Resource( void ) : m_pimpl( new ResourceImpl )
     {
-        //n/a
+        return;
     }
     
     Resource::Resource( const Resource& original ) : m_pimpl( new ResourceImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Resource::Resource( const ResourceImpl& implementation ) : m_pimpl( new ResourceImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Resource::~Resource( void )
     {
-        //n/a
+        return;
     }
     
     string Resource::get_path( void ) const

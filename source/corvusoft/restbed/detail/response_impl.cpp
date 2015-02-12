@@ -40,7 +40,7 @@ namespace restbed
             m_status_message( String::empty ),
             m_headers( )
         {
-            //n/a
+            return;
         }
         
         ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_body( original.m_body ),
@@ -49,12 +49,12 @@ namespace restbed
             m_status_message( original.m_status_message ),
             m_headers( original.m_headers )
         {
-            //n/a
+            return;
         }
         
         ResponseImpl::~ResponseImpl( void )
         {
-            //n/a
+            return;
         }
         
         Bytes ResponseImpl::to_bytes( void ) const

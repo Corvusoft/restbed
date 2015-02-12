@@ -23,22 +23,22 @@ namespace restbed
 {
     Logger::Logger( void ) : m_pimpl( new LoggerImpl )
     {
-        //n/a
+        return;
     }
     
     Logger::Logger( const Logger& original ) : m_pimpl( new LoggerImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Logger::Logger( const LoggerImpl& implementation ) : m_pimpl( new LoggerImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Logger::~Logger( void )
     {
-        //n/a
+        return;
     }
     
     void Logger::log( const LogLevel level, const string format, ... ) noexcept

@@ -56,12 +56,12 @@ namespace restbed
         
         RequestBuilderImpl::RequestBuilderImpl( const RequestBuilderImpl& original ) : RequestImpl( original )
         {
-            //n/a
+            return;
         }
         
         RequestBuilderImpl::~RequestBuilderImpl( void )
         {
-            //n/a
+            return;
         }
         
         Request RequestBuilderImpl::build( void ) const

@@ -35,17 +35,17 @@ namespace restbed
     {
         ResourceMatcherImpl::ResourceMatcherImpl( const Request& request ) : m_request( request )
         {
-            //n/a
+            return;
         }
         
         ResourceMatcherImpl::ResourceMatcherImpl( const ResourceMatcherImpl& original ) : m_request( original.m_request )
         {
-            //n/a
+            return;
         }
         
         ResourceMatcherImpl::~ResourceMatcherImpl( void )
         {
-            //n/a
+            return;
         }
         
         bool ResourceMatcherImpl::operator ( )( const Resource& resource ) const

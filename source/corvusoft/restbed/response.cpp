@@ -24,22 +24,22 @@ namespace restbed
 {
     Response::Response( void ) : m_pimpl( new ResponseImpl )
     {
-        //n/a
+        return;
     }
     
     Response::Response( const Response& original ) : m_pimpl( new ResponseImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Response::Response( const ResponseImpl& implementation ) : m_pimpl( new ResponseImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Response::~Response( void )
     {
-        //n/a
+        return;
     }
     
     Bytes Response::to_bytes( void ) const

@@ -24,22 +24,22 @@ namespace restbed
 {
     Settings::Settings( void ) : m_pimpl( new SettingsImpl )
     {
-        //n/a
+        return;
     }
     
     Settings::Settings( const Settings& original ) : m_pimpl( new SettingsImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Settings::Settings( const SettingsImpl& implementation ) : m_pimpl( new SettingsImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Settings::~Settings( void )
     {
-        //n/a
+        return;
     }
     
     Mode Settings::get_mode( void ) const

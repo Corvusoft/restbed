@@ -31,22 +31,22 @@ namespace restbed
 {
     Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
     {
-        //n/a
+        return;
     }
     
     Service::Service( const Service& original ) : m_pimpl( new ServiceImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Service::Service( const ServiceImpl& implementation ) : m_pimpl( new ServiceImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Service::~Service( void )
     {
-        //n/a
+        return;
     }
     
     void Service::start( void )

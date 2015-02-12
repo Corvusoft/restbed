@@ -23,12 +23,12 @@ using restbed::LogLevel;
 TestLogger::TestLogger( void ) : Logger( ),
     m_log_entries( )
 {
-    //n/a
+    return;
 }
 
 TestLogger::~TestLogger( void )
 {
-    //n/a
+    return;
 }
 
 void TestLogger::log( const LogLevel, const string format, ... ) noexcept

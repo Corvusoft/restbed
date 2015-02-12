@@ -26,22 +26,22 @@ namespace restbed
 {
     Request::Request( void ) : m_pimpl( new RequestImpl )
     {
-        //n/a
+        return;
     }
     
     Request::Request( const Request& original ) : m_pimpl( new RequestImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Request::Request( const RequestImpl& implementation ) : m_pimpl( new RequestImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Request::~Request( void )
     {
-        //n/a
+        return;
     }
     
     Bytes Request::to_bytes( void ) const

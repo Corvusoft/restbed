@@ -38,27 +38,27 @@ namespace restbed
     
     Method::Method( const char* value ) : m_pimpl( new MethodImpl( value ) )
     {
-        //n/a
+        return;
     }
     
     Method::Method( const string& value ) : m_pimpl( new MethodImpl( value ) )
     {
-        //n/a
+        return;
     }
     
     Method::Method( const Method& original ) : m_pimpl( new MethodImpl( *original.m_pimpl ) )
     {
-        //n/a
+        return;
     }
     
     Method::Method( const MethodImpl& implementation ) : m_pimpl( new MethodImpl( implementation ) )
     {
-        //n/a
+        return;
     }
     
     Method::~Method( void )
     {
-        //n/a
+        return;
     }
     
     string Method::to_string( void ) const
@@ -102,6 +102,6 @@ namespace restbed
     
     Method::Method( void ) : m_pimpl( nullptr )
     {
-        //n/a
+        return;
     }
 }

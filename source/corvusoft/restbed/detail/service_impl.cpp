@@ -70,7 +70,7 @@ namespace restbed
             m_authentication_handler( bind( &ServiceImpl::authentication_handler, this, _1, _2 ) ),
             m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2, _3 ) )
         {
-            //n/a
+            return;
         }
         
         ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
@@ -86,7 +86,7 @@ namespace restbed
             m_authentication_handler( original.m_authentication_handler ),
             m_error_handler( original.m_error_handler )
         {
-            //n/a
+            return;
         }
         
         ServiceImpl::~ServiceImpl( void )

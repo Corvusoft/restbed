@@ -55,12 +55,12 @@ namespace restbed
             m_header_filters( original.m_header_filters ),
             m_method_handlers( original.m_method_handlers )
         {
-            //n/a
+            return;
         }
         
         ResourceImpl::~ResourceImpl( void )
         {
-            //n/a
+            return;
         }
 
         string ResourceImpl::get_path( void ) const

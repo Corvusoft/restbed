@@ -38,12 +38,12 @@ namespace restbed
         
         SettingsImpl::SettingsImpl( const SettingsImpl& original ) : m_properties( original.m_properties )
         {
-            //n/a
+            return;
         }
         
         SettingsImpl::~SettingsImpl( void )
         {
-            //n/a
+            return;
         }
         
         Mode SettingsImpl::get_mode( void ) const

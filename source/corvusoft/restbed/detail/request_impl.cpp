@@ -40,7 +40,7 @@ namespace restbed
             m_path_parameters( ),
             m_query_parameters( )
         {
-            //n/a
+            return;
         }
         
         RequestImpl::RequestImpl( const RequestImpl& original ) : m_body( original.m_body ),
@@ -53,12 +53,12 @@ namespace restbed
             m_path_parameters( original.m_path_parameters ),
             m_query_parameters( original.m_query_parameters )
         {
-            //n/a
+            return;
         }
         
         RequestImpl::~RequestImpl( void )
         {
-            //n/a
+            return;
         }
         
         Bytes RequestImpl::to_bytes( void ) const

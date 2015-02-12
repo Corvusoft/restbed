@@ -45,12 +45,12 @@ namespace restbed
         
         MethodImpl::MethodImpl( const MethodImpl& original ) : m_value( original.m_value )
         {
-            //n/a
+            return;
         }
         
         MethodImpl::~MethodImpl( void )
         {
-            //n/a
+            return;
         }
         
         string MethodImpl::to_string( void ) const

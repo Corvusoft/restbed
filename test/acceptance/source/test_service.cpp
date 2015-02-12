@@ -30,7 +30,7 @@ TestService::TestService( const Settings& settings ) : Service( settings ),
 
 TestService::~TestService( void )
 {
-    //n/a
+    return;
 }
 
 void TestService::suppress_resource( void )

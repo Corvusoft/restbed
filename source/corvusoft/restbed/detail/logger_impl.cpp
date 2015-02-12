@@ -33,17 +33,17 @@ namespace restbed
     {
         LoggerImpl::LoggerImpl( void )
         {
-            //n/a
+            return;
         }
         
         LoggerImpl::LoggerImpl( const LoggerImpl& )
         {
-            //n/a
+            return;
         }
         
         LoggerImpl::~LoggerImpl( void )
         {
-            //n/a
+            return;
         }
         
         void LoggerImpl::log( const LogLevel level, const string format, va_list arguments ) const
