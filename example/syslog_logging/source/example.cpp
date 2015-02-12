@@ -15,7 +15,7 @@ class SyslogLogger : public Logger
     public:
         SyslogLogger( void ) : Logger( )
         {
-            //n/a
+            return;
         }
         
         void log( const LogLevel level, const string format, ... ) noexcept
