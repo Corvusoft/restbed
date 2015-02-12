@@ -95,9 +95,9 @@ namespace restbed
             {
                 stop( );
             }
-            catch ( const exception& ex )
+            catch ( ... )
             {
-                log( LogLevel::WARNING, String::format( "Service failed graceful shutdown: %s",  ex.what( ) ) );
+                log( LogLevel::WARNING, "Service failed graceful shutdown." );
             }
         }
         
