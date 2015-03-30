@@ -35,6 +35,7 @@ namespace restbed
             m_path( "/" ),
             m_method( "GET" ),
             m_origin( String::empty ),
+            m_destination( String::empty ),
             m_protocol( "HTTP" ),
             m_headers( ),
             m_path_parameters( ),
@@ -48,6 +49,7 @@ namespace restbed
             m_path( original.m_path ),
             m_method( original.m_method ),
             m_origin( original.m_origin ),
+            m_destination( original.m_destination ),
             m_protocol( original.m_protocol ),
             m_headers( original.m_headers ),
             m_path_parameters( original.m_path_parameters ),
@@ -109,6 +111,11 @@ namespace restbed
         string RequestImpl::get_origin( void ) const
         {
             return m_origin;
+        }
+
+        string RequestImpl::get_destination( void ) const
+        {
+            return m_destination;
         }
 
         string RequestImpl::get_protocol( void ) const
@@ -235,6 +242,11 @@ namespace restbed
             m_origin = value;
         }
 
+        void RequestImpl::set_destination( const string& value )
+        {
+            m_destination = value;
+        }
+
         void RequestImpl::set_protocol( const string& value )
         {
             auto protocol = String::uppercase( value );
@@ -277,6 +289,7 @@ namespace restbed
             return ( m_path == value.m_path and
                      m_method == value.m_method and
                      m_origin == value.m_origin and
+                     m_destination == value.m_destination and
                      m_version == value.m_version and
                      m_headers == value.m_headers and
                      m_protocol == value.m_protocol and
@@ -298,6 +311,8 @@ namespace restbed
             m_method = value.m_method;
             
             m_origin = value.m_origin;
+
+            m_destination = value.m_destination;
             
             m_version = value.m_version;
             

@@ -62,6 +62,8 @@ namespace restbed
                 std::string get_method( void ) const;
                 
                 std::string get_origin( void ) const;
+
+                std::string get_destination( void ) const;
             
                 std::string get_protocol( void ) const;
                 
@@ -91,6 +93,8 @@ namespace restbed
                 void set_method( const std::string& value );
                 
                 void set_origin( const std::string& value );
+
+                void set_destination( const std::string& value );
             
                 void set_protocol( const std::string& value );
                 
@@ -160,6 +164,8 @@ namespace restbed
                 std::string m_method;
                 
                 std::string m_origin;
+
+                std::string m_destination;
             
                 std::string m_protocol;
             

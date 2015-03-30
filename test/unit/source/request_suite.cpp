@@ -35,6 +35,7 @@ SCENARIO( "constructor", "[request]" )
             const Bytes body = request.get_body( );
             const string path = request.get_path( );
             const string origin = request.get_origin( );
+            const string destination = request.get_destination( );
             const string protocol = request.get_protocol( );
             const double version = request.get_version( );
             const multimap< string, string > headers = request.get_headers( );
@@ -46,6 +47,7 @@ SCENARIO( "constructor", "[request]" )
                 REQUIRE( body.empty( ) );
                 REQUIRE( path == "/" );
                 REQUIRE( origin.empty( ) );
+                REQUIRE( destination.empty( ) );
                 REQUIRE( version == 1.1 );
                 REQUIRE( headers.empty( ) );
                 REQUIRE( protocol == "HTTP" );
@@ -72,6 +74,7 @@ SCENARIO( "copy constructor", "[request]" )
                 REQUIRE( copy.get_body( ).empty( ) );
                 REQUIRE( copy.get_path( ) == "/" );
                 REQUIRE( copy.get_origin( ).empty( ) );
+                REQUIRE( copy.get_destination( ).empty( ) );
                 REQUIRE( copy.get_version( ) == 1.1 );
                 REQUIRE( copy.get_headers( ).empty( ) );
                 REQUIRE( copy.get_protocol( ) == "HTTP" );
@@ -113,6 +116,7 @@ SCENARIO( "assignment-operator", "[request]" )
                 REQUIRE( copy.get_body( ).empty( ) );
                 REQUIRE( copy.get_path( ) == "/" );
                 REQUIRE( copy.get_origin( ).empty( ) );
+                REQUIRE( copy.get_destination( ).empty( ) );
                 REQUIRE( copy.get_version( ) == 1.1 );
                 REQUIRE( copy.get_headers( ).empty( ) );
                 REQUIRE( copy.get_protocol( ) == "HTTP" );

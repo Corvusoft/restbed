@@ -89,6 +89,7 @@ namespace restbed
             set_version( parse_http_version( stream ) );
             set_headers( parse_http_headers( stream ) );
             set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
+            set_destination( socket->local_endpoint( ).address( ).to_string( ) );
 
             auto header = get_header( "Content-Length", String::empty );
             long length = header.empty( ) ? 0 : stoi( header );
@@ -106,12 +107,7 @@ namespace restbed
                 set_body( parse_http_body( stream ) );
             }
         }
-        
-        void RequestBuilderImpl::set_origin( const string& value )
-        {
-            RequestImpl::set_origin( value );
-        }
-        
+
         void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )
         {
             RequestImpl::set_path_parameters( parameters );

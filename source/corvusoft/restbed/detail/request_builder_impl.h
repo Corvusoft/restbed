@@ -54,8 +54,6 @@ namespace restbed
                 //Getters
                 
                 //Setters
-                void set_origin( const std::string& value );
-                
                 void set_path_parameters( const std::map< std::string, std::string >& parameters );
                 
                 //Operators

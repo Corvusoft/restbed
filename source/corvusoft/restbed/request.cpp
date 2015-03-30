@@ -89,6 +89,11 @@ namespace restbed
         return m_pimpl->get_origin( );
     }
 
+    string Request::get_destination( void ) const
+    {
+        return m_pimpl->get_destination( );
+    }
+
     string Request::get_protocol( void ) const
     {
         return m_pimpl->get_protocol( );
