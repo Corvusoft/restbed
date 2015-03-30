@@ -88,6 +88,7 @@ namespace restbed
             set_protocol( parse_http_protocol( stream ) );
             set_version( parse_http_version( stream ) );
             set_headers( parse_http_headers( stream ) );
+            set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
 
             auto header = get_header( "Content-Length", String::empty );
             long length = header.empty( ) ? 0 : stoi( header );
