@@ -47,9 +47,7 @@ namespace restbed
             
             virtual ~Request( void );
             
-            //Functionality
-            framework::Bytes to_bytes( void ) const;
-            
+            //Functionality            
             bool has_header( const std::string& name ) const;
             
             bool has_path_parameter( const std::string& name ) const;

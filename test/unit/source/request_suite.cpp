@@ -195,25 +195,6 @@ SCENARIO( "inequality-operator", "[request]" )
     }
 }
 
-SCENARIO( "to_bytes", "[request]" )
-{
-    GIVEN( "i want to convert a request to bytes" )
-    {
-        Request request;
-
-        WHEN( "i invoke to_bytes" )
-        {
-            THEN( "i should see bytes" )
-            {
-                string data = "GET / HTTP/1.1\r\n\r\n";
-                Bytes bytes( data.begin( ), data.end( ) );
-
-                REQUIRE( request.to_bytes( ) == bytes );
-            }
-        }
-    }
-}
-
 SCENARIO( "has_header", "[request]" )
 {
     GIVEN( "i want to test for an available request header" )

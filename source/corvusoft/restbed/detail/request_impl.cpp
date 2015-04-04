@@ -74,16 +74,6 @@ namespace restbed
             return;
         }
         
-        Bytes RequestImpl::to_bytes( void ) const
-        {
-            string headers = String::format( "%s%s\r\n", generate_status_section( ).data( ), generate_header_section( ).data( ) );
-            
-            Bytes bytes( headers.begin( ), headers.end( ) );
-            bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
-            
-            return bytes;
-        }
-        
         bool RequestImpl::has_header( const string& name ) const
         {
             return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
@@ -421,40 +411,6 @@ namespace restbed
             m_query_parameters = value.m_query_parameters;
             
             return *this;
-        }
-        
-        string RequestImpl::generate_status_section( void ) const
-        {
-            return String::format( "%s %s %s/%.1f\r\n", m_method.data( ), generate_path_section( ).data( ), m_protocol.data( ), m_version );
-        }
-        
-        string RequestImpl::generate_header_section( void ) const
-        {
-            string section = String::empty;
-            
-            for ( auto header : m_headers )
-            {
-                section += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
-            }
-            
-            return section;
-        }
-        
-        string RequestImpl::generate_path_section( void ) const
-        {
-            string section = m_path;
-            
-            if ( not m_query_parameters.empty( ) )
-            {
-                section += "?";
-                
-                for ( auto parameter : m_query_parameters )
-                {
-                    section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
-                }
-            }
-            
-            return String::trim_lagging( section, "&" );
         }
     }
 }

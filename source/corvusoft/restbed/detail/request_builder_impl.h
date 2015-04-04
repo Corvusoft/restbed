@@ -48,6 +48,8 @@ namespace restbed
                 
                 //Functionality
                 Request build( void ) const;
+
+                static framework::Bytes to_bytes( const Request& request );
                 
                 void parse( const std::shared_ptr< asio::ip::tcp::socket >& socket );
                 
@@ -86,6 +88,12 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                static std::string generate_path_section( const Request& request );
+
+                static std::string generate_status_section( const Request& request );
+
+                static std::string generate_header_section( const Request& request );
+
                 static double parse_http_version( std::istream& socket );
             
                 static std::string parse_http_path( std::istream& socket );

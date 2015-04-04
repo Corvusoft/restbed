@@ -44,11 +44,6 @@ namespace restbed
         return;
     }
     
-    Bytes Request::to_bytes( void ) const
-    {
-        return m_pimpl->to_bytes( );
-    }
-    
     bool Request::has_header( const string& name ) const
     {
         return m_pimpl->has_header( name );

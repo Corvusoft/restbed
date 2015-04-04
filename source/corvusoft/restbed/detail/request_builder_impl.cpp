@@ -10,6 +10,7 @@
 #include <stdexcept>
 
 //Project Includes
+#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
@@ -68,6 +69,18 @@ namespace restbed
         {
             return *this;
         }
+
+        framework::Bytes RequestBuilderImpl::to_bytes( const Request& request )
+        {
+            string headers = String::format( "%s%s\r\n", generate_status_section( request ).data( ),
+                                                         generate_header_section( request ).data( ) );
+
+            Bytes bytes( headers.begin( ), headers.end( ) );
+            Bytes body = request.get_body( );
+            bytes.insert( bytes.end( ), body.begin( ), body.end( ) );
+
+            return bytes;
+        }
         
         void RequestBuilderImpl::parse( const shared_ptr< tcp::socket >& socket )
         {
@@ -103,6 +116,45 @@ namespace restbed
             *this = value;
             
             return *this;
+        }
+
+        string RequestBuilderImpl::generate_path_section( const Request& request )
+        {
+            string section = request.get_path( );
+
+            auto query_parameters = request.get_query_parameters( );
+
+            if ( not query_parameters.empty( ) )
+            {
+                section += "?";
+
+                for ( auto parameter : query_parameters )
+                {
+                    section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+                }
+            }
+
+            return String::trim_lagging( section, "&" );
+        }
+
+        string RequestBuilderImpl::generate_status_section( const Request& request )
+        {
+            return String::format( "%s %s %s/%.1f\r\n", request.get_method( ).to_string( ).data( ),
+                                                        generate_path_section( request ).data( ),
+                                                        request.get_protocol( ).data( ),
+                                                        request.get_version( ) );
+        }
+
+        string RequestBuilderImpl::generate_header_section( const Request& request )
+        {
+            string section = String::empty;
+
+            for ( auto header : request.get_headers( ) )
+            {
+                section += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            }
+
+            return section;
         }
         
         double RequestBuilderImpl::parse_http_version( istream& socket )

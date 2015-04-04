@@ -324,7 +324,10 @@ namespace restbed
             }
             catch ( const exception& ex )
             {
-                log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n", ex.what( ), request.to_bytes( ).data( ) ) );
+                log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
+                                                     ex.what( ),
+                                                     RequestBuilderImpl::to_bytes( request ).data( ) ) );
+
                 m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
             }
 

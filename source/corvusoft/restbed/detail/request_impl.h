@@ -44,9 +44,7 @@ namespace restbed
                 
                 virtual ~RequestImpl( void );
                 
-                //Functionality
-                framework::Bytes to_bytes( void ) const;
-                
+                //Functionality               
                 bool has_header( const std::string& name ) const;
                 
                 bool has_path_parameter( const std::string& name ) const;
@@ -149,11 +147,6 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                std::string generate_status_section( void ) const;
-                
-                std::string generate_header_section( void ) const;
-                
-                std::string generate_path_section( void ) const;
                 
                 //Getters
                 
