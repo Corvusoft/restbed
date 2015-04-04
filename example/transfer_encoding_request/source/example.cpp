@@ -11,15 +11,13 @@ Response post_method_handler( const Request& request )
     Response response;
     response.set_status_code( StatusCode::BAD_REQUEST );
 
-    framework::Bytes body = { };
-
     if ( request.has_header( "Transfer-Encoding" ) )
     {
         const auto header = request.get_header( "Transfer-Encoding" );
 
         if ( header == "chunked" )
         {
-            body = request.get_body( "\r\n" );
+            framework::Bytes body = request.get_body( "\r\n" );
             auto chunk_size = stoul( string( body.begin( ), body.end( ) ), nullptr, 16 );
 
             while ( chunk_size not_eq 0 )
@@ -35,9 +33,9 @@ Response post_method_handler( const Request& request )
         }
         //else 400 Bad Request
     }
-    else if ( request.has_header( "content-length" ) )
+    else if ( request.has_header( "Content-Length" ) )
     {
-        body = request.get_body( );
+        framework::Bytes body = request.get_body( );
 
         fprintf( stderr, "Complete Body Content: %.*s\n", ( int )body.size( ), body.data( ) );
 
