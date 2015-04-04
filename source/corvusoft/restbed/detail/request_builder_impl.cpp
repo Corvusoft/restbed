@@ -72,15 +72,15 @@ namespace restbed
         void RequestBuilderImpl::parse( const shared_ptr< tcp::socket >& socket )
         {
             asio::error_code code;
-            asio::streambuf buffer;
-            asio::read_until( *socket, buffer, "\r\n\r\n", code );
+            asio::streambuf* buffer = new asio::streambuf;
+            asio::read_until( *socket, *buffer, "\r\n\r\n", code );
 
             if ( code )
             {
                 throw asio::system_error( code );
             }
 
-            istream stream( &buffer );
+            istream stream( buffer );
 
             set_method( parse_http_method( stream ) );
             set_path( parse_http_path( stream ) );
@@ -90,22 +90,7 @@ namespace restbed
             set_headers( parse_http_headers( stream ) );
             set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
             set_destination( socket->local_endpoint( ).address( ).to_string( ) );
-
-            auto header = get_header( "Content-Length", String::empty );
-            long length = header.empty( ) ? 0 : stoi( header );
-
-            if ( length not_eq 0 )
-            {
-                length -= buffer.size( );
-
-                if ( length < 0 )
-                {
-                    throw StatusCode::BAD_REQUEST;
-                }
-
-                asio::read( *socket, buffer, asio::transfer_at_least( length ) );
-                set_body( parse_http_body( stream ) );
-            }
+            set_socket( socket, buffer );
         }
 
         void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )
@@ -118,15 +103,6 @@ namespace restbed
             *this = value;
             
             return *this;
-        }
-        
-        Bytes RequestBuilderImpl::parse_http_body( istream& socket )
-        {
-            istreambuf_iterator< char > end_of_stream;
-            
-            Bytes body( istreambuf_iterator< char >( socket ), end_of_stream );
-            
-            return body;
         }
         
         double RequestBuilderImpl::parse_http_version( istream& socket )

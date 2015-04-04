@@ -68,7 +68,17 @@ namespace restbed
     {
         return m_pimpl->get_body( );
     }
-    
+
+    Bytes Request::get_body( const size_t length ) const
+    {
+        return m_pimpl->get_body( length );
+    }
+
+    Bytes Request::get_body( const string& delimiter ) const
+    {
+        return m_pimpl->get_body( delimiter );
+    }
+
     Method Request::get_method( void ) const
     {
         return m_pimpl->get_method( );

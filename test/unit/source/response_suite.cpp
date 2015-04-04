@@ -208,35 +208,6 @@ SCENARIO( "inequality-operator", "[response]" )
     }
 }
 
-SCENARIO( "to_bytes", "[response]" )
-{
-    GIVEN( "an object with example data" )
-    {
-        int status = 201;
-        Bytes body = { 'T', 'e', 's', 't', ' ', 'D', 'a', 't', 'a' };
-        string message = "CUSTOM-CREATED";
-        double version = 1.0;
-        multimap< string, string > headers = { { "api", "1.1v" }, { "Date", "ignore" } };
-
-        Response response;
-        response.set_body( body );
-        response.set_version( version );
-        response.set_status_code( status );
-        response.set_status_message( message );
-        response.set_headers( headers );
-
-        WHEN( "i invoke to_bytes" )
-        {
-            THEN( "i should a byte representation" )
-            {
-                string data = "HTTP/1.0 201 CUSTOM-CREATED\r\nConnection: close\r\nServer: Corvusoft - restbed\r\nContent-Type: text/plain; charset=us-ascii\r\nContent-Length: 9\r\nDate: ignore\r\napi: 1.1v\r\n\r\nTest Data";
-
-                REQUIRE( response.to_bytes( ) == Bytes( data.begin( ), data.end( ) ) );
-            }
-        }
-    }
-}
-
 SCENARIO( "header filter case sensitivity", "[response]" )
 {
     GIVEN( "i want to read header filter field 'Content-Type'" )

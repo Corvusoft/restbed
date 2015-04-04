@@ -11,6 +11,7 @@
 #include <string>
 
 //Project Includes
+#include <asio.hpp>
 
 //External Includes
 #include <corvusoft/framework/bytes>
@@ -53,7 +54,11 @@ namespace restbed
                 bool has_query_parameter( const std::string& name ) const;
                 
                 //Getters
-                framework::Bytes get_body( void ) const;
+                framework::Bytes get_body( void );
+
+                framework::Bytes get_body( const std::size_t length );
+
+                framework::Bytes get_body( const std::string& delimiter );
                 
                 double get_version( void ) const;
                 
@@ -97,6 +102,8 @@ namespace restbed
                 void set_destination( const std::string& value );
             
                 void set_protocol( const std::string& value );
+
+                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value, asio::streambuf* buffer );
                 
                 void set_headers( const std::multimap< std::string, std::string >& values );
                 
@@ -155,6 +162,8 @@ namespace restbed
                 //Operators
                 
                 //Properties
+                bool m_body_processed;
+
                 framework::Bytes m_body;
                 
                 double m_version;
@@ -168,6 +177,10 @@ namespace restbed
                 std::string m_destination;
             
                 std::string m_protocol;
+
+                asio::streambuf* m_buffer;
+
+                std::shared_ptr< asio::ip::tcp::socket > m_socket;
             
                 std::multimap< std::string, std::string > m_headers;
                 

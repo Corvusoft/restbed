@@ -20,6 +20,7 @@
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
+#include "corvusoft/restbed/detail/response_builder_impl.h"
 #include "corvusoft/restbed/detail/resource_matcher_impl.h"
 
 //External Includes
@@ -45,7 +46,6 @@ using std::placeholders::_3;
 //Project Namespaces
 
 //External Namespaces
-using asio::buffer;
 using asio::ip::tcp;
 using asio::io_service;
 using asio::error_code;
@@ -254,9 +254,9 @@ namespace restbed
         
         void ServiceImpl::start_synchronous( void )
         {
-            m_io_service->run( );
-            
             log( LogLevel::INFO, "Synchronous Service Started" );
+
+            m_io_service->run( );
         }
         
         void ServiceImpl::start_asynchronous( void )
@@ -327,9 +327,9 @@ namespace restbed
                 log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n", ex.what( ), request.to_bytes( ).data( ) ) );
                 m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
             }
-            
-            asio::write( *socket, buffer( response.to_bytes( ) ), asio::transfer_all( ) );
-            
+
+            ResponseBuilderImpl::write( response, socket );
+
             listen( );
         }
         

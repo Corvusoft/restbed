@@ -9,6 +9,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <functional>
 
 //Project Includes
 
@@ -27,13 +28,14 @@ namespace restbed
     namespace detail
     {
         class ResponseImpl;
+        class ResponseBuilderImpl;
     }
     
     class Response
     {
         public:
             //Friends
-            
+
             //Definitions
             
             //Constructors
@@ -46,7 +48,6 @@ namespace restbed
             virtual ~Response( void );
             
             //Functionality
-            framework::Bytes to_bytes( void ) const;
             
             //Getters
             framework::Bytes get_body( void ) const;
@@ -64,9 +65,11 @@ namespace restbed
             std::multimap< std::string, std::string > get_headers( const std::string& name ) const;
 
             //Setters
-            void set_body( const framework::Bytes& value );
-            
             void set_body( const std::string& value );
+
+            void set_body( const framework::Bytes& value );
+
+            void set_body( const std::function< framework::Bytes ( void ) >& value );
         
             void set_version( const double value );
             
@@ -110,6 +113,7 @@ namespace restbed
             
         private:
             //Friends
+            friend detail::ResponseBuilderImpl;
             
             //Definitions
             

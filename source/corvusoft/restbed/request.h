@@ -58,6 +58,10 @@ namespace restbed
             
             //Getters
             framework::Bytes get_body( void ) const;
+
+            framework::Bytes get_body( const std::size_t length ) const;
+
+            framework::Bytes get_body( const std::string& delimiter ) const;
             
             Method get_method( void ) const;
             

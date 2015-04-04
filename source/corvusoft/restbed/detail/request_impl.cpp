@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <istream>
 
 //Project Includes
 #include "corvusoft/restbed/status_code.h"
@@ -16,7 +17,11 @@
 using std::map;
 using std::stod;
 using std::string;
+using std::istream;
 using std::multimap;
+using std::shared_ptr;
+using std::istreambuf_iterator;
+using asio::ip::tcp;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -30,13 +35,16 @@ namespace restbed
 {
     namespace detail
     {
-        RequestImpl::RequestImpl( void ) : m_body( ),
+        RequestImpl::RequestImpl( void ) : m_body_processed( false ),
+            m_body( ),
             m_version( 1.1 ),
             m_path( "/" ),
             m_method( "GET" ),
             m_origin( String::empty ),
             m_destination( String::empty ),
             m_protocol( "HTTP" ),
+            m_buffer( nullptr ),
+            m_socket( nullptr ),
             m_headers( ),
             m_path_parameters( ),
             m_query_parameters( )
@@ -44,13 +52,16 @@ namespace restbed
             return;
         }
         
-        RequestImpl::RequestImpl( const RequestImpl& original ) : m_body( original.m_body ),
+        RequestImpl::RequestImpl( const RequestImpl& original ) : m_body_processed( original.m_body_processed ),
+            m_body( original.m_body ),
             m_version( original.m_version ),
             m_path( original.m_path ),
             m_method( original.m_method ),
             m_origin( original.m_origin ),
             m_destination( original.m_destination ),
             m_protocol( original.m_protocol ),
+            m_buffer( original.m_buffer ),
+            m_socket( original.m_socket ),
             m_headers( original.m_headers ),
             m_path_parameters( original.m_path_parameters ),
             m_query_parameters( original.m_query_parameters )
@@ -88,11 +99,81 @@ namespace restbed
             return ( m_query_parameters.find( name ) not_eq m_query_parameters.end( ) );
         }
         
-        Bytes RequestImpl::get_body( void ) const
+        Bytes RequestImpl::get_body( void )
         {
+            if ( has_header( "Content-Length" ) and not m_body_processed )
+            {
+                auto header = get_header( "Content-Length", String::empty );
+                size_t length = header.empty( ) ? 0 : stoul( header );
+
+                if ( length > m_buffer->size( ) )
+                {
+                    size_t size = length - m_buffer->size( );
+                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
+                }
+
+                m_body_processed = true;
+
+                istream stream( m_buffer );
+                istreambuf_iterator< char > end_of_stream;
+                m_body.insert( m_body.end( ), istreambuf_iterator< char >( stream ), end_of_stream );
+            }
+
             return m_body;
         }
-        
+
+        Bytes RequestImpl::get_body( const size_t length )
+        {
+            if ( has_header( "Content-Length" ) )
+            {
+                if ( not m_body_processed )
+                {
+                    get_body( );
+                }
+
+                return Bytes( m_body.begin( ), m_body.begin( ) + length );
+            }
+            else
+            {
+                if ( length > m_buffer->size( ) )
+                {
+                    size_t size = length - m_buffer->size( );
+                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
+                }
+
+                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
+                Bytes body( data, data + length );
+                m_buffer->consume( length );
+
+                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
+                return body;
+            }
+        }
+
+        Bytes RequestImpl::get_body( const string& delimiter )
+        {
+            if ( has_header( "Content-Length" ) )
+            {
+                if ( not m_body_processed )
+                {
+                    get_body( );
+                }
+
+                return Bytes( m_body.begin( ), search( m_body.begin( ), m_body.end( ), delimiter.begin( ), delimiter.end( ) ) );
+            }
+            else
+            {
+                size_t length = asio::read_until( *m_socket, *m_buffer, delimiter );
+
+                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
+                Bytes body( data, data + length );
+                m_buffer->consume( length );
+
+                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
+                return body;
+            }
+        }
+
         double RequestImpl::get_version( void ) const
         {
             return m_version;
@@ -258,6 +339,12 @@ namespace restbed
             
             m_protocol = value;
         }
+
+        void RequestImpl::set_socket( const shared_ptr< tcp::socket >& value, asio::streambuf* buffer )
+        {
+            m_socket = value;
+            m_buffer = buffer;
+        }
         
         void RequestImpl::set_headers( const multimap< string, string >& values )
         {
@@ -286,13 +373,16 @@ namespace restbed
         
         bool RequestImpl::operator ==( const RequestImpl& value ) const
         {
-            return ( m_path == value.m_path and
+            return ( m_body_processed == value.m_body_processed and
+                     m_path == value.m_path and
                      m_method == value.m_method and
                      m_origin == value.m_origin and
                      m_destination == value.m_destination and
                      m_version == value.m_version and
                      m_headers == value.m_headers and
                      m_protocol == value.m_protocol and
+                     m_buffer == value.m_buffer and
+                     m_socket == value.m_socket and
                      m_path_parameters == value.m_path_parameters and
                      m_query_parameters == value.m_query_parameters );
         }
@@ -304,6 +394,8 @@ namespace restbed
         
         RequestImpl& RequestImpl::operator =( const RequestImpl& value )
         {
+            m_body_processed = value.m_body_processed;
+
             m_body = value.m_body;
             
             m_path = value.m_path;
@@ -319,6 +411,10 @@ namespace restbed
             m_headers = value.m_headers;
             
             m_protocol = value.m_protocol;
+
+            m_buffer = value.m_buffer;
+
+            m_socket = value.m_socket;
             
             m_path_parameters = value.m_path_parameters;
             

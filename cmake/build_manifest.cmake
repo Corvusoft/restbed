@@ -14,6 +14,7 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/request_builder_impl.cpp
      ${SOURCE_DIR}/response.cpp
      ${SOURCE_DIR}/detail/response_impl.cpp
+     ${SOURCE_DIR}/detail/response_builder_impl.cpp
      ${SOURCE_DIR}/service.cpp
      ${SOURCE_DIR}/detail/service_impl.cpp
      ${SOURCE_DIR}/logger.cpp

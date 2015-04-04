@@ -12,6 +12,7 @@
 
 //System Namespaces
 using std::string;
+using std::function;
 using std::multimap;
 
 //Project Namespaces
@@ -40,11 +41,6 @@ namespace restbed
     Response::~Response( void )
     {
         return;
-    }
-    
-    Bytes Response::to_bytes( void ) const
-    {
-        return m_pimpl->to_bytes( );
     }
     
     Bytes Response::get_body( void ) const
@@ -82,14 +78,19 @@ namespace restbed
         return m_pimpl->get_headers( name );
     }
 
+    void Response::set_body( const string& value )
+    {
+        m_pimpl->set_body( value );
+    }
+
     void Response::set_body( const Bytes& value )
     {
         m_pimpl->set_body( value );
     }
-    
-    void Response::set_body( const string& value )
+
+    void Response::set_body( const function< Bytes ( void ) >& value )
     {
-        m_pimpl->set_body( value );
+        m_pimpl->set_body_callback( value );
     }
     
     void Response::set_version( const double value )

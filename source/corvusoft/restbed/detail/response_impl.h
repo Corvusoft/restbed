@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <functional>
 
 //Project Includes
 
@@ -42,10 +43,12 @@ namespace restbed
                 virtual ~ResponseImpl( void );
                 
                 //Functionality
-                framework::Bytes to_bytes( void ) const;
-                
+                bool has_header( const std::string& name ) const;
+
                 //Getters
                 framework::Bytes get_body( void ) const;
+
+                std::function< framework::Bytes ( void ) > get_body_callback( void ) const;
             
                 double get_version( void ) const;
             
@@ -60,9 +63,11 @@ namespace restbed
                 std::multimap< std::string, std::string > get_headers( const std::string& name ) const;
                 
                 //Setters
-                void set_body( const framework::Bytes& value );
-                
                 void set_body( const std::string& value );
+
+                void set_body( const framework::Bytes& value );
+
+                void set_body_callback( const std::function< framework::Bytes ( void ) >& value );
             
                 void set_version( const double value );
             
@@ -112,21 +117,6 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                bool has_header( const std::string& name ) const;
-                
-                std::string generate_status_section( void ) const;
-                
-                std::string generate_header_section( void ) const;
-                
-                std::string generate_default_date_header( void ) const;
-                
-                std::string generate_default_server_header( void ) const;
-                
-                std::string generate_default_connection_header( void ) const;
-                
-                std::string generate_default_content_type_header( void ) const;
-                
-                std::string generate_default_content_length_header( void ) const;
                 
                 //Getters
                 
@@ -136,6 +126,8 @@ namespace restbed
                 
                 //Properties
                 framework::Bytes m_body;
+
+                std::function< framework::Bytes ( void ) > m_body_callback;
             
                 double m_version;
             
