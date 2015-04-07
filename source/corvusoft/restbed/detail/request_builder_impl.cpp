@@ -30,6 +30,7 @@ using std::vector;
 using std::istream;
 using std::multimap;
 using std::make_pair;
+using std::to_string;
 using std::shared_ptr;
 using std::invalid_argument;
 using std::istreambuf_iterator;
@@ -101,8 +102,19 @@ namespace restbed
             set_protocol( parse_http_protocol( stream ) );
             set_version( parse_http_version( stream ) );
             set_headers( parse_http_headers( stream ) );
-            set_origin( socket->remote_endpoint( ).address( ).to_string( ) );
-            set_destination( socket->local_endpoint( ).address( ).to_string( ) );
+
+            auto endpoint = socket->remote_endpoint( );
+            auto address = endpoint.address( );
+            string value = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            value += ::to_string( endpoint.port( ) );
+            set_origin( value );
+
+            endpoint = socket->local_endpoint( );
+            address = endpoint.address( );
+            value = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            value += ::to_string( endpoint.port( ) );
+            set_destination( value );
+
             set_socket( socket, buffer );
         }
 
