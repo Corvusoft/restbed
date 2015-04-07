@@ -123,7 +123,9 @@ namespace restbed
                 void authentication_handler( const Request& request, Response& response );
                 
                 void error_handler( const int status_code, const Request& request, Response& response );
-                
+
+                void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
+
                 //Getters
                 
                 //Setters
@@ -138,7 +140,9 @@ namespace restbed
                 std::string m_root;
                 
                 int m_maximum_connections;
-                
+
+                long long m_connection_timeout;
+
                 std::list< Resource > m_resources;
                 
                 std::shared_ptr< Logger > m_log_handler;

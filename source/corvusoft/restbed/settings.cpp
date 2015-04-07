@@ -14,6 +14,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::chrono::seconds;
 
 //Project Namespaces
 using restbed::detail::SettingsImpl;
@@ -61,7 +62,12 @@ namespace restbed
     {
         return m_pimpl->get_maximum_connections( );
     }
-    
+
+    seconds Settings::get_connection_timeout( void ) const
+    {
+        return m_pimpl->get_connection_timeout( );
+    }
+
     string Settings::get_property( const string& name ) const
     {
         return m_pimpl->get_property( name );
@@ -91,7 +97,12 @@ namespace restbed
     {
         m_pimpl->set_maximum_connections( value );
     }
-    
+
+    void Settings::set_connection_timeout( const seconds& value )
+    {
+        m_pimpl->set_connection_timeout( value );
+    }
+
     void Settings::set_property( const string& name, const string& value )
     {
         m_pimpl->set_property( name, value );

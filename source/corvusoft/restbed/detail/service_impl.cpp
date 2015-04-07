@@ -38,6 +38,7 @@ using std::to_string;
 using std::exception;
 using std::shared_ptr;
 using std::make_shared;
+using std::runtime_error;
 using std::invalid_argument;
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -61,6 +62,7 @@ namespace restbed
             m_port( settings.get_port( ) ),
             m_root( settings.get_root( ) ),
             m_maximum_connections( settings.get_maximum_connections( ) ),
+            m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
             m_resources( ),
             m_log_handler( nullptr ),
             m_thread( nullptr ),
@@ -77,6 +79,7 @@ namespace restbed
             m_port( original.m_port ),
             m_root( original.m_root ),
             m_maximum_connections( original.m_maximum_connections ),
+            m_connection_timeout( original.m_connection_timeout ),
             m_resources( original.m_resources ),
             m_log_handler( original.m_log_handler ),
             m_thread( original.m_thread ),
@@ -235,6 +238,8 @@ namespace restbed
             m_resources = value.m_resources;
             
             m_log_handler = value.m_log_handler;
+
+            m_connection_timeout = value.m_connection_timeout;
             
             m_maximum_connections = value.m_maximum_connections;
             
@@ -274,64 +279,70 @@ namespace restbed
         {
             Request request;
             Response response;
-            
-            try
-            {
-                if ( error )
-                {
-                    throw asio::system_error( error );
-                }
-                
-                RequestBuilderImpl builder( socket );
-                request = builder.build( );
-                
-                Resource resource = resolve_resource_route( request );
-                
-                auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
-                builder.set_path_parameters( parameters );
-                
-                request = builder.build( );
 
-                m_authentication_handler( request, response );
-                
-                const int status = response.get_status_code( );
-                
-                if ( status == StatusCode::OK )
+            do
+            {
+                try
                 {
-                    log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
-                                                         request.get_method( ).to_string( ).data( ),
-                                                         request.get_path( ).data( ),
-                                                         request.get_origin( ).data( ) ) );
-                                                         
-                    response = invoke_method_handler( request, resource );
-                }
-                else
-                {
-                    log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
+                    if ( error )
+                    {
+                        throw asio::system_error( error );
+                    }
+
+                    set_socket_timeout( socket );
+                    
+                    RequestBuilderImpl builder( socket );
+                    request = builder.build( );
+                    
+                    Resource resource = resolve_resource_route( request );
+                    
+                    auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
+                    builder.set_path_parameters( parameters );
+                    
+                    request = builder.build( );
+
+                    m_authentication_handler( request, response );
+                    
+                    const int status = response.get_status_code( );
+                    
+                    if ( status == StatusCode::OK )
+                    {
+                        log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
                                                              request.get_method( ).to_string( ).data( ),
                                                              request.get_path( ).data( ),
                                                              request.get_origin( ).data( ) ) );
+                                                             
+                        response = invoke_method_handler( request, resource );
+                    }
+                    else
+                    {
+                        log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
+                                                                 request.get_method( ).to_string( ).data( ),
+                                                                 request.get_path( ).data( ),
+                                                                 request.get_origin( ).data( ) ) );
+                    }
                 }
-            }
-            catch ( const asio::system_error& se )
-            {
-                log( LogLevel::FATAL, se.what( ) );
-                response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
-            }
-            catch ( const StatusCode::Value status_code )
-            {
-                m_error_handler( status_code, request, response );
-            }
-            catch ( const exception& ex )
-            {
-                log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
-                                                     ex.what( ),
-                                                     RequestBuilderImpl::to_bytes( request ).data( ) ) );
+                catch ( const asio::system_error& se )
+                {
+                    log( LogLevel::FATAL, se.what( ) );
+                    response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
+                }
+                catch ( const StatusCode::Value status_code )
+                {
+                    m_error_handler( status_code, request, response );
+                }
+                catch ( const exception& ex )
+                {
+                    log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
+                                                         ex.what( ),
+                                                         RequestBuilderImpl::to_bytes( request ).data( ) ) );
 
-                m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
-            }
+                    m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
+                }
 
-            ResponseBuilderImpl::write( response, socket );
+                ResponseBuilderImpl::write( response, socket );
+            }
+            while ( "keep-alive" == String::lowercase( response.get_header( "Connection" ) ) );
 
             listen( );
         }
@@ -370,6 +381,11 @@ namespace restbed
                 m_log_handler->log( level, "%s", message.data( ) );
             }
         }
+
+        void ServiceImpl::authentication_handler( const Request&, Response& response )
+        {
+            response.set_status_code( StatusCode::OK );
+        }
         
         void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
         {
@@ -393,10 +409,27 @@ namespace restbed
             response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
             response.set_body( status_message );
         }
-        
-        void ServiceImpl::authentication_handler( const Request&, Response& response )
+
+        void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
         {
-            response.set_status_code( StatusCode::OK );
+            struct timeval value;
+            value.tv_usec = 0;
+            value.tv_sec = m_connection_timeout;
+
+            auto native_socket = socket->native( );
+            int status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+
+            if ( status == -1 )
+            {
+                throw runtime_error( "Failed to set socket receive timeout" );
+            }
+
+            status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+
+            if ( status == -1 )
+            {
+                throw runtime_error( "Failed to set socket send timeout" );
+            }
         }
     }
 }

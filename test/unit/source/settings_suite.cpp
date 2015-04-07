@@ -5,6 +5,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <chrono>
 
 //Project Includes
 #include <corvusoft/restbed/settings>
@@ -15,6 +16,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::chrono::seconds;
 
 //Project Namespaces
 using restbed::Settings;
@@ -34,6 +36,7 @@ SCENARIO( "constructor", "[settings]" )
                 REQUIRE( settings.get_port( ) == 80 );
                 REQUIRE( settings.get_root( ) == "/" );
                 REQUIRE( settings.get_maximum_connections( ) == 1024 );
+                REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
             }
         }
     }
@@ -48,6 +51,7 @@ SCENARIO( "copy constructor", "[settings]" )
         settings.set_root( "/events" );
         settings.set_maximum_connections( 30 );
         settings.set_property( "name", "value" );
+        settings.set_connection_timeout( seconds( 15 ) );
 
         WHEN( "i instantiate the object with the copy-constructor" )
         {
@@ -58,6 +62,7 @@ SCENARIO( "copy constructor", "[settings]" )
                 REQUIRE( settings.get_port( ) == 33 );
                 REQUIRE( settings.get_root( ) == "/events" );
                 REQUIRE( settings.get_maximum_connections( ) == 30 );
+                REQUIRE( settings.get_connection_timeout( ) == seconds( 15 ) );
                 REQUIRE( settings.get_property( "name" ) == "value" );
             }
         }
@@ -89,6 +94,7 @@ SCENARIO( "assignment-operator", "[settings]" )
         settings.set_root( "/events" );
         settings.set_maximum_connections( 23 );
         settings.set_property( "name", "value" );
+        settings.set_connection_timeout( seconds( 15 ) );
 
         WHEN( "i instantiate the object with the assignment-operator" )
         {
@@ -100,6 +106,7 @@ SCENARIO( "assignment-operator", "[settings]" )
                 REQUIRE( settings.get_root( ) == "/events" );
                 REQUIRE( settings.get_maximum_connections( ) == 23 );
                 REQUIRE( settings.get_property( "name" ) == "value" );
+                REQUIRE( settings.get_connection_timeout( ) == seconds( 15 ) );
             }
         }
     }
@@ -114,6 +121,7 @@ SCENARIO( "overwrite properties", "[settings]" )
             { "ROOT", "/" },
             { "MODE", "8" },
             { "PORT", "80" },
+            { "CONNECTION TIMEOUT", "10" },
             { "MAXIMUM CONNECTIONS", "1024" },
             { "VOYAGER 1", "124 AU" },
             { "VOYAGER 2", "101 AU" }
