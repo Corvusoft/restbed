@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  *
- * bug tracker issue #9
+ * bug tracker issue #98
  */
 
 //System Includes
@@ -25,41 +25,30 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-Response get_handler( const Request& request )
+TEST_CASE( "resource instance destroyed with bound method functors", "[resource]" )
 {
-    REQUIRE( "/uri test" == request.get_path( ) );
-    REQUIRE( "@30" == request.get_query_parameter( "ben crowhurst" ) );
-    
-    Response response;
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
-}
+    auto resource = make_shared< Resource >( );
 
-TEST_CASE( "encoded uri test", "[request]" )
-{
-    Resource resource;
-    resource.set_path( "uri test" );
-    resource.set_method_handler( "GET", &get_handler );
-    
     Settings settings;
-    settings.set_port( 8989 );
+    settings.set_port( 1984 );
     settings.set_mode( ASYNCHRONOUS );
-    
+
     auto service = make_shared< Service >( settings );
-    service->publish( resource );
-    
+    service->publish( *resource );
+
+    resource.reset( );
+
     service->start( );
 
     Http::Request request;
     request.method = "GET";
-    request.port = 8989;
+    request.port = 1984;
     request.host = "localhost";
-    request.path = "/uri%20test?ben+crowhurst=%4030";
+    request.path = "/";
 
     auto response = Http::get( request );
-    
-    REQUIRE( 200 == response.status_code );
-    
+
+    REQUIRE( 405 == response.status_code );
+
     service->stop( );
 }

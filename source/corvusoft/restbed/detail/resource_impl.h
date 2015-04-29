@@ -60,7 +60,7 @@ namespace restbed
                 std::function< Response ( const Request& ) > get_method_handler( const Method& verb ) const;
             
                 std::map< Method, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
-                
+
                 //Setters
                 void set_path( const std::string& value );
             
@@ -112,17 +112,13 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                void setup( void );
-                
-                std::string generate_allow_header_value( void );
-                
-                Response default_options_handler( const Request& request );
-            
-                Response default_method_not_allowed_handler( const Request& request );
-            
                 static std::string rebuild_path( const Request& request );
-                
+
                 static Response default_trace_handler( const Request& request );
+
+                static Response default_options_handler( const Request& request, const std::vector< std::string >& allow_methods );
+            
+                static Response default_method_not_allowed_handler( const Request& request, const std::vector< std::string >& allow_methods );
                 
                 //Getters
                 
@@ -137,7 +133,7 @@ namespace restbed
             
                 std::map< std::string, std::string > m_header_filters;
                 
-                std::map< std::string, std::function< Response ( const Request& ) > > m_method_handlers;
+                std::map< Method, std::function< Response ( const Request& ) > > m_method_handlers;
         };
     }
 }

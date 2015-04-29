@@ -44,7 +44,7 @@ Response xml_get_handler( const Request& )
     return response;
 }
 
-TEST_CASE( "overwrite existing resource", "resource" )
+TEST_CASE( "overwrite existing resource", "[resource]" )
 {
     Resource initial_resource;
     initial_resource.set_path( "TestResource" );

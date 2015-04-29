@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST_CASE( "mismatched resource path of equal path segments", "[service]" )
+TEST_CASE( "mismatched resource path of equal path segments", "[resource]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -61,7 +61,7 @@ TEST_CASE( "mismatched resource path of equal path segments", "[service]" )
     service->stop( );
 }
 
-TEST_CASE( "mismatched resource path of unequal path segments", "[service]" )
+TEST_CASE( "mismatched resource path of unequal path segments", "[resource]" )
 {
     Resource resource;
     resource.set_path( "test" );
@@ -89,7 +89,7 @@ TEST_CASE( "mismatched resource path of unequal path segments", "[service]" )
     service->stop( );
 }
 
-TEST_CASE( "matched resource path", "[service]" )
+TEST_CASE( "matched resource path", "[resource]" )
 {
     Resource resource;
     resource.set_path( "test" );

@@ -50,7 +50,7 @@ Response post_handler( const Request& request )
     return response;
 }
 
-TEST_CASE( "large request bodies being trimmed", "[service]" )
+TEST_CASE( "large request bodies being trimmed", "[request]" )
 {
     Resource resource;
     resource.set_path( "test" );

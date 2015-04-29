@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST_CASE( "content type present on empty response body", "[service]" )
+TEST_CASE( "content type present on empty response body", "[response]" )
 {
     Resource resource;
     resource.set_path( "test" );

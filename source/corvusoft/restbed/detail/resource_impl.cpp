@@ -47,7 +47,7 @@ namespace restbed
             m_header_filters( ),
             m_method_handlers( )
         {
-            setup( );
+            return;
         }
         
         ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_paths( original.m_paths ),
@@ -94,18 +94,68 @@ namespace restbed
         
         function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& verb ) const
         {
-            return m_method_handlers.at( verb.to_string( ) );
+            if ( m_method_handlers.count( verb ) not_eq 0 )
+            {
+                return m_method_handlers.at( verb );
+            }
+            else if ( verb == "TRACE" )
+            {
+                return &ResourceImpl::default_trace_handler;
+            }
+            else if ( verb == "OPTIONS" )
+            {
+                return bind( &ResourceImpl::default_options_handler, _1, m_allow_methods );
+            }
+            else
+            {
+                return bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
         }
         
         map< Method, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
         {
-            map< Method, function< Response ( const Request& ) > > handlers;
-            
-            for ( auto method_handler : m_method_handlers )
+            map< Method, function< Response ( const Request& ) > > handlers = m_method_handlers;
+
+            if ( handlers.count( "TRACE" ) == 0 )
             {
-                handlers[ method_handler.first ] = method_handler.second;
+                handlers[ "TRACE" ] = &ResourceImpl::default_trace_handler;
             }
-            
+
+            if ( handlers.count( "OPTIONS" ) == 0 )
+            {
+                handlers[ "OPTIONS" ] = bind( &ResourceImpl::default_options_handler, _1, m_allow_methods );
+            }
+
+            if ( handlers.count( "GET" ) == 0 )
+            {
+                handlers[ "GET" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
+
+            if ( handlers.count( "PUT" ) == 0 )
+            {
+                handlers[ "PUT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
+
+            if ( handlers.count( "POST" ) == 0 )
+            {
+                handlers[ "POST" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
+
+            if ( handlers.count( "HEAD" ) == 0 )
+            {
+                handlers[ "HEAD" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
+
+            if ( handlers.count( "DELETE" ) == 0 )
+            {
+                handlers[ "DELETE" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
+
+            if ( handlers.count( "CONNECT" ) == 0 )
+            {
+                handlers[ "CONNECT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
+            }
+
             return handlers;
         }
         
@@ -208,29 +258,14 @@ namespace restbed
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
         {
             m_paths = value.m_paths;
+
+            m_allow_methods = value.m_allow_methods;
             
             m_header_filters = value.m_header_filters;
             
             m_method_handlers = value.m_method_handlers;
             
             return *this;
-        }
-        
-        void ResourceImpl::setup( void )
-        {
-            m_method_handlers[ "TRACE" ] = &ResourceImpl::default_trace_handler;
-            m_method_handlers[ "OPTIONS" ] = bind( &ResourceImpl::default_options_handler, this, _1 );
-            m_method_handlers[ "GET" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
-            m_method_handlers[ "PUT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
-            m_method_handlers[ "POST" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
-            m_method_handlers[ "HEAD" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
-            m_method_handlers[ "DELETE" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
-            m_method_handlers[ "CONNECT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, this, _1 );
-        }
-        
-        string ResourceImpl::generate_allow_header_value( void )
-        {
-            return String::join( m_allow_methods, ", " );
         }
         
         string ResourceImpl::rebuild_path( const Request& request )
@@ -244,37 +279,37 @@ namespace restbed
             
             return request.get_path( ) + query;
         }
-        
-        Response ResourceImpl::default_options_handler( const Request& )
-        {
-            Response response;
-            response.set_status_code( StatusCode::OK );
-            response.set_header( "Allow", generate_allow_header_value( ) );
-            
-            return response;
-        }
-        
-        Response ResourceImpl::default_method_not_allowed_handler( const Request& )
-        {
-            Response response;
-            response.set_status_code( StatusCode::METHOD_NOT_ALLOWED );
-            response.set_header( "Allow", generate_allow_header_value( ) );
-            
-            return response;
-        }
-        
+
         Response ResourceImpl::default_trace_handler( const Request& request )
         {
             string path = rebuild_path( request );
-            
+
             string headers = String::join( request.get_headers( ), ": ", "\r\n" );
-            
+
             string body = String::format( "TRACE %s HTTP/1.1\r\n%s", path.data( ), headers.data( ) );
-            
+
             Response response;
             response.set_body( body );
             response.set_status_code( StatusCode::OK );
             response.set_header( "Content-Type", "message/http" );
+
+            return response;
+        }
+        
+        Response ResourceImpl::default_options_handler( const Request&, const vector< string >& allow_methods )
+        {
+            Response response;
+            response.set_status_code( StatusCode::OK );
+            response.set_header( "Allow", String::join( allow_methods, ", " ) );
+            
+            return response;
+        }
+        
+        Response ResourceImpl::default_method_not_allowed_handler( const Request&, const vector< string >& allow_methods )
+        {
+            Response response;
+            response.set_status_code( StatusCode::METHOD_NOT_ALLOWED );
+            response.set_header( "Allow", String::join( allow_methods, ", " ) );
             
             return response;
         }

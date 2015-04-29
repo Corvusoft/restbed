@@ -44,7 +44,7 @@ void error_handler( const int status_code, const Request&, /*out*/ Response& res
     response.set_body( StatusCode::to_string( status_code ) );
 }
 
-TEST_CASE( "overwrite existing resource", "[service]" )
+TEST_CASE( "overwrite existing resource", "[resource]" )
 {
     Resource resource;
     resource.set_path( "TestResource" );

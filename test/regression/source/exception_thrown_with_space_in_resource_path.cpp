@@ -33,7 +33,7 @@ Response get_handler( const Request& )
     return response;
 }
 
-TEST_CASE( "with space in path", "[service]" )
+TEST_CASE( "with space in path", "[resource]" )
 {
     Resource resource;
     resource.set_path( "test queue" );
@@ -62,7 +62,7 @@ TEST_CASE( "with space in path", "[service]" )
     service->stop( );
 }
 
-TEST_CASE( "without space in path", "[service]" )
+TEST_CASE( "without space in path", "[resource]" )
 {
     Resource resource;
     resource.set_path( "testQueue" );
