@@ -14,7 +14,6 @@
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/status_codes.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
@@ -99,7 +98,7 @@ namespace restbed
             }
             catch ( ... )
             {
-                log( LogLevel::WARNING, "Service failed graceful shutdown." );
+                log( Logger::Level::WARNING, "Service failed graceful shutdown." );
             }
         }
         
@@ -131,7 +130,7 @@ namespace restbed
                     break;
                     
                 default:
-                    log( LogLevel::FATAL, String::format( "Service failed, unknown service mode: %i",  m_mode ) );
+                    log( Logger::Level::FATAL, String::format( "Service failed, unknown service mode: %i",  m_mode ) );
             }
         }
         
@@ -152,7 +151,7 @@ namespace restbed
                 m_thread->join( );
             }
             
-            log( LogLevel::INFO, "Service stopped" );
+            log( Logger::Level::INFO, "Service stopped" );
         }
         
         void ServiceImpl::publish( const Resource& value )
@@ -190,12 +189,17 @@ namespace restbed
                 m_resources.push_back( resource );
             }
             
-            log( LogLevel::INFO, String::format( "Published '%s' resource", resource.get_path( ).data( ) ) );
+            log( Logger::Level::INFO, String::format( "Published '%s' resource", resource.get_path( ).data( ) ) );
         }
         
         void ServiceImpl::suppress( const Resource& value )
         {
-            auto position = find( m_resources.begin( ), m_resources.end( ), value );
+            auto position = find_if( m_resources.begin( ),
+                                     m_resources.end( ),
+                                     [&] ( const Resource & item )
+            {
+                return item == value;
+            } );
             
             if ( position not_eq m_resources.end( ) )
             {
@@ -203,11 +207,11 @@ namespace restbed
                 
                 m_resources.erase( position );
                 
-                log( LogLevel::INFO, String::format( "Suppressed '%s' resource", path.data( ) ) );
+                log( Logger::Level::INFO, String::format( "Suppressed '%s' resource", path.data( ) ) );
             }
             else
             {
-                log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found", value.get_path( ).data( ) ) );
+                log( Logger::Level::INFO, String::format( "Failed to suppress '%s' resource, not found", value.get_path( ).data( ) ) );
             }
         }
         
@@ -258,7 +262,7 @@ namespace restbed
         
         void ServiceImpl::start_synchronous( void )
         {
-            log( LogLevel::INFO, "Synchronous Service Started" );
+            log( Logger::Level::INFO, "Synchronous Service Started" );
 
             m_io_service->run( );
         }
@@ -271,7 +275,7 @@ namespace restbed
             
             m_thread = make_shared< thread >( task, m_io_service );
             
-            log( LogLevel::INFO, "Asynchronous Service Started" );
+            log( Logger::Level::INFO, "Asynchronous Service Started" );
         }
         
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
@@ -306,24 +310,24 @@ namespace restbed
                     
                     if ( status == 200 )
                     {
-                        log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
-                                                             request.get_method( ).data( ),
-                                                             request.get_path( ).data( ),
-                                                             request.get_origin( ).data( ) ) );
+                        log( Logger::Level::INFO, String::format( "Incoming %s request for '%s' resource from %s",
+                                                                  request.get_method( ).data( ),
+                                                                  request.get_path( ).data( ),
+                                                                  request.get_origin( ).data( ) ) );
                                                              
                         response = invoke_method_handler( request, resource );
                     }
                     else
                     {
-                        log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-                                                                 request.get_method( ).data( ),
-                                                                 request.get_path( ).data( ),
-                                                                 request.get_origin( ).data( ) ) );
+                        log( Logger::Level::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
+                                                                      request.get_method( ).data( ),
+                                                                      request.get_path( ).data( ),
+                                                                      request.get_origin( ).data( ) ) );
                     }
                 }
                 catch ( const asio::system_error& se )
                 {
-                    log( LogLevel::FATAL, se.what( ) );
+                    log( Logger::Level::FATAL, se.what( ) );
                     response.set_status_code( 500 );
                 }
                 catch ( const int status_code )
@@ -332,9 +336,9 @@ namespace restbed
                 }
                 catch ( const exception& ex )
                 {
-                    log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
-                                                         ex.what( ),
-                                                         RequestBuilderImpl::to_bytes( request ).data( ) ) );
+                    log( Logger::Level::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
+                                                               ex.what( ),
+                                                               RequestBuilderImpl::to_bytes( request ).data( ) ) );
 
                     m_error_handler( 500, request, response );
                 }
@@ -370,7 +374,7 @@ namespace restbed
             return callback( request );
         }
         
-        void ServiceImpl::log( const LogLevel level, const string& message )
+        void ServiceImpl::log( const Logger::Level level, const string& message )
         {
             if ( m_log_handler not_eq nullptr )
             {
@@ -391,10 +395,10 @@ namespace restbed
                                             iterator->second :
                                             "No Appropriate Status Message Found";
             
-            log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
-                                                  status_code,
-                                                  status_message.data( ),
-                                                  request.get_path( ).data( ) ) );
+            log( Logger::Level::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
+                                                       status_code,
+                                                       status_message.data( ),
+                                                       request.get_path( ).data( ) ) );
                                                   
             response.set_status_code( status_code );
             response.set_header( "Content-Type", "text/plain; charset=us-ascii" );

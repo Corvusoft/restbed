@@ -16,7 +16,6 @@ using std::vector;
 
 //Project Namespaces
 using restbed::Logger;
-using restbed::LogLevel;
 
 //External Namespaces
 
@@ -31,7 +30,7 @@ TestLogger::~TestLogger( void )
     return;
 }
 
-void TestLogger::log( const LogLevel, const string format, ... ) noexcept
+void TestLogger::log( const Logger::Level, const string format, ... ) noexcept
 {
     va_list arguments;
     
@@ -41,16 +40,19 @@ void TestLogger::log( const LogLevel, const string format, ... ) noexcept
     
     int status = vasprintf( &entry, format.data( ), arguments );
     
-    if ( status == -1 )
+    if ( status not_eq -1 )
     {
-        throw "Failed to copy log entry!";
+        m_log_entries.push_back( entry );
+
+        free( entry );
     }
-    
-    m_log_entries.push_back( entry );
-    
-    free( entry );
-    
+
     va_end( arguments );
+}
+
+void TestLogger::log_if( bool, const Logger::Level, const string, ... ) noexcept
+{
+    return;
 }
 
 const char* TestLogger::get_log_entry( void ) const

@@ -13,8 +13,6 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/response_builder_impl.cpp
      ${SOURCE_DIR}/service.cpp
      ${SOURCE_DIR}/detail/service_impl.cpp
-     ${SOURCE_DIR}/logger.cpp
-     ${SOURCE_DIR}/detail/logger_impl.cpp
      ${SOURCE_DIR}/detail/resource_matcher_impl.cpp
      ${SOURCE_DIR}/detail/path_parameter_impl.cpp
 )

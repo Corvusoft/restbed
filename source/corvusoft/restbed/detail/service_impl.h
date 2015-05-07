@@ -34,10 +34,7 @@ namespace restbed
     
     enum Mode :
     int;
-    
-    enum LogLevel :
-    int;
-    
+
     namespace detail
     {
         //Forward Declarations
@@ -118,7 +115,7 @@ namespace restbed
                 
                 Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
                 
-                void log( const LogLevel level, const std::string& message );
+                void log( const Logger::Level level, const std::string& message );
                 
                 void authentication_handler( const Request& request, Response& response );
                 

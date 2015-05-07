@@ -22,41 +22,35 @@
 namespace restbed
 {
     //Forward Declarations
-    enum LogLevel :
-    int;
-    
-    namespace detail
-    {
-        class LoggerImpl;
-    }
-    
+
     class Logger
     {
         public:
             //Friends
             
             //Definitions
+            enum Level : int
+            {
+                INFO = 0000,
+                DEBUG = 1000,
+                FATAL = 2000,
+                ERROR = 3000,
+                WARNING = 4000,
+                SECURITY = 5000
+            };
             
             //Constructors
-            Logger( void );
-            
-            Logger( const Logger& original );
-        
-            Logger( const detail::LoggerImpl& implementation );
-        
-            virtual ~Logger( void );
             
             //Functionality
-            virtual void log( const LogLevel level, const std::string format, ... ) noexcept;
+            virtual void log( const Level level, const std::string format, ... ) noexcept = 0;
             
-            virtual void log_if( bool expression, const LogLevel level, const std::string format, ... ) noexcept;
+            virtual void log_if( bool expression, const Level level, const std::string format, ... ) noexcept = 0;
             
             //Getters
             
             //Setters
             
             //Operators
-            Logger& operator =( const Logger& value );
             
             //Properties
             
@@ -66,6 +60,11 @@ namespace restbed
             //Definitions
             
             //Constructors
+            Logger( void ) = default;
+            
+            Logger( const Logger& original ) = default;
+        
+            virtual ~Logger( void ) = default;
             
             //Functionality
             
@@ -74,6 +73,7 @@ namespace restbed
             //Setters
             
             //Operators
+            Logger& operator =( const Logger& value ) = default;
             
             //Properties
             
@@ -93,7 +93,6 @@ namespace restbed
             //Operators
             
             //Properties
-            const std::unique_ptr< detail::LoggerImpl > m_pimpl;
     };
 }
 
