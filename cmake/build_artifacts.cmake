@@ -9,8 +9,6 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/log_level.h
      ${SOURCE_DIR}/status_code
      ${SOURCE_DIR}/status_code.h
-     ${SOURCE_DIR}/method
-     ${SOURCE_DIR}/method.h
      ${SOURCE_DIR}/resource
      ${SOURCE_DIR}/resource.h
      ${SOURCE_DIR}/request

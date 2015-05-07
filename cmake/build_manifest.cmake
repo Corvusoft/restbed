@@ -5,8 +5,6 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/settings_impl.cpp
      ${SOURCE_DIR}/status_code.cpp
      ${SOURCE_DIR}/detail/status_code_impl.cpp
-     ${SOURCE_DIR}/method.cpp
-     ${SOURCE_DIR}/detail/method_impl.cpp
      ${SOURCE_DIR}/resource.cpp
      ${SOURCE_DIR}/detail/resource_impl.cpp
      ${SOURCE_DIR}/request.cpp

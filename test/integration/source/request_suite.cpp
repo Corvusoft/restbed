@@ -5,7 +5,6 @@
 //System Includes
 
 //Project Includes
-#include <corvusoft/restbed/method>
 #include <corvusoft/restbed/request>
 
 //External Includes
@@ -14,7 +13,6 @@
 //System Namespaces
 
 //Project Namespaces
-using restbed::Method;
 using restbed::Request;
 
 //External Namespaces
@@ -29,7 +27,7 @@ SCENARIO( "constructor", "[request]" )
 
             THEN( "i should see default properties" )
             {
-                REQUIRE( request.get_method( ) == Method( "GET" ) );
+                REQUIRE( request.get_method( ) == "GET" );
             }
         }
     }
@@ -47,7 +45,7 @@ SCENARIO( "copy constructor", "[request]" )
 
             THEN( "i should see the same properties" )
             {
-                REQUIRE( request.get_method( ) == Method( "GET" ) );
+                REQUIRE( request.get_method( ) == "GET" );
             }
         }
     }
@@ -65,7 +63,7 @@ SCENARIO( "assignment-operator", "[request]" )
 
             THEN( "i should see the same properties" )
             {
-                REQUIRE( request.get_method( ) == Method( "GET" ) );
+                REQUIRE( request.get_method( ) == "GET" );
             }
         }
     }

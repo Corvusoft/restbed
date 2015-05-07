@@ -25,7 +25,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Method;
     class Request;
     class Response;
     
@@ -61,9 +60,9 @@ namespace restbed
             
             std::map< std::string, std::string > get_header_filters( void ) const;
             
-            std::function< Response ( const Request& ) > get_method_handler( const Method& method ) const;
+            std::function< Response ( const Request& ) > get_method_handler( const std::string& method ) const;
         
-            std::map< Method, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
+            std::map< std::string, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
         
             //Setters
             void set_path( const std::string& value );
@@ -74,9 +73,9 @@ namespace restbed
         
             void set_header_filters( const std::map< std::string, std::string >& values );
         
-            void set_method_handler( const Method& verb, const std::function< Response ( const Request& ) >& callback );
+            void set_method_handler( const std::string& method, const std::function< Response ( const Request& ) >& callback );
         
-            void set_method_handlers( const std::map< Method, std::function< Response ( const Request& ) > >& values );
+            void set_method_handlers( const std::map< std::string, std::function< Response ( const Request& ) > >& values );
         
             //Operators
             Resource& operator =( const Resource& value );

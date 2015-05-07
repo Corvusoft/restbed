@@ -6,6 +6,7 @@
 #include <istream>
 
 //Project Includes
+#include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 
@@ -305,7 +306,14 @@ namespace restbed
         
         void RequestImpl::set_method( const string& value )
         {
-            m_method = value;
+            const string method = String::uppercase( value );
+
+            if ( methods.count( method ) == 0 )
+            {
+                throw StatusCode::NOT_IMPLEMENTED;
+            }
+
+            m_method = method;
         }
         
         void RequestImpl::set_origin( const string& value )

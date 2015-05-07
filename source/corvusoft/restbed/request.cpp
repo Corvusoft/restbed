@@ -5,7 +5,6 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 
@@ -73,15 +72,15 @@ namespace restbed
     {
         return m_pimpl->get_body( delimiter );
     }
-
-    Method Request::get_method( void ) const
-    {
-        return m_pimpl->get_method( );
-    }
     
     double Request::get_version( void ) const
     {
         return m_pimpl->get_version( );
+    }
+
+    string Request::get_method( void ) const
+    {
+        return m_pimpl->get_method( );
     }
     
     string Request::get_path( void ) const
