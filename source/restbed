@@ -11,4 +11,4 @@
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/log_level.h"
-#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/status_codes.h"

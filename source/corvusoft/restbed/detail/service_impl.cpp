@@ -15,7 +15,7 @@
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/log_level.h"
-#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/status_codes.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
@@ -304,7 +304,7 @@ namespace restbed
                     
                     const int status = response.get_status_code( );
                     
-                    if ( status == StatusCode::OK )
+                    if ( status == 200 )
                     {
                         log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
                                                              request.get_method( ).data( ),
@@ -324,9 +324,9 @@ namespace restbed
                 catch ( const asio::system_error& se )
                 {
                     log( LogLevel::FATAL, se.what( ) );
-                    response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
+                    response.set_status_code( 500 );
                 }
-                catch ( const StatusCode::Value status_code )
+                catch ( const int status_code )
                 {
                     m_error_handler( status_code, request, response );
                 }
@@ -336,7 +336,7 @@ namespace restbed
                                                          ex.what( ),
                                                          RequestBuilderImpl::to_bytes( request ).data( ) ) );
 
-                    m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
+                    m_error_handler( 500, request, response );
                 }
 
                 ResponseBuilderImpl::write( response, socket );
@@ -358,7 +358,7 @@ namespace restbed
             }
             else
             {
-                throw StatusCode::NOT_FOUND;
+                throw 404;
             }
 
             return resource;
@@ -380,21 +380,16 @@ namespace restbed
 
         void ServiceImpl::authentication_handler( const Request&, Response& response )
         {
-            response.set_status_code( StatusCode::OK );
+            response.set_status_code( 200 );
         }
         
         void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
         {
-            string status_message = String::empty;
-            
-            try
-            {
-                status_message = StatusCode::to_string( status_code );
-            }
-            catch ( const invalid_argument& ia )
-            {
-                status_message = ia.what( );
-            }
+            const auto& iterator = status_codes.find( status_code );
+
+            const string status_message = ( iterator not_eq status_codes.end( ) ) ?
+                                            iterator->second :
+                                            "No Appropriate Status Message Found";
             
             log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
                                                   status_code,

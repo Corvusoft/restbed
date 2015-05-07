@@ -30,7 +30,7 @@ bool error_handler_called = false;
 
 Response faulty_method_handler( const Request& )
 {
-    throw StatusCode::SERVICE_UNAVAILABLE;
+    throw 503;
     
     Response response;
     return response;
@@ -41,7 +41,7 @@ void error_handler( const int status_code, const Request&, /*out*/ Response& res
     error_handler_called = true;
 
     response.set_status_code( status_code );
-    response.set_body( StatusCode::to_string( status_code ) );
+    response.set_body( status_codes.at( status_code ) );
 }
 
 TEST_CASE( "overwrite existing resource", "[resource]" )

@@ -28,7 +28,7 @@ using namespace framework;
 Response get_handler( const Request& )
 {
     Response response;
-    response.set_status_code( StatusCode::OK );
+    response.set_status_code( 200 );
 
     return response;
 }

@@ -11,7 +11,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
 
 //External Includes
@@ -183,7 +182,7 @@ namespace restbed
             }
             catch ( const invalid_argument& ia )
             {
-                throw StatusCode::BAD_REQUEST;
+                throw 400;
             }
             
             return result;

@@ -5,7 +5,7 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/status_codes.h"
 #include "corvusoft/restbed/detail/response_impl.h"
 
 //External Includes
@@ -31,7 +31,7 @@ namespace restbed
         ResponseImpl::ResponseImpl( void ) : m_body( ),
             m_body_callback( ),
             m_version( 1.1 ),
-            m_status_code( StatusCode::OK ),
+            m_status_code( 200 ),
             m_status_message( String::empty ),
             m_headers( )
         {
@@ -84,7 +84,11 @@ namespace restbed
 
             if ( m_status_message.empty( ) )
             {
-                status_message = StatusCode::to_string( m_status_code );
+                const auto& iterator = status_codes.find( m_status_code );
+
+                status_message = ( iterator not_eq status_codes.end( ) ) ?
+                                   iterator->second :
+                                   "No Appropriate Status Message Found";
             }
 
             return status_message;

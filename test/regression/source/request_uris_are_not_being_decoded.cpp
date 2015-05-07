@@ -31,7 +31,7 @@ Response get_handler( const Request& request )
     REQUIRE( "@30" == request.get_query_parameter( "ben crowhurst" ) );
     
     Response response;
-    response.set_status_code( StatusCode::OK );
+    response.set_status_code( 200 );
     
     return response;
 }
