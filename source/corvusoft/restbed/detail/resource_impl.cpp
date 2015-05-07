@@ -7,7 +7,7 @@
 #include <algorithm>
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/status_code.h"
@@ -92,8 +92,10 @@ namespace restbed
             return m_header_filters;
         }
         
-        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& verb ) const
+        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const string& method ) const
         {
+            const auto verb = String::uppercase( method );
+
             if ( m_method_handlers.count( verb ) not_eq 0 )
             {
                 return m_method_handlers.at( verb );
@@ -112,9 +114,9 @@ namespace restbed
             }
         }
         
-        map< Method, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
+        map< string, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
         {
-            map< Method, function< Response ( const Request& ) > > handlers = m_method_handlers;
+            map< string, function< Response ( const Request& ) > > handlers = m_method_handlers;
 
             if ( handlers.count( "TRACE" ) == 0 )
             {
@@ -213,21 +215,21 @@ namespace restbed
             }
         }
         
-        void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
+        void ResourceImpl::set_method_handler( const string& method, const function< Response ( const Request& ) >& callback )
         {
-            auto method = verb.to_string( );
+            auto verb = String::uppercase( method );
             
-            m_method_handlers[ method ] = callback;
+            m_method_handlers[ verb ] = callback;
             
-            auto iterator = find( m_allow_methods.begin( ), m_allow_methods.end( ), method );
+            auto iterator = find( m_allow_methods.begin( ), m_allow_methods.end( ), verb );
             
             if ( iterator == m_allow_methods.end( ) )
             {
-                m_allow_methods.push_back( method );
+                m_allow_methods.push_back( verb );
             }
         }
         
-        void ResourceImpl::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
+        void ResourceImpl::set_method_handlers( const map< string, function< Response ( const Request& ) > >& values )
         {
             for ( const auto value : values )
             {

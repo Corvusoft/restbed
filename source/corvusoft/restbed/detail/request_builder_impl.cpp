@@ -10,7 +10,6 @@
 #include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
@@ -151,7 +150,7 @@ namespace restbed
 
         string RequestBuilderImpl::generate_status_section( const Request& request )
         {
-            return String::format( "%s %s %s/%.1f\r\n", request.get_method( ).to_string( ).data( ),
+            return String::format( "%s %s %s/%.1f\r\n", request.get_method( ).data( ),
                                                         generate_path_section( request ).data( ),
                                                         request.get_protocol( ).data( ),
                                                         request.get_version( ) );

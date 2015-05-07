@@ -16,24 +16,15 @@ include_directories( ${catch_INCLUDE} )
 #
 # Build
 #
-add_executable( method_integration_test_suite ${SOURCE_DIR}/method_suite.cpp )
-add_executable( request_integration_test_suite ${SOURCE_DIR}/request_suite.cpp )
 add_executable( service_integration_test_suite ${SOURCE_DIR}/service_suite.cpp )
-add_executable( resource_integration_test_suite ${SOURCE_DIR}/resource_suite.cpp )
 add_executable( settings_integration_test_suite ${SOURCE_DIR}/settings_suite.cpp )
 
-target_link_libraries( method_integration_test_suite ${CMAKE_PROJECT_NAME} )
-target_link_libraries( request_integration_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( service_integration_test_suite ${CMAKE_PROJECT_NAME} )
-target_link_libraries( resource_integration_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( settings_integration_test_suite ${CMAKE_PROJECT_NAME} )
 
 #
 # Setup
 #
 enable_testing( )
-add_test( method_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/method_integration_test_suite )
-add_test( request_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/request_integration_test_suite )
 add_test( service_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_integration_test_suite )
-add_test( resource_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_integration_test_suite )
 add_test( settings_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/settings_integration_test_suite )

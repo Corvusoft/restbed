@@ -5,7 +5,6 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/resource.h"
@@ -66,12 +65,12 @@ namespace restbed
         return m_pimpl->get_header_filters( );
     }
     
-    function< Response ( const Request& ) > Resource::get_method_handler( const Method& method ) const
+    function< Response ( const Request& ) > Resource::get_method_handler( const string& method ) const
     {
         return m_pimpl->get_method_handler( method );
     }
     
-    map< Method, function< Response ( const Request& ) > > Resource::get_method_handlers( void ) const
+    map< string, function< Response ( const Request& ) > > Resource::get_method_handlers( void ) const
     {
         return m_pimpl->get_method_handlers( );
     }
@@ -96,12 +95,12 @@ namespace restbed
         m_pimpl->set_header_filters( values );
     }
     
-    void Resource::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
+    void Resource::set_method_handler( const string& method, const function< Response ( const Request& ) >& callback )
     {
-        m_pimpl->set_method_handler( verb, callback );
+        m_pimpl->set_method_handler( method, callback );
     }
     
-    void Resource::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
+    void Resource::set_method_handlers( const map< string, function< Response ( const Request& ) > >& values )
     {
         m_pimpl->set_method_handlers( values );
     }

@@ -9,7 +9,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/mode.h"
-#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
@@ -308,7 +307,7 @@ namespace restbed
                     if ( status == StatusCode::OK )
                     {
                         log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
-                                                             request.get_method( ).to_string( ).data( ),
+                                                             request.get_method( ).data( ),
                                                              request.get_path( ).data( ),
                                                              request.get_origin( ).data( ) ) );
                                                              
@@ -317,7 +316,7 @@ namespace restbed
                     else
                     {
                         log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-                                                                 request.get_method( ).to_string( ).data( ),
+                                                                 request.get_method( ).data( ),
                                                                  request.get_path( ).data( ),
                                                                  request.get_origin( ).data( ) ) );
                     }
@@ -366,12 +365,9 @@ namespace restbed
         }
         
         Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
-        {
-            Method method = request.get_method( );
-            
-            auto handle = resource.get_method_handler( method );
-            
-            return handle( request );
+        {   
+            auto callback = resource.get_method_handler( request.get_method( ) );   
+            return callback( request );
         }
         
         void ServiceImpl::log( const LogLevel level, const string& message )

@@ -24,7 +24,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Method;
     
     namespace detail
     {
@@ -61,9 +60,9 @@ namespace restbed
 
             framework::Bytes get_body( const std::string& delimiter ) const;
             
-            Method get_method( void ) const;
-            
             double get_version( void ) const;
+
+            std::string get_method( void ) const;
             
             std::string get_path( void ) const;
             

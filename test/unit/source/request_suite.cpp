@@ -34,6 +34,7 @@ SCENARIO( "constructor", "[request]" )
         {
             const Bytes body = request.get_body( );
             const string path = request.get_path( );
+            const string method = request.get_method( );
             const string origin = request.get_origin( );
             const string destination = request.get_destination( );
             const string protocol = request.get_protocol( );
@@ -53,6 +54,7 @@ SCENARIO( "constructor", "[request]" )
                 REQUIRE( protocol == "HTTP" );
                 REQUIRE( path_parameters.empty( ) );
                 REQUIRE( query_parameters.empty( ) );
+                REQUIRE( method == "GET" );
             }
         }
     }
@@ -80,6 +82,7 @@ SCENARIO( "copy constructor", "[request]" )
                 REQUIRE( copy.get_protocol( ) == "HTTP" );
                 REQUIRE( copy.get_path_parameters( ).empty( ) );
                 REQUIRE( copy.get_query_parameters( ).empty( ) );
+                REQUIRE( copy.get_method( ) == "GET" );
             }
         }
     }
@@ -122,6 +125,7 @@ SCENARIO( "assignment-operator", "[request]" )
                 REQUIRE( copy.get_protocol( ) == "HTTP" );
                 REQUIRE( copy.get_path_parameters( ).empty( ) );
                 REQUIRE( copy.get_query_parameters( ).empty( ) );
+                REQUIRE( copy.get_method( ) == "GET" );
             }
         }
     }

@@ -4,7 +4,7 @@
 
 #include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
-#include "corvusoft/restbed/method.h"
+#include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/service.h"
 #include "corvusoft/restbed/response.h"

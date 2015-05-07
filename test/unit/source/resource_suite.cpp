@@ -7,8 +7,11 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <functional>
 
 //Project Includes
+#include <corvusoft/restbed/request>
+#include <corvusoft/restbed/response>
 #include <corvusoft/restbed/resource>
 
 //External Includes
@@ -18,9 +21,12 @@
 using std::map;
 using std::string;
 using std::vector;
+using std::function;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::Request;
+using restbed::Response;
 using restbed::Resource;
 
 //External Namespaces
@@ -207,6 +213,62 @@ SCENARIO( "header filter case sensitivity", "[resource]" )
             THEN( "i should see 'application/xml'" )
             {
                 REQUIRE( resource.get_header_filter( "CoNtEnt-TYPE" ) == "application/xml" );
+            }
+        }
+    }
+}
+
+SCENARIO( "method handler", "[resource]" )
+{
+    GIVEN( "i setup a 'GET' method handler" )
+    {
+        Resource resource;
+        resource.set_method_handler( "GET", [ ]( const Request& ) -> Response {
+            Response response;
+            response.set_status_code( 501 );
+            return response;
+        } );
+
+        WHEN( "i invoke the 'GET' method handler" )
+        {
+            auto handler = resource.get_method_handler( "GET" );
+
+            Request request;
+            Response response = handler( request );
+
+            THEN( "i should see '3349' status code" )
+            {
+                REQUIRE( response.get_status_code( ) == 501 );
+            }
+        }
+    }
+}
+
+SCENARIO( "method handlers", "[resource]" )
+{
+    GIVEN( "i setup a method handlers" )
+    {
+        auto method_handler = [ ]( const Request& ) -> Response {
+            Response response;
+            response.set_status_code( 200 );
+            return response;
+        };
+
+        map< string, function< Response ( const Request& ) > > handlers;
+        handlers[ "GET" ] = method_handler;
+        handlers[ "PUT" ] = method_handler;
+        handlers[ "DELETE" ] = method_handler;
+
+        Resource resource;
+        resource.set_method_handlers( handlers );
+
+        WHEN( "i invoke get_method_handlers" )
+        {
+            THEN( "i should see 3 entries 'GET, PUT, DELETE'" )
+            {
+                REQUIRE( handlers.find( "GET" ) not_eq handlers.end( ) );
+                REQUIRE( handlers.find( "PUT" ) not_eq handlers.end( ) );
+                REQUIRE( handlers.find( "DELETE" ) not_eq handlers.end( ) );
             }
         }
     }
