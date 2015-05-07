@@ -5,8 +5,6 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/mode.h
      ${SOURCE_DIR}/settings
      ${SOURCE_DIR}/settings.h
-     ${SOURCE_DIR}/log_level
-     ${SOURCE_DIR}/log_level.h
      ${SOURCE_DIR}/status_codes
      ${SOURCE_DIR}/status_codes.h
      ${SOURCE_DIR}/resource
@@ -19,6 +17,4 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/service.h
      ${SOURCE_DIR}/logger
      ${SOURCE_DIR}/logger.h
-     ${SOURCE_DIR}/log_level
-     ${SOURCE_DIR}/log_level.h
 )

@@ -30,9 +30,6 @@ namespace restbed
     class Settings;
     
     enum Mode : int;
-
-    enum LogLevel :
-    int;
     
     namespace detail
     {

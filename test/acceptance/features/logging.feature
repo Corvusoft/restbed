@@ -9,7 +9,7 @@ Feature: Service logging
 		Given I have configured a service
 		And I publish a resource at "/table"
 		When I perform a HTTP "<method>" request to "/table"
-		Then I should see a log entry of "Incoming <method> request for '/table' resource from ::1"
+		Then I should see a log entry of "Incoming <method> request for '/table' resource from LocalHost"
 
 	Examples:
 		| method  |
@@ -25,7 +25,7 @@ Feature: Service logging
 	Scenario Outline: Unauthorised request logging
 		Given I have configured a Basic Auth service
 		When I perform a HTTP "<method>" request with username "Glasgow" and password "open sesame"
-		Then I should see a log entry of "Unauthorised <method> request for '/' resource from ::1"
+		Then I should see a log entry of "Unauthorised <method> request for '/' resource from LocalHost"
 
 	Examples:
 		| method  |

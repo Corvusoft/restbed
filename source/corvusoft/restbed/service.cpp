@@ -12,7 +12,6 @@
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 
 //External Includes
