@@ -45,7 +45,7 @@ Response post_handler( const Request& request )
     Bytes expectation( body, body + 492 );
     
     Response response;
-    response.set_status_code( ( request.get_body( ) == expectation ) ? StatusCode::CREATED : StatusCode::BAD_REQUEST );
+    response.set_status_code( ( request.get_body( ) == expectation ) ? 201 : 400 );
 
     return response;
 }

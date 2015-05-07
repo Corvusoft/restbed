@@ -35,7 +35,7 @@ using namespace framework;
 Response get_handler( const Request& request )
 {
     Response response;
-    response.set_status_code( StatusCode::OK );
+    response.set_status_code( 200 );
     
     multimap< string, string > expectation;
     expectation.insert( make_pair( "echo", "false" ) );
@@ -45,7 +45,7 @@ Response get_handler( const Request& request )
     
     if ( actual not_eq expectation )
     {
-        response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
+        response.set_status_code( 500 );
     }
 
     return response;

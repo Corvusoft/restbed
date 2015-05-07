@@ -29,7 +29,7 @@ shared_ptr< Service > m_service;
 Response json_get_handler( const Request& )
 {
     Response response;
-    response.set_status_code( StatusCode::OK );
+    response.set_status_code( 200 );
     response.set_body( "{ name: \"value\" }" );
     
     return response;
@@ -38,7 +38,7 @@ Response json_get_handler( const Request& )
 Response xml_get_handler( const Request& )
 {
     Response response;
-    response.set_status_code( StatusCode::UNAUTHORIZED );
+    response.set_status_code( 401 );
     response.set_body( "<name>value</value>" );
     
     return response;

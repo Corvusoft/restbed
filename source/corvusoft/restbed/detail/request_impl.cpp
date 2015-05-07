@@ -7,7 +7,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/methods.h"
-#include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes
@@ -293,7 +292,7 @@ namespace restbed
         {
             if ( value not_eq 1.0 and value not_eq 1.1 )
             {
-                throw StatusCode::HTTP_VERSION_NOT_SUPPORTED;
+                throw 505;
             }
             
             m_version = value;
@@ -310,7 +309,7 @@ namespace restbed
 
             if ( methods.count( method ) == 0 )
             {
-                throw StatusCode::NOT_IMPLEMENTED;
+                throw 501;
             }
 
             m_method = method;
@@ -328,14 +327,14 @@ namespace restbed
 
         void RequestImpl::set_protocol( const string& value )
         {
-            auto protocol = String::uppercase( value );
+            const auto& protocol = String::uppercase( value );
 
-            if ( protocol not_eq "HTTP" and protocol not_eq "HTTPS" )
+            if ( protocol not_eq "HTTP" )
             {
-                throw StatusCode::BAD_REQUEST;
+                throw 400;
             }
             
-            m_protocol = value;
+            m_protocol = protocol;
         }
 
         void RequestImpl::set_socket( const shared_ptr< tcp::socket >& value, asio::streambuf* buffer )

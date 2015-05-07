@@ -10,7 +10,6 @@
 #include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
-#include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
 #include "corvusoft/restbed/detail/path_parameter_impl.h"
 
@@ -292,7 +291,7 @@ namespace restbed
 
             Response response;
             response.set_body( body );
-            response.set_status_code( StatusCode::OK );
+            response.set_status_code( 200 );
             response.set_header( "Content-Type", "message/http" );
 
             return response;
@@ -301,7 +300,7 @@ namespace restbed
         Response ResourceImpl::default_options_handler( const Request&, const vector< string >& allow_methods )
         {
             Response response;
-            response.set_status_code( StatusCode::OK );
+            response.set_status_code( 200 );
             response.set_header( "Allow", String::join( allow_methods, ", " ) );
             
             return response;
@@ -310,7 +309,7 @@ namespace restbed
         Response ResourceImpl::default_method_not_allowed_handler( const Request&, const vector< string >& allow_methods )
         {
             Response response;
-            response.set_status_code( StatusCode::METHOD_NOT_ALLOWED );
+            response.set_status_code( 405 );
             response.set_header( "Allow", String::join( allow_methods, ", " ) );
             
             return response;
