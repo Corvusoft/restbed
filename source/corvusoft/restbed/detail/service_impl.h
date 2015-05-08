@@ -7,7 +7,6 @@
 
 //System Includes
 #include <list>
-#include <thread>
 #include <memory>
 #include <string>
 #include <functional>
@@ -31,9 +30,6 @@ namespace restbed
     class Request;
     class Resource;
     class Settings;
-    
-    enum Mode :
-    int;
 
     namespace detail
     {
@@ -55,23 +51,21 @@ namespace restbed
                 
                 //Functionality
                 void start( void );
-            
-                void start( const Mode& value );
                 
                 void stop( void );
                 
-                void publish( const Resource& value );
+                void publish( const std::shared_ptr< Resource >& value );
                 
-                void suppress( const Resource& value );
+                void suppress( const std::shared_ptr< Resource >& value );
                 
                 //Getters
                 
                 //Setters
                 void set_log_handler( const std::shared_ptr< Logger >& value );
                 
-                void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
+                void set_authentication_handler( const std::function< void ( const Request&, Response& ) >& value );
                 
-                void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
+                void set_error_handler( const std::function< void ( const int, const Request&, Response& ) >& value );
                 
                 //Operators                
                 ServiceImpl& operator =( const ServiceImpl& value );
@@ -105,10 +99,6 @@ namespace restbed
                 //Functionality
                 void listen( void );
                 
-                void start_synchronous( void );
-                
-                void start_asynchronous( void );
-                
                 void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
                 
                 Resource resolve_resource_route( const Request& request ) const;
@@ -130,8 +120,6 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                Mode m_mode;
-                
                 uint16_t m_port;
                 
                 std::string m_root;
@@ -140,13 +128,9 @@ namespace restbed
 
                 long long m_connection_timeout;
 
-                std::list< Resource > m_resources;
+                std::set< Resource > m_resources;
                 
                 std::shared_ptr< Logger > m_log_handler;
-                
-                std::shared_ptr< std::thread > m_thread;
-                
-                std::shared_ptr< asio::io_service::work > m_work;
                 
                 std::shared_ptr< asio::io_service > m_io_service;
                 

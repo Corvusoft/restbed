@@ -48,20 +48,16 @@ namespace restbed
             
             Service( const Service& original );
         
-            Service( const detail::ServiceImpl& implementation );
-            
             virtual ~Service( void );
             
             //Functionality
             void start( void );
-        
-            void start( const Mode& value );
             
             void stop( void );
             
-            void publish( const Resource& value );
+            void publish( const std::shared_ptr< Resource >& value );
             
-            void suppress( const Resource& value );
+            void suppress( const std::shared_ptr< Resource >& value );
             
             //Getters
             

@@ -8,7 +8,6 @@
 #include <functional>
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
@@ -28,7 +27,6 @@
 using std::list;
 using std::find;
 using std::bind;
-using std::thread;
 using std::string;
 using std::find_if;
 using std::function;
@@ -56,15 +54,12 @@ namespace restbed
 {
     namespace detail
     {
-        ServiceImpl::ServiceImpl( const Settings& settings ) : m_mode( settings.get_mode( ) ),
-            m_port( settings.get_port( ) ),
+        ServiceImpl::ServiceImpl( const Settings& settings ) : m_port( settings.get_port( ) ),
             m_root( settings.get_root( ) ),
             m_maximum_connections( settings.get_maximum_connections( ) ),
             m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
             m_resources( ),
             m_log_handler( nullptr ),
-            m_thread( nullptr ),
-            m_work( nullptr ),
             m_io_service( nullptr ),
             m_acceptor( nullptr ),
             m_authentication_handler( bind( &ServiceImpl::authentication_handler, this, _1, _2 ) ),
@@ -73,15 +68,12 @@ namespace restbed
             return;
         }
         
-        ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
-            m_port( original.m_port ),
+        ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_port( original.m_port ),
             m_root( original.m_root ),
             m_maximum_connections( original.m_maximum_connections ),
             m_connection_timeout( original.m_connection_timeout ),
             m_resources( original.m_resources ),
             m_log_handler( original.m_log_handler ),
-            m_thread( original.m_thread ),
-            m_work( original.m_work ),
             m_io_service( original.m_io_service ),
             m_acceptor( original.m_acceptor ),
             m_authentication_handler( original.m_authentication_handler ),
@@ -104,115 +96,66 @@ namespace restbed
         
         void ServiceImpl::start( void )
         {
-            start( m_mode );
-        }
+            // m_io_service = make_shared< io_service >( );
+            
+            // m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
+            
+            // m_acceptor->set_option( socket_base::reuse_address( true ) );
+            
+            // m_acceptor->listen( m_maximum_connections );
+            
+            // listen( );
 
-        void ServiceImpl::start( const Mode& value )
-        {
-            m_io_service = make_shared< io_service >( );
-            
-            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
-            
-            m_acceptor->set_option( socket_base::reuse_address( true ) );
-            
-            m_acceptor->listen( m_maximum_connections );
-            
-            listen( );
-            
-            switch ( value )
-            {
-                case SYNCHRONOUS:
-                    start_synchronous( );
-                    break;
-                    
-                case ASYNCHRONOUS:
-                    start_asynchronous( );
-                    break;
-                    
-                default:
-                    log( Logger::Level::FATAL, String::format( "Service failed, unknown service mode: %i",  m_mode ) );
-            }
+            // log( Logger::Level::INFO, "Service Started" );
+
+            // m_io_service->run( );
+
+            // log( Logger::Level::INFO, "Service Stopped" );
         }
         
         void ServiceImpl::stop( void )
         {
-            if ( m_work not_eq nullptr )
-            {
-                m_work.reset( );
-            }
-            
-            if ( m_io_service not_eq nullptr )
-            {
-                m_io_service->stop( );
-            }
-            
-            if ( m_thread not_eq nullptr and m_thread->joinable( ) )
-            {
-                m_thread->join( );
-            }
-            
-            log( Logger::Level::INFO, "Service stopped" );
+            // if ( m_io_service not_eq nullptr )
+            // {
+            //     m_io_service->stop( );
+            // }
+
+            ///acceptor?
+
+            // log( Logger::Level::INFO, "Service stopped" );
         }
         
-        void ServiceImpl::publish( const Resource& value )
+        void ServiceImpl::publish( const shared_ptr< Resource >& value )
         {
-            auto paths = value.get_paths( );
-            
-            if ( paths.empty( ) )
-            {
-                paths.push_back( m_root );
-            }
-            else if ( m_root not_eq "/" )
-            {
-                for ( auto& path : paths )
-                {
-                    path = String::format( "/%s/%s", m_root.data( ), path.data( ) );
-                }
-            }
-            
-            Resource resource( value );
-            resource.set_paths( paths );
-            
-            auto iterator = find_if( m_resources.begin( ),
-                                     m_resources.end( ),
-                                     [&] ( const Resource & item )
-            {
-                return item == resource;
-            } );
-            
-            if ( iterator not_eq m_resources.end( ) )
-            {
-                *iterator = resource;
-            }
-            else
-            {
-                m_resources.push_back( resource );
-            }
-            
-            log( Logger::Level::INFO, String::format( "Published '%s' resource", resource.get_path( ).data( ) ) );
+            //if ( not has_unique_paths( value.get_paths( ) ) )
+            //{
+            //    throw invalid_argument( "Resource would pollute namespace. Please ensure all resources have unique paths." );
+            //}
+
+            //const auto& paths = resource->get_paths( );
+            //m_paths.insert( paths.begin( ), paths.end( ) );
+
+            //m_resources.push_back( value );
+
+            //log( Logger::Level::INFO,
+            //     String::format( "Published resource at '%s'", String::join( resource.get_paths( ), ", " ) ) );
+
+            //no need to check for root path.  before running resource match make sure it has the /root
+            //otherwise call service->not_found_handler
         }
         
-        void ServiceImpl::suppress( const Resource& value )
+        void ServiceImpl::suppress( const shared_ptr< Resource >& value )
         {
-            auto position = find_if( m_resources.begin( ),
-                                     m_resources.end( ),
-                                     [&] ( const Resource & item )
-            {
-                return item == value;
-            } );
-            
-            if ( position not_eq m_resources.end( ) )
-            {
-                string path = position->get_path( );
-                
-                m_resources.erase( position );
-                
-                log( Logger::Level::INFO, String::format( "Suppressed '%s' resource", path.data( ) ) );
-            }
-            else
-            {
-                log( Logger::Level::INFO, String::format( "Failed to suppress '%s' resource, not found", value.get_path( ).data( ) ) );
-            }
+            //if ( m_resource.erase( value ) )
+            //{
+            //    log( Logger::Level::INFO,
+            //         String::format( "Resource with identifier '%s' suppressed.", value.get_id( ).data( ) ) );
+            //}
+            //else
+            //{
+            //    log( Logger::Level::INFO,
+            //         String::format( "Failed to suppress resource with identifier '%s'; Not Found.", value.get_id( ).data( ) ) );
+            //}
         }
         
         void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
@@ -220,20 +163,18 @@ namespace restbed
             m_log_handler = value;
         }
         
-        void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
+        void ServiceImpl::set_authentication_handler( const function< void ( const Request&, Response& ) >& value )
         {
             m_authentication_handler = value;
         }
         
-        void ServiceImpl::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
+        void ServiceImpl::set_error_handler( const function< void ( const int, const Request&, Response& ) >& value )
         {
             m_error_handler = value;
         }
         
         ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
         {
-            m_mode = value.m_mode;
-            
             m_port = value.m_port;
             
             m_root = value.m_root;
@@ -255,176 +196,158 @@ namespace restbed
         
         void ServiceImpl::listen( void )
         {
-            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+            // auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
             
-            m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
+            // m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
-        
-        void ServiceImpl::start_synchronous( void )
-        {
-            log( Logger::Level::INFO, "Synchronous Service Started" );
 
-            m_io_service->run( );
-        }
-        
-        void ServiceImpl::start_asynchronous( void )
-        {
-            m_work = make_shared< io_service::work >( *m_io_service );
-            
-            auto task = static_cast< size_t ( io_service::* )( ) >( &io_service::run );
-            
-            m_thread = make_shared< thread >( task, m_io_service );
-            
-            log( Logger::Level::INFO, "Asynchronous Service Started" );
-        }
-        
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         {
-            Request request;
-            Response response;
+            // Request request;
+            // Response response;
 
-            do
-            {
-                try
-                {
-                    if ( error )
-                    {
-                        throw asio::system_error( error );
-                    }
+            // do
+            // {
+            //     try
+            //     {
+            //         if ( error )
+            //         {
+            //             throw asio::system_error( error );
+            //         }
 
-                    set_socket_timeout( socket );
+            //         set_socket_timeout( socket );
                     
-                    RequestBuilderImpl builder( socket );
-                    request = builder.build( );
+            //         RequestBuilderImpl builder( socket );
+            //         request = builder.build( );
                     
-                    Resource resource = resolve_resource_route( request );
+            //         Resource resource = resolve_resource_route( request );
                     
-                    auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
-                    builder.set_path_parameters( parameters );
+            //         auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
+            //         builder.set_path_parameters( parameters );
                     
-                    request = builder.build( );
+            //         request = builder.build( );
 
-                    m_authentication_handler( request, response );
+            //         m_authentication_handler( request, response );
                     
-                    const int status = response.get_status_code( );
+            //         const int status = response.get_status_code( );
                     
-                    if ( status == 200 )
-                    {
-                        log( Logger::Level::INFO, String::format( "Incoming %s request for '%s' resource from %s",
-                                                                  request.get_method( ).data( ),
-                                                                  request.get_path( ).data( ),
-                                                                  request.get_origin( ).data( ) ) );
+            //         if ( status == 200 )
+            //         {
+            //             log( Logger::Level::INFO, String::format( "Incoming %s request for '%s' resource from %s",
+            //                                                       request.get_method( ).data( ),
+            //                                                       request.get_path( ).data( ),
+            //                                                       request.get_origin( ).data( ) ) );
                                                              
-                        response = invoke_method_handler( request, resource );
-                    }
-                    else
-                    {
-                        log( Logger::Level::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-                                                                      request.get_method( ).data( ),
-                                                                      request.get_path( ).data( ),
-                                                                      request.get_origin( ).data( ) ) );
-                    }
-                }
-                catch ( const asio::system_error& se )
-                {
-                    log( Logger::Level::FATAL, se.what( ) );
-                    response.set_status_code( 500 );
-                }
-                catch ( const int status_code )
-                {
-                    m_error_handler( status_code, request, response );
-                }
-                catch ( const exception& ex )
-                {
-                    log( Logger::Level::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
-                                                               ex.what( ),
-                                                               RequestBuilderImpl::to_bytes( request ).data( ) ) );
+            //             response = invoke_method_handler( request, resource );
+            //         }
+            //         else
+            //         {
+            //             log( Logger::Level::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
+            //                                                           request.get_method( ).data( ),
+            //                                                           request.get_path( ).data( ),
+            //                                                           request.get_origin( ).data( ) ) );
+            //         }
+            //     }
+            //     catch ( const asio::system_error& se )
+            //     {
+            //         log( Logger::Level::FATAL, se.what( ) );
+            //         response.set_status_code( 500 );
+            //     }
+            //     catch ( const int status_code )
+            //     {
+            //         m_error_handler( status_code, request, response );
+            //     }
+            //     catch ( const exception& ex )
+            //     {
+            //         log( Logger::Level::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
+            //                                                    ex.what( ),
+            //                                                    RequestBuilderImpl::to_bytes( request ).data( ) ) );
 
-                    m_error_handler( 500, request, response );
-                }
+            //         m_error_handler( 500, request, response );
+            //     }
 
-                ResponseBuilderImpl::write( response, socket );
-            }
-            while ( "keep-alive" == String::lowercase( response.get_header( "Connection" ) ) );
+            //     ResponseBuilderImpl::write( response, socket );
+            // }
+            // while ( "keep-alive" == String::lowercase( response.get_header( "Connection" ) ) );
 
-            listen( );
+            // listen( );
         }
         
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
         {
-            Resource resource;
+            // Resource resource;
             
-            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) );
+            // auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) );
             
-            if ( iterator not_eq m_resources.end( ) )
-            {
-                resource = *iterator;
-            }
-            else
-            {
-                throw 404;
-            }
+            // if ( iterator not_eq m_resources.end( ) )
+            // {
+            //     resource = *iterator;
+            // }
+            // else
+            // {
+            //     throw 404;
+            // }
 
-            return resource;
+            // return resource;
         }
         
         Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
         {   
-            auto callback = resource.get_method_handler( request.get_method( ) );   
-            return callback( request );
+            // auto callback = resource.get_method_handler( request.get_method( ) );   
+            // return callback( request );
         }
         
         void ServiceImpl::log( const Logger::Level level, const string& message )
         {
-            if ( m_log_handler not_eq nullptr )
-            {
-                m_log_handler->log( level, "%s", message.data( ) );
-            }
+            // if ( m_log_handler not_eq nullptr )
+            // {
+            //     m_log_handler->log( level, "%s", message.data( ) );
+            // }
         }
 
         void ServiceImpl::authentication_handler( const Request&, Response& response )
         {
-            response.set_status_code( 200 );
+            // response.set_status_code( 200 );
         }
         
         void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
         {
-            const auto& iterator = status_codes.find( status_code );
+            // const auto& iterator = status_codes.find( status_code );
 
-            const string status_message = ( iterator not_eq status_codes.end( ) ) ?
-                                            iterator->second :
-                                            "No Appropriate Status Message Found";
+            // const string status_message = ( iterator not_eq status_codes.end( ) ) ?
+            //                                 iterator->second :
+            //                                 "No Appropriate Status Message Found";
             
-            log( Logger::Level::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
-                                                       status_code,
-                                                       status_message.data( ),
-                                                       request.get_path( ).data( ) ) );
+            // log( Logger::Level::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
+            //                                            status_code,
+            //                                            status_message.data( ),
+            //                                            request.get_path( ).data( ) ) );
                                                   
-            response.set_status_code( status_code );
-            response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
-            response.set_body( status_message );
+            // response.set_status_code( status_code );
+            // response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
+            // response.set_body( status_message );
         }
 
         void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
         {
-            struct timeval value;
-            value.tv_usec = 0;
-            value.tv_sec = m_connection_timeout;
+            // struct timeval value;
+            // value.tv_usec = 0;
+            // value.tv_sec = m_connection_timeout;
 
-            auto native_socket = socket->native( );
-            int status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+            // auto native_socket = socket->native( );
+            // int status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
 
-            if ( status == -1 )
-            {
-                throw runtime_error( "Failed to set socket receive timeout" );
-            }
+            // if ( status == -1 )
+            // {
+            //     throw runtime_error( "Failed to set socket receive timeout" );
+            // }
 
-            status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+            // status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
 
-            if ( status == -1 )
-            {
-                throw runtime_error( "Failed to set socket send timeout" );
-            }
+            // if ( status == -1 )
+            // {
+            //     throw runtime_error( "Failed to set socket send timeout" );
+            // }
         }
     }
 }

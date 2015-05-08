@@ -3,55 +3,45 @@
  */
 
 //System Includes
-#include <regex>
-#include <algorithm>
+#include <stdexcept>
 
 //Project Includes
 #include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
-#include "corvusoft/restbed/detail/path_parameter_impl.h"
 
 //External Includes
-#include <corvusoft/framework/map>
-#include <corvusoft/framework/regex>
 #include <corvusoft/framework/string>
+#include <corvusoft/framework/unique_id>
 
 //System Namespaces
-using std::map;
-using std::bind;
-using std::find;
-using std::regex;
+using std::set;
+using std::pair;
 using std::string;
-using std::vector;
 using std::function;
-using std::regex_error;
+using std::multimap;
 using std::invalid_argument;
-using std::placeholders::_1;
 
 //Project Namespaces
 
 //External Namespaces
-using framework::Map;
-using framework::Regex;
 using framework::String;
+using framework::UniqueId;
 
 namespace restbed
 {
     namespace detail
     {
-        ResourceImpl::ResourceImpl( void ) : m_paths( ),
-            m_allow_methods( { "OPTIONS", "TRACE" } ),
-            m_header_filters( ),
+        ResourceImpl::ResourceImpl( void ) : m_id( UniqueId::generate( ).to_string( ) ),
+            m_paths( ),
             m_method_handlers( )
         {
             return;
         }
         
-        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_paths( original.m_paths ),
-            m_allow_methods( original.m_allow_methods ),
-            m_header_filters( original.m_header_filters ),
+        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_id( original.m_id ),
+            m_paths( original.m_paths ),
             m_method_handlers( original.m_method_handlers )
         {
             return;
@@ -62,257 +52,98 @@ namespace restbed
             return;
         }
 
-        string ResourceImpl::get_path( void ) const
+        const string& ResourceImpl::get_id( void ) const
         {
-            return m_paths.empty( ) ? String::empty : m_paths.front( );
+            return m_id;
         }
         
-        vector< string > ResourceImpl::get_paths( void ) const
+        const set< string >& ResourceImpl::get_paths( void ) const
         {
             return m_paths;
         }
         
-        string ResourceImpl::get_header_filter( const string& name ) const
+        multimap< string, pair< multimap< string, string >, function< Response ( const Request& ) > > >
+        ResourceImpl::get_method_handlers( const string& method ) const
         {
-            string filter = String::empty;
-            
-            const auto iterator = Map::find_ignoring_case( name, m_header_filters );
-            
-            if ( iterator not_eq m_header_filters.end( ) )
+            //this return argument stinks
+            if ( method.empty( ) )
             {
-                filter = iterator->second;
+                return m_method_handlers;
             }
-            
-            return filter;
+
+            const string verb = String::uppercase( method );
+
+            if ( m_method_handlers.count( verb ) == 0 )
+            {
+                throw invalid_argument(
+                    String::format( "Resource has no handler associated with HTTP method '%s'.", verb.data( ) )
+                );
+            }
+
+            return decltype( m_method_handlers )( m_method_handlers.lower_bound( verb ),
+                                                  m_method_handlers.upper_bound( verb ) );
         }
         
-        map< string, string > ResourceImpl::get_header_filters( void ) const
+        void ResourceImpl::set_paths( const set< string >& values )
         {
-            return m_header_filters;
+            m_paths = values;
         }
         
-        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const string& method ) const
+        void ResourceImpl::set_method_handler( const string& method,
+                                               const multimap< string, string >& filters,
+                                               const function< Response ( const Request& ) >& callback )
         {
-            const auto verb = String::uppercase( method );
+            const string verb = String::uppercase( method );
 
-            if ( m_method_handlers.count( verb ) not_eq 0 )
+            if ( methods.count( verb ) == 0 )
             {
-                return m_method_handlers.at( verb );
-            }
-            else if ( verb == "TRACE" )
-            {
-                return &ResourceImpl::default_trace_handler;
-            }
-            else if ( verb == "OPTIONS" )
-            {
-                return bind( &ResourceImpl::default_options_handler, _1, m_allow_methods );
-            }
-            else
-            {
-                return bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-        }
-        
-        map< string, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
-        {
-            map< string, function< Response ( const Request& ) > > handlers = m_method_handlers;
-
-            if ( handlers.count( "TRACE" ) == 0 )
-            {
-                handlers[ "TRACE" ] = &ResourceImpl::default_trace_handler;
-            }
-
-            if ( handlers.count( "OPTIONS" ) == 0 )
-            {
-                handlers[ "OPTIONS" ] = bind( &ResourceImpl::default_options_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "GET" ) == 0 )
-            {
-                handlers[ "GET" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "PUT" ) == 0 )
-            {
-                handlers[ "PUT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "POST" ) == 0 )
-            {
-                handlers[ "POST" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "HEAD" ) == 0 )
-            {
-                handlers[ "HEAD" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "DELETE" ) == 0 )
-            {
-                handlers[ "DELETE" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "CONNECT" ) == 0 )
-            {
-                handlers[ "CONNECT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            return handlers;
-        }
-        
-        void ResourceImpl::set_path( const string& value )
-        {
-            m_paths.clear( );
-            m_paths.push_back( value );
-        }
-        
-        void ResourceImpl::set_paths( const vector< string >& values )
-        {
-            for ( auto value : values )
-            {
-                auto path = String::split( value, '/' );
-                
-                for ( auto directory : path )
-                {
-                    string pattern = PathParameterImpl::parse( directory );
-                    
-                    if ( not Regex::is_valid( pattern ) )
-                    {
-                        throw invalid_argument( String::empty );
-                    }
-                }
-                
-                
-                m_paths.push_back( value );
-            }
-        }
-        
-        void ResourceImpl::set_header_filter( const string& name, const string& value )
-        {
-            if ( not Regex::is_valid( value ) )
-            {
-                throw invalid_argument( String::empty );
+                throw invalid_argument(
+                    String::format( "Resource method handler set with an unsupported HTTP method '%s'.", verb.data( ) )
+                );
             }
             
-            auto entry = Map::find_ignoring_case( name, m_header_filters );
-            
-            if ( entry not_eq m_header_filters.end( ) )
-            {
-                entry->second = value;
-            }
-            else
-            {
-                m_header_filters[ name ] = value;
-            }
+            m_method_handlers.insert( make_pair( verb, make_pair( filters, callback ) ) );
         }
-        
-        void ResourceImpl::set_header_filters( const map< string, string >& values )
+
+        void ResourceImpl::set_authentication_handler( const function< void ( const Request&, Response& ) >& value )
         {
-            for ( auto value : values )
-            {
-                set_header_filter( value.first, value.second );
-            }
+            //m_authentication_handler = value;
         }
-        
-        void ResourceImpl::set_method_handler( const string& method, const function< Response ( const Request& ) >& callback )
+
+        void ResourceImpl::set_error_handler( const function< void ( const int, const Request&, Response& ) >& value )
         {
-            auto verb = String::uppercase( method );
-            
-            m_method_handlers[ verb ] = callback;
-            
-            auto iterator = find( m_allow_methods.begin( ), m_allow_methods.end( ), verb );
-            
-            if ( iterator == m_allow_methods.end( ) )
-            {
-                m_allow_methods.push_back( verb );
-            }
-        }
-        
-        void ResourceImpl::set_method_handlers( const map< string, function< Response ( const Request& ) > >& values )
-        {
-            for ( const auto value : values )
-            {
-                set_method_handler( value.first, value.second );
-            }
-        }
-        
-        bool ResourceImpl::operator <( const ResourceImpl& value ) const
-        {
-            return m_paths < value.m_paths;
+            //m_error_handler = value;
         }
         
         bool ResourceImpl::operator >( const ResourceImpl& value ) const
         {
-            return m_paths > value.m_paths;
+            return UniqueId( m_id ) > UniqueId( value.m_id );
         }
-        
+
+        bool ResourceImpl::operator <( const ResourceImpl& value ) const
+        {
+            return UniqueId( m_id ) < UniqueId( value.m_id );
+        }
+
         bool ResourceImpl::operator ==( const ResourceImpl& value ) const
         {
-            return m_paths == value.m_paths and m_header_filters == value.m_header_filters;
+            return m_id == value.m_id;
         }
         
         bool ResourceImpl::operator !=( const ResourceImpl& value ) const
         {
-            return not ( *this == value );
+            return m_id not_eq value.m_id;
         }
         
         ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
         {
+            m_id = value.m_id;
+
             m_paths = value.m_paths;
 
-            m_allow_methods = value.m_allow_methods;
-            
-            m_header_filters = value.m_header_filters;
-            
             m_method_handlers = value.m_method_handlers;
             
             return *this;
-        }
-        
-        string ResourceImpl::rebuild_path( const Request& request )
-        {
-            string query = String::join( request.get_query_parameters( ), "=", "&" );
-            
-            if ( not query.empty( ) )
-            {
-                query = "?" + query;
-            }
-            
-            return request.get_path( ) + query;
-        }
-
-        Response ResourceImpl::default_trace_handler( const Request& request )
-        {
-            string path = rebuild_path( request );
-
-            string headers = String::join( request.get_headers( ), ": ", "\r\n" );
-
-            string body = String::format( "TRACE %s HTTP/1.1\r\n%s", path.data( ), headers.data( ) );
-
-            Response response;
-            response.set_body( body );
-            response.set_status_code( 200 );
-            response.set_header( "Content-Type", "message/http" );
-
-            return response;
-        }
-        
-        Response ResourceImpl::default_options_handler( const Request&, const vector< string >& allow_methods )
-        {
-            Response response;
-            response.set_status_code( 200 );
-            response.set_header( "Allow", String::join( allow_methods, ", " ) );
-            
-            return response;
-        }
-        
-        Response ResourceImpl::default_method_not_allowed_handler( const Request&, const vector< string >& allow_methods )
-        {
-            Response response;
-            response.set_status_code( 405 );
-            response.set_header( "Allow", String::join( allow_methods, ", " ) );
-            
-            return response;
         }
     }
 }

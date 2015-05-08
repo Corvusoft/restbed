@@ -43,8 +43,6 @@ namespace restbed
             
             Response( const Response& original );
         
-            Response( const detail::ResponseImpl& implementation );
-            
             virtual ~Response( void );
             
             //Functionality

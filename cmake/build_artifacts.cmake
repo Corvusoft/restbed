@@ -1,8 +1,6 @@
 # Copyright (c) 2013, 2014, 2015 Corvusoft
 
 set( FRAMEWORK_ARTIFACTS
-     ${SOURCE_DIR}/mode
-     ${SOURCE_DIR}/mode.h
      ${SOURCE_DIR}/settings
      ${SOURCE_DIR}/settings.h
      ${SOURCE_DIR}/status_codes
