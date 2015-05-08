@@ -202,7 +202,67 @@ namespace restbed
         }
 
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
+        try
         {
+            // Session session;
+            // session.m_pimpl->set_socket( socket ); //parses incoming request.
+            // //session.m_pimpl->set_service( m_ioservice );
+            // //session.m_pimpl->set_acceptor( m_acceptor );
+
+            // m_authentication_handler( session );
+
+            // if ( not m_authentication_handler( session ) )
+            // {
+            //     return;
+            // }
+
+            // const auto resource = find_matching_resource_by_path( session );
+
+            // if ( resource == nullptr )
+            // {
+            //     return m_not_found_handler( session );
+            // }
+
+            // const auto method_handler = find_first_matching_method_handler_by_filters( resource );
+
+            // if ( method_handler == nullptr )
+            // {
+            //     if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
+            //     {
+            //         //resource has m_method_not_implemented_handler )
+            //         m_method_not_implemented_handler( session );
+            //         return;
+            //     }
+            //     else
+            //     {
+            //         //if ( resource has method_not_allowed_handler )
+            //         m_method_not_allowed_handler( session );
+            //         return;
+            //     }
+            // }
+
+            // session->m_pimpl->set_resource( resource );
+            // session->m_pimpl->set_default_headers( m_default_headers );
+
+            // method_handler( session );
+        }
+        catch ( const exception& ex )
+        {
+            // resource_error_handler = resource->get_error_handler( );
+            // resource_error_handler( session );
+            // m_error_handler( session );
+        }
+        catch ( ... )
+        {
+            // resource_error_handler = resource->get_error_handler( );
+            // resource_error_handler( session );
+            // m_error_handler( session );
+        }
+
+
+
+
+
             // Request request;
             // Response response;
 
@@ -271,7 +331,7 @@ namespace restbed
             // while ( "keep-alive" == String::lowercase( response.get_header( "Connection" ) ) );
 
             // listen( );
-        }
+        //}
         
         Resource ServiceImpl::resolve_resource_route( const Request& request ) const
         {
