@@ -13,9 +13,10 @@
 //External Includes
 
 //System Namespaces
-using std::map;
-using std::vector;
+using std::set;
+using std::pair;
 using std::string;
+using std::multimap;
 using std::function;
 
 //Project Namespaces
@@ -35,74 +36,54 @@ namespace restbed
         return;
     }
     
-    Resource::Resource( const ResourceImpl& implementation ) : m_pimpl( new ResourceImpl( implementation ) )
-    {
-        return;
-    }
-    
     Resource::~Resource( void )
     {
         return;
     }
-    
-    string Resource::get_path( void ) const
+
+    string Resource::get_id( void ) const
     {
-        return m_pimpl->get_path( );
+        return m_pimpl->get_id( );
     }
 
-    vector< string > Resource::get_paths( void ) const
+    set< string > Resource::get_paths( void ) const
     {
         return m_pimpl->get_paths( );
     }
     
-    string Resource::get_header_filter( const string& name ) const
+    multimap< string, pair< multimap< string, string >, function< Response ( const Request& ) > > >
+    Resource::get_method_handlers( const string& method ) const
     {
-        return m_pimpl->get_header_filter( name );
-    }
-    
-    map< string, string > Resource::get_header_filters( void ) const
-    {
-        return m_pimpl->get_header_filters( );
-    }
-    
-    function< Response ( const Request& ) > Resource::get_method_handler( const string& method ) const
-    {
-        return m_pimpl->get_method_handler( method );
-    }
-    
-    map< string, function< Response ( const Request& ) > > Resource::get_method_handlers( void ) const
-    {
-        return m_pimpl->get_method_handlers( );
-    }
-    
-    void Resource::set_path( const string& value )
-    {
-        m_pimpl->set_path( value );
+        return m_pimpl->get_method_handlers( method );
     }
 
-    void Resource::set_paths( const vector< string >& values )
+    void Resource::set_paths( const set< string >& values )
     {
         m_pimpl->set_paths( values );
     }
-    
-    void Resource::set_header_filter( const string& name, const string& value )
+
+    void Resource::set_method_handler( const string& method,
+                                       const function< Response ( const Request& ) >& callback )
     {
-        m_pimpl->set_header_filter( name, value );
+        static const multimap< string, string > empty;
+        m_pimpl->set_method_handler( method, empty, callback );
     }
     
-    void Resource::set_header_filters( const map< string, string >& values )
+    void Resource::set_method_handler( const string& method,
+                                       const multimap< string, string >& filters,
+                                       const function< Response ( const Request& ) >& callback )
     {
-        m_pimpl->set_header_filters( values );
+        m_pimpl->set_method_handler( method, filters, callback );
+    }
+
+    void Resource::set_authentication_handler( const function< void ( const Request&, Response& ) >& value )
+    {
+        m_pimpl->set_authentication_handler( value );
     }
     
-    void Resource::set_method_handler( const string& method, const function< Response ( const Request& ) >& callback )
+    void Resource::set_error_handler( const function< void ( const int, const Request&, Response& ) >& value )
     {
-        m_pimpl->set_method_handler( method, callback );
-    }
-    
-    void Resource::set_method_handlers( const map< string, function< Response ( const Request& ) > >& values )
-    {
-        m_pimpl->set_method_handlers( values );
+        m_pimpl->set_error_handler( value );
     }
     
     Resource& Resource::operator =( const Resource& value )
@@ -111,15 +92,15 @@ namespace restbed
         
         return *this;
     }
-    
-    bool Resource::operator <( const Resource& value ) const
-    {
-        return *m_pimpl < *value.m_pimpl;
-    }
-    
+
     bool Resource::operator >( const Resource& value ) const
     {
         return *m_pimpl > *value.m_pimpl;
+    }
+
+    bool Resource::operator <( const Resource& value ) const
+    {
+        return *m_pimpl < *value.m_pimpl;
     }
     
     bool Resource::operator ==( const Resource& value ) const
@@ -129,6 +110,6 @@ namespace restbed
     
     bool Resource::operator !=( const Resource& value ) const
     {
-        return *m_pimpl != *value.m_pimpl;
+        return *m_pimpl not_eq *value.m_pimpl;
     }
 }

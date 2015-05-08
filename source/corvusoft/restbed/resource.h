@@ -7,14 +7,16 @@
 
 //System Includes
 #include <map>
+#include <set>
 #include <memory>
-#include <vector>
 #include <string>
+#include <utility>
 #include <functional>
 
 //Project Includes
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -44,46 +46,40 @@ namespace restbed
             Resource( void );
             
             Resource( const Resource& original );
-        
-            Resource( const detail::ResourceImpl& implementation );
             
             virtual ~Resource( void );
             
             //Functionality
             
             //Getters
-            std::string get_path( void ) const;
-        
-            std::vector< std::string > get_paths( void ) const;
-        
-            std::string get_header_filter( const std::string& name ) const;
-            
-            std::map< std::string, std::string > get_header_filters( void ) const;
-            
-            std::function< Response ( const Request& ) > get_method_handler( const std::string& method ) const;
-        
-            std::map< std::string, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
-        
+            std::string get_id( void ) const;
+
+            std::set< std::string > get_paths( void ) const;
+
+            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< Response ( const Request& ) > > >
+            get_method_handlers( const std::string& method = framework::String::empty ) const;
+
             //Setters
-            void set_path( const std::string& value );
-        
-            void set_paths( const std::vector< std::string >& values );
+            void set_paths( const std::set< std::string >& values );
+
+            void set_method_handler( const std::string& method,
+                                     const std::function< Response ( const Request& ) >& callback );
+
+            void set_method_handler( const std::string& method,
+                                     const std::multimap< std::string, std::string >& filters,
+                                     const std::function< Response ( const Request& ) >& callback );
+
+            void set_authentication_handler( const std::function< void ( const Request&, Response& ) >& value );
+                
+            void set_error_handler( const std::function< void ( const int, const Request&, Response& ) >& value );
             
-            void set_header_filter( const std::string& name, const std::string& value );
-        
-            void set_header_filters( const std::map< std::string, std::string >& values );
-        
-            void set_method_handler( const std::string& method, const std::function< Response ( const Request& ) >& callback );
-        
-            void set_method_handlers( const std::map< std::string, std::function< Response ( const Request& ) > >& values );
-        
             //Operators
             Resource& operator =( const Resource& value );
-        
-            bool operator <( const Resource& value ) const;
-            
+
             bool operator >( const Resource& value ) const;
-            
+
+            bool operator <( const Resource& value ) const;
+
             bool operator ==( const Resource& value ) const;
             
             bool operator !=( const Resource& value ) const;

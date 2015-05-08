@@ -55,63 +55,63 @@ namespace restbed
         
         bool ResourceMatcherImpl::compare_path( const Request& request, const Resource& resource ) const
         {
-            bool found_matching_path = false;
+            // bool found_matching_path = false;
             
-            auto resource_paths = resource.get_paths( );
-            auto path_segments = String::split( request.get_path( ), '/' );
+            // auto resource_paths = resource.get_paths( );
+            // auto path_segments = String::split( request.get_path( ), '/' );
             
-            for ( auto path : resource_paths )
-            {
-                auto path_filters = String::split( path, '/' );
+            // for ( auto path : resource_paths )
+            // {
+            //     auto path_filters = String::split( path, '/' );
                 
-                if ( path_segments.size( ) == path_filters.size( ) )
-                {
-                    found_matching_path = true;
+            //     if ( path_segments.size( ) == path_filters.size( ) )
+            //     {
+            //         found_matching_path = true;
                     
-                    for ( size_t index = 0; index not_eq path_filters.size( ); index++ )
-                    {
-                        string filter = PathParameterImpl::parse( path_filters[ index ] );
+            //         for ( size_t index = 0; index not_eq path_filters.size( ); index++ )
+            //         {
+            //             string filter = PathParameterImpl::parse( path_filters[ index ] );
                         
-                        regex pattern( filter );
+            //             regex pattern( filter );
                         
-                        if ( not regex_match( path_segments[ index ], pattern ) )
-                        {
-                            found_matching_path = false;
-                            break;
-                        }
-                    }
-                }
+            //             if ( not regex_match( path_segments[ index ], pattern ) )
+            //             {
+            //                 found_matching_path = false;
+            //                 break;
+            //             }
+            //         }
+            //     }
                 
-                if ( found_matching_path )
-                {
-                    break;
-                }
-            }
+            //     if ( found_matching_path )
+            //     {
+            //         break;
+            //     }
+            // }
             
-            return found_matching_path;
+            // return found_matching_path;
         }
         
         bool ResourceMatcherImpl::compare_headers( const Request& request, const Resource& resource ) const
         {
-            bool result = true;
+            // bool result = true;
             
-            for ( auto filter : resource.get_header_filters( ) )
-            {
-                string name = filter.first;
-                regex pattern = regex( filter.second );
+            // for ( auto filter : resource.get_header_filters( ) )
+            // {
+            //     string name = filter.first;
+            //     regex pattern = regex( filter.second );
                 
-                for ( auto header : request.get_headers( name ) )
-                {
-                    string value = header.second;
+            //     for ( auto header : request.get_headers( name ) )
+            //     {
+            //         string value = header.second;
                     
-                    if ( not regex_match( value, pattern ) )
-                    {
-                        return false;
-                    }
-                }
-            }
+            //         if ( not regex_match( value, pattern ) )
+            //         {
+            //             return false;
+            //         }
+            //     }
+            // }
             
-            return result;
+            // return result;
         }
     }
 }

@@ -7,8 +7,10 @@
 
 //System Includes
 #include <map>
+#include <set>
+#include <memory>
 #include <string>
-#include <vector>
+#include <utility>
 #include <functional>
 
 //Project Includes
@@ -48,36 +50,29 @@ namespace restbed
                 //Functionality
                 
                 //Getters
-                std::string get_path( void ) const;
-            
-                std::vector< std::string > get_paths( void ) const;
+                const std::string& get_id( void ) const;
+
+                const std::set< std::string >& get_paths( void ) const;
                 
-                std::string get_header_filter( const std::string& name ) const;
-                
-                std::map< std::string, std::string > get_header_filters( void ) const;
-                
-                std::function< Response ( const Request& ) > get_method_handler( const std::string& method ) const;
-            
-                std::map< std::string, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
+                std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< Response ( const Request& ) > > >
+                get_method_handlers( const std::string& method ) const;
 
                 //Setters
-                void set_path( const std::string& value );
-            
-                void set_paths( const std::vector< std::string >& values );
+                void set_paths( const std::set< std::string >& values );
+
+                void set_method_handler( const std::string& method,
+                                         const std::multimap< std::string, std::string >& filters,
+                                         const std::function< Response ( const Request& ) >& callback );
+
+                void set_authentication_handler( const std::function< void ( const Request&, Response& ) >& value );
                 
-                void set_header_filter( const std::string& name, const std::string& value );
-            
-                void set_header_filters( const std::map< std::string, std::string >& values );
-            
-                void set_method_handler( const std::string& method, const std::function< Response ( const Request& ) >& callback );
-            
-                void set_method_handlers( const std::map< std::string, std::function< Response ( const Request& ) > >& values );
-            
+                void set_error_handler( const std::function< void ( const int, const Request&, Response& ) >& value );
+
                 //Operators
-                bool operator <( const ResourceImpl& value ) const;
-                
                 bool operator >( const ResourceImpl& value ) const;
-                
+
+                bool operator <( const ResourceImpl& value ) const;
+
                 bool operator ==( const ResourceImpl& value ) const;
                 
                 bool operator !=( const ResourceImpl& value ) const;
@@ -111,14 +106,7 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static std::string rebuild_path( const Request& request );
 
-                static Response default_trace_handler( const Request& request );
-
-                static Response default_options_handler( const Request& request, const std::vector< std::string >& allow_methods );
-            
-                static Response default_method_not_allowed_handler( const Request& request, const std::vector< std::string >& allow_methods );
-                
                 //Getters
                 
                 //Setters
@@ -126,13 +114,13 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                std::vector< std::string > m_paths;
-            
-                std::vector< std::string > m_allow_methods;
-            
-                std::map< std::string, std::string > m_header_filters;
+                std::string m_id;
+
+                std::set< std::string > m_paths;
                 
-                std::map< std::string, std::function< Response ( const Request& ) > > m_method_handlers;
+                std::multimap< std::string,
+                               std::pair< std::multimap< std::string, std::string >,
+                               std::function< Response ( const Request& ) > > > m_method_handlers;
         };
     }
 }

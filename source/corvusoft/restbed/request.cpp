@@ -33,11 +33,6 @@ namespace restbed
         return;
     }
     
-    Request::Request( const RequestImpl& implementation ) : m_pimpl( new RequestImpl( implementation ) )
-    {
-        return;
-    }
-    
     Request::~Request( void )
     {
         return;

@@ -66,59 +66,59 @@ namespace restbed
         
         Request RequestBuilderImpl::build( void ) const
         {
-            return *this;
+            // return *this;
         }
 
         framework::Bytes RequestBuilderImpl::to_bytes( const Request& request )
         {
-            string headers = String::format( "%s%s\r\n", generate_status_section( request ).data( ),
-                                                         generate_header_section( request ).data( ) );
+            // string headers = String::format( "%s%s\r\n", generate_status_section( request ).data( ),
+            //                                              generate_header_section( request ).data( ) );
 
-            Bytes bytes( headers.begin( ), headers.end( ) );
-            Bytes body = request.get_body( );
-            bytes.insert( bytes.end( ), body.begin( ), body.end( ) );
+            // Bytes bytes( headers.begin( ), headers.end( ) );
+            // Bytes body = request.get_body( );
+            // bytes.insert( bytes.end( ), body.begin( ), body.end( ) );
 
-            return bytes;
+            // return bytes;
         }
         
         void RequestBuilderImpl::parse( const shared_ptr< tcp::socket >& socket )
         {
-            asio::error_code code;
-            asio::streambuf* buffer = new asio::streambuf;
-            asio::read_until( *socket, *buffer, "\r\n\r\n", code );
+            // asio::error_code code;
+            // asio::streambuf* buffer = new asio::streambuf;
+            // asio::read_until( *socket, *buffer, "\r\n\r\n", code );
 
-            if ( code )
-            {
-                throw asio::system_error( code );
-            }
+            // if ( code )
+            // {
+            //     throw asio::system_error( code );
+            // }
 
-            istream stream( buffer );
+            // istream stream( buffer );
 
-            set_method( parse_http_method( stream ) );
-            set_path( parse_http_path( stream ) );
-            set_query_parameters( parse_http_query_parameters( stream ) );
-            set_protocol( parse_http_protocol( stream ) );
-            set_version( parse_http_version( stream ) );
-            set_headers( parse_http_headers( stream ) );
+            // set_method( parse_http_method( stream ) );
+            // set_path( parse_http_path( stream ) );
+            // set_query_parameters( parse_http_query_parameters( stream ) );
+            // set_protocol( parse_http_protocol( stream ) );
+            // set_version( parse_http_version( stream ) );
+            // set_headers( parse_http_headers( stream ) );
 
-            auto endpoint = socket->remote_endpoint( );
-            auto address = endpoint.address( );
-            string value = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            value += ::to_string( endpoint.port( ) );
-            set_origin( value );
+            // auto endpoint = socket->remote_endpoint( );
+            // auto address = endpoint.address( );
+            // string value = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            // value += ::to_string( endpoint.port( ) );
+            // set_origin( value );
 
-            endpoint = socket->local_endpoint( );
-            address = endpoint.address( );
-            value = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            value += ::to_string( endpoint.port( ) );
-            set_destination( value );
+            // endpoint = socket->local_endpoint( );
+            // address = endpoint.address( );
+            // value = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            // value += ::to_string( endpoint.port( ) );
+            // set_destination( value );
 
-            set_socket( socket, buffer );
+            // set_socket( socket, buffer );
         }
 
         void RequestBuilderImpl::set_path_parameters( const map< string, string >& parameters )
         {
-            RequestImpl::set_path_parameters( parameters );
+            // RequestImpl::set_path_parameters( parameters );
         }
         
         RequestBuilderImpl& RequestBuilderImpl::operator =( const RequestBuilderImpl& value )
@@ -130,146 +130,146 @@ namespace restbed
 
         string RequestBuilderImpl::generate_path_section( const Request& request )
         {
-            string section = request.get_path( );
+            // string section = request.get_path( );
 
-            auto query_parameters = request.get_query_parameters( );
+            // auto query_parameters = request.get_query_parameters( );
 
-            if ( not query_parameters.empty( ) )
-            {
-                section += "?";
+            // if ( not query_parameters.empty( ) )
+            // {
+            //     section += "?";
 
-                for ( auto parameter : query_parameters )
-                {
-                    section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
-                }
-            }
+            //     for ( auto parameter : query_parameters )
+            //     {
+            //         section += String::format( "%s=%s&", parameter.first.data( ), parameter.second.data( ) );
+            //     }
+            // }
 
-            return String::trim_lagging( section, "&" );
+            // return String::trim_lagging( section, "&" );
         }
 
         string RequestBuilderImpl::generate_status_section( const Request& request )
         {
-            return String::format( "%s %s %s/%.1f\r\n", request.get_method( ).data( ),
-                                                        generate_path_section( request ).data( ),
-                                                        request.get_protocol( ).data( ),
-                                                        request.get_version( ) );
+            // return String::format( "%s %s %s/%.1f\r\n", request.get_method( ).data( ),
+            //                                             generate_path_section( request ).data( ),
+            //                                             request.get_protocol( ).data( ),
+            //                                             request.get_version( ) );
         }
 
         string RequestBuilderImpl::generate_header_section( const Request& request )
         {
-            string section = String::empty;
+            // string section = String::empty;
 
-            for ( auto header : request.get_headers( ) )
-            {
-                section += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
-            }
+            // for ( auto header : request.get_headers( ) )
+            // {
+            //     section += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            // }
 
-            return section;
+            // return section;
         }
         
         double RequestBuilderImpl::parse_http_version( istream& socket )
         {
-            string version = String::empty;
+            // string version = String::empty;
             
-            socket >> version;
-            socket.ignore( 2 );
+            // socket >> version;
+            // socket.ignore( 2 );
             
-            double result = 0;
+            // double result = 0;
             
-            try
-            {
-                result = stod( version );
-            }
-            catch ( const invalid_argument& ia )
-            {
-                throw 400;
-            }
+            // try
+            // {
+            //     result = stod( version );
+            // }
+            // catch ( const invalid_argument& ia )
+            // {
+            //     throw 400;
+            // }
             
-            return result;
+            // return result;
         }
         
         string RequestBuilderImpl::parse_http_path( istream& socket )
         {
-            string path = String::empty;
+            // string path = String::empty;
             
-            for ( char character = socket.get( ); character not_eq ' ' and character not_eq '?'; character = socket.get( ) )
-            {
-                path.push_back( character );
-            }
+            // for ( char character = socket.get( ); character not_eq ' ' and character not_eq '?'; character = socket.get( ) )
+            // {
+            //     path.push_back( character );
+            // }
             
-            return Uri::decode( path );
+            // return Uri::decode( path );
         }
         
         string RequestBuilderImpl::parse_http_method( istream& socket )
         {
-            string method = String::empty;
+            // string method = String::empty;
             
-            socket >> method;
-            socket.ignore( 1 );
+            // socket >> method;
+            // socket.ignore( 1 );
             
-            return method;
+            // return method;
         }
         
         string RequestBuilderImpl::parse_http_protocol( istream& socket )
         {
-            string protocol = String::empty;
+            // string protocol = String::empty;
             
-            for ( char character = socket.get( ); character not_eq '/'; character = socket.get( ) )
-            {
-                protocol.push_back( character );
-            }
+            // for ( char character = socket.get( ); character not_eq '/'; character = socket.get( ) )
+            // {
+            //     protocol.push_back( character );
+            // }
             
-            return String::trim( protocol );
+            // return String::trim( protocol );
         }
         
         multimap< string, string > RequestBuilderImpl::parse_http_headers( istream& socket )
         {
-            multimap< string, string > headers;
+            // multimap< string, string > headers;
             
-            string header = String::empty;
+            // string header = String::empty;
             
-            while ( getline( socket, header ) and header not_eq "\r" )
-            {
-                header.erase( header.length( ) - 1 );
+            // while ( getline( socket, header ) and header not_eq "\r" )
+            // {
+            //     header.erase( header.length( ) - 1 );
                 
-                string::size_type index = header.find_first_of( ':' );
+            //     string::size_type index = header.find_first_of( ':' );
                 
-                string name = String::trim( header.substr( 0, index ) );
+            //     string name = String::trim( header.substr( 0, index ) );
                 
-                string value = String::trim( header.substr( index + 1 ) );
+            //     string value = String::trim( header.substr( index + 1 ) );
                 
-                headers.insert( make_pair( name, value ) );
-            }
+            //     headers.insert( make_pair( name, value ) );
+            // }
             
-            return headers;
+            // return headers;
         }
         
         multimap< string, string > RequestBuilderImpl::parse_http_query_parameters( istream& socket )
         {
-            multimap< string, string > parameters;
+            // multimap< string, string > parameters;
             
-            char previous_byte = IStream::reverse_peek( socket );
+            // char previous_byte = IStream::reverse_peek( socket );
             
-            if ( previous_byte == '?' )
-            {
-                string query_string = String::empty;
+            // if ( previous_byte == '?' )
+            // {
+            //     string query_string = String::empty;
                 
-                socket >> query_string;
+            //     socket >> query_string;
                 
-                const auto& query = String::split( query_string, '&' );
+            //     const auto& query = String::split( query_string, '&' );
                 
-                for ( const auto& parameter : query )
-                {
-                    string::size_type index = parameter.find_first_of( '=' );
+            //     for ( const auto& parameter : query )
+            //     {
+            //         string::size_type index = parameter.find_first_of( '=' );
 
-                    string name = Uri::decode_parameter( parameter.substr( 0, index ) );
-                    string value = Uri::decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
+            //         string name = Uri::decode_parameter( parameter.substr( 0, index ) );
+            //         string value = Uri::decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
 
-                    parameters.insert( make_pair( name, value ) );
-                }
-            }
+            //         parameters.insert( make_pair( name, value ) );
+            //     }
+            // }
             
-            return parameters;
+            // return parameters;
         }
     }
 }

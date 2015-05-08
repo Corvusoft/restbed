@@ -5,7 +5,6 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
 
@@ -33,19 +32,9 @@ namespace restbed
         return;
     }
     
-    Settings::Settings( const SettingsImpl& implementation ) : m_pimpl( new SettingsImpl( implementation ) )
-    {
-        return;
-    }
-    
     Settings::~Settings( void )
     {
         return;
-    }
-    
-    Mode Settings::get_mode( void ) const
-    {
-        return m_pimpl->get_mode( );
     }
     
     uint16_t Settings::get_port( void ) const
@@ -76,11 +65,6 @@ namespace restbed
     map< string, string > Settings::get_properties( void ) const
     {
         return m_pimpl->get_properties( );
-    }
-    
-    void Settings::set_mode( const Mode value )
-    {
-        m_pimpl->set_mode( value );
     }
     
     void Settings::set_port( const uint16_t value )

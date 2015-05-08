@@ -33,11 +33,6 @@ namespace restbed
         return;
     }
     
-    Response::Response( const ResponseImpl& implementation ) : m_pimpl( new ResponseImpl( implementation ) )
-    {
-        return;
-    }
-    
     Response::~Response( void )
     {
         return;

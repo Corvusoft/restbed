@@ -6,7 +6,6 @@
 #include <functional>
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/service.h"
 #include "corvusoft/restbed/resource.h"
@@ -38,11 +37,6 @@ namespace restbed
         return;
     }
     
-    Service::Service( const ServiceImpl& implementation ) : m_pimpl( new ServiceImpl( implementation ) )
-    {
-        return;
-    }
-    
     Service::~Service( void )
     {
         return;
@@ -53,22 +47,17 @@ namespace restbed
         m_pimpl->start( );
     }
     
-    void Service::start( const Mode& value )
-    {
-        m_pimpl->start( value );
-    }
-    
     void Service::stop( void )
     {
         m_pimpl->stop( );
     }
     
-    void Service::publish( const Resource& value )
+    void Service::publish( const shared_ptr< Resource >& value )
     {
         m_pimpl->publish( value );
     }
     
-    void Service::suppress( const Resource& value )
+    void Service::suppress( const shared_ptr< Resource >& value )
     {
         m_pimpl->suppress( value );
     }

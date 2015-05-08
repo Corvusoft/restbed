@@ -2,7 +2,6 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/request.h"
