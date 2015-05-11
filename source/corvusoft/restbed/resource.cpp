@@ -5,8 +5,7 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
 
@@ -51,7 +50,7 @@ namespace restbed
         return m_pimpl->get_paths( );
     }
     
-    multimap< string, pair< multimap< string, string >, function< Response ( const Request& ) > > >
+    multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
     Resource::get_method_handlers( const string& method ) const
     {
         return m_pimpl->get_method_handlers( method );
@@ -63,7 +62,7 @@ namespace restbed
     }
 
     void Resource::set_method_handler( const string& method,
-                                       const function< Response ( const Request& ) >& callback )
+                                       const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static const multimap< string, string > empty;
         m_pimpl->set_method_handler( method, empty, callback );
@@ -71,17 +70,17 @@ namespace restbed
     
     void Resource::set_method_handler( const string& method,
                                        const multimap< string, string >& filters,
-                                       const function< Response ( const Request& ) >& callback )
+                                       const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->set_method_handler( method, filters, callback );
     }
 
-    void Resource::set_authentication_handler( const function< void ( const Request&, Response& ) >& value )
+    void Resource::set_authentication_handler( const function< bool ( const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_authentication_handler( value );
     }
     
-    void Resource::set_error_handler( const function< void ( const int, const Request&, Response& ) >& value )
+    void Resource::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_error_handler( value );
     }

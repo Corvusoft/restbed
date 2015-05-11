@@ -7,8 +7,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/methods.h"
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
 
 //External Includes
@@ -62,10 +61,10 @@ namespace restbed
             return m_paths;
         }
         
-        multimap< string, pair< multimap< string, string >, function< Response ( const Request& ) > > >
+        multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
         ResourceImpl::get_method_handlers( const string& method ) const
         {
-            //this return argument stinks
+            //this return argument stinks, remove copy.
             if ( method.empty( ) )
             {
                 return m_method_handlers;
@@ -91,7 +90,7 @@ namespace restbed
         
         void ResourceImpl::set_method_handler( const string& method,
                                                const multimap< string, string >& filters,
-                                               const function< Response ( const Request& ) >& callback )
+                                               const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             const string verb = String::uppercase( method );
 
@@ -105,12 +104,12 @@ namespace restbed
             m_method_handlers.insert( make_pair( verb, make_pair( filters, callback ) ) );
         }
 
-        void ResourceImpl::set_authentication_handler( const function< void ( const Request&, Response& ) >& value )
+        void ResourceImpl::set_authentication_handler( const function< bool ( const shared_ptr< Session >& ) >& value )
         {
             //m_authentication_handler = value;
         }
 
-        void ResourceImpl::set_error_handler( const function< void ( const int, const Request&, Response& ) >& value )
+        void ResourceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
         {
             //m_error_handler = value;
         }
