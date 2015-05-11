@@ -58,6 +58,9 @@ namespace restbed
             void publish( const std::shared_ptr< Resource >& value );
             
             void suppress( const std::shared_ptr< Resource >& value );
+
+            //void add_cache_entry( const Request&, const Response&, strict (everyhting must match), expires ); CacheEntry
+            //void add_cache_entries( ... );
             
             //Getters
             

@@ -27,8 +27,7 @@
 namespace restbed
 {
     //Forward Declarations
-    class Request;
-    class Response;
+    class Session;
     
     namespace detail
     {
@@ -56,22 +55,22 @@ namespace restbed
 
             std::set< std::string > get_paths( void ) const;
 
-            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< Response ( const Request& ) > > >
+            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > >
             get_method_handlers( const std::string& method = framework::String::empty ) const;
 
             //Setters
             void set_paths( const std::set< std::string >& values );
 
             void set_method_handler( const std::string& method,
-                                     const std::function< Response ( const Request& ) >& callback );
+                                     const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             void set_method_handler( const std::string& method,
                                      const std::multimap< std::string, std::string >& filters,
-                                     const std::function< Response ( const Request& ) >& callback );
+                                     const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-            void set_authentication_handler( const std::function< void ( const Request&, Response& ) >& value );
+            void set_authentication_handler( const std::function< bool ( const std::shared_ptr< Session >& ) >& value );
                 
-            void set_error_handler( const std::function< void ( const int, const Request&, Response& ) >& value );
+            void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
             
             //Operators
             Resource& operator =( const Resource& value );

@@ -26,8 +26,8 @@ namespace restbed
 {
     //Forward Declarations
     class Logger;
+    class Session;
     class Service;
-    class Request;
     class Resource;
     class Settings;
 
@@ -63,9 +63,9 @@ namespace restbed
                 //Setters
                 void set_log_handler( const std::shared_ptr< Logger >& value );
                 
-                void set_authentication_handler( const std::function< void ( const Request&, Response& ) >& value );
+                void set_authentication_handler( const std::function< bool ( const std::shared_ptr< Session >& ) >& value );
                 
-                void set_error_handler( const std::function< void ( const int, const Request&, Response& ) >& value );
+                void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
                 
                 //Operators                
                 ServiceImpl& operator =( const ServiceImpl& value );
@@ -107,9 +107,9 @@ namespace restbed
                 
                 void log( const Logger::Level level, const std::string& message );
                 
-                void authentication_handler( const Request& request, Response& response );
+                bool authentication_handler( const shared_ptr< Session >& response );
                 
-                void error_handler( const int status_code, const Request& request, Response& response );
+                void error_handler( const int status_code, const std::shared_ptr< Session >& response );
 
                 void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
 
@@ -136,9 +136,9 @@ namespace restbed
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 
-                std::function< void ( const Request&, Response& ) > m_authentication_handler;
+                std::function< bool ( const std::shared_ptr< Session >& ) > m_authentication_handler;
                 
-                std::function< void ( const int, const Request&, Response& ) > m_error_handler;
+                std::function< void ( const int, const std::shared_ptr< Session >& ) > m_error_handler;
         };
     }
 }

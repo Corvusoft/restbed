@@ -163,12 +163,12 @@ namespace restbed
             m_log_handler = value;
         }
         
-        void ServiceImpl::set_authentication_handler( const function< void ( const Request&, Response& ) >& value )
+        void ServiceImpl::set_authentication_handler( const function< bool ( const shared_ptr< Session >& ) >& value )
         {
             m_authentication_handler = value;
         }
         
-        void ServiceImpl::set_error_handler( const function< void ( const int, const Request&, Response& ) >& value )
+        void ServiceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
         {
             m_error_handler = value;
         }
@@ -365,9 +365,10 @@ namespace restbed
             // }
         }
 
-        void ServiceImpl::authentication_handler( const Request&, Response& response )
+        bool ServiceImpl::authentication_handler( const shared_ptr< Session >& value )
         {
-            // response.set_status_code( 200 );
+            //don't return boolean false.
+            //let the service check for the session.is_closed( );
         }
         
         void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
