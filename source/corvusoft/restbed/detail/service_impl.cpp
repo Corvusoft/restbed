@@ -201,50 +201,68 @@ namespace restbed
             // m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
         }
 
+        //void ServiceImpl::create_session
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         try
         {
-            // Session session;
-            // session.m_pimpl->set_socket( socket ); //parses incoming request.
-            // //session.m_pimpl->set_service( m_ioservice );
-            // //session.m_pimpl->set_acceptor( m_acceptor );
+            auto service = this;
 
-            // m_authentication_handler( session );
+            Session session;
+            session.m_pimpl->set_socket( socket );
+            session.m_pimpl->set_service( m_ioservice );
+            //this happens inside fetch
+            //asio::error_code code;
+            //asio::streambuf* buffer = new asio::streambuf; //when is this deleted?
+            //asio::read_until( *socket, *buffer, "\r\n\r\n", code );
+            //if ( code )
+            //{
+            //    throw asio::system_error( code );
+            //}
+            //end of session::fetch
+            session.fetch( [ &service ]( shared_ptr< Session >& session ) //bind( ServiceImpl::router, this )
+            {
+                if ( not service.m_authentication_handler( session ) )
+                {
+                    return;
+                }
 
-            // if ( not m_authentication_handler( session ) )
-            // {
-            //     return;
-            // }
+                const auto resource = find_matching_resource_by_path( session );
 
-            // const auto resource = find_matching_resource_by_path( session );
+                if ( resource == nullptr )
+                {
+                    return m_not_found_handler( session );
+                }
 
-            // if ( resource == nullptr )
-            // {
-            //     return m_not_found_handler( session );
-            // }
+                const auto method_handler = find_first_matching_method_handler_by_filters( resource );
 
-            // const auto method_handler = find_first_matching_method_handler_by_filters( resource );
+                if ( method_handler == nullptr )
+                {
+                    if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
+                    {
+                        //resource has m_method_not_implemented_handler )
+                        m_method_not_implemented_handler( session );
+                        return;
+                    }
+                    else
+                    {
+                        //if ( resource has method_not_allowed_handler )
+                        m_method_not_allowed_handler( session );
+                        return;
+                    }
+                }
 
-            // if ( method_handler == nullptr )
-            // {
-            //     if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
-            //     {
-            //         //resource has m_method_not_implemented_handler )
-            //         m_method_not_implemented_handler( session );
-            //         return;
-            //     }
-            //     else
-            //     {
-            //         //if ( resource has method_not_allowed_handler )
-            //         m_method_not_allowed_handler( session );
-            //         return;
-            //     }
-            // }
+                session->m_pimpl->set_resource( resource );
+                session->m_pimpl->set_default_headers( m_default_headers ); 
 
-            // session->m_pimpl->set_resource( resource );
-            // session->m_pimpl->set_default_headers( m_default_headers );
+                method_handler( session );
 
-            // method_handler( session );
+                if ( session.is_closed( ) )
+                {
+                    //delete from session store
+                }
+            } );
+
+            m_sessions[ session.get_id( ) ] = session;
         }
         catch ( const exception& ex )
         {
