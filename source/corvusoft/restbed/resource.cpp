@@ -17,6 +17,7 @@ using std::pair;
 using std::string;
 using std::multimap;
 using std::function;
+using std::shared_ptr;
 
 //Project Namespaces
 using restbed::detail::ResourceImpl;

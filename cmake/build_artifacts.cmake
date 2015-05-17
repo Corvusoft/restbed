@@ -13,6 +13,8 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/response.h
      ${SOURCE_DIR}/service
      ${SOURCE_DIR}/service.h
+     ${SOURCE_DIR}/session
+     ${SOURCE_DIR}/session.h
      ${SOURCE_DIR}/logger
      ${SOURCE_DIR}/logger.h
 )

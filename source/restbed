@@ -6,6 +6,7 @@
 #include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/service.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"

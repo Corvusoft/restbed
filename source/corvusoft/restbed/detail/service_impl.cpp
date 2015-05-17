@@ -35,6 +35,7 @@ using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
+using std::shared_ptr;
 using std::invalid_argument;
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -62,8 +63,8 @@ namespace restbed
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
             m_acceptor( nullptr ),
-            m_authentication_handler( bind( &ServiceImpl::authentication_handler, this, _1, _2 ) ),
-            m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2, _3 ) )
+            m_authentication_handler( &ServiceImpl::authentication_handler ),
+            m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2 ) )
         {
             return;
         }
@@ -163,7 +164,7 @@ namespace restbed
             m_log_handler = value;
         }
         
-        void ServiceImpl::set_authentication_handler( const function< bool ( const shared_ptr< Session >& ) >& value )
+        void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
             m_authentication_handler = value;
         }
@@ -205,11 +206,11 @@ namespace restbed
         void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
         try
         {
-            auto service = this;
-
-            Session session;
-            session.m_pimpl->set_socket( socket );
-            session.m_pimpl->set_service( m_ioservice );
+//            auto service = this;
+//
+//            Session session;
+//            session.m_pimpl->set_socket( socket );
+//            session.m_pimpl->set_service( m_ioservice );
             //this happens inside fetch
             //asio::error_code code;
             //asio::streambuf* buffer = new asio::streambuf; //when is this deleted?
@@ -219,50 +220,50 @@ namespace restbed
             //    throw asio::system_error( code );
             //}
             //end of session::fetch
-            session.fetch( [ &service ]( shared_ptr< Session >& session ) //bind( ServiceImpl::router, this )
-            {
-                if ( not service.m_authentication_handler( session ) )
-                {
-                    return;
-                }
-
-                const auto resource = find_matching_resource_by_path( session );
-
-                if ( resource == nullptr )
-                {
-                    return m_not_found_handler( session );
-                }
-
-                const auto method_handler = find_first_matching_method_handler_by_filters( resource );
-
-                if ( method_handler == nullptr )
-                {
-                    if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
-                    {
-                        //resource has m_method_not_implemented_handler )
-                        m_method_not_implemented_handler( session );
-                        return;
-                    }
-                    else
-                    {
-                        //if ( resource has method_not_allowed_handler )
-                        m_method_not_allowed_handler( session );
-                        return;
-                    }
-                }
-
-                session->m_pimpl->set_resource( resource );
-                session->m_pimpl->set_default_headers( m_default_headers ); 
-
-                method_handler( session );
-
-                if ( session.is_closed( ) )
-                {
-                    //delete from session store
-                }
-            } );
-
-            m_sessions[ session.get_id( ) ] = session;
+//            session.fetch( [ &service ]( shared_ptr< Session >& session ) //bind( ServiceImpl::router, this )
+//            {
+//                if ( not service.m_authentication_handler( session ) )
+//                {
+//                    return;
+//                }
+//
+//                const auto resource = find_matching_resource_by_path( session );
+//
+//                if ( resource == nullptr )
+//                {
+//                    return m_not_found_handler( session );
+//                }
+//
+//                const auto method_handler = find_first_matching_method_handler_by_filters( resource );
+//
+//                if ( method_handler == nullptr )
+//                {
+//                    if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
+//                    {
+//                        //resource has m_method_not_implemented_handler )
+//                        m_method_not_implemented_handler( session );
+//                        return;
+//                    }
+//                    else
+//                    {
+//                        //if ( resource has method_not_allowed_handler )
+//                        m_method_not_allowed_handler( session );
+//                        return;
+//                    }
+//                }
+//
+//                session->m_pimpl->set_resource( resource );
+//                session->m_pimpl->set_default_headers( m_default_headers ); 
+//
+//                method_handler( session );
+//
+//                if ( session.is_closed( ) )
+//                {
+//                    //delete from session store
+//                }
+//            } );
+//
+//            m_sessions[ session.get_id( ) ] = session;
         }
         catch ( const exception& ex )
         {
@@ -383,13 +384,14 @@ namespace restbed
             // }
         }
 
-        bool ServiceImpl::authentication_handler( const shared_ptr< Session >& value )
+        void ServiceImpl::authentication_handler( const shared_ptr< Session >& value )
         {
+            return;
             //don't return boolean false.
             //let the service check for the session.is_closed( );
         }
         
-        void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
+        void ServiceImpl::error_handler( const int status_code, const shared_ptr< Session >& session )
         {
             // const auto& iterator = status_codes.find( status_code );
 

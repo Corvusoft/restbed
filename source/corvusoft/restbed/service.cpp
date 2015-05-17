@@ -8,6 +8,7 @@
 //Project Includes
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/service.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/settings.h"
@@ -67,12 +68,12 @@ namespace restbed
         m_pimpl->set_log_handler( value );
     }
     
-    void Service::set_authentication_handler( function< void ( const Request&, Response& ) > value )
+    void Service::set_authentication_handler( function< void ( const shared_ptr< Session >& ) > value )
     {
         m_pimpl->set_authentication_handler( value );
     }
     
-    void Service::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
+    void Service::set_error_handler( function< void ( const int, const shared_ptr< Session >& ) > value )
     {
         m_pimpl->set_error_handler( value );
     }

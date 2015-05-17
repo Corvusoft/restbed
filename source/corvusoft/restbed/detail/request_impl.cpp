@@ -73,322 +73,322 @@ namespace restbed
         {
             return;
         }
-        
-        bool RequestImpl::has_header( const string& name ) const
-        {
-            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
-        }
-        
-        bool RequestImpl::has_path_parameter( const string& name ) const
-        {
-            return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
-        }
-        
-        bool RequestImpl::has_query_parameter( const string& name ) const
-        {
-            return ( m_query_parameters.find( name ) not_eq m_query_parameters.end( ) );
-        }
-        
-        Bytes RequestImpl::get_body( void )
-        {
-            if ( has_header( "Content-Length" ) and not m_body_processed )
-            {
-                auto header = get_header( "Content-Length", String::empty );
-                size_t length = header.empty( ) ? 0 : stoul( header );
+//        
+//        bool RequestImpl::has_header( const string& name ) const
+//        {
+//            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
+//        }
+//        
+//        bool RequestImpl::has_path_parameter( const string& name ) const
+//        {
+//            return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
+//        }
+//        
+//        bool RequestImpl::has_query_parameter( const string& name ) const
+//        {
+//            return ( m_query_parameters.find( name ) not_eq m_query_parameters.end( ) );
+//        }
+//        
+//        Bytes RequestImpl::get_body( void )
+//        {
+//            if ( has_header( "Content-Length" ) and not m_body_processed )
+//            {
+//                auto header = get_header( "Content-Length", String::empty );
+//                size_t length = header.empty( ) ? 0 : stoul( header );
+//
+//                if ( length > m_buffer->size( ) )
+//                {
+//                    size_t size = length - m_buffer->size( );
+//                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
+//                }
+//
+//                m_body_processed = true;
+//
+//                istream stream( m_buffer );
+//                istreambuf_iterator< char > end_of_stream;
+//                m_body.insert( m_body.end( ), istreambuf_iterator< char >( stream ), end_of_stream );
+//            }
+//
+//            return m_body;
+//        }
+//
+//        Bytes RequestImpl::get_body( const size_t length )
+//        {
+//            if ( has_header( "Content-Length" ) )
+//            {
+//                if ( not m_body_processed )
+//                {
+//                    get_body( );
+//                }
+//
+//                return Bytes( m_body.begin( ), m_body.begin( ) + length );
+//            }
+//            else
+//            {
+//                if ( length > m_buffer->size( ) )
+//                {
+//                    size_t size = length - m_buffer->size( );
+//                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
+//                }
+//
+//                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
+//                Bytes body( data, data + length );
+//                m_buffer->consume( length );
+//
+//                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
+//                return body;
+//            }
+//        }
+//
+//        Bytes RequestImpl::get_body( const string& delimiter )
+//        {
+//            if ( has_header( "Content-Length" ) )
+//            {
+//                if ( not m_body_processed )
+//                {
+//                    get_body( );
+//                }
+//
+//                return Bytes( m_body.begin( ), search( m_body.begin( ), m_body.end( ), delimiter.begin( ), delimiter.end( ) ) );
+//            }
+//            else
+//            {
+//                size_t length = asio::read_until( *m_socket, *m_buffer, delimiter );
+//
+//                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
+//                Bytes body( data, data + length );
+//                m_buffer->consume( length );
+//
+//                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
+//                return body;
+//            }
+//        }
+//
+//        double RequestImpl::get_version( void ) const
+//        {
+//            return m_version;
+//        }
+//        
+//        string RequestImpl::get_path( void ) const
+//        {
+//            return m_path;
+//        }
+//        
+//        string RequestImpl::get_method( void ) const
+//        {
+//            return m_method;
+//        }
+//        
+//        string RequestImpl::get_origin( void ) const
+//        {
+//            return m_origin;
+//        }
+//
+//        string RequestImpl::get_destination( void ) const
+//        {
+//            return m_destination;
+//        }
+//
+//        string RequestImpl::get_protocol( void ) const
+//        {
+//            return m_protocol;
+//        }
+//        
+//        string RequestImpl::get_header( const string& name, const string& default_value ) const
+//        {
+//            string value = default_value;
+//            
+//            if ( has_header( name ) )
+//            {
+//                const auto iterator = Map::find_ignoring_case( name, m_headers );
+//                
+//                value = iterator->second;
+//            }
+//            
+//            return value;
+//        }
+//        
+//        multimap< string, string > RequestImpl::get_headers( void ) const
+//        {
+//            return m_headers;
+//        }
+//        
+//        multimap< string, string > RequestImpl::get_headers( const string& name ) const
+//        {
+//            multimap< string, string > headers;
+//            
+//            auto key = String::lowercase( name );
+//            
+//            for ( auto header : m_headers )
+//            {
+//                if ( String::lowercase( header.first ) == key )
+//                {
+//                    headers.insert( header );
+//                }
+//            }
+//            
+//            return headers;
+//        }
+//        
+//        string RequestImpl::get_query_parameter( const string& name, const string& default_value ) const
+//        {
+//            string parameter = default_value;
+//            
+//            if ( has_query_parameter( name ) )
+//            {
+//                const auto iterator = m_query_parameters.find( name );
+//                
+//                parameter = iterator->second;
+//            }
+//            
+//            return parameter;
+//        }
+//        
+//        multimap< string, string > RequestImpl::get_query_parameters( void ) const
+//        {
+//            return m_query_parameters;
+//        }
+//
+//        multimap< string, string > RequestImpl::get_query_parameters( const string& name ) const
+//        {
+//            multimap< string, string > parameters;
+//            
+//            for ( auto parameter : m_query_parameters )
+//            {
+//                if ( parameter.first == name )
+//                {
+//                    parameters.insert( parameter );
+//                }
+//            }
+//            
+//            return parameters;
+//        }
+//        
+//        string RequestImpl::get_path_parameter( const string& name, const string& default_value ) const
+//        {
+//            string parameter = default_value;
+//            
+//            if ( has_path_parameter( name ) )
+//            {
+//                const auto iterator = Map::find_ignoring_case( name, m_path_parameters );
+//                
+//                parameter = iterator->second;
+//            }
+//            
+//            return parameter;
+//        }
+//        
+//        map< string, string > RequestImpl::get_path_parameters( void ) const
+//        {
+//            return m_path_parameters;
+//        }
+//        
+//        void RequestImpl::set_body( const Bytes& value )
+//        {
+//            m_body = value;
+//        }
+//        
+//        void RequestImpl::set_version( const double value )
+//        {
+//            if ( value not_eq 1.0 and value not_eq 1.1 )
+//            {
+//                throw 505;
+//            }
+//            
+//            m_version = value;
+//        }
+//        
+//        void RequestImpl::set_path( const string& value )
+//        {
+//            m_path = value;
+//        }
+//        
+//        void RequestImpl::set_method( const string& value )
+//        {
+//            const string method = String::uppercase( value );
+//
+//            if ( methods.count( method ) == 0 )
+//            {
+//                throw 501;
+//            }
+//
+//            m_method = method;
+//        }
+//        
+//        void RequestImpl::set_origin( const string& value )
+//        {
+//            m_origin = value;
+//        }
+//
+//        void RequestImpl::set_destination( const string& value )
+//        {
+//            m_destination = value;
+//        }
+//
+//        void RequestImpl::set_protocol( const string& value )
+//        {
+//            const auto& protocol = String::uppercase( value );
+//
+//            if ( protocol not_eq "HTTP" )
+//            {
+//                throw 400;
+//            }
+//            
+//            m_protocol = protocol;
+//        }
+//
+//        void RequestImpl::set_socket( const shared_ptr< tcp::socket >& value, asio::streambuf* buffer )
+//        {
+//            m_socket = value;
+//            m_buffer = buffer;
+//        }
+//        
+//        void RequestImpl::set_headers( const multimap< string, string >& values )
+//        {
+//            m_headers = values;
+//        }
+//        
+//        void RequestImpl::set_path_parameters( const map< string, string >& values )
+//        {
+//            m_path_parameters = values;
+//        }
+//        
+//        void RequestImpl::set_query_parameters( const multimap< string, string >& values )
+//        {
+//            m_query_parameters = values;
+//        }
+//        
+//        bool RequestImpl::operator <( const RequestImpl& value ) const
+//        {
+//            return m_path < value.m_path;
+//        }
+//        
+//        bool RequestImpl::operator >( const RequestImpl& value ) const
+//        {
+//            return m_path > value.m_path;
+//        }
+//        
+//        bool RequestImpl::operator ==( const RequestImpl& value ) const
+//        {
+//            return ( m_body_processed == value.m_body_processed and
+//                     m_path == value.m_path and
+//                     m_method == value.m_method and
+//                     m_origin == value.m_origin and
+//                     m_destination == value.m_destination and
+//                     m_version == value.m_version and
+//                     m_headers == value.m_headers and
+//                     m_protocol == value.m_protocol and
+//                     m_buffer == value.m_buffer and
+//                     m_socket == value.m_socket and
+//                     m_path_parameters == value.m_path_parameters and
+//                     m_query_parameters == value.m_query_parameters );
+//        }
+//        
+//        bool RequestImpl::operator !=( const RequestImpl& value ) const
+//        {
+//            return not ( *this == value );
+//        }
 
-                if ( length > m_buffer->size( ) )
-                {
-                    size_t size = length - m_buffer->size( );
-                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
-                }
-
-                m_body_processed = true;
-
-                istream stream( m_buffer );
-                istreambuf_iterator< char > end_of_stream;
-                m_body.insert( m_body.end( ), istreambuf_iterator< char >( stream ), end_of_stream );
-            }
-
-            return m_body;
-        }
-
-        Bytes RequestImpl::get_body( const size_t length )
-        {
-            if ( has_header( "Content-Length" ) )
-            {
-                if ( not m_body_processed )
-                {
-                    get_body( );
-                }
-
-                return Bytes( m_body.begin( ), m_body.begin( ) + length );
-            }
-            else
-            {
-                if ( length > m_buffer->size( ) )
-                {
-                    size_t size = length - m_buffer->size( );
-                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
-                }
-
-                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
-                Bytes body( data, data + length );
-                m_buffer->consume( length );
-
-                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
-                return body;
-            }
-        }
-
-        Bytes RequestImpl::get_body( const string& delimiter )
-        {
-            if ( has_header( "Content-Length" ) )
-            {
-                if ( not m_body_processed )
-                {
-                    get_body( );
-                }
-
-                return Bytes( m_body.begin( ), search( m_body.begin( ), m_body.end( ), delimiter.begin( ), delimiter.end( ) ) );
-            }
-            else
-            {
-                size_t length = asio::read_until( *m_socket, *m_buffer, delimiter );
-
-                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
-                Bytes body( data, data + length );
-                m_buffer->consume( length );
-
-                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
-                return body;
-            }
-        }
-
-        double RequestImpl::get_version( void ) const
-        {
-            return m_version;
-        }
-        
-        string RequestImpl::get_path( void ) const
-        {
-            return m_path;
-        }
-        
-        string RequestImpl::get_method( void ) const
-        {
-            return m_method;
-        }
-        
-        string RequestImpl::get_origin( void ) const
-        {
-            return m_origin;
-        }
-
-        string RequestImpl::get_destination( void ) const
-        {
-            return m_destination;
-        }
-
-        string RequestImpl::get_protocol( void ) const
-        {
-            return m_protocol;
-        }
-        
-        string RequestImpl::get_header( const string& name, const string& default_value ) const
-        {
-            string value = default_value;
-            
-            if ( has_header( name ) )
-            {
-                const auto iterator = Map::find_ignoring_case( name, m_headers );
-                
-                value = iterator->second;
-            }
-            
-            return value;
-        }
-        
-        multimap< string, string > RequestImpl::get_headers( void ) const
-        {
-            return m_headers;
-        }
-        
-        multimap< string, string > RequestImpl::get_headers( const string& name ) const
-        {
-            multimap< string, string > headers;
-            
-            auto key = String::lowercase( name );
-            
-            for ( auto header : m_headers )
-            {
-                if ( String::lowercase( header.first ) == key )
-                {
-                    headers.insert( header );
-                }
-            }
-            
-            return headers;
-        }
-        
-        string RequestImpl::get_query_parameter( const string& name, const string& default_value ) const
-        {
-            string parameter = default_value;
-            
-            if ( has_query_parameter( name ) )
-            {
-                const auto iterator = m_query_parameters.find( name );
-                
-                parameter = iterator->second;
-            }
-            
-            return parameter;
-        }
-        
-        multimap< string, string > RequestImpl::get_query_parameters( void ) const
-        {
-            return m_query_parameters;
-        }
-
-        multimap< string, string > RequestImpl::get_query_parameters( const string& name ) const
-        {
-            multimap< string, string > parameters;
-            
-            for ( auto parameter : m_query_parameters )
-            {
-                if ( parameter.first == name )
-                {
-                    parameters.insert( parameter );
-                }
-            }
-            
-            return parameters;
-        }
-        
-        string RequestImpl::get_path_parameter( const string& name, const string& default_value ) const
-        {
-            string parameter = default_value;
-            
-            if ( has_path_parameter( name ) )
-            {
-                const auto iterator = Map::find_ignoring_case( name, m_path_parameters );
-                
-                parameter = iterator->second;
-            }
-            
-            return parameter;
-        }
-        
-        map< string, string > RequestImpl::get_path_parameters( void ) const
-        {
-            return m_path_parameters;
-        }
-        
-        void RequestImpl::set_body( const Bytes& value )
-        {
-            m_body = value;
-        }
-        
-        void RequestImpl::set_version( const double value )
-        {
-            if ( value not_eq 1.0 and value not_eq 1.1 )
-            {
-                throw 505;
-            }
-            
-            m_version = value;
-        }
-        
-        void RequestImpl::set_path( const string& value )
-        {
-            m_path = value;
-        }
-        
-        void RequestImpl::set_method( const string& value )
-        {
-            const string method = String::uppercase( value );
-
-            if ( methods.count( method ) == 0 )
-            {
-                throw 501;
-            }
-
-            m_method = method;
-        }
-        
-        void RequestImpl::set_origin( const string& value )
-        {
-            m_origin = value;
-        }
-
-        void RequestImpl::set_destination( const string& value )
-        {
-            m_destination = value;
-        }
-
-        void RequestImpl::set_protocol( const string& value )
-        {
-            const auto& protocol = String::uppercase( value );
-
-            if ( protocol not_eq "HTTP" )
-            {
-                throw 400;
-            }
-            
-            m_protocol = protocol;
-        }
-
-        void RequestImpl::set_socket( const shared_ptr< tcp::socket >& value, asio::streambuf* buffer )
-        {
-            m_socket = value;
-            m_buffer = buffer;
-        }
-        
-        void RequestImpl::set_headers( const multimap< string, string >& values )
-        {
-            m_headers = values;
-        }
-        
-        void RequestImpl::set_path_parameters( const map< string, string >& values )
-        {
-            m_path_parameters = values;
-        }
-        
-        void RequestImpl::set_query_parameters( const multimap< string, string >& values )
-        {
-            m_query_parameters = values;
-        }
-        
-        bool RequestImpl::operator <( const RequestImpl& value ) const
-        {
-            return m_path < value.m_path;
-        }
-        
-        bool RequestImpl::operator >( const RequestImpl& value ) const
-        {
-            return m_path > value.m_path;
-        }
-        
-        bool RequestImpl::operator ==( const RequestImpl& value ) const
-        {
-            return ( m_body_processed == value.m_body_processed and
-                     m_path == value.m_path and
-                     m_method == value.m_method and
-                     m_origin == value.m_origin and
-                     m_destination == value.m_destination and
-                     m_version == value.m_version and
-                     m_headers == value.m_headers and
-                     m_protocol == value.m_protocol and
-                     m_buffer == value.m_buffer and
-                     m_socket == value.m_socket and
-                     m_path_parameters == value.m_path_parameters and
-                     m_query_parameters == value.m_query_parameters );
-        }
-        
-        bool RequestImpl::operator !=( const RequestImpl& value ) const
-        {
-            return not ( *this == value );
-        }
-        
         RequestImpl& RequestImpl::operator =( const RequestImpl& value )
         {
             m_body_processed = value.m_body_processed;
