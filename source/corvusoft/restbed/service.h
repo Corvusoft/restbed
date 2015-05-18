@@ -24,6 +24,7 @@ namespace restbed
 {
     //Forward Declarations
     class Logger;
+    class Session;
     class Request;
     class Response;
     class Resource;
@@ -67,9 +68,9 @@ namespace restbed
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
             
-            void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
+            void set_authentication_handler( std::function< void ( const std::shared_ptr< Session >& ) > value );
             
-            void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
+            void set_error_handler( std::function< void ( const int, const std::shared_ptr< Session >& ) > value );
             
             //Operators
             Service& operator =( const Service& value );

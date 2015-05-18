@@ -6,6 +6,7 @@
 #define _RESTBED_SESSION_H 1
 
 //System Includes
+#include <memory>
 
 //Project Includes
 
