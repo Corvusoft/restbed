@@ -9,16 +9,16 @@
 
 //Project Includes
 #include "corvusoft/restbed/logger.h"
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/status_codes.h"
+#include "corvusoft/restbed/detail/session_impl.h"
 #include "corvusoft/restbed/detail/service_impl.h"
-#include "corvusoft/restbed/detail/path_parameter_impl.h"
-#include "corvusoft/restbed/detail/request_builder_impl.h"
-#include "corvusoft/restbed/detail/response_builder_impl.h"
-#include "corvusoft/restbed/detail/resource_matcher_impl.h"
+// #include "corvusoft/restbed/detail/path_parameter_impl.h"
+// #include "corvusoft/restbed/detail/request_builder_impl.h"
+// #include "corvusoft/restbed/detail/response_builder_impl.h"
+// #include "corvusoft/restbed/detail/resource_matcher_impl.h"
 
 //External Includes
 #include <corvusoft/framework/string>
@@ -57,31 +57,32 @@ namespace restbed
     {
         ServiceImpl::ServiceImpl( const Settings& settings ) : m_port( settings.get_port( ) ),
             m_root( settings.get_root( ) ),
-            m_maximum_connections( settings.get_maximum_connections( ) ),
-            m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
+            // m_maximum_connections( settings.get_maximum_connections( ) ),
+            // m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
             m_resources( ),
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
             m_acceptor( nullptr ),
+            m_sessions( ),
             m_authentication_handler( &ServiceImpl::authentication_handler ),
             m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2 ) )
         {
             return;
         }
         
-        ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_port( original.m_port ),
-            m_root( original.m_root ),
-            m_maximum_connections( original.m_maximum_connections ),
-            m_connection_timeout( original.m_connection_timeout ),
-            m_resources( original.m_resources ),
-            m_log_handler( original.m_log_handler ),
-            m_io_service( original.m_io_service ),
-            m_acceptor( original.m_acceptor ),
-            m_authentication_handler( original.m_authentication_handler ),
-            m_error_handler( original.m_error_handler )
-        {
-            return;
-        }
+        // ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_port( original.m_port ),
+        //     m_root( original.m_root ),
+        //     // m_maximum_connections( original.m_maximum_connections ),
+        //     // m_connection_timeout( original.m_connection_timeout ),
+        //     m_resources( original.m_resources ),
+        //     m_log_handler( original.m_log_handler ),
+        //     m_io_service( original.m_io_service ),
+        //     m_acceptor( original.m_acceptor ),
+        //     m_authentication_handler( original.m_authentication_handler ),
+        //     m_error_handler( original.m_error_handler )
+        // {
+        //     return;
+        // }
         
         ServiceImpl::~ServiceImpl( void )
         {
@@ -95,42 +96,38 @@ namespace restbed
             }
         }
         
+        void ServiceImpl::stop( void )
+        {
+            if ( m_io_service not_eq nullptr )
+            {
+                m_io_service->stop( );
+            }
+
+            // log( Logger::Level::INFO, "Service stopped" );
+        }
+
         void ServiceImpl::start( void )
         {
-            // m_io_service = make_shared< io_service >( );
+            m_io_service = make_shared< io_service >( );
             
-            // m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
+            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
+            m_acceptor->set_option( socket_base::reuse_address( true ) );
+            m_acceptor->listen(  );//m_maximum_connections );
             
-            // m_acceptor->set_option( socket_base::reuse_address( true ) );
-            
-            // m_acceptor->listen( m_maximum_connections );
-            
-            // listen( );
+            listen( );
 
             // log( Logger::Level::INFO, "Service Started" );
 
-            // m_io_service->run( );
+            m_io_service->run( );
 
             // log( Logger::Level::INFO, "Service Stopped" );
-        }
-        
-        void ServiceImpl::stop( void )
-        {
-            // if ( m_io_service not_eq nullptr )
-            // {
-            //     m_io_service->stop( );
-            // }
-
-            ///acceptor?
-
-            // log( Logger::Level::INFO, "Service stopped" );
         }
         
         void ServiceImpl::publish( const shared_ptr< Resource >& value )
         {
             //if ( not has_unique_paths( value.get_paths( ) ) )
             //{
-            //    throw invalid_argument( "Resource would pollute namespace. Please ensure all resources have unique paths." );
+            //    throw invalid_argument( "Resource would pollute namespace. Please ensure all published resources have unique paths." );
             //}
 
             //const auto& paths = resource->get_paths( );
@@ -174,55 +171,41 @@ namespace restbed
             m_error_handler = value;
         }
         
-        ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
-        {
-            m_port = value.m_port;
+        // ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
+        // {
+        //     m_port = value.m_port;
             
-            m_root = value.m_root;
+        //     m_root = value.m_root;
             
-            m_resources = value.m_resources;
+        //     m_resources = value.m_resources;
             
-            m_log_handler = value.m_log_handler;
+        //     m_log_handler = value.m_log_handler;
 
-            m_connection_timeout = value.m_connection_timeout;
+        //     // m_connection_timeout = value.m_connection_timeout;
             
-            m_maximum_connections = value.m_maximum_connections;
+        //     // m_maximum_connections = value.m_maximum_connections; connection_limit
             
-            m_error_handler = value.m_error_handler;
+        //     m_error_handler = value.m_error_handler;
             
-            m_authentication_handler = value.m_authentication_handler;
+        //     m_authentication_handler = value.m_authentication_handler;
             
-            return *this;
-        }
+        //     return *this;
+        // }
         
         void ServiceImpl::listen( void )
         {
-            // auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
             
-            // m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
+            m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
 
-        //void ServiceImpl::create_session
-        void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
+        void ServiceImpl::router( const shared_ptr< Session >& session )
         try
         {
-//            auto service = this;
-//
-//            Session session;
-//            session.m_pimpl->set_socket( socket );
-//            session.m_pimpl->set_service( m_ioservice );
-            //this happens inside fetch
-            //asio::error_code code;
-            //asio::streambuf* buffer = new asio::streambuf; //when is this deleted?
-            //asio::read_until( *socket, *buffer, "\r\n\r\n", code );
-            //if ( code )
-            //{
-            //    throw asio::system_error( code );
-            //}
-            //end of session::fetch
-//            session.fetch( [ &service ]( shared_ptr< Session >& session ) //bind( ServiceImpl::router, this )
 //            {
-//                if ( not service.m_authentication_handler( session ) )
+//                m_authentication_handler( session );
+//
+//                if ( session.is_closed( ) )
 //                {
 //                    return;
 //                }
@@ -262,8 +245,6 @@ namespace restbed
 //                    //delete from session store
 //                }
 //            } );
-//
-//            m_sessions[ session.get_id( ) ] = session;
         }
         catch ( const exception& ex )
         {
@@ -276,6 +257,20 @@ namespace restbed
             // resource_error_handler = resource->get_error_handler( );
             // resource_error_handler( session );
             // m_error_handler( session );
+        }
+
+        void ServiceImpl::create_session( shared_ptr< tcp::socket > socket, const error_code& error )
+        {
+            //if ( error )
+            //{
+            //   //log, error handler and close connection.
+            //}
+
+            auto session = make_shared< Session >( );
+            session->m_pimpl->set_socket( socket );
+            session->fetch( bind( &ServiceImpl::router, this, _1 ) );
+
+            m_sessions[ session->get_id( ) ] = session;
         }
 
 
@@ -352,8 +347,8 @@ namespace restbed
             // listen( );
         //}
         
-        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
-        {
+        //Resource ServiceImpl::resolve_resource_route( const Request& request ) const
+        //{
             // Resource resource;
             
             // auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) );
@@ -368,13 +363,13 @@ namespace restbed
             // }
 
             // return resource;
-        }
+        //}
         
-        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
-        {   
+        //Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
+        //{   
             // auto callback = resource.get_method_handler( request.get_method( ) );   
             // return callback( request );
-        }
+        //}
         
         void ServiceImpl::log( const Logger::Level level, const string& message )
         {
@@ -387,8 +382,6 @@ namespace restbed
         void ServiceImpl::authentication_handler( const shared_ptr< Session >& value )
         {
             return;
-            //don't return boolean false.
-            //let the service check for the session.is_closed( );
         }
         
         void ServiceImpl::error_handler( const int status_code, const shared_ptr< Session >& session )
@@ -409,8 +402,8 @@ namespace restbed
             // response.set_body( status_message );
         }
 
-        void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
-        {
+        //void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
+        //{
             // struct timeval value;
             // value.tv_usec = 0;
             // value.tv_sec = m_connection_timeout;
@@ -429,6 +422,6 @@ namespace restbed
             // {
             //     throw runtime_error( "Failed to set socket send timeout" );
             // }
-        }
+        //}
     }
 }

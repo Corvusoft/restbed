@@ -6,10 +6,14 @@
 #define _RESTBED_DETAIL_SESSION_IMPL_H 1
 
 //System Includes
+#include <string>
+#include <memory>
+#include <functional>
 
 //Project Includes
 
 //External Includes
+#include <asio.hpp>
 
 //System Namespaces
 
@@ -20,6 +24,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Session;
     
     namespace detail
     {
@@ -35,11 +40,11 @@ namespace restbed
                 //Constructors
                 SessionImpl( void );
                 
-                SessionImpl( const SessionImpl& original );
-                
                 virtual ~SessionImpl( void );
                 
                 //Functionality
+                void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
 //                bool is_open( void );
 //
 //                bool is_closed( void );
@@ -76,11 +81,12 @@ namespace restbed
 
                 //Getters
 //                const Request& get_request( void ) const;
+                const std::string& get_id( void ) const;
 
                 //Setters
+                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
                 
                 //Operators
-                SessionImpl& operator =( const SessionImpl& value );
                 
                 //Properties
                 
@@ -107,6 +113,7 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                SessionImpl( const SessionImpl& original ) = delete;
                 
                 //Functionality
                 
@@ -115,8 +122,12 @@ namespace restbed
                 //Setters
                 
                 //Operators
+                SessionImpl& operator =( const SessionImpl& value ) = delete;
                 
                 //Properties
+                std::string m_id;
+                
+                std::shared_ptr< asio::ip::tcp::socket > m_socket;
         };
     }
 }

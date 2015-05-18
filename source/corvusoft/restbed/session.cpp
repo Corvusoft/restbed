@@ -11,6 +11,8 @@
 //External Includes
 
 //System Namespaces
+using std::string;
+using std::function;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -25,20 +27,18 @@ namespace restbed
         return;
     }
     
-    Session::Session( const Session& original ) : m_pimpl( new SessionImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
     Session::~Session( void )
     {
         return;
     }
 
-    Session& Session::operator =( const Session& value )
+    void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
+        m_pimpl->fetch( callback );
+    }
+
+    string Session::get_id( void ) const
+    {
+        return m_pimpl->get_id( );
     }
 }

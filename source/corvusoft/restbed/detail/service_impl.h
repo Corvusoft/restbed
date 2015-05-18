@@ -45,14 +45,12 @@ namespace restbed
                 //Constructors
                 ServiceImpl( const Settings& settings );
                 
-                ServiceImpl( const ServiceImpl& original );
-                
                 virtual ~ServiceImpl( void );
                 
                 //Functionality
-                void start( void );
-                
                 void stop( void );
+
+                void start( void );
                 
                 void publish( const std::shared_ptr< Resource >& value );
                 
@@ -67,8 +65,7 @@ namespace restbed
                 
                 void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
                 
-                //Operators                
-                ServiceImpl& operator =( const ServiceImpl& value );
+                //Operators
                 
                 //Properties
                 
@@ -95,38 +92,42 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                ServiceImpl( const ServiceImpl& original ) = delete;
                 
                 //Functionality
                 void listen( void );
+
+                void router( const std::shared_ptr< Session >& session );
                 
-                void router( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
+                void create_session( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
                 
-                Resource resolve_resource_route( const Request& request ) const;
+                // Resource resolve_resource_route( const Request& request ) const;
                 
-                Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
+                // Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
                 
                 void log( const Logger::Level level, const std::string& message );
                 
-                static void authentication_handler( const std::shared_ptr< Session >& response );
+                static void authentication_handler( const std::shared_ptr< Session >& session );
                 
                 void error_handler( const int status_code, const std::shared_ptr< Session >& session );
 
-                void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
+                // void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
 
                 //Getters
                 
                 //Setters
                 
                 //Operators
+                ServiceImpl& operator =( const ServiceImpl& value ) = delete;
                 
                 //Properties
                 uint16_t m_port;
                 
                 std::string m_root;
                 
-                int m_maximum_connections;
+                // int m_maximum_connections;
 
-                long long m_connection_timeout;
+                // long long m_connection_timeout;
 
                 std::set< Resource > m_resources;
                 
@@ -135,6 +136,8 @@ namespace restbed
                 std::shared_ptr< asio::io_service > m_io_service;
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
+
+                std::map< std::string, std::shared_ptr< Session > > m_sessions;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_authentication_handler;
                 

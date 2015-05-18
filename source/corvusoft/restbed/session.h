@@ -6,7 +6,9 @@
 #define _RESTBED_SESSION_H 1
 
 //System Includes
+#include <string>
 #include <memory>
+#include <functional>
 
 //Project Includes
 
@@ -21,10 +23,12 @@
 namespace restbed
 {
     //Forward Declarations
+    class Session;
     
     namespace detail
     {
         class SessionImpl;
+        class ServiceImpl;
     }
     
     class Session
@@ -36,19 +40,18 @@ namespace restbed
             
             //Constructors
             Session( void );
-            
-            Session( const Session& original );
-        
+
             virtual ~Session( void );
             
-            //Functionality            
+            //Functionality
+            void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             //Getters
+            std::string get_id( void ) const;
 
             //Setters
             
             //Operators
-            Session& operator =( const Session& value );
             
             //Properties
             
@@ -71,10 +74,12 @@ namespace restbed
             
         private:
             //Friends
+            friend detail::ServiceImpl;
             
             //Definitions
             
             //Constructors
+            Session( const Session& original ) = delete;
             
             //Functionality
             
@@ -83,6 +88,7 @@ namespace restbed
             //Setters
             
             //Operators
+            Session& operator =( const Session& value ) = delete;
             
             //Properties
             std::unique_ptr< detail::SessionImpl > m_pimpl;

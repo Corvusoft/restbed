@@ -25,8 +25,6 @@ namespace restbed
     //Forward Declarations
     class Logger;
     class Session;
-    class Request;
-    class Response;
     class Resource;
     class Settings;
     
@@ -46,22 +44,17 @@ namespace restbed
             
             //Constructors
             Service( const Settings& settings );
-            
-            Service( const Service& original );
         
             virtual ~Service( void );
             
             //Functionality
-            void start( void );
-            
             void stop( void );
+
+            void start( void );
             
             void publish( const std::shared_ptr< Resource >& value );
             
             void suppress( const std::shared_ptr< Resource >& value );
-
-            //void add_cache_entry( const Request&, const Response&, strict (everyhting must match), expires ); CacheEntry
-            //void add_cache_entries( ... );
             
             //Getters
             
@@ -73,7 +66,6 @@ namespace restbed
             void set_error_handler( std::function< void ( const int, const std::shared_ptr< Session >& ) > value );
             
             //Operators
-            Service& operator =( const Service& value );
             
             //Properties
             
@@ -100,6 +92,7 @@ namespace restbed
             //Definitions
             
             //Constructors
+            Service( const Service& original ) = delete;
             
             //Functionality
             
@@ -108,6 +101,7 @@ namespace restbed
             //Setters
             
             //Operators
+            Service& operator =( const Service& value ) = delete;
             
             //Properties
             std::unique_ptr< detail::ServiceImpl > m_pimpl;
