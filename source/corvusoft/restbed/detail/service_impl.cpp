@@ -271,6 +271,8 @@ namespace restbed
             session->m_pimpl->fetch( bind( &ServiceImpl::router, this, _1 ), session );
 
             m_sessions[ session->get_id( ) ] = session;
+
+            listen( );
         }
 
 

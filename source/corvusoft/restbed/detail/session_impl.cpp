@@ -3,6 +3,8 @@
  */
 
 //System Includes
+#include <istream>
+#include <iostream> //debug
 
 //Project Includes
 #include "corvusoft/restbed/session.h"
@@ -13,6 +15,7 @@
 
 //System Namespaces
 using std::string;
+using std::istream;
 using std::function;
 using std::shared_ptr;
 using std::make_shared;
@@ -44,8 +47,8 @@ namespace restbed
 
         void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session )
         {
-            //just reset the buffer not a new alloc.
             m_buffer = make_shared< asio::streambuf >( );
+
             asio::async_read_until( *m_socket,
                                     *m_buffer,
                                     "\r\n\r\n",
@@ -71,6 +74,8 @@ namespace restbed
 
             //m_buffer has status/headers
             //m_request
+            istream stream( m_buffer.get( ) );
+            std::cout << stream.rdbuf( );
 
             callback( session );
         }
