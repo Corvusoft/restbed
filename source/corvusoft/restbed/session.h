@@ -71,7 +71,7 @@ namespace restbed
             //Operators
             
             //Properties
-            
+
         private:
             //Friends
             friend detail::ServiceImpl;
@@ -82,7 +82,7 @@ namespace restbed
             Session( const Session& original ) = delete;
             
             //Functionality
-            
+
             //Getters
             
             //Setters

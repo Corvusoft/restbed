@@ -43,7 +43,7 @@ namespace restbed
                 virtual ~SessionImpl( void );
                 
                 //Functionality
-                void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session );
 
 //                bool is_open( void );
 //
@@ -116,6 +116,7 @@ namespace restbed
                 SessionImpl( const SessionImpl& original ) = delete;
                 
                 //Functionality
+                void parse_status_and_headers( const std::function< void ( const std::shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session, const asio::error_code& error );
                 
                 //Getters
                 
@@ -126,7 +127,9 @@ namespace restbed
                 
                 //Properties
                 std::string m_id;
-                
+
+                std::shared_ptr< asio::streambuf > m_buffer;
+
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
         };
     }

@@ -34,7 +34,7 @@ namespace restbed
 
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->fetch( callback );
+        m_pimpl->fetch( callback, shared_ptr< Session >( this ) );
     }
 
     string Session::get_id( void ) const

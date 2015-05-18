@@ -268,7 +268,7 @@ namespace restbed
 
             auto session = make_shared< Session >( );
             session->m_pimpl->set_socket( socket );
-            session->fetch( bind( &ServiceImpl::router, this, _1 ) );
+            session->m_pimpl->fetch( bind( &ServiceImpl::router, this, _1 ), session );
 
             m_sessions[ session->get_id( ) ] = session;
         }
