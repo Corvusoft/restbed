@@ -20,6 +20,7 @@ using std::pair;
 using std::string;
 using std::function;
 using std::multimap;
+using std::shared_ptr;
 using std::invalid_argument;
 
 //Project Namespaces
