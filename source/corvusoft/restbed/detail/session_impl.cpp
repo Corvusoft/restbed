@@ -86,7 +86,7 @@ namespace restbed
             getline( stream, status );
 
             smatch base_matches;
-            static const regex status_pattern( "^(.*)\\s(.*)\\s(HTTP\\/[0-9]\\.[0-9])\\s*$" ); //class wide?
+            static const regex status_pattern( "^(.*) (.*) (HTTP\\/[0-9]\\.[0-9])\\s*$" ); //class wide?
             bool match = regex_match( status, base_matches, status_pattern );
 
             if ( not match or base_matches.size( ) not_eq 4 )
