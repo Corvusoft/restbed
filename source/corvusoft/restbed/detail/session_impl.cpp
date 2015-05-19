@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <regex>
 #include <istream>
 #include <iostream> //debug
 
@@ -11,14 +12,20 @@
 #include "corvusoft/restbed/detail/session_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 #include <corvusoft/framework/unique_id>
 
 //System Namespaces
+using std::regex;
+using std::smatch;
 using std::string;
+using std::getline;
 using std::istream;
 using std::function;
+using std::ssub_match;
 using std::shared_ptr;
 using std::make_shared;
+using std::regex_match;
 using std::placeholders::_1;
 
 //Project Namespaces
@@ -28,6 +35,7 @@ using restbed::detail::SessionImpl;
 using asio::buffer;
 using asio::ip::tcp;
 using asio::error_code;
+using framework::String;
 using framework::UniqueId;
 
 namespace restbed
@@ -72,10 +80,28 @@ namespace restbed
             //    throw asio::system_error( code );
             //}
 
-            //m_buffer has status/headers
-            //m_request
             istream stream( m_buffer.get( ) );
-            std::cout << stream.rdbuf( );
+
+            string status = String::empty;
+            getline( stream, status );
+
+            smatch base_matches;
+            static const regex status_pattern( "^(.*)\\s(.*)\\s(HTTP\\/[0-9]\\.[0-9])\\s*$" ); //class wide?
+            bool match = regex_match( status, base_matches, status_pattern );
+
+            if ( not match or base_matches.size( ) not_eq 4 )
+            {
+                std::cout << "FAILED BAD REQUEST!" << base_matches.size( ) << std::endl;
+            }
+
+            string method = base_matches[ 1 ].str( );
+            string path = base_matches[ 2 ].str( );
+            string version = base_matches[ 3 ].str( );
+
+            std::cout << "method: " << method << std::endl;
+            std::cout << "path: " << path << std::endl;
+            std::cout << "version: " << version << std::endl;
+            std::cout << "buffer: " << stream.rdbuf( );
 
             callback( session );
         }
