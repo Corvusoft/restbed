@@ -13,18 +13,15 @@
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/status_codes.h"
-#include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/session_manager.h"
 #include "corvusoft/restbed/detail/service_impl.h"
-// #include "corvusoft/restbed/detail/path_parameter_impl.h"
-// #include "corvusoft/restbed/detail/request_builder_impl.h"
-// #include "corvusoft/restbed/detail/response_builder_impl.h"
-// #include "corvusoft/restbed/detail/resource_matcher_impl.h"
+#include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/detail/session_manager_impl.h"
 
 //External Includes
 #include <corvusoft/framework/string>
 
 //System Namespaces
-using std::list;
 using std::find;
 using std::bind;
 using std::string;
@@ -62,27 +59,13 @@ namespace restbed
             m_resources( ),
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
+            m_session_manager( nullptr ),
             m_acceptor( nullptr ),
-            m_sessions( ),
             m_authentication_handler( &ServiceImpl::authentication_handler ),
             m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2 ) )
         {
             return;
         }
-        
-        // ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_port( original.m_port ),
-        //     m_root( original.m_root ),
-        //     // m_maximum_connections( original.m_maximum_connections ),
-        //     // m_connection_timeout( original.m_connection_timeout ),
-        //     m_resources( original.m_resources ),
-        //     m_log_handler( original.m_log_handler ),
-        //     m_io_service( original.m_io_service ),
-        //     m_acceptor( original.m_acceptor ),
-        //     m_authentication_handler( original.m_authentication_handler ),
-        //     m_error_handler( original.m_error_handler )
-        // {
-        //     return;
-        // }
         
         ServiceImpl::~ServiceImpl( void )
         {
@@ -109,7 +92,10 @@ namespace restbed
         void ServiceImpl::start( void )
         {
             m_io_service = make_shared< io_service >( );
-            
+
+            Settings settings; //get from constructor
+            m_session_manager = make_shared< SessionManagerImpl >( settings );
+
             m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
             m_acceptor->set_option( socket_base::reuse_address( true ) );
             m_acceptor->listen(  );//m_maximum_connections );
@@ -199,9 +185,11 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
 
-        void ServiceImpl::router( const shared_ptr< Session >& session )
+        void ServiceImpl::resource_router( const shared_ptr< Session >& session )
         try
         {
+            //m_session_manager->load( session ); //bottleneck
+
 //            {
 //                m_authentication_handler( session );
 //
@@ -259,25 +247,19 @@ namespace restbed
             // m_error_handler( session );
         }
 
-        void ServiceImpl::create_session( shared_ptr< tcp::socket > socket, const error_code& error )
+        void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error )
         {
             //if ( error )
             //{
             //   //log, error handler and close connection.
             //}
 
-            auto session = make_shared< Session >( );
+            auto session = m_session_manager->create( ); //bottleneck
             session->m_pimpl->set_socket( socket );
-            session->m_pimpl->fetch( bind( &ServiceImpl::router, this, _1 ), session );
-
-            m_sessions[ session->get_id( ) ] = session;
+            session->m_pimpl->fetch( bind( &ServiceImpl::resource_router, this, _1 ), session );
 
             listen( );
         }
-
-
-
-
 
             // Request request;
             // Response response;

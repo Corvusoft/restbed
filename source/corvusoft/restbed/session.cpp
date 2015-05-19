@@ -22,11 +22,11 @@ using restbed::detail::SessionImpl;
 
 namespace restbed
 {
-    Session::Session( void ) : m_pimpl( new SessionImpl )
+    Session::Session( const string& id ) : m_pimpl( new SessionImpl )
     {
-        return;
+        m_pimpl->set_id( id );
     }
-    
+
     Session::~Session( void )
     {
         return;

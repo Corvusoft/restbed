@@ -17,4 +17,6 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/session.h
      ${SOURCE_DIR}/logger
      ${SOURCE_DIR}/logger.h
+     ${SOURCE_DIR}/session_manager
+     ${SOURCE_DIR}/session_manager.h
 )

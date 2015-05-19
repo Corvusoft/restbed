@@ -2,13 +2,11 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#ifndef _RESTBED_SESSION_H
-#define _RESTBED_SESSION_H 1
+#ifndef _RESTBED_SESSION_MANAGER_H
+#define _RESTBED_SESSION_MANAGER_H 1
 
 //System Includes
-#include <string>
 #include <memory>
-#include <functional>
 
 //Project Includes
 
@@ -24,14 +22,9 @@ namespace restbed
 {
     //Forward Declarations
     class Session;
+    class Settings;
     
-    namespace detail
-    {
-        class SessionImpl;
-        class ServiceImpl;
-    }
-    
-    class Session
+    class SessionManager
     {
         public:
             //Friends
@@ -39,15 +32,16 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Session( const std::string& id );
-
-            virtual ~Session( void );
+            SessionManager( const Settings& settings );
+            
+            virtual ~SessionManager( void );
             
             //Functionality
-            void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+            virtual std::shared_ptr< Session > create( void ) = 0;
+
+            virtual void load( std::shared_ptr< Session >& session ) = 0;
 
             //Getters
-            std::string get_id( void ) const;
 
             //Setters
             
@@ -71,18 +65,17 @@ namespace restbed
             //Operators
             
             //Properties
-
+            
         private:
             //Friends
-            friend detail::ServiceImpl;
             
             //Definitions
             
             //Constructors
-            Session( void ) = delete;
+            SessionManager( void ) = delete;
 
-            Session( const Session& original ) = delete;
-            
+            SessionManager( const SessionManager& original ) = delete;
+
             //Functionality
 
             //Getters
@@ -90,11 +83,10 @@ namespace restbed
             //Setters
             
             //Operators
-            Session& operator =( const Session& value ) = delete;
+            SessionManager& operator =( const SessionManager& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::SessionImpl > m_pimpl;
     };
 }
 
-#endif  /* _RESTBED_SESSION_H */
+#endif  /* _RESTBED_SESSION_MANAGER_H */

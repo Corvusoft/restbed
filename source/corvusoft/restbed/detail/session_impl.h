@@ -84,6 +84,8 @@ namespace restbed
                 const std::string& get_id( void ) const;
 
                 //Setters
+                void set_id( const std::string& value );
+
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
                 
                 //Operators

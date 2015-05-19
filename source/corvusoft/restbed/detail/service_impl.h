@@ -6,7 +6,6 @@
 #define _RESTBED_DETAIL_SERVICE_IMPL_H 1
 
 //System Includes
-#include <list>
 #include <memory>
 #include <string>
 #include <functional>
@@ -30,6 +29,7 @@ namespace restbed
     class Service;
     class Resource;
     class Settings;
+    class SessionManager;
 
     namespace detail
     {
@@ -97,9 +97,9 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
-                void router( const std::shared_ptr< Session >& session );
+                void resource_router( const std::shared_ptr< Session >& session );
                 
-                void create_session( std::shared_ptr< asio::ip::tcp::socket > socket, const asio::error_code& error );
+                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error );
                 
                 // Resource resolve_resource_route( const Request& request ) const;
                 
@@ -134,10 +134,10 @@ namespace restbed
                 std::shared_ptr< Logger > m_log_handler;
                 
                 std::shared_ptr< asio::io_service > m_io_service;
+
+                std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
-
-                std::map< std::string, std::shared_ptr< Session > > m_sessions;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_authentication_handler;
                 

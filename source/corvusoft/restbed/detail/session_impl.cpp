@@ -13,7 +13,6 @@
 
 //External Includes
 #include <corvusoft/framework/string>
-#include <corvusoft/framework/unique_id>
 
 //System Namespaces
 using std::regex;
@@ -36,13 +35,13 @@ using asio::buffer;
 using asio::ip::tcp;
 using asio::error_code;
 using framework::String;
-using framework::UniqueId;
 
 namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_id( UniqueId::generate( ).to_string( ) ),
+        SessionImpl::SessionImpl( void ) : m_id( String::empty ),
+            m_buffer( nullptr ),
             m_socket( nullptr )
         {
             return;
@@ -68,9 +67,14 @@ namespace restbed
             return m_id;
         }
 
+        void SessionImpl::set_id( const string& value )
+        {
+            m_id = value;
+        }
+
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
         {
-            m_socket = value;
+            m_socket = value; //just pass this in via fetch?
         }
 
         void SessionImpl::parse_status_and_headers( const function< void ( const shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session, const asio::error_code& error )
@@ -82,12 +86,12 @@ namespace restbed
 
             istream stream( m_buffer.get( ) );
 
-            string status = String::empty;
-            getline( stream, status );
+            string data = String::empty;
+            getline( stream, data );
 
             smatch base_matches;
             static const regex status_pattern( "^(.*) (.*) (HTTP\\/[0-9]\\.[0-9])\\s*$" ); //class wide?
-            bool match = regex_match( status, base_matches, status_pattern );
+            const bool match = regex_match( data, base_matches, status_pattern );
 
             if ( not match or base_matches.size( ) not_eq 4 )
             {
@@ -101,7 +105,24 @@ namespace restbed
             std::cout << "method: " << method << std::endl;
             std::cout << "path: " << path << std::endl;
             std::cout << "version: " << version << std::endl;
-            std::cout << "buffer: " << stream.rdbuf( );
+
+            getline( stream, data );
+            while ( not stream.eof( ) and data not_eq "\r" )
+            {
+                static const regex header_pattern( "^(.*): *(.*)\\s*$" );
+                const bool match2 = regex_match( data, base_matches, header_pattern );
+
+                if ( not match2 or base_matches.size( ) not_eq 3 )
+                {
+                    std::cout << "FAILED BAD REQUEST!" << base_matches.size( ) << std::endl;
+                }
+
+                string name = base_matches[ 1 ].str( );
+                string value = base_matches[ 2 ].str( );
+
+                std::cout << name << ": " << value << std::endl;
+                getline( stream, data );
+            }
 
             callback( session );
         }
