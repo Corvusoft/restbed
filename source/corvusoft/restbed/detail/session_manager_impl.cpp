@@ -48,9 +48,8 @@ namespace restbed
 
         void SessionManagerImpl::load( shared_ptr< Session >& session )
         {
-            //send of async database request
-            //session.wait_for( seconds( 10 ), callback_to_check_if_returned( ) );
-            
+            //perform async operation ex. Http::async( );
+            //restbed::wait_for( seconds( 10 ), bind( session, callback ) );
             return;
         }
     }

@@ -12,6 +12,7 @@
 #include "corvusoft/restbed/detail/session_impl.h"
 
 //External Includes
+#include <corvusoft/framework/uri>
 #include <corvusoft/framework/string>
 
 //System Namespaces
@@ -34,6 +35,7 @@ using restbed::detail::SessionImpl;
 using asio::buffer;
 using asio::ip::tcp;
 using asio::error_code;
+using framework::Uri;
 using framework::String;
 
 namespace restbed
@@ -99,15 +101,22 @@ namespace restbed
             }
 
             string method = base_matches[ 1 ].str( );
-            string path = base_matches[ 2 ].str( );
             string version = base_matches[ 3 ].str( );
+
+            auto uri = Uri::parse( "http://localhost" + base_matches[ 2 ].str( ) );
+            string path = uri.get_path( );
+            auto parameters = uri.get_query_parameters( );
 
             std::cout << "method: " << method << std::endl;
             std::cout << "path: " << path << std::endl;
             std::cout << "version: " << version << std::endl;
 
-            getline( stream, data );
-            while ( not stream.eof( ) and data not_eq "\r" )
+            for ( auto parameter : uri.get_query_parameters( ) )
+            {
+                std::cout << "parameter: '" << parameter.first << "' = '" << parameter.second << "'" << std::endl;
+            }
+
+            while ( getline( stream, data ) and data not_eq "\r" )
             {
                 static const regex header_pattern( "^(.*): *(.*)\\s*$" );
                 const bool match2 = regex_match( data, base_matches, header_pattern );
@@ -120,8 +129,7 @@ namespace restbed
                 string name = base_matches[ 1 ].str( );
                 string value = base_matches[ 2 ].str( );
 
-                std::cout << name << ": " << value << std::endl;
-                getline( stream, data );
+                std::cout << "header: '" << name << "' = '" << value << "'" << std::endl;
             }
 
             callback( session );
