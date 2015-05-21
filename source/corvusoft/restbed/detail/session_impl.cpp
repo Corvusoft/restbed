@@ -4,10 +4,12 @@
 
 //System Includes
 #include <regex>
-#include <istream>
+#include <utility>
+#include <stdexcept>
 #include <iostream> //debug
 
 //Project Includes
+#include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/detail/session_impl.h"
 
@@ -16,16 +18,20 @@
 #include <corvusoft/framework/string>
 
 //System Namespaces
+using std::map;
 using std::regex;
 using std::smatch;
 using std::string;
 using std::getline;
 using std::istream;
 using std::function;
+using std::multimap;
+using std::make_pair;
 using std::ssub_match;
 using std::shared_ptr;
 using std::make_shared;
 using std::regex_match;
+using std::runtime_error;
 using std::placeholders::_1;
 
 //Project Namespaces
@@ -61,7 +67,7 @@ namespace restbed
             asio::async_read_until( *m_socket,
                                     *m_buffer,
                                     "\r\n\r\n",
-                                    bind( &SessionImpl::parse_status_and_headers, this, callback, session, _1 ) );
+                                    bind( &SessionImpl::parse_request, this, callback, session, _1 ) );
         }
 
         const string& SessionImpl::get_id( void ) const
@@ -76,61 +82,64 @@ namespace restbed
 
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
         {
-            m_socket = value; //just pass this in via fetch?
+            m_socket = value;
         }
 
-        void SessionImpl::parse_status_and_headers( const function< void ( const shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session, const asio::error_code& error )
+        const multimap< string, string > SessionImpl::parse_headers( istream& stream )
         {
-            //if ( error )
-            //{
-            //    throw asio::system_error( code );
-            //}
-
-            istream stream( m_buffer.get( ) );
-
+            smatch matches;
             string data = String::empty;
-            getline( stream, data );
-
-            smatch base_matches;
-            static const regex status_pattern( "^(.*) (.*) (HTTP\\/[0-9]\\.[0-9])\\s*$" ); //class wide?
-            const bool match = regex_match( data, base_matches, status_pattern );
-
-            if ( not match or base_matches.size( ) not_eq 4 )
-            {
-                std::cout << "FAILED BAD REQUEST!" << base_matches.size( ) << std::endl;
-            }
-
-            string method = base_matches[ 1 ].str( );
-            string version = base_matches[ 3 ].str( );
-
-            auto uri = Uri::parse( "http://localhost" + base_matches[ 2 ].str( ) );
-            string path = uri.get_path( );
-            auto parameters = uri.get_query_parameters( );
-
-            std::cout << "method: " << method << std::endl;
-            std::cout << "path: " << path << std::endl;
-            std::cout << "version: " << version << std::endl;
-
-            for ( auto parameter : uri.get_query_parameters( ) )
-            {
-                std::cout << "parameter: '" << parameter.first << "' = '" << parameter.second << "'" << std::endl;
-            }
+            multimap< string, string > headers;
+            static const regex pattern( "^(.*): *(.*)\\s*$" );
 
             while ( getline( stream, data ) and data not_eq "\r" )
             {
-                static const regex header_pattern( "^(.*): *(.*)\\s*$" );
-                const bool match2 = regex_match( data, base_matches, header_pattern );
-
-                if ( not match2 or base_matches.size( ) not_eq 3 )
+                if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 3 )
                 {
-                    std::cout << "FAILED BAD REQUEST!" << base_matches.size( ) << std::endl;
+                    throw runtime_error( "FAILED BAD REQUEST!" );
                 }
 
-                string name = base_matches[ 1 ].str( );
-                string value = base_matches[ 2 ].str( );
-
-                std::cout << "header: '" << name << "' = '" << value << "'" << std::endl;
+                headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
             }
+
+            return headers;
+        }
+
+        const map< string, string > SessionImpl::parse_status_path_and_version( istream& stream )
+        {
+            string data = String::empty;
+            getline( stream, data );
+
+            smatch matches;
+            static const regex pattern( "^(.*) (.*) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
+
+            if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 4 )
+            {
+                throw runtime_error( "FAILED BAD REQUEST!" );
+            }
+
+            const string version = matches[ 3 ].str( );
+
+            return map< string, string > {
+                { "path", matches[ 2 ].str( ) },
+                { "method", matches[ 1 ].str( ) },
+                { "version", version.substr( version.find_first_of( "HTTP/" ) ) }
+            };
+        }
+
+        void SessionImpl::parse_request( const function< void ( const shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session, const asio::error_code& error )
+        {
+            if ( error )
+            {
+                throw runtime_error( "" ); //throw asio::system_error( code );
+            }
+
+            istream stream( m_buffer.get( ) );
+            const auto items = parse_status_path_and_version( stream );
+            const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
+
+            auto request = RequestBuilderImpl::build( stream );
+            session = SessionBuilderImpl::modifiy( session, request );
 
             callback( session );
         }

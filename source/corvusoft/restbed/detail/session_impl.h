@@ -6,8 +6,10 @@
 #define _RESTBED_DETAIL_SESSION_IMPL_H 1
 
 //System Includes
+#include <map>
 #include <string>
 #include <memory>
+#include <istream>
 #include <functional>
 
 //Project Includes
@@ -24,6 +26,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Request;
     class Session;
     
     namespace detail
@@ -104,6 +107,7 @@ namespace restbed
                 //Getters
                 
                 //Setters
+                void set_request( const std::shared_ptr< Request >& value );
                 
                 //Operators
                 
@@ -118,8 +122,13 @@ namespace restbed
                 SessionImpl( const SessionImpl& original ) = delete;
                 
                 //Functionality
-                void parse_status_and_headers( const std::function< void ( const std::shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session, const asio::error_code& error );
-                
+                static const std::multimap< std::string, std::string > parse_headers( std::istream& stream );
+
+                static const std::map< std::string, std::string > parse_status_path_and_version( std::istream& stream );
+
+                void parse_status_and_headers( const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
+                                               const std::shared_ptr< Session >& session,
+                                               const asio::error_code& error );
                 //Getters
                 
                 //Setters
@@ -129,6 +138,8 @@ namespace restbed
                 
                 //Properties
                 std::string m_id;
+
+                std::shared_ptr< Request > m_request;
 
                 std::shared_ptr< asio::streambuf > m_buffer;
 

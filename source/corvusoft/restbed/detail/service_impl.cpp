@@ -254,9 +254,14 @@ namespace restbed
             //   //log, error handler and close connection.
             //}
 
-            auto session = m_session_manager->create( ); //bottleneck
-            session->m_pimpl->set_socket( socket );
-            session->m_pimpl->fetch( bind( &ServiceImpl::resource_router, this, _1 ), session );
+            m_session_manager->create( [ &socket ]( const shared_ptr< Session >& session )
+            {
+                session = SessionBuilderImpl::build( socket );
+                session->fetch( bind( &ServiceImpl::resource_router, this, _1 ) );
+            } );
+
+            //session->m_pimpl->set_socket( socket );
+            //session->m_pimpl->fetch( bind( &ServiceImpl::resource_router, this, _1 ), session );
 
             listen( );
         }
