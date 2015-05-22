@@ -27,12 +27,7 @@ namespace restbed
     {
         return;
     }
-    
-    Request::Request( const Request& original ) : m_pimpl( new RequestImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
+
     Request::~Request( void )
     {
         return;
@@ -136,32 +131,5 @@ namespace restbed
 //    map< string, string > Request::get_path_parameters( void ) const
 //    {
 //        return m_pimpl->get_path_parameters( );
-//    }
-
-    Request& Request::operator =( const Request& value )
-    {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
-    }
-    
-//    bool Request::operator <( const Request& value ) const
-//    {
-//        return *m_pimpl < *value.m_pimpl;
-//    }
-//    
-//    bool Request::operator >( const Request& value ) const
-//    {
-//        return *m_pimpl > *value.m_pimpl;
-//    }
-//    
-//    bool Request::operator ==( const Request& value ) const
-//    {
-//        return *m_pimpl == *value.m_pimpl;
-//    }
-//    
-//    bool Request::operator !=( const Request& value ) const
-//    {
-//        return *m_pimpl != *value.m_pimpl;
 //    }
 }

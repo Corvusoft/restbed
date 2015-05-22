@@ -17,6 +17,7 @@
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
 #include "corvusoft/restbed/detail/session_builder_impl.h"
+#include "corvusoft/restbed/detail/request_builder_impl.h"
 #include "corvusoft/restbed/detail/session_manager_impl.h"
 
 //External Includes

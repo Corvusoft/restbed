@@ -41,7 +41,9 @@ namespace restbed
                 virtual ~SessionBuilderImpl( void );
                 
                 //Functionality
-                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& socket );
+                void set_request( const std::shared_ptr< Request >& value );
+
+                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
                 
                 //Getters
                 

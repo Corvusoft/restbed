@@ -32,6 +32,11 @@ namespace restbed
         {
             return;
         }
+
+        void SessionBuilderImpl::set_request( const shared_ptr< Request >& value )
+        {
+            m_pimpl->set_request( value );
+        }
         
         void SessionBuilderImpl::set_socket( const shared_ptr< tcp::socket >& socket )
         {

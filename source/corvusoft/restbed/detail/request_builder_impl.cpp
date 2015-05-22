@@ -3,54 +3,56 @@
  */
 
 //System Includes
+#include <regex>
+#include <string>
+#include <stdexcept>
 
 //Project Includes
 #include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/request_builder_impl.h"
 
 //External Includes
+#include <corvusoft/framework/uri>
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
+using std::regex;
+using std::smatch;
+using std::string;
 using std::istream;
 using std::multimap;
+using std::shared_ptr;
+using std::make_shared;
+using std::runtime_error;
 
 //Project Namespaces
 
 //External Namespaces
+using framework::Uri;
+using framework::String;
 
 namespace restbed
 {
     namespace detail
     {
-        RequestBuilderImpl::RequestBuilderImpl( void ) : Request( )
-        {
-            return;
-        }
-        
-        RequestBuilderImpl::RequestBuilderImpl( const RequestBuilderImpl& original ) : Request( original )
-        {
-            return;
-        }
-        
-        RequestBuilderImpl::~RequestBuilderImpl( void )
-        {
-            return;
-        }
-        
-        shared_ptr< Request > RequestBuilderImpl::build( istream& stream )
+        RequestBuilderImpl::RequestBuilderImpl( istream& stream ) : Request( )
         {
             const auto items = parse_request_line( stream );
             const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
 
             auto request = make_shared< Request >( );
-            request->m_pimpl->set_path( uri.get_path( ) );
-            request->m_pimpl->set_method( items.at( "method" ) );
-            request->m_pimpl->set_version( stoi( items.at( "version" ) ) );
-            request->m_pimpl->set_headers( parse_request_headers( stream ) );
+            m_pimpl->set_path( uri.get_path( ) );
+            m_pimpl->set_method( items.at( "method" ) );
+            m_pimpl->set_version( stod( items.at( "version" ) ) );
+            m_pimpl->set_headers( parse_request_headers( stream ) );
             //request->m_pimpl->set_query_parameters( uri.get_query_parameters( ) );
-
-            return request;
+        }
+        
+        RequestBuilderImpl::~RequestBuilderImpl( void )
+        {
+            return;
         }
 
         const map< string, string > RequestBuilderImpl::parse_request_line( istream& stream )
@@ -65,12 +67,14 @@ namespace restbed
                 throw runtime_error( "FAILED BAD REQUEST!" );
             }
 
-            const string version = matches[ 3 ].str( );
+            const string protocol = matches[ 3 ].str( );
+            const auto delimiter = protocol.find_first_of( "HTTP/" );
 
             return map< string, string > {
                 { "path", matches[ 2 ].str( ) },
                 { "method", matches[ 1 ].str( ) },
-                { "version", version.substr( version.find_first_of( "HTTP/" ) ) }
+                { "version", protocol.substr( delimiter ) },
+                { "protocol", protocol.substr( 0, delimiter ) },
             };
         }
 

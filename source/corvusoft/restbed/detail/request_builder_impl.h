@@ -10,7 +10,7 @@
 #include <istream>
 
 //Project Includes
-#include "corvusoft/restbed/detail/request_impl.h"
+#include "corvusoft/restbed/request.h"
 
 //External Includes
 
@@ -36,21 +36,17 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                RequestBuilderImpl( void ); //remove/hide
-                
-                RequestBuilderImpl( const RequestBuilderImpl& original ); //remove
+                RequestBuilderImpl( std::istream& stream );
                 
                 virtual ~RequestBuilderImpl( void );
                 
                 //Functionality
-                static std::shared_ptr< Request > build( std::istream& stream );
 
                 //Getters
                 
                 //Setters
 
                 //Operators
-                RequestBuilderImpl& operator =( const RequestBuilderImpl& value ); //remove
                 
                 //Properties
                 
@@ -77,6 +73,7 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                RequestBuilderImpl( const RequestBuilderImpl& original ) = delete;
                 
                 //Functionality
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
@@ -88,6 +85,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
+                RequestBuilderImpl& operator =( const RequestBuilderImpl& value ) = delete;
                 
                 //Properties
         };

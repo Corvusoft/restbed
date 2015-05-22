@@ -12,6 +12,8 @@
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/detail/session_builder_impl.h"
+#include "corvusoft/restbed/detail/request_builder_impl.h"
 
 //External Includes
 #include <corvusoft/framework/uri>
@@ -55,13 +57,6 @@ namespace restbed
         {
             return;
         }
-        
-        // SessionImpl::SessionImpl( const SessionImpl& original ) : m_id( original.m_id ),
-        //     m_buffer( original.m_buffer ), //is this bad
-        //     m_socket( original.m_socket ) //is this bad
-        // {
-        //     return;
-        // }
 
         SessionImpl::~SessionImpl( void )
         {
@@ -106,7 +101,7 @@ namespace restbed
             }
 
             istream stream( m_buffer.get( ) );
-            const auto request = RequestBuilderImpl::build( stream ); //just pass m_buffer.get( )? hopefull auto convert
+            const auto request = make_shared< RequestBuilderImpl >( stream );
 
             auto builder = std::dynamic_pointer_cast< SessionBuilderImpl >( session );
             builder->set_request( request );

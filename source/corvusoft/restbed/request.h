@@ -37,11 +37,9 @@ namespace restbed
             
             //Definitions
             
-            //Constructors
+            //Constructors  
             Request( void );
-            
-            Request( const Request& original );
-        
+
             virtual ~Request( void );
             
             //Functionality            
@@ -126,15 +124,6 @@ namespace restbed
             //Setters
             
             //Operators
-            Request& operator =( const Request& value );
-            
-//            bool operator <( const Request& value ) const;
-//            
-//            bool operator >( const Request& value ) const;
-//            
-//            bool operator ==( const Request& value ) const;
-//            
-//            bool operator !=( const Request& value ) const;
 
             //Properties
             
@@ -154,6 +143,7 @@ namespace restbed
             //Operators
             
             //Properties
+            std::unique_ptr< detail::RequestImpl > m_pimpl;
             
         private:
             //Friends
@@ -161,7 +151,8 @@ namespace restbed
             //Definitions
             
             //Constructors
-            
+            Request( const Request& original ) = delete;
+
             //Functionality
             
             //Getters
@@ -171,7 +162,7 @@ namespace restbed
             //Operators
             
             //Properties
-            std::unique_ptr< detail::RequestImpl > m_pimpl;
+            Request& operator =( const Request& value ) = delete;
     };
 }
 

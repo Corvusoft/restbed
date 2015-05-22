@@ -43,8 +43,6 @@ namespace restbed
                 //Constructors
                 SessionImpl( void );
                 
-                // SessionImpl( const SessionImpl& original );
-
                 virtual ~SessionImpl( void );
                 
                 //Functionality
