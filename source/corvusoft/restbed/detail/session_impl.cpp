@@ -49,12 +49,20 @@ namespace restbed
     namespace detail
     {
         SessionImpl::SessionImpl( void ) : m_id( String::empty ),
+            m_request( nullptr ),
             m_buffer( nullptr ),
             m_socket( nullptr )
         {
             return;
         }
         
+        // SessionImpl::SessionImpl( const SessionImpl& original ) : m_id( original.m_id ),
+        //     m_buffer( original.m_buffer ), //is this bad
+        //     m_socket( original.m_socket ) //is this bad
+        // {
+        //     return;
+        // }
+
         SessionImpl::~SessionImpl( void )
         {
             return;
@@ -62,7 +70,7 @@ namespace restbed
 
         void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session )
         {
-            m_buffer = make_shared< asio::streambuf >( );
+            m_buffer = make_shared< asio::streambuf >( ); //pass as argument!
 
             asio::async_read_until( *m_socket,
                                     *m_buffer,
@@ -80,51 +88,14 @@ namespace restbed
             m_id = value;
         }
 
+        void SessionImpl::set_request( const shared_ptr< Request >& value )
+        {
+            m_request = value;
+        }
+
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
         {
             m_socket = value;
-        }
-
-        const multimap< string, string > SessionImpl::parse_headers( istream& stream )
-        {
-            smatch matches;
-            string data = String::empty;
-            multimap< string, string > headers;
-            static const regex pattern( "^(.*): *(.*)\\s*$" );
-
-            while ( getline( stream, data ) and data not_eq "\r" )
-            {
-                if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 3 )
-                {
-                    throw runtime_error( "FAILED BAD REQUEST!" );
-                }
-
-                headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
-            }
-
-            return headers;
-        }
-
-        const map< string, string > SessionImpl::parse_status_path_and_version( istream& stream )
-        {
-            string data = String::empty;
-            getline( stream, data );
-
-            smatch matches;
-            static const regex pattern( "^(.*) (.*) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
-
-            if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 4 )
-            {
-                throw runtime_error( "FAILED BAD REQUEST!" );
-            }
-
-            const string version = matches[ 3 ].str( );
-
-            return map< string, string > {
-                { "path", matches[ 2 ].str( ) },
-                { "method", matches[ 1 ].str( ) },
-                { "version", version.substr( version.find_first_of( "HTTP/" ) ) }
-            };
         }
 
         void SessionImpl::parse_request( const function< void ( const shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session, const asio::error_code& error )
@@ -135,13 +106,12 @@ namespace restbed
             }
 
             istream stream( m_buffer.get( ) );
-            const auto items = parse_status_path_and_version( stream );
-            const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
+            const auto request = RequestBuilderImpl::build( stream ); //just pass m_buffer.get( )? hopefull auto convert
 
-            auto request = RequestBuilderImpl::build( stream );
-            session = SessionBuilderImpl::modifiy( session, request );
+            auto builder = std::dynamic_pointer_cast< SessionBuilderImpl >( session );
+            builder->set_request( request );
 
-            callback( session );
+            callback( builder );
         }
     }
 }

@@ -16,6 +16,7 @@
 #include "corvusoft/restbed/session_manager.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/detail/session_builder_impl.h"
 #include "corvusoft/restbed/detail/session_manager_impl.h"
 
 //External Includes
@@ -188,23 +189,24 @@ namespace restbed
         void ServiceImpl::resource_router( const shared_ptr< Session >& session )
         try
         {
-            //m_session_manager->load( session ); //bottleneck
+            //print everything out
 
-//            {
-//                m_authentication_handler( session );
-//
-//                if ( session.is_closed( ) )
-//                {
-//                    return;
-//                }
-//
-//                const auto resource = find_matching_resource_by_path( session );
-//
-//                if ( resource == nullptr )
-//                {
-//                    return m_not_found_handler( session );
-//                }
-//
+            //m_authentication_handler( session );
+            //
+            //if ( session.is_closed( ) )
+            //{
+            //    return;
+            //}
+
+            //auto resource = m_resource_routes.find( request->path( ) );
+
+            //if ( resource == m_resource_routes.end( ) )
+            //{
+            //    return m_not_found_handler( session );
+            //}
+
+            //resource.authentication_handler( session );
+
 //                const auto method_handler = find_first_matching_method_handler_by_filters( resource );
 //
 //                if ( method_handler == nullptr )
@@ -230,7 +232,7 @@ namespace restbed
 //
 //                if ( session.is_closed( ) )
 //                {
-//                    //delete from session store
+//                    //m_session_manager->purge( session );
 //                }
 //            } );
         }
@@ -249,19 +251,22 @@ namespace restbed
 
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error )
         {
-            //if ( error )
-            //{
-            //   //log, error handler and close connection.
-            //}
-
-            m_session_manager->create( [ &socket ]( const shared_ptr< Session >& session )
+            if ( not error )
             {
-                session = SessionBuilderImpl::build( socket );
-                session->fetch( bind( &ServiceImpl::resource_router, this, _1 ) );
-            } );
+                const auto callback = bind( &ServiceImpl::resource_router, this, _1 );
 
-            //session->m_pimpl->set_socket( socket );
-            //session->m_pimpl->fetch( bind( &ServiceImpl::resource_router, this, _1 ), session );
+                m_session_manager->create( [ &socket, &callback ]( const shared_ptr< Session >& session )
+                {
+                    auto builder = std::dynamic_pointer_cast< SessionBuilderImpl >( session );
+                    builder->set_socket( socket );
+                    builder->fetch( callback ); //m_session_manager->load( session );
+                } );
+            }
+            else
+            {
+                //socket.close()?
+                //log, error handler, close connection.
+            }
 
             listen( );
         }

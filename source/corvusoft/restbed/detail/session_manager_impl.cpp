@@ -15,6 +15,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::function;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -38,19 +39,19 @@ namespace restbed
             return;
         }
 
-        shared_ptr< Session > SessionManagerImpl::create( void )
+        void SessionManagerImpl::create( const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             auto session = make_shared< Session >( UniqueId::generate( ).to_string( ) );
             m_sessions[ session->get_id( ) ] = session;
 
-            return session;
+            callback( session );
         }
 
-        void SessionManagerImpl::load( shared_ptr< Session >& session )
-        {
+        //void SessionManagerImpl::load( shared_ptr< Session >& session )
+        //{
             //perform async operation ex. Http::async( );
             //restbed::wait_for( seconds( 10 ), bind( session, callback ) );
-            return;
-        }
+        //    return;
+        //}
     }
 }

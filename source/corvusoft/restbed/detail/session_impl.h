@@ -43,6 +43,8 @@ namespace restbed
                 //Constructors
                 SessionImpl( void );
                 
+                // SessionImpl( const SessionImpl& original );
+
                 virtual ~SessionImpl( void );
                 
                 //Functionality
@@ -80,6 +82,7 @@ namespace restbed
 //
 //                void wait_for( const std::chrono::seconds& delay, const std::size_t iterations, const std::function< void ( const std::shared_ptr< Session >& ) >& expired_callback );
 //
+                  //void wait_until( func, cond var );
 //                void wait_for( const std::chrono::seconds& delay, const std::size_t iterations, const std::function< bool ( const std::shared_ptr< Session >& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& triggered_callback );
 
                 //Getters
@@ -88,6 +91,8 @@ namespace restbed
 
                 //Setters
                 void set_id( const std::string& value );
+
+                void set_request( const std::shared_ptr< Request >& value );
 
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
                 
@@ -107,7 +112,6 @@ namespace restbed
                 //Getters
                 
                 //Setters
-                void set_request( const std::shared_ptr< Request >& value );
                 
                 //Operators
                 
@@ -119,14 +123,9 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SessionImpl( const SessionImpl& original ) = delete;
                 
                 //Functionality
-                static const std::multimap< std::string, std::string > parse_headers( std::istream& stream );
-
-                static const std::map< std::string, std::string > parse_status_path_and_version( std::istream& stream );
-
-                void parse_status_and_headers( const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
+                void parse_request( const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
                                                const std::shared_ptr< Session >& session,
                                                const asio::error_code& error );
                 //Getters
@@ -141,7 +140,7 @@ namespace restbed
 
                 std::shared_ptr< Request > m_request;
 
-                std::shared_ptr< asio::streambuf > m_buffer;
+                std::shared_ptr< asio::streambuf > m_buffer; //just pass as argument?
 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
         };

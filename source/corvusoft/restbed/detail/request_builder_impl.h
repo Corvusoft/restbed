@@ -7,16 +7,12 @@
 
 //System Includes
 #include <map>
-#include <memory>
-#include <string>
 #include <istream>
 
 //Project Includes
 #include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes
-#include <asio.hpp>
-#include <corvusoft/framework/bytes>
 
 //System Namespaces
 
@@ -32,7 +28,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class RequestBuilderImpl : private RequestImpl
+        class RequestBuilderImpl : public Request
         {
             public:
                 //Friends
@@ -40,26 +36,21 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                RequestBuilderImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket );
+                RequestBuilderImpl( void ); //remove/hide
                 
-                RequestBuilderImpl( const RequestBuilderImpl& original );
+                RequestBuilderImpl( const RequestBuilderImpl& original ); //remove
                 
                 virtual ~RequestBuilderImpl( void );
                 
                 //Functionality
-                Request build( void ) const;
+                static std::shared_ptr< Request > build( std::istream& stream );
 
-                static framework::Bytes to_bytes( const Request& request );
-                
-                void parse( const std::shared_ptr< asio::ip::tcp::socket >& socket );
-                
                 //Getters
                 
                 //Setters
-                void set_path_parameters( const std::map< std::string, std::string >& parameters );
-                
+
                 //Operators
-                RequestBuilderImpl& operator =( const RequestBuilderImpl& value );
+                RequestBuilderImpl& operator =( const RequestBuilderImpl& value ); //remove
                 
                 //Properties
                 
@@ -88,24 +79,10 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                static std::string generate_path_section( const Request& request );
+                static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
 
-                static std::string generate_status_section( const Request& request );
+                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
 
-                static std::string generate_header_section( const Request& request );
-
-                static double parse_http_version( std::istream& socket );
-            
-                static std::string parse_http_path( std::istream& socket );
-                
-                static std::string parse_http_method( std::istream& socket );
-            
-                static std::string parse_http_protocol( std::istream& socket );
-                
-                static std::multimap< std::string, std::string > parse_http_headers( std::istream& socket );
-                
-                static std::multimap< std::string, std::string > parse_http_query_parameters( std::istream& socket );
-                
                 //Getters
                 
                 //Setters

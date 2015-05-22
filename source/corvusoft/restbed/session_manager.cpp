@@ -18,7 +18,7 @@
 namespace restbed
 {
     SessionManager::SessionManager( const Settings& )
-    {
+    { //why do we have this file?
         return;
     }
 

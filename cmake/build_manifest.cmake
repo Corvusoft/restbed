@@ -19,4 +19,5 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/path_parameter_impl.cpp
      ${SOURCE_DIR}/session_manager.cpp
      ${SOURCE_DIR}/detail/session_manager_impl.cpp
+     ${SOURCE_DIR}/detail/session_builder_impl.cpp
 )

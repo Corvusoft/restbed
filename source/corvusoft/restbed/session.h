@@ -61,7 +61,7 @@ namespace restbed
             //Definitions
             
             //Constructors
-            
+
             //Functionality
             
             //Getters
@@ -71,10 +71,10 @@ namespace restbed
             //Operators
             
             //Properties
+            std::unique_ptr< detail::SessionImpl > m_pimpl;
 
         private:
             //Friends
-            friend detail::ServiceImpl;
             
             //Definitions
             
@@ -93,7 +93,6 @@ namespace restbed
             Session& operator =( const Session& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::SessionImpl > m_pimpl;
     };
 }
 

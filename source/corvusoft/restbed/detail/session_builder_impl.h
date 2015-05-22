@@ -2,18 +2,17 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#ifndef _RESTBED_DETAIL_SESSION_MANAGER_IMPL_H
-#define _RESTBED_DETAIL_SESSION_MANAGER_IMPL_H 1
+#ifndef _RESTBED_DETAIL_SESSION_BUILDER_IMPL_H
+#define _RESTBED_DETAIL_SESSION_BUILDER_IMPL_H 1
 
 //System Includes
-#include <map>
-#include <string>
 #include <memory>
 
 //Project Includes
-#include "corvusoft/restbed/session_manager.h"
+#include "corvusoft/restbed/session.h"
 
 //External Includes
+#include <asio.hpp>
 
 //System Namespaces
 
@@ -24,14 +23,12 @@
 namespace restbed
 {
     //Forward Declarations
-    class Session;
-    class Settings;
     
     namespace detail
     {
         //Forward Declarations
         
-        class SessionManagerImpl : public SessionManager
+        class SessionBuilderImpl : public Session
         {
             public:
                 //Friends
@@ -39,19 +36,17 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SessionManagerImpl( const Settings& settings );
+                SessionBuilderImpl( const std::string& id );
                 
-                virtual ~SessionManagerImpl( void );
+                virtual ~SessionBuilderImpl( void );
                 
                 //Functionality
-                void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
-                //void load( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) );
-
-                //Getters
-
-                //Setters
+                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& socket );
                 
+                //Getters
+                
+                //Setters
+ 
                 //Operators
                 
                 //Properties
@@ -79,10 +74,10 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SessionManagerImpl( void ) = delete;
+                SessionBuilderImpl( void ) = delete;
 
-                SessionManagerImpl( const SessionManagerImpl& original ) = delete;
-
+                SessionBuilderImpl( const SessionBuilderImpl& original ) = delete;
+                
                 //Functionality
 
                 //Getters
@@ -90,12 +85,11 @@ namespace restbed
                 //Setters
                 
                 //Operators
-                SessionManagerImpl& operator =( const SessionManagerImpl& value ) = delete;
+                SessionBuilderImpl& operator =( const SessionBuilderImpl& value ) = delete;
                 
                 //Properties
-                std::map< std::string, std::shared_ptr< Session > > m_sessions;
         };
     }
 }
 
-#endif  /* _RESTBED_DETAIL_SESSION_MANAGER_IMPL_H */
+#endif  /* _RESTBED_DETAIL_SESSION_BUILDER_IMPL_H */

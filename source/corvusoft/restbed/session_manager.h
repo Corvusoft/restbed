@@ -7,6 +7,7 @@
 
 //System Includes
 #include <memory>
+#include <functional>
 
 //Project Includes
 
@@ -37,9 +38,9 @@ namespace restbed
             virtual ~SessionManager( void );
             
             //Functionality
-            virtual std::shared_ptr< Session > create( void ) = 0;
+            virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
-            virtual void load( std::shared_ptr< Session >& session ) = 0;
+            // virtual void load( std::shared_ptr< Session >& session ) = 0;
 
             //Getters
 
