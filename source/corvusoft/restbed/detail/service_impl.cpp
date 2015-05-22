@@ -9,6 +9,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/logger.h"
+#include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
@@ -16,8 +17,6 @@
 #include "corvusoft/restbed/session_manager.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
-#include "corvusoft/restbed/detail/session_builder_impl.h"
-#include "corvusoft/restbed/detail/request_builder_impl.h"
 #include "corvusoft/restbed/detail/session_manager_impl.h"
 
 //External Includes
@@ -159,27 +158,6 @@ namespace restbed
             m_error_handler = value;
         }
         
-        // ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
-        // {
-        //     m_port = value.m_port;
-            
-        //     m_root = value.m_root;
-            
-        //     m_resources = value.m_resources;
-            
-        //     m_log_handler = value.m_log_handler;
-
-        //     // m_connection_timeout = value.m_connection_timeout;
-            
-        //     // m_maximum_connections = value.m_maximum_connections; connection_limit
-            
-        //     m_error_handler = value.m_error_handler;
-            
-        //     m_authentication_handler = value.m_authentication_handler;
-            
-        //     return *this;
-        // }
-        
         void ServiceImpl::listen( void )
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
@@ -190,7 +168,11 @@ namespace restbed
         void ServiceImpl::resource_router( const shared_ptr< Session >& session )
         try
         {
-            //print everything out
+            auto request = session->get_request( );
+
+            fprintf( stderr, "path: %s\n", request->get_path( ).data( ) );
+            fprintf( stderr, "method: %s\n", request->get_method( ).data( ) );
+            fprintf( stderr, "version: %.1f\n", request->get_version( ) );
 
             //m_authentication_handler( session );
             //
@@ -258,9 +240,8 @@ namespace restbed
 
                 m_session_manager->create( [ &socket, &callback ]( const shared_ptr< Session >& session )
                 {
-                    auto builder = std::dynamic_pointer_cast< SessionBuilderImpl >( session );
-                    builder->set_socket( socket );
-                    builder->fetch( callback ); //m_session_manager->load( session );
+                    session->m_pimpl->set_socket( socket );
+                    session->m_pimpl->fetch( session, callback ); //m_session_manager->load( session );
                 } );
             }
             else
@@ -272,100 +253,6 @@ namespace restbed
             listen( );
         }
 
-            // Request request;
-            // Response response;
-
-            // do
-            // {
-            //     try
-            //     {
-            //         if ( error )
-            //         {
-            //             throw asio::system_error( error );
-            //         }
-
-            //         set_socket_timeout( socket );
-                    
-            //         RequestBuilderImpl builder( socket );
-            //         request = builder.build( );
-                    
-            //         Resource resource = resolve_resource_route( request );
-                    
-            //         auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
-            //         builder.set_path_parameters( parameters );
-                    
-            //         request = builder.build( );
-
-            //         m_authentication_handler( request, response );
-                    
-            //         const int status = response.get_status_code( );
-                    
-            //         if ( status == 200 )
-            //         {
-            //             log( Logger::Level::INFO, String::format( "Incoming %s request for '%s' resource from %s",
-            //                                                       request.get_method( ).data( ),
-            //                                                       request.get_path( ).data( ),
-            //                                                       request.get_origin( ).data( ) ) );
-                                                             
-            //             response = invoke_method_handler( request, resource );
-            //         }
-            //         else
-            //         {
-            //             log( Logger::Level::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-            //                                                           request.get_method( ).data( ),
-            //                                                           request.get_path( ).data( ),
-            //                                                           request.get_origin( ).data( ) ) );
-            //         }
-            //     }
-            //     catch ( const asio::system_error& se )
-            //     {
-            //         log( Logger::Level::FATAL, se.what( ) );
-            //         response.set_status_code( 500 );
-            //     }
-            //     catch ( const int status_code )
-            //     {
-            //         m_error_handler( status_code, request, response );
-            //     }
-            //     catch ( const exception& ex )
-            //     {
-            //         log( Logger::Level::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
-            //                                                    ex.what( ),
-            //                                                    RequestBuilderImpl::to_bytes( request ).data( ) ) );
-
-            //         m_error_handler( 500, request, response );
-            //     }
-
-            //     ResponseBuilderImpl::write( response, socket );
-            // }
-            // while ( "keep-alive" == String::lowercase( response.get_header( "Connection" ) ) );
-
-            // listen( );
-        //}
-        
-        //Resource ServiceImpl::resolve_resource_route( const Request& request ) const
-        //{
-            // Resource resource;
-            
-            // auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) );
-            
-            // if ( iterator not_eq m_resources.end( ) )
-            // {
-            //     resource = *iterator;
-            // }
-            // else
-            // {
-            //     throw 404;
-            // }
-
-            // return resource;
-        //}
-        
-        //Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
-        //{   
-            // auto callback = resource.get_method_handler( request.get_method( ) );   
-            // return callback( request );
-        //}
-        
         void ServiceImpl::log( const Logger::Level level, const string& message )
         {
             // if ( m_log_handler not_eq nullptr )

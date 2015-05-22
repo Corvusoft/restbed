@@ -23,6 +23,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Request;
     class Session;
     
     namespace detail
@@ -47,7 +48,9 @@ namespace restbed
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             //Getters
-            std::string get_id( void ) const;
+            const std::string& get_id( void ) const;
+
+            const std::shared_ptr< Request >& get_request(  void ) const;
 
             //Setters
             
@@ -71,11 +74,12 @@ namespace restbed
             //Operators
             
             //Properties
-            std::unique_ptr< detail::SessionImpl > m_pimpl;
 
         private:
             //Friends
-            
+            friend detail::ServiceImpl;
+            friend detail::SessionImpl;
+
             //Definitions
             
             //Constructors
@@ -93,6 +97,7 @@ namespace restbed
             Session& operator =( const Session& value ) = delete;
             
             //Properties
+            std::unique_ptr< detail::SessionImpl > m_pimpl;
     };
 }
 

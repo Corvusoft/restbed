@@ -46,7 +46,8 @@ namespace restbed
                 virtual ~SessionImpl( void );
                 
                 //Functionality
-                void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback, const std::shared_ptr< Session >& session );
+                void fetch( const std::shared_ptr< Session >& session,
+                            const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
 //                bool is_open( void );
 //
@@ -87,6 +88,8 @@ namespace restbed
 //                const Request& get_request( void ) const;
                 const std::string& get_id( void ) const;
 
+                const std::shared_ptr< Request >& get_request( void ) const;
+
                 //Setters
                 void set_id( const std::string& value );
 
@@ -123,9 +126,13 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                void parse_request( const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
-                                               const std::shared_ptr< Session >& session,
-                                               const asio::error_code& error );
+                static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
+
+                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
+
+                void parse_request( const asio::error_code& error,
+                                    const std::shared_ptr< Session >& session,
+                                    const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 //Getters
                 
                 //Setters

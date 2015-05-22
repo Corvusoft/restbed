@@ -32,7 +32,27 @@ namespace restbed
     {
         return;
     }
-    
+
+    double Request::get_version( void ) const
+    {
+        return m_pimpl->get_version( );
+    }
+
+    const string& Request::get_path( void ) const
+    {
+        return m_pimpl->get_path( );
+    }
+
+    const string& Request::get_method( void ) const
+    {
+        return m_pimpl->get_method( );
+    }
+
+    const string& Request::get_protocol( void ) const
+    {
+        return m_pimpl->get_protocol( );
+    }
+
 //    bool Request::has_header( const string& name ) const
 //    {
 //        return m_pimpl->has_header( name );

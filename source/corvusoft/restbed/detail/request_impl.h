@@ -42,7 +42,15 @@ namespace restbed
                 
                 virtual ~RequestImpl( void );
                 
-                //Functionality               
+                //Functionality
+                double get_version( void ) const;
+
+                const std::string& get_path( void ) const;
+
+                const std::string& get_method( void ) const;
+
+                const std::string& get_protocol( void ) const;
+
                 // bool has_header( const std::string& name ) const;
                 
                 // bool has_path_parameter( const std::string& name ) const;
@@ -94,14 +102,12 @@ namespace restbed
 //                void set_destination( const std::string& value );
 //            
                 void set_protocol( const std::string& value );
-//
-//                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value, asio::streambuf* buffer );
-//                
+
                 void set_headers( const std::multimap< std::string, std::string >& values );
 //                
 //                void set_path_parameters( const std::map< std::string, std::string >& values );
 //                
-//                void set_query_parameters( const std::multimap< std::string, std::string >& values );
+                void set_query_parameters( const std::multimap< std::string, std::string >& values );
 
                 //Operators
 

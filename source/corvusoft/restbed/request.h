@@ -28,6 +28,7 @@ namespace restbed
     namespace detail
     {
         class RequestImpl;
+        class SessionImpl;
     }
     
     class Request
@@ -50,8 +51,14 @@ namespace restbed
 //            bool has_query_parameter( const std::string& name, const bool case_insensitive_search = true ) const;
 
             //Getters
-//            double get_version( void ) const;
-//
+            double get_version( void ) const;
+
+            const std::string& get_path( void ) const;
+
+            const std::string& get_method( void ) const;
+
+            const std::string& get_protocol( void ) const;
+
 //            std::string get_path( std::function< string ( string ) > transfomer = nullptr ) const;
 //
 //            std::string get_method( std::function< string ( string ) > transfomer = nullptr ) const;
@@ -147,6 +154,7 @@ namespace restbed
             
         private:
             //Friends
+            friend detail::SessionImpl;
             
             //Definitions
             
