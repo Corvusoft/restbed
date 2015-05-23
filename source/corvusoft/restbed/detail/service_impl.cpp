@@ -183,12 +183,13 @@ namespace restbed
             fprintf( stderr, "method: %s\n", request->get_method( ).data( ) );
             fprintf( stderr, "version: %.1f\n", request->get_version( ) );
 
-            //auto resource = m_resource_routes.find( request->path( ) );
+            const auto resource = m_resources.find( request->get_path( ) );
 
-            //if ( resource == m_resource_routes.end( ) )
-            //{
-            //    return m_not_found_handler( session );
-            //}
+            if ( resource == m_resources.end( ) )
+            {
+                session->close( 404, status_codes.at( 404 ) ); //status_message.at( 404 );
+                return;
+            }
 
             //resource.authentication_handler( session );
 

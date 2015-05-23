@@ -42,6 +42,11 @@ namespace restbed
         return m_pimpl->is_closed( );
     }
 
+    void Session::close( const int status, const string& status_message )
+    {
+        m_pimpl->close( status, status_message );
+    }
+
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->fetch( shared_ptr< Session >( this ), callback );

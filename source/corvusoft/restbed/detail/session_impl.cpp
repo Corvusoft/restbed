@@ -42,6 +42,8 @@ using restbed::detail::SessionImpl;
 using asio::buffer;
 using asio::ip::tcp;
 using asio::error_code;
+using asio::async_write;
+using asio::async_read_until;
 using framework::Uri;
 using framework::String;
 
@@ -70,6 +72,20 @@ namespace restbed
         bool SessionImpl::is_closed( void ) const
         {
             return ( m_socket == nullptr or not m_socket->is_open( ) );
+        }
+
+        void SessionImpl::close( const int status, const string& status_message )
+        {
+            string data = String::format( "HTTP/1.1 %i %s\r\n\r\n", status, status_message.data( ) );
+
+            auto socket = m_socket;
+            asio::async_write( *socket,
+                               asio::buffer( data, data.length( ) ),
+                               [ socket, status, status_message ]( const asio::error_code& error, std::size_t bytes_transferred )
+            {
+                //if error -> log
+                socket->close( );
+            } );
         }
 
         void SessionImpl::fetch( const std::shared_ptr< Session >& session,

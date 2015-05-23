@@ -72,6 +72,8 @@ namespace restbed
             void set_version( const double value );
             
             void set_status_code( const int value );
+
+                    //response.set_protocol
         
             void set_status_message( const std::string& value );
         

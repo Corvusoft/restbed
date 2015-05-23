@@ -23,7 +23,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    static std::map< int, std::string > status_codes {
+    static std::map< int, std::string > status_codes { //status_message
         { 100, "Continue" },
         { 101, "Switching Protocols" },
         { 102, "Processing" },

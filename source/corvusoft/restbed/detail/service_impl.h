@@ -101,11 +101,7 @@ namespace restbed
                 void resource_router( const std::shared_ptr< Session >& session );
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error );
-                
-                // Resource resolve_resource_route( const Request& request ) const;
-                
-                // Response invoke_method_handler( const Request& request, const Resource& resource  ) const;
-                
+
                 void log( const Logger::Level level, const std::string& message );
                 
                 void authenticate( const std::shared_ptr< Session >& session,
@@ -131,7 +127,7 @@ namespace restbed
 
                 // long long m_connection_timeout;
 
-                std::set< Resource > m_resources;
+                std::map< std::string, Resource > m_resources;
                 
                 std::shared_ptr< Logger > m_log_handler;
                 
