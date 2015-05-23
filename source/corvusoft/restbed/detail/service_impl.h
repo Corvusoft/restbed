@@ -61,7 +61,8 @@ namespace restbed
                 //Setters
                 void set_log_handler( const std::shared_ptr< Logger >& value );
                 
-                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
+                                                                             const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
                 
                 void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
                 
@@ -107,9 +108,10 @@ namespace restbed
                 
                 void log( const Logger::Level level, const std::string& message );
                 
-                static void authentication_handler( const std::shared_ptr< Session >& session );
+                void authenticate( const std::shared_ptr< Session >& session,
+                                   const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
-                void error_handler( const int status_code, const std::shared_ptr< Session >& session );
+                void error( const int status_code, const std::shared_ptr< Session >& session );
 
                 // void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
 
@@ -139,7 +141,7 @@ namespace restbed
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > m_authentication_handler;
+                std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
                 
                 std::function< void ( const int, const std::shared_ptr< Session >& ) > m_error_handler;
         };

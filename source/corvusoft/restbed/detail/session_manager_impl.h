@@ -46,7 +46,7 @@ namespace restbed
                 //Functionality
                 void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-                //void load( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) );
+                void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 //Getters
 

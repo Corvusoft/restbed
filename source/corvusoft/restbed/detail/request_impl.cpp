@@ -212,17 +212,7 @@ namespace restbed
        {
            m_method = value;
        }
-        
-//        void RequestImpl::set_origin( const string& value )
-//        {
-//            m_origin = value;
-//        }
-//
-//        void RequestImpl::set_destination( const string& value )
-//        {
-//            m_destination = value;
-//        }
-//
+
        void RequestImpl::set_protocol( const string& value )
        {
            m_protocol = value;

@@ -47,11 +47,16 @@ namespace restbed
             callback( session );
         }
 
-        //void SessionManagerImpl::load( shared_ptr< Session >& session )
-        //{
-            //perform async operation ex. Http::async( );
-            //restbed::wait_for( seconds( 10 ), bind( session, callback ) );
-        //    return;
-        //}
+        void SessionManagerImpl::load( const shared_ptr< Session >& session,
+                                       const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            //if ( session.is_closed( ) )
+            //{
+            //    return;
+            //}
+//            perform async operation ex. Http::async( );
+//            restbed::wait_for( seconds( 10 ), bind( session, callback ) );
+            callback( session );
+        }
     }
 }

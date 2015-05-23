@@ -62,8 +62,8 @@ namespace restbed
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
             m_acceptor( nullptr ),
-            m_authentication_handler( &ServiceImpl::authentication_handler ),
-            m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2 ) )
+            m_authentication_handler( nullptr ),
+            m_error_handler( nullptr )
         {
             return;
         }
@@ -145,16 +145,20 @@ namespace restbed
         
         void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
         {
+            //if is running throw runtime_error
             m_log_handler = value;
         }
         
-        void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
+                                                                             const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
+            //if is running throw runtime_error
             m_authentication_handler = value;
         }
         
         void ServiceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
         {
+            //if is running throw runtime_error
             m_error_handler = value;
         }
         
@@ -168,18 +172,16 @@ namespace restbed
         void ServiceImpl::resource_router( const shared_ptr< Session >& session )
         try
         {
+            //if ( session.is_closed( ) )
+            //{
+            //    return;
+            //}
+
             auto request = session->get_request( );
 
             fprintf( stderr, "path: %s\n", request->get_path( ).data( ) );
             fprintf( stderr, "method: %s\n", request->get_method( ).data( ) );
             fprintf( stderr, "version: %.1f\n", request->get_version( ) );
-
-            //m_authentication_handler( session );
-            //
-            //if ( session.is_closed( ) )
-            //{
-            //    return;
-            //}
 
             //auto resource = m_resource_routes.find( request->path( ) );
 
@@ -211,12 +213,13 @@ namespace restbed
 //                session->m_pimpl->set_resource( resource );
 //                session->m_pimpl->set_default_headers( m_default_headers ); 
 //
-//                method_handler( session );
-//
-//                if ( session.is_closed( ) )
+//                method_handler( session, [ ]( const std::shared_ptr< Session >& session )
 //                {
-//                    //m_session_manager->purge( session );
-//                }
+//                    if ( session.is_close( ) )
+//                    {
+//                        m_session_manager->purge( session );
+//                    }
+//                } );
 //            } );
         }
         catch ( const exception& ex )
@@ -236,12 +239,14 @@ namespace restbed
         {
             if ( not error )
             {
-                const auto callback = bind( &ServiceImpl::resource_router, this, _1 );
+                const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::resource_router, this, _1 );
+                const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
+                const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
 
-                m_session_manager->create( [ &socket, &callback ]( const shared_ptr< Session >& session )
+                m_session_manager->create( [ socket, authenticate ]( const shared_ptr< Session >& session )
                 {
                     session->m_pimpl->set_socket( socket );
-                    session->m_pimpl->fetch( session, callback ); //m_session_manager->load( session );
+                    session->m_pimpl->fetch( session, authenticate );
                 } );
             }
             else
@@ -261,13 +266,31 @@ namespace restbed
             // }
         }
 
-        void ServiceImpl::authentication_handler( const shared_ptr< Session >& value )
+        void ServiceImpl::authenticate( const shared_ptr< Session >& session,
+                                        const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            return;
+            if ( m_authentication_handler not_eq nullptr )
+            {
+                m_authentication_handler( session, callback );
+            }
+            else
+            {
+                callback( session );
+            }
         }
-        
-        void ServiceImpl::error_handler( const int status_code, const shared_ptr< Session >& session )
+
+        //error
+        void ServiceImpl::error( const int status_code, const shared_ptr< Session >& session )
         {
+//            if ( m_error_handler not_eq nullptr )
+//            {
+//                m_error_handler( status_code, callback );
+//            }
+//            else
+//            {
+//                callback( session );
+//            }
+
             // const auto& iterator = status_codes.find( status_code );
 
             // const string status_message = ( iterator not_eq status_codes.end( ) ) ?

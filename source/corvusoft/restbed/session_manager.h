@@ -33,14 +33,14 @@ namespace restbed
             //Definitions
             
             //Constructors
-            SessionManager( const Settings& settings );
+            SessionManager( const Settings& settings ); //why?
             
             virtual ~SessionManager( void );
             
             //Functionality
             virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
-            // virtual void load( std::shared_ptr< Session >& session ) = 0;
+            virtual void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
             //Getters
 
