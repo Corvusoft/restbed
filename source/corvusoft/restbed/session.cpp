@@ -32,6 +32,16 @@ namespace restbed
         return;
     }
 
+    bool Session::is_open( void ) const
+    {
+        return m_pimpl->is_open( );
+    }
+
+    bool Session::is_closed( void ) const
+    {
+        return m_pimpl->is_closed( );
+    }
+
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->fetch( shared_ptr< Session >( this ), callback );

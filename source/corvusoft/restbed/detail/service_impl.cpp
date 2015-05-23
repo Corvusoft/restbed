@@ -172,10 +172,10 @@ namespace restbed
         void ServiceImpl::resource_router( const shared_ptr< Session >& session )
         try
         {
-            //if ( session.is_closed( ) )
-            //{
-            //    return;
-            //}
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
 
             auto request = session->get_request( );
 

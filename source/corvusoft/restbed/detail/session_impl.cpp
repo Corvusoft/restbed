@@ -62,6 +62,16 @@ namespace restbed
             return;
         }
 
+        bool SessionImpl::is_open( void ) const
+        {
+            return ( m_socket not_eq nullptr and m_socket->is_open( ) );
+        }
+
+        bool SessionImpl::is_closed( void ) const
+        {
+            return ( m_socket == nullptr or not m_socket->is_open( ) );
+        }
+
         void SessionImpl::fetch( const std::shared_ptr< Session >& session,
                                  const function< void ( const shared_ptr< Session >& ) >& callback )
         {

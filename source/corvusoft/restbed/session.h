@@ -45,6 +45,10 @@ namespace restbed
             virtual ~Session( void );
             
             //Functionality
+            bool is_open( void ) const;
+
+            bool is_closed( void ) const;
+
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             //Getters
