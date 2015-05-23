@@ -59,6 +59,8 @@ namespace restbed
             get_method_handlers( const std::string& method = framework::String::empty ) const;
 
             //Setters
+            void set_path( const std::string& value );
+
             void set_paths( const std::set< std::string >& values );
 
             void set_method_handler( const std::string& method,

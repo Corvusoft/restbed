@@ -23,6 +23,7 @@
 #include <corvusoft/framework/string>
 
 //System Namespaces
+using std::set;
 using std::find;
 using std::bind;
 using std::string;
@@ -57,7 +58,7 @@ namespace restbed
             m_root( settings.get_root( ) ),
             // m_maximum_connections( settings.get_maximum_connections( ) ),
             // m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
-            m_resources( ),
+            m_resource_routes( ),
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
@@ -110,27 +111,39 @@ namespace restbed
             // log( Logger::Level::INFO, "Service Stopped" );
         }
         
-        void ServiceImpl::publish( const shared_ptr< Resource >& value )
+        void ServiceImpl::publish( const shared_ptr< Resource >& resource )
         {
-            //if ( not has_unique_paths( value.get_paths( ) ) )
-            //{
-            //    throw invalid_argument( "Resource would pollute namespace. Please ensure all published resources have unique paths." );
-            //}
+            if ( resource == nullptr )
+            {
+                return;
+            }
 
-            //const auto& paths = resource->get_paths( );
-            //m_paths.insert( paths.begin( ), paths.end( ) );
+            auto paths = resource->get_paths( );
 
-            //m_resources.push_back( value );
+            if ( not has_unique_paths( paths ) ) //paths_case_insensitive!!!!!!
+            {
+                throw invalid_argument( "Resource would pollute namespace. Please ensure all published resources have unique paths." );
+            }
+
+            for ( auto& path : paths )
+            {
+                //if ( settings.paths_case_insensitive ) then String::lowercase( )
+
+                //path = normalise_path( root, path );
+                m_resource_routes[ path ] = resource;
+            }
 
             //log( Logger::Level::INFO,
             //     String::format( "Published resource at '%s'", String::join( resource.get_paths( ), ", " ) ) );
-
-            //no need to check for root path.  before running resource match make sure it has the /root
-            //otherwise call service->not_found_handler
         }
         
-        void ServiceImpl::suppress( const shared_ptr< Resource >& value )
+        void ServiceImpl::suppress( const shared_ptr< Resource >& resource )
         {
+            if ( resource == nullptr )
+            {
+                return;
+            }
+
             //if ( m_resource.erase( value ) )
             //{
             //    log( Logger::Level::INFO,
@@ -183,9 +196,9 @@ namespace restbed
             fprintf( stderr, "method: %s\n", request->get_method( ).data( ) );
             fprintf( stderr, "version: %.1f\n", request->get_version( ) );
 
-            const auto resource = m_resources.find( request->get_path( ) );
+            const auto resource = m_resource_routes.find( request->get_path( ) );
 
-            if ( resource == m_resources.end( ) )
+            if ( resource == m_resource_routes.end( ) )
             {
                 session->close( 404, status_codes.at( 404 ) ); //status_message.at( 404 );
                 return;
@@ -306,6 +319,19 @@ namespace restbed
             // response.set_status_code( status_code );
             // response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
             // response.set_body( status_message );
+        }
+
+        bool ServiceImpl::has_unique_paths( const set< string >& paths )
+        {
+            for ( const auto& path : paths )
+            {
+                if ( m_resource_routes.count( path ) )
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         //void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )

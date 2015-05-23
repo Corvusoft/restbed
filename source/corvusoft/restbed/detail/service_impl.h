@@ -6,6 +6,7 @@
 #define _RESTBED_DETAIL_SERVICE_IMPL_H 1
 
 //System Includes
+#include <set>
 #include <memory>
 #include <string>
 #include <functional>
@@ -52,9 +53,9 @@ namespace restbed
 
                 void start( void );
                 
-                void publish( const std::shared_ptr< Resource >& value );
+                void publish( const std::shared_ptr< Resource >& resource ); //publish( path, resource );
                 
-                void suppress( const std::shared_ptr< Resource >& value );
+                void suppress( const std::shared_ptr< Resource >& resource ); //hmm suppress( string path );
                 
                 //Getters
                 
@@ -109,6 +110,8 @@ namespace restbed
                 
                 void error( const int status_code, const std::shared_ptr< Session >& session );
 
+                bool has_unique_paths( const std::set< std::string >& paths );
+
                 // void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
 
                 //Getters
@@ -127,7 +130,7 @@ namespace restbed
 
                 // long long m_connection_timeout;
 
-                std::map< std::string, Resource > m_resources;
+                std::map< std::string, std::shared_ptr< Resource > > m_resource_routes;
                 
                 std::shared_ptr< Logger > m_log_handler;
                 

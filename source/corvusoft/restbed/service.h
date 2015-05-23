@@ -52,9 +52,9 @@ namespace restbed
 
             void start( void );
             
-            void publish( const std::shared_ptr< Resource >& value );
+            void publish( const std::shared_ptr< Resource >& resource );
             
-            void suppress( const std::shared_ptr< Resource >& value );
+            void suppress( const std::shared_ptr< Resource >& resource );
             
             //Getters
             

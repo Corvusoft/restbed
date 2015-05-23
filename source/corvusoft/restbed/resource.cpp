@@ -57,6 +57,11 @@ namespace restbed
         return m_pimpl->get_method_handlers( method );
     }
 
+    void Resource::set_path( const string& value )
+    {
+        m_pimpl->set_paths( { value } );
+    }
+
     void Resource::set_paths( const set< string >& values )
     {
         m_pimpl->set_paths( values );

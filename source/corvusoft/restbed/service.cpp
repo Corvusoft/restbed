@@ -51,14 +51,14 @@ namespace restbed
         m_pimpl->start( );
     }
     
-    void Service::publish( const shared_ptr< Resource >& value )
+    void Service::publish( const shared_ptr< Resource >& resource )
     {
-        m_pimpl->publish( value );
+        m_pimpl->publish( resource );
     }
     
-    void Service::suppress( const shared_ptr< Resource >& value )
+    void Service::suppress( const shared_ptr< Resource >& resource )
     {
-        m_pimpl->suppress( value );
+        m_pimpl->suppress( resource );
     }
     
     void Service::set_logger( const shared_ptr< Logger >& value )
