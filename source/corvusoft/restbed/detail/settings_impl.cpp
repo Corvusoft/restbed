@@ -33,7 +33,7 @@ namespace restbed
         {
             m_properties[ "root" ] = "/";
             m_properties[ "port" ] = "80";
-            m_properties[ "connecton-limit" ] = "128";
+            m_properties[ "connection-limit" ] = "128";
             m_properties[ "connection-timeout" ] = "5";
         }
         

@@ -49,6 +49,8 @@ namespace restbed
                                    const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 //Getters
                 const std::set< std::string >& get_paths( void ) const;
+
+                const std::set< std::string >& get_methods( void ) const;
                 
                 std::multimap< std::string,
                                std::pair< std::multimap< std::string, std::string >,
@@ -106,6 +108,8 @@ namespace restbed
 
                 //Properties
                 std::set< std::string > m_paths;
+
+                std::set< std::string > m_methods;
 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_authentication_handler;
                 

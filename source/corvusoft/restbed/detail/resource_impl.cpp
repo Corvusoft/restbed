@@ -32,6 +32,7 @@ namespace restbed
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
+            m_methods( ),
             m_authentication_handler( nullptr ),
             m_method_handlers( )
         {
@@ -60,7 +61,12 @@ namespace restbed
         {
             return m_paths;
         }
-        
+
+        const set< string >& ResourceImpl::get_methods( void ) const
+        {
+            return m_methods;
+        }
+
         multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
         ResourceImpl::get_method_handlers( const string& method ) const
         {
@@ -88,6 +94,8 @@ namespace restbed
             }
 
             const string verb = String::uppercase( method );
+            m_methods.insert( verb );
+
             m_method_handlers.insert( make_pair( verb, make_pair( filters, callback ) ) );
         }
 

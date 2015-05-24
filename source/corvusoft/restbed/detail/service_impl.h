@@ -130,7 +130,9 @@ namespace restbed
                 ServiceImpl& operator =( const ServiceImpl& value ) = delete;
                 
                 //Properties
-                const std::shared_ptr< Settings > m_settings;
+                std::shared_ptr< Settings > m_settings;
+
+                std::set< std::string > m_supported_methods;
 
                 std::multimap< std::string, std::string > m_default_headers;
 

@@ -58,6 +58,7 @@ namespace restbed
     namespace detail
     {
         ServiceImpl::ServiceImpl( void ) : m_settings( nullptr ),
+            m_supported_methods( ),
             m_resource_routes( ),
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
@@ -119,15 +120,15 @@ namespace restbed
 
             m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
             m_acceptor->set_option( socket_base::reuse_address( true ) );
-            m_acceptor->listen(  );//m_maximum_connections );
+            m_acceptor->listen( settings->get_connection_limit( ) );
             
             listen( );
 
-            // log( Logger::Level::INFO, "Service online at 'TIME HERE PLEASE'" );
+            log( Logger::Level::INFO, "Service online at 'TIME HERE PLEASE'" );
 
             m_io_service->run( );
 
-            // log( Logger::Level::INFO, "Service halted at 'TIME HERE PLEASE'" );
+            log( Logger::Level::INFO, "Service halted at 'TIME HERE PLEASE'" );
         }
         
         void ServiceImpl::publish( const shared_ptr< Resource >& resource )
@@ -151,6 +152,9 @@ namespace restbed
                 //path = normalise_path( root, path );
                 m_resource_routes[ path ] = resource;
             }
+
+            const auto& methods = resource->m_pimpl->get_methods( );
+            m_supported_methods.insert( methods.begin( ), methods.end( ) );
 
             //log( Logger::Level::INFO,
             //     String::format( "Published resource at '%s'", String::join( resource.get_paths( ), ", " ) ) );
@@ -244,16 +248,14 @@ namespace restbed
 
             if ( method_handler == nullptr )
             {
-                //if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
-                //{
-                //    session->close( 501, status_message.at( 501 ) );
-                //    return;
-                //return method_not_implemented_handler( session );
-                //}
-                //else
-                //{
-                return method_not_allowed( session );
-                //}
+                if ( m_supported_methods.count( request->get_method( ) ) == 0 )
+                {
+                    return method_not_implemented( session );
+                }
+                else
+                {
+                    return method_not_allowed( session );
+                }
             }
 
             method_handler( session );
@@ -306,10 +308,10 @@ namespace restbed
 
         void ServiceImpl::log( const Logger::Level level, const string& message )
         {
-            // if ( m_log_handler not_eq nullptr )
-            // {
-            //     m_log_handler->log( level, "%s", message.data( ) );
-            // }
+             if ( m_log_handler not_eq nullptr )
+             {
+                 m_log_handler->log( level, "%s", message.data( ) );
+             }
         }
 
         void ServiceImpl::authenticate( const shared_ptr< Session >& session,
