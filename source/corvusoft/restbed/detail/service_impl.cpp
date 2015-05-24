@@ -124,11 +124,11 @@ namespace restbed
             
             listen( );
 
-            log( Logger::Level::INFO, "Service online at 'TIME HERE PLEASE'" );
+            log( Logger::Level::INFO, "Service online" );
 
             m_io_service->run( );
 
-            log( Logger::Level::INFO, "Service halted at 'TIME HERE PLEASE'" );
+            log( Logger::Level::INFO, "Service halted" );
         }
         
         void ServiceImpl::publish( const shared_ptr< Resource >& resource )
@@ -156,8 +156,7 @@ namespace restbed
             const auto& methods = resource->m_pimpl->get_methods( );
             m_supported_methods.insert( methods.begin( ), methods.end( ) );
 
-            //log( Logger::Level::INFO,
-            //     String::format( "Published resource at '%s'", String::join( resource.get_paths( ), ", " ) ) );
+//            log( Logger::Level::INFO, String::format( "Published resource routes '%s'", String::join( paths, ", " ).data( ) ) );
         }
         
         void ServiceImpl::suppress( const shared_ptr< Resource >& resource )
@@ -171,11 +170,11 @@ namespace restbed
             {
                 if ( m_resource_routes.erase( path ) )
                 {
-//                    log( Logger::Level::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
+                    log( Logger::Level::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
                 }
                 else
                 {
-//                    log( Logger::Level::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
+                    log( Logger::Level::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
                 }
             }
         }
