@@ -14,6 +14,7 @@
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
+#include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/session_manager.h"
 #include "corvusoft/restbed/detail/service_impl.h"
@@ -356,17 +357,17 @@ namespace restbed
 
         void ServiceImpl::not_found( const std::shared_ptr< Session >& session )
         {
-            session->close( 404, status_message.at( 404 ) );
+            session->close( NOT_FOUND, status_message.at( NOT_FOUND ) );
         }
 
         void ServiceImpl::method_not_allowed( const std::shared_ptr< Session >& session )
         {
-            session->close( 405, status_message.at( 405 ) );
+            session->close( METHOD_NOT_ALLOWED, status_message.at( METHOD_NOT_ALLOWED ) );
         }
 
         void ServiceImpl::method_not_implemented( const std::shared_ptr< Session >& session )
         {
-            session->close( 501, status_message.at( 501 ) );
+            session->close( NOT_IMPLEMENTED, status_message.at( NOT_IMPLEMENTED ) );
         }
 
         bool ServiceImpl::has_unique_paths( const set< string >& paths )

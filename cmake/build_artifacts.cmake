@@ -5,6 +5,8 @@ set( FRAMEWORK_ARTIFACTS
      ${SOURCE_DIR}/settings.h
      ${SOURCE_DIR}/status_message
      ${SOURCE_DIR}/status_message.h
+     ${SOURCE_DIR}/status_code
+     ${SOURCE_DIR}/status_code.h
      ${SOURCE_DIR}/resource
      ${SOURCE_DIR}/resource.h
      ${SOURCE_DIR}/request
