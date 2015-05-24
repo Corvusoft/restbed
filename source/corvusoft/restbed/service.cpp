@@ -67,7 +67,7 @@ namespace restbed
     }
     
     void Service::set_authentication_handler( function< void ( const shared_ptr< Session >&,
-                                                               const std::function< void ( const std::shared_ptr< Session >& ) >& ) > value )
+                                                               const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value )
     {
         m_pimpl->set_authentication_handler( value );
     }
@@ -76,11 +76,4 @@ namespace restbed
     {
         m_pimpl->set_error_handler( value );
     }
-    
-    // Service& Service::operator =( const Service& value )
-    // {
-    //     *m_pimpl = *value.m_pimpl;
-        
-    //     return *this;
-    // }
 }

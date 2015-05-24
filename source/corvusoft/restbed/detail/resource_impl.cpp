@@ -33,30 +33,38 @@ namespace restbed
 {
     namespace detail
     {
-        ResourceImpl::ResourceImpl( void ) : m_id( UniqueId::generate( ).to_string( ) ),
-            m_paths( ),
+        ResourceImpl::ResourceImpl( void ) : m_paths( ),
+            m_authentication_handler( nullptr ),
             m_method_handlers( )
         {
             return;
         }
         
-        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_id( original.m_id ),
-            m_paths( original.m_paths ),
-            m_method_handlers( original.m_method_handlers )
-        {
-            return;
-        }
-        
+//        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_id( original.m_id ),
+//            m_paths( original.m_paths ),
+//            m_method_handlers( original.m_method_handlers )
+//        {
+//            return;
+//        }
+
         ResourceImpl::~ResourceImpl( void )
         {
             return;
         }
 
-        const string& ResourceImpl::get_id( void ) const
+        void ResourceImpl::authenticate( const shared_ptr< Session >& session,
+                                         const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            return m_id;
+            if ( m_authentication_handler not_eq nullptr )
+            {
+                m_authentication_handler( session );
+            }
+            else
+            {
+                callback( session );
+            }
         }
-        
+
         const set< string >& ResourceImpl::get_paths( void ) const
         {
             return m_paths;
@@ -65,25 +73,15 @@ namespace restbed
         multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
         ResourceImpl::get_method_handlers( const string& method ) const
         {
-            //this return argument stinks, remove copy.
             if ( method.empty( ) )
             {
                 return m_method_handlers;
             }
 
-            const string verb = String::uppercase( method );
-
-            if ( m_method_handlers.count( verb ) == 0 )
-            {
-                throw invalid_argument(
-                    String::format( "Resource has no handler associated with HTTP method '%s'.", verb.data( ) )
-                );
-            }
-
-            return decltype( m_method_handlers )( m_method_handlers.lower_bound( verb ),
-                                                  m_method_handlers.upper_bound( verb ) );
+            return decltype( m_method_handlers )( m_method_handlers.lower_bound( method ),
+                                                  m_method_handlers.upper_bound( method ) );
         }
-        
+
         void ResourceImpl::set_paths( const set< string >& values )
         {
             m_paths = values;
@@ -91,7 +89,7 @@ namespace restbed
         
         void ResourceImpl::set_method_handler( const string& method,
                                                const multimap< string, string >& filters,
-                                               const function< void ( const shared_ptr< Session >& ) >& callback )
+                                               const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
         {
             const string verb = String::uppercase( method );
 
@@ -105,45 +103,14 @@ namespace restbed
             m_method_handlers.insert( make_pair( verb, make_pair( filters, callback ) ) );
         }
 
-        void ResourceImpl::set_authentication_handler( const function< bool ( const shared_ptr< Session >& ) >& value )
+        void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            //m_authentication_handler = value;
+            m_authentication_handler = value;
         }
 
         void ResourceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
         {
             //m_error_handler = value;
-        }
-        
-        bool ResourceImpl::operator >( const ResourceImpl& value ) const
-        {
-            return UniqueId( m_id ) > UniqueId( value.m_id );
-        }
-
-        bool ResourceImpl::operator <( const ResourceImpl& value ) const
-        {
-            return UniqueId( m_id ) < UniqueId( value.m_id );
-        }
-
-        bool ResourceImpl::operator ==( const ResourceImpl& value ) const
-        {
-            return m_id == value.m_id;
-        }
-        
-        bool ResourceImpl::operator !=( const ResourceImpl& value ) const
-        {
-            return m_id not_eq value.m_id;
-        }
-        
-        ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
-        {
-            m_id = value.m_id;
-
-            m_paths = value.m_paths;
-
-            m_method_handlers = value.m_method_handlers;
-            
-            return *this;
         }
     }
 }

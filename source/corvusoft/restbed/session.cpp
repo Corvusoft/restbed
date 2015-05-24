@@ -61,4 +61,9 @@ namespace restbed
     {
         return m_pimpl->get_request( );
     }
+
+    const shared_ptr< Resource >& Session::get_resource(  void ) const
+    {
+        return m_pimpl->get_resource( );
+    }
 }

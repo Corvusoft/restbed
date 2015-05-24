@@ -31,6 +31,7 @@ namespace restbed
     
     namespace detail
     {
+        class ServiceImpl;
         class ResourceImpl;
     }
     
@@ -44,18 +45,16 @@ namespace restbed
             //Constructors
             Resource( void );
             
-            Resource( const Resource& original );
-            
             virtual ~Resource( void );
             
             //Functionality
             
             //Getters
-            std::string get_id( void ) const;
-
             std::set< std::string > get_paths( void ) const;
 
-            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > >
+            std::multimap< std::string,
+                           std::pair< std::multimap< std::string, std::string >,
+                                      std::function< void ( const std::shared_ptr< Session >& ) > > >
             get_method_handlers( const std::string& method = framework::String::empty ) const;
 
             //Setters
@@ -70,25 +69,17 @@ namespace restbed
                                      const std::multimap< std::string, std::string >& filters,
                                      const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-            void set_authentication_handler( const std::function< bool ( const std::shared_ptr< Session >& ) >& value );
+            void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
                 
             void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
             
             //Operators
-            Resource& operator =( const Resource& value );
-
-            bool operator >( const Resource& value ) const;
-
-            bool operator <( const Resource& value ) const;
-
-            bool operator ==( const Resource& value ) const;
-            
-            bool operator !=( const Resource& value ) const;
             
             //Properties
             
         protected:
             //Friends
+            friend detail::ServiceImpl;
             
             //Definitions
             
@@ -110,6 +101,7 @@ namespace restbed
             //Definitions
             
             //Constructors
+            Resource( const Resource& original ) = delete;
             
             //Functionality
             
@@ -118,6 +110,7 @@ namespace restbed
             //Setters
             
             //Operators
+            Resource& operator =( const Resource& value ) = delete;
             
             //Properties
             std::unique_ptr< detail::ResourceImpl > m_pimpl;

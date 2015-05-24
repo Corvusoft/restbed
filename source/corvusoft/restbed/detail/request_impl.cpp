@@ -19,9 +19,9 @@ using std::stod;
 using std::string;
 using std::istream;
 using std::multimap;
+using std::function;
 using std::shared_ptr;
 using std::istreambuf_iterator;
-using asio::ip::tcp;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -123,23 +123,23 @@ namespace restbed
 //            return m_headers;
 //        }
 //        
-//        multimap< string, string > RequestImpl::get_headers( const string& name ) const
-//        {
-//            multimap< string, string > headers;
-//            
-//            auto key = String::lowercase( name );
-//            
-//            for ( auto header : m_headers )
-//            {
-//                if ( String::lowercase( header.first ) == key )
-//                {
-//                    headers.insert( header );
-//                }
-//            }
-//            
-//            return headers;
-//        }
-//        
+        multimap< string, string > RequestImpl::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
+        {
+            const auto key = transform( name );
+
+            multimap< string, string > headers;
+            
+            for ( auto header : m_headers )
+            {
+                if ( transform( header.first ) == key )
+                {
+                    headers.insert( header );
+                }
+            }
+            
+            return headers;
+        }
+
 //        string RequestImpl::get_query_parameter( const string& name, const string& default_value ) const
 //        {
 //            string parameter = default_value;

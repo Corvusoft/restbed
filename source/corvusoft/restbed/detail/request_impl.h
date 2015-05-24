@@ -9,9 +9,9 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <functional>
 
 //Project Includes
-#include <asio.hpp>
 
 //External Includes
 #include <corvusoft/framework/bytes>
@@ -75,9 +75,10 @@ namespace restbed
 //                std::string get_header( const std::string& name, const std::string& default_value ) const;
 //                
 //                std::multimap< std::string, std::string > get_headers( void ) const;
-//            
-//                std::multimap< std::string, std::string > get_headers( const std::string& name ) const;
-//                
+//
+                  std::multimap< std::string, std::string > get_headers( const std::string& name,
+                                                                         const std::function< std::string ( const std::string& ) >& transform ) const;
+//
 //                std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
 //                
 //                std::multimap< std::string, std::string > get_query_parameters( void ) const;

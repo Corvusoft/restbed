@@ -11,6 +11,7 @@
 //Project Includes
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
+#include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
 
@@ -53,6 +54,7 @@ namespace restbed
     {
         SessionImpl::SessionImpl( void ) : m_id( String::empty ),
             m_request( nullptr ),
+            m_resource( nullptr ),
             m_buffer( nullptr ),
             m_socket( nullptr )
         {
@@ -74,14 +76,14 @@ namespace restbed
             return ( m_socket == nullptr or not m_socket->is_open( ) );
         }
 
-        void SessionImpl::close( const int status, const string& status_message )
+        void SessionImpl::close( const int status, const string& body )
         {
-            string data = String::format( "HTTP/1.1 %i %s\r\n\r\n", status, status_message.data( ) );
+            string data = String::format( "HTTP/1.1 %i %s\r\n\r\n%s", status, status_message.at( status ).data( ), body.data( ) );
 
             auto socket = m_socket;
             asio::async_write( *socket,
                                asio::buffer( data, data.length( ) ),
-                               [ socket, status, status_message ]( const asio::error_code& error, std::size_t bytes_transferred )
+                               [ socket, status ]( const asio::error_code& error, std::size_t bytes_transferred )
             {
                 //if error -> log
                 socket->close( );
@@ -109,6 +111,11 @@ namespace restbed
             return m_request;
         }
 
+        const shared_ptr< Resource >& SessionImpl::get_resource( void ) const
+        {
+            return m_resource;
+        }
+
         void SessionImpl::set_id( const string& value )
         {
             m_id = value;
@@ -117,6 +124,11 @@ namespace restbed
         void SessionImpl::set_request( const shared_ptr< Request >& value )
         {
             m_request = value;
+        }
+
+        void SessionImpl::set_resource( const std::shared_ptr< Resource >& value )
+        {
+            m_resource = value;
         }
 
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )

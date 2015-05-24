@@ -25,6 +25,7 @@ namespace restbed
     //Forward Declarations
     class Request;
     class Session;
+    class Resource;
     
     namespace detail
     {
@@ -57,6 +58,8 @@ namespace restbed
             const std::string& get_id( void ) const;
 
             const std::shared_ptr< Request >& get_request(  void ) const;
+
+            const std::shared_ptr< Resource >& get_resource( void ) const;
 
             //Setters
             

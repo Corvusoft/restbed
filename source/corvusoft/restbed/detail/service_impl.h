@@ -99,6 +99,8 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
+                void route( const std::shared_ptr< Session >& session );
+
                 void resource_router( const std::shared_ptr< Session >& session );
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error );
@@ -109,6 +111,12 @@ namespace restbed
                                    const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void error( const int status_code, const std::shared_ptr< Session >& session );
+
+                void not_found( const std::shared_ptr< Session >& session );
+
+                void method_not_allowed( const std::shared_ptr< Session >& session );
+
+                void method_not_implemented( const std::shared_ptr< Session >& session );
 
                 bool has_unique_paths( const std::set< std::string >& paths );
 
@@ -130,8 +138,10 @@ namespace restbed
 
                 // long long m_connection_timeout;
 
+                std::multimap< std::string, std::string > m_default_headers;
+
                 std::map< std::string, std::shared_ptr< Resource > > m_resource_routes;
-                
+
                 std::shared_ptr< Logger > m_log_handler;
                 
                 std::shared_ptr< asio::io_service > m_io_service;

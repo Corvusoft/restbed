@@ -31,19 +31,9 @@ namespace restbed
         return;
     }
     
-    Resource::Resource( const Resource& original ) : m_pimpl( new ResourceImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
     Resource::~Resource( void )
     {
         return;
-    }
-
-    string Resource::get_id( void ) const
-    {
-        return m_pimpl->get_id( );
     }
 
     set< string > Resource::get_paths( void ) const
@@ -51,7 +41,9 @@ namespace restbed
         return m_pimpl->get_paths( );
     }
     
-    multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
+    multimap< string,
+              pair< multimap< string, string >,
+              function< void ( const shared_ptr< Session >& ) > > >
     Resource::get_method_handlers( const string& method ) const
     {
         return m_pimpl->get_method_handlers( method );
@@ -68,7 +60,7 @@ namespace restbed
     }
 
     void Resource::set_method_handler( const string& method,
-                                       const function< void ( const shared_ptr< Session >& ) >& callback )
+                                       const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
     {
         static const multimap< string, string > empty;
         m_pimpl->set_method_handler( method, empty, callback );
@@ -76,12 +68,12 @@ namespace restbed
     
     void Resource::set_method_handler( const string& method,
                                        const multimap< string, string >& filters,
-                                       const function< void ( const shared_ptr< Session >& ) >& callback )
+                                       const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->set_method_handler( method, filters, callback );
     }
 
-    void Resource::set_authentication_handler( const function< bool ( const shared_ptr< Session >& ) >& value )
+    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_authentication_handler( value );
     }
@@ -89,32 +81,5 @@ namespace restbed
     void Resource::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_error_handler( value );
-    }
-    
-    Resource& Resource::operator =( const Resource& value )
-    {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
-    }
-
-    bool Resource::operator >( const Resource& value ) const
-    {
-        return *m_pimpl > *value.m_pimpl;
-    }
-
-    bool Resource::operator <( const Resource& value ) const
-    {
-        return *m_pimpl < *value.m_pimpl;
-    }
-    
-    bool Resource::operator ==( const Resource& value ) const
-    {
-        return *m_pimpl == *value.m_pimpl;
-    }
-    
-    bool Resource::operator !=( const Resource& value ) const
-    {
-        return *m_pimpl not_eq *value.m_pimpl;
     }
 }

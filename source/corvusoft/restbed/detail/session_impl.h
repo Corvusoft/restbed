@@ -28,6 +28,7 @@ namespace restbed
     //Forward Declarations
     class Request;
     class Session;
+    class Resource;
     
     namespace detail
     {
@@ -55,10 +56,6 @@ namespace restbed
                 void fetch( const std::shared_ptr< Session >& session,
                             const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-//                bool is_open( void );
-//
-//                bool is_closed( void );
-//
 //                void close( void );
 //
 //                void close( const Response& value );
@@ -96,10 +93,14 @@ namespace restbed
 
                 const std::shared_ptr< Request >& get_request( void ) const;
 
+                const std::shared_ptr< Resource >& get_resource( void ) const;
+
                 //Setters
                 void set_id( const std::string& value );
 
                 void set_request( const std::shared_ptr< Request >& value );
+
+                void set_resource( const std::shared_ptr< Resource >& value );
 
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
                 
@@ -150,6 +151,8 @@ namespace restbed
                 std::string m_id;
 
                 std::shared_ptr< Request > m_request;
+
+                std::shared_ptr< Resource > m_resource;
 
                 std::shared_ptr< asio::streambuf > m_buffer; //just pass as argument?
 

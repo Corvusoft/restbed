@@ -2,8 +2,8 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#ifndef _RESTBED_STATUS_CODES_H
-#define _RESTBED_STATUS_CODES_H 1
+#ifndef _RESTBED_STATUS_MESSAGE_H
+#define _RESTBED_STATUS_MESSAGE_H 1
 
 //System Includes
 #include <map>
@@ -23,7 +23,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    static std::map< int, std::string > status_codes { //status_message
+    static std::map< int, std::string > status_message {
         { 100, "Continue" },
         { 101, "Switching Protocols" },
         { 102, "Processing" },
@@ -85,4 +85,4 @@ namespace restbed
     };
 }
 
-#endif  /* _RESTBED_STATUS_CODES_H */
+#endif  /* _RESTBED_STATUS_MESSAGE_H */

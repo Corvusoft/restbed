@@ -1,55 +1,33 @@
-#include <map>
 #include <string>
+#include <memory>
 #include <cstdlib>
+#include <restbed>
 
 using namespace std;
-
-#include "restbed"
-
 using namespace restbed;
 
-Response get_xml_method_handler( const Request& )
+void get_xml_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_body( "<hello><world></world></hello>" );
-    response.set_header( "Content-Type", "application/xml" );
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
+    session->close( 200, "<hello><world></world></hello>" ); //header "Content-Type", "application/xml"
 }
 
-Response get_json_method_handler( const Request& )
+void get_json_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_body( "{ \"Hello\": \", World!\" }" );
-    response.set_header( "Content-Type", "application/json" );
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
+    session->close( 200, "{ \"Hello\": \", World!\" }" ); //header "Content-Type", "application/json"
 }
+
 int main( const int, const char** )
 {
-    Resource xml;
-    xml.set_path( "/resource" );
-    xml.set_header_filter( "Accept", "application/xml" );
-    xml.set_header_filter( "Content-Type", "application/xml" );
-    xml.set_method_handler( "GET", &get_xml_method_handler );
-
-    map< string, string > filters;
-    filters[ "Accept" ] = "application/json";
-    filters[ "Content-Type" ] = "application/json";
-
-    Resource json;
-    json.set_path( "/resource" );
-    json.set_header_filters( filters );
-    json.set_method_handler( "GET", &get_json_method_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resource" );
+    resource->set_method_handler( "GET", { { "Accept", "application/xml" }, { "Content-Type", "application/xml" } }, &get_xml_method_handler );
+    resource->set_method_handler( "GET", { { "Accept", "application/json" }, { "Content-Type", "application/json" } }, &get_json_method_handler );
     
     Settings settings;
     settings.set_port( 1984 );
     
     Service service( settings );
-    service.publish( xml );
-    service.publish( json );
+    service.publish( resource );
     service.start( );
     
     return EXIT_SUCCESS;

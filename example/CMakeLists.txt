@@ -39,8 +39,8 @@ target_link_libraries( publishing_resources ${CMAKE_PROJECT_NAME} )
 #add_executable( publishing_multipath_resources publishing_multipath_resources/source/example.cpp )
 #target_link_libraries( publishing_multipath_resources ${CMAKE_PROJECT_NAME} )
 
-#add_executable( request_filtering request_filtering/source/example.cpp )
-#target_link_libraries( request_filtering ${CMAKE_PROJECT_NAME} )
+add_executable( request_filtering request_filtering/source/example.cpp )
+target_link_libraries( request_filtering ${CMAKE_PROJECT_NAME} )
 
 #add_executable( serving_html serving_html/source/example.cpp )
 #target_link_libraries( serving_html ${CMAKE_PROJECT_NAME} )

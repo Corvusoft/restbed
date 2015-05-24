@@ -42,18 +42,17 @@ namespace restbed
                 //Constructors
                 ResourceImpl( void );
                 
-                ResourceImpl( const ResourceImpl& original );
-                
                 virtual ~ResourceImpl( void );
                 
                 //Functionality
-                
+                void authenticate( const std::shared_ptr< Session >& session,
+                                   const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 //Getters
-                const std::string& get_id( void ) const;
-
                 const std::set< std::string >& get_paths( void ) const;
                 
-                std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > >
+                std::multimap< std::string,
+                               std::pair< std::multimap< std::string, std::string >,
+                                          std::function< void ( const std::shared_ptr< Session >& ) > > >
                 get_method_handlers( const std::string& method ) const;
 
                 //Setters
@@ -63,20 +62,11 @@ namespace restbed
                                          const std::multimap< std::string, std::string >& filters,
                                          const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-                void set_authentication_handler( const std::function< bool ( const std::shared_ptr< Session >& ) >& value );
+                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
                 
                 void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
 
                 //Operators
-                bool operator >( const ResourceImpl& value ) const;
-
-                bool operator <( const ResourceImpl& value ) const;
-
-                bool operator ==( const ResourceImpl& value ) const;
-                
-                bool operator !=( const ResourceImpl& value ) const;
-                
-                ResourceImpl& operator =( const ResourceImpl& value );
                 
                 //Properties
                 
@@ -103,6 +93,7 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                ResourceImpl( const ResourceImpl& original ) = delete;
                 
                 //Functionality
 
@@ -111,11 +102,12 @@ namespace restbed
                 //Setters
                 
                 //Operators
-                
-                //Properties
-                std::string m_id;
+                ResourceImpl& operator =( const ResourceImpl& value ) = delete;
 
+                //Properties
                 std::set< std::string > m_paths;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_authentication_handler;
                 
                 std::multimap< std::string,
                                std::pair< std::multimap< std::string, std::string >,

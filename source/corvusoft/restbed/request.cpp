@@ -13,6 +13,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::function;
 using std::multimap;
 
 //Project Namespaces
@@ -122,12 +123,12 @@ namespace restbed
 //    {
 //        return m_pimpl->get_headers( );
 //    }
-//    
-//    multimap< string, string > Request::get_headers( const string& name ) const
-//    {
-//        return m_pimpl->get_headers( name );
-//    }
-//    
+
+    multimap< string, string > Request::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_headers( name, transform );
+    }
+
 //    string Request::get_query_parameter( const string& name, const string& default_value ) const
 //    {
 //        return m_pimpl->get_query_parameter( name, default_value );

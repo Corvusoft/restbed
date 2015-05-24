@@ -9,11 +9,13 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <functional>
 
 //Project Includes
 
 //External Includes
 #include <corvusoft/framework/bytes>
+#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -94,8 +96,10 @@ namespace restbed
 //            
 //            std::multimap< std::string, std::string > get_headers( void ) const;
 //        
-//            std::multimap< std::string, std::string > get_headers( const std::string& name ) const;
-//            
+
+           std::multimap< std::string, std::string > get_headers( const std::string& name,
+                                                                  const std::function< std::string ( const std::string& ) >& transform = framework::String::uppercase ) const;
+//
 //            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );
 //
 //            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );

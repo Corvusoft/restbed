@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <regex>
 #include <cstdio>
 #include <stdexcept>
 #include <functional>
@@ -13,10 +14,11 @@
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/status_codes.h"
+#include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/session_manager.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/detail/resource_impl.h"
 #include "corvusoft/restbed/detail/session_manager_impl.h"
 
 //External Includes
@@ -26,6 +28,7 @@
 using std::set;
 using std::find;
 using std::bind;
+using std::regex;
 using std::string;
 using std::find_if;
 using std::function;
@@ -77,7 +80,7 @@ namespace restbed
             }
             catch ( ... )
             {
-                log( Logger::Level::WARNING, "Service failed graceful shutdown." );
+                log( Logger::Level::WARNING, "Service failed graceful teardown." );
             }
         }
         
@@ -87,15 +90,13 @@ namespace restbed
             {
                 m_io_service->stop( );
             }
-
-            // log( Logger::Level::INFO, "Service stopped" );
         }
 
         void ServiceImpl::start( void )
         {
             m_io_service = make_shared< io_service >( );
 
-            Settings settings; //get from constructor
+            Settings settings; //get from constructor + logger...
             m_session_manager = make_shared< SessionManagerImpl >( settings );
 
             m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
@@ -104,11 +105,11 @@ namespace restbed
             
             listen( );
 
-            // log( Logger::Level::INFO, "Service Started" );
+            // log( Logger::Level::INFO, "Service online at 'TIME HERE PLEASE'" );
 
             m_io_service->run( );
 
-            // log( Logger::Level::INFO, "Service Stopped" );
+            // log( Logger::Level::INFO, "Service halted at 'TIME HERE PLEASE'" );
         }
         
         void ServiceImpl::publish( const shared_ptr< Resource >& resource )
@@ -144,16 +145,17 @@ namespace restbed
                 return;
             }
 
-            //if ( m_resource.erase( value ) )
-            //{
-            //    log( Logger::Level::INFO,
-            //         String::format( "Resource with identifier '%s' suppressed.", value.get_id( ).data( ) ) );
-            //}
-            //else
-            //{
-            //    log( Logger::Level::INFO,
-            //         String::format( "Failed to suppress resource with identifier '%s'; Not Found.", value.get_id( ).data( ) ) );
-            //}
+            for ( const auto& path : resource->get_paths( ) )
+            {
+                if ( m_resource_routes.erase( path ) )
+                {
+//                    log( Logger::Level::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
+                }
+                else
+                {
+//                    log( Logger::Level::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
+                }
+            }
         }
         
         void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
@@ -182,71 +184,82 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
 
-        void ServiceImpl::resource_router( const shared_ptr< Session >& session )
-        try
+        void ServiceImpl::route( const shared_ptr< Session >& session )
         {
             if ( session->is_closed( ) )
             {
                 return;
             }
 
-            auto request = session->get_request( );
+            const auto request = session->get_request( );
+            const auto resource = session->get_resource( );
 
-            fprintf( stderr, "path: %s\n", request->get_path( ).data( ) );
-            fprintf( stderr, "method: %s\n", request->get_method( ).data( ) );
-            fprintf( stderr, "version: %.1f\n", request->get_version( ) );
+            function< void ( const std::shared_ptr< Session >& ) > method_handler = nullptr;
+            const auto method_handlers = resource->get_method_handlers( request->get_method( ) );
 
-            const auto resource = m_resource_routes.find( request->get_path( ) );
-
-            if ( resource == m_resource_routes.end( ) )
+            for ( const auto& handler : method_handlers )
             {
-                session->close( 404, status_codes.at( 404 ) ); //status_message.at( 404 );
+                const auto& filters = handler.second.first;
+
+                bool valid = true;
+                for ( const auto& filter : filters )
+                {
+                    for ( const auto& header : request->get_headers( filter.first ) )
+                    {
+                         if ( not regex_match( header.second, regex( filter.second ) ) )
+                         {
+                             valid = false;
+                             //method_handler = resource->get_failed_filter_validation_handler( );???
+                             break;
+                         }
+                    }
+
+                    if ( not valid ) break;
+                }
+
+                if ( valid )
+                {
+                    method_handler = handler.second.second;
+                    break;
+                }
+            }
+
+            if ( method_handler == nullptr )
+            {
+                //if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
+                //{
+                //    session->close( 501, status_message.at( 501 ) );
+                //    return;
+                //return method_not_implemented_handler( session );
+                //}
+                //else
+                //{
+                return method_not_allowed( session );
+                //}
+            }
+
+            method_handler( session );
+        }
+
+        void ServiceImpl::resource_router( const shared_ptr< Session >& session )
+        {
+            if ( session->is_closed( ) )
+            {
                 return;
             }
 
-            //resource.authentication_handler( session );
+            const auto request = session->get_request( );
+            const auto resource_route = m_resource_routes.find( request->get_path( ) );
 
-//                const auto method_handler = find_first_matching_method_handler_by_filters( resource );
-//
-//                if ( method_handler == nullptr )
-//                {
-//                    if ( m_service_methods.count( session.get_request( ).get_method( ) ) == 0 )
-//                    {
-//                        //resource has m_method_not_implemented_handler )
-//                        m_method_not_implemented_handler( session );
-//                        return;
-//                    }
-//                    else
-//                    {
-//                        //if ( resource has method_not_allowed_handler )
-//                        m_method_not_allowed_handler( session );
-//                        return;
-//                    }
-//                }
-//
-//                session->m_pimpl->set_resource( resource );
-//                session->m_pimpl->set_default_headers( m_default_headers ); 
-//
-//                method_handler( session, [ ]( const std::shared_ptr< Session >& session )
-//                {
-//                    if ( session.is_close( ) )
-//                    {
-//                        m_session_manager->purge( session );
-//                    }
-//                } );
-//            } );
-        }
-        catch ( const exception& ex )
-        {
-            // resource_error_handler = resource->get_error_handler( );
-            // resource_error_handler( session );
-            // m_error_handler( session );
-        }
-        catch ( ... )
-        {
-            // resource_error_handler = resource->get_error_handler( );
-            // resource_error_handler( session );
-            // m_error_handler( session );
+            if ( resource_route == m_resource_routes.end( ) )
+            {
+                return not_found( session );
+            }
+
+            const auto resource = resource_route->second;
+            session->m_pimpl->set_resource( resource );
+
+            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1 ) );
         }
 
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error )
@@ -261,6 +274,7 @@ namespace restbed
                 {
                     session->m_pimpl->set_socket( socket );
                     session->m_pimpl->fetch( session, authenticate );
+                    //session->m_pimpl->set_default_headers( m_default_headers );
                 } );
             }
             else
@@ -319,6 +333,21 @@ namespace restbed
             // response.set_status_code( status_code );
             // response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
             // response.set_body( status_message );
+        }
+
+        void ServiceImpl::not_found( const std::shared_ptr< Session >& session )
+        {
+            session->close( 404, status_message.at( 404 ) );
+        }
+
+        void ServiceImpl::method_not_allowed( const std::shared_ptr< Session >& session )
+        {
+            session->close( 405, status_message.at( 405 ) );
+        }
+
+        void ServiceImpl::method_not_implemented( const std::shared_ptr< Session >& session )
+        {
+            session->close( 501, status_message.at( 501 ) );
         }
 
         bool ServiceImpl::has_unique_paths( const set< string >& paths )
