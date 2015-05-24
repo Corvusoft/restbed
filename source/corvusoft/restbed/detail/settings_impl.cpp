@@ -13,7 +13,8 @@
 
 //System Namespaces
 using std::map;
-using std::stoi;
+using std::stol;
+using std::stoll;
 using std::string;
 using std::to_string;
 using std::chrono::seconds;
@@ -30,15 +31,10 @@ namespace restbed
     {
         SettingsImpl::SettingsImpl( void ) : m_properties( )
         {
-            m_properties[ "ROOT" ] = "/";
-            m_properties[ "PORT" ] = "80";
-            m_properties[ "MAXIMUM CONNECTIONS" ] = "1024";
-            m_properties[ "CONNECTION TIMEOUT" ] = "5";
-        }
-        
-        SettingsImpl::SettingsImpl( const SettingsImpl& original ) : m_properties( original.m_properties )
-        {
-            return;
+            m_properties[ "root" ] = "/";
+            m_properties[ "port" ] = "80";
+            m_properties[ "connecton-limit" ] = "128";
+            m_properties[ "connection-timeout" ] = "5";
         }
         
         SettingsImpl::~SettingsImpl( void )
@@ -48,22 +44,22 @@ namespace restbed
         
         uint16_t SettingsImpl::get_port( void ) const
         {
-            return stoi( get_property( "PORT" ) );
+            return stoi( get_property( "port" ) );
         }
         
         string SettingsImpl::get_root( void ) const
         {
-            return get_property( "ROOT" );
+            return get_property( "root" );
         }
         
-        int SettingsImpl::get_maximum_connections( void ) const
+        int32_t SettingsImpl::get_connection_limit( void ) const
         {
-            return stoi( get_property( "MAXIMUM CONNECTIONS" ) );
+            return stoul( get_property( "connection-limit" ) );
         }
 
         seconds SettingsImpl::get_connection_timeout( void ) const
         {
-            return seconds( stoll( get_property( "CONNECTION TIMEOUT" ) ) );
+            return seconds( stoll( get_property( "socket-timeout" ) ) );
         }
 
         string SettingsImpl::get_property( const string& name ) const
@@ -87,22 +83,22 @@ namespace restbed
         
         void SettingsImpl::set_port( const uint16_t value )
         {
-            set_property( "PORT", ::to_string( value ) );
+            set_property( "port", ::to_string( value ) );
         }
         
         void SettingsImpl::set_root( const string& value )
         {
-            set_property( "ROOT", value );
+            set_property( "root", value );
         }
         
-        void SettingsImpl::set_maximum_connections( const int value )
+        void SettingsImpl::set_connection_limit( const int32_t value )
         {
-            set_property( "MAXIMUM CONNECTIONS", ::to_string( value ) );
+            set_property( "connection-limit", ::to_string( value ) );
         }
 
         void SettingsImpl::set_connection_timeout( const seconds& value )
         {
-            set_property( "CONNECTION TIMEOUT", ::to_string( value.count( ) ) );
+            set_property( "connection-timeout", ::to_string( value.count( ) ) );
         }
 
         void SettingsImpl::set_property( const string& name, const string& value )
@@ -118,13 +114,6 @@ namespace restbed
             {
                 set_property( value.first, value.second );
             }
-        }
-        
-        SettingsImpl& SettingsImpl::operator =( const SettingsImpl& value )
-        {
-            m_properties = value.m_properties;
-            
-            return *this;
         }
     }
 }

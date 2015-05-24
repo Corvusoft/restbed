@@ -37,9 +37,7 @@ namespace restbed
                 
                 //Constructors
                 SettingsImpl( void );
-                
-                SettingsImpl( const SettingsImpl& original );
-                
+
                 virtual ~SettingsImpl( void );
                 
                 //Functionality
@@ -49,7 +47,7 @@ namespace restbed
                 
                 std::string get_root( void ) const;
                 
-                int get_maximum_connections( void ) const;
+                int32_t get_connection_limit( void ) const;
 
                 std::chrono::seconds get_connection_timeout( void ) const;
                 
@@ -62,7 +60,7 @@ namespace restbed
                 
                 void set_root( const std::string& value );
                 
-                void set_maximum_connections( const int value );
+                void set_connection_limit( const int32_t value );
 
                 void set_connection_timeout( const std::chrono::seconds& value );
                 
@@ -71,7 +69,6 @@ namespace restbed
                 void set_properties( const std::map< std::string, std::string >& values );
                 
                 //Operators
-                SettingsImpl& operator =( const SettingsImpl& value );
                 
                 //Properties
                 
@@ -98,7 +95,8 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                
+                SettingsImpl( const SettingsImpl& original ) = delete;
+
                 //Functionality
                 
                 //Getters
@@ -106,6 +104,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
+                SettingsImpl& operator =( const SettingsImpl& value ) = delete;
                 
                 //Properties
                 std::map< std::string, std::string > m_properties;

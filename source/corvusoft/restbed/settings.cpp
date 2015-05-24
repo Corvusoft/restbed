@@ -27,11 +27,6 @@ namespace restbed
         return;
     }
     
-    Settings::Settings( const Settings& original ) : m_pimpl( new SettingsImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
     Settings::~Settings( void )
     {
         return;
@@ -47,9 +42,9 @@ namespace restbed
         return m_pimpl->get_root( );
     }
     
-    int Settings::get_maximum_connections( void ) const
+    int32_t Settings::get_connection_limit( void ) const
     {
-        return m_pimpl->get_maximum_connections( );
+        return m_pimpl->get_connection_limit( );
     }
 
     seconds Settings::get_connection_timeout( void ) const
@@ -77,9 +72,9 @@ namespace restbed
         m_pimpl->set_root( value );
     }
     
-    void Settings::set_maximum_connections( const int value )
+    void Settings::set_connection_limit( const int32_t value )
     {
-        m_pimpl->set_maximum_connections( value );
+        m_pimpl->set_connection_limit( value );
     }
 
     void Settings::set_connection_timeout( const seconds& value )
@@ -95,12 +90,5 @@ namespace restbed
     void Settings::set_properties( const map< string, string >& values )
     {
         m_pimpl->set_properties( values );
-    }
-    
-    Settings& Settings::operator =( const Settings& value )
-    {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
     }
 }
