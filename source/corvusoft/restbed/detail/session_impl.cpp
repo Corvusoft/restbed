@@ -76,9 +76,16 @@ namespace restbed
             return ( m_socket == nullptr or not m_socket->is_open( ) );
         }
 
+        void SessionImpl::close( void )
+        {
+            m_socket->close( );
+        }
+
         void SessionImpl::close( const int status, const string& body )
         {
-            string data = String::format( "HTTP/1.1 %i %s\r\n\r\n%s", status, status_message.at( status ).data( ), body.data( ) );
+            const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
+
+            const auto data = String::format( "HTTP/1.1 %i %s\r\n\r\n%s", status, message.data( ), body.data( ) );
 
             auto socket = m_socket;
             asio::async_write( *socket,

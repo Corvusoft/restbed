@@ -6,7 +6,6 @@
 #include <istream>
 
 //Project Includes
-#include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes

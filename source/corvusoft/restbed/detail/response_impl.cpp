@@ -86,7 +86,7 @@ namespace restbed
             {
                 message = ( status_message.count( m_status_code ) ) ?
                             status_message.at( m_status_code ) :
-                            "No Appropriate Status Message Found";
+                            status_message.at( 999 );
             }
 
             return message;

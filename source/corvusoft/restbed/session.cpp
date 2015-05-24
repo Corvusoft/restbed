@@ -42,6 +42,11 @@ namespace restbed
         return m_pimpl->is_closed( );
     }
 
+    void Session::close( void )
+    {
+        m_pimpl->close( );
+    }
+
     void Session::close( const int status, const string& status_message )
     {
         m_pimpl->close( status, status_message );

@@ -50,6 +50,8 @@ namespace restbed
 
             bool is_closed( void ) const;
 
+            void close( void );
+
             void close( const int status, const std::string& status_message = "" );
 
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );

@@ -6,7 +6,6 @@
 #include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/methods.h"
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
 
@@ -27,7 +26,6 @@ using std::invalid_argument;
 
 //External Namespaces
 using framework::String;
-using framework::UniqueId;
 
 namespace restbed
 {
@@ -39,13 +37,6 @@ namespace restbed
         {
             return;
         }
-        
-//        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_id( original.m_id ),
-//            m_paths( original.m_paths ),
-//            m_method_handlers( original.m_method_handlers )
-//        {
-//            return;
-//        }
 
         ResourceImpl::~ResourceImpl( void )
         {
@@ -91,15 +82,12 @@ namespace restbed
                                                const multimap< string, string >& filters,
                                                const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
         {
-            const string verb = String::uppercase( method );
-
-            if ( methods.count( verb ) == 0 )
+            if ( method.empty( ) )
             {
-                throw invalid_argument(
-                    String::format( "Resource method handler set with an unsupported HTTP method '%s'.", verb.data( ) )
-                );
+                throw invalid_argument( "Attempt to set resource method handler to an empty protocol method." );
             }
-            
+
+            const string verb = String::uppercase( method );
             m_method_handlers.insert( make_pair( verb, make_pair( filters, callback ) ) );
         }
 
