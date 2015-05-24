@@ -44,15 +44,15 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                ServiceImpl( const Settings& settings );
+                ServiceImpl( void );
                 
                 virtual ~ServiceImpl( void );
                 
                 //Functionality
                 void stop( void );
 
-                void start( void );
-                
+                void start( const std::shared_ptr< Settings >& settings );
+
                 void publish( const std::shared_ptr< Resource >& resource ); //publish( path, resource );
                 
                 void suppress( const std::shared_ptr< Resource >& resource ); //hmm suppress( string path );
@@ -130,13 +130,7 @@ namespace restbed
                 ServiceImpl& operator =( const ServiceImpl& value ) = delete;
                 
                 //Properties
-                uint16_t m_port;
-                
-                std::string m_root;
-                
-                // int m_maximum_connections;
-
-                // long long m_connection_timeout;
+                const std::shared_ptr< Settings > m_settings;
 
                 std::multimap< std::string, std::string > m_default_headers;
 

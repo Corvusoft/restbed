@@ -28,13 +28,22 @@ namespace restbed
 {
     namespace detail
     {
-        SessionManagerImpl::SessionManagerImpl( const Settings& settings ) : SessionManager( settings ),
-            m_sessions( )
+        SessionManagerImpl::SessionManagerImpl( void )
         {
             return;
         }
-        
+
         SessionManagerImpl::~SessionManagerImpl( void )
+        {
+            return;
+        }
+
+        void SessionManagerImpl::stop( void )
+        {
+            return;
+        }
+
+        void SessionManagerImpl::start( const shared_ptr< Settings >& )
         {
             return;
         }
@@ -47,16 +56,21 @@ namespace restbed
             callback( session );
         }
 
-        void SessionManagerImpl::load( const shared_ptr< Session >& session,
-                                       const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionManagerImpl::load( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             if ( session->is_closed( ) )
             {
                 return;
             }
-//            perform async operation ex. Http::async( );
-//            restbed::wait_for( seconds( 10 ), bind( session, callback ) );
+
             callback( session );
+        }
+
+        void SessionManagerImpl::purge( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+        {
+            m_sessions.erase( session->get_id( ) );
+
+            callback( nullptr );
         }
     }
 }

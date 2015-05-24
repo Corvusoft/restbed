@@ -22,6 +22,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Settings;
 
     class Logger
     {
@@ -42,9 +43,13 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual void log( const Level level, const std::string format, ... ) noexcept = 0;
+            virtual void stop( void ) = 0;
+
+            virtual void start( const std::shared_ptr< Settings >& settings ) = 0;
+
+            virtual void log( const Level level, const std::string format, ... ) = 0;
             
-            virtual void log_if( bool expression, const Level level, const std::string format, ... ) noexcept = 0;
+            virtual void log_if( bool expression, const Level level, const std::string format, ... ) = 0;
             
             //Getters
             

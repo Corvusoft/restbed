@@ -13,6 +13,5 @@ set( MANIFEST
      ${SOURCE_DIR}/detail/service_impl.cpp
      ${SOURCE_DIR}/session.cpp
      ${SOURCE_DIR}/detail/session_impl.cpp
-     ${SOURCE_DIR}/session_manager.cpp
      ${SOURCE_DIR}/detail/session_manager_impl.cpp
 )

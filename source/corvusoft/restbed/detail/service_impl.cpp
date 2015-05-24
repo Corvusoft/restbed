@@ -57,10 +57,7 @@ namespace restbed
 {
     namespace detail
     {
-        ServiceImpl::ServiceImpl( const Settings& settings ) : m_port( settings.get_port( ) ),
-            m_root( settings.get_root( ) ),
-            // m_maximum_connections( settings.get_maximum_connections( ) ),
-            // m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
+        ServiceImpl::ServiceImpl( void ) : m_settings( nullptr ),
             m_resource_routes( ),
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
@@ -90,16 +87,37 @@ namespace restbed
             {
                 m_io_service->stop( );
             }
+
+            if ( m_session_manager not_eq nullptr )
+            {
+                m_session_manager->stop( );
+            }
+
+//            if ( m_logger not_eq nullptr )
+//            {
+//                m_logger->stop( );
+//            }
         }
 
-        void ServiceImpl::start( void )
+        void ServiceImpl::start( const shared_ptr< Settings >& settings )
         {
+            if ( m_session_manager == nullptr )
+            {
+                m_session_manager = make_shared< SessionManagerImpl >( );
+            }
+
+            m_session_manager->start( settings );
+
+//            if ( m_logger == nullptr )
+//            {
+//                m_logger = make_shared< LoggerImpl >( settings );
+//            }
+//
+//            m_logger->start( settings );
+
             m_io_service = make_shared< io_service >( );
 
-            Settings settings; //get from constructor + logger...
-            m_session_manager = make_shared< SessionManagerImpl >( settings );
-
-            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
+            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
             m_acceptor->set_option( socket_base::reuse_address( true ) );
             m_acceptor->listen(  );//m_maximum_connections );
             

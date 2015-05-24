@@ -43,15 +43,15 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Service( const Settings& settings );
+            Service( void );
         
             virtual ~Service( void );
             
             //Functionality
             void stop( void );
 
-            void start( void );
-            
+            void start( const std::shared_ptr< Settings >& settings = nullptr );
+
             void publish( const std::shared_ptr< Resource >& resource );
             
             void suppress( const std::shared_ptr< Resource >& resource );
@@ -59,7 +59,7 @@ namespace restbed
             //Getters
             
             //Setters
-        //set not_found, not_implemented, method_not_allowed
+            //set not_found, not_implemented, method_not_allowed
             void set_logger( const std::shared_ptr< Logger >& value );
             
             void set_authentication_handler( std::function< void ( const std::shared_ptr< Session >&,

@@ -39,14 +39,20 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SessionManagerImpl( const Settings& settings );
-                
+                SessionManagerImpl( void );
+            
                 virtual ~SessionManagerImpl( void );
                 
                 //Functionality
+                void stop( void );
+
+                void start( const std::shared_ptr< Settings >& settings );
+
                 void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void purge( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 //Getters
 
@@ -79,8 +85,6 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SessionManagerImpl( void ) = delete;
-
                 SessionManagerImpl( const SessionManagerImpl& original ) = delete;
 
                 //Functionality

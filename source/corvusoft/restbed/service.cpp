@@ -26,15 +26,10 @@ using restbed::detail::ServiceImpl;
 
 namespace restbed
 {
-    Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
+    Service::Service( void ) : m_pimpl( new ServiceImpl )
     {
         return;
     }
-    
-    // Service::Service( const Service& original ) : m_pimpl( new ServiceImpl( *original.m_pimpl ) )
-    // {
-    //     return;
-    // }
     
     Service::~Service( void )
     {
@@ -46,9 +41,9 @@ namespace restbed
         m_pimpl->stop( );
     }
     
-    void Service::start( void )
+    void Service::start( const shared_ptr< Settings >& settings )
     {
-        m_pimpl->start( );
+        m_pimpl->start( settings );
     }
     
     void Service::publish( const shared_ptr< Resource >& resource )

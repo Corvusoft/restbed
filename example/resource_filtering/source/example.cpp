@@ -23,12 +23,12 @@ int main( const int, const char** )
     resource->set_method_handler( "GET", { { "Accept", "application/xml" }, { "Content-Type", "application/xml" } }, &get_xml_method_handler );
     resource->set_method_handler( "GET", { { "Accept", "application/json" }, { "Content-Type", "application/json" } }, &get_json_method_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    
-    Service service( settings );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+
+    Service service;
     service.publish( resource );
-    service.start( );
+    service.start( settings );
     
     return EXIT_SUCCESS;
 }

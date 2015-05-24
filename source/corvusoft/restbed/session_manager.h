@@ -33,14 +33,17 @@ namespace restbed
             //Definitions
             
             //Constructors
-            SessionManager( const Settings& settings ); //why?
-            
-            virtual ~SessionManager( void );
-            
+
             //Functionality
+            virtual void stop( void ) = 0;
+
+            virtual void start( const std::shared_ptr< Settings >& settings ) = 0;
+
             virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
             virtual void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+
+            virtual void purge( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
             //Getters
 
@@ -51,31 +54,29 @@ namespace restbed
             //Properties
             
         protected:
-            //Friends
-            
-            //Definitions
-            
-            //Constructors
-            
+            SessionManager( void ) = default;
+
+            SessionManager( const SessionManager& original ) = default;
+
+            virtual ~SessionManager( void ) = default;
+
             //Functionality
-            
+
             //Getters
-            
+
             //Setters
-            
+
             //Operators
-            
+            SessionManager& operator =( const SessionManager& value ) = default;
+
             //Properties
-            
+
         private:
             //Friends
             
             //Definitions
             
             //Constructors
-            SessionManager( void ) = delete;
-
-            SessionManager( const SessionManager& original ) = delete;
 
             //Functionality
 
@@ -84,7 +85,6 @@ namespace restbed
             //Setters
             
             //Operators
-            SessionManager& operator =( const SessionManager& value ) = delete;
             
             //Properties
     };
