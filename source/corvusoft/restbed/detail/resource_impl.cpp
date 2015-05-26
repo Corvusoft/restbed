@@ -35,7 +35,8 @@ namespace restbed
             m_methods( ),
             m_default_headers( ),
             m_authentication_handler( nullptr ),
-            m_method_handlers( )
+            m_method_handlers( ),
+            m_failed_filter_validation_handler( nullptr )
         {
             return;
         }
@@ -66,6 +67,11 @@ namespace restbed
         const set< string >& ResourceImpl::get_methods( void ) const
         {
             return m_methods;
+        }
+
+        const function< void ( const shared_ptr< Session >& ) >& ResourceImpl::get_failed_filter_validation_handler( void ) const
+        {
+            return m_failed_filter_validation_handler;
         }
 
         multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
@@ -102,7 +108,7 @@ namespace restbed
         
         void ResourceImpl::set_method_handler( const string& method,
                                                const multimap< string, string >& filters,
-                                               const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+                                               const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             if ( method.empty( ) )
             {
@@ -123,6 +129,11 @@ namespace restbed
         void ResourceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
         {
             //m_error_handler = value;
+        }
+
+        void ResourceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            m_failed_filter_validation_handler = value;
         }
     }
 }

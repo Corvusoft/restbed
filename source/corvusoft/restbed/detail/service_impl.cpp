@@ -228,27 +228,27 @@ namespace restbed
             function< void ( const std::shared_ptr< Session >& ) > method_handler = nullptr;
             const auto method_handlers = resource->get_method_handlers( request->get_method( ) );
 
+            bool filter_validation_failed = false;
+
             for ( const auto& handler : method_handlers )
             {
-                const auto& filters = handler.second.first;
+                filter_validation_failed = false;
 
-                bool valid = true;
-                for ( const auto& filter : filters )
+                for ( const auto& filter : handler.second.first )
                 {
                     for ( const auto& header : request->get_headers( filter.first ) )
                     {
                          if ( not regex_match( header.second, regex( filter.second ) ) )
                          {
-                             valid = false;
-                             //method_handler = resource->get_failed_filter_validation_handler( );???
+                             filter_validation_failed = true;
                              break;
                          }
                     }
 
-                    if ( not valid ) break;
+                    if ( filter_validation_failed ) break;
                 }
 
-                if ( valid )
+                if ( not filter_validation_failed )
                 {
                     method_handler = handler.second.second;
                     break;
@@ -257,7 +257,12 @@ namespace restbed
 
             extract_path_parameters( sanitised_path, request );
 
-            if ( method_handler == nullptr )
+            if ( filter_validation_failed )
+            {
+                auto handler = resource->get_failed_filter_validation_handler( );
+                method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
+            }
+            else if ( method_handler == nullptr )
             {
                 if ( m_supported_methods.count( request->get_method( ) ) == 0 )
                 {
@@ -392,19 +397,24 @@ namespace restbed
             // response.set_body( status_message );
         }
 
-        void ServiceImpl::not_found( const std::shared_ptr< Session >& session )
+        void ServiceImpl::not_found( const shared_ptr< Session >& session )
         {
-            session->close( NOT_FOUND, status_message.at( NOT_FOUND ) );
+            session->close( NOT_FOUND );
         }
 
-        void ServiceImpl::method_not_allowed( const std::shared_ptr< Session >& session )
+        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session )
         {
-            session->close( METHOD_NOT_ALLOWED, status_message.at( METHOD_NOT_ALLOWED ) );
+            session->close( METHOD_NOT_ALLOWED );
         }
 
-        void ServiceImpl::method_not_implemented( const std::shared_ptr< Session >& session )
+        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session )
         {
-            session->close( NOT_IMPLEMENTED, status_message.at( NOT_IMPLEMENTED ) );
+            session->close( NOT_IMPLEMENTED );
+        }
+
+        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session )
+        {
+            session->close( BAD_REQUEST );
         }
 
         bool ServiceImpl::has_unique_paths( const set< string >& paths )

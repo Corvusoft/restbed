@@ -52,6 +52,8 @@ namespace restbed
             //Getters
             std::set< std::string > get_paths( void ) const;
 
+            std::function< void ( const std::shared_ptr< Session >& ) > get_failed_filter_validation_handler( void ) const;
+
             std::multimap< std::string,
                            std::pair< std::multimap< std::string, std::string >,
                                       std::function< void ( const std::shared_ptr< Session >& ) > > >
@@ -78,6 +80,8 @@ namespace restbed
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
                 
             void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
+
+            void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
             
             //Operators
             

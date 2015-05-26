@@ -120,6 +120,8 @@ namespace restbed
 
                 void method_not_implemented( const std::shared_ptr< Session >& session );
 
+                void failed_filter_validation( const std::shared_ptr< Session >& session );
+
                 bool has_unique_paths( const std::set< std::string >& paths );
 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request );

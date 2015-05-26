@@ -40,6 +40,11 @@ namespace restbed
     {
         return m_pimpl->get_paths( );
     }
+
+    function< void ( const shared_ptr< Session >& ) > Resource::get_failed_filter_validation_handler( void ) const
+    {
+        return m_pimpl->get_failed_filter_validation_handler( );
+    }
     
     multimap< string,
               pair< multimap< string, string >,
@@ -96,5 +101,10 @@ namespace restbed
     void Resource::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_error_handler( value );
+    }
+
+    void Resource::set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_failed_filter_validation_handler( value );
     }
 }
