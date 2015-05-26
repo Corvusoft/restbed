@@ -64,7 +64,6 @@ namespace restbed
     {
         ServiceImpl::ServiceImpl( void ) : m_settings( nullptr ),
             m_supported_methods( ),
-            m_default_headers( ),
             m_resource_paths( ),
             m_resource_routes( ),
             m_log_handler( nullptr ),
@@ -326,11 +325,13 @@ namespace restbed
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
 
-                m_session_manager->create( [ socket, authenticate ]( const shared_ptr< Session >& session )
+                const auto headers = m_settings->get_default_headers( );
+
+                m_session_manager->create( [ socket, authenticate, headers ]( const shared_ptr< Session >& session )
                 {
                     session->m_pimpl->set_socket( socket );
                     session->m_pimpl->fetch( session, authenticate );
-                    //session->m_pimpl->set_default_headers( m_default_headers );
+                    session->m_pimpl->set_default_headers( headers );
                 } );
             }
             else

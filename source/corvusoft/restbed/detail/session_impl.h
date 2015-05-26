@@ -105,6 +105,8 @@ namespace restbed
                 void set_resource( const std::shared_ptr< Resource >& value );
 
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
+
+                void set_default_headers( const std::multimap< std::string, std::string >& values );
                 
                 //Operators
                 
@@ -159,6 +161,8 @@ namespace restbed
                 std::shared_ptr< asio::streambuf > m_buffer; //just pass as argument?
 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
+
+                std::multimap< std::string, std::string > m_default_headers;
         };
     }
 }

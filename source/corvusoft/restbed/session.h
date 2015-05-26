@@ -6,6 +6,7 @@
 #define _RESTBED_SESSION_H 1
 
 //System Includes
+#include <map>
 #include <string>
 #include <memory>
 #include <functional>
@@ -64,6 +65,7 @@ namespace restbed
             const std::shared_ptr< const Resource > get_resource( void ) const;
 
             //Setters
+            void set_default_headers( const std::multimap< std::string, std::string >& values ); //set_default_header
             
             //Operators
             

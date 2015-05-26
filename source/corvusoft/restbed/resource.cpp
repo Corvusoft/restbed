@@ -49,6 +49,11 @@ namespace restbed
         return m_pimpl->get_method_handlers( method );
     }
 
+    multimap< string, string > Resource::get_default_headers( void ) const
+    {
+        return m_pimpl->get_default_headers( );
+    }
+
     void Resource::set_path( const string& value )
     {
         m_pimpl->set_paths( { value } );
@@ -57,6 +62,16 @@ namespace restbed
     void Resource::set_paths( const set< string >& values )
     {
         m_pimpl->set_paths( values );
+    }
+
+    void Resource::set_default_header( const string& name, const string& value )
+    {
+        m_pimpl->set_default_header( name, value );
+    }
+
+    void Resource::set_default_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->set_default_headers( values );
     }
 
     void Resource::set_method_handler( const string& method,

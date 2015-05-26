@@ -60,6 +60,8 @@ namespace restbed
                 //Getters
                 
                 //Setters
+                void set_default_header( const std::string& name, const std::string& value );
+
                 void set_log_handler( const std::shared_ptr< Logger >& value );
                 
                 void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
@@ -137,8 +139,6 @@ namespace restbed
                 std::shared_ptr< Settings > m_settings;
 
                 std::set< std::string > m_supported_methods;
-
-                std::multimap< std::string, std::string > m_default_headers;
 
                 std::map< std::string, std::string > m_resource_paths;
 

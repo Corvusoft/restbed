@@ -11,6 +11,7 @@
 //Project Includes
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
+#include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
@@ -56,7 +57,8 @@ namespace restbed
             m_request( nullptr ),
             m_resource( nullptr ),
             m_buffer( nullptr ),
-            m_socket( nullptr )
+            m_socket( nullptr ),
+            m_default_headers( )
         {
             return;
         }
@@ -85,7 +87,22 @@ namespace restbed
         {
             const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
 
-            const auto data = String::format( "HTTP/1.1 %i %s\r\n\r\n%s", status, message.data( ), body.data( ) );
+            auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
+
+            auto headers = m_default_headers;
+
+            if ( m_resource not_eq nullptr )
+            {
+                const auto resource_headers = m_resource->get_default_headers( );
+                headers.insert( resource_headers.begin( ), resource_headers.end( ) );
+            }
+
+            for ( auto header : m_default_headers )
+            {
+                data += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            }
+
+            data += "\r\n" + body;
 
             auto socket = m_socket;
             asio::async_write( *socket,
@@ -141,6 +158,11 @@ namespace restbed
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
         {
             m_socket = value;
+        }
+
+        void SessionImpl::set_default_headers( const multimap< string, string >& values )
+        {
+            m_default_headers = values;
         }
 
         const map< string, string > SessionImpl::parse_request_line( istream& stream )

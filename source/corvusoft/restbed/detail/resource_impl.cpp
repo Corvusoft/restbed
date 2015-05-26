@@ -33,6 +33,7 @@ namespace restbed
     {
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
             m_methods( ),
+            m_default_headers( ),
             m_authentication_handler( nullptr ),
             m_method_handlers( )
         {
@@ -79,9 +80,24 @@ namespace restbed
                                                   m_method_handlers.upper_bound( method ) );
         }
 
+        multimap< string, string > ResourceImpl::get_default_headers( void ) const
+        {
+            return m_default_headers;
+        }
+
         void ResourceImpl::set_paths( const set< string >& values )
         {
             m_paths = values;
+        }
+
+        void ResourceImpl::set_default_header( const string& name, const string& value )
+        {
+            m_default_headers.insert( make_pair( name, value ) );
+        }
+
+        void ResourceImpl::set_default_headers( const multimap< string, string >& values )
+        {
+            m_default_headers = values;
         }
         
         void ResourceImpl::set_method_handler( const string& method,

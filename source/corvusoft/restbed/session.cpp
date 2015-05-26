@@ -13,6 +13,7 @@
 //System Namespaces
 using std::string;
 using std::function;
+using std::multimap;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -70,5 +71,10 @@ namespace restbed
     const shared_ptr< const Resource > Session::get_resource(  void ) const
     {
         return m_pimpl->get_resource( );
+    }
+
+    void Session::set_default_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->set_default_headers( values );
     }
 }

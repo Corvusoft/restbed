@@ -57,8 +57,14 @@ namespace restbed
                                           std::function< void ( const std::shared_ptr< Session >& ) > > >
                 get_method_handlers( const std::string& method ) const;
 
+                std::multimap< std::string, std::string > get_default_headers( void ) const;
+
                 //Setters
                 void set_paths( const std::set< std::string >& values );
+
+                void set_default_header( const std::string& name, const std::string& value );
+
+                void set_default_headers( const std::multimap< std::string, std::string >& values );
 
                 void set_method_handler( const std::string& method,
                                          const std::multimap< std::string, std::string >& filters,
@@ -110,6 +116,8 @@ namespace restbed
                 std::set< std::string > m_paths;
 
                 std::set< std::string > m_methods;
+
+                std::multimap< std::string, std::string > m_default_headers;
 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_authentication_handler;
                 

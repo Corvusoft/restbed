@@ -15,6 +15,7 @@ using std::map;
 using std::stol;
 using std::stoll;
 using std::string;
+using std::multimap;
 using std::to_string;
 using std::chrono::seconds;
 
@@ -74,7 +75,12 @@ namespace restbed
         {
             return m_properties;
         }
-        
+
+        multimap< string, string > SettingsImpl::get_default_headers( void ) const
+        {
+            return m_default_headers;
+        }
+
         void SettingsImpl::set_port( const uint16_t value )
         {
             set_property( "port", ::to_string( value ) );
@@ -103,6 +109,16 @@ namespace restbed
         void SettingsImpl::set_properties( const map< string, string >& values )
         {
             m_properties.insert( values.begin( ), values.end( ) );
+        }
+
+        void SettingsImpl::set_default_header( const string& name, const string& value )
+        {
+            m_default_headers.insert( make_pair( name, value ) );
+        }
+
+        void SettingsImpl::set_default_headers( const multimap< string, string >& values )
+        {
+            m_default_headers = values;
         }
     }
 }

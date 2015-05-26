@@ -13,6 +13,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::multimap;
 using std::chrono::seconds;
 
 //Project Namespaces
@@ -61,7 +62,12 @@ namespace restbed
     {
         return m_pimpl->get_properties( );
     }
-    
+
+    multimap< string, string > Settings::get_default_headers( void ) const
+    {
+        return m_pimpl->get_default_headers( );
+    }
+
     void Settings::set_port( const uint16_t value )
     {
         m_pimpl->set_port( value );
@@ -90,5 +96,15 @@ namespace restbed
     void Settings::set_properties( const map< string, string >& values )
     {
         m_pimpl->set_properties( values );
+    }
+
+    void Settings::set_default_header( const string& name, const string& value )
+    {
+        m_pimpl->set_default_header( name, value );
+    }
+
+    void Settings::set_default_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->set_default_headers( values );
     }
 }
