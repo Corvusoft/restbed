@@ -113,12 +113,12 @@ namespace restbed
             return m_id;
         }
 
-        const shared_ptr< Request >& SessionImpl::get_request( void ) const
+        const shared_ptr< const Request >& SessionImpl::get_request( void ) const
         {
             return m_request;
         }
 
-        const shared_ptr< Resource >& SessionImpl::get_resource( void ) const
+        const shared_ptr< const Resource >& SessionImpl::get_resource( void ) const
         {
             return m_resource;
         }

@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <string>
 #include <memory>
 #include <string>
 #include <functional>
@@ -31,6 +32,7 @@ namespace restbed
     {
         class RequestImpl;
         class SessionImpl;
+        class ServiceImpl;
     }
     
     class Request
@@ -117,7 +119,7 @@ namespace restbed
 //            std::multimap< std::string, std::string > get_query_parameters( void ) const;
 //        
 //            std::multimap< std::string, std::string > get_query_parameters( const std::string& name ) const;
-//            
+
 //            void get_path_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );
 //
 //            void get_path_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transfomer = nullptr);
@@ -128,8 +130,10 @@ namespace restbed
 //
 //            void get_path_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transfomer = nullptr );
 //
-//            std::string get_path_parameter( const std::string& name, const std::string& default_value = "", std::function< string ( string ) > transfomer = nullptr ) const;
-//            
+            std::string get_path_parameter( const std::string& name,
+                                            const std::string& default_value = framework::String::empty,
+                                            std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+
 //            std::map< std::string, std::string > get_path_parameters( void ) const;
 
             //Setters
@@ -158,6 +162,7 @@ namespace restbed
             
         private:
             //Friends
+            friend detail::ServiceImpl;
             friend detail::SessionImpl;
             
             //Definitions

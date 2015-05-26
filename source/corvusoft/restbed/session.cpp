@@ -62,12 +62,12 @@ namespace restbed
         return m_pimpl->get_id( );
     }
 
-    const shared_ptr< Request >& Session::get_request(  void ) const
+    const shared_ptr< const Request > Session::get_request(  void ) const
     {
         return m_pimpl->get_request( );
     }
 
-    const shared_ptr< Resource >& Session::get_resource(  void ) const
+    const shared_ptr< const Resource > Session::get_resource(  void ) const
     {
         return m_pimpl->get_resource( );
     }

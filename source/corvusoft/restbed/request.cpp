@@ -153,4 +153,10 @@ namespace restbed
 //    {
 //        return m_pimpl->get_path_parameters( );
 //    }
+    string Request::get_path_parameter( const string& name,
+                                        const string& default_value,
+                                        function< string ( const string& ) > transform ) const
+    {
+        return m_pimpl->get_path_parameter( name, default_value, transform );
+    }
 }

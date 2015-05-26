@@ -99,7 +99,7 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
-                void route( const std::shared_ptr< Session >& session );
+                void route( const std::shared_ptr< Session >& session, const std::string sanitised_path );
 
                 void resource_router( const std::shared_ptr< Session >& session );
                 
@@ -120,6 +120,10 @@ namespace restbed
 
                 bool has_unique_paths( const std::set< std::string >& paths );
 
+                void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request );
+
+                std::string sanitise_path( const std::string& path );
+
                 // void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
 
                 //Getters
@@ -135,6 +139,8 @@ namespace restbed
                 std::set< std::string > m_supported_methods;
 
                 std::multimap< std::string, std::string > m_default_headers;
+
+                std::map< std::string, std::string > m_resource_paths;
 
                 std::map< std::string, std::shared_ptr< Resource > > m_resource_routes;
 

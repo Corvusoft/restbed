@@ -50,11 +50,11 @@ namespace restbed
             //Functionality
             void stop( void );
 
-            void start( const std::shared_ptr< Settings >& settings = nullptr );
+            void start( const std::shared_ptr< Settings >& settings = nullptr ); //const settings
 
-            void publish( const std::shared_ptr< Resource >& resource );
+            void publish( const std::shared_ptr< Resource >& resource ); //const
             
-            void suppress( const std::shared_ptr< Resource >& resource );
+            void suppress( const std::shared_ptr< Resource >& resource ); //const
             
             //Getters
             

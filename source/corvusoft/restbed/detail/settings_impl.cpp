@@ -8,7 +8,6 @@
 #include "corvusoft/restbed/detail/settings_impl.h"
 
 //External Includes
-#include <corvusoft/framework/map>
 #include <corvusoft/framework/string>
 
 //System Namespaces
@@ -22,7 +21,6 @@ using std::chrono::seconds;
 //Project Namespaces
 
 //External Namespaces
-using framework::Map;
 using framework::String;
 
 namespace restbed
@@ -64,16 +62,12 @@ namespace restbed
 
         string SettingsImpl::get_property( const string& name ) const
         {
-            string property = String::empty;
-            
-            auto iterator = Map::find_ignoring_case( name, m_properties );
-            
-            if ( iterator not_eq m_properties.end( ) )
+            if ( m_properties.count( name ) )
             {
-                property = iterator->second;
+                return m_properties.at( name );
             }
             
-            return property;
+            return String::empty;
         }
         
         map< string, string > SettingsImpl::get_properties( void ) const
@@ -103,17 +97,12 @@ namespace restbed
 
         void SettingsImpl::set_property( const string& name, const string& value )
         {
-            const string key = String::uppercase( name );
-            
-            m_properties[ key ] = value;
+            m_properties[ name ] = value;
         }
         
         void SettingsImpl::set_properties( const map< string, string >& values )
         {
-            for ( const auto& value : values )
-            {
-                set_property( value.first, value.second );
-            }
+            m_properties.insert( values.begin( ), values.end( ) );
         }
     }
 }

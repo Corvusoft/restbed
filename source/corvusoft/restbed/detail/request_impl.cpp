@@ -172,7 +172,21 @@ namespace restbed
 //            
 //            return parameters;
 //        }
-//        
+
+        string RequestImpl::get_path_parameter( const string& name,
+                                                const string& default_value,
+                                                function< string ( const string& ) > transform ) const
+        {
+            string parameter = default_value;
+
+            if ( m_path_parameters.count( name ) )
+            {
+                parameter = m_path_parameters.at( name );
+            }
+
+            return ( transform not_eq nullptr ) ? transform( parameter ) : parameter;
+        }
+
 //        string RequestImpl::get_path_parameter( const string& name, const string& default_value ) const
 //        {
 //            string parameter = default_value;
@@ -222,10 +236,10 @@ namespace restbed
            m_headers = values;
        }
         
-//        void RequestImpl::set_path_parameters( const map< string, string >& values )
-//        {
-//            m_path_parameters = values;
-//        }
+        void RequestImpl::set_path_parameter( const string& name, const string& value )
+        {
+            m_path_parameters[ name ] = value;
+        }
 
        void RequestImpl::set_query_parameters( const multimap< string, string >& values )
        {

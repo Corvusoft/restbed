@@ -78,7 +78,11 @@ namespace restbed
 //
                   std::multimap< std::string, std::string > get_headers( const std::string& name,
                                                                          const std::function< std::string ( const std::string& ) >& transform ) const;
-//
+
+                  std::string get_path_parameter( const std::string& name,
+                                                  const std::string& default_value,
+                                                  std::function< std::string ( const std::string& ) > transform ) const;
+
 //                std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
 //                
 //                std::multimap< std::string, std::string > get_query_parameters( void ) const;
@@ -106,8 +110,8 @@ namespace restbed
 
                 void set_headers( const std::multimap< std::string, std::string >& values );
 //                
-//                void set_path_parameters( const std::map< std::string, std::string >& values );
-//                
+                void set_path_parameter( const std::string& name, const std::string& value );
+
                 void set_query_parameters( const std::multimap< std::string, std::string >& values );
 
                 //Operators

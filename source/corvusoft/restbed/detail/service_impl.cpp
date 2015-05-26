@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <utility>
 #include <cstdio>
 #include <stdexcept>
 #include <functional>
@@ -17,6 +18,7 @@
 #include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/session_manager.h"
+#include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
@@ -27,10 +29,12 @@
 
 //System Namespaces
 using std::set;
+using std::pair;
 using std::find;
 using std::bind;
 using std::regex;
 using std::string;
+using std::smatch;
 using std::find_if;
 using std::function;
 using std::to_string;
@@ -60,6 +64,8 @@ namespace restbed
     {
         ServiceImpl::ServiceImpl( void ) : m_settings( nullptr ),
             m_supported_methods( ),
+            m_default_headers( ),
+            m_resource_paths( ),
             m_resource_routes( ),
             m_log_handler( nullptr ),
             m_io_service( nullptr ),
@@ -101,8 +107,10 @@ namespace restbed
 //            }
         }
 
-        void ServiceImpl::start( const shared_ptr< Settings >& settings )
+        void ServiceImpl::start( const shared_ptr< Settings >& settings ) //const settings
         {
+            m_settings = settings;
+
             if ( m_session_manager == nullptr )
             {
                 m_session_manager = make_shared< SessionManagerImpl >( );
@@ -134,24 +142,25 @@ namespace restbed
         
         void ServiceImpl::publish( const shared_ptr< Resource >& resource )
         {
+            //if is running throw runtime_error
             if ( resource == nullptr )
             {
                 return;
             }
 
-            auto paths = resource->get_paths( );
+            const auto paths = resource->get_paths( );
 
-            if ( not has_unique_paths( paths ) ) //paths_case_insensitive!!!!!!
+            if ( not has_unique_paths( paths ) )
             {
                 throw invalid_argument( "Resource would pollute namespace. Please ensure all published resources have unique paths." );
             }
 
-            for ( auto& path : paths )
+            for ( auto& path : paths ) //how to set root ?!?!?!?
             {
-                //if ( settings.paths_case_insensitive ) then String::lowercase( )
+                const string sanitised_path = sanitise_path( path ); //paths_case_insensitive!!!!!!
 
-                //path = normalise_path( root, path );
-                m_resource_routes[ path ] = resource;
+                m_resource_paths[ sanitised_path ] = path;
+                m_resource_routes[ sanitised_path ] = resource;
             }
 
             const auto& methods = resource->m_pimpl->get_methods( );
@@ -162,6 +171,7 @@ namespace restbed
         
         void ServiceImpl::suppress( const shared_ptr< Resource >& resource )
         {
+            //if is running throw runtime_error
             if ( resource == nullptr )
             {
                 return;
@@ -206,7 +216,7 @@ namespace restbed
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
 
-        void ServiceImpl::route( const shared_ptr< Session >& session )
+        void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path )
         {
             if ( session->is_closed( ) )
             {
@@ -246,6 +256,8 @@ namespace restbed
                 }
             }
 
+            extract_path_parameters( sanitised_path, request );
+
             if ( method_handler == nullptr )
             {
                 if ( m_supported_methods.count( request->get_method( ) ) == 0 )
@@ -268,18 +280,42 @@ namespace restbed
                 return;
             }
 
-            const auto request = session->get_request( );
-            const auto resource_route = m_resource_routes.find( request->get_path( ) );
+            const auto resource_route = find_if( m_resource_routes.begin( ),
+                                                 m_resource_routes.end( ),
+                                                [ &session ]( const pair< string, shared_ptr< Resource > >& route )
+                                                {
+                                                    bool match = false;
+                                                    const auto request = session->get_request( );
+                                                    const auto path_folders = String::split( request->get_path( ), '/' );
+
+                                                    const auto route_folders = String::split( route.first, '/' );
+
+                                                    if ( path_folders.size( ) == route_folders.size( ) )
+                                                    {
+                                                        for ( size_t index = 0; index < path_folders.size( ); index++ )
+                                                        {
+                                                            match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+
+                                                            if ( not match )
+                                                            {
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    return match;
+                                                } );
 
             if ( resource_route == m_resource_routes.end( ) )
             {
                 return not_found( session );
             }
 
+            const auto path = resource_route->first;
             const auto resource = resource_route->second;
             session->m_pimpl->set_resource( resource );
 
-            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1 ) );
+            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
         }
 
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error )
@@ -381,6 +417,57 @@ namespace restbed
             }
 
             return true;
+        }
+
+        void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request )
+        {
+            smatch matches;
+            static const regex pattern( "^\\{([a-zA-Z0-9]+): ?.*\\}$" );
+
+            const auto folders = String::split( request->get_path( ), '/' );
+            const auto declarations = String::split( m_resource_paths[ sanitised_path ], '/' );
+
+            for ( size_t index = 0; index < folders.size( ); index++ )
+            {
+                const auto declaration = declarations[ index ];
+
+                if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
+                {
+                    regex_match( declaration, matches, pattern );
+                    request->m_pimpl->set_path_parameter( matches[ 1 ].str( ), folders[ index ] );
+                }
+            }
+        }
+
+        string ServiceImpl::sanitise_path( const string& path )
+        {
+            smatch matches;
+            string sanitised_path = String::empty;
+            static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
+
+            for ( auto folder : String::split( path, '/' ) )
+            {
+                if ( folder.front( ) == '{' and folder.back( ) == '}' )
+                {
+                    if ( not regex_match( folder, matches, pattern ) or matches.size( ) not_eq 2 )
+                    {
+                        throw runtime_error( String::format( "Resource path parameter declaration is malformed '%s'.", folder.data( ) ) );
+                    }
+
+                    sanitised_path += '/' + matches[ 1 ].str( );
+                }
+                else
+                {
+                    sanitised_path += '/' + folder;
+                }
+            }
+
+            if ( path.back( ) == '/' )
+            {
+                sanitised_path += '/';
+            }
+
+            return sanitised_path;
         }
 
         //void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )

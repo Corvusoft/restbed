@@ -59,9 +59,9 @@ namespace restbed
             //Getters
             const std::string& get_id( void ) const;
 
-            const std::shared_ptr< Request >& get_request(  void ) const;
+            const std::shared_ptr< const Request > get_request(  void ) const;
 
-            const std::shared_ptr< Resource >& get_resource( void ) const;
+            const std::shared_ptr< const Resource > get_resource( void ) const;
 
             //Setters
             
