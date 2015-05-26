@@ -27,8 +27,8 @@ target_link_libraries( digest_authentication ${CMAKE_PROJECT_NAME} )
 #add_executable( error_handling error_handling/source/example.cpp )
 #target_link_libraries( error_handling ${CMAKE_PROJECT_NAME} )
 
-#add_executable( logging logging/source/example.cpp )
-#target_link_libraries( logging ${CMAKE_PROJECT_NAME} )
+add_executable( logging logging/source/example.cpp )
+target_link_libraries( logging ${CMAKE_PROJECT_NAME} )
 
 add_executable( path_parameters path_parameters/source/example.cpp )
 target_link_libraries( path_parameters ${CMAKE_PROJECT_NAME} )
