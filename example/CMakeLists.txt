@@ -45,8 +45,8 @@ target_link_libraries( publishing_multipath_resources ${CMAKE_PROJECT_NAME} )
 add_executable( resource_filtering resource_filtering/source/example.cpp )
 target_link_libraries( resource_filtering ${CMAKE_PROJECT_NAME} )
 
-#add_executable( serving_html serving_html/source/example.cpp )
-#target_link_libraries( serving_html ${CMAKE_PROJECT_NAME} )
+add_executable( serving_html serving_html/source/example.cpp )
+target_link_libraries( serving_html ${CMAKE_PROJECT_NAME} )
 
 #add_executable( syslog_logging syslog_logging/source/example.cpp )
 #target_link_libraries( syslog_logging ${CMAKE_PROJECT_NAME} )
