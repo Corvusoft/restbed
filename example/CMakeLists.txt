@@ -39,8 +39,8 @@ target_link_libraries( publishing_resources ${CMAKE_PROJECT_NAME} )
 add_executable( custom_methods custom_methods/source/example.cpp )
 target_link_libraries( custom_methods ${CMAKE_PROJECT_NAME} )
 
-#add_executable( publishing_multipath_resources publishing_multipath_resources/source/example.cpp )
-#target_link_libraries( publishing_multipath_resources ${CMAKE_PROJECT_NAME} )
+add_executable( publishing_multipath_resources publishing_multipath_resources/source/example.cpp )
+target_link_libraries( publishing_multipath_resources ${CMAKE_PROJECT_NAME} )
 
 add_executable( resource_filtering resource_filtering/source/example.cpp )
 target_link_libraries( resource_filtering ${CMAKE_PROJECT_NAME} )

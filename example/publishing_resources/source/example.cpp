@@ -7,7 +7,7 @@ using namespace restbed;
 
 void get_method_handler( const shared_ptr< Session >& session )
 {
-    session->close( OK, "Hello, World!" );
+    session->close( OK, "Hello, World!", { { "Content-Length", "13" } } );
 }
 
 int main( const int, const char** )
