@@ -21,6 +21,7 @@ int main( const int, const char** )
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
     
     Service service;
     service.publish( resource );
