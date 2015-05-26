@@ -53,7 +53,7 @@ namespace restbed
 
                 void close( void );
 
-                void close( const int status, const std::string& status_message );
+                void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
                 void fetch( const std::shared_ptr< Session >& session,
                             const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
@@ -152,6 +152,8 @@ namespace restbed
                 SessionImpl& operator =( const SessionImpl& value ) = delete;
                 
                 //Properties
+                bool m_is_closed;
+
                 std::string m_id;
 
                 std::shared_ptr< Request > m_request;

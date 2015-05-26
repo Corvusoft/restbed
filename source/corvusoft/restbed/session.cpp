@@ -20,6 +20,7 @@ using std::shared_ptr;
 using restbed::detail::SessionImpl;
 
 //External Namespaces
+using framework::String;
 
 namespace restbed
 {
@@ -48,9 +49,20 @@ namespace restbed
         m_pimpl->close( );
     }
 
-    void Session::close( const int status, const string& status_message )
+    void Session::close( const int status, const string& body )
     {
-        m_pimpl->close( status, status_message );
+        static multimap< string, string > empty;
+        m_pimpl->close( status, body, empty );
+    }
+
+    void Session::close( const int status, const multimap< string, string >& headers )
+    {
+        m_pimpl->close( status, String::empty, headers );
+    }
+
+    void Session::close( const int status, const string& body, const multimap< string, string >& headers )
+    {
+        m_pimpl->close( status, body, headers );
     }
 
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -71,10 +83,5 @@ namespace restbed
     const shared_ptr< const Resource > Session::get_resource(  void ) const
     {
         return m_pimpl->get_resource( );
-    }
-
-    void Session::set_default_headers( const multimap< string, string >& values )
-    {
-        m_pimpl->set_default_headers( values );
     }
 }

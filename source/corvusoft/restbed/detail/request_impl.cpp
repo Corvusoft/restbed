@@ -102,37 +102,39 @@ namespace restbed
         {
             return m_protocol;
         }
-//
-//        string RequestImpl::get_header( const string& name, const string& default_value ) const
-//        {
-//            string value = default_value;
-//            
-//            if ( has_header( name ) )
-//            {
-//                const auto iterator = Map::find_ignoring_case( name, m_headers );
-//                
-//                value = iterator->second;
-//            }
-//            
-//            return value;
-//        }
-//        
-//        multimap< string, string > RequestImpl::get_headers( void ) const
-//        {
-//            return m_headers;
-//        }
-//        
+
+        string RequestImpl::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+        {
+            string value = default_value;
+
+            const auto headers = get_headers( name, transform );
+
+            if ( headers.size( ) not_eq 0 )
+            {
+                value = headers.begin( )->second;
+            }
+            
+            return value;
+        }
+
         multimap< string, string > RequestImpl::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
         {
-            const auto key = transform( name );
-
             multimap< string, string > headers;
+
+            const auto key = String::lowercase( name );
             
             for ( auto header : m_headers )
             {
-                if ( transform( header.first ) == key )
+                if ( String::lowercase( header.first ) == key )
                 {
-                    headers.insert( header );
+                    if ( transform == nullptr )
+                    {
+                        headers.insert( header );
+                    }
+                    else
+                    {
+                        headers.insert( make_pair( header.first, transform( header.second ) ) );
+                    }
                 }
             }
             

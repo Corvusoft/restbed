@@ -14,6 +14,7 @@
 //Project Includes
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -53,7 +54,11 @@ namespace restbed
 
             void close( void );
 
-            void close( const int status, const std::string& status_message = "" );
+            void close( const int status, const std::string& body = framework::String::empty );
+
+            void close( const int status, const std::multimap< std::string, std::string >& headers );
+
+            void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
@@ -65,7 +70,6 @@ namespace restbed
             const std::shared_ptr< const Resource > get_resource( void ) const;
 
             //Setters
-            void set_default_headers( const std::multimap< std::string, std::string >& values ); //set_default_header
             
             //Operators
             

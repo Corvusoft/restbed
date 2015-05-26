@@ -63,72 +63,70 @@ namespace restbed
 
             const std::string& get_protocol( void ) const;
 
-//            std::string get_path( std::function< string ( string ) > transfomer = nullptr ) const;
+//            std::string get_path( std::function< string ( string ) > transform = nullptr ) const;
 //
-//            std::string get_method( std::function< string ( string ) > transfomer = nullptr ) const;
+//            std::string get_method( std::function< string ( string ) > transform = nullptr ) const;
 //
-//            framework::Bytes get_body( std::function< framework::Bytes ( framework::Bytes ) > transfomer = nullptr ) const;
+//            framework::Bytes get_body( std::function< framework::Bytes ( framework::Bytes ) > transform = nullptr ) const;
 //            
-//            std::string get_origin( std::function< string ( string ) > transfomer = nullptr ) const;
+//            std::string get_origin( std::function< string ( string ) > transform = nullptr ) const;
 //
-//            std::string get_destination( std::function< string ( string ) > transfomer = nullptr ) const;
+//            std::string get_destination( std::function< string ( string ) > transform = nullptr ) const;
 //        
-//            std::string get_protocol( std::function< string ( string ) > transfomer = nullptr ) const;
+//            std::string get_protocol( std::function< string ( string ) > transform = nullptr ) const;
 //
-////, const bool case_insensitive_search = true 
-//            void get_header( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );
+            //void get_header( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ int& value, int default_value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_header( const std::string& name, /*out*/ int& value, int default_value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transfomer = nullptr);
+//            void get_header( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transform = nullptr);
 //
-//            void get_header( const std::string& name, /*out*/ uint& value, uint default_value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_header( const std::string& name, /*out*/ uint& value, uint default_value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_header( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ float& value, float default_value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_header( const std::string& name, /*out*/ float& value, float default_value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_header( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ double& value, double default_value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_header( const std::string& name, /*out*/ double& value, double default_value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_header( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transfomer = nullptr );
-//
-//            std::string get_header( const std::string& name, const std::string& default_value = "", std::function< string ( string ) > transfomer = nullptr ) const;
-//            
-//            std::multimap< std::string, std::string > get_headers( void ) const;
-//        
+//            void get_header( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transform = nullptr );
 
-           std::multimap< std::string, std::string > get_headers( const std::string& name,
-                                                                  const std::function< std::string ( const std::string& ) >& transform = framework::String::uppercase ) const;
+            std::string get_header( const std::string& name,
+                                    const std::string& default_value = framework::String::empty,
+                                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            std::multimap< std::string, std::string > get_headers( const std::string& name = framework::String::empty,
+                                                                   const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 //
-//            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_query_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transfomer = nullptr);
+//            void get_query_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transform = nullptr);
 //
-//            void get_query_parameter( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_query_parameter( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_query_parameter( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_query_parameter( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_query_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_query_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transform = nullptr );
 //
-//            std::string get_query_parameter( const std::string& name, const std::string& default_value = "", std::function< string ( string ) > transfomer = nullptr ) const;
+//            std::string get_query_parameter( const std::string& name, const std::string& default_value = "", std::function< string ( string ) > transform = nullptr ) const;
 //        
 //            std::multimap< std::string, std::string > get_query_parameters( void ) const;
 //        
 //            std::multimap< std::string, std::string > get_query_parameters( const std::string& name ) const;
 
-//            void get_path_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_path_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_path_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transfomer = nullptr);
+//            void get_path_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transform = nullptr);
 //
-//            void get_path_parameter( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_path_parameter( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_path_parameter( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_path_parameter( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transform = nullptr );
 //
-//            void get_path_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transfomer = nullptr );
+//            void get_path_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transform = nullptr );
 //
             std::string get_path_parameter( const std::string& name,
                                             const std::string& default_value = framework::String::empty,

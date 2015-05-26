@@ -72,10 +72,10 @@ namespace restbed
 //            
 //                std::string get_protocol( void ) const;
 //                
-//                std::string get_header( const std::string& name, const std::string& default_value ) const;
-//                
-//                std::multimap< std::string, std::string > get_headers( void ) const;
-//
+                  std::string get_header( const std::string& name,
+                                          const std::string& default_value,
+                                          const std::function< std::string ( const std::string& ) >& transform ) const;
+
                   std::multimap< std::string, std::string > get_headers( const std::string& name,
                                                                          const std::function< std::string ( const std::string& ) >& transform ) const;
 

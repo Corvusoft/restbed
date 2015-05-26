@@ -124,6 +124,11 @@ namespace restbed
 //        return m_pimpl->get_headers( );
 //    }
 
+    string Request::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_header( name, default_value, transform );
+    }
+
     multimap< string, string > Request::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
     {
         return m_pimpl->get_headers( name, transform );

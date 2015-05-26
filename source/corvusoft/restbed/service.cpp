@@ -61,8 +61,8 @@ namespace restbed
         m_pimpl->set_log_handler( value );
     }
     
-    void Service::set_authentication_handler( function< void ( const shared_ptr< Session >&,
-                                                               const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value )
+    void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
+                                                                     const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value )
     {
         m_pimpl->set_authentication_handler( value );
     }

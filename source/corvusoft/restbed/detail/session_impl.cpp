@@ -53,7 +53,8 @@ namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_id( String::empty ),
+        SessionImpl::SessionImpl( void ) : m_is_closed( false ),
+            m_id( String::empty ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_buffer( nullptr ),
@@ -70,34 +71,39 @@ namespace restbed
 
         bool SessionImpl::is_open( void ) const
         {
-            return ( m_socket not_eq nullptr and m_socket->is_open( ) );
+            return not is_closed( );
         }
 
         bool SessionImpl::is_closed( void ) const
         {
-            return ( m_socket == nullptr or not m_socket->is_open( ) );
+            return ( m_is_closed or m_socket == nullptr or not m_socket->is_open( ) );
         }
 
         void SessionImpl::close( void )
         {
+            m_is_closed = true;
             m_socket->close( );
         }
 
-        void SessionImpl::close( const int status, const string& body )
+        void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
         {
+            m_is_closed = true;
+            
             const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
 
             auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
 
-            auto headers = m_default_headers;
+            auto response_headers = m_default_headers;
 
             if ( m_resource not_eq nullptr )
             {
                 const auto resource_headers = m_resource->get_default_headers( );
-                headers.insert( resource_headers.begin( ), resource_headers.end( ) );
+                response_headers.insert( resource_headers.begin( ), resource_headers.end( ) );
             }
 
-            for ( auto header : m_default_headers )
+            response_headers.insert( headers.begin( ), headers.end( ) );
+
+            for ( auto header : response_headers )
             {
                 data += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
             }
@@ -106,12 +112,12 @@ namespace restbed
 
             auto socket = m_socket;
             asio::async_write( *socket,
-                               asio::buffer( data, data.length( ) ),
-                               [ socket, status ]( const asio::error_code& error, std::size_t bytes_transferred )
-            {
-                //if error -> log
-                socket->close( );
-            } );
+                              asio::buffer( data, data.length( ) ),
+                              [ socket, status ]( const asio::error_code& error, std::size_t bytes_transferred )
+                              {
+                                  //if error -> log
+                                  socket->close( );
+                              } );
         }
 
         void SessionImpl::fetch( const std::shared_ptr< Session >& session,
