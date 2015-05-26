@@ -24,7 +24,7 @@ public:
 
         va_start( arguments, format );
 
-        vprintf( format.data( ), arguments );
+        vfprintf( stderr, format.data( ), arguments );
 
         va_end( arguments );
     }
