@@ -28,12 +28,14 @@ namespace restbed
 {
     namespace detail
     {
-        SettingsImpl::SettingsImpl( void ) : m_properties( )
+        SettingsImpl::SettingsImpl( void ) : m_root( "/" ),
+            m_port( 80 ),
+            m_connection_limit( 128 ),
+            m_connection_timeout( 5 ),
+            m_properties( ),
+            m_default_headers( )
         {
-            m_properties[ "root" ] = "/";
-            m_properties[ "port" ] = "80";
-            m_properties[ "connection-limit" ] = "128";
-            m_properties[ "connection-timeout" ] = "5";
+            return;
         }
         
         SettingsImpl::~SettingsImpl( void )
@@ -43,22 +45,22 @@ namespace restbed
         
         uint16_t SettingsImpl::get_port( void ) const
         {
-            return stoi( get_property( "port" ) );
+            return m_port;
         }
         
         string SettingsImpl::get_root( void ) const
         {
-            return get_property( "root" );
+            return m_root;
         }
         
         int32_t SettingsImpl::get_connection_limit( void ) const
         {
-            return stoul( get_property( "connection-limit" ) );
+            return m_connection_limit;
         }
 
         seconds SettingsImpl::get_connection_timeout( void ) const
         {
-            return seconds( stoll( get_property( "socket-timeout" ) ) );
+            return m_connection_timeout;
         }
 
         string SettingsImpl::get_property( const string& name ) const
@@ -83,22 +85,22 @@ namespace restbed
 
         void SettingsImpl::set_port( const uint16_t value )
         {
-            set_property( "port", ::to_string( value ) );
+            m_port = value;
         }
         
         void SettingsImpl::set_root( const string& value )
         {
-            set_property( "root", value );
+            m_root = value;
         }
         
         void SettingsImpl::set_connection_limit( const int32_t value )
         {
-            set_property( "connection-limit", ::to_string( value ) );
+            m_connection_limit = value;
         }
 
         void SettingsImpl::set_connection_timeout( const seconds& value )
         {
-            set_property( "connection-timeout", ::to_string( value.count( ) ) );
+            m_connection_timeout = value;
         }
 
         void SettingsImpl::set_property( const string& name, const string& value )

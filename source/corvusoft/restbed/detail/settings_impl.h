@@ -113,6 +113,14 @@ namespace restbed
                 SettingsImpl& operator =( const SettingsImpl& value ) = delete;
                 
                 //Properties
+                std::string m_root;
+
+                uint16_t m_port;
+
+                uint32_t m_connection_limit;
+
+                std::chrono::seconds m_connection_timeout;
+
                 std::map< std::string, std::string > m_properties;
 
                 std::multimap< std::string, std::string > m_default_headers;

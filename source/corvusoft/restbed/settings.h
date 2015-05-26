@@ -53,6 +53,7 @@ namespace restbed
 
             std::chrono::seconds get_connection_timeout( void ) const;
 
+            //void get_property( name, int& etc...)
             std::string get_property( const std::string& name ) const;
             
             std::map< std::string, std::string > get_properties( void ) const;
