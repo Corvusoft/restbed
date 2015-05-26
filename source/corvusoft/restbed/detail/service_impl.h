@@ -62,7 +62,7 @@ namespace restbed
                 //Setters
                 void set_default_header( const std::string& name, const std::string& value );
 
-                void set_log_handler( const std::shared_ptr< Logger >& value );
+                void set_logger( const std::shared_ptr< Logger >& value );
                 
                 void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
                                                                              const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
@@ -146,7 +146,7 @@ namespace restbed
 
                 std::map< std::string, std::shared_ptr< Resource > > m_resource_routes;
 
-                std::shared_ptr< Logger > m_log_handler;
+                std::shared_ptr< Logger > m_logger;
                 
                 std::shared_ptr< asio::io_service > m_io_service;
 

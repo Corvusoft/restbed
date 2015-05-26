@@ -66,7 +66,7 @@ namespace restbed
             m_supported_methods( ),
             m_resource_paths( ),
             m_resource_routes( ),
-            m_log_handler( nullptr ),
+            m_logger( nullptr ),
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
             m_acceptor( nullptr ),
@@ -100,10 +100,10 @@ namespace restbed
                 m_session_manager->stop( );
             }
 
-//            if ( m_logger not_eq nullptr )
-//            {
-//                m_logger->stop( );
-//            }
+            if ( m_logger not_eq nullptr )
+            {
+                m_logger->stop( );
+            }
         }
 
         void ServiceImpl::start( const shared_ptr< Settings >& settings ) //const settings
@@ -117,12 +117,12 @@ namespace restbed
 
             m_session_manager->start( settings );
 
-//            if ( m_logger == nullptr )
-//            {
-//                m_logger = make_shared< LoggerImpl >( settings );
-//            }
-//
-//            m_logger->start( settings );
+            if ( m_logger == nullptr )
+            {
+                //m_logger = make_shared< LoggerImpl >( settings );
+            }
+
+            m_logger->start( settings );
 
             m_io_service = make_shared< io_service >( );
 
@@ -189,10 +189,10 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
+        void ServiceImpl::set_logger(  const shared_ptr< Logger >& value )
         {
             //if is running throw runtime_error
-            m_log_handler = value;
+            m_logger = value;
         }
         
         void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
@@ -350,9 +350,9 @@ namespace restbed
 
         void ServiceImpl::log( const Logger::Level level, const string& message )
         {
-             if ( m_log_handler not_eq nullptr )
+             if ( m_logger not_eq nullptr )
              {
-                 m_log_handler->log( level, "%s", message.data( ) );
+                 m_logger->log( level, "%s", message.data( ) );
              }
         }
 

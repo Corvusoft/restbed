@@ -58,7 +58,7 @@ namespace restbed
     
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
-        m_pimpl->set_log_handler( value );
+        m_pimpl->set_logger( value );
     }
     
     void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
