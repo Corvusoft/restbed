@@ -60,6 +60,12 @@ namespace restbed
 
             void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
+            void yield( const int status, const std::string& body = framework::String::empty );
+
+            void yield( const int status, const std::multimap< std::string, std::string >& headers );
+
+            void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
+
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             //Getters

@@ -55,10 +55,12 @@ namespace restbed
     {
         SessionImpl::SessionImpl( void ) : m_is_closed( false ),
             m_id( String::empty ),
+            m_session( nullptr ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_buffer( nullptr ),
             m_socket( nullptr ),
+            m_callback( nullptr ),
             m_default_headers( )
         {
             return;
@@ -66,6 +68,7 @@ namespace restbed
 
         SessionImpl::~SessionImpl( void )
         {
+            fprintf( stderr, "DESTORYING SESSION\n\n\n" );
             return;
         }
 
@@ -88,7 +91,7 @@ namespace restbed
         void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
         {
             m_is_closed = true;
-            
+
             const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
 
             auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
@@ -113,16 +116,59 @@ namespace restbed
             auto socket = m_socket;
             asio::async_write( *socket,
                               asio::buffer( data, data.length( ) ),
-                              [ socket, status ]( const asio::error_code& error, std::size_t bytes_transferred )
+                              [ socket ]( const asio::error_code& error, std::size_t bytes_transferred )
                               {
                                   //if error -> log
                                   socket->close( );
                               } );
         }
 
-        void SessionImpl::fetch( const std::shared_ptr< Session >& session,
+        void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers )
+        {
+            const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
+
+            auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
+
+            auto response_headers = m_default_headers;
+
+            if ( m_resource not_eq nullptr )
+            {
+                const auto resource_headers = m_resource->get_default_headers( );
+                response_headers.insert( resource_headers.begin( ), resource_headers.end( ) );
+            }
+
+            response_headers.insert( headers.begin( ), headers.end( ) );
+
+            for ( auto header : response_headers )
+            {
+                data += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            }
+
+            data += "\r\n" + body;
+
+            asio::async_write( *m_socket,
+                              asio::buffer( data, data.length( ) ),
+                              [ this ]( const asio::error_code& error, std::size_t bytes_transferred )
+                              {
+                                  //if error -> log
+                                  this->fetch( this->m_session, this->m_callback );
+                              } );
+        }
+
+        void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            fetch( m_session, callback );
+        }
+
+        void SessionImpl::fetch( const shared_ptr< Session >& session,
                                  const function< void ( const shared_ptr< Session >& ) >& callback )
         {
+            if ( m_callback == nullptr and m_session == nullptr )
+            {
+                m_session = session;
+                m_callback = callback;
+            }
+
             m_buffer = make_shared< asio::streambuf >( ); //pass as argument!
 
             asio::async_read_until( *m_socket,

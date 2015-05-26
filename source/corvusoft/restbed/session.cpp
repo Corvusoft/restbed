@@ -65,9 +65,25 @@ namespace restbed
         m_pimpl->close( status, body, headers );
     }
 
+    void Session::yield( const int status, const string& body )
+    {
+        static multimap< string, string > empty;
+        m_pimpl->yield( status, body, empty );
+    }
+
+    void Session::yield( const int status, const multimap< string, string >& headers )
+    {
+        m_pimpl->yield( status, String::empty, headers );
+    }
+
+    void Session::yield( const int status, const string& body, const multimap< string, string >& headers )
+    {
+        m_pimpl->yield( status, body, headers );
+    }
+
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->fetch( shared_ptr< Session >( this ), callback );
+        m_pimpl->fetch( callback );
     }
 
     const string& Session::get_id( void ) const

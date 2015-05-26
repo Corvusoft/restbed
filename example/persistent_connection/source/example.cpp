@@ -1,47 +1,39 @@
 #include <string>
+#include <memory>
 #include <cstdlib>
-
-#include "restbed"
+#include <restbed>
 
 using namespace std;
 using namespace restbed;
 
-Response get_persistent_method_handler( const Request& )
+void get_intermittent_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( StatusCode::OK );
-    response.set_header( "Connection", "keep-alive" );
-    response.set_body( "persistent resource request" );
-
-    return response;
+    session->close( OK, "intermittent resource request", { { "Content-Length", "29" }, { "Connection", "close" } } );
 }
 
-Response get_intermittent_method_handler( const Request& )
+void get_persistent_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( StatusCode::OK );
-    response.set_body( "intermittent resource request" );
-
-    return response;
+    session->yield( OK, "persistent resource request", { { "Content-Length", "27" }, { "Connection", "keep-alive" } } );
 }
 
 int main( const int, const char** )
 {
-    Resource persistent;
-    persistent.set_path( "/resources/persistent" );
-    persistent.set_method_handler( "GET", &get_persistent_method_handler );
+    auto persistent = make_shared< Resource >( );
+    persistent->set_path( "/resources/persistent" );
+    persistent->set_method_handler( "GET", &get_persistent_method_handler );
 
-    Resource intermittent;
-    intermittent.set_path( "/resources/intermittent" );
-    intermittent.set_method_handler( "GET", &get_intermittent_method_handler );
+    auto intermittent = make_shared< Resource >( );
+    intermittent->set_path( "/resources/intermittent" );
+    intermittent->set_method_handler( "GET", &get_intermittent_method_handler );
 
-    Settings settings;
-    settings.set_port( 1984 );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
     
-    Service service( settings );
+    Service service;
     service.publish( persistent );
     service.publish( intermittent );
-    service.start( );
+
+    service.start( settings );
     
     return EXIT_SUCCESS;
 }

@@ -55,19 +55,14 @@ namespace restbed
 
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
-                void fetch( const std::shared_ptr< Session >& session,
-                            const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
-//                void close( void );
-//
+                void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
 //                void close( const Response& value );
-//
-//                void close( uint16_t status_code );
-//
-//                void close( uint16_t status_code, Bytes& body );
-//
-//                void close( uint16_t status_code, multimap< string, string > headers, Bytes& body );
-//
+
 //                void yield( const Response& value ); //send response and call this function again with request.
 //
 //                void yield( const Response& value, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
@@ -156,11 +151,15 @@ namespace restbed
 
                 std::string m_id;
 
+                std::shared_ptr< Session > m_session;
+
                 std::shared_ptr< Request > m_request;
 
                 std::shared_ptr< Resource > m_resource;
 
-                std::shared_ptr< asio::streambuf > m_buffer; //just pass as argument?
+                std::shared_ptr< asio::streambuf > m_buffer;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_callback;
 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
 

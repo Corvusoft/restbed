@@ -13,8 +13,6 @@
 #include <corvusoft/framework/unique_id>
 
 //System Namespaces
-using std::map;
-using std::string;
 using std::function;
 using std::shared_ptr;
 using std::make_shared;
@@ -51,8 +49,6 @@ namespace restbed
         void SessionManagerImpl::create( const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             auto session = make_shared< Session >( UniqueId::generate( ).to_string( ) );
-            m_sessions[ session->get_id( ) ] = session;
-
             callback( session );
         }
 
@@ -68,8 +64,6 @@ namespace restbed
 
         void SessionManagerImpl::purge( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
         {
-            m_sessions.erase( session->get_id( ) );
-
             callback( nullptr );
         }
     }
