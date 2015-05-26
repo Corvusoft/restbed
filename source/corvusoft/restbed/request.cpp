@@ -54,21 +54,21 @@ namespace restbed
         return m_pimpl->get_protocol( );
     }
 
-//    bool Request::has_header( const string& name ) const
-//    {
-//        return m_pimpl->has_header( name );
-//    }
-//    
-//    bool Request::has_path_parameter( const string& name ) const
-//    {
-//        return m_pimpl->has_path_parameter( name );
-//    }
-//    
-//    bool Request::has_query_parameter( const string& name ) const
-//    {
-//        return m_pimpl->has_query_parameter( name );
-//    }
-//    
+    bool Request::has_header( const string& name ) const
+    {
+        return m_pimpl->has_header( name );
+    }
+    
+    bool Request::has_path_parameter( const string& name, const bool ignore_case ) const
+    {
+        return m_pimpl->has_path_parameter( name, ignore_case );
+    }
+    
+    bool Request::has_query_parameter( const string& name, const bool ignore_case ) const
+    {
+        return m_pimpl->has_query_parameter( name, ignore_case );
+    }
+    
 //    Bytes Request::get_body( void ) const
 //    {
 //        return m_pimpl->get_body( );

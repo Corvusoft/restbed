@@ -1,34 +1,30 @@
+#include <memory>
 #include <cstdlib>
+#include <restbed>
 
-#include "restbed"
-
+using namespace std;
 using namespace restbed;
 
-Response get_method_handler( const Request& )
+void get_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_body( StatusCode::to_string( 418 ) );
-    response.set_status_code( 418 );
-    
-    return response;
+    session->close( 418 );
 }
 
 int main( const int, const char** )
 {
-    auto status_code_mappings = StatusCode::get_mappings( );
-    status_code_mappings[ 418 ] = "I'm a teapot";
+    status_message[ 418 ] = "I'm a teapot";
+
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resource" );
+    resource->set_method_handler( "GET", &get_method_handler );
     
-    StatusCode::set_mappings( status_code_mappings );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
     
-    Resource resource;
-    resource.set_method_handler( "GET", &get_method_handler );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    
-    Service service( settings );
+    Service service;
     service.publish( resource );
-    service.start( );
+    service.start( settings );
     
     return EXIT_SUCCESS;
 }

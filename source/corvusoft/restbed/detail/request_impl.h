@@ -51,11 +51,11 @@ namespace restbed
 
                 const std::string& get_protocol( void ) const;
 
-                // bool has_header( const std::string& name ) const;
+                 bool has_header( const std::string& name ) const;
                 
-                // bool has_path_parameter( const std::string& name ) const;
+                 bool has_path_parameter( const std::string& name, const bool ignore_case ) const;
                 
-                // bool has_query_parameter( const std::string& name ) const;
+                 bool has_query_parameter( const std::string& name, const bool ignore_case ) const;
                 
                 //Getters
 //                framework::Bytes get_body( void );

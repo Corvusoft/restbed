@@ -18,11 +18,11 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/example"  )
 add_executable( basic_authentication basic_authentication/source/example.cpp )
 target_link_libraries( basic_authentication ${CMAKE_PROJECT_NAME} )
 
-#add_executable( custom_status_codes custom_status_codes/source/example.cpp )
-#target_link_libraries( custom_status_codes ${CMAKE_PROJECT_NAME} )
+add_executable( custom_status_codes custom_status_codes/source/example.cpp )
+target_link_libraries( custom_status_codes ${CMAKE_PROJECT_NAME} )
 
-#add_executable( digest_authentication digest_authentication/source/example.cpp )
-#target_link_libraries( digest_authentication ${CMAKE_PROJECT_NAME} )
+add_executable( digest_authentication digest_authentication/source/example.cpp )
+target_link_libraries( digest_authentication ${CMAKE_PROJECT_NAME} )
 
 #add_executable( error_handling error_handling/source/example.cpp )
 #target_link_libraries( error_handling ${CMAKE_PROJECT_NAME} )

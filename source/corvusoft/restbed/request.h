@@ -48,11 +48,11 @@ namespace restbed
             virtual ~Request( void );
             
             //Functionality            
-//            bool has_header( const std::string& name, const bool case_insensitive_search = true ) const;
-//            
-//            bool has_path_parameter( const std::string& name, const bool case_insensitive_search = true ) const;
-//            
-//            bool has_query_parameter( const std::string& name, const bool case_insensitive_search = true ) const;
+            bool has_header( const std::string& name ) const;
+            
+            bool has_path_parameter( const std::string& name, const bool ignore_case = true ) const;
+            
+            bool has_query_parameter( const std::string& name, const bool ignore_case = true ) const;
 
             //Getters
             double get_version( void ) const;

@@ -52,22 +52,36 @@ namespace restbed
         {
             return;
         }
-//        
-//        bool RequestImpl::has_header( const string& name ) const
-//        {
-//            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
-//        }
-//        
-//        bool RequestImpl::has_path_parameter( const string& name ) const
-//        {
-//            return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
-//        }
-//        
-//        bool RequestImpl::has_query_parameter( const string& name ) const
-//        {
-//            return ( m_query_parameters.find( name ) not_eq m_query_parameters.end( ) );
-//        }
-//        
+        
+        bool RequestImpl::has_header( const string& name ) const
+        {
+            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
+        }
+        
+        bool RequestImpl::has_path_parameter( const string& name, const bool ignore_case ) const
+        {
+            if ( ignore_case )
+            {
+                return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
+            }
+            else
+            {
+                m_path_parameters.find( name ) not_eq m_path_parameters.end( );
+            }
+        }
+        
+        bool RequestImpl::has_query_parameter( const string& name, const bool ignore_case ) const
+        {
+            if ( ignore_case )
+            {
+                return ( Map::find_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
+            }
+            else
+            {
+                m_query_parameters.find( name ) not_eq m_query_parameters.end( );
+            }
+        }
+
 //        Bytes RequestImpl::get_body( void )
 //        {
 //            return m_body;
