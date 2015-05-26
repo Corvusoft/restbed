@@ -1,10 +1,11 @@
 #include <string>
+#include <memory>
 #include <utility>
 #include <cstdlib>
+#include <restbed>
+
 #include "pam.h"
 #include "base64.h"
-
-#include "restbed"
 
 using namespace std;
 using namespace restbed;
@@ -19,43 +20,42 @@ pair< string, string > decode_header( const string& value )
     return make_pair( username, password );
 }
 
-void authentication_handler( const Request& request, /*out*/ Response& response )
+void authentication_handler( const shared_ptr< Session >& session,
+                             const function< void ( const shared_ptr< Session >& ) >& callback )
 {
-    auto credentials = decode_header( request.get_header( "Authorization" ) );
+    const auto request = session->get_request( );
+    const auto credentials = decode_header( request->get_header( "Authorization" ) );
 
-    if ( pam_authorisation( credentials.first, credentials.second ) )
+    bool authorised = pam_authorisation( credentials.first, credentials.second );
+
+    if ( not authorised )
     {
-        response.set_status_code( 200 );
+        session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"Restbed\"" } } );
     }
-    else
-    {
-        response.set_status_code( 401 );
-        response.set_header( "WWW-Authenticate", "Basic realm=\"Restbed\"" );
-    }
+
+    callback( session );
 }
 
-Response get_method_handler( const Request& )
+void get_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_body( "Password Protected Hello, World!" );
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
+    session->close( OK, "Password Protected Hello, World!", { { "Content-Length", "32" } } );
 }
 
 int main( const int, const char** )
 {
-    Resource resource;
-    resource.set_path( "/resource" );
-    resource.set_method_handler( "GET", &get_method_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resource" );
+    resource->set_method_handler( "GET", &get_method_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
     
-    Service service( settings );
-    service.set_authentication_handler( &authentication_handler );
+    Service service;
     service.publish( resource );
-    service.start( );
+    service.set_authentication_handler( &authentication_handler );
+
+    service.start( settings );
     
     return EXIT_SUCCESS;
 }
