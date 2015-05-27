@@ -15,12 +15,14 @@ using std::map;
 using std::string;
 using std::function;
 using std::multimap;
+using std::shared_ptr;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
 
 //External Namespaces
 using framework::Bytes;
+using framework::String;
 
 namespace restbed
 {
@@ -32,21 +34,6 @@ namespace restbed
     Request::~Request( void )
     {
         return;
-    }
-
-    double Request::get_version( void ) const
-    {
-        return m_pimpl->get_version( );
-    }
-
-    const string& Request::get_path( void ) const
-    {
-        return m_pimpl->get_path( );
-    }
-
-    const string& Request::get_method( void ) const
-    {
-        return m_pimpl->get_method( );
     }
 
     const string& Request::get_protocol( void ) const
@@ -67,6 +54,26 @@ namespace restbed
     bool Request::has_query_parameter( const string& name, const bool ignore_case ) const
     {
         return m_pimpl->has_query_parameter( name, ignore_case );
+    }
+
+    double Request::get_version( void ) const
+    {
+        return m_pimpl->get_version( );
+    }
+
+    const string& Request::get_path( void ) const
+    {
+        return m_pimpl->get_path( );
+    }
+
+    const string& Request::get_method( void ) const
+    {
+        return m_pimpl->get_method( );
+    }
+
+    const shared_ptr< framework::Bytes >& Request::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
     }
     
 //    Bytes Request::get_body( void ) const
@@ -170,6 +177,12 @@ namespace restbed
                               const function< string ( const string& ) >& transform ) const
     {
         m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    string Request::get_header( const string& name,
+                               const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_header( name, String::empty, transform );
     }
 
     string Request::get_header( const string& name,

@@ -51,8 +51,8 @@ target_link_libraries( serving_html ${CMAKE_PROJECT_NAME} )
 add_executable( syslog_logging syslog_logging/source/example.cpp )
 target_link_libraries( syslog_logging ${CMAKE_PROJECT_NAME} )
 
-#add_executable( transfer_encoding_request transfer_encoding_request/source/example.cpp )
-#target_link_libraries( transfer_encoding_request ${CMAKE_PROJECT_NAME} )
+add_executable( transfer_encoding_request transfer_encoding_request/source/example.cpp )
+target_link_libraries( transfer_encoding_request ${CMAKE_PROJECT_NAME} )
 
 #add_executable( transfer_encoding_response transfer_encoding_response/source/example.cpp )
 #target_link_libraries( transfer_encoding_response ${CMAKE_PROJECT_NAME} )

@@ -122,7 +122,7 @@ namespace restbed
                 //m_logger = make_shared< LoggerImpl >( settings );
             }
 
-            m_logger->start( settings );
+            //m_logger->start( settings );
 
             m_io_service = make_shared< io_service >( );
 

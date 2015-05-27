@@ -16,6 +16,7 @@
 
 //External Includes
 #include <asio.hpp>
+#include <corvusoft/framework/bytes>
 
 //System Namespaces
 
@@ -58,6 +59,12 @@ namespace restbed
                 void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
                 void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void fetch( const std::size_t length,
+                            const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
+
+                void fetch( const std::string& delimiter,
+                            const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
                 void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 

@@ -36,7 +36,7 @@ namespace restbed
 {
     namespace detail
     {
-        RequestImpl::RequestImpl( void ) : m_body( ),
+        RequestImpl::RequestImpl( void ) : m_body( nullptr ),
             m_version( 1.1 ),
             m_path( "/" ),
             m_method( "GET" ),
@@ -80,11 +80,6 @@ namespace restbed
             return m_query_parameters.find( name ) not_eq m_query_parameters.end( );
         }
 
-//        Bytes RequestImpl::get_body( void )
-//        {
-//            return m_body;
-//        }
-
         double RequestImpl::get_version( void ) const
         {
             return m_version;
@@ -113,6 +108,11 @@ namespace restbed
         const string& RequestImpl::get_protocol( void ) const
         {
             return m_protocol;
+        }
+
+        const shared_ptr< Bytes >& RequestImpl::get_body( void ) const
+        {
+            return m_body;
         }
 
         void RequestImpl::get_header( const string& name,
@@ -345,12 +345,12 @@ namespace restbed
 //        {
 //            return m_path_parameters;
 //        }
-//        
-//        void RequestImpl::set_body( const Bytes& value )
-//        {
-//            m_body = value;
-//        }
-//        
+
+        void RequestImpl::set_body( const shared_ptr< Bytes >& value )
+        {
+            m_body = value;
+        }
+        
        void RequestImpl::set_version( const double value )
        {
            m_version = value;

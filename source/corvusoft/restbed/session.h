@@ -14,6 +14,7 @@
 //Project Includes
 
 //External Includes
+#include <corvusoft/framework/bytes>
 #include <corvusoft/framework/string>
 
 //System Namespaces
@@ -68,9 +69,11 @@ namespace restbed
 
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-            void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+            void fetch( const std::size_t length,
+                        const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
-            void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+            void fetch( const std::string& delimiter,
+                        const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
             //Getters
             const std::string& get_id( void ) const;

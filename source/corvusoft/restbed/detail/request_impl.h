@@ -61,6 +61,8 @@ namespace restbed
 
                 const std::string& get_protocol( void ) const;
 
+                const std::shared_ptr< framework::Bytes >& get_body( void ) const;
+
 //                std::string get_origin( void ) const;
 
 //                std::string get_destination( void ) const;
@@ -117,7 +119,7 @@ namespace restbed
 //                std::map< std::string, std::string > get_path_parameters( void ) const;
 
                 //Setters
-//                void set_body( const framework::Bytes& value );
+                void set_body( const std::shared_ptr< framework::Bytes >& value );
 //                
                 void set_version( const double value );
 //                
@@ -176,7 +178,7 @@ namespace restbed
                 RequestImpl& operator =( const RequestImpl& value ) = delete;
                 
                 //Properties
-                framework::Bytes m_body;
+                std::shared_ptr< framework::Bytes > m_body;
                 
                 double m_version;
                 

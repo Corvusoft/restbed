@@ -63,11 +63,15 @@ namespace restbed
 
             const std::string& get_protocol( void ) const;
 
+            const std::shared_ptr< framework::Bytes >& get_body( void ) const;
+
 //            std::string get_path( std::function< string ( string ) > transform = nullptr ) const;
 //
 //            std::string get_method( std::function< string ( string ) > transform = nullptr ) const;
-//
-//            framework::Bytes get_body( std::function< framework::Bytes ( framework::Bytes ) > transform = nullptr ) const;
+
+            //framework::Bytes get_body( std::function< framework::Bytes ( const framework::Bytes& ) > transform = nullptr ) const;
+
+            //framework::Bytes get_body( std::function< framework::Bytes ( const framework::Bytes& ) > transform = nullptr ) const;
 //            
 //            std::string get_origin( std::function< string ( string ) > transform = nullptr ) const;
 //
@@ -106,7 +110,10 @@ namespace restbed
                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
             std::string get_header( const std::string& name,
-                                    const std::string& default_value = framework::String::empty,
+                                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            std::string get_header( const std::string& name,
+                                    const std::string& default_value,
                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
             std::multimap< std::string, std::string > get_headers( const std::string& name = framework::String::empty,

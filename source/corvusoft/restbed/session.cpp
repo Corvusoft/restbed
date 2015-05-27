@@ -20,6 +20,7 @@ using std::shared_ptr;
 using restbed::detail::SessionImpl;
 
 //External Namespaces
+using framework::Bytes;
 using framework::String;
 
 namespace restbed
@@ -84,6 +85,16 @@ namespace restbed
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->fetch( callback );
+    }
+
+    void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+    {
+        m_pimpl->fetch( length, callback );
+    }
+
+    void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+    {
+        m_pimpl->fetch( delimiter, callback );
     }
 
     const string& Session::get_id( void ) const
