@@ -15,6 +15,7 @@
 
 //External Includes
 #include <corvusoft/framework/bytes>
+#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -43,6 +44,15 @@ namespace restbed
                 virtual ~RequestImpl( void );
                 
                 //Functionality
+                bool has_header( const std::string& name ) const;
+                
+                bool has_path_parameter( const std::string& name, const bool ignore_case ) const;
+
+                bool has_query_parameter( const std::string& name, const bool ignore_case ) const;
+                
+                //Getters
+//                framework::Bytes get_body( void );
+
                 double get_version( void ) const;
 
                 const std::string& get_path( void ) const;
@@ -51,37 +61,50 @@ namespace restbed
 
                 const std::string& get_protocol( void ) const;
 
-                 bool has_header( const std::string& name ) const;
-                
-                 bool has_path_parameter( const std::string& name, const bool ignore_case ) const;
-                
-                 bool has_query_parameter( const std::string& name, const bool ignore_case ) const;
-                
-                //Getters
-//                framework::Bytes get_body( void );
-
-//                double get_version( void ) const;
-//                
-//                std::string get_path( void ) const;
-//                
-//                std::string get_method( void ) const;
-//                
 //                std::string get_origin( void ) const;
-//
+
 //                std::string get_destination( void ) const;
-//            
-//                std::string get_protocol( void ) const;
-//                
-                  std::string get_header( const std::string& name,
-                                          const std::string& default_value,
-                                          const std::function< std::string ( const std::string& ) >& transform ) const;
 
-                  std::multimap< std::string, std::string > get_headers( const std::string& name,
-                                                                         const std::function< std::string ( const std::string& ) >& transform ) const;
+                void get_header( const std::string& name,
+                                 int& value,
+                                 const int default_value,
+                                 const std::function< std::string ( const std::string& ) >& transform ) const;
 
-                  std::string get_path_parameter( const std::string& name,
-                                                  const std::string& default_value,
-                                                  std::function< std::string ( const std::string& ) > transform ) const;
+                void get_header( const std::string& name,
+                                 unsigned int& value,
+                                 const unsigned int default_value,
+                                 const std::function< std::string ( const std::string& ) >& transform ) const;
+
+                void get_header( const std::string& name,
+                                 long& value,
+                                 const long default_value,
+                                 const std::function< std::string ( const std::string& ) >& transform ) const;
+
+                void get_header( const std::string& name,
+                                 unsigned long& value,
+                                 const unsigned long default_value,
+                                 const std::function< std::string ( const std::string& ) >& transform ) const;
+
+                void get_header( const std::string& name,
+                                 float& value,
+                                 const float default_value,
+                                 const std::function< std::string ( const std::string& ) > transform ) const;
+
+                void get_header( const std::string& name,
+                                 double& value,
+                                 const double default_value,
+                                 const std::function< std::string ( const std::string& ) >& transform ) const;
+
+                std::string get_header( const std::string& name,
+                                        const std::string& default_value = framework::String::empty,
+                                        const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+                std::multimap< std::string, std::string > get_headers( const std::string& name,
+                                                                        const std::function< std::string ( const std::string& ) >& transform ) const;
+
+                std::string get_path_parameter( const std::string& name,
+                                                const std::string& default_value,
+                                                const std::function< std::string ( const std::string& ) >& transform ) const;
 
 //                std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
 //                

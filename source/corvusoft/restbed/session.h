@@ -68,6 +68,10 @@ namespace restbed
 
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
+            void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+            void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
             //Getters
             const std::string& get_id( void ) const;
 

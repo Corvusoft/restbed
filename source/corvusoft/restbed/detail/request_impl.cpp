@@ -10,11 +10,13 @@
 
 //External Includes
 #include <corvusoft/framework/map>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
+using std::stoi;
 using std::stod;
+using std::stof;
+using std::stoul;
 using std::string;
 using std::istream;
 using std::multimap;
@@ -64,10 +66,8 @@ namespace restbed
             {
                 return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
             }
-            else
-            {
-                m_path_parameters.find( name ) not_eq m_path_parameters.end( );
-            }
+
+            return m_path_parameters.find( name ) not_eq m_path_parameters.end( );
         }
         
         bool RequestImpl::has_query_parameter( const string& name, const bool ignore_case ) const
@@ -76,10 +76,8 @@ namespace restbed
             {
                 return ( Map::find_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
             }
-            else
-            {
-                m_query_parameters.find( name ) not_eq m_query_parameters.end( );
-            }
+
+            return m_query_parameters.find( name ) not_eq m_query_parameters.end( );
         }
 
 //        Bytes RequestImpl::get_body( void )
@@ -115,6 +113,132 @@ namespace restbed
         const string& RequestImpl::get_protocol( void ) const
         {
             return m_protocol;
+        }
+
+        void RequestImpl::get_header( const string& name,
+                                      int& value,
+                                      const int default_value,
+                                      const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stoi( header );
+        }
+
+        void RequestImpl::get_header( const string& name,
+                                      unsigned int& value,
+                                      const unsigned int default_value,
+                                      const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stoul( header );
+        }
+
+        void RequestImpl::get_header( const string& name,
+                                      long& value,
+                                      const long default_value,
+                                      const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stol( header );
+        }
+
+        void RequestImpl::get_header( const string& name,
+                                      unsigned long& value,
+                                      const unsigned long default_value,
+                                      const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+            
+            value = stoul( header );
+        }
+
+        void RequestImpl::get_header( const string& name,
+                                      float& value,
+                                      const float default_value,
+                                      const function< string ( const string& ) > transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stof( header );
+        }
+
+        void RequestImpl::get_header( const string& name,
+                                      double& value,
+                                      const double default_value,
+                                      const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stod( header );
         }
 
         string RequestImpl::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
@@ -191,7 +315,7 @@ namespace restbed
 
         string RequestImpl::get_path_parameter( const string& name,
                                                 const string& default_value,
-                                                function< string ( const string& ) > transform ) const
+                                                const function< string ( const string& ) >& transform ) const
         {
             string parameter = default_value;
 

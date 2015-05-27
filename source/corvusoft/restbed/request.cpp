@@ -124,7 +124,57 @@ namespace restbed
 //        return m_pimpl->get_headers( );
 //    }
 
-    string Request::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_header( const string& name,
+                              int& value,
+                              const int default_value,
+                              const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    void Request::get_header( const string& name,
+                              unsigned int& value,
+                              const unsigned int default_value,
+                              const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    void Request::get_header( const string& name,
+                              long& value,
+                              const long default_value,
+                              const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    void Request::get_header( const string& name,
+                              unsigned long& value,
+                              const unsigned long default_value,
+                              const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    void Request::get_header( const string& name,
+                              float& value,
+                              const float default_value,
+                              const function< string ( const string& ) > transform ) const
+    {
+        m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    void Request::get_header( const string& name,
+                              double& value,
+                              const double default_value,
+                              const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_header( name, value, default_value, transform );
+    }
+
+    string Request::get_header( const string& name,
+                                const string& default_value,
+                                const function< string ( const string& ) >& transform ) const
     {
         return m_pimpl->get_header( name, default_value, transform );
     }
@@ -160,7 +210,7 @@ namespace restbed
 //    }
     string Request::get_path_parameter( const string& name,
                                         const string& default_value,
-                                        function< string ( const string& ) > transform ) const
+                                        const function< string ( const string& ) >& transform ) const
     {
         return m_pimpl->get_path_parameter( name, default_value, transform );
     }

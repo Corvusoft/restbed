@@ -74,24 +74,36 @@ namespace restbed
 //            std::string get_destination( std::function< string ( string ) > transform = nullptr ) const;
 //        
 //            std::string get_protocol( std::function< string ( string ) > transform = nullptr ) const;
-//
-            //void get_header( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ int& value, int default_value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transform = nullptr);
-//
-//            void get_header( const std::string& name, /*out*/ uint& value, uint default_value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ float& value, float default_value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ double& value, double default_value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_header( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transform = nullptr );
+
+            void get_header( const std::string& name,
+                     /*out*/ int& value,
+                             const int default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                     /*out*/ long& value,
+                             const long default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                     /*out*/ unsigned long& value,
+                             const unsigned long default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                     /*out*/ unsigned int& value,
+                             const unsigned int default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                     /*out*/ float& value,
+                             const float default_value = 0,
+                             const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                     /*out*/ double& value,
+                             const double default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
             std::string get_header( const std::string& name,
                                     const std::string& default_value = framework::String::empty,
@@ -99,7 +111,7 @@ namespace restbed
 
             std::multimap< std::string, std::string > get_headers( const std::string& name = framework::String::empty,
                                                                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-//
+
 //            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
 //
 //            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
@@ -130,7 +142,7 @@ namespace restbed
 //
             std::string get_path_parameter( const std::string& name,
                                             const std::string& default_value = framework::String::empty,
-                                            std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+                                            const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
 //            std::map< std::string, std::string > get_path_parameters( void ) const;
 
