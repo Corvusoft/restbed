@@ -1,61 +1,39 @@
 #include <string>
 #include <memory>
 #include <cstdlib>
-
-#include "restbed"
+#include <restbed>
 
 using namespace std;
 using namespace restbed;
 
-Response get_method_handler( const Request& )
+void get_method_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( StatusCode::OK );
-    response.set_header( "Transfer-Encoding", "chunked" );
-    response.set_body( [ ]( void ) -> framework::Bytes
+    session->yield( OK, "7\r\nrestbed\r\n", { { "Transfer-Encoding", "chunked" } } );
+
+    restbed::wait_for( seconds( 5 ), [ ]( const shared_ptr< Session >& session )
     {
-        string data = "";
-        string chunk = "";
-        static int count = 0;
+        session->yield( "16\r\nchunked encoding\r\n" );
 
-        switch ( count++ )
+        restbed::wait_for( seconds( 2 ), [ ]( const shared_ptr< Session >& session
         {
-            case 0:
-                data = "restbed";
-                chunk = ::to_string( data.length( ) ) + "\r\n";
-                chunk += data + "\r\n";
-                break;
-            case 1:
-                data = " chunked\n";
-                chunk = ::to_string( data.length( ) ) + "\r\n";
-                chunk += data + "\r\n";
-                break;
-            case 2:
-                chunk = "0\r\n\r\n";
-                break;
-            default:
-                count = 0;
-                chunk = "";
-        }
-
-        return framework::Bytes( chunk.begin( ), chunk.end( ) );
+            session->close( "0\r\n\r\n" );
+        } ) );
     } );
-
-    return response;
 }
 
 int main( const int, const char** )
 {
-    Resource resource;
-    resource.set_path( "/resources/item" );
-    resource.set_method_handler( "GET", &get_method_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources/item" );
+    resource->set_method_handler( "GET", &get_method_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
     
-    Service service( settings );
+    Service service;
     service.publish( resource );
-    service.start( );
+    service.start( settings );
     
     return EXIT_SUCCESS;
 }
