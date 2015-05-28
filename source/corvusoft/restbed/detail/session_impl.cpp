@@ -164,17 +164,42 @@ namespace restbed
 
         void SessionImpl::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
         {
-            m_buffer = make_shared< asio::streambuf >( ); //pass as argument!
-
-            asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( length ), [ this, callback ]( const asio::error_code& error,
-                                                                                                           std::size_t bytes_transferred )
+            if ( length > m_buffer->size( ) )
             {
-                //if error
+                size_t size = length - m_buffer->size( );
 
-                const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
-                const auto data = make_shared< Bytes >( data_ptr, data_ptr + bytes_transferred );
+                asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code& error,
+                                                                                                             std::size_t bytes_transferred )
+                 {
+                     //if error
 
-                const auto request = this->m_session->m_pimpl->get_request( );
+                     const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
+                     const auto data = make_shared< Bytes >( data_ptr, data_ptr + length );
+                     this->m_buffer->consume( length );
+
+                     const auto request = this->m_session->m_pimpl->get_request( );
+                     auto body = request->m_pimpl->get_body( );
+
+                     if ( body == nullptr )
+                     {
+                         request->m_pimpl->set_body( data );
+                     }
+                     else
+                     {
+                         body->insert( body->end( ), data->begin( ), data->end( ) );
+                         request->m_pimpl->set_body( body );
+                     }
+                     
+                     callback( m_session, data );
+                 } );
+            }
+            else
+            {
+                const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
+                const auto data = make_shared< Bytes >( data_ptr, data_ptr + length );
+                m_buffer->consume( length );
+
+                const auto request = m_session->m_pimpl->get_request( );
                 auto body = request->m_pimpl->get_body( );
 
                 if ( body == nullptr )
@@ -188,13 +213,11 @@ namespace restbed
                 }
 
                 callback( m_session, data );
-            } );
+            }
         }
 
-        void SessionImpl::fetch( const std::string& delimiter, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+        void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
         {
-            m_buffer = make_shared< asio::streambuf >( ); //pass as argument!
-
             asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code& error,
                                                                                          std::size_t bytes_transferred ) //const bytes_trans..?
              {
@@ -202,6 +225,7 @@ namespace restbed
 
                  const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
                  const auto data = make_shared< Bytes >( data_ptr, data_ptr + bytes_transferred );
+                 m_buffer->consume( bytes_transferred );
 
                  const auto request = this->m_session->m_pimpl->get_request( );
                  auto body = request->m_pimpl->get_body( );
@@ -229,7 +253,7 @@ namespace restbed
                 m_callback = callback;
             }
 
-            m_buffer = make_shared< asio::streambuf >( ); //pass as argument!
+            m_buffer = make_shared< asio::streambuf >( );
 
             asio::async_read_until( *m_socket,
                                     *m_buffer,

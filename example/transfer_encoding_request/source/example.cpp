@@ -59,18 +59,18 @@ void post_method_handler( const shared_ptr< Session >& session )
 
 void read_chunk_size( const shared_ptr< Session >& session, const shared_ptr< Bytes >& data )
 {
-    fprintf ( stderr, "chunk size read caled\n" );
+    fprintf ( stderr, "chunk size read called\n" );
 
     if ( data not_eq nullptr and not data->empty( ) )
     {
         string length( data->begin( ), data->end( ) );
+        fprintf( stderr, "Data length: '%s'", length.data( ) );
 
-        fprintf( stderr, "Data length: %s\n", length.data( ) );
-
-        const auto chunk_size = stoul( length, nullptr, 16 );
-
-        if ( chunk_size not_eq 0 )
+        if ( length not_eq "0\r\n" )
         {
+            const auto chunk_size = stoul( length, nullptr, 16 ) + strlen( "\r\n" );
+            fprintf( stderr, "Chunk size: %lu\n", chunk_size );
+
             session->fetch( chunk_size, &read_chunk );
             return;
         }
@@ -85,7 +85,7 @@ void read_chunk_size( const shared_ptr< Session >& session, const shared_ptr< By
 
 void read_chunk( const shared_ptr< Session >& session, const shared_ptr< Bytes >& data )
 {
-    fprintf( stdout, "Partial body chunk: %lu bytes", data->size( ) );
+    fprintf( stdout, "Partial body chunk: %lu bytes\n", data->size( ) );
 
     //if expect header yield
 
