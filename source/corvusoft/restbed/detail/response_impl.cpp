@@ -5,7 +5,7 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/status_message.h"
+//#include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/detail/response_impl.h"
 
 //External Includes
@@ -82,12 +82,12 @@ namespace restbed
         {
             string message = m_status_message;
 
-            if ( message.empty( ) )
-            {
-                message = ( status_message.count( m_status_code ) ) ?
-                            status_message.at( m_status_code ) :
-                            status_message.at( 999 );
-            }
+//            if ( message.empty( ) )
+//            {
+//                message = ( status_message.count( m_status_code ) ) ?
+//                            status_message.at( m_status_code ) :
+//                            status_message.at( 999 );
+//            }
 
             return message;
         }

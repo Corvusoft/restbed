@@ -12,7 +12,7 @@
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
-#include "corvusoft/restbed/status_message.h"
+#include "corvusoft/restbed/detail/status_messages_impl.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
 
@@ -64,7 +64,8 @@ namespace restbed
             m_buffer( nullptr ),
             m_socket( nullptr ),
             m_callback( nullptr ),
-            m_default_headers( )
+            m_default_headers( ),
+            m_status_messages( m_status_messages )
         {
             return;
         }
@@ -94,7 +95,7 @@ namespace restbed
         {
             m_is_closed = true;
 
-            const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
+            const auto message = ( m_status_messages.count( status ) ) ? m_status_messages.at( status ) : m_status_messages.at( 0 );
 
             auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
 
@@ -127,7 +128,7 @@ namespace restbed
 
         void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers )
         {
-            const auto message = ( status_message.count( status ) ) ? status_message.at( status ) : status_message.at( 999 );
+            const auto message = ( m_status_messages.count( status ) ) ? m_status_messages.at( status ) : m_status_messages.at( 0 );
 
             auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
 
@@ -289,6 +290,11 @@ namespace restbed
         void SessionImpl::set_resource( const std::shared_ptr< Resource >& value )
         {
             m_resource = value;
+        }
+
+        void SessionImpl::set_status_messages( const map< int, string >& values )
+        {
+            m_status_messages = values;
         }
 
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )

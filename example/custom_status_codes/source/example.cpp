@@ -12,8 +12,6 @@ void get_method_handler( const shared_ptr< Session >& session )
 
 int main( const int, const char** )
 {
-    status_message[ 418 ] = "I'm a teapot";
-
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
     resource->set_method_handler( "GET", &get_method_handler );
@@ -24,6 +22,7 @@ int main( const int, const char** )
     
     Service service;
     service.publish( resource );
+    service.set_status_message( 418, "I'm a teapot" ); //move this to settings! stops copy
     service.start( settings );
     
     return EXIT_SUCCESS;

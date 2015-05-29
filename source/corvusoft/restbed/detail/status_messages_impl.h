@@ -2,8 +2,8 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#ifndef _RESTBED_STATUS_MESSAGE_H
-#define _RESTBED_STATUS_MESSAGE_H 1
+#ifndef _RESTBED_STATUS_MESSAGES_IMPL_H
+#define _RESTBED_STATUS_MESSAGES_IMPL_H 1
 
 //System Includes
 #include <map>
@@ -23,7 +23,8 @@ namespace restbed
 {
     //Forward Declarations
     
-    static std::map< int, std::string > status_message {
+    static std::map< int, std::string > status_messages {
+        { 0, "No Appropriate Status Message Found" },
         { 100, "Continue" },
         { 101, "Switching Protocols" },
         { 102, "Processing" },
@@ -81,9 +82,8 @@ namespace restbed
         { 507, "Insufficient Storage" },
         { 508, "Loop Detected" },
         { 510, "Not Extended" },
-        { 511, "Network Authentication Required" },
-        { 999, "No Appropriate Status Message Found" }
+        { 511, "Network Authentication Required" }
     };
 }
 
-#endif  /* _RESTBED_STATUS_MESSAGE_H */
+#endif  /* _RESTBED_STATUS_MESSAGES_IMPL_H */

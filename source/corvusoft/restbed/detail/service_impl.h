@@ -7,6 +7,7 @@
 
 //System Includes
 #include <set>
+#include <map>
 #include <memory>
 #include <string>
 #include <functional>
@@ -58,8 +59,15 @@ namespace restbed
                 void suppress( const std::shared_ptr< Resource >& resource ); //hmm suppress( string path );
                 
                 //Getters
-                
+                std::string get_status_message( const int code ) const;
+
+                std::map< int, std::string > get_status_messages( void ) const;
+
                 //Setters
+                void set_status_message( const int code, const std::string& message );
+
+                void set_status_messages( const std::map< int, std::string >& values );
+
                 void set_default_header( const std::string& name, const std::string& value );
 
                 void set_logger( const std::shared_ptr< Logger >& value );
@@ -157,6 +165,8 @@ namespace restbed
                 std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
                 
                 std::function< void ( const int, const std::shared_ptr< Session >& ) > m_error_handler;
+
+                std::map< int, std::string > m_status_messages; //hate all this copying
         };
     }
 }
