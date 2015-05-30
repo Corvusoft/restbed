@@ -161,7 +161,7 @@ namespace restbed
             
         protected:
             //Friends
-            
+
             //Definitions
             
             //Constructors
@@ -175,13 +175,12 @@ namespace restbed
             //Operators
             
             //Properties
-            std::unique_ptr< detail::RequestImpl > m_pimpl;
             
         private:
             //Friends
             friend detail::ServiceImpl;
             friend detail::SessionImpl;
-            
+
             //Definitions
             
             //Constructors
@@ -194,9 +193,10 @@ namespace restbed
             //Setters
             
             //Operators
-            
-            //Properties
             Request& operator =( const Request& value ) = delete;
+
+            //Properties
+            std::unique_ptr< detail::RequestImpl > m_pimpl;
     };
 }
 

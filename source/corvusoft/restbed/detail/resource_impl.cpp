@@ -11,7 +11,6 @@
 
 //External Includes
 #include <corvusoft/framework/string>
-#include <corvusoft/framework/unique_id>
 
 //System Namespaces
 using std::set;
@@ -35,8 +34,8 @@ namespace restbed
             m_methods( ),
             m_default_headers( ),
             m_authentication_handler( nullptr ),
-            m_method_handlers( ),
-            m_failed_filter_validation_handler( nullptr )
+            m_failed_filter_validation_handler( nullptr ),
+            m_method_handlers( )
         {
             return;
         }
@@ -69,13 +68,17 @@ namespace restbed
             return m_methods;
         }
 
+        const multimap< string, string >& ResourceImpl::get_default_headers( void ) const
+        {
+            return m_default_headers;
+        }
+
         const function< void ( const shared_ptr< Session >& ) >& ResourceImpl::get_failed_filter_validation_handler( void ) const
         {
             return m_failed_filter_validation_handler;
         }
 
-        multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > >
-        ResourceImpl::get_method_handlers( const string& method ) const
+        multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > > ResourceImpl::get_method_handlers( const string& method ) const
         {
             if ( method.empty( ) )
             {
@@ -84,11 +87,6 @@ namespace restbed
 
             return decltype( m_method_handlers )( m_method_handlers.lower_bound( method ),
                                                   m_method_handlers.upper_bound( method ) );
-        }
-
-        multimap< string, string > ResourceImpl::get_default_headers( void ) const
-        {
-            return m_default_headers;
         }
 
         void ResourceImpl::set_paths( const set< string >& values )
@@ -105,21 +103,6 @@ namespace restbed
         {
             m_default_headers = values;
         }
-        
-        void ResourceImpl::set_method_handler( const string& method,
-                                               const multimap< string, string >& filters,
-                                               const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            if ( method.empty( ) )
-            {
-                throw invalid_argument( "Attempt to set resource method handler to an empty protocol method." );
-            }
-
-            const string verb = String::uppercase( method );
-            m_methods.insert( verb );
-
-            m_method_handlers.insert( make_pair( verb, make_pair( filters, callback ) ) );
-        }
 
         void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
@@ -134,6 +117,19 @@ namespace restbed
         void ResourceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
             m_failed_filter_validation_handler = value;
+        }
+        
+        void ResourceImpl::set_method_handler( const string& method,
+                                               const multimap< string, string >& filters,
+                                               const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            if ( method.empty( ) )
+            {
+                throw invalid_argument( "Attempt to set resource handler to an empty protocol method." );
+            }
+
+            m_methods.insert( method );
+            m_method_handlers.insert( make_pair( method, make_pair( filters, callback ) ) );
         }
     }
 }

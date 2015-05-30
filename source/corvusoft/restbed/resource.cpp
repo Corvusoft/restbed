@@ -13,7 +13,6 @@
 
 //System Namespaces
 using std::set;
-using std::pair;
 using std::string;
 using std::multimap;
 using std::function;
@@ -36,29 +35,6 @@ namespace restbed
         return;
     }
 
-    set< string > Resource::get_paths( void ) const
-    {
-        return m_pimpl->get_paths( );
-    }
-
-    function< void ( const shared_ptr< Session >& ) > Resource::get_failed_filter_validation_handler( void ) const
-    {
-        return m_pimpl->get_failed_filter_validation_handler( );
-    }
-    
-    multimap< string,
-              pair< multimap< string, string >,
-              function< void ( const shared_ptr< Session >& ) > > >
-    Resource::get_method_handlers( const string& method ) const
-    {
-        return m_pimpl->get_method_handlers( method );
-    }
-
-    multimap< string, string > Resource::get_default_headers( void ) const
-    {
-        return m_pimpl->get_default_headers( );
-    }
-
     void Resource::set_path( const string& value )
     {
         m_pimpl->set_paths( { value } );
@@ -79,6 +55,21 @@ namespace restbed
         m_pimpl->set_default_headers( values );
     }
 
+    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_authentication_handler( value );
+    }
+
+    void Resource::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_error_handler( value );
+    }
+
+    void Resource::set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_failed_filter_validation_handler( value );
+    }
+
     void Resource::set_method_handler( const string& method,
                                        const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
     {
@@ -91,20 +82,5 @@ namespace restbed
                                        const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->set_method_handler( method, filters, callback );
-    }
-
-    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
-    {
-        m_pimpl->set_authentication_handler( value );
-    }
-    
-    void Resource::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
-    {
-        m_pimpl->set_error_handler( value );
-    }
-
-    void Resource::set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value )
-    {
-        m_pimpl->set_failed_filter_validation_handler( value );
     }
 }

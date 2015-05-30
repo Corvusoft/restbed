@@ -10,13 +10,11 @@
 #include <set>
 #include <memory>
 #include <string>
-#include <utility>
 #include <functional>
 
 //Project Includes
 
 //External Includes
-#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -31,6 +29,7 @@ namespace restbed
     
     namespace detail
     {
+        class SessionImpl;
         class ServiceImpl;
         class ResourceImpl;
     }
@@ -50,16 +49,6 @@ namespace restbed
             //Functionality
             
             //Getters
-            std::set< std::string > get_paths( void ) const;
-
-            std::function< void ( const std::shared_ptr< Session >& ) > get_failed_filter_validation_handler( void ) const;
-
-            std::multimap< std::string,
-                           std::pair< std::multimap< std::string, std::string >,
-                                      std::function< void ( const std::shared_ptr< Session >& ) > > >
-            get_method_handlers( const std::string& method = framework::String::empty ) const;
-
-            std::multimap< std::string, std::string > get_default_headers( void ) const;
 
             //Setters
             void set_path( const std::string& value );
@@ -70,18 +59,15 @@ namespace restbed
 
             void set_default_headers( const std::multimap< std::string, std::string >& values );
 
-            void set_method_handler( const std::string& method,
-                                     const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
-            void set_method_handler( const std::string& method,
-                                     const std::multimap< std::string, std::string >& filters,
-                                     const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-                
+
             void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
 
             void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_method_handler( const std::string& method, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+            void set_method_handler( const std::string& method, const std::multimap< std::string, std::string >& filters, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             
             //Operators
             
@@ -89,7 +75,6 @@ namespace restbed
             
         protected:
             //Friends
-            friend detail::ServiceImpl;
             
             //Definitions
             
@@ -107,6 +92,8 @@ namespace restbed
             
         private:
             //Friends
+            friend detail::SessionImpl;
+            friend detail::ServiceImpl;
             
             //Definitions
             

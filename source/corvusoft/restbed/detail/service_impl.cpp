@@ -147,7 +147,7 @@ namespace restbed
                 return;
             }
 
-            const auto paths = resource->get_paths( );
+            const auto paths = resource->m_pimpl->get_paths( );
 
             if ( not has_unique_paths( paths ) )
             {
@@ -176,7 +176,7 @@ namespace restbed
                 return;
             }
 
-            for ( const auto& path : resource->get_paths( ) )
+            for ( const auto& path : resource->m_pimpl->get_paths( ) )
             {
                 if ( m_resource_routes.erase( path ) )
                 {
@@ -226,7 +226,7 @@ namespace restbed
             const auto resource = session->get_resource( );
 
             function< void ( const std::shared_ptr< Session >& ) > method_handler = nullptr;
-            const auto method_handlers = resource->get_method_handlers( request->get_method( ) );
+            const auto method_handlers = resource->m_pimpl->get_method_handlers( request->get_method( ) );
 
             bool filter_validation_failed = false;
 
@@ -259,7 +259,7 @@ namespace restbed
 
             if ( filter_validation_failed )
             {
-                auto handler = resource->get_failed_filter_validation_handler( );
+                auto handler = resource->m_pimpl->get_failed_filter_validation_handler( );
                 method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
             }
             else if ( method_handler == nullptr )

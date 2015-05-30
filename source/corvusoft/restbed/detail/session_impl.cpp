@@ -6,7 +6,6 @@
 #include <regex>
 #include <utility>
 #include <stdexcept>
-#include <iostream> //debug
 
 //Project Includes
 #include "corvusoft/restbed/session.h"
@@ -16,6 +15,7 @@
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/detail/resource_impl.h"
 
 //External Includes
 #include <corvusoft/framework/uri>
@@ -339,7 +339,7 @@ namespace restbed
 
             if ( m_resource not_eq nullptr )
             {
-                const auto headers = m_resource->get_default_headers( );
+                const auto headers = m_resource->m_pimpl->get_default_headers( );
                 default_headers.insert( headers.begin( ), headers.end( ) );
             }
 
