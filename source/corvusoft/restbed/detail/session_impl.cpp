@@ -59,13 +59,16 @@ namespace restbed
     {
         SessionImpl::SessionImpl( void ) : m_is_closed( false ),
             m_id( String::empty ),
+            m_origin( String::empty ),
+            m_destination( String::empty ),
             m_session( nullptr ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
             m_buffer( nullptr ),
             m_socket( nullptr ),
-            m_callback( nullptr ) //router
+            m_headers( ),
+            m_router( nullptr )
         {
             return;
         }
@@ -83,6 +86,12 @@ namespace restbed
         bool SessionImpl::is_closed( void ) const
         {
             return ( m_is_closed or m_socket == nullptr or not m_socket->is_open( ) );
+        }
+
+        void SessionImpl::purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+        {
+            close( );
+            //m_session_manager->purge( m_session, callback );
         }
 
         void SessionImpl::close( void )
@@ -115,9 +124,10 @@ namespace restbed
             response.set_headers( headers );
             response.set_status_code( status );
 
-            transmit( response, [ ]( const asio::error_code& error, size_t bytes_transferred )
+            transmit( response, [ this ]( const asio::error_code& error, size_t bytes_transferred )
             {
                 //if error -> log
+                this->fetch( this->m_session, this->m_router );
             } );
         }
 
@@ -211,10 +221,10 @@ namespace restbed
         void SessionImpl::fetch( const shared_ptr< Session >& session,
                                  const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            if ( m_callback == nullptr and m_session == nullptr )
+            if ( m_router == nullptr and m_session == nullptr )
             {
                 m_session = session;
-                m_callback = callback;
+                m_router = callback;
             }
 
             m_buffer = make_shared< asio::streambuf >( );
@@ -240,9 +250,34 @@ namespace restbed
             return m_resource;
         }
 
+        const multimap< string, string >& SessionImpl::get_headers( void ) const
+        {
+            return m_headers;
+        }
+
         void SessionImpl::set_id( const string& value )
         {
             m_id = value;
+        }
+
+        void SessionImpl::set_origin( const string& value )
+        {
+            m_origin = value;
+        }
+
+        void SessionImpl::set_destination( const string& value )
+        {
+            m_destination = value;
+        }
+
+        const string& SessionImpl::get_origin( void ) const
+        {
+            return m_origin;
+        }
+
+        const string& SessionImpl::get_destination( void ) const
+        {
+            return m_destination;
         }
 
         void SessionImpl::set_request( const shared_ptr< Request >& value )
@@ -263,6 +298,16 @@ namespace restbed
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
         {
             m_socket = value;
+        }
+
+        void SessionImpl::set_header( const string& name, const string& value )
+        {
+            m_headers.insert( make_pair( name, value ) );
+        }
+
+        void SessionImpl::set_headers( const multimap< string, string >& values )
+        {
+            m_headers = values;
         }
 
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
@@ -335,17 +380,19 @@ namespace restbed
 
         void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
         {
-            auto default_headers = m_settings->get_default_headers( );
+            auto headers = m_settings->get_default_headers( );
 
             if ( m_resource not_eq nullptr )
             {
-                const auto headers = m_resource->m_pimpl->get_default_headers( );
-                default_headers.insert( headers.begin( ), headers.end( ) );
+                const auto hdrs = m_resource->m_pimpl->get_default_headers( );
+                headers.insert( hdrs.begin( ), hdrs.end( ) );
             }
 
-            auto headers = response.get_headers( );
-            headers.insert( default_headers.begin( ), default_headers.end( ) );
-            response.set_headers( headers );
+            auto hdrs = m_session->get_headers( );
+            headers.insert( hdrs.begin( ), hdrs.end( ) );
+
+            hdrs = response.get_headers( );
+            headers.insert( hdrs.begin( ), hdrs.end( ) );
 
             if ( response.get_status_message( ) == String::empty )
             {
@@ -353,9 +400,7 @@ namespace restbed
             }
 
             const auto data = response.to_bytes( );
-
-            auto socket = m_socket;
-            asio::async_write( *socket, asio::buffer( data, data.size( ) ), callback );
+            asio::async_write( *m_socket, asio::buffer( data, data.size( ) ), callback );
         }
     }
 }

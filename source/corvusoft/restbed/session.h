@@ -53,6 +53,8 @@ namespace restbed
 
             bool is_closed( void ) const;
 
+            void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+
             void close( void );
 
             void close( const int status, const std::string& body = framework::String::empty );
@@ -69,22 +71,27 @@ namespace restbed
 
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-            void fetch( const std::size_t length,
-                        const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
+            void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
-            void fetch( const std::string& delimiter,
-                        const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
+            void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
             //Getters
             const std::string& get_id( void ) const;
+
+            const std::string& get_origin( void ) const;
+
+            const std::string& get_destination( void ) const;
 
             const std::shared_ptr< const Request > get_request(  void ) const;
 
             const std::shared_ptr< const Resource > get_resource( void ) const;
 
+            const std::multimap< std::string, std::string >& get_headers( void ) const;
+
             //Setters
-        //set_default_header
-        //set_deafult_headers
+            void set_header( const std::string& name, const std::string& value );
+
+            void set_headers( const std::multimap< std::string, std::string >& values );
             
             //Operators
             

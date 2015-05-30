@@ -28,3 +28,10 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[service]" )
 
     REQUIRE_NOTHROW( delete service );
 }
+
+TEST_CASE( "confirm calling stop before start throws no exceptions", "[service]" )
+{
+    Service service;
+
+    REQUIRE_NOTHROW( service.stop( ) );
+}

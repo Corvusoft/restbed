@@ -54,7 +54,9 @@ namespace restbed
 
                 bool is_closed( void ) const;
 
-                void close( void ); //callbacks on close and yeild so you can purge the session for example
+                void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void close( void );
 
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
@@ -62,23 +64,31 @@ namespace restbed
 
                 void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-                void fetch( const std::size_t length,
-                            const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
+                void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
-                void fetch( const std::string& delimiter,
-                            const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
+                void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const std::shared_ptr< framework::Bytes >& ) >& callback );
 
                 void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 //Getters
                 const std::string& get_id( void ) const;
 
+                const std::string& get_origin( void ) const;
+
+                const std::string& get_destination( void ) const;
+
                 const std::shared_ptr< const Request >& get_request( void ) const;
 
                 const std::shared_ptr< const Resource >& get_resource( void ) const;
 
+                const std::multimap< std::string, std::string >& get_headers( void ) const;
+
                 //Setters
                 void set_id( const std::string& value );
+
+                void set_origin( const std::string& value );
+
+                void set_destination( const std::string& value );
 
                 void set_request( const std::shared_ptr< Request >& value );
 
@@ -87,7 +97,11 @@ namespace restbed
                 void set_settings( const std::shared_ptr< Settings >& value );
 
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
-                
+
+                void set_header( const std::string& name, const std::string& value );
+
+                void set_headers( const std::multimap< std::string, std::string >& values );
+
                 //Operators
                 
                 //Properties
@@ -139,6 +153,10 @@ namespace restbed
 
                 std::string m_id;
 
+                std::string m_origin;
+
+                std::string m_destination;
+
                 std::shared_ptr< Session > m_session;
 
                 std::shared_ptr< Request > m_request;
@@ -149,11 +167,11 @@ namespace restbed
 
                 std::shared_ptr< asio::streambuf > m_buffer;
 
-                std::function< void ( const std::shared_ptr< Session >& ) > m_callback;
-
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
 
-                std::multimap< std::string, std::string > m_default_headers;
+                std::multimap< std::string, std::string > m_headers;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_router;
         };
     }
 }

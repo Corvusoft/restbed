@@ -45,6 +45,11 @@ namespace restbed
         return m_pimpl->is_closed( );
     }
 
+    void Session::purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->purge( callback );
+    }
+
     void Session::close( void )
     {
         m_pimpl->close( );
@@ -102,6 +107,16 @@ namespace restbed
         return m_pimpl->get_id( );
     }
 
+    const string& Session::get_origin( void ) const
+    {
+        return m_pimpl->get_origin( );
+    }
+
+    const string& Session::get_destination( void ) const
+    {
+        return m_pimpl->get_destination( );
+    }
+
     const shared_ptr< const Request > Session::get_request(  void ) const
     {
         return m_pimpl->get_request( );
@@ -110,5 +125,20 @@ namespace restbed
     const shared_ptr< const Resource > Session::get_resource(  void ) const
     {
         return m_pimpl->get_resource( );
+    }
+
+    const multimap< string, string >& Session::get_headers( void ) const
+    {
+        return m_pimpl->get_headers( );
+    }
+
+    void Session::set_header( const string& name, const string& value )
+    {
+        m_pimpl->set_header( name, value );
+    }
+
+    void Session::set_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->set_headers( values );
     }
 }
