@@ -16,6 +16,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::multimap;
 using std::chrono::seconds;
 
 //Project Namespaces
@@ -23,154 +24,236 @@ using restbed::Settings;
 
 //External Namespaces
 
-SCENARIO( "constructor", "[settings]" )
+TEST_CASE( "validate default instance values", "[settings]" )
 {
-    GIVEN( "i want to instantiate default settings" )
-    {
-        Settings settings;
+    const Settings settings;
 
-        WHEN( "i construct the object" )
-        {
-            THEN( "i should see default properties" )
-            {
-                REQUIRE( settings.get_port( ) == 80 );
-                REQUIRE( settings.get_root( ) == "/" );
-                REQUIRE( settings.get_maximum_connections( ) == 1024 );
-                REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
-            }
-        }
-    }
+    REQUIRE( settings.get_port( ) == 80 );
+    REQUIRE( settings.get_root( ) == "/" );
+    REQUIRE( settings.get_properties( ).empty( ) );
+    REQUIRE( settings.get_connection_limit( ) == 128 );
+    REQUIRE( settings.get_default_headers( ).empty( ) );
+    REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
+
+    map< int, string > expectation = {
+        { 0, "No Appropriate Status Message Found" },
+        { 100, "Continue" },
+        { 101, "Switching Protocols" },
+        { 102, "Processing" },
+        { 200, "OK" },
+        { 201, "Created" },
+        { 202, "Accepted" },
+        { 203, "Non-Authoritative Information" },
+        { 204, "No Content" },
+        { 205, "Reset Content" },
+        { 206, "Partial Content" },
+        { 207, "Multi-Status" },
+        { 208, "Already Reported" },
+        { 226, "IM Used" },
+        { 300, "Multiple Choices" },
+        { 301, "Moved Permanently" },
+        { 302, "Found" },
+        { 303, "See Other" },
+        { 304, "Not Modified" },
+        { 305, "Use Proxy" },
+        { 306, "Reserved" },
+        { 307, "Temporary Redirect" },
+        { 308, "Permanent Redirect" },
+        { 400, "Bad Request" },
+        { 401, "Unauthorized" },
+        { 402, "Payment Required" },
+        { 403, "Forbidden" },
+        { 404, "Not Found" },
+        { 405, "Method Not Allowed" },
+        { 406, "Not Acceptable" },
+        { 407, "Proxy Authentication Required" },
+        { 408, "Request Timeout" },
+        { 409, "Conflict" },
+        { 410, "Gone" },
+        { 411, "Length Required" },
+        { 412, "Precondition Failed" },
+        { 413, "Request Entity Too Large" },
+        { 414, "Request URI Too Long" },
+        { 415, "Unsupported Media Type" },
+        { 416, "Requested Range Not Satisfiable" },
+        { 417, "Expectation Failed" },
+        { 422, "Unprocessable Entity" },
+        { 423, "Locked" },
+        { 424, "Failed Dependency" },
+        { 426, "Upgrade Required" },
+        { 428, "Precondition Required" },
+        { 429, "Too Many Requests" },
+        { 431, "Request Header Fields Too Large" },
+        { 500, "Internal Server Error" },
+        { 501, "Not Implemented" },
+        { 502, "Bad Gateway" },
+        { 503, "Service Unavailable" },
+        { 504, "Gateway Timeout" },
+        { 505, "HTTP Version Not Supported" },
+        { 506, "Variant Also Negotiates" },
+        { 507, "Insufficient Storage" },
+        { 508, "Loop Detected" },
+        { 510, "Not Extended" },
+        { 511, "Network Authentication Required" }
+    };
+
+    REQUIRE( settings.get_status_messages( ) == expectation );
 }
 
-SCENARIO( "copy constructor", "[settings]" )
+TEST_CASE( "confirm default destructor throws no exceptions", "[settings]" )
 {
-    GIVEN( "i want to copy existing settings" )
-    {
-        Settings settings;
-        settings.set_port( 33 );
-        settings.set_root( "/events" );
-        settings.set_maximum_connections( 30 );
-        settings.set_property( "name", "value" );
-        settings.set_connection_timeout( seconds( 15 ) );
+    auto settings = new Settings;
 
-        WHEN( "i instantiate the object with the copy-constructor" )
-        {
-            Settings copy( settings );
-
-            THEN( "i should see the same properties" )
-            {
-                REQUIRE( settings.get_port( ) == 33 );
-                REQUIRE( settings.get_root( ) == "/events" );
-                REQUIRE( settings.get_maximum_connections( ) == 30 );
-                REQUIRE( settings.get_connection_timeout( ) == seconds( 15 ) );
-                REQUIRE( settings.get_property( "name" ) == "value" );
-            }
-        }
-    }
+    REQUIRE_NOTHROW( delete settings );
 }
 
-SCENARIO( "destructor", "[settings]" )
+TEST_CASE( "validate setters modify default values", "[settings]" )
 {
-    GIVEN( "i instantiate a new object" )
-    {
-        Settings* settings = new Settings( );
+    Settings settings;
+    settings.set_port( 1984 );
+    settings.set_root( "/resources" );
+    settings.set_connection_limit( 1 );
+    settings.set_connection_timeout( seconds( 30 ) );
+    settings.set_properties( { { "name", "value" } } );
+    settings.set_default_headers( { { "Connection", "close" } } );
 
-        WHEN( "i deallocate the object" )
-        {
-            THEN( "i should not see any exceptions" )
-            {
-                REQUIRE_NOTHROW( delete settings );
-            }
-        }
-    }
+    REQUIRE( settings.get_port( ) == 1984 );
+    REQUIRE( settings.get_root( ) == "/resources" );
+    REQUIRE( settings.get_connection_limit( ) == 1 );
+    REQUIRE( settings.get_connection_timeout( ) == seconds( 30 ) );
+
+    map< string, string > properties_expectation = { { "name", "value" } };
+    REQUIRE( settings.get_properties( ) == properties_expectation );
+
+    multimap< string, string > headers_expectation = { { "Connection", "close" } };
+    REQUIRE( settings.get_default_headers( ) == headers_expectation );
 }
 
-SCENARIO( "assignment-operator", "[settings]" )
+TEST_CASE( "manipulating status messages", "[settings]" )
 {
-    GIVEN( "i want to copy existing settings" )
+    Settings settings;
+    settings.set_status_message( 418, "I'm a teapot" );
+
+    SECTION( "read individual status message from valid status code" )
     {
-        Settings settings;
-        settings.set_port( 33 );
-        settings.set_root( "/events" );
-        settings.set_maximum_connections( 23 );
-        settings.set_property( "name", "value" );
-        settings.set_connection_timeout( seconds( 15 ) );
-
-        WHEN( "i instantiate the object with the assignment-operator" )
-        {
-            Settings copy = settings;
-
-            THEN( "i should see the same properties" )
-            {
-                REQUIRE( settings.get_port( ) == 33 );
-                REQUIRE( settings.get_root( ) == "/events" );
-                REQUIRE( settings.get_maximum_connections( ) == 23 );
-                REQUIRE( settings.get_property( "name" ) == "value" );
-                REQUIRE( settings.get_connection_timeout( ) == seconds( 15 ) );
-            }
-        }
+        REQUIRE( settings.get_status_message( 418 ) == "I'm a teapot" );
     }
-}
 
-SCENARIO( "overwrite properties", "[settings]" )
-{
-    GIVEN( "i want to overwrite all properties" )
+    SECTION( "read individual status message from invalid status code" )
     {
-        map< string, string > values =
-        {
-            { "ROOT", "/" },
-            { "MODE", "8" },
-            { "PORT", "80" },
-            { "CONNECTION TIMEOUT", "10" },
-            { "MAXIMUM CONNECTIONS", "1024" },
-            { "VOYAGER 1", "124 AU" },
-            { "VOYAGER 2", "101 AU" }
+        REQUIRE( settings.get_status_message( -2 ) == "No Appropriate Status Message Found" );
+    }
+
+    SECTION( "read individual status message from unknown status code" )
+    {
+        REQUIRE( settings.get_status_message( 888 ) == "No Appropriate Status Message Found" );
+    }
+
+    SECTION( "read all status messages" )
+    {
+        map< int, string > expectation = {
+            { 0, "No Appropriate Status Message Found" },
+            { 100, "Continue" },
+            { 101, "Switching Protocols" },
+            { 102, "Processing" },
+            { 200, "OK" },
+            { 201, "Created" },
+            { 202, "Accepted" },
+            { 203, "Non-Authoritative Information" },
+            { 204, "No Content" },
+            { 205, "Reset Content" },
+            { 206, "Partial Content" },
+            { 207, "Multi-Status" },
+            { 208, "Already Reported" },
+            { 226, "IM Used" },
+            { 300, "Multiple Choices" },
+            { 301, "Moved Permanently" },
+            { 302, "Found" },
+            { 303, "See Other" },
+            { 304, "Not Modified" },
+            { 305, "Use Proxy" },
+            { 306, "Reserved" },
+            { 307, "Temporary Redirect" },
+            { 308, "Permanent Redirect" },
+            { 400, "Bad Request" },
+            { 401, "Unauthorized" },
+            { 402, "Payment Required" },
+            { 403, "Forbidden" },
+            { 404, "Not Found" },
+            { 405, "Method Not Allowed" },
+            { 406, "Not Acceptable" },
+            { 407, "Proxy Authentication Required" },
+            { 408, "Request Timeout" },
+            { 409, "Conflict" },
+            { 410, "Gone" },
+            { 411, "Length Required" },
+            { 412, "Precondition Failed" },
+            { 413, "Request Entity Too Large" },
+            { 414, "Request URI Too Long" },
+            { 415, "Unsupported Media Type" },
+            { 416, "Requested Range Not Satisfiable" },
+            { 417, "Expectation Failed" },
+            { 418, "I'm a teapot" },
+            { 422, "Unprocessable Entity" },
+            { 423, "Locked" },
+            { 424, "Failed Dependency" },
+            { 426, "Upgrade Required" },
+            { 428, "Precondition Required" },
+            { 429, "Too Many Requests" },
+            { 431, "Request Header Fields Too Large" },
+            { 500, "Internal Server Error" },
+            { 501, "Not Implemented" },
+            { 502, "Bad Gateway" },
+            { 503, "Service Unavailable" },
+            { 504, "Gateway Timeout" },
+            { 505, "HTTP Version Not Supported" },
+            { 506, "Variant Also Negotiates" },
+            { 507, "Insufficient Storage" },
+            { 508, "Loop Detected" },
+            { 510, "Not Extended" },
+            { 511, "Network Authentication Required" }
         };
 
-        Settings settings;
-        settings.set_properties( values );
-
-        WHEN( "i instantiate the object with the assignment-operator" )
-        {
-            Settings copy = settings;
-
-            THEN( "i should see the same properties" )
-            {
-                REQUIRE( settings.get_properties( ) == values );
-            }
-        }
+        REQUIRE( settings.get_status_messages( ) == expectation );
     }
 }
 
-SCENARIO( "property case sensitivity", "[response]" )
+TEST_CASE( "manipulation generic properties", "[settings]" )
 {
-    GIVEN( "i want to read settings property 'port'" )
-    {
-        Settings settings;
-        settings.set_port( 343 );
+    Settings settings;
+    settings.set_property( "security-seed", "de305d54-75b4-431b-adb2-eb6b9e546014" );
 
-        WHEN( "i invoke get_property with 'PoRt'" )
-        {
-            THEN( "i should see '343'" )
-            {
-                REQUIRE( settings.get_property( "PoRt" ) == "343" );
-            }
-        }
+    SECTION( "read individual property from valid name" )
+    {
+        REQUIRE( settings.get_property( "security-seed" ) == "de305d54-75b4-431b-adb2-eb6b9e546014" );
     }
-}
 
-SCENARIO( "read non-existent property", "[response]" )
-{
-    GIVEN( "i want to read settings property 'asfadf'" )
+    SECTION( "read individual property from uppercase name" )
     {
-        Settings settings;
+        REQUIRE( settings.get_property( "SECURITY-SEED" ) == "" );
+    }
 
-        WHEN( "i invoke get_property with 'asfadf'" )
-        {
-            THEN( "i should see ''" )
-            {
-                REQUIRE( settings.get_property( "asfadf" ) == "" );
-            }
-        }
+    SECTION( "read individual property from mixedcase name" )
+    {
+        REQUIRE( settings.get_property( "SEcURiTY-SeeD" ) == "" );
+    }
+
+    SECTION( "read individual propety from invalid name" )
+    {
+        REQUIRE( settings.get_property( "" ) == "" );
+    }
+
+    SECTION( "read individual property from unknown name" )
+    {
+        REQUIRE( settings.get_property( "realm" ) == "" );
+    }
+
+    SECTION( "read all properties" )
+    {
+        map< string, string > expectation = {
+            { "security-seed", "de305d54-75b4-431b-adb2-eb6b9e546014" }
+        };
+
+        REQUIRE( settings.get_properties( ) == expectation );
     }
 }
