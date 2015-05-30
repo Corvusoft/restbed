@@ -28,9 +28,7 @@ namespace restbed
     class Session;
     class Resource;
     class Settings;
-    
-    enum Mode : int;
-    
+
     namespace detail
     {
         class ServiceImpl;
