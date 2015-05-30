@@ -330,15 +330,13 @@ namespace restbed
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
 
-                const auto headers = m_settings->get_default_headers( );
-                const auto status_messages = m_settings->get_status_messages( );
+                const auto settings = m_settings;
 
-                m_session_manager->create( [ socket, authenticate, headers, status_messages ]( const shared_ptr< Session >& session )
+                m_session_manager->create( [ socket, authenticate, settings ]( const shared_ptr< Session >& session )
                 {
                     session->m_pimpl->set_socket( socket );
                     session->m_pimpl->fetch( session, authenticate );
-                    session->m_pimpl->set_default_headers( headers );
-                    session->m_pimpl->set_status_messages( status_messages );
+                    session->m_pimpl->set_settings( settings );
                     //set socket timeout etc...
                 } );
             }

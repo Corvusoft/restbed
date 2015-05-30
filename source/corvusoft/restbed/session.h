@@ -83,6 +83,8 @@ namespace restbed
             const std::shared_ptr< const Resource > get_resource( void ) const;
 
             //Setters
+        //set_default_header
+        //set_deafult_headers
             
             //Operators
             

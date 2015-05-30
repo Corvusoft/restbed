@@ -30,6 +30,7 @@ namespace restbed
     class Request;
     class Session;
     class Resource;
+    class Settings;
     
     namespace detail
     {
@@ -106,11 +107,9 @@ namespace restbed
 
                 void set_resource( const std::shared_ptr< Resource >& value );
 
-                void set_status_messages( const std::map< int, std::string >& values );
+                void set_settings( const std::shared_ptr< Settings >& value );
 
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
-
-                void set_default_headers( const std::multimap< std::string, std::string >& values );
                 
                 //Operators
                 
@@ -166,6 +165,8 @@ namespace restbed
 
                 std::shared_ptr< Resource > m_resource;
 
+                std::shared_ptr< Settings > m_settings;
+
                 std::shared_ptr< asio::streambuf > m_buffer;
 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_callback;
@@ -173,8 +174,6 @@ namespace restbed
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
 
                 std::multimap< std::string, std::string > m_default_headers;
-
-                std::map< int, std::string > m_status_messages;  //hate all this copying
         };
     }
 }
