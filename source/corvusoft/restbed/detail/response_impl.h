@@ -12,7 +12,7 @@
 //Project Includes
 
 //External Includes
-#include <corvusoft/framework/bytes>
+#include <corvusoft/framework/byte>
 
 //System Namespaces
 

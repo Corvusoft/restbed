@@ -11,7 +11,7 @@
 
 //External Includes
 #include <catch.hpp>
-#include <corvusoft/framework/bytes>
+#include <corvusoft/framework/byte>
 
 //System Namespaces
 using std::map;

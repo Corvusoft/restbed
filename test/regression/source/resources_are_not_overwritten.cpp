@@ -46,17 +46,16 @@ Response xml_get_handler( const Request& )
 
 TEST_CASE( "overwrite existing resource", "[resource]" )
 {
-    Resource initial_resource;
-    initial_resource.set_path( "TestResource" );
-    initial_resource.set_method_handler( "GET", &json_get_handler );
+    auto initial_resource = make_shared< Resource >( );
+    initial_resource->set_path( "TestResource" );
+    initial_resource->set_method_handler( "GET", &json_get_handler );
+
+    auto secondary_resource = make_shared< Resource >( );
+    secondary_resource->set_path( "TestResource" );
+    secondary_resource->set_method_handler( "GET", &xml_get_handler );
     
-    Resource secondary_resource;
-    secondary_resource.set_path( "TestResource" );
-    secondary_resource.set_method_handler( "GET", &xml_get_handler );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
     
     m_service = make_shared< Service >( settings );
     m_service->publish( initial_resource );
@@ -78,19 +77,18 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
 
 TEST_CASE( "add alternative resource", "[resource]" )
 {
-    Resource initial_resource;
-    initial_resource.set_path( "TestResource" );
-    initial_resource.set_header_filter( "Content-Type", "application/json" );
-    initial_resource.set_method_handler( "GET", &json_get_handler );
+    auto initial_resource = make_shared< Resource >( );
+    initial_resource->set_path( "TestResource" );
+    initial_resource->set_header_filter( "Content-Type", "application/json" );
+    initial_resource->set_method_handler( "GET", &json_get_handler );
     
-    Resource secondary_resource;
-    secondary_resource.set_path( "TestResource" );
-    secondary_resource.set_header_filter( "Content-Type", "application/xml" );
-    secondary_resource.set_method_handler( "GET", &xml_get_handler );
+    auto secondary_resource = make_shared< Resource >( );
+    secondary_resource->set_path( "TestResource" );
+    secondary_resource->set_header_filter( "Content-Type", "application/xml" );
+    secondary_resource->set_method_handler( "GET", &xml_get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
     
     m_service = make_shared< Service >( settings );
     m_service->publish( initial_resource );

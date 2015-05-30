@@ -19,7 +19,6 @@
 
 //External Includes
 #include <corvusoft/framework/uri>
-#include <corvusoft/framework/byte>
 #include <corvusoft/framework/string>
 
 //System Namespaces

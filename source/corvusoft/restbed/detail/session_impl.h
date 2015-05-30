@@ -16,7 +16,7 @@
 
 //External Includes
 #include <asio.hpp>
-#include <corvusoft/framework/bytes>
+#include <corvusoft/framework/byte>
 
 //System Namespaces
 

@@ -52,7 +52,7 @@ namespace restbed
 
             data += "\r\n";
 
-            Bytes bytes( data.begin( ), data.end( ) );
+            Bytes bytes = String::to_bytes( data );
             bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
             
             return bytes;
