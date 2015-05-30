@@ -24,7 +24,6 @@
 namespace restbed
 {
     //Forward Declarations
-
     namespace detail
     {
         class SettingsImpl;

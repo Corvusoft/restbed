@@ -13,11 +13,8 @@
 
 //System Namespaces
 using std::map;
-using std::stol;
-using std::stoll;
 using std::string;
 using std::multimap;
-using std::to_string;
 using std::chrono::seconds;
 
 //Project Namespaces
@@ -29,8 +26,8 @@ namespace restbed
 {
     namespace detail
     {
-        SettingsImpl::SettingsImpl( void ) : m_root( "/" ),
-            m_port( 80 ),
+        SettingsImpl::SettingsImpl( void ) : m_port( 80 ),
+            m_root( "/" ),
             m_connection_limit( 128 ),
             m_connection_timeout( 5 ),
             m_status_messages( status_messages ),

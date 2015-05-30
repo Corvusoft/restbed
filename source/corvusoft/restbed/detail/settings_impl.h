@@ -121,9 +121,9 @@ namespace restbed
                 SettingsImpl& operator =( const SettingsImpl& value ) = delete;
                 
                 //Properties
-                std::string m_root;
-
                 uint16_t m_port;
+            
+                std::string m_root;
 
                 uint32_t m_connection_limit;
 

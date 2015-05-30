@@ -9,8 +9,9 @@
 #include <iostream> //debug
 
 //Project Includes
-#include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/session.h"
+#include "corvusoft/restbed/request.h"
+#include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/detail/request_impl.h"
@@ -64,7 +65,7 @@ namespace restbed
             m_settings( nullptr ),
             m_buffer( nullptr ),
             m_socket( nullptr ),
-            m_callback( nullptr )
+            m_callback( nullptr ) //router
         {
             return;
         }
@@ -94,67 +95,30 @@ namespace restbed
         {
             m_is_closed = true;
 
-            const auto message = m_settings->get_status_message( status );
-
-            auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
-
-            auto response_headers = m_settings->get_default_headers( );
-
-            if ( m_resource not_eq nullptr )
-            {
-                const auto resource_headers = m_resource->get_default_headers( );
-                response_headers.insert( resource_headers.begin( ), resource_headers.end( ) );
-            }
-
-            response_headers.insert( headers.begin( ), headers.end( ) );
-
-            for ( auto header : response_headers )
-            {
-                data += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
-            }
-
-            data += "\r\n" + body;
+            Response response;
+            response.set_body( body );
+            response.set_headers( headers );
+            response.set_status_code( status );
 
             auto socket = m_socket;
-            asio::async_write( *socket,
-                              asio::buffer( data, data.length( ) ),
-                              [ socket ]( const asio::error_code& error, std::size_t bytes_transferred )
-                              {
-                                  //if error -> log
-                                  socket->close( );
-                              } );
+            transmit( response, [ socket ]( const asio::error_code& error, size_t bytes_transferred )
+            {
+                //if error -> log
+                socket->close( );
+            } );
         }
 
         void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers )
         {
-            const auto message = m_settings->get_status_message( status );
+            Response response;
+            response.set_body( body );
+            response.set_headers( headers );
+            response.set_status_code( status );
 
-            auto data = String::format( "HTTP/1.1 %i %s\r\n", status, message.data( ) );
-
-            auto response_headers = m_settings->get_default_headers( );
-
-            if ( m_resource not_eq nullptr )
+            transmit( response, [ ]( const asio::error_code& error, size_t bytes_transferred )
             {
-                const auto resource_headers = m_resource->get_default_headers( );
-                response_headers.insert( resource_headers.begin( ), resource_headers.end( ) );
-            }
-
-            response_headers.insert( headers.begin( ), headers.end( ) );
-
-            for ( auto header : response_headers )
-            {
-                data += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
-            }
-
-            data += "\r\n" + body;
-
-            asio::async_write( *m_socket,
-                              asio::buffer( data, data.length( ) ),
-                              [ this ]( const asio::error_code& error, std::size_t bytes_transferred )
-                              {
-                                  //if error -> log
-                                  this->fetch( this->m_session, this->m_callback );
-                              } );
+                //if error -> log
+            } );
         }
 
         void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -367,6 +331,31 @@ namespace restbed
             session->m_pimpl->set_request( request );
 
             callback( session );
+        }
+
+        void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
+        {
+            auto default_headers = m_settings->get_default_headers( );
+
+            if ( m_resource not_eq nullptr )
+            {
+                const auto headers = m_resource->get_default_headers( );
+                default_headers.insert( headers.begin( ), headers.end( ) );
+            }
+
+            auto headers = response.get_headers( );
+            headers.insert( default_headers.begin( ), default_headers.end( ) );
+            response.set_headers( headers );
+
+            if ( response.get_status_message( ) == String::empty )
+            {
+                response.set_status_message( m_settings->get_status_message( response.get_status_code( ) ) );
+            }
+
+            const auto data = response.to_bytes( );
+
+            auto socket = m_socket;
+            asio::async_write( *socket, asio::buffer( data, data.size( ) ), callback );
         }
     }
 }

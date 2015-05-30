@@ -5,22 +5,18 @@
 //System Includes
 
 //Project Includes
-//#include "corvusoft/restbed/status_message.h"
 #include "corvusoft/restbed/detail/response_impl.h"
 
 //External Includes
-#include <corvusoft/framework/map>
 #include <corvusoft/framework/string>
 
 //System Namespaces
 using std::string;
-using std::function;
 using std::multimap;
 
 //Project Namespaces
 
 //External Namespaces
-using framework::Map;
 using framework::Bytes;
 using framework::String;
 
@@ -28,22 +24,12 @@ namespace restbed
 {
     namespace detail
     {
-        ResponseImpl::ResponseImpl( void ) : m_body( ),
-            m_body_callback( ),
-            m_version( 1.1 ),
+        ResponseImpl::ResponseImpl( void ) : m_version( 1.1 ),
             m_status_code( 200 ),
+            m_body( ),
+            m_protocol( "HTTP" ),
             m_status_message( String::empty ),
             m_headers( )
-        {
-            return;
-        }
-        
-        ResponseImpl::ResponseImpl( const ResponseImpl& original ) : m_body( original.m_body ),
-            m_body_callback( original.m_body_callback ),
-            m_version( original.m_version ),
-            m_status_code( original.m_status_code ),
-            m_status_message( original.m_status_message ),
-            m_headers( original.m_headers )
         {
             return;
         }
@@ -53,106 +39,75 @@ namespace restbed
             return;
         }
 
-        bool ResponseImpl::has_header( const string& name ) const
+        Bytes ResponseImpl::to_bytes( void ) const
         {
-            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
-        }
-        
-        Bytes ResponseImpl::get_body( void ) const
-        {
-            return m_body;
-        }
+            auto data = String::format( "%s/%.1f %i %s\r\n", m_protocol.data( ),
+                                                             m_version,
+                                                             m_status_code,
+                                                             m_status_message.data( ) );
+            for ( const auto& header : m_headers )
+            {
+                data += String::format( "%s: %s\r\n", header.first.data( ), header.second.data( ) );
+            }
 
-        function< Bytes ( void ) > ResponseImpl::get_body_callback( void ) const
-        {
-            return m_body_callback;
+            data += "\r\n";
+
+            Bytes bytes( data.begin( ), data.end( ) );
+            bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
+            
+            return bytes;
         }
 
         double ResponseImpl::get_version( void ) const
         {
             return m_version;
         }
-        
+
         int ResponseImpl::get_status_code( void ) const
         {
             return m_status_code;
         }
         
-        string ResponseImpl::get_status_message( void ) const
+        const Bytes& ResponseImpl::get_body( void ) const
         {
-            string message = m_status_message;
+            return m_body;
+        }
 
-//            if ( message.empty( ) )
-//            {
-//                message = ( status_message.count( m_status_code ) ) ?
-//                            status_message.at( m_status_code ) :
-//                            status_message.at( 999 );
-//            }
-
-            return message;
+        const string& ResponseImpl::get_protocol( void ) const
+        {
+            return m_protocol;
         }
         
-        string ResponseImpl::get_header( const string& name ) const
+        const string& ResponseImpl::get_status_message( void ) const
         {
-            string value = String::empty;
-            
-            if ( has_header( name ) )
-            {
-                const auto iterator = Map::find_ignoring_case( name, m_headers );
-                
-                value = iterator->second;
-            }
-            
-            return value;
+            return m_status_message;
         }
 
-        multimap< string, string > ResponseImpl::get_headers( void ) const
+        const multimap< string, string >& ResponseImpl::get_headers( void ) const
         {
             return m_headers;
         }
 
-        multimap< string, string > ResponseImpl::get_headers( const string& name ) const
+        void ResponseImpl::set_version( const double value )
         {
-            multimap< string, string > headers;
-
-            auto key = String::lowercase( name );
-
-            for ( auto header : m_headers )
-            {
-                if ( String::lowercase( header.first ) == key )
-                {
-                    headers.insert( header );
-                }
-            }
-
-            return headers;
+            m_version = value;
         }
 
-        void ResponseImpl::set_body( const string& value )
+        void ResponseImpl::set_status_code( const int value )
         {
-            m_body = Bytes( value.begin( ), value.end( ) );
+            m_status_code = value;
         }
-        
+
         void ResponseImpl::set_body( const Bytes& value )
         {
             m_body = value;
         }
 
-        void ResponseImpl::set_body_callback( const function< Bytes ( void ) >& value )
+        void ResponseImpl::set_protocol( const string& value )
         {
-            m_body_callback = value;
+            m_protocol = value;
         }
-        
-        void ResponseImpl::set_version( const double value )
-        {
-            m_version = value;
-        }
-        
-        void ResponseImpl::set_status_code( const int value )
-        {
-            m_status_code = value;
-        }
-        
+
         void ResponseImpl::set_status_message( const string& value )
         {
             m_status_message = value;
@@ -160,58 +115,12 @@ namespace restbed
         
         void ResponseImpl::set_header( const string& name, const string& value )
         {
-            if ( has_header( name ) )
-            {
-                const auto iterator = Map::find_ignoring_case( name, m_headers );
-
-                iterator->second = value;
-            }
-            else
-            {
-                m_headers.insert( make_pair( name, value ) );
-            }
+            m_headers.insert( make_pair( name, value ) );
         }
         
         void ResponseImpl::set_headers( const multimap< string, string >& values )
         {
             m_headers = values;
-        }
-        
-        bool ResponseImpl::operator <( const ResponseImpl& value ) const
-        {
-            return m_status_code < value.m_status_code;
-        }
-        
-        bool ResponseImpl::operator >( const ResponseImpl& value ) const
-        {
-            return m_status_code > value.m_status_code;
-        }
-        
-        bool ResponseImpl::operator ==( const ResponseImpl& value ) const
-        {
-            return m_status_code == value.m_status_code and m_body == value.m_body and m_headers == value.m_headers;
-        }
-        
-        bool ResponseImpl::operator !=( const ResponseImpl& value ) const
-        {
-            return not ( *this == value );
-        }
-        
-        ResponseImpl& ResponseImpl::operator =( const ResponseImpl& value )
-        {
-            m_body = value.m_body;
-
-            m_body_callback = value.m_body_callback;
-            
-            m_version = value.m_version;
-            
-            m_status_code = value.m_status_code;
-            
-            m_status_message = value.m_status_message;
-            
-            m_headers = value.m_headers;
-            
-            return *this;
         }
     }
 }

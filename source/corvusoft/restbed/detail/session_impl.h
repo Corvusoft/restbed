@@ -27,8 +27,9 @@
 namespace restbed
 {
     //Forward Declarations
-    class Request;
     class Session;
+    class Request;
+    class Response;
     class Resource;
     class Settings;
     
@@ -53,7 +54,7 @@ namespace restbed
 
                 bool is_closed( void ) const;
 
-                void close( void );
+                void close( void ); //callbacks on close and yeild so you can purge the session for example
 
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
@@ -69,31 +70,7 @@ namespace restbed
 
                 void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
-//                void close( const Response& value );
-
-//                void yield( const Response& value ); //send response and call this function again with request.
-//
-//                void yield( const Response& value, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-//
-//                void yield( uint16_t status_code, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-//
-//                void yield( uint16_t status_code, Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-//
-//                void yield( uint16_t status_code, multimap< string, string > headers, Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-//
-//                void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-//
-//                void fetch( const Request& value, const std::size_t length, const std::function< void ( const std::shared_ptr< Session >& ) >& read_callback );
-//
-//                void wait_for( const std::chrono::seconds& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& expired_callback );
-//
-//                void wait_for( const std::chrono::seconds& delay, const std::size_t iterations, const std::function< void ( const std::shared_ptr< Session >& ) >& expired_callback );
-//
-                  //void wait_until( func, cond var );
-//                void wait_for( const std::chrono::seconds& delay, const std::size_t iterations, const std::function< bool ( const std::shared_ptr< Session >& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& triggered_callback );
-
                 //Getters
-//                const Request& get_request( void ) const;
                 const std::string& get_id( void ) const;
 
                 const std::shared_ptr< const Request >& get_request( void ) const;
@@ -147,6 +124,9 @@ namespace restbed
                 void parse_request( const asio::error_code& error,
                                     const std::shared_ptr< Session >& session,
                                     const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
+
                 //Getters
                 
                 //Setters
