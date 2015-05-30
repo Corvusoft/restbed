@@ -3,7 +3,6 @@
  */
 
 //System Includes
-#include <istream>
 
 //Project Includes
 #include "corvusoft/restbed/detail/request_impl.h"
@@ -18,11 +17,9 @@ using std::stod;
 using std::stof;
 using std::stoul;
 using std::string;
-using std::istream;
 using std::multimap;
 using std::function;
 using std::shared_ptr;
-using std::istreambuf_iterator;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;

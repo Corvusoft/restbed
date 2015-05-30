@@ -28,9 +28,7 @@
 
 //System Namespaces
 using std::set;
-using std::map;
 using std::pair;
-using std::find;
 using std::bind;
 using std::regex;
 using std::string;
@@ -38,15 +36,11 @@ using std::smatch;
 using std::find_if;
 using std::function;
 using std::to_string;
-using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
-using std::shared_ptr;
 using std::invalid_argument;
 using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
 
 //Project Namespaces
 

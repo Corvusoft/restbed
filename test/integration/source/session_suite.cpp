@@ -16,6 +16,8 @@
 
 //Project Namespaces
 using restbed::Session;
+using restbed::Request;
+using restbed::Resource;
 
 //External Namespaces
 
