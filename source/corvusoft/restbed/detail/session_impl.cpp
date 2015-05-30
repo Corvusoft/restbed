@@ -152,7 +152,7 @@ namespace restbed
                      this->m_buffer->consume( length );
 
                      const auto request = this->m_session->m_pimpl->get_request( );
-                     auto body = request->m_pimpl->get_body( );
+                     auto body = request->get_body( );
 
                      if ( body == nullptr )
                      {
@@ -174,7 +174,7 @@ namespace restbed
                 m_buffer->consume( length );
 
                 const auto request = m_session->m_pimpl->get_request( );
-                auto body = request->m_pimpl->get_body( );
+                auto body = request->get_body( );
 
                 if ( body == nullptr )
                 {
@@ -202,7 +202,7 @@ namespace restbed
                  m_buffer->consume( bytes_transferred );
 
                  const auto request = this->m_session->m_pimpl->get_request( );
-                 auto body = request->m_pimpl->get_body( );
+                 auto body = request->get_body( );
 
                  if ( body == nullptr )
                  {

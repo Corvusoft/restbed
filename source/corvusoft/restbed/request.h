@@ -57,55 +57,41 @@ namespace restbed
             //Getters
             double get_version( void ) const;
 
-            const std::string& get_path( void ) const;
+            const std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
-            const std::string& get_method( void ) const;
+            const std::string get_method( const std::function< std::string ( const std::string& ) >& transform = &framework::String::uppercase ) const;
 
-            const std::string& get_protocol( void ) const;
+            const std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = &framework::String::uppercase ) const;
 
-            const std::shared_ptr< framework::Bytes >& get_body( void ) const;
-
-//            std::string get_path( std::function< string ( string ) > transform = nullptr ) const;
-//
-//            std::string get_method( std::function< string ( string ) > transform = nullptr ) const;
-
-            //framework::Bytes get_body( std::function< framework::Bytes ( const framework::Bytes& ) > transform = nullptr ) const;
-
-            //framework::Bytes get_body( std::function< framework::Bytes ( const framework::Bytes& ) > transform = nullptr ) const;
-//            
-//            std::string get_origin( std::function< string ( string ) > transform = nullptr ) const;
-//
-//            std::string get_destination( std::function< string ( string ) > transform = nullptr ) const;
-//        
-//            std::string get_protocol( std::function< string ( string ) > transform = nullptr ) const;
+            const std::shared_ptr< framework::Bytes > get_body( const std::function< std::shared_ptr< framework::Bytes > ( const std::shared_ptr< framework::Bytes >& ) >& transform = nullptr ) const;
 
             void get_header( const std::string& name,
-                     /*out*/ int& value,
+                             int& value, /*out*/
                              const int default_value = 0,
                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
             void get_header( const std::string& name,
-                     /*out*/ long& value,
-                             const long default_value = 0,
-                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-
-            void get_header( const std::string& name,
-                     /*out*/ unsigned long& value,
-                             const unsigned long default_value = 0,
-                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-
-            void get_header( const std::string& name,
-                     /*out*/ unsigned int& value,
+                             unsigned int& value, /*out*/
                              const unsigned int default_value = 0,
                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
             void get_header( const std::string& name,
-                     /*out*/ float& value,
+                             long& value, /*out*/
+                             const long default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                             unsigned long& value, /*out*/
+                             const unsigned long default_value = 0,
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_header( const std::string& name,
+                             float& value, /*out*/
                              const float default_value = 0,
                              const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
 
             void get_header( const std::string& name,
-                     /*out*/ double& value,
+                             double& value, /*out*/
                              const double default_value = 0,
                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
@@ -119,39 +105,85 @@ namespace restbed
             std::multimap< std::string, std::string > get_headers( const std::string& name = framework::String::empty,
                                                                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
-//            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_query_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_query_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transform = nullptr);
-//
-//            void get_query_parameter( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_query_parameter( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_query_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transform = nullptr );
-//
-//            std::string get_query_parameter( const std::string& name, const std::string& default_value = "", std::function< string ( string ) > transform = nullptr ) const;
-//        
-//            std::multimap< std::string, std::string > get_query_parameters( void ) const;
-//        
-//            std::multimap< std::string, std::string > get_query_parameters( const std::string& name ) const;
+            void get_query_parameter( const std::string& name,
+                                      int& value, /*out*/
+                                      const int default_value = 0,
+                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
-//            void get_path_parameter( const std::string& name, /*out*/ int& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_path_parameter( const std::string& name, /*out*/ uint& value, std::function< string ( string ) > transform = nullptr);
-//
-//            void get_path_parameter( const std::string& name, /*out*/ float& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_path_parameter( const std::string& name, /*out*/ double& value, std::function< string ( string ) > transform = nullptr );
-//
-//            void get_path_parameter( const std::string& name, /*out*/ string& value, std::function< string ( string ) > transform = nullptr );
-//
+            void get_query_parameter( const std::string& name,
+                                      unsigned int& value, /*out*/
+                                      const unsigned int default_value = 0,
+                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_query_parameter( const std::string& name,
+                                      long& value, /*out*/
+                                      const long default_value = 0,
+                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_query_parameter( const std::string& name,
+                                      unsigned long& value, /*out*/
+                                      const unsigned long default_value = 0,
+                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_query_parameter( const std::string& name,
+                                      float& value, /*out*/
+                                      const float default_value = 0,
+                                      const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+
+            void get_query_parameter( const std::string& name,
+                                      double& value, /*out*/
+                                      const double default_value = 0,
+                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            std::string get_query_parameter( const std::string& name,
+                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            std::string get_query_parameter( const std::string& name,
+                                             const std::string& default_value,
+                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            std::multimap< std::string, std::string > get_query_parameters( const std::string& name = framework::String::empty,
+                                                                            const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_path_parameter( const std::string& name,
+                                     int& value, /*out*/
+                                     const int default_value = 0,
+                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_path_parameter( const std::string& name,
+                                     unsigned int& value, /*out*/
+                                     const unsigned int default_value = 0,
+                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_path_parameter( const std::string& name,
+                                     long& value, /*out*/
+                                     const long default_value = 0,
+                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_path_parameter( const std::string& name,
+                                     unsigned long& value, /*out*/
+                                     const unsigned long default_value = 0,
+                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            void get_path_parameter( const std::string& name,
+                                     float& value, /*out*/
+                                     const float default_value = 0,
+                                     const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+
+            void get_path_parameter( const std::string& name,
+                                     double& value, /*out*/
+                                     const double default_value = 0,
+                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
             std::string get_path_parameter( const std::string& name,
-                                            const std::string& default_value = framework::String::empty,
                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
-//            std::map< std::string, std::string > get_path_parameters( void ) const;
+            std::string get_path_parameter( const std::string& name,
+                                            const std::string& default_value,
+                                            const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+
+            std::map< std::string, std::string > get_path_parameters( const std::string& name = framework::String::empty,
+                                                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 
             //Setters
             
