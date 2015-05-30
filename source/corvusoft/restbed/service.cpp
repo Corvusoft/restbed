@@ -57,26 +57,6 @@ namespace restbed
         m_pimpl->suppress( resource );
     }
 
-    string Service::get_status_message( const int code ) const
-    {
-        return m_pimpl->get_status_message( code );
-    }
-
-    map< int, string > Service::get_status_messages( void ) const
-    {
-        return m_pimpl->get_status_messages( );
-    }
-
-    void Service::set_status_message( const int code, const string& message )
-    {
-        m_pimpl->set_status_message( code, message );
-    }
-
-    void Service::set_status_messages( const map< int, string >& values )
-    {
-        m_pimpl->set_status_messages( values );
-    }
-
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
         m_pimpl->set_logger( value );

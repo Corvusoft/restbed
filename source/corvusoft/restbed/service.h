@@ -58,17 +58,8 @@ namespace restbed
             void suppress( const std::shared_ptr< Resource >& resource ); //const
             
             //Getters
-            //int get_status_code( const std::string& message ) const;
-
-            std::string get_status_message( const int code ) const;
-
-            std::map< int, std::string > get_status_messages( void ) const;
 
             //Setters
-            void set_status_message( const int code, const std::string& message );
-
-            void set_status_messages( const std::map< int, std::string >& values );
-
             //set not_found, not_implemented, method_not_allowed
             void set_logger( const std::shared_ptr< Logger >& value );
             

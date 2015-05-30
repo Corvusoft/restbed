@@ -16,7 +16,6 @@
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/status_code.h"
-#include "corvusoft/restbed/detail/status_messages_impl.h"
 #include "corvusoft/restbed/session_manager.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/service_impl.h"
@@ -72,8 +71,7 @@ namespace restbed
             m_session_manager( nullptr ),
             m_acceptor( nullptr ),
             m_authentication_handler( nullptr ),
-            m_error_handler( nullptr ),
-            m_status_messages( status_messages )
+            m_error_handler( nullptr )
         {
             return;
         }
@@ -191,37 +189,6 @@ namespace restbed
             }
         }
 
-        string ServiceImpl::get_status_message( const int code ) const
-        {
-            string message = String::empty;
-
-            if ( m_status_messages.count( code ) )
-            {
-                message = m_status_messages.at( code );
-            }
-            else
-            {
-                message = m_status_messages.at( 0 );
-            }
-
-            return message;
-        }
-
-        map< int, string > ServiceImpl::get_status_messages( void ) const
-        {
-            return m_status_messages;
-        }
-
-        void ServiceImpl::set_status_message( const int code, const string& message )
-        {
-            m_status_messages[ code ] = message;
-        }
-
-        void ServiceImpl::set_status_messages( const map< int, string >& values )
-        {
-            m_status_messages = values;
-        }
-        
         void ServiceImpl::set_logger(  const shared_ptr< Logger >& value )
         {
             //if is running throw runtime_error
@@ -364,7 +331,7 @@ namespace restbed
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
 
                 const auto headers = m_settings->get_default_headers( );
-                const auto status_messages = m_status_messages;
+                const auto status_messages = m_settings->get_status_messages( );
 
                 m_session_manager->create( [ socket, authenticate, headers, status_messages ]( const shared_ptr< Session >& session )
                 {

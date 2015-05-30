@@ -6,6 +6,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/detail/settings_impl.h"
+#include "corvusoft/restbed/detail/status_messages_impl.h"
 
 //External Includes
 #include <corvusoft/framework/string>
@@ -32,6 +33,7 @@ namespace restbed
             m_port( 80 ),
             m_connection_limit( 128 ),
             m_connection_timeout( 5 ),
+            m_status_messages( status_messages ),
             m_properties( ),
             m_default_headers( )
         {
@@ -61,6 +63,27 @@ namespace restbed
         seconds SettingsImpl::get_connection_timeout( void ) const
         {
             return m_connection_timeout;
+        }
+
+        string SettingsImpl::get_status_message( const int code ) const
+        {
+            string message = String::empty;
+
+            if ( m_status_messages.count( code ) )
+            {
+                message = m_status_messages.at( code );
+            }
+            else
+            {
+                message = m_status_messages.at( 0 );
+            }
+
+            return message;
+        }
+
+        map< int, string > SettingsImpl::get_status_messages( void ) const
+        {
+            return m_status_messages;
         }
 
         string SettingsImpl::get_property( const string& name ) const
@@ -101,6 +124,16 @@ namespace restbed
         void SettingsImpl::set_connection_timeout( const seconds& value )
         {
             m_connection_timeout = value;
+        }
+
+        void SettingsImpl::set_status_message( const int code, const string& message )
+        {
+            m_status_messages[ code ] = message;
+        }
+
+        void SettingsImpl::set_status_messages( const map< int, string >& values )
+        {
+            m_status_messages = values;
         }
 
         void SettingsImpl::set_property( const string& name, const string& value )

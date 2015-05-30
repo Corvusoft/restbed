@@ -50,9 +50,13 @@ namespace restbed
                 int32_t get_connection_limit( void ) const;
 
                 std::chrono::seconds get_connection_timeout( void ) const;
-                
+
+                std::string get_status_message( const int code ) const;
+
+                std::map< int, std::string > get_status_messages( void ) const;
+
                 std::string get_property( const std::string& name ) const;
-                
+
                 std::map< std::string, std::string > get_properties( void ) const;
 
                 std::multimap< std::string, std::string > get_default_headers( void ) const;
@@ -65,7 +69,11 @@ namespace restbed
                 void set_connection_limit( const int32_t value );
 
                 void set_connection_timeout( const std::chrono::seconds& value );
-                
+
+                void set_status_message( const int code, const std::string& message );
+
+                void set_status_messages( const std::map< int, std::string >& values );
+
                 void set_property( const std::string& name, const std::string& value );
                 
                 void set_properties( const std::map< std::string, std::string >& values );
@@ -120,6 +128,8 @@ namespace restbed
                 uint32_t m_connection_limit;
 
                 std::chrono::seconds m_connection_timeout;
+
+                std::map< int, std::string > m_status_messages;
 
                 std::map< std::string, std::string > m_properties;
 

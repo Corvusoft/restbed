@@ -19,10 +19,10 @@ int main( const int, const char** )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
+    settings->set_status_message( 418, "I'm a teapot" );
     
     Service service;
     service.publish( resource );
-    service.set_status_message( 418, "I'm a teapot" ); //move this to settings! stops copy
     service.start( settings );
     
     return EXIT_SUCCESS;

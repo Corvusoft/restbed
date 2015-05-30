@@ -53,6 +53,16 @@ namespace restbed
         return m_pimpl->get_connection_timeout( );
     }
 
+    string Settings::get_status_message( const int code ) const
+    {
+        return m_pimpl->get_status_message( code );
+    }
+
+    map< int, string > Settings::get_status_messages( void ) const
+    {
+        return m_pimpl->get_status_messages( );
+    }
+
     string Settings::get_property( const string& name ) const
     {
         return m_pimpl->get_property( name );
@@ -86,6 +96,16 @@ namespace restbed
     void Settings::set_connection_timeout( const seconds& value )
     {
         m_pimpl->set_connection_timeout( value );
+    }
+
+    void Settings::set_status_message( const int code, const string& message )
+    {
+        m_pimpl->set_status_message( code, message );
+    }
+
+    void Settings::set_status_messages( const map< int, string >& values )
+    {
+        m_pimpl->set_status_messages( values );
     }
 
     void Settings::set_property( const string& name, const string& value )
