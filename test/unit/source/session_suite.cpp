@@ -3,6 +3,8 @@
  */
 
 //System Includes
+#include <map>
+#include <string>
 
 //Project Includes
 #include <corvusoft/restbed/session>
@@ -11,6 +13,8 @@
 #include <catch.hpp>
 
 //System Namespaces
+using std::string;
+using std::multimap;
 
 //Project Namespaces
 using restbed::Session;
@@ -33,4 +37,21 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )
     auto session = new Session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
 
     REQUIRE_NOTHROW( delete session );
+}
+
+TEST_CASE( "validate setters modify default values", "[response]" )
+{
+    Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
+
+    session.set_header( "Connection", "close" );
+    multimap< string, string > expectation = { { "Connection", "close" } };
+    REQUIRE( session.get_headers( ) == expectation );
+
+    expectation = {
+        { "Content-Type", "application/yaml" },
+        { "Content-Encoding", "" }
+    };
+
+    session.set_headers( expectation );
+    REQUIRE( session.get_headers( ) == expectation );
 }
