@@ -13,6 +13,8 @@
 //System Namespaces
 using std::string;
 using std::multimap;
+using std::shared_ptr;
+using std::make_shared;
 
 //Project Namespaces
 using restbed::detail::ResponseImpl;
@@ -32,7 +34,7 @@ namespace restbed
         return;
     }
 
-    Bytes Response::to_bytes( void ) const
+    shared_ptr< Bytes > Response::to_bytes( void ) const
     {
         return m_pimpl->to_bytes( );
     }
@@ -47,11 +49,6 @@ namespace restbed
         return m_pimpl->get_status_code( );
     }
 
-    Bytes Response::get_body( void ) const
-    {
-        return m_pimpl->get_body( );
-    }
-
     string Response::get_protocol( void ) const
     {
         return m_pimpl->get_protocol( );
@@ -60,6 +57,11 @@ namespace restbed
     string Response::get_status_message( void ) const
     {
         return m_pimpl->get_status_message( );
+    }
+
+    shared_ptr< Bytes > Response::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
     }
 
     multimap< string, string > Response::get_headers( void ) const
@@ -89,10 +91,10 @@ namespace restbed
 
     void Response::set_body( const string& value )
     {
-        m_pimpl->set_body( Bytes( value.begin( ), value.end( ) ) );
+        m_pimpl->set_body( make_shared< Bytes >( value.begin( ), value.end( ) ) );
     }
 
-    void Response::set_body( const Bytes& value )
+    void Response::set_body( const shared_ptr< Bytes >& value )
     {
         m_pimpl->set_body( value );
     }

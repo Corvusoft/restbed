@@ -27,7 +27,7 @@ TEST_CASE( "validate default instance values", "[response]" )
 {
     const Response response;
 
-    REQUIRE( response.get_body( ).empty( ) );
+    REQUIRE( response.get_body( ) == nullptr );
     REQUIRE( response.get_version( ) == 1.1 );
     REQUIRE( response.get_status_code( ) == 200 );
     REQUIRE( response.get_protocol( ) == "HTTP" );
@@ -61,8 +61,10 @@ TEST_CASE( "validate setters modify default values", "[response]" )
     REQUIRE( response.get_status_code( ) == 400 );
     REQUIRE( response.get_protocol( ) == "SPDY" );
     REQUIRE( response.get_headers( ) == headers );
-    REQUIRE( response.get_body( ) == Bytes( { 'a', 'b' } ) );
     REQUIRE( response.get_status_message( ) == "corvusoft ltd" );
+
+    const auto body = response.get_body( );
+    REQUIRE( *body == Bytes( { 'a', 'b' } ) );
 }
 
 TEST_CASE( "convert response to bytes", "[response]" )
@@ -72,7 +74,7 @@ TEST_CASE( "convert response to bytes", "[response]" )
     SECTION( "default response" )
     {
         const auto bytes = response.to_bytes( );
-        const string body( bytes.data( ), bytes.data( ) + bytes.size( ) );
+        const string body( bytes->data( ), bytes->data( ) + bytes->size( ) );
 
         REQUIRE( body == "HTTP/1.1 200 \r\n\r\n" );
     }
@@ -92,7 +94,7 @@ TEST_CASE( "convert response to bytes", "[response]" )
         response.set_headers( headers );
 
         const auto bytes = response.to_bytes( );
-        const string body( bytes.data( ), bytes.data( ) + bytes.size( ) );
+        const string body( bytes->data( ), bytes->data( ) + bytes->size( ) );
 
         REQUIRE( body == "SPDY/1.0 400 corvusoft ltd\r\nConnection: keep-alive\r\n\r\nab" );
     }

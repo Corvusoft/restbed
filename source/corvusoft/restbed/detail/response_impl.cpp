@@ -13,6 +13,8 @@
 //System Namespaces
 using std::string;
 using std::multimap;
+using std::shared_ptr;
+using std::make_shared;
 
 //Project Namespaces
 
@@ -26,9 +28,9 @@ namespace restbed
     {
         ResponseImpl::ResponseImpl( void ) : m_version( 1.1 ),
             m_status_code( 200 ),
-            m_body( ),
             m_protocol( "HTTP" ),
             m_status_message( String::empty ),
+            m_body( nullptr ),
             m_headers( )
         {
             return;
@@ -39,7 +41,7 @@ namespace restbed
             return;
         }
 
-        Bytes ResponseImpl::to_bytes( void ) const
+        shared_ptr< Bytes > ResponseImpl::to_bytes( void ) const
         {
             auto data = String::format( "%s/%.1f %i %s\r\n", m_protocol.data( ),
                                                              m_version,
@@ -52,8 +54,13 @@ namespace restbed
 
             data += "\r\n";
 
-            Bytes bytes = String::to_bytes( data );
-            bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
+            auto bytes = make_shared< Bytes >( );
+            *bytes = String::to_bytes( data );
+
+            if ( m_body not_eq nullptr )
+            {
+                bytes->insert( bytes->end( ), m_body->begin( ), m_body->end( ) );
+            }
             
             return bytes;
         }
@@ -67,11 +74,6 @@ namespace restbed
         {
             return m_status_code;
         }
-        
-        const Bytes& ResponseImpl::get_body( void ) const
-        {
-            return m_body;
-        }
 
         const string& ResponseImpl::get_protocol( void ) const
         {
@@ -81,6 +83,11 @@ namespace restbed
         const string& ResponseImpl::get_status_message( void ) const
         {
             return m_status_message;
+        }
+
+        const shared_ptr< Bytes >& ResponseImpl::get_body( void ) const
+        {
+            return m_body;
         }
 
         const multimap< string, string >& ResponseImpl::get_headers( void ) const
@@ -98,11 +105,6 @@ namespace restbed
             m_status_code = value;
         }
 
-        void ResponseImpl::set_body( const Bytes& value )
-        {
-            m_body = value;
-        }
-
         void ResponseImpl::set_protocol( const string& value )
         {
             m_protocol = value;
@@ -112,7 +114,12 @@ namespace restbed
         {
             m_status_message = value;
         }
-        
+
+        void ResponseImpl::set_body( const shared_ptr< Bytes >& value )
+        {
+            m_body = value;
+        }
+
         void ResponseImpl::set_header( const string& name, const string& value )
         {
             m_headers.insert( make_pair( name, value ) );

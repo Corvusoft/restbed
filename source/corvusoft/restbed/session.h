@@ -57,11 +57,15 @@ namespace restbed
 
             void close( void );
 
+            void close( const int status, const std::shared_ptr< framework::Bytes >& body );
+
             void close( const int status, const std::string& body = framework::String::empty );
 
             void close( const int status, const std::multimap< std::string, std::string >& headers );
 
             void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
+
+            void close( const int status, const std::shared_ptr< framework::Bytes >& body, const std::multimap< std::string, std::string >& headers );
 
             void yield( const int status, const std::string& body = framework::String::empty );
 

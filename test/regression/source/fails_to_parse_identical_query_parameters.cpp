@@ -6,6 +6,7 @@
 
 //System Includes
 #include <map>
+#include <thread>
 #include <string>
 #include <memory>
 #include <utility>
@@ -20,6 +21,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::string;
 using std::multimap;
 using std::make_pair;
@@ -32,39 +34,42 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-Response get_handler( const Request& request )
+void get_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( 200 );
-    
+    const auto request = session->get_request( );
+
     multimap< string, string > expectation;
     expectation.insert( make_pair( "echo", "false" ) );
     expectation.insert( make_pair( "echo", "true" ) );
 
-    const auto actual = request.get_query_parameters( "echo" );
+    const auto actual = request->get_query_parameters( "echo" );
     
     if ( actual not_eq expectation )
     {
-        response.set_status_code( 500 );
+        session->close( 500 );
     }
-
-    return response;
+    else
+    {
+        session->close( 200 );
+    }
 }
 
 TEST_CASE( "fails to parse identical query parameters", "[service]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
-    
-    service->start( );
+    Service service;
+    service.publish( resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -76,5 +81,6 @@ TEST_CASE( "fails to parse identical query parameters", "[service]" )
     
     REQUIRE( 200 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

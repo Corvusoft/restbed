@@ -5,6 +5,7 @@
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 #include <functional>
 
@@ -16,6 +17,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -25,28 +27,27 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-Response get_handler( const Request& )
+void get_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( 200 );
-    
-    return response;
+    session->close( 200 );
 }
 
 TEST_CASE( "mismatched resource path of equal path segments", "[resource]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
-    
-    service->start( );
+    Service service;
+    service.publish( resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -58,23 +59,26 @@ TEST_CASE( "mismatched resource path of equal path segments", "[resource]" )
     
     REQUIRE( 404 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }
 
 TEST_CASE( "mismatched resource path of unequal path segments", "[resource]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );;
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
-    
-    service->start( );
+    Service service;
+    service.publish( resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -86,23 +90,26 @@ TEST_CASE( "mismatched resource path of unequal path segments", "[resource]" )
     
     REQUIRE( 404 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }
 
 TEST_CASE( "matched resource path", "[resource]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    resource.set_method_handler( "GET", &get_handler );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
-    
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
-    
-    service->start( );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "GET", &get_handler );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+
+    Service service;
+    service.publish( resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -114,5 +121,6 @@ TEST_CASE( "matched resource path", "[resource]" )
     
     REQUIRE( 200 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

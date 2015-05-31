@@ -35,6 +35,8 @@ using std::ssub_match;
 using std::shared_ptr;
 using std::make_shared;
 using std::regex_match;
+using std::exception;
+using std::to_string;
 using std::runtime_error;
 using std::placeholders::_1;
 
@@ -100,6 +102,11 @@ namespace restbed
         }
 
         void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
+        {
+            close( status, make_shared< Bytes >( body.begin( ), body.end( ) ), headers );
+        }
+
+        void SessionImpl::close( const int status, const shared_ptr< Bytes >& body, const multimap< string, string >& headers )
         {
             m_is_closed = true;
 
@@ -217,8 +224,7 @@ namespace restbed
              } );
         }
 
-        void SessionImpl::fetch( const shared_ptr< Session >& session,
-                                 const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionImpl::fetch( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             if ( m_router == nullptr and m_session == nullptr )
             {
@@ -312,13 +318,13 @@ namespace restbed
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
         {
             smatch matches;
-            static const regex pattern( "^(.*) (.*) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
+            static const regex pattern( "^([0-9a-zA-Z]*) ([a-zA-Z0-9\\/\\?:@\\-\\._~!$&'\\(\\)\\*\\+\\,;\\=#%]*) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
             string data = String::empty;
             getline( stream, data );
 
             if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 4 )
             {
-                throw runtime_error( "FAILED BAD REQUEST!" );
+                throw runtime_error( "Your client has issued a malformed or illegal request status line. That’s all we know." );
             }
 
             const string protocol = matches[ 3 ].str( );
@@ -328,7 +334,7 @@ namespace restbed
                 { "path", matches[ 2 ].str( ) },
                 { "method", matches[ 1 ].str( ) },
                 { "version", protocol.substr( delimiter + 1 ) },
-                { "protocol", protocol.substr( 0, delimiter ) },
+                { "protocol", protocol.substr( 0, delimiter ) }
             };
         }
 
@@ -343,7 +349,7 @@ namespace restbed
             {
                 if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 3 )
                 {
-                    throw runtime_error( "FAILED BAD REQUEST!" );
+                    throw runtime_error( "Your client has issued a malformed or illegal request header. That’s all we know." );
                 }
 
                 headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
@@ -352,9 +358,8 @@ namespace restbed
             return headers;
         }
 
-        void SessionImpl::parse_request( const asio::error_code& error,
-                                         const std::shared_ptr< Session >& session,
-                                         const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionImpl::parse_request( const asio::error_code& error, const std::shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+        try
         {
             if ( error )
             {
@@ -366,7 +371,7 @@ namespace restbed
             const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
 
             auto request = make_shared< Request >( );
-            request->m_pimpl->set_path( uri.get_path( ) );
+            request->m_pimpl->set_path( Uri::decode( uri.get_path( ) ) );
             request->m_pimpl->set_method( items.at( "method" ) );
             request->m_pimpl->set_version( stod( items.at( "version" ) ) );
             request->m_pimpl->set_headers( parse_request_headers( stream ) );
@@ -375,6 +380,15 @@ namespace restbed
             session->m_pimpl->set_request( request );
 
             callback( session );
+        }
+        catch ( const runtime_error& re )
+        {
+            string body = re.what( );
+            session->close( 400, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+        }
+        catch ( ... )
+        {
+            session->close( 500 ); //add message? with retrhow funcs
         }
 
         void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
@@ -399,7 +413,7 @@ namespace restbed
             }
 
             const auto data = response.to_bytes( );
-            asio::async_write( *m_socket, asio::buffer( data, data.size( ) ), callback );
+            asio::async_write( *m_socket, asio::buffer( *data, data->size( ) ), callback );
         }
     }
 }

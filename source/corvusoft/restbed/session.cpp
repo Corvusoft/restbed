@@ -45,7 +45,7 @@ namespace restbed
         return m_pimpl->is_closed( );
     }
 
-    void Session::purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+    void Session::purge( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->purge( callback );
     }
@@ -53,6 +53,12 @@ namespace restbed
     void Session::close( void )
     {
         m_pimpl->close( );
+    }
+
+    void Session::close( const int status, const shared_ptr< Bytes >& body )
+    {
+        static multimap< string, string > empty;
+        m_pimpl->close( status, body, empty );
     }
 
     void Session::close( const int status, const string& body )
@@ -67,6 +73,11 @@ namespace restbed
     }
 
     void Session::close( const int status, const string& body, const multimap< string, string >& headers )
+    {
+        m_pimpl->close( status, body, headers );
+    }
+
+    void Session::close( const int status, const shared_ptr< Bytes >& body, const multimap< string, string >& headers )
     {
         m_pimpl->close( status, body, headers );
     }

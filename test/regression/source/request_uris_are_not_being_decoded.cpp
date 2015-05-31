@@ -5,6 +5,7 @@
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 #include <functional>
 
@@ -16,6 +17,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -25,31 +27,32 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-Response get_handler( const Request& request )
+void get_handler( const shared_ptr< Session >& session )
 {
-    REQUIRE( "/uri test" == request.get_path( ) );
-    REQUIRE( "@30" == request.get_query_parameter( "ben crowhurst" ) );
-    
-    Response response;
-    response.set_status_code( 200 );
-    
-    return response;
+    const auto request = session->get_request( );
+
+    REQUIRE( "/uri test" == request->get_path( ) );
+    REQUIRE( "@30" == request->get_query_parameter( "ben crowhurst" ) );
+
+    session->close( 200 );
 }
 
 TEST_CASE( "encoded uri test", "[request]" )
 {
-    Resource resource;
-    resource.set_path( "uri test" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "uri test" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 8989 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 8989 );
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
+    Service service;
+    service.publish( resource );
     
-    service->start( );
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -61,5 +64,6 @@ TEST_CASE( "encoded uri test", "[request]" )
     
     REQUIRE( 200 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

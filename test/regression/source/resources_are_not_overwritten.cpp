@@ -5,6 +5,7 @@
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 
 //Project Includes
@@ -15,6 +16,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -24,24 +26,14 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-shared_ptr< Service > m_service;
-
-Response json_get_handler( const Request& )
+void json_get_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( 200 );
-    response.set_body( "{ name: \"value\" }" );
-    
-    return response;
+    session->close( 200, "{ name: \"value\" }", { { "Content-Length", "17" }, { "Content-Type", "application/json" } } );
 }
 
-Response xml_get_handler( const Request& )
+void xml_get_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( 401 );
-    response.set_body( "<name>value</value>" );
-    
-    return response;
+    session->close( 401, "<name>value</name>", { { "Content-Length", "18" }, { "Content-Type", "application/xml" } } );
 }
 
 TEST_CASE( "overwrite existing resource", "[resource]" )
@@ -57,10 +49,14 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     
-    m_service = make_shared< Service >( settings );
-    m_service->publish( initial_resource );
-    m_service->publish( secondary_resource );
-    m_service->start( );
+    Service service;
+    service.publish( initial_resource );
+    service.publish( secondary_resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -69,31 +65,34 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     request.path = "/TestResource";
 
     auto response = Http::get( request );
-    
+
     REQUIRE( 401 == response.status_code );
-    
-    m_service->stop( );
+
+    service.stop( );
+    service_thread.join( );
 }
 
 TEST_CASE( "add alternative resource", "[resource]" )
 {
     auto initial_resource = make_shared< Resource >( );
     initial_resource->set_path( "TestResource" );
-    initial_resource->set_header_filter( "Content-Type", "application/json" );
-    initial_resource->set_method_handler( "GET", &json_get_handler );
+    initial_resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, &json_get_handler );
     
     auto secondary_resource = make_shared< Resource >( );
     secondary_resource->set_path( "TestResource" );
-    secondary_resource->set_header_filter( "Content-Type", "application/xml" );
-    secondary_resource->set_method_handler( "GET", &xml_get_handler );
+    secondary_resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, &xml_get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     
-    m_service = make_shared< Service >( settings );
-    m_service->publish( initial_resource );
-    m_service->publish( secondary_resource );
-    m_service->start( );
+    Service service;
+    service.publish( initial_resource );
+    service.publish( secondary_resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -103,8 +102,9 @@ TEST_CASE( "add alternative resource", "[resource]" )
     request.headers = { { "Content-Type", "application/xml" } };
 
     auto response = Http::get( request );
-    
+
     REQUIRE( 401 == response.status_code );
-    
-    m_service->stop( );
+
+    service.stop( );
+    service_thread.join( );
 }

@@ -136,19 +136,20 @@ namespace restbed
         void ServiceImpl::publish( const shared_ptr< Resource >& resource )
         {
             //if is running throw runtime_error
+
             if ( resource == nullptr )
             {
                 return;
             }
 
-            const auto paths = resource->m_pimpl->get_paths( );
+            auto paths = resource->m_pimpl->get_paths( );
 
             if ( not has_unique_paths( paths ) )
             {
                 throw invalid_argument( "Resource would pollute namespace. Please ensure all published resources have unique paths." );
             }
 
-            for ( auto& path : paths ) //how to set root ?!?!?!?
+            for ( auto& path : paths )
             {
                 const string sanitised_path = sanitise_path( path ); //paths_case_insensitive!!!!!!
 
@@ -278,15 +279,26 @@ namespace restbed
                 return;
             }
 
+            const auto root = m_settings->get_root( );
+
             const auto resource_route = find_if( m_resource_routes.begin( ),
                                                  m_resource_routes.end( ),
-                                                [ &session ]( const pair< string, shared_ptr< Resource > >& route )
+                                                [ &session, &root ]( const pair< string, shared_ptr< Resource > >& route )
                                                 {
                                                     bool match = false;
                                                     const auto request = session->get_request( );
                                                     const auto path_folders = String::split( request->get_path( ), '/' );
 
-                                                    const auto route_folders = String::split( route.first, '/' );
+                                                    auto route_folders = String::split( route.first, '/' );
+                                                    if ( not root.empty( ) and root not_eq "/" )
+                                                    {
+                                                        route_folders.insert( route_folders.begin( ), root );
+                                                    }
+
+                                                    if ( path_folders.empty( ) and route_folders.empty( ) )
+                                                    {
+                                                        return true; //root resource
+                                                    }
 
                                                     if ( path_folders.size( ) == route_folders.size( ) )
                                                     {
@@ -414,6 +426,11 @@ namespace restbed
 
         bool ServiceImpl::has_unique_paths( const set< string >& paths )
         {
+            if ( paths.empty( ) )
+            {
+                return false;
+            }
+
             for ( const auto& path : paths )
             {
                 if ( m_resource_routes.count( path ) )
@@ -447,6 +464,11 @@ namespace restbed
 
         string ServiceImpl::sanitise_path( const string& path )
         {
+            if ( path == "/" )
+            {
+                return path;
+            }
+
             smatch matches;
             string sanitised_path = String::empty;
             static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
