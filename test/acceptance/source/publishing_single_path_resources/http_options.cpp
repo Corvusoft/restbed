@@ -35,7 +35,7 @@ void get_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "publishing single path resources", "[resource]" )
 {
-    GIVEN( "I publish a resource at '/resources/1' with a HTTP GET method handler" )
+    GIVEN( "I publish a resource at '/resources/1' with a HTTP 'GET' method handler" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
@@ -61,7 +61,7 @@ SCENARIO( "publishing single path resources", "[resource]" )
 
             auto response = Http::options( request );
 
-            THEN( "I should see a 501 (Not Implemented) status code" )
+            THEN( "I should see a '501' (Not Implemented) status code" )
             {
                 REQUIRE( 501 == response.status_code );
             }
