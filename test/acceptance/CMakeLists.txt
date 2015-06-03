@@ -1,0 +1,52 @@
+# Copyright (c) 2013, 2014, 2015 Corvusoft
+
+project( "acceptance test suite" )
+
+cmake_minimum_required( VERSION 2.8.10 )
+
+#
+# Configuration
+#
+set( SOURCE_DIR "source" )
+set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/test"  )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
+
+include_directories( ${catch_INCLUDE} ${asio_INCLUDE} )
+
+#
+# Build
+#
+add_executable( publishing_single_path_resources_http_get_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_get.cpp )
+add_executable( publishing_single_path_resources_http_put_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_put.cpp )
+add_executable( publishing_single_path_resources_http_head_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_head.cpp )
+add_executable( publishing_single_path_resources_http_post_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_post.cpp )
+add_executable( publishing_single_path_resources_http_trace_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_trace.cpp )
+add_executable( publishing_single_path_resources_http_patch_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_patch.cpp )
+add_executable( publishing_single_path_resources_http_delete_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_delete.cpp )
+add_executable( publishing_single_path_resources_http_connect_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_connect.cpp )
+add_executable( publishing_single_path_resources_http_options_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_options.cpp )
+
+target_link_libraries( publishing_single_path_resources_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_head_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_post_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_trace_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_patch_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_delete_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_connect_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( publishing_single_path_resources_http_options_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+
+#
+# Setup
+#
+enable_testing( )
+add_test( publishing_single_path_resources_http_get_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_get_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_put_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_put_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_head_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_head_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_post_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_post_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_trace_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_trace_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_patch_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_patch_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_options_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_delete_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_delete_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_connect_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_connect_acceptance_test_suite )
+add_test( publishing_single_path_resources_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_options_acceptance_test_suite )

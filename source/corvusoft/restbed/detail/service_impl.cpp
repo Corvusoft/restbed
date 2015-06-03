@@ -411,17 +411,17 @@ namespace restbed
 
         void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session )
         {
-            session->close( METHOD_NOT_ALLOWED );
+            session->close( METHOD_NOT_ALLOWED, { { "Connection", "close" } } );
         }
 
         void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session )
         {
-            session->close( NOT_IMPLEMENTED );
+            session->close( NOT_IMPLEMENTED, { { "Connection", "close" } } );
         }
 
         void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session )
         {
-            session->close( BAD_REQUEST );
+            session->close( BAD_REQUEST, { { "Connection", "close" } } );
         }
 
         bool ServiceImpl::has_unique_paths( const set< string >& paths )
