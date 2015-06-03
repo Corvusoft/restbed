@@ -42,7 +42,7 @@ namespace restbed
                 virtual ~ResponseImpl( void );
                 
                 //Functionality
-                std::shared_ptr< framework::Bytes > to_bytes( void ) const;
+                framework::Bytes to_bytes( void ) const;
 
                 //Getters
                 double get_version( void ) const;
@@ -53,7 +53,7 @@ namespace restbed
             
                 const std::string& get_status_message( void ) const;
 
-                const std::shared_ptr< framework::Bytes >& get_body( void ) const;
+                const framework::Bytes& get_body( void ) const;
 
                 const std::multimap< std::string, std::string >& get_headers( void ) const;
                 
@@ -66,7 +66,7 @@ namespace restbed
             
                 void set_status_message( const std::string& value );
 
-                void set_body( const std::shared_ptr< framework::Bytes >& value );
+                void set_body( const framework::Bytes& value );
                 
                 void set_header( const std::string& name, const std::string& value );
                 
@@ -119,7 +119,7 @@ namespace restbed
 
                 std::string m_status_message;
 
-                std::shared_ptr< framework::Bytes > m_body;
+                framework::Bytes m_body;
             
                 std::multimap< std::string, std::string > m_headers;
         };

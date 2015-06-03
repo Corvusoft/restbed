@@ -44,11 +44,11 @@ const char* body = R"(
 
 void post_handler( const shared_ptr< Session >& session )
 {
-    session->fetch( 492, [ ]( const shared_ptr< Session >& session, const shared_ptr< Bytes >& )
+    session->fetch( 492, [ ]( const shared_ptr< Session >& session, const Bytes& )
     {
-        auto expectation = make_shared< Bytes >( body, body + 492 );
+        auto expectation = Bytes( body, body + 492 );
         const auto request = session->get_request( );
-        const auto status = ( *request->get_body( ) == *expectation ) ? 201 : 400;
+        const auto status = ( request->get_body( ) == expectation ) ? 201 : 400;
 
         session->close( status, expectation, { { "Content-Length", "492" } } );
     } );

@@ -38,7 +38,7 @@ namespace restbed
             m_path( "/" ),
             m_method( "GET" ),
             m_protocol( "HTTP" ),
-            m_body( nullptr ),
+            m_body( ),
             m_headers( ),
             m_path_parameters( ),
             m_query_parameters( )
@@ -111,7 +111,7 @@ namespace restbed
             return m_protocol;
         }
 
-        const shared_ptr< Bytes > RequestImpl::get_body( const function< shared_ptr< Bytes > ( const shared_ptr< Bytes >& ) >& transform ) const
+        const Bytes RequestImpl::get_body( const function< Bytes ( const Bytes& ) >& transform ) const
         {
             if ( transform not_eq nullptr )
             {
@@ -575,7 +575,7 @@ namespace restbed
             m_protocol = value;
         }
 
-        void RequestImpl::set_body( const shared_ptr< Bytes >& value )
+        void RequestImpl::set_body( const Bytes& value )
         {
             m_body = value;
         }

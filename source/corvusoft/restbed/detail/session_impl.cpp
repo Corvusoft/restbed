@@ -103,10 +103,10 @@ namespace restbed
 
         void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
         {
-            close( status, make_shared< Bytes >( body.begin( ), body.end( ) ), headers );
+            close( status, String::to_bytes( body ), headers );
         }
 
-        void SessionImpl::close( const int status, const shared_ptr< Bytes >& body, const multimap< string, string >& headers )
+        void SessionImpl::close( const int status, const Bytes& body, const multimap< string, string >& headers )
         {
             m_is_closed = true;
 
@@ -142,7 +142,7 @@ namespace restbed
             fetch( m_session, callback );
         }
 
-        void SessionImpl::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+        void SessionImpl::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
         {
             if ( length > m_buffer->size( ) )
             {
@@ -154,19 +154,19 @@ namespace restbed
                      //if error
 
                      const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
-                     const auto data = make_shared< Bytes >( data_ptr, data_ptr + length );
+                     const auto data = Bytes( data_ptr, data_ptr + length );
                      this->m_buffer->consume( length );
 
                      const auto request = this->m_session->m_pimpl->get_request( );
                      auto body = request->get_body( );
 
-                     if ( body == nullptr )
+                     if ( body.empty( ) )
                      {
                          request->m_pimpl->set_body( data );
                      }
                      else
                      {
-                         body->insert( body->end( ), data->begin( ), data->end( ) );
+                         body.insert( body.end( ), data.begin( ), data.end( ) );
                          request->m_pimpl->set_body( body );
                      }
                      
@@ -176,19 +176,19 @@ namespace restbed
             else
             {
                 const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
-                const auto data = make_shared< Bytes >( data_ptr, data_ptr + length );
+                const auto data = Bytes( data_ptr, data_ptr + length );
                 m_buffer->consume( length );
 
                 const auto request = m_session->m_pimpl->get_request( );
                 auto body = request->get_body( );
 
-                if ( body == nullptr )
+                if ( body.empty( ) )
                 {
                     request->m_pimpl->set_body( data );
                 }
                 else
                 {
-                    body->insert( body->end( ), data->begin( ), data->end( ) );
+                    body.insert( body.end( ), data.begin( ), data.end( ) );
                     request->m_pimpl->set_body( body );
                 }
 
@@ -196,7 +196,7 @@ namespace restbed
             }
         }
 
-        void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+        void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
         {
             asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code& error,
                                                                                          std::size_t bytes_transferred ) //const bytes_trans..?
@@ -204,19 +204,19 @@ namespace restbed
                  //if error
 
                  const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
-                 const auto data = make_shared< Bytes >( data_ptr, data_ptr + bytes_transferred );
+                 const auto data = Bytes( data_ptr, data_ptr + bytes_transferred );
                  m_buffer->consume( bytes_transferred );
 
                  const auto request = this->m_session->m_pimpl->get_request( );
                  auto body = request->get_body( );
 
-                 if ( body == nullptr )
+                 if ( body.empty( ) )
                  {
                      request->m_pimpl->set_body( data );
                  }
                  else
                  {
-                     body->insert( body->end( ), data->begin( ), data->end( ) );
+                     body.insert( body.end( ), data.begin( ), data.end( ) );
                      request->m_pimpl->set_body( body );
                  }
                  
@@ -413,7 +413,7 @@ namespace restbed
             }
 
             const auto data = response.to_bytes( );
-            asio::async_write( *m_socket, asio::buffer( *data, data->size( ) ), callback );
+            asio::async_write( *m_socket, asio::buffer( data.data( ), data.size( ) ), callback );
         }
     }
 }

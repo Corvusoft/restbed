@@ -9,8 +9,8 @@ using namespace restbed;
 using namespace framework;
 
 void post_method_handler( const shared_ptr< Session >& );
-void read_chunk( const shared_ptr< Session >&, const shared_ptr< Bytes >& );
-void read_chunk_size( const shared_ptr< Session >&, const shared_ptr< Bytes >& );
+void read_chunk( const shared_ptr< Session >&, const Bytes& );
+void read_chunk_size( const shared_ptr< Session >&, const Bytes& );
 
 int main( const int, const char** )
 {
@@ -42,12 +42,12 @@ void post_method_handler( const shared_ptr< Session >& session )
         int length = 0;
         request->get_header( "Content-Length", length );
 
-        session->fetch( length, [ ]( const shared_ptr< Session >& session, const shared_ptr< Bytes >& )
+        session->fetch( length, [ ]( const shared_ptr< Session >& session, const Bytes& )
         {
             const auto request = session->get_request( );
             const auto body = request->get_body( );
 
-            fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body->size( ) ), body->data( ) );
+            fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), body.data( ) );
             session->close( OK );
         } );
     }
@@ -57,11 +57,11 @@ void post_method_handler( const shared_ptr< Session >& session )
     }
 }
 
-void read_chunk_size( const shared_ptr< Session >& session, const shared_ptr< Bytes >& data )
+void read_chunk_size( const shared_ptr< Session >& session, const Bytes& data )
 {
-    if ( data not_eq nullptr and not data->empty( ) )
+    if ( not data.empty( ) )
     {
-        const string length( data->begin( ), data->end( ) );
+        const string length( data.begin( ), data.end( ) );
 
         if ( length not_eq "0\r\n" )
         {
@@ -76,12 +76,12 @@ void read_chunk_size( const shared_ptr< Session >& session, const shared_ptr< By
     const auto request = session->get_request( );
     const auto body = request->get_body( );
 
-    fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body->size( ) ), body->data( ) );
+    fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), body.data( ) );
 }
 
-void read_chunk( const shared_ptr< Session >& session, const shared_ptr< Bytes >& data )
+void read_chunk( const shared_ptr< Session >& session, const Bytes& data )
 {
-    fprintf( stdout, "Partial body chunk: %lu bytes\n", data->size( ) );
+    fprintf( stdout, "Partial body chunk: %lu bytes\n", data.size( ) );
 
     session->fetch( "\r\n", &read_chunk_size );
 }

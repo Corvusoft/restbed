@@ -59,7 +59,7 @@ namespace restbed
 
                 const std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform ) const;
 
-                const std::shared_ptr< framework::Bytes > get_body( const std::function< std::shared_ptr< framework::Bytes > ( const std::shared_ptr< framework::Bytes >& ) >& transform ) const;
+                const framework::Bytes get_body( const std::function< framework::Bytes ( const framework::Bytes& ) >& transform ) const;
 
                 void get_header( const std::string& name, int& value, const int default_value, const std::function< std::string ( const std::string& ) >& transform ) const;
 
@@ -118,7 +118,7 @@ namespace restbed
 
                 void set_protocol( const std::string& value );
 
-                void set_body( const std::shared_ptr< framework::Bytes >& value );
+                void set_body( const framework::Bytes& value );
 
                 void set_headers( const std::multimap< std::string, std::string >& values );
 
@@ -173,7 +173,7 @@ namespace restbed
             
                 std::string m_protocol;
 
-                std::shared_ptr< framework::Bytes > m_body;
+                framework::Bytes m_body;
             
                 std::multimap< std::string, std::string > m_headers;
                 

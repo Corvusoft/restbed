@@ -30,7 +30,7 @@ namespace restbed
             m_status_code( 200 ),
             m_protocol( "HTTP" ),
             m_status_message( String::empty ),
-            m_body( nullptr ),
+            m_body( ),
             m_headers( )
         {
             return;
@@ -41,7 +41,7 @@ namespace restbed
             return;
         }
 
-        shared_ptr< Bytes > ResponseImpl::to_bytes( void ) const
+        Bytes ResponseImpl::to_bytes( void ) const
         {
             auto data = String::format( "%s/%.1f %i %s\r\n", m_protocol.data( ),
                                                              m_version,
@@ -54,12 +54,11 @@ namespace restbed
 
             data += "\r\n";
 
-            auto bytes = make_shared< Bytes >( );
-            *bytes = String::to_bytes( data );
+            Bytes bytes = String::to_bytes( data );
 
-            if ( m_body not_eq nullptr )
+            if ( not m_body.empty( ) )
             {
-                bytes->insert( bytes->end( ), m_body->begin( ), m_body->end( ) );
+                bytes.insert( bytes.end( ), m_body.begin( ), m_body.end( ) );
             }
             
             return bytes;
@@ -85,7 +84,7 @@ namespace restbed
             return m_status_message;
         }
 
-        const shared_ptr< Bytes >& ResponseImpl::get_body( void ) const
+        const Bytes& ResponseImpl::get_body( void ) const
         {
             return m_body;
         }
@@ -115,7 +114,7 @@ namespace restbed
             m_status_message = value;
         }
 
-        void ResponseImpl::set_body( const shared_ptr< Bytes >& value )
+        void ResponseImpl::set_body( const Bytes& value )
         {
             m_body = value;
         }

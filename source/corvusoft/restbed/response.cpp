@@ -9,6 +9,7 @@
 #include "corvusoft/restbed/detail/response_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::string;
@@ -21,6 +22,7 @@ using restbed::detail::ResponseImpl;
 
 //External Namespaces
 using framework::Bytes;
+using framework::String;
 
 namespace restbed
 {
@@ -34,7 +36,7 @@ namespace restbed
         return;
     }
 
-    shared_ptr< Bytes > Response::to_bytes( void ) const
+    Bytes Response::to_bytes( void ) const
     {
         return m_pimpl->to_bytes( );
     }
@@ -59,7 +61,7 @@ namespace restbed
         return m_pimpl->get_status_message( );
     }
 
-    shared_ptr< Bytes > Response::get_body( void ) const
+    Bytes Response::get_body( void ) const
     {
         return m_pimpl->get_body( );
     }
@@ -91,10 +93,10 @@ namespace restbed
 
     void Response::set_body( const string& value )
     {
-        m_pimpl->set_body( make_shared< Bytes >( value.begin( ), value.end( ) ) );
+        m_pimpl->set_body( String::to_bytes( value ) );
     }
 
-    void Response::set_body( const shared_ptr< Bytes >& value )
+    void Response::set_body( const Bytes& value )
     {
         m_pimpl->set_body( value );
     }

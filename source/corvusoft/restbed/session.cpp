@@ -55,7 +55,7 @@ namespace restbed
         m_pimpl->close( );
     }
 
-    void Session::close( const int status, const shared_ptr< Bytes >& body )
+    void Session::close( const int status, const Bytes& body )
     {
         static multimap< string, string > empty;
         m_pimpl->close( status, body, empty );
@@ -77,7 +77,7 @@ namespace restbed
         m_pimpl->close( status, body, headers );
     }
 
-    void Session::close( const int status, const shared_ptr< Bytes >& body, const multimap< string, string >& headers )
+    void Session::close( const int status, const Bytes& body, const multimap< string, string >& headers )
     {
         m_pimpl->close( status, body, headers );
     }
@@ -103,12 +103,12 @@ namespace restbed
         m_pimpl->fetch( callback );
     }
 
-    void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+    void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
     {
         m_pimpl->fetch( length, callback );
     }
 
-    void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const shared_ptr< Bytes >& ) >& callback )
+    void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
     {
         m_pimpl->fetch( delimiter, callback );
     }

@@ -71,7 +71,7 @@ namespace restbed
         return m_pimpl->get_protocol( transform );
     }
 
-    const shared_ptr< Bytes > Request::get_body( const function< shared_ptr< Bytes > ( const shared_ptr< Bytes >& ) >& transform ) const
+    const Bytes Request::get_body( const function< Bytes ( const Bytes& ) >& transform ) const
     {
         return m_pimpl->get_body( transform );
     }

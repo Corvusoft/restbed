@@ -30,7 +30,7 @@ TEST_CASE( "validate default instance values", "[request]" )
 
     REQUIRE( request.get_version( ) == 1.1 );
     REQUIRE( request.get_path( ) == "/" );
-    REQUIRE( request.get_body( )== nullptr );
+    REQUIRE( request.get_body( ).empty( ) );
     REQUIRE( request.get_method( ) == "GET" );
     REQUIRE( request.get_protocol( ) == "HTTP" );
     REQUIRE( request.get_headers( ).empty( ) );
