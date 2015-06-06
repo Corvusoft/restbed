@@ -406,6 +406,7 @@ namespace restbed
 
             hdrs = response.get_headers( );
             headers.insert( hdrs.begin( ), hdrs.end( ) );
+            response.set_headers( headers );
 
             if ( response.get_status_message( ) == String::empty )
             {

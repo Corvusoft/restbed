@@ -57,6 +57,9 @@ add_executable( http_method_handlers_http_delete_acceptance_test_suite ${SOURCE_
 add_executable( http_method_handlers_http_connect_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_connect.cpp )
 add_executable( http_method_handlers_http_options_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_options.cpp )
 
+add_executable( custom_authentication_authorised_acceptance_test_suite ${SOURCE_DIR}/custom_authentication/authorised.cpp )
+add_executable( custom_authentication_unauthorised_acceptance_test_suite ${SOURCE_DIR}/custom_authentication/unauthorised.cpp )
+
 target_link_libraries( publishing_single_path_resources_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_single_path_resources_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_single_path_resources_http_head_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
@@ -97,6 +100,9 @@ target_link_libraries( http_method_handlers_http_patch_acceptance_test_suite ${C
 target_link_libraries( http_method_handlers_http_delete_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( http_method_handlers_http_connect_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( http_method_handlers_http_options_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+
+target_link_libraries( custom_authentication_authorised_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( custom_authentication_unauthorised_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 
 #
 # Setup
@@ -146,3 +152,6 @@ add_test( http_method_handlers_http_options_acceptance_test_suite ${EXECUTABLE_O
 add_test( http_method_handlers_http_delete_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_delete_acceptance_test_suite )
 add_test( http_method_handlers_http_connect_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_connect_acceptance_test_suite )
 add_test( http_method_handlers_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_options_acceptance_test_suite )
+
+add_test( custom_authentication_authorised_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_authentication_authorised_acceptance_test_suite )
+add_test( custom_authentication_unauthorised_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_authentication_unauthorised_acceptance_test_suite )
