@@ -118,12 +118,10 @@ namespace restbed
 
             m_session_manager->start( settings );
 
-            if ( m_logger == nullptr )
+            if ( m_logger not_eq nullptr )
             {
-                //m_logger = make_shared< LoggerImpl >( settings );
+                m_logger->start( settings );
             }
-
-            //m_logger->start( settings );
 
             m_io_service = make_shared< io_service >( );
 
@@ -479,7 +477,7 @@ namespace restbed
             }
             else
             {
-                session->close( NOT_FOUND, { { "Connection", "close" } } );
+                session->close( NOT_FOUND );
             }
         }
 
@@ -491,7 +489,7 @@ namespace restbed
             }
             else
             {
-                session->close( METHOD_NOT_ALLOWED, { { "Connection", "close" } } );
+                session->close( METHOD_NOT_ALLOWED );
             }
         }
 
@@ -503,7 +501,7 @@ namespace restbed
             }
             else
             {
-                session->close( NOT_IMPLEMENTED, { { "Connection", "close" } } );
+                session->close( NOT_IMPLEMENTED );
             }
         }
 

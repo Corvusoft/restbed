@@ -30,7 +30,7 @@ using namespace framework;
 
 void get_handler( const shared_ptr< Session >& session )
 {
-    session->close( 200, "Hello, World!", { { "Content-Length", "13" }, { "Connection", "close" } } );
+    session->close( 200, "Hello, World!", { { "Content-Length", "13" } } );
 }
 
 SCENARIO( "publishing multi path resources", "[resource]" )
@@ -43,6 +43,7 @@ SCENARIO( "publishing multi path resources", "[resource]" )
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
+        settings->set_default_header( "Connection", "close" );
 
         Service service;
         service.publish( resource );
