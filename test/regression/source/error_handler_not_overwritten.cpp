@@ -6,7 +6,9 @@
 
 //System Includes
 #include <memory>
+#include <thread>
 #include <cstdlib>
+#include <stdexcept>
 
 //Project Includes
 #include <restbed>
@@ -16,6 +18,8 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
+using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -25,49 +29,45 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-shared_ptr< Service > m_service;
-bool error_handler_called = false;
-
-Response faulty_method_handler( const Request& )
+void faulty_method_handler( const shared_ptr< Session >& )
 {
     throw 503;
-    
-    Response response;
-    return response;
 }
 
-void error_handler( const int status_code, const Request&, /*out*/ Response& response )
+void error_handler( const int, const exception&, const std::shared_ptr< Session >& session )
 {
-    error_handler_called = true;
-
-    response.set_status_code( status_code );
-    response.set_body( status_codes.at( status_code ) );
+    session->close( 444 );
 }
 
 TEST_CASE( "overwrite existing resource", "[resource]" )
 {
-    Resource resource;
-    resource.set_path( "TestResource" );
-    resource.set_method_handler( "GET", &faulty_method_handler );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
-    
-    m_service = make_shared< Service >( settings );
-    m_service->set_error_handler( &error_handler );
-    m_service->publish( resource );
-    m_service->start( );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "GET", &faulty_method_handler );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_root( "queues" );
+
+    Service service;
+    service.publish( resource );
+    service.set_error_handler( &error_handler );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
     request.port = 1984;
     request.host = "localhost";
-    request.path = "/TestResource";
+    request.path = "/queues/test";
 
     auto response = Http::get( request );
+
+    REQUIRE( 444 == response.status_code );
     
-    REQUIRE( error_handler_called );
-    
-    m_service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

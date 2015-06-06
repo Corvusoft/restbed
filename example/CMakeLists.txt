@@ -24,8 +24,8 @@ target_link_libraries( custom_status_codes ${CMAKE_PROJECT_NAME} )
 add_executable( digest_authentication digest_authentication/source/example.cpp )
 target_link_libraries( digest_authentication ${CMAKE_PROJECT_NAME} )
 
-#add_executable( error_handling error_handling/source/example.cpp )
-#target_link_libraries( error_handling ${CMAKE_PROJECT_NAME} )
+add_executable( error_handling error_handling/source/example.cpp )
+target_link_libraries( error_handling ${CMAKE_PROJECT_NAME} )
 
 add_executable( logging logging/source/example.cpp )
 target_link_libraries( logging ${CMAKE_PROJECT_NAME} )

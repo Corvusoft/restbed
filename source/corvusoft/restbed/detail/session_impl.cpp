@@ -77,7 +77,8 @@ namespace restbed
             m_timer( nullptr ),
             m_socket( nullptr ),
             m_headers( ),
-            m_router( nullptr )
+            m_router( nullptr ),
+            m_error_handler( nullptr )
         {
             return;
         }
@@ -385,6 +386,11 @@ namespace restbed
             m_headers = values;
         }
 
+        void SessionImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
+        {
+            m_error_handler = value;
+        }
+
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
         {
             smatch matches;
@@ -453,17 +459,39 @@ namespace restbed
         }
         catch ( const runtime_error& re )
         {
-            string body = re.what( );
-            session->close( 400, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+            if ( m_error_handler not_eq nullptr )
+            {
+                m_error_handler( 400, re, session );
+            }
+            else
+            {
+                string body = re.what( );
+                session->close( 400, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+            }
         }
         catch ( const exception& ex )
         {
-            string body = ex.what( );
-            session->close( 500, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+            if ( m_error_handler not_eq nullptr )
+            {
+                m_error_handler( 500, ex, session );
+            }
+            else
+            {
+                string body = ex.what( );
+                session->close( 500, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+            }
         }
         catch ( ... )
         {
-            session->close( 500 ); //add message? with retrhow funcs, merge with one above.
+            if ( m_error_handler not_eq nullptr )
+            {
+                runtime_error re( "An unknown error has occured." );
+                m_error_handler( 500, re, session );
+            }
+            else
+            {
+                session->close( 500, "An unknown error has occured.", { { "Content-Type", "text/plain" }, { "Content-Length", "29" } } );
+            }
         }
 
         void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const

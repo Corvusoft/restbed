@@ -9,6 +9,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <stdexcept>
 #include <functional>
 
 //Project Includes
@@ -77,7 +78,7 @@ namespace restbed
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
                                                                          const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
             
-            void set_error_handler( std::function< void ( const int, const std::shared_ptr< Session >& ) > value );
+            void set_error_handler( std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > value );
             
             //Operators
             

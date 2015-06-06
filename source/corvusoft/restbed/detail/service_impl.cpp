@@ -36,6 +36,7 @@ using std::smatch;
 using std::find_if;
 using std::function;
 using std::to_string;
+using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
@@ -258,7 +259,7 @@ namespace restbed
             m_authentication_handler = value;
         }
         
-        void ServiceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
+        void ServiceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
         {
             if ( m_is_running )
             {
@@ -400,14 +401,16 @@ namespace restbed
                 const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::resource_router, this, _1 );
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
+                const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
 
                 const auto settings = m_settings;
 
-                m_session_manager->create( [ socket, authenticate, settings ]( const shared_ptr< Session >& session )
+                m_session_manager->create( [ socket, authenticate, settings, error_handler ]( const shared_ptr< Session >& session )
                 {
                     session->m_pimpl->set_socket( socket );
                     session->m_pimpl->fetch( session, authenticate );
                     session->m_pimpl->set_settings( settings );
+                    session->m_pimpl->set_error_handler( error_handler );
                     //set socket timeout etc...
                 } );
             }

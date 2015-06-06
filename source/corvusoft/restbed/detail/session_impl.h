@@ -121,6 +121,8 @@ namespace restbed
 
                 void set_headers( const std::multimap< std::string, std::string >& values );
 
+                void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) >& value );
+
                 //Operators
                 
                 //Properties
@@ -193,6 +195,8 @@ namespace restbed
                 std::multimap< std::string, std::string > m_headers;
 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_router;
+
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > m_error_handler;
         };
     }
 }

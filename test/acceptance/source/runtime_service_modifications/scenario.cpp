@@ -20,6 +20,7 @@
 using std::thread;
 using std::string;
 using std::function;
+using std::exception;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
@@ -35,7 +36,7 @@ void handler( const shared_ptr< Session >& )
     return;
 }
 
-void error_handler( const int, const shared_ptr< Session >& )
+void error_handler( const int, const exception&, const shared_ptr< Session >& )
 {
     return;
 }

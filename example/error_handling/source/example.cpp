@@ -1,35 +1,36 @@
+#include <memory>
 #include <cstdlib>
+#include <stdexcept>
+#include <restbed>
 
-#include "restbed"
-
+using namespace std;
 using namespace restbed;
 
-Response faulty_method_handler( const Request& )
+void faulty_method_handler( const shared_ptr< Session >& )
 {
-    throw StatusCode::SERVICE_UNAVAILABLE;
-    
-    Response response;
-    return response;
+    throw SERVICE_UNAVAILABLE;
 }
 
-void error_handler( const int status_code, const Request&, /*out*/ Response& response )
+void error_handler( const int status_code, const exception& error, const shared_ptr< Session >& session )
 {
-    response.set_status_code( status_code );
-    response.set_body( StatusCode::to_string( status_code ) );
+    session->close( 5000, "Custom Internal Server Error", { { "Content-Length", "28" } } );
 }
 
 int main( const int, const char** )
 {
-    Resource resource;
-    resource.set_method_handler( "GET", &faulty_method_handler );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    
-    Service service( settings );
-    service.set_error_handler( &error_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources/item" );
+    resource->set_method_handler( "GET", &faulty_method_handler );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+
+    Service service;
     service.publish( resource );
-    service.start( );
-    
+    service.set_error_handler( &error_handler );
+
+    service.start( settings );
+
     return EXIT_SUCCESS;
 }

@@ -18,6 +18,7 @@
 using std::map;
 using std::string;
 using std::function;
+using std::exception;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -88,7 +89,7 @@ namespace restbed
         m_pimpl->set_authentication_handler( value );
     }
     
-    void Service::set_error_handler( function< void ( const int, const shared_ptr< Session >& ) > value )
+    void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session >& ) > value )
     {
         m_pimpl->set_error_handler( value );
     }
