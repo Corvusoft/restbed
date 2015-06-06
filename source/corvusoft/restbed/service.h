@@ -60,7 +60,15 @@ namespace restbed
             //Setters
             //set not_found, not_implemented, method_not_allowed
             void set_logger( const std::shared_ptr< Logger >& value );
-            
+
+            void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
                                                                          const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
             

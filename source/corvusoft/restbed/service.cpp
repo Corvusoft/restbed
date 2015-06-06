@@ -61,7 +61,27 @@ namespace restbed
     {
         m_pimpl->set_logger( value );
     }
-    
+
+    void Service::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_not_found_handler( value );
+    }
+
+    void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_method_not_allowed_handler( value );
+    }
+
+    void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_method_not_implemented_handler( value );
+    }
+
+    void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_failed_filter_validation_handler( value );
+    }
+
     void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
                                                                      const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value )
     {

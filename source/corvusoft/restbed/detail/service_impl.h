@@ -64,6 +64,14 @@ namespace restbed
                 void set_default_header( const std::string& name, const std::string& value );
 
                 void set_logger( const std::shared_ptr< Logger >& value );
+
+                void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+                void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+                void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+                void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
                 
                 void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
                                                                              const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
@@ -154,6 +162,14 @@ namespace restbed
                 std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_not_found_handler;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_method_not_allowed_handler;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_method_not_implemented_handler;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_failed_filter_validation_handler;
                 
                 std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
                 

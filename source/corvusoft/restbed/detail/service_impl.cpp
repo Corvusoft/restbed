@@ -64,6 +64,10 @@ namespace restbed
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
             m_acceptor( nullptr ),
+            m_not_found_handler( nullptr ),
+            m_method_not_allowed_handler( nullptr ),
+            m_method_not_implemented_handler( nullptr ),
+            m_failed_filter_validation_handler( nullptr ),
             m_authentication_handler( nullptr ),
             m_error_handler( nullptr )
         {
@@ -189,7 +193,31 @@ namespace restbed
             //if is running throw runtime_error
             m_logger = value;
         }
-        
+
+        void ServiceImpl::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            //if is running throw runtime_error
+            m_not_found_handler = value;
+        }
+
+        void ServiceImpl::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            //if is running throw runtime_error
+            m_method_not_allowed_handler = value;
+        }
+
+        void ServiceImpl::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            //if is running throw runtime_error
+            m_method_not_implemented_handler = value;
+        }
+
+        void ServiceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            //if is running throw runtime_error
+            m_failed_filter_validation_handler = value;
+        }
+
         void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
                                                                              const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
@@ -406,22 +434,50 @@ namespace restbed
 
         void ServiceImpl::not_found( const shared_ptr< Session >& session )
         {
-            session->close( NOT_FOUND );
+            if ( m_not_found_handler not_eq nullptr )
+            {
+                m_not_found_handler( session );
+            }
+            else
+            {
+                session->close( NOT_FOUND, { { "Connection", "close" } } );
+            }
         }
 
         void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session )
         {
-            session->close( METHOD_NOT_ALLOWED, { { "Connection", "close" } } );
+            if ( m_method_not_allowed_handler not_eq nullptr )
+            {
+                m_method_not_allowed_handler( session );
+            }
+            else
+            {
+                session->close( METHOD_NOT_ALLOWED, { { "Connection", "close" } } );
+            }
         }
 
         void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session )
         {
-            session->close( NOT_IMPLEMENTED, { { "Connection", "close" } } );
+            if ( m_method_not_implemented_handler not_eq nullptr )
+            {
+                m_method_not_implemented_handler( session );
+            }
+            else
+            {
+                session->close( NOT_IMPLEMENTED, { { "Connection", "close" } } );
+            }
         }
 
         void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session )
         {
-            session->close( BAD_REQUEST, { { "Connection", "close" } } );
+            if ( m_failed_filter_validation_handler not_eq nullptr )
+            {
+                m_failed_filter_validation_handler( session );
+            }
+            else
+            {
+                session->close( BAD_REQUEST, { { "Connection", "close" } } );
+            }
         }
 
         bool ServiceImpl::has_unique_paths( const set< string >& paths )
