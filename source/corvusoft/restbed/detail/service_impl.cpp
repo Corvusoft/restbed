@@ -56,7 +56,8 @@ namespace restbed
 {
     namespace detail
     {
-        ServiceImpl::ServiceImpl( void ) : m_settings( nullptr ),
+        ServiceImpl::ServiceImpl( void ) : m_is_running( false ),
+            m_settings( nullptr ),
             m_supported_methods( ),
             m_resource_paths( ),
             m_resource_routes( ),
@@ -88,6 +89,8 @@ namespace restbed
         
         void ServiceImpl::stop( void )
         {
+            m_is_running = false;
+
             if ( m_io_service not_eq nullptr )
             {
                 m_io_service->stop( );
@@ -132,6 +135,7 @@ namespace restbed
 
             log( Logger::Level::INFO, "Service online" );
 
+            m_is_running = true;
             m_io_service->run( );
 
             log( Logger::Level::INFO, "Service halted" );
@@ -139,7 +143,10 @@ namespace restbed
         
         void ServiceImpl::publish( const shared_ptr< Resource >& resource )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
 
             if ( resource == nullptr )
             {
@@ -169,7 +176,11 @@ namespace restbed
         
         void ServiceImpl::suppress( const shared_ptr< Resource >& resource )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             if ( resource == nullptr )
             {
                 return;
@@ -190,44 +201,72 @@ namespace restbed
 
         void ServiceImpl::set_logger(  const shared_ptr< Logger >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_logger = value;
         }
 
         void ServiceImpl::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_not_found_handler = value;
         }
 
         void ServiceImpl::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_method_not_allowed_handler = value;
         }
 
         void ServiceImpl::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_method_not_implemented_handler = value;
         }
 
         void ServiceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_failed_filter_validation_handler = value;
         }
 
         void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
                                                                              const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_authentication_handler = value;
         }
         
         void ServiceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
         {
-            //if is running throw runtime_error
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_error_handler = value;
         }
         

@@ -48,7 +48,7 @@ void get_method_handler( const shared_ptr< Session >& session )
     session->close( OK, "Password Protected Hello, World!", { { "Content-Length", "32" } } );
 }
 
-SCENARIO( "custom resource authentication", "[resource]" )
+SCENARIO( "custom service authentication", "[service]" )
 {
     GIVEN( "I publish a secure resource at '/resources/1' with a HTTP 'GET' method handler" )
     {
@@ -69,24 +69,25 @@ SCENARIO( "custom resource authentication", "[resource]" )
             service.start( settings );
         } );
 
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29y28fsoOkdsYXNnb3c'" )
+        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29ydnVzb2Z0OkdsYXNnb3c='" )
         {
             Http::Request request;
             request.port = 1984;
             request.host = "localhost";
             request.path = "/resources/1";
-            request.headers.insert( make_pair( "Authorization", "Basic Q29y28fsoOkdsYXNnb3c" ) );
+            request.headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
 
             auto response = Http::get( request );
 
-            THEN( "I should see a '401' (Unauthorized) status code" )
+            THEN( "I should see a '200' (OK) status code" )
             {
-                REQUIRE( 401 == response.status_code );
+                REQUIRE( 200 == response.status_code );
             }
 
-            AND_THEN( "I should see an empty repsonse body" )
+            AND_THEN( "I should see a repsonse body of 'Password Protected Hello, World!'" )
             {
-                REQUIRE( response.body.empty( ) );
+                Bytes expection { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                REQUIRE( response.body == expection );
             }
 
             AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -96,16 +97,11 @@ SCENARIO( "custom resource authentication", "[resource]" )
                 REQUIRE( "close" == response.headers.find( "Connection" )->second );
             }
 
-            AND_THEN( "I should not see a 'Content-Length' header" )
+            AND_THEN( "I should see a 'Content-Length' header value of '32'" )
             {
-                REQUIRE( response.headers.find( "Content-Length" ) == response.headers.end( ) );
-            }
-
-            AND_THEN( "I should see a 'WWW-Authenticate' header value of 'Basic realm=\"restbed\"'" )
-            {
-                auto header = response.headers.find( "WWW-Authenticate" );
+                auto header = response.headers.find( "Content-Length" );
                 REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "Basic realm=\"restbed\"" == response.headers.find( "WWW-Authenticate" )->second );
+                REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
             }
         }
 

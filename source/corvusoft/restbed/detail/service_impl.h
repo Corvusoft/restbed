@@ -147,6 +147,8 @@ namespace restbed
                 ServiceImpl& operator =( const ServiceImpl& value ) = delete;
                 
                 //Properties
+                bool m_is_running;
+
                 std::shared_ptr< Settings > m_settings;
 
                 std::set< std::string > m_supported_methods;

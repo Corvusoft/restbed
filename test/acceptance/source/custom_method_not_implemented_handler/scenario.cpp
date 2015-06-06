@@ -31,30 +31,17 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-void authentication_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+void method_not_implemented_handler( const shared_ptr< Session >& session )
 {
-    auto authorisation = session->get_request( )->get_header( "Authorization" );
-
-    if ( authorisation not_eq "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" )
-    {
-        session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
-    }
-
-    callback( session );
+    session->close( -232, "Banned Method", { { "Content-Length", "13" } } );
 }
 
-void get_method_handler( const shared_ptr< Session >& session )
+SCENARIO( "custom resource method not implemented handler", "[resource]" )
 {
-    session->close( OK, "Password Protected Hello, World!", { { "Content-Length", "32" } } );
-}
-
-SCENARIO( "custom resource authentication", "[resource]" )
-{
-    GIVEN( "I publish a secure resource at '/resources/1' with a HTTP 'GET' method handler" )
+    GIVEN( "I publish a resource at '/resources/1' without a HTTP 'GET' method handler" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-        resource->set_method_handler( "GET", &get_method_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
@@ -62,31 +49,30 @@ SCENARIO( "custom resource authentication", "[resource]" )
 
         Service service;
         service.publish( resource );
-        service.set_authentication_handler( &authentication_handler );
+        service.set_method_not_implemented_handler( &method_not_implemented_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {
             service.start( settings );
         } );
 
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29ydnVzb2Z0OkdsYXNnb3c='" )
+        WHEN( "I perform a HTTP 'GET' request to '/resources/1'" )
         {
             Http::Request request;
             request.port = 1984;
             request.host = "localhost";
             request.path = "/resources/1";
-            request.headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
 
-            auto response = Http::get( request );
+            auto response = Http::put( request );
 
-            THEN( "I should see a '200' (OK) status code" )
+            THEN( "I should see a '-232' (Banned Method) status code" )
             {
-                REQUIRE( 200 == response.status_code );
+                REQUIRE( -232 == response.status_code );
             }
 
-            AND_THEN( "I should see a repsonse body of 'Password Protected Hello, World!'" )
+            AND_THEN( "I should see a repsonse body of 'Banned Method'" )
             {
-                Bytes expection { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                Bytes expection { 'B', 'a', 'n', 'n', 'e', 'd', ' ', 'M', 'e', 't', 'h', 'o', 'd' };
                 REQUIRE( response.body == expection );
             }
 
@@ -97,11 +83,11 @@ SCENARIO( "custom resource authentication", "[resource]" )
                 REQUIRE( "close" == response.headers.find( "Connection" )->second );
             }
 
-            AND_THEN( "I should see a 'Content-Length' header value of '32'" )
+            AND_THEN( "I should see a 'Content-Length' header value of '13'" )
             {
                 auto header = response.headers.find( "Content-Length" );
                 REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
+                REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
             }
         }
 

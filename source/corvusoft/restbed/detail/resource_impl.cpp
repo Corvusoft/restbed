@@ -50,7 +50,7 @@ namespace restbed
         {
             if ( m_authentication_handler not_eq nullptr )
             {
-                m_authentication_handler( session );
+                m_authentication_handler( session, callback );
             }
             else
             {
@@ -104,7 +104,7 @@ namespace restbed
             m_default_headers = values;
         }
 
-        void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
             m_authentication_handler = value;
         }

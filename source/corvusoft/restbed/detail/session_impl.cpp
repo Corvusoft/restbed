@@ -386,9 +386,14 @@ namespace restbed
             string body = re.what( );
             session->close( 400, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
         }
+        catch ( const exception& ex )
+        {
+            string body = ex.what( );
+            session->close( 500, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+        }
         catch ( ... )
         {
-            session->close( 500 ); //add message? with retrhow funcs
+            session->close( 500 ); //add message? with retrhow funcs, merge with one above.
         }
 
         void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const

@@ -49,6 +49,8 @@ namespace restbed
             //Functionality
             void stop( void );
 
+            //void restart( const std::shared_ptr< Settings >& settings = nullptr ); //const settings
+
             void start( const std::shared_ptr< Settings >& settings = nullptr ); //const settings
 
             void publish( const std::shared_ptr< Resource >& resource ); //const
@@ -58,8 +60,10 @@ namespace restbed
             //Getters
 
             //Setters
-            //set not_found, not_implemented, method_not_allowed
             void set_logger( const std::shared_ptr< Logger >& value );
+
+            //void set_hook( const std::string& event, const std::function< void ( const std::shared_ptr< Service >& ) >& value );
+            //void set_hook( const std::string& event, const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
             void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 

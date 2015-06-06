@@ -55,7 +55,7 @@ namespace restbed
         m_pimpl->set_default_headers( values );
     }
 
-    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
     {
         m_pimpl->set_authentication_handler( value );
     }
