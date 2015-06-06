@@ -1,4 +1,5 @@
 #include <string>
+#include <chrono>
 #include <memory>
 #include <cstdlib>
 #include <restbed>
@@ -8,16 +9,15 @@ using namespace restbed;
 
 void get_method_handler( const shared_ptr< Session >& session )
 {
-    session->yield( OK, "7\r\nrestbed\r\n", { { "Transfer-Encoding", "chunked" } } );
-
-    restbed::wait_for( seconds( 5 ), [ ]( const shared_ptr< Session >& session )
+    session->yield( OK, "8\r\nrestbed \r\n", { { "Transfer-Encoding", "chunked" } }, [ ]( const shared_ptr< Session >& session )
     {
-        session->yield( "16\r\nchunked encoding\r\n" );
-
-        restbed::wait_for( seconds( 2 ), [ ]( const shared_ptr< Session >& session
+        session->wait_for( chrono::seconds( 5 ), [ ]( const shared_ptr< Session >& session )
         {
-            session->close( "0\r\n\r\n" );
-        } ) );
+            session->yield( "16\r\nchunked encoding\r\n", [ ]( const shared_ptr< Session >& session )
+            {
+                session->close( "0\r\n\r\n" );
+            } );
+        } );
     } );
 }
 

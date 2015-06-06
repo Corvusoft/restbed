@@ -15,6 +15,11 @@ using std::string;
 using std::function;
 using std::multimap;
 using std::shared_ptr;
+using std::chrono::hours;
+using std::chrono::minutes;
+using std::chrono::seconds;
+using std::chrono::milliseconds;
+using std::chrono::microseconds;
 
 //Project Namespaces
 using restbed::detail::SessionImpl;
@@ -50,9 +55,9 @@ namespace restbed
         m_pimpl->purge( callback );
     }
 
-    void Session::close( void )
+    void Session::close( const string& body )
     {
-        m_pimpl->close( );
+        m_pimpl->close( body );
     }
 
     void Session::close( const int status, const Bytes& body )
@@ -82,20 +87,25 @@ namespace restbed
         m_pimpl->close( status, body, headers );
     }
 
-    void Session::yield( const int status, const string& body )
+    void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static multimap< string, string > empty;
-        m_pimpl->yield( status, body, empty );
+        m_pimpl->yield( status, body, empty, callback );
     }
 
-    void Session::yield( const int status, const multimap< string, string >& headers )
+    void Session::yield( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->yield( status, String::empty, headers );
+        m_pimpl->yield( status, String::empty, headers, callback );
     }
 
-    void Session::yield( const int status, const string& body, const multimap< string, string >& headers )
+    void Session::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->yield( status, body, headers );
+        m_pimpl->yield( status, body, headers, callback );
+    }
+
+    void Session::yield( const string& data, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->yield( data, callback );
     }
 
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -111,6 +121,31 @@ namespace restbed
     void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
     {
         m_pimpl->fetch( delimiter, callback );
+    }
+
+    void Session::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( delay, callback );
+    }
+
+    void Session::wait_for( const minutes& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( delay, callback );
+    }
+
+    void Session::wait_for( const seconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( delay, callback );
+    }
+
+    void Session::wait_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( delay, callback );
+    }
+
+    void Session::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( delay, callback );
     }
 
     const string& Session::get_id( void ) const

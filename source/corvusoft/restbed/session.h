@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <chrono>
 #include <string>
 #include <memory>
 #include <functional>
@@ -55,7 +56,7 @@ namespace restbed
 
             void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
 
-            void close( void );
+            void close( const std::string& body = framework::String::empty );
 
             void close( const int status, const framework::Bytes& body );
 
@@ -67,17 +68,29 @@ namespace restbed
 
             void close( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers );
 
-            void yield( const int status, const std::string& body = framework::String::empty );
+            void yield( const int status, const std::string& body = framework::String::empty, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr  );
 
-            void yield( const int status, const std::multimap< std::string, std::string >& headers );
+            void yield( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr  );
 
-            void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
+            void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr  );
+
+            void yield( const std::string& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
 
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
 
             void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
+
+            void wait_for( const std::chrono::hours& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+            void wait_for( const std::chrono::minutes& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+            void wait_for( const std::chrono::seconds& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+            void wait_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+            void wait_for( const std::chrono::microseconds& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
             //Getters
             const std::string& get_id( void ) const;

@@ -39,6 +39,12 @@ using std::exception;
 using std::to_string;
 using std::runtime_error;
 using std::placeholders::_1;
+using std::chrono::hours;
+using std::chrono::minutes;
+using std::chrono::seconds;
+using std::chrono::milliseconds;
+using std::chrono::microseconds;
+using std::chrono::duration_cast;
 
 //Project Namespaces
 using restbed::detail::SessionImpl;
@@ -48,6 +54,7 @@ using asio::buffer;
 using asio::ip::tcp;
 using asio::error_code;
 using asio::async_write;
+using asio::steady_timer;
 using asio::async_read_until;
 using framework::Uri;
 using framework::Byte;
@@ -67,6 +74,7 @@ namespace restbed
             m_resource( nullptr ),
             m_settings( nullptr ),
             m_buffer( nullptr ),
+            m_timer( nullptr ),
             m_socket( nullptr ),
             m_headers( ),
             m_router( nullptr )
@@ -101,6 +109,17 @@ namespace restbed
             m_socket->close( );
         }
 
+        void SessionImpl::close( const string& body )
+        {
+            asio::async_write( *m_socket,
+                               asio::buffer( body.data( ), body.size( ) ),
+                               [ this ]( const asio::error_code& error, size_t bytes_transferred )
+                               {
+                                   //if error
+                                   this->close( );
+                               } );
+        }
+
         void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
         {
             close( status, String::to_bytes( body ), headers );
@@ -123,18 +142,36 @@ namespace restbed
             } );
         }
 
-        void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers )
+        void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             Response response;
             response.set_body( body );
             response.set_headers( headers );
             response.set_status_code( status );
 
-            transmit( response, [ this ]( const asio::error_code& error, size_t bytes_transferred )
+            transmit( response, [ this, callback ]( const asio::error_code& error, size_t bytes_transferred )
             {
                 //if error -> log
-                this->fetch( this->m_session, this->m_router );
+                if ( callback == nullptr )
+                {
+                    this->fetch( this->m_session, this->m_router );
+                }
+                else
+                {
+                    callback( this->m_session );
+                }
             } );
+        }
+
+        void SessionImpl::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            asio::async_write( *m_socket,
+                              asio::buffer( body.data( ), body.size( ) ),
+                              [ this, callback ]( const asio::error_code& error, size_t bytes_transferred )
+                              {
+                                  //if error
+                                  callback( this->m_session );
+                              } );
         }
 
         void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -238,6 +275,39 @@ namespace restbed
                                     *m_buffer,
                                     "\r\n\r\n",
                                     bind( &SessionImpl::parse_request, this, _1, m_session, callback ) );
+        }
+
+        void SessionImpl::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback );
+        }
+
+        void SessionImpl::wait_for( const minutes& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback );
+        }
+
+        void SessionImpl::wait_for( const seconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback );
+        }
+        
+        void SessionImpl::wait_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback );
+        }
+
+        void SessionImpl::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            auto session = m_session;
+
+            m_timer = make_shared< asio::steady_timer >( m_socket->get_io_service( ) );
+            m_timer->expires_from_now( delay );
+            m_timer->async_wait( [ callback, session ]( const error_code& error )
+            {
+               //if error
+               callback( session );
+            } );
         }
 
         const string& SessionImpl::get_id( void ) const
