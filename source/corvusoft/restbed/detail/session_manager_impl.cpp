@@ -41,7 +41,7 @@ namespace restbed
             return;
         }
 
-        void SessionManagerImpl::start( const shared_ptr< Settings >& )
+        void SessionManagerImpl::start( const shared_ptr< const Settings >& )
         {
             return;
         }

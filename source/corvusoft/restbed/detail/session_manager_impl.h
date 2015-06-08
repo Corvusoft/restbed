@@ -44,7 +44,7 @@ namespace restbed
                 //Functionality
                 void stop( void );
 
-                void start( const std::shared_ptr< Settings >& settings );
+                void start( const std::shared_ptr< const Settings >& settings );
 
                 void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 

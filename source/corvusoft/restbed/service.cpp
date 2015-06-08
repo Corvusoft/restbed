@@ -43,17 +43,22 @@ namespace restbed
         m_pimpl->stop( );
     }
     
-    void Service::start( const shared_ptr< Settings >& settings )
+    void Service::start( const shared_ptr< const Settings >& settings )
     {
         m_pimpl->start( settings );
     }
-    
-    void Service::publish( const shared_ptr< Resource >& resource )
+
+    void Service::restart( const shared_ptr< const Settings >& settings )
+    {
+        m_pimpl->restart( settings );
+    }
+
+    void Service::publish( const shared_ptr< const Resource >& resource )
     {
         m_pimpl->publish( resource );
     }
     
-    void Service::suppress( const shared_ptr< Resource >& resource )
+    void Service::suppress( const shared_ptr< const Resource >& resource )
     {
         m_pimpl->suppress( resource );
     }

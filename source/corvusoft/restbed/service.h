@@ -50,13 +50,13 @@ namespace restbed
             //Functionality
             void stop( void );
 
-            //void restart( const std::shared_ptr< Settings >& settings = nullptr ); //const settings
+            void start( const std::shared_ptr< const Settings >& settings = nullptr );
 
-            void start( const std::shared_ptr< Settings >& settings = nullptr ); //const settings
+            void restart( const std::shared_ptr< const Settings >& settings = nullptr );
 
-            void publish( const std::shared_ptr< Resource >& resource ); //const
+            void publish( const std::shared_ptr< const Resource >& resource );
             
-            void suppress( const std::shared_ptr< Resource >& resource ); //const
+            void suppress( const std::shared_ptr< const Resource >& resource );
             
             //Getters
 
@@ -75,10 +75,9 @@ namespace restbed
 
             void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
-            void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
-                                                                         const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
-            
             void set_error_handler( std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > value );
+
+            void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
             
             //Operators
             

@@ -108,7 +108,7 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::start( const shared_ptr< Settings >& settings ) //const settings
+        void ServiceImpl::start( const shared_ptr< const Settings >& settings )
         {
             m_settings = settings;
 
@@ -139,8 +139,22 @@ namespace restbed
 
             log( Logger::Level::INFO, "Service halted" );
         }
+
+        void ServiceImpl::restart( const shared_ptr< const Settings >& settings )
+        {
+            try
+            {
+                stop( );
+            }
+            catch ( ... )
+            {
+                log( Logger::Level::WARNING, "Service failed graceful teardown." );
+            }
+
+            start( settings );
+        }
         
-        void ServiceImpl::publish( const shared_ptr< Resource >& resource )
+        void ServiceImpl::publish( const shared_ptr< const Resource >& resource )
         {
             if ( m_is_running )
             {
@@ -173,7 +187,7 @@ namespace restbed
 //            log( Logger::Level::INFO, String::format( "Published resource routes '%s'", String::join( paths, ", " ).data( ) ) );
         }
         
-        void ServiceImpl::suppress( const shared_ptr< Resource >& resource )
+        void ServiceImpl::suppress( const shared_ptr< const Resource >& resource )
         {
             if ( m_is_running )
             {
@@ -349,7 +363,7 @@ namespace restbed
 
             const auto resource_route = find_if( m_resource_routes.begin( ),
                                                  m_resource_routes.end( ),
-                                                [ &session, &root ]( const pair< string, shared_ptr< Resource > >& route )
+                                                [ &session, &root ]( const pair< string, shared_ptr< const Resource > >& route )
                                                 {
                                                     bool match = false;
                                                     const auto request = session->get_request( );

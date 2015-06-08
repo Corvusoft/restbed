@@ -56,7 +56,7 @@ SCENARIO( "custom resource method not implemented handler", "[resource]" )
             service.start( settings );
         } );
 
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1'" )
+        WHEN( "I perform a HTTP 'PUT' request to '/resources/1'" )
         {
             Http::Request request;
             request.port = 1984;

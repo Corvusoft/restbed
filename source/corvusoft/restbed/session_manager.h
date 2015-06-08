@@ -37,7 +37,7 @@ namespace restbed
             //Functionality
             virtual void stop( void ) = 0;
 
-            virtual void start( const std::shared_ptr< Settings >& settings ) = 0;
+            virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
 
             virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 

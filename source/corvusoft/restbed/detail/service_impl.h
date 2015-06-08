@@ -53,11 +53,13 @@ namespace restbed
                 //Functionality
                 void stop( void );
 
-                void start( const std::shared_ptr< Settings >& settings );
+                void start( const std::shared_ptr< const Settings >& settings );
 
-                void publish( const std::shared_ptr< Resource >& resource ); //publish( path, resource );
+                void restart( const std::shared_ptr< const Settings >& settings );
+
+                void publish( const std::shared_ptr< const Resource >& resource );
                 
-                void suppress( const std::shared_ptr< Resource >& resource ); //hmm suppress( string path );
+                void suppress( const std::shared_ptr< const Resource >& resource );
                 
                 //Getters
 
@@ -150,13 +152,13 @@ namespace restbed
                 //Properties
                 bool m_is_running;
 
-                std::shared_ptr< Settings > m_settings;
+                std::shared_ptr< const Settings > m_settings;
 
                 std::set< std::string > m_supported_methods;
 
                 std::map< std::string, std::string > m_resource_paths;
 
-                std::map< std::string, std::shared_ptr< Resource > > m_resource_routes;
+                std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
 
                 std::shared_ptr< Logger > m_logger;
                 

@@ -45,8 +45,8 @@ namespace restbed
                 virtual ~ResourceImpl( void );
                 
                 //Functionality
-                void authenticate( const std::shared_ptr< Session >& session,
-                                   const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 //Getters
                 const std::set< std::string >& get_paths( void ) const;
 

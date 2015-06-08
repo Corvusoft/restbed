@@ -356,17 +356,17 @@ namespace restbed
             return m_destination;
         }
 
-        void SessionImpl::set_request( const shared_ptr< Request >& value )
+        void SessionImpl::set_request( const shared_ptr< const Request >& value )
         {
             m_request = value;
         }
 
-        void SessionImpl::set_resource( const std::shared_ptr< Resource >& value )
+        void SessionImpl::set_resource( const std::shared_ptr< const Resource >& value )
         {
             m_resource = value;
         }
 
-        void SessionImpl::set_settings( const shared_ptr< Settings >& value )
+        void SessionImpl::set_settings( const shared_ptr< const Settings >& value )
         {
             m_settings = value;
         }
@@ -459,7 +459,7 @@ namespace restbed
         }
         catch ( const runtime_error& re )
         {
-            if ( m_error_handler not_eq nullptr )
+            if ( m_error_handler not_eq nullptr ) //check for resource->error_handler first.
             {
                 m_error_handler( 400, re, session );
             }
@@ -471,7 +471,7 @@ namespace restbed
         }
         catch ( const exception& ex )
         {
-            if ( m_error_handler not_eq nullptr )
+            if ( m_error_handler not_eq nullptr ) //check for resource->error_handler first.
             {
                 m_error_handler( 500, ex, session );
             }
@@ -483,7 +483,7 @@ namespace restbed
         }
         catch ( ... )
         {
-            if ( m_error_handler not_eq nullptr )
+            if ( m_error_handler not_eq nullptr ) //check for resource->error_handler first.
             {
                 runtime_error re( "An unknown error has occured." );
                 m_error_handler( 500, re, session );

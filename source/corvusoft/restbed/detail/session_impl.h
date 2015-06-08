@@ -109,11 +109,11 @@ namespace restbed
 
                 void set_destination( const std::string& value );
 
-                void set_request( const std::shared_ptr< Request >& value );
+                void set_request( const std::shared_ptr< const Request >& value );
 
-                void set_resource( const std::shared_ptr< Resource >& value );
+                void set_resource( const std::shared_ptr< const Resource >& value );
 
-                void set_settings( const std::shared_ptr< Settings >& value );
+                void set_settings( const std::shared_ptr< const Settings >& value );
 
                 void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
 
@@ -180,11 +180,11 @@ namespace restbed
 
                 std::shared_ptr< Session > m_session;
 
-                std::shared_ptr< Request > m_request;
+                std::shared_ptr< const Request > m_request;
 
-                std::shared_ptr< Resource > m_resource;
+                std::shared_ptr< const Resource > m_resource;
 
-                std::shared_ptr< Settings > m_settings;
+                std::shared_ptr< const Settings > m_settings;
 
                 std::shared_ptr< asio::streambuf > m_buffer;
 

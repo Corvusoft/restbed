@@ -11,7 +11,7 @@ void faulty_method_handler( const shared_ptr< Session >& )
     throw SERVICE_UNAVAILABLE;
 }
 
-void error_handler( const int status_code, const exception& error, const shared_ptr< Session >& session )
+void error_handler( const int, const exception&, const shared_ptr< Session >& session )
 {
     session->close( 5000, "Custom Internal Server Error", { { "Content-Length", "28" } } );
 }
