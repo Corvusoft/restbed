@@ -17,7 +17,7 @@ class SyslogLogger : public Logger
             return;
         }
 
-        void start( const shared_ptr< Settings >& )
+        void start( const shared_ptr< const Settings >& )
         {
             return;
         }
