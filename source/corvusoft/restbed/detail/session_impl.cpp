@@ -1,5 +1,15 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
+ *
+ * http://corvusoft.co.uk/license
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.
+ *
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
+ * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 //System Includes
@@ -272,10 +282,7 @@ namespace restbed
 
             m_buffer = make_shared< asio::streambuf >( );
 
-            asio::async_read_until( *m_socket,
-                                    *m_buffer,
-                                    "\r\n\r\n",
-                                    bind( &SessionImpl::parse_request, this, _1, m_session, callback ) );
+            asio::async_read_until( *m_socket, *m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, m_session, callback ) );
         }
 
         void SessionImpl::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
