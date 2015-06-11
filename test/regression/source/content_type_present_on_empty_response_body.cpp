@@ -1,7 +1,5 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * bug tracker issue #77
  */
 
 //System Includes
