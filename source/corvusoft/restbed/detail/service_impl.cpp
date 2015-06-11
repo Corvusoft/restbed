@@ -194,7 +194,7 @@ namespace restbed
             const auto& methods = resource->m_pimpl->get_methods( );
             m_supported_methods.insert( methods.begin( ), methods.end( ) );
 
-//            log( Logger::Level::INFO, String::format( "Published resource routes '%s'", String::join( paths, ", " ).data( ) ) );
+            //log( Logger::Level::INFO, String::format( "Resource published at routes '%s'.", String::join( paths, ", " ).data( ) ) );
         }
         
         void ServiceImpl::suppress( const shared_ptr< const Resource >& resource )
@@ -315,7 +315,7 @@ namespace restbed
 
             bool filter_validation_failed = false;
 
-            for ( const auto& handler : method_handlers )
+            for ( const auto& handler : method_handlers ) //make_method?
             {
                 filter_validation_failed = false;
 
@@ -373,7 +373,7 @@ namespace restbed
 
             const auto resource_route = find_if( m_resource_routes.begin( ),
                                                  m_resource_routes.end( ),
-                                                [ &session, &root ]( const pair< string, shared_ptr< const Resource > >& route )
+                                                [ &session, &root ]( const pair< string, shared_ptr< const Resource > >& route ) //pullout into method
                                                 {
                                                     bool match = false;
                                                     const auto request = session->get_request( );
@@ -620,6 +620,8 @@ namespace restbed
 
         //void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
         //{
+            //session->set_connection_timeout( );
+
             // struct timeval value;
             // value.tv_usec = 0;
             // value.tv_sec = m_connection_timeout;

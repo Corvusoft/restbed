@@ -18,6 +18,9 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" 
 find_package( asio REQUIRED )
 find_package( framework REQUIRED )
 
+include( ExternalProject )
+ExternalProject_Add( framework SOURCE_DIR ${framework_BUILD} )
+
 include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
 
 #
