@@ -59,7 +59,7 @@ namespace restbed
 
             void set_default_headers( const std::multimap< std::string, std::string >& values );
 
-            void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
+            void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) >& value );
 
             void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 

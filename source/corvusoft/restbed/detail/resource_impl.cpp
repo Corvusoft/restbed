@@ -18,6 +18,7 @@ using std::pair;
 using std::string;
 using std::function;
 using std::multimap;
+using std::exception;
 using std::shared_ptr;
 using std::invalid_argument;
 
@@ -33,6 +34,7 @@ namespace restbed
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
             m_methods( ),
             m_default_headers( ),
+            m_error_handler( nullptr ),
             m_authentication_handler( nullptr ),
             m_failed_filter_validation_handler( nullptr ),
             m_method_handlers( )
@@ -45,8 +47,7 @@ namespace restbed
             return;
         }
 
-        void ResourceImpl::authenticate( const shared_ptr< Session >& session,
-                                         const function< void ( const shared_ptr< Session >& ) >& callback )
+        void ResourceImpl::authenticate( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             if ( m_authentication_handler not_eq nullptr )
             {
@@ -76,6 +77,11 @@ namespace restbed
         const function< void ( const shared_ptr< Session >& ) >& ResourceImpl::get_failed_filter_validation_handler( void ) const
         {
             return m_failed_filter_validation_handler;
+        }
+
+        const function< void ( const int, const exception&, const shared_ptr< Session >& ) > ResourceImpl::get_error_handler( void ) const
+        {
+            return m_error_handler;
         }
 
         multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > > ResourceImpl::get_method_handlers( const string& method ) const
@@ -109,9 +115,9 @@ namespace restbed
             m_authentication_handler = value;
         }
 
-        void ResourceImpl::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
+        void ResourceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
         {
-            //m_error_handler = value;
+            m_error_handler = value;
         }
 
         void ResourceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )

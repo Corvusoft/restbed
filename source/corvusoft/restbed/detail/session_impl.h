@@ -61,6 +61,8 @@ namespace restbed
 
                 void close( const std::string& body );
 
+                //void close( const framework::Bytes& body );
+
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
                 void close( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers );
@@ -68,8 +70,6 @@ namespace restbed
                 void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 void yield( const std::string& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
-            //yeild bytes
 
                 void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
@@ -104,10 +104,6 @@ namespace restbed
 
                 //Setters
                 void set_id( const std::string& value );
-
-                void set_origin( const std::string& value );
-
-                void set_destination( const std::string& value );
 
                 void set_request( const std::shared_ptr< const Request >& value );
 
@@ -152,6 +148,8 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                void failure( const int, const std::exception&, const std::shared_ptr< Session >& session );
+
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );

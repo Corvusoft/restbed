@@ -52,6 +52,12 @@ namespace restbed
             callback( session );
         }
 
+        void SessionManagerImpl::purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+        {
+            session.reset( );
+            callback( nullptr );
+        }
+
         void SessionManagerImpl::load( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             if ( session->is_closed( ) )
@@ -60,12 +66,6 @@ namespace restbed
             }
 
             callback( session );
-        }
-
-        void SessionManagerImpl::purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
-        {
-            session.reset( );
-            callback( nullptr );
         }
     }
 }

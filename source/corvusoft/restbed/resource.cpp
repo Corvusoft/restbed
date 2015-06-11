@@ -16,6 +16,7 @@ using std::set;
 using std::string;
 using std::multimap;
 using std::function;
+using std::exception;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -60,7 +61,7 @@ namespace restbed
         m_pimpl->set_authentication_handler( value );
     }
 
-    void Resource::set_error_handler( const function< void ( const int, const shared_ptr< Session >& ) >& value )
+    void Resource::set_error_handler( const function< void ( const int, const std::exception&, const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_error_handler( value );
     }

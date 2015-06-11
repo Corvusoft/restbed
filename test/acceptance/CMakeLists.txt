@@ -79,7 +79,8 @@ add_executable( runtime_service_modifications_acceptance_test_suite ${SOURCE_DIR
 
 add_executable( publish_duplicate_resources_acceptance_test_suite ${SOURCE_DIR}/publish_duplicate_resources/scenario.cpp )
 
-add_executable( custom_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/scenario.cpp )
+add_executable( custom_service_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/service.cpp )
+add_executable( custom_resource_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/resource.cpp )
 
 target_link_libraries( publishing_single_path_resources_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_single_path_resources_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
@@ -144,7 +145,8 @@ target_link_libraries( runtime_service_modifications_acceptance_test_suite ${CMA
 
 target_link_libraries( publish_duplicate_resources_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 
-target_link_libraries( custom_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( custom_service_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
+target_link_libraries( custom_resource_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 
 #
 # Setup
@@ -218,4 +220,5 @@ add_test( runtime_service_modifications_acceptance_test_suite ${EXECUTABLE_OUTPU
 
 add_test( publish_duplicate_resources_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publish_duplicate_resources_acceptance_test_suite )
 
-add_test( custom_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_error_handling_acceptance_test_suite )
+add_test( custom_service_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_service_error_handling_acceptance_test_suite )
+add_test( custom_resource_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_resource_error_handling_acceptance_test_suite )

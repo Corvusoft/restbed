@@ -64,9 +64,9 @@ namespace restbed
                 //Getters
 
                 //Setters
-                void set_default_header( const std::string& name, const std::string& value );
-
                 void set_logger( const std::shared_ptr< Logger >& value );
+
+                void set_default_header( const std::string& name, const std::string& value );
 
                 void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
@@ -75,12 +75,11 @@ namespace restbed
                 void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
                 void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-                
-                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
-                                                                             const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
-                
+
                 void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& )  >& value );
-                
+
+                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
+
                 //Operators
                 
                 //Properties

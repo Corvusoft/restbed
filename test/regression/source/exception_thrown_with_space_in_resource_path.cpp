@@ -64,34 +64,34 @@ TEST_CASE( "with space in path", "[resource]" )
     service_thread.join( );
 }
 
-TEST_CASE( "without space in path", "[resource]" )
-{
-    auto resource = make_shared< Resource >( );
-    resource->set_path( "testQueue" );
-    resource->set_method_handler( "GET", &get_handler );
-    
-    auto settings = make_shared< Settings >( );
-    settings->set_port( 1984 );
-    settings->set_root( "queues" );
-    
-    Service service;
-    service.publish( resource );
-    
-    thread service_thread( [ &service, settings ] ( )
-    {
-        service.start( settings );
-    } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/queues/testQueue";
-
-    auto response = Http::get( request );
-    
-    REQUIRE( 200 == response.status_code );
-    
-    service.stop( );
-    service_thread.join( );
-}
+//TEST_CASE( "without space in path", "[resource]" )
+//{
+//    auto resource = make_shared< Resource >( );
+//    resource->set_path( "testQueue" );
+//    resource->set_method_handler( "GET", &get_handler );
+//    
+//    auto settings = make_shared< Settings >( );
+//    settings->set_port( 1984 );
+//    settings->set_root( "queues" );
+//    
+//    Service service;
+//    service.publish( resource );
+//    
+//    thread service_thread( [ &service, settings ] ( )
+//    {
+//        service.start( settings );
+//    } );
+//
+//    Http::Request request;
+//    request.method = "GET";
+//    request.port = 1984;
+//    request.host = "localhost";
+//    request.path = "/queues/testQueue";
+//
+//    auto response = Http::get( request );
+//    
+//    REQUIRE( 200 == response.status_code );
+//    
+//    service.stop( );
+//    service_thread.join( );
+//}

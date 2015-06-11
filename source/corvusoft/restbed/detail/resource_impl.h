@@ -11,6 +11,7 @@
 #include <memory>
 #include <string>
 #include <utility>
+#include <stdexcept>
 #include <functional>
 
 //Project Includes
@@ -56,6 +57,8 @@ namespace restbed
 
                 const std::function< void ( const std::shared_ptr< Session >& ) >& get_failed_filter_validation_handler( void ) const;
 
+                const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > get_error_handler( void ) const;
+
                 std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > > get_method_handlers( const std::string& method ) const;
 
                 //Setters
@@ -68,7 +71,7 @@ namespace restbed
                 void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
                                                                         const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
 
-                void set_error_handler( const std::function< void ( const int, const std::shared_ptr< Session >& ) >& value );
+                void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) >& value );
 
                 void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
@@ -118,6 +121,8 @@ namespace restbed
                 std::set< std::string > m_methods;
 
                 std::multimap< std::string, std::string > m_default_headers;
+
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > m_error_handler;
 
                 std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
 

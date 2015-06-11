@@ -116,7 +116,7 @@ namespace restbed
                                asio::buffer( body.data( ), body.size( ) ),
                                [ this ]( const asio::error_code& error, size_t bytes_transferred )
                                {
-                                   //if error
+                                   //if error?
                                    this->close( );
                                } );
         }
@@ -336,16 +336,6 @@ namespace restbed
             m_id = value;
         }
 
-        void SessionImpl::set_origin( const string& value )
-        {
-            m_origin = value;
-        }
-
-        void SessionImpl::set_destination( const string& value )
-        {
-            m_destination = value;
-        }
-
         const string& SessionImpl::get_origin( void ) const
         {
             return m_origin;
@@ -373,6 +363,16 @@ namespace restbed
 
         void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
         {
+            auto endpoint = value->remote_endpoint( );
+            auto address = endpoint.address( );
+            m_origin = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            m_origin += ::to_string( endpoint.port( ) );
+
+            endpoint = value->local_endpoint( );
+            address = endpoint.address( );
+            m_destination = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            m_destination += ::to_string( endpoint.port( ) );
+
             m_socket = value;
         }
 
@@ -389,6 +389,32 @@ namespace restbed
         void SessionImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
         {
             m_error_handler = value;
+        }
+
+        void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session )
+        {
+            auto error_handler = m_error_handler;
+
+            if ( session->get_resource( ) not_eq nullptr )
+            {
+                auto resource = session->get_resource( );
+                auto handler = resource->m_pimpl->get_error_handler( );
+
+                if ( handler not_eq nullptr )
+                {
+                    error_handler = handler;
+                }
+            }
+
+            if ( error_handler not_eq nullptr )
+            {
+                error_handler( status, error, session );
+            }
+            else
+            {
+                string body = error.what( );
+                session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+            }
         }
 
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
@@ -459,39 +485,16 @@ namespace restbed
         }
         catch ( const runtime_error& re )
         {
-            if ( m_error_handler not_eq nullptr ) //check for resource->error_handler first.
-            {
-                m_error_handler( 400, re, session );
-            }
-            else
-            {
-                string body = re.what( );
-                session->close( 400, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
-            }
+            failure( 400, re, session );
         }
         catch ( const exception& ex )
         {
-            if ( m_error_handler not_eq nullptr ) //check for resource->error_handler first.
-            {
-                m_error_handler( 500, ex, session );
-            }
-            else
-            {
-                string body = ex.what( );
-                session->close( 500, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
-            }
+            failure( 500, ex, session );
         }
         catch ( ... )
         {
-            if ( m_error_handler not_eq nullptr ) //check for resource->error_handler first.
-            {
-                runtime_error re( "An unknown error has occured." );
-                m_error_handler( 500, re, session );
-            }
-            else
-            {
-                session->close( 500, "An unknown error has occured.", { { "Content-Type", "text/plain" }, { "Content-Length", "29" } } );
-            }
+            runtime_error re( "Internal Server Error" ); //get from ... rethrow
+            failure( 500, re, session );
         }
 
         void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
