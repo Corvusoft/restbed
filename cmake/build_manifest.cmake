@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014, 2015 Corvusoft
 
-set( MANIFEST
+set( BUILD_MANIFEST
      ${SOURCE_DIR}/settings.cpp
      ${SOURCE_DIR}/detail/settings_impl.cpp
      ${SOURCE_DIR}/resource.cpp

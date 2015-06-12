@@ -8,7 +8,6 @@ cmake_minimum_required( VERSION 2.8.10 )
 # Configuration
 #
 set( SOURCE_DIR "source" )
-set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/test"  )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
 
 include_directories( ${catch_INCLUDE} )

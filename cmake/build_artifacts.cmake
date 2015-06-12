@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014, 2015 Corvusoft
 
-set( FRAMEWORK_ARTIFACTS
+set( BUILD_ARTIFACTS
      ${SOURCE_DIR}/settings
      ${SOURCE_DIR}/settings.h
      ${SOURCE_DIR}/status_code
