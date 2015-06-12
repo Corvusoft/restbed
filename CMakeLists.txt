@@ -11,25 +11,16 @@ option( BUILD_TESTS "Build all test suites using CTest." OFF )
 option( BUILD_EXAMPLES "Build the examples." OFF )
 
 #
-# Dependencies
-#
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
-
-find_package( asio REQUIRED )
-find_package( framework REQUIRED )
-
-include( ExternalProject )
-ExternalProject_Add( framework SOURCE_DIR ${framework_BUILD} )
-
-include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
-
-#
 # Configuration
 #
 set( INCLUDE_DIR "${CMAKE_SOURCE_DIR}/source" )
 set( SOURCE_DIR "${INCLUDE_DIR}/corvusoft/restbed" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE=YES" )
-set( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/distribution" )
+
+if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
+    set( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/distribution" )
+endif ( )
+
 set( LIBRARY_OUTPUT_PATH "${CMAKE_INSTALL_PREFIX}/library" )
 
 if ( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
@@ -51,6 +42,21 @@ if ( CMAKE_BUILD_TYPE MATCHES Debug )
 else ( )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -pedantic" )
 endif ( )
+
+#
+# Dependencies
+#
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
+
+find_package( asio REQUIRED )
+find_package( framework REQUIRED )
+
+include( ExternalProject )
+ExternalProject_Add( framework SOURCE_DIR ${framework_BUILD}
+                               INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+                               CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} )
+
+include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
 
 #
 # Build
