@@ -1,6 +1,9 @@
 build instruction including how to install in an alternative directory.
 cmake -DCMAKE_INSTALL_PREFIX=/tmp ..
 
+ctest -N
+ctest -R 'test name'
+
 ### What is this repository for? ###
 
 Restbed is a C++ framework that enables you to embed RESTful services within your application. Restbed is designed
