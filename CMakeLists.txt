@@ -18,16 +18,10 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 #
 # Dependencies
 #
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE=YES" )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( asio REQUIRED )
 find_package( framework REQUIRED )
-
-include( ExternalProject )
-ExternalProject_Add( framework SOURCE_DIR ${framework_BUILD}
-                               INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-                               CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} )
 
 include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
 
@@ -51,9 +45,9 @@ endif ( )
 #
 include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
 
-install( FILES ${INCLUDE_DIR}/${PROJECT_NAME} DESTINATION "include/" )
-install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}/" )
-install( FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "library/" )
+install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "include" )
+install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
+install( FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "library" )
 
 #
 # Test

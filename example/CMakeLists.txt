@@ -7,7 +7,7 @@ cmake_minimum_required( VERSION 2.8.10 )
 #
 # Configuration
 #
-set( EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/distribution/binary/example"  )
+set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example"  )
 
 #
 # Build
@@ -63,4 +63,5 @@ target_link_libraries( persistent_connection ${CMAKE_PROJECT_NAME} )
 #
 # Install
 #
-install( DIRECTORY ${CMAKE_SOURCE_DIR}/example/serving_html/resource/serving_html DESTINATION "${EXECUTABLE_OUTPUT_PATH}/resource" )
+install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION "${CMAKE_SOURCE_DIR}/distribution/example" )
+install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/serving_html/resource/serving_html" DESTINATION "${EXECUTABLE_OUTPUT_PATH}/resource" )
