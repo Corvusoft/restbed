@@ -476,7 +476,7 @@ namespace restbed
             const auto request = session->get_request( );
             const auto resource = session->get_resource( );
 
-            function< void ( const std::shared_ptr< Session >& ) > method_handler = nullptr;
+            function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
             const auto method_handlers = resource->m_pimpl->get_method_handlers( request->get_method( ) );
 
             bool filter_validation_failed = false;

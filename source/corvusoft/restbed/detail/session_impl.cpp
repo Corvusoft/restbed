@@ -108,7 +108,7 @@ namespace restbed
             return ( m_is_closed or m_socket == nullptr or not m_socket->is_open( ) );
         }
 
-        void SessionImpl::purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback )
+        void SessionImpl::purge( const function< void ( const shared_ptr< Session >& ) >& )
         {
             close( );
             //m_session_manager->purge( m_session, callback );
@@ -129,7 +129,7 @@ namespace restbed
         {
             asio::async_write( *m_socket,
                                asio::buffer( body.data( ), body.size( ) ),
-                               [ this ]( const asio::error_code& error, size_t bytes_transferred )
+                               [ this ]( const asio::error_code&, size_t )
                                {
                                    //if error?
                                    this->close( );
@@ -151,7 +151,7 @@ namespace restbed
             response.set_status_code( status );
 
             auto socket = m_socket;
-            transmit( response, [ socket ]( const asio::error_code& error, size_t bytes_transferred )
+            transmit( response, [ socket ]( const asio::error_code&, size_t )
             {
                 //if error -> log
                 socket->close( );
@@ -167,7 +167,7 @@ namespace restbed
         {
             asio::async_write( *m_socket,
                               asio::buffer( body.data( ), body.size( ) ),
-                              [ this, callback ]( const asio::error_code& error, size_t bytes_transferred )
+                              [ this, callback ]( const asio::error_code&, size_t )
                               {
                                   //if error
                                   callback( this->m_session );
@@ -186,7 +186,7 @@ namespace restbed
             response.set_headers( headers );
             response.set_status_code( status );
 
-            transmit( response, [ this, callback ]( const asio::error_code& error, size_t bytes_transferred )
+            transmit( response, [ this, callback ]( const asio::error_code&, size_t )
             {
                 //if error -> log
                 if ( callback == nullptr )
@@ -224,9 +224,8 @@ namespace restbed
             {
                 size_t size = length - m_buffer->size( );
 
-                asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code& error,
-                                                                                                             std::size_t bytes_transferred )
-                 {
+                asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code&, size_t )
+                {
                      //if error
 
                      const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
@@ -274,9 +273,8 @@ namespace restbed
 
         void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
         {
-            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code& error,
-                                                                                         std::size_t bytes_transferred ) //const bytes_trans..?
-             {
+            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code&, size_t bytes_transferred )
+            {
                  //if error
 
                  const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
@@ -326,7 +324,7 @@ namespace restbed
 
             m_timer = make_shared< asio::steady_timer >( m_socket->get_io_service( ) );
             m_timer->expires_from_now( delay );
-            m_timer->async_wait( [ callback, session ]( const error_code& error )
+            m_timer->async_wait( [ callback, session ]( const error_code& )
             {
                //if error
                callback( session );
@@ -373,7 +371,7 @@ namespace restbed
             m_request = value;
         }
 
-        void SessionImpl::set_resource( const std::shared_ptr< const Resource >& value )
+        void SessionImpl::set_resource( const shared_ptr< const Resource >& value )
         {
             m_resource = value;
         }
@@ -383,7 +381,7 @@ namespace restbed
             m_settings = value;
         }
 
-        void SessionImpl::set_socket( const std::shared_ptr< tcp::socket >& value )
+        void SessionImpl::set_socket( const shared_ptr< tcp::socket >& value )
         {
             auto endpoint = value->remote_endpoint( );
             auto address = endpoint.address( );
@@ -508,7 +506,7 @@ namespace restbed
             return headers;
         }
 
-        void SessionImpl::parse_request( const asio::error_code& error, const std::shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionImpl::parse_request( const asio::error_code& error, const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         try
         {
             if ( error )
