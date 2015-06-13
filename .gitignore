@@ -1,17 +1,8 @@
-# Build Files #
-###############
+# Project Files
 build/
-
-# Distribution #
-###############
 distribution/
 
-# Design #
-##########
-design/api/
-
-# Compiled source #
-###################
+# Compiled source
 *.com
 *.class
 *.dll
@@ -20,11 +11,24 @@ design/api/
 *.so
 *.dylib
 *.pyc
+*.cab
+*.msi
+*.msm
+*.msp
+*.slo
+*.lo
+*.obj
+*.lai
+*.la
+*.a
+*.lib
+*.exe
+*.out
+*.app
+*.gch
+*.pch
 
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
+# Packages
 *.7z
 *.dmg
 *.gz
@@ -34,16 +38,14 @@ design/api/
 *.tar
 *.zip
 
-# Logs and databases #
-######################
+# Logs and databases
 *.log
 *.sql
 *.sqlite
 *.bak
 *.swp
 
-# OS generated files #
-######################
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
@@ -52,3 +54,6 @@ design/api/
 Icon?
 ehthumbs.db
 Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk

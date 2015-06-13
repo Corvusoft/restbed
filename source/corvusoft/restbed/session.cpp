@@ -65,6 +65,11 @@ namespace restbed
         m_pimpl->purge( callback );
     }
 
+    void Session::close( const Bytes& body )
+    {
+        m_pimpl->close( body );
+    }
+
     void Session::close( const string& body )
     {
         m_pimpl->close( body );
@@ -97,7 +102,23 @@ namespace restbed
         m_pimpl->close( status, body, headers );
     }
 
+    void Session::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->yield( body, callback );
+    }
+
+    void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->yield( body, callback );
+    }
+
     void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        static multimap< string, string > empty;
+        m_pimpl->yield( status, body, empty, callback );
+    }
+
+    void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static multimap< string, string > empty;
         m_pimpl->yield( status, body, empty, callback );
@@ -113,9 +134,9 @@ namespace restbed
         m_pimpl->yield( status, body, headers, callback );
     }
 
-    void Session::yield( const string& data, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->yield( data, callback );
+        m_pimpl->yield( status, body, headers, callback );
     }
 
     void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )

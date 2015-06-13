@@ -86,6 +86,11 @@ namespace restbed
         return m_pimpl->get_body( transform );
     }
 
+    void Request::get_body( string& body, const function< Bytes ( const Bytes& ) >& transform ) const
+    {
+        return m_pimpl->get_body( body, transform );
+    }
+
     void Request::get_header( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
     {
         m_pimpl->get_header( name, value, default_value, transform );

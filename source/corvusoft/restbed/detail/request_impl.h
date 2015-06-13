@@ -71,6 +71,8 @@ namespace restbed
 
                 const framework::Bytes get_body( const std::function< framework::Bytes ( const framework::Bytes& ) >& transform ) const;
 
+                void get_body( std::string& body, const std::function< framework::Bytes ( const framework::Bytes& ) >& transform ) const;
+
                 void get_header( const std::string& name, int& value, const int default_value, const std::function< std::string ( const std::string& ) >& transform ) const;
 
                 void get_header( const std::string& name, unsigned int& value, const unsigned int default_value, const std::function< std::string ( const std::string& ) >& transform ) const;

@@ -131,6 +131,11 @@ namespace restbed
             return m_body;
         }
 
+        void RequestImpl::get_body( string& body, const function< Bytes ( const Bytes& ) >& transform ) const
+        {
+            body = String::to_string( get_body( transform ) );
+        }
+
         void RequestImpl::get_header( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_header( name ) )

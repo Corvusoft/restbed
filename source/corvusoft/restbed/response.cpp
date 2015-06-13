@@ -61,6 +61,11 @@ namespace restbed
         return m_pimpl->get_status_code( );
     }
 
+    Bytes Response::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
+    }
+
     string Response::get_protocol( void ) const
     {
         return m_pimpl->get_protocol( );
@@ -69,11 +74,6 @@ namespace restbed
     string Response::get_status_message( void ) const
     {
         return m_pimpl->get_status_message( );
-    }
-
-    Bytes Response::get_body( void ) const
-    {
-        return m_pimpl->get_body( );
     }
 
     multimap< string, string > Response::get_headers( void ) const

@@ -76,8 +76,6 @@ namespace restbed
                 //Setters
                 void set_logger( const std::shared_ptr< Logger >& value );
 
-                void set_default_header( const std::string& name, const std::string& value );
-
                 void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
                 void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
@@ -122,20 +120,15 @@ namespace restbed
                 //Functionality
                 void listen( void );
 
-                void route( const std::shared_ptr< Session >& session, const std::string sanitised_path );
-
-                void resource_router( const std::shared_ptr< Session >& session );
-                
-                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error );
-
-                void log( const Logger::Level level, const std::string& message );
-                
-                void authenticate( const std::shared_ptr< Session >& session,
-                                   const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-                
-                void error( const int status_code, const std::shared_ptr< Session >& session );
+                std::string sanitise_path( const std::string& path );
 
                 void not_found( const std::shared_ptr< Session >& session );
+
+                bool has_unique_paths( const std::set< std::string >& paths );
+
+                void log( const Logger::Level level, const std::string& message );
+
+                void resource_router( const std::shared_ptr< Session >& session );
 
                 void method_not_allowed( const std::shared_ptr< Session >& session );
 
@@ -143,13 +136,13 @@ namespace restbed
 
                 void failed_filter_validation( const std::shared_ptr< Session >& session );
 
-                bool has_unique_paths( const std::set< std::string >& paths );
+                void route( const std::shared_ptr< Session >& session, const std::string sanitised_path );
+                
+                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error );
 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request );
-
-                std::string sanitise_path( const std::string& path );
-
-                // void set_socket_timeout( std::shared_ptr< asio::ip::tcp::socket > socket );
+                
+                void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 //Getters
                 
@@ -161,21 +154,21 @@ namespace restbed
                 //Properties
                 bool m_is_running;
 
-                std::shared_ptr< const Settings > m_settings;
+                std::shared_ptr< Logger > m_logger;
 
                 std::set< std::string > m_supported_methods;
 
-                std::map< std::string, std::string > m_resource_paths;
-
-                std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
-
-                std::shared_ptr< Logger > m_logger;
+                std::shared_ptr< const Settings > m_settings;
                 
                 std::shared_ptr< asio::io_service > m_io_service;
 
                 std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
+
+                std::map< std::string, std::string > m_resource_paths;
+
+                std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_not_found_handler;
 
@@ -184,10 +177,10 @@ namespace restbed
                 std::function< void ( const std::shared_ptr< Session >& ) > m_method_not_implemented_handler;
 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_failed_filter_validation_handler;
+
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > m_error_handler;
                 
                 std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
-                
-                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > m_error_handler;
         };
     }
 }

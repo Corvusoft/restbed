@@ -59,11 +59,11 @@ namespace restbed
             
                 int get_status_code( void ) const;
 
+                const framework::Bytes& get_body( void ) const;
+
                 const std::string& get_protocol( void ) const;
             
                 const std::string& get_status_message( void ) const;
-
-                const framework::Bytes& get_body( void ) const;
 
                 const std::multimap< std::string, std::string >& get_headers( void ) const;
                 
@@ -73,10 +73,10 @@ namespace restbed
                 void set_status_code( const int value );
 
                 void set_protocol( const std::string& value );
-            
-                void set_status_message( const std::string& value );
 
                 void set_body( const framework::Bytes& value );
+            
+                void set_status_message( const std::string& value );
                 
                 void set_header( const std::string& name, const std::string& value );
                 
@@ -127,9 +127,9 @@ namespace restbed
 
                 std::string m_protocol;
 
-                std::string m_status_message;
-
                 framework::Bytes m_body;
+
+                std::string m_status_message;
             
                 std::multimap< std::string, std::string > m_headers;
         };

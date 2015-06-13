@@ -73,8 +73,9 @@ namespace restbed
 
             const std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = &framework::String::uppercase ) const;
 
-            //get_body &string
             const framework::Bytes get_body( const std::function< framework::Bytes ( const framework::Bytes& ) >& transform = nullptr ) const;
+
+            void get_body( std::string& body, const std::function< framework::Bytes ( const framework::Bytes& ) >& transform = nullptr ) const;
 
             void get_header( const std::string& name,
                              int& value, /*out*/

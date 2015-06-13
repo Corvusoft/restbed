@@ -44,9 +44,9 @@ namespace restbed
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
             m_methods( ),
             m_default_headers( ),
+            m_failed_filter_validation_handler( nullptr ),
             m_error_handler( nullptr ),
             m_authentication_handler( nullptr ),
-            m_failed_filter_validation_handler( nullptr ),
             m_method_handlers( )
         {
             return;
@@ -120,9 +120,9 @@ namespace restbed
             m_default_headers = values;
         }
 
-        void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+        void ResourceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            m_authentication_handler = value;
+            m_failed_filter_validation_handler = value;
         }
 
         void ResourceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
@@ -130,14 +130,12 @@ namespace restbed
             m_error_handler = value;
         }
 
-        void ResourceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
-            m_failed_filter_validation_handler = value;
+            m_authentication_handler = value;
         }
         
-        void ResourceImpl::set_method_handler( const string& method,
-                                               const multimap< string, string >& filters,
-                                               const function< void ( const shared_ptr< Session >& ) >& callback )
+        void ResourceImpl::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             if ( method.empty( ) )
             {

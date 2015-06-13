@@ -71,23 +71,27 @@ namespace restbed
 
                 void close( const std::string& body );
 
-                //void close( const framework::Bytes& body );
+                void close( const framework::Bytes& body );
 
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
 
                 void close( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers );
 
-                void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
                 void yield( const std::string& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
+                void yield( const framework::Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void yield( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
+                void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
 
                 void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
-
-                void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 void wait_for( const std::chrono::hours& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
@@ -160,15 +164,13 @@ namespace restbed
                 //Functionality
                 void failure( const int, const std::exception&, const std::shared_ptr< Session >& session );
 
+                void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
+
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
 
-                void parse_request( const asio::error_code& error,
-                                    const std::shared_ptr< Session >& session,
-                                    const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
-                void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
+                void parse_request( const asio::error_code& error, const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
                 //Getters
                 

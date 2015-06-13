@@ -72,11 +72,7 @@ namespace restbed
 
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
-
-            //void set_hook( "ready", ... );
-            //void set_hook( const std::string& event, const std::function< void ( const std::shared_ptr< Service >& ) >& value );
-            //void set_hook( const std::string& event, const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-
+            
             void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
             void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );

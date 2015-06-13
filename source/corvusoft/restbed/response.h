@@ -59,11 +59,11 @@ namespace restbed
         
             int get_status_code( void ) const;
 
+            framework::Bytes get_body( void ) const;
+
             std::string get_protocol( void ) const;
         
             std::string get_status_message( void ) const;
-
-            framework::Bytes get_body( void ) const;
             
             std::multimap< std::string, std::string > get_headers( void ) const;
 

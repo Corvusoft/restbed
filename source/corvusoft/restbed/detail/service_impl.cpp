@@ -14,8 +14,8 @@
 
 //System Includes
 #include <regex>
-#include <utility>
 #include <cstdio>
+#include <utility>
 #include <stdexcept>
 #include <functional>
 
@@ -68,20 +68,20 @@ namespace restbed
     namespace detail
     {
         ServiceImpl::ServiceImpl( void ) : m_is_running( false ),
-            m_settings( nullptr ),
-            m_supported_methods( ),
-            m_resource_paths( ),
-            m_resource_routes( ),
             m_logger( nullptr ),
+            m_supported_methods( ),
+            m_settings( nullptr ),
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
             m_acceptor( nullptr ),
+            m_resource_paths( ),
+            m_resource_routes( ),
             m_not_found_handler( nullptr ),
             m_method_not_allowed_handler( nullptr ),
             m_method_not_implemented_handler( nullptr ),
             m_failed_filter_validation_handler( nullptr ),
-            m_authentication_handler( nullptr ),
-            m_error_handler( nullptr )
+            m_error_handler( nullptr ),
+            m_authentication_handler( nullptr )
         {
             return;
         }
@@ -272,6 +272,16 @@ namespace restbed
             m_failed_filter_validation_handler = value;
         }
 
+        void ServiceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
+        {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            m_error_handler = value;
+        }
+
         void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
                                                                              const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
@@ -283,21 +293,177 @@ namespace restbed
             m_authentication_handler = value;
         }
         
-        void ServiceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
-        {
-            if ( m_is_running )
-            {
-                throw runtime_error( "Runtime modifications of the service are prohibited." );
-            }
-
-            m_error_handler = value;
-        }
-        
         void ServiceImpl::listen( void )
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
             
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
+        }
+
+        string ServiceImpl::sanitise_path( const string& path )
+        {
+            if ( path == "/" )
+            {
+                return path;
+            }
+
+            smatch matches;
+            string sanitised_path = String::empty;
+            static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
+
+            for ( auto folder : String::split( path, '/' ) )
+            {
+                if ( folder.front( ) == '{' and folder.back( ) == '}' )
+                {
+                    if ( not regex_match( folder, matches, pattern ) or matches.size( ) not_eq 2 )
+                    {
+                        throw runtime_error( String::format( "Resource path parameter declaration is malformed '%s'.", folder.data( ) ) );
+                    }
+
+                    sanitised_path += '/' + matches[ 1 ].str( );
+                }
+                else
+                {
+                    sanitised_path += '/' + folder;
+                }
+            }
+
+            if ( path.back( ) == '/' )
+            {
+                sanitised_path += '/';
+            }
+
+            return sanitised_path;
+        }
+
+        void ServiceImpl::not_found( const shared_ptr< Session >& session )
+        {
+            if ( m_not_found_handler not_eq nullptr )
+            {
+                m_not_found_handler( session );
+            }
+            else
+            {
+                session->close( NOT_FOUND );
+            }
+        }
+
+        bool ServiceImpl::has_unique_paths( const set< string >& paths )
+        {
+            if ( paths.empty( ) )
+            {
+                return false;
+            }
+
+            for ( const auto& path : paths )
+            {
+                if ( m_resource_routes.count( path ) )
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        void ServiceImpl::log( const Logger::Level level, const string& message )
+        {
+             if ( m_logger not_eq nullptr )
+             {
+                 m_logger->log( level, "%s", message.data( ) );
+             }
+        }
+
+        void ServiceImpl::resource_router( const shared_ptr< Session >& session )
+        {
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
+
+            const auto root = m_settings->get_root( );
+
+            const auto resource_route = find_if( m_resource_routes.begin( ),
+                                                 m_resource_routes.end( ),
+                                                [ &session, &root ]( const pair< string, shared_ptr< const Resource > >& route ) //pullout into method
+                                                {
+                                                    bool match = false;
+                                                    const auto request = session->get_request( );
+                                                    const auto path_folders = String::split( request->get_path( ), '/' );
+
+                                                    auto route_folders = String::split( route.first, '/' );
+                                                    if ( not root.empty( ) and root not_eq "/" )
+                                                    {
+                                                        route_folders.insert( route_folders.begin( ), root );
+                                                    }
+
+                                                    if ( path_folders.empty( ) and route_folders.empty( ) )
+                                                    {
+                                                        return true; //root resource
+                                                    }
+
+                                                    if ( path_folders.size( ) == route_folders.size( ) )
+                                                    {
+                                                        for ( size_t index = 0; index < path_folders.size( ); index++ )
+                                                        {
+                                                            match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+
+                                                            if ( not match )
+                                                            {
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    return match;
+                                                } );
+
+            if ( resource_route == m_resource_routes.end( ) )
+            {
+                return not_found( session );
+            }
+
+            const auto path = resource_route->first;
+            const auto resource = resource_route->second;
+            session->m_pimpl->set_resource( resource );
+
+            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
+        }
+
+        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session )
+        {
+            if ( m_method_not_allowed_handler not_eq nullptr )
+            {
+                m_method_not_allowed_handler( session );
+            }
+            else
+            {
+                session->close( METHOD_NOT_ALLOWED );
+            }
+        }
+
+        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session )
+        {
+            if ( m_method_not_implemented_handler not_eq nullptr )
+            {
+                m_method_not_implemented_handler( session );
+            }
+            else
+            {
+                session->close( NOT_IMPLEMENTED );
+            }
+        }
+
+        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session )
+        {
+            if ( m_failed_filter_validation_handler not_eq nullptr )
+            {
+                m_failed_filter_validation_handler( session );
+            }
+            else
+            {
+                session->close( BAD_REQUEST, { { "Connection", "close" } } );
+            }
         }
 
         void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path )
@@ -362,62 +528,6 @@ namespace restbed
             method_handler( session );
         }
 
-        void ServiceImpl::resource_router( const shared_ptr< Session >& session )
-        {
-            if ( session->is_closed( ) )
-            {
-                return;
-            }
-
-            const auto root = m_settings->get_root( );
-
-            const auto resource_route = find_if( m_resource_routes.begin( ),
-                                                 m_resource_routes.end( ),
-                                                [ &session, &root ]( const pair< string, shared_ptr< const Resource > >& route ) //pullout into method
-                                                {
-                                                    bool match = false;
-                                                    const auto request = session->get_request( );
-                                                    const auto path_folders = String::split( request->get_path( ), '/' );
-
-                                                    auto route_folders = String::split( route.first, '/' );
-                                                    if ( not root.empty( ) and root not_eq "/" )
-                                                    {
-                                                        route_folders.insert( route_folders.begin( ), root );
-                                                    }
-
-                                                    if ( path_folders.empty( ) and route_folders.empty( ) )
-                                                    {
-                                                        return true; //root resource
-                                                    }
-
-                                                    if ( path_folders.size( ) == route_folders.size( ) )
-                                                    {
-                                                        for ( size_t index = 0; index < path_folders.size( ); index++ )
-                                                        {
-                                                            match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
-
-                                                            if ( not match )
-                                                            {
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    return match;
-                                                } );
-
-            if ( resource_route == m_resource_routes.end( ) )
-            {
-                return not_found( session );
-            }
-
-            const auto path = resource_route->first;
-            const auto resource = resource_route->second;
-            session->m_pimpl->set_resource( resource );
-
-            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
-        }
-
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error )
         {
             if ( not error )
@@ -447,121 +557,6 @@ namespace restbed
             listen( );
         }
 
-        void ServiceImpl::log( const Logger::Level level, const string& message )
-        {
-             if ( m_logger not_eq nullptr )
-             {
-                 m_logger->log( level, "%s", message.data( ) );
-             }
-        }
-
-        void ServiceImpl::authenticate( const shared_ptr< Session >& session,
-                                        const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            if ( m_authentication_handler not_eq nullptr )
-            {
-                m_authentication_handler( session, callback );
-            }
-            else
-            {
-                callback( session );
-            }
-        }
-
-        //error
-        void ServiceImpl::error( const int status_code, const shared_ptr< Session >& session )
-        {
-//            if ( m_error_handler not_eq nullptr )
-//            {
-//                m_error_handler( status_code, callback );
-//            }
-//            else
-//            {
-//                callback( session );
-//            }
-
-            // const auto& iterator = status_codes.find( status_code );
-
-            // const string status_message = ( iterator not_eq status_codes.end( ) ) ?
-            //                                 iterator->second :
-            //                                 "No Appropriate Status Message Found";
-            
-            // log( Logger::Level::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
-            //                                            status_code,
-            //                                            status_message.data( ),
-            //                                            request.get_path( ).data( ) ) );
-                                                  
-            // response.set_status_code( status_code );
-            // response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
-            // response.set_body( status_message );
-        }
-
-        void ServiceImpl::not_found( const shared_ptr< Session >& session )
-        {
-            if ( m_not_found_handler not_eq nullptr )
-            {
-                m_not_found_handler( session );
-            }
-            else
-            {
-                session->close( NOT_FOUND );
-            }
-        }
-
-        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session )
-        {
-            if ( m_method_not_allowed_handler not_eq nullptr )
-            {
-                m_method_not_allowed_handler( session );
-            }
-            else
-            {
-                session->close( METHOD_NOT_ALLOWED );
-            }
-        }
-
-        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session )
-        {
-            if ( m_method_not_implemented_handler not_eq nullptr )
-            {
-                m_method_not_implemented_handler( session );
-            }
-            else
-            {
-                session->close( NOT_IMPLEMENTED );
-            }
-        }
-
-        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session )
-        {
-            if ( m_failed_filter_validation_handler not_eq nullptr )
-            {
-                m_failed_filter_validation_handler( session );
-            }
-            else
-            {
-                session->close( BAD_REQUEST, { { "Connection", "close" } } );
-            }
-        }
-
-        bool ServiceImpl::has_unique_paths( const set< string >& paths )
-        {
-            if ( paths.empty( ) )
-            {
-                return false;
-            }
-
-            for ( const auto& path : paths )
-            {
-                if ( m_resource_routes.count( path ) )
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request )
         {
             smatch matches;
@@ -582,64 +577,17 @@ namespace restbed
             }
         }
 
-        string ServiceImpl::sanitise_path( const string& path )
+        void ServiceImpl::authenticate( const shared_ptr< Session >& session,
+                                        const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            if ( path == "/" )
+            if ( m_authentication_handler not_eq nullptr )
             {
-                return path;
+                m_authentication_handler( session, callback );
             }
-
-            smatch matches;
-            string sanitised_path = String::empty;
-            static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
-
-            for ( auto folder : String::split( path, '/' ) )
+            else
             {
-                if ( folder.front( ) == '{' and folder.back( ) == '}' )
-                {
-                    if ( not regex_match( folder, matches, pattern ) or matches.size( ) not_eq 2 )
-                    {
-                        throw runtime_error( String::format( "Resource path parameter declaration is malformed '%s'.", folder.data( ) ) );
-                    }
-
-                    sanitised_path += '/' + matches[ 1 ].str( );
-                }
-                else
-                {
-                    sanitised_path += '/' + folder;
-                }
+                callback( session );
             }
-
-            if ( path.back( ) == '/' )
-            {
-                sanitised_path += '/';
-            }
-
-            return sanitised_path;
         }
-
-        //void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
-        //{
-            //session->set_connection_timeout( );
-
-            // struct timeval value;
-            // value.tv_usec = 0;
-            // value.tv_sec = m_connection_timeout;
-
-            // auto native_socket = socket->native( );
-            // int status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
-
-            // if ( status == -1 )
-            // {
-            //     throw runtime_error( "Failed to set socket receive timeout" );
-            // }
-
-            // status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
-
-            // if ( status == -1 )
-            // {
-            //     throw runtime_error( "Failed to set socket send timeout" );
-            // }
-        //}
     }
 }

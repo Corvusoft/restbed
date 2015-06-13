@@ -78,12 +78,11 @@ namespace restbed
 
                 void set_default_headers( const std::multimap< std::string, std::string >& values );
 
-                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&,
-                                                                        const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
+                void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
 
                 void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) >& value );
 
-                void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
 
                 void set_method_handler( const std::string& method, const std::multimap< std::string, std::string >& filters, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
 
@@ -132,11 +131,11 @@ namespace restbed
 
                 std::multimap< std::string, std::string > m_default_headers;
 
+                std::function< void ( const std::shared_ptr< Session >& ) > m_failed_filter_validation_handler;
+
                 std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > m_error_handler;
 
                 std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
-
-                std::function< void ( const std::shared_ptr< Session >& ) > m_failed_filter_validation_handler;
 
                 std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > > m_method_handlers;
         };
