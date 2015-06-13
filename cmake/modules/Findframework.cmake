@@ -18,7 +18,7 @@ if ( framework_SOURCE )
 
     install( FILES ${framework_LIBRARY} DESTINATION "library" )
     install( FILES "${framework_INCLUDE}/framework" DESTINATION "include" )
-    install( DIRECTORY "${framework_INCLUDE}/corvusoft/framework" DESTINATION "include/corvusoft/framework" )
+    install( DIRECTORY "${framework_INCLUDE}/corvusoft/framework" DESTINATION "include/corvusoft" )
 
     if ( NOT framework_FIND_QUIETLY )
         message( STATUS "Found framework source: ${framework_SOURCE}" )
