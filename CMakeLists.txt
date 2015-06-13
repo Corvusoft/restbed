@@ -37,7 +37,7 @@ add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
 target_link_libraries( ${PROJECT_NAME} pthread ${framework_LIBRARY} )
 
 if ( BUILD_EXAMPLES )
-    add_subdirectory( "${CMAKE_SOURCE_DIR}/example" "example" )
+    add_subdirectory( "${CMAKE_SOURCE_DIR}/example" )
 endif ( )
 
 #
