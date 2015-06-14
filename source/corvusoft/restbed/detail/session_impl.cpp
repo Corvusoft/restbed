@@ -127,13 +127,11 @@ namespace restbed
 
         void SessionImpl::close( const Bytes& body )
         {
-            asio::async_write( *m_socket,
-                               asio::buffer( body.data( ), body.size( ) ),
-                               [ this ]( const asio::error_code&, size_t )
-                               {
-                                   //if error?
-                                   this->close( );
-                               } );  
+            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this ]( const asio::error_code&, size_t )
+            {
+                //if error log
+                this->close( );
+            } );
         }
 
         void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
@@ -165,13 +163,11 @@ namespace restbed
 
         void SessionImpl::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            asio::async_write( *m_socket,
-                              asio::buffer( body.data( ), body.size( ) ),
-                              [ this, callback ]( const asio::error_code&, size_t )
-                              {
-                                  //if error
-                                  callback( this->m_session );
-                              } );
+            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this, callback ]( const asio::error_code&, size_t )
+            {
+                //if error -> log + close
+                callback( this->m_session );
+            } );
         }
 
         void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -188,7 +184,7 @@ namespace restbed
 
             transmit( response, [ this, callback ]( const asio::error_code&, size_t )
             {
-                //if error -> log
+                //if error -> log + close
                 if ( callback == nullptr )
                 {
                     this->fetch( this->m_session, this->m_router );
@@ -226,7 +222,7 @@ namespace restbed
 
                 asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code&, size_t )
                 {
-                     //if error
+                     //if error -> log + close
 
                      const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
                      const auto data = Bytes( data_ptr, data_ptr + length );
@@ -275,7 +271,7 @@ namespace restbed
         {
             asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code&, size_t bytes_transferred )
             {
-                 //if error
+                 //if error -> log + close
 
                  const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
                  const auto data = Bytes( data_ptr, data_ptr + bytes_transferred );
@@ -326,7 +322,7 @@ namespace restbed
             m_timer->expires_from_now( delay );
             m_timer->async_wait( [ callback, session ]( const error_code& )
             {
-               //if error
+               //if error -> log + close
                callback( session );
             } );
         }

@@ -282,8 +282,7 @@ namespace restbed
             m_error_handler = value;
         }
 
-        void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&,
-                                                                             const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+        void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
         {
             if ( m_is_running )
             {
@@ -293,14 +292,14 @@ namespace restbed
             m_authentication_handler = value;
         }
         
-        void ServiceImpl::listen( void )
+        void ServiceImpl::listen( void ) const
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
             
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
 
-        string ServiceImpl::sanitise_path( const string& path )
+        string ServiceImpl::sanitise_path( const string& path ) const
         {
             if ( path == "/" )
             {
@@ -336,7 +335,30 @@ namespace restbed
             return sanitised_path;
         }
 
-        void ServiceImpl::not_found( const shared_ptr< Session >& session )
+        void ServiceImpl::router( const shared_ptr< Session >& session ) const
+        {
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
+
+            const auto root = m_settings->get_root( );
+
+            const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
+
+            if ( resource_route == m_resource_routes.end( ) )
+            {
+                return not_found( session );
+            }
+
+            const auto path = resource_route->first;
+            const auto resource = resource_route->second;
+            session->m_pimpl->set_resource( resource );
+
+            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
+        }
+
+        void ServiceImpl::not_found( const shared_ptr< Session >& session ) const
         {
             if ( m_not_found_handler not_eq nullptr )
             {
@@ -348,7 +370,7 @@ namespace restbed
             }
         }
 
-        bool ServiceImpl::has_unique_paths( const set< string >& paths )
+        bool ServiceImpl::has_unique_paths( const set< string >& paths ) const
         {
             if ( paths.empty( ) )
             {
@@ -366,7 +388,7 @@ namespace restbed
             return true;
         }
 
-        void ServiceImpl::log( const Logger::Level level, const string& message )
+        void ServiceImpl::log( const Logger::Level level, const string& message ) const
         {
              if ( m_logger not_eq nullptr )
              {
@@ -374,63 +396,7 @@ namespace restbed
              }
         }
 
-        void ServiceImpl::resource_router( const shared_ptr< Session >& session )
-        {
-            if ( session->is_closed( ) )
-            {
-                return;
-            }
-
-            const auto root = m_settings->get_root( );
-
-            const auto resource_route = find_if( m_resource_routes.begin( ),
-                                                 m_resource_routes.end( ),
-                                                [ &session, &root ]( const pair< string, shared_ptr< const Resource > >& route ) //pullout into method
-                                                {
-                                                    bool match = false;
-                                                    const auto request = session->get_request( );
-                                                    const auto path_folders = String::split( request->get_path( ), '/' );
-
-                                                    auto route_folders = String::split( route.first, '/' );
-                                                    if ( not root.empty( ) and root not_eq "/" )
-                                                    {
-                                                        route_folders.insert( route_folders.begin( ), root );
-                                                    }
-
-                                                    if ( path_folders.empty( ) and route_folders.empty( ) )
-                                                    {
-                                                        return true; //root resource
-                                                    }
-
-                                                    if ( path_folders.size( ) == route_folders.size( ) )
-                                                    {
-                                                        for ( size_t index = 0; index < path_folders.size( ); index++ )
-                                                        {
-                                                            match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
-
-                                                            if ( not match )
-                                                            {
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    return match;
-                                                } );
-
-            if ( resource_route == m_resource_routes.end( ) )
-            {
-                return not_found( session );
-            }
-
-            const auto path = resource_route->first;
-            const auto resource = resource_route->second;
-            session->m_pimpl->set_resource( resource );
-
-            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
-        }
-
-        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session )
+        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session ) const
         {
             if ( m_method_not_allowed_handler not_eq nullptr )
             {
@@ -442,7 +408,7 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session )
+        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session ) const
         {
             if ( m_method_not_implemented_handler not_eq nullptr )
             {
@@ -454,7 +420,7 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session )
+        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session ) const
         {
             if ( m_failed_filter_validation_handler not_eq nullptr )
             {
@@ -466,7 +432,7 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path )
+        void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path ) const
         {
             if ( session->is_closed( ) )
             {
@@ -474,46 +440,11 @@ namespace restbed
             }
 
             const auto request = session->get_request( );
-            const auto resource = session->get_resource( );
-
-            function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
-            const auto method_handlers = resource->m_pimpl->get_method_handlers( request->get_method( ) );
-
-            bool filter_validation_failed = false;
-
-            for ( const auto& handler : method_handlers ) //make_method?
-            {
-                filter_validation_failed = false;
-
-                for ( const auto& filter : handler.second.first )
-                {
-                    for ( const auto& header : request->get_headers( filter.first ) )
-                    {
-                         if ( not regex_match( header.second, regex( filter.second ) ) )
-                         {
-                             filter_validation_failed = true;
-                             break;
-                         }
-                    }
-
-                    if ( filter_validation_failed ) break;
-                }
-
-                if ( not filter_validation_failed )
-                {
-                    method_handler = handler.second.second;
-                    break;
-                }
-            }
+            const auto method_handler = find_method_handler( session );
 
             extract_path_parameters( sanitised_path, request );
 
-            if ( filter_validation_failed )
-            {
-                auto handler = resource->m_pimpl->get_failed_filter_validation_handler( );
-                method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
-            }
-            else if ( method_handler == nullptr )
+            if ( method_handler == nullptr )
             {
                 if ( m_supported_methods.count( request->get_method( ) ) == 0 )
                 {
@@ -528,11 +459,11 @@ namespace restbed
             method_handler( session );
         }
 
-        void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error )
+        void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const
         {
             if ( not error )
             {
-                const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::resource_router, this, _1 );
+                const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
                 const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
@@ -557,13 +488,13 @@ namespace restbed
             listen( );
         }
 
-        void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request )
+        void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
         {
             smatch matches;
             static const regex pattern( "^\\{([a-zA-Z0-9]+): ?.*\\}$" );
 
             const auto folders = String::split( request->get_path( ), '/' );
-            const auto declarations = String::split( m_resource_paths[ sanitised_path ], '/' );
+            const auto declarations = String::split( m_resource_paths.at( sanitised_path ), '/' );
 
             for ( size_t index = 0; index < folders.size( ); index++ )
             {
@@ -577,8 +508,42 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::authenticate( const shared_ptr< Session >& session,
-                                        const function< void ( const shared_ptr< Session >& ) >& callback )
+        function< void ( const shared_ptr< Session >& ) > ServiceImpl::find_method_handler( const shared_ptr< Session >& session ) const
+        {
+            const auto request = session->get_request( );
+            const auto resource = session->get_resource( );
+            const auto method_handlers = resource->m_pimpl->get_method_handlers( request->get_method( ) );
+
+            bool failed_filter_validation = false;
+            function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
+
+            for ( auto handler = method_handlers.begin( ); handler not_eq method_handlers.end( ) and method_handler == nullptr; handler++ )
+            {
+                method_handler = handler->second.second;
+
+                for ( const auto& filter : handler->second.first )
+                {
+                    for ( const auto& header : request->get_headers( filter.first ) )
+                    {
+                         if ( not regex_match( header.second, regex( filter.second ) ) )
+                         {
+                            method_handler = nullptr;
+                            failed_filter_validation = true;
+                         }
+                    }
+                }
+            }
+
+            if ( failed_filter_validation and method_handler == nullptr )
+            {
+                const auto handler = resource->m_pimpl->get_failed_filter_validation_handler( );
+                method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
+            }
+
+            return method_handler;
+        }
+
+        void ServiceImpl::authenticate( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) const
         {
             if ( m_authentication_handler not_eq nullptr )
             {
@@ -588,6 +553,42 @@ namespace restbed
             {
                 callback( session );
             }
+        }
+
+        bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const pair< string, shared_ptr< const Resource > >& route ) const
+        {
+            const auto root = m_settings->get_root( );
+            auto route_folders = String::split( route.first, '/' );
+
+            if ( not root.empty( ) and root not_eq "/" )
+            {
+                route_folders.insert( route_folders.begin( ), root );
+            }
+
+            const auto request = session->get_request( );
+            const auto path_folders = String::split( request->get_path( ), '/' );
+
+            if ( path_folders.empty( ) and route_folders.empty( ) )
+            {
+                return true;
+            }
+
+            bool match = false;
+
+            if ( path_folders.size( ) == route_folders.size( ) )
+            {
+                for ( size_t index = 0; index < path_folders.size( ); index++ )
+                {
+                    match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+
+                    if ( not match )
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return match;
         }
     }
 }

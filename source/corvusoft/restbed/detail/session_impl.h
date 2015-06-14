@@ -162,7 +162,7 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                void failure( const int, const std::exception&, const std::shared_ptr< Session >& session );
+                void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ); //const
 
                 void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
 

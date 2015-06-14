@@ -118,31 +118,35 @@ namespace restbed
                 ServiceImpl( const ServiceImpl& original ) = delete;
                 
                 //Functionality
-                void listen( void );
+                void listen( void ) const;
 
-                std::string sanitise_path( const std::string& path );
+                std::string sanitise_path( const std::string& path ) const;
 
-                void not_found( const std::shared_ptr< Session >& session );
+                void router( const std::shared_ptr< Session >& session ) const;
 
-                bool has_unique_paths( const std::set< std::string >& paths );
+                void not_found( const std::shared_ptr< Session >& session ) const;
 
-                void log( const Logger::Level level, const std::string& message );
+                bool has_unique_paths( const std::set< std::string >& paths ) const;
 
-                void resource_router( const std::shared_ptr< Session >& session );
+                void log( const Logger::Level level, const std::string& message ) const;
 
-                void method_not_allowed( const std::shared_ptr< Session >& session );
+                void method_not_allowed( const std::shared_ptr< Session >& session ) const;
 
-                void method_not_implemented( const std::shared_ptr< Session >& session );
+                void method_not_implemented( const std::shared_ptr< Session >& session ) const;
 
-                void failed_filter_validation( const std::shared_ptr< Session >& session );
+                void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
 
-                void route( const std::shared_ptr< Session >& session, const std::string sanitised_path );
+                void route( const std::shared_ptr< Session >& session, const std::string sanitised_path ) const;
                 
-                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error );
+                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error ) const;
 
-                void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request );
+                void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > find_method_handler( const std::shared_ptr< Session >& session ) const;
                 
-                void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
+
+                bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
 
                 //Getters
                 
