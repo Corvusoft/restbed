@@ -152,9 +152,9 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
-                framework::Bytes fetch_body( const std::size_t length );
+                framework::Bytes fetch_body( const std::size_t length ) const;
 
-                void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ); //const
+                void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ) const;
 
                 void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
 
@@ -162,7 +162,7 @@ namespace restbed
 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
 
-                void parse_request( const asio::error_code& error, const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void parse_request( const asio::error_code& error, const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
 
                 //Getters
                 

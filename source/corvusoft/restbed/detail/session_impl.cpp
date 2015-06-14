@@ -39,6 +39,8 @@ using std::make_shared;
 using std::regex_match;
 using std::runtime_error;
 using std::placeholders::_1;
+using std::rethrow_exception;
+using std::current_exception;
 using std::chrono::hours;
 using std::chrono::minutes;
 using std::chrono::seconds;
@@ -348,7 +350,7 @@ namespace restbed
             m_error_handler = value;
         }
 
-        Bytes SessionImpl::fetch_body( const size_t length )
+        Bytes SessionImpl::fetch_body( const size_t length ) const
         {
              const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
              const auto data = Bytes( data_ptr, data_ptr + length );
@@ -370,7 +372,7 @@ namespace restbed
              return data;
         }
 
-        void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session )
+        void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session ) const
         {
             auto error_handler = m_error_handler;
 
@@ -470,7 +472,7 @@ namespace restbed
             return headers;
         }
 
-        void SessionImpl::parse_request( const asio::error_code& error, const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionImpl::parse_request( const asio::error_code& error, const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) const
         try
         {
             if ( error )
@@ -493,6 +495,11 @@ namespace restbed
 
             callback( session );
         }
+        catch ( const int status_code )
+        {
+            runtime_error re( m_settings->get_status_message( status_code ) );
+            failure( status_code, re, session );
+        }
         catch ( const runtime_error& re )
         {
             failure( 400, re, session );
@@ -503,8 +510,29 @@ namespace restbed
         }
         catch ( ... )
         {
-            runtime_error re( "Internal Server Error" ); //get from ... rethrow
-            failure( 500, re, session );
+            auto cex = current_exception( );
+
+            if ( cex not_eq nullptr )
+            {
+                try
+                {
+                    rethrow_exception( cex );
+                }
+                catch ( const exception& ex )
+                {
+                    failure( 500, ex, session );
+                }
+                catch ( ... )
+                {
+                    runtime_error re( "Internal Server Error" );
+                    failure( 500, re, session );
+                }
+            }
+            else
+            {
+                runtime_error re( "Internal Server Error" );
+                failure( 500, re, session );
+            }
         }
     }
 }
