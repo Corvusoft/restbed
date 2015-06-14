@@ -295,6 +295,25 @@ namespace restbed
         void ServiceImpl::listen( void ) const
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+
+            struct timeval value;
+            value.tv_usec = 0;
+            value.tv_sec = m_settings->get_connection_timeout( ).count( );
+
+            auto native_socket = socket->native_handle( );
+            int status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+
+            if ( status == -1 )
+            {
+                log( Logger::Level::WARNING, "Failed to set socket option, send timeout." );
+            }
+
+            status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+
+            if ( status == -1 )
+            {
+                log( Logger::Level::WARNING, "Failed to set socket option, receive timeout." );
+            }
             
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
