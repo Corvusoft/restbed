@@ -391,8 +391,13 @@ namespace restbed
             }
             else
             {
-                string body = error.what( );
-                session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+                //log failure
+
+                if ( session->is_open( ) )
+                {
+                    string body = error.what( );
+                    session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+                }
             }
         }
 
