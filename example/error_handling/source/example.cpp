@@ -13,12 +13,26 @@ void faulty_method_handler( const shared_ptr< Session >& )
 
 void resource_error_handler( const int, const exception&, const shared_ptr< Session >& session )
 {
-    session->close( 6000, "Custom Resource Internal Server Error", { { "Content-Length", "37" } } );
+    if ( session->is_open( ) )
+    {
+        session->close( 6000, "Custom Resource Internal Server Error", { { "Content-Length", "37" } } );
+    }
+    else
+    {
+        fprintf( stderr, "Custom Resource Internal Server Error\n" );
+    }
 }
 
 void service_error_handler( const int, const exception&, const shared_ptr< Session >& session )
 {
-    session->close( 5000, "Custom Service Internal Server Error", { { "Content-Length", "36" } } );
+    if ( session->is_open( ) )
+    {
+        session->close( 5000, "Custom Service Internal Server Error", { { "Content-Length", "36" } } );
+    }
+    else
+    {
+        fprintf( stderr, "Custom Service Internal Server Error\n" );
+    }
 }
 
 int main( const int, const char** )

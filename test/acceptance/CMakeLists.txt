@@ -24,7 +24,6 @@ add_executable( publishing_single_path_resources_http_patch_acceptance_test_suit
 add_executable( publishing_single_path_resources_http_delete_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_delete.cpp )
 add_executable( publishing_single_path_resources_http_connect_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_connect.cpp )
 add_executable( publishing_single_path_resources_http_options_acceptance_test_suite ${SOURCE_DIR}/publishing_single_path_resources/http_options.cpp )
-
 add_executable( publishing_multi_path_resources_http_get_acceptance_test_suite ${SOURCE_DIR}/publishing_multi_path_resources/http_get.cpp )
 add_executable( publishing_multi_path_resources_http_put_acceptance_test_suite ${SOURCE_DIR}/publishing_multi_path_resources/http_put.cpp )
 add_executable( publishing_multi_path_resources_http_head_acceptance_test_suite ${SOURCE_DIR}/publishing_multi_path_resources/http_head.cpp )
@@ -34,7 +33,6 @@ add_executable( publishing_multi_path_resources_http_patch_acceptance_test_suite
 add_executable( publishing_multi_path_resources_http_delete_acceptance_test_suite ${SOURCE_DIR}/publishing_multi_path_resources/http_delete.cpp )
 add_executable( publishing_multi_path_resources_http_connect_acceptance_test_suite ${SOURCE_DIR}/publishing_multi_path_resources/http_connect.cpp )
 add_executable( publishing_multi_path_resources_http_options_acceptance_test_suite ${SOURCE_DIR}/publishing_multi_path_resources/http_options.cpp )
-
 add_executable( custom_http_methods_http_get_acceptance_test_suite ${SOURCE_DIR}/custom_http_methods/http_get.cpp )
 add_executable( custom_http_methods_http_put_acceptance_test_suite ${SOURCE_DIR}/custom_http_methods/http_put.cpp )
 add_executable( custom_http_methods_http_head_acceptance_test_suite ${SOURCE_DIR}/custom_http_methods/http_head.cpp )
@@ -45,7 +43,6 @@ add_executable( custom_http_methods_http_delete_acceptance_test_suite ${SOURCE_D
 add_executable( custom_http_methods_http_connect_acceptance_test_suite ${SOURCE_DIR}/custom_http_methods/http_connect.cpp )
 add_executable( custom_http_methods_http_options_acceptance_test_suite ${SOURCE_DIR}/custom_http_methods/http_options.cpp )
 add_executable( custom_http_methods_http_invoke_acceptance_test_suite ${SOURCE_DIR}/custom_http_methods/http_invoke.cpp )
-
 add_executable( http_method_handlers_http_get_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_get.cpp )
 add_executable( http_method_handlers_http_put_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_put.cpp )
 add_executable( http_method_handlers_http_head_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_head.cpp )
@@ -55,29 +52,18 @@ add_executable( http_method_handlers_http_patch_acceptance_test_suite ${SOURCE_D
 add_executable( http_method_handlers_http_delete_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_delete.cpp )
 add_executable( http_method_handlers_http_connect_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_connect.cpp )
 add_executable( http_method_handlers_http_options_acceptance_test_suite ${SOURCE_DIR}/http_method_handlers/http_options.cpp )
-
 add_executable( custom_service_authentication_acceptance_test_suite ${SOURCE_DIR}/custom_authentication/service.cpp )
 add_executable( custom_resource_authentication_acceptance_test_suite ${SOURCE_DIR}/custom_authentication/resource.cpp )
-
 add_executable( custom_failed_service_filter_validation_handler_acceptance_test_suite ${SOURCE_DIR}/custom_failed_resource_filter_validation_handler/service.cpp )
 add_executable( custom_failed_resource_filter_validation_handler_acceptance_test_suite ${SOURCE_DIR}/custom_failed_resource_filter_validation_handler/resource.cpp )
-
 add_executable( custom_method_not_allowed_handler_acceptance_test_suite ${SOURCE_DIR}/custom_method_not_allowed_handler/scenario.cpp )
-
 add_executable( custom_method_not_implemented_handler_acceptance_test_suite ${SOURCE_DIR}/custom_method_not_implemented_handler/scenario.cpp )
-
 add_executable( custom_resource_not_found_handler_acceptance_test_suite ${SOURCE_DIR}/custom_resource_not_found_handler/scenario.cpp )
-
 add_executable( path_parameters_acceptance_test_suite ${SOURCE_DIR}/path_parameters/scenario.cpp )
-
 add_executable( query_parameters_acceptance_test_suite ${SOURCE_DIR}/query_parameters/scenario.cpp )
-
 add_executable( resource_method_filters_acceptance_test_suite ${SOURCE_DIR}/resource_method_filters/scenario.cpp )
-
 add_executable( runtime_service_modifications_acceptance_test_suite ${SOURCE_DIR}/runtime_service_modifications/scenario.cpp )
-
 add_executable( publish_duplicate_resources_acceptance_test_suite ${SOURCE_DIR}/publish_duplicate_resources/scenario.cpp )
-
 add_executable( custom_service_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/service.cpp )
 add_executable( custom_resource_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/resource.cpp )
 
@@ -90,7 +76,6 @@ target_link_libraries( publishing_single_path_resources_http_patch_acceptance_te
 target_link_libraries( publishing_single_path_resources_http_delete_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_single_path_resources_http_connect_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_single_path_resources_http_options_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( publishing_multi_path_resources_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_multi_path_resources_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_multi_path_resources_http_head_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
@@ -100,7 +85,6 @@ target_link_libraries( publishing_multi_path_resources_http_patch_acceptance_tes
 target_link_libraries( publishing_multi_path_resources_http_delete_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_multi_path_resources_http_connect_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( publishing_multi_path_resources_http_options_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_http_methods_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_http_methods_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_http_methods_http_head_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
@@ -111,7 +95,6 @@ target_link_libraries( custom_http_methods_http_delete_acceptance_test_suite ${C
 target_link_libraries( custom_http_methods_http_connect_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_http_methods_http_options_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_http_methods_http_invoke_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( http_method_handlers_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( http_method_handlers_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( http_method_handlers_http_head_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
@@ -121,29 +104,18 @@ target_link_libraries( http_method_handlers_http_patch_acceptance_test_suite ${C
 target_link_libraries( http_method_handlers_http_delete_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( http_method_handlers_http_connect_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( http_method_handlers_http_options_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_service_authentication_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_resource_authentication_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_failed_service_filter_validation_handler_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_failed_resource_filter_validation_handler_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_method_not_allowed_handler_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_method_not_implemented_handler_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_resource_not_found_handler_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( path_parameters_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( query_parameters_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( resource_method_filters_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( runtime_service_modifications_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( publish_duplicate_resources_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
-
 target_link_libraries( custom_service_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 target_link_libraries( custom_resource_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} pthread )
 
@@ -161,7 +133,6 @@ add_test( publishing_single_path_resources_http_options_acceptance_test_suite ${
 add_test( publishing_single_path_resources_http_delete_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_delete_acceptance_test_suite )
 add_test( publishing_single_path_resources_http_connect_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_connect_acceptance_test_suite )
 add_test( publishing_single_path_resources_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_single_path_resources_http_options_acceptance_test_suite )
-
 add_test( publishing_multi_path_resources_http_get_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_multi_path_resources_http_get_acceptance_test_suite )
 add_test( publishing_multi_path_resources_http_put_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_multi_path_resources_http_put_acceptance_test_suite )
 add_test( publishing_multi_path_resources_http_head_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_multi_path_resources_http_head_acceptance_test_suite )
@@ -172,7 +143,6 @@ add_test( publishing_multi_path_resources_http_options_acceptance_test_suite ${E
 add_test( publishing_multi_path_resources_http_delete_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_multi_path_resources_http_delete_acceptance_test_suite )
 add_test( publishing_multi_path_resources_http_connect_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_multi_path_resources_http_connect_acceptance_test_suite )
 add_test( publishing_multi_path_resources_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publishing_multi_path_resources_http_options_acceptance_test_suite )
-
 add_test( custom_http_methods_http_get_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_http_methods_http_get_acceptance_test_suite )
 add_test( custom_http_methods_http_put_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_http_methods_http_put_acceptance_test_suite )
 add_test( custom_http_methods_http_head_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_http_methods_http_head_acceptance_test_suite )
@@ -184,7 +154,6 @@ add_test( custom_http_methods_http_delete_acceptance_test_suite ${EXECUTABLE_OUT
 add_test( custom_http_methods_http_connect_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_http_methods_http_connect_acceptance_test_suite )
 add_test( custom_http_methods_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_http_methods_http_options_acceptance_test_suite )
 add_test( custom_http_methods_http_invoke_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_http_methods_http_invoke_acceptance_test_suite )
-
 add_test( http_method_handlers_http_get_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_get_acceptance_test_suite )
 add_test( http_method_handlers_http_put_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_put_acceptance_test_suite )
 add_test( http_method_handlers_http_head_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_head_acceptance_test_suite )
@@ -195,29 +164,17 @@ add_test( http_method_handlers_http_options_acceptance_test_suite ${EXECUTABLE_O
 add_test( http_method_handlers_http_delete_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_delete_acceptance_test_suite )
 add_test( http_method_handlers_http_connect_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_connect_acceptance_test_suite )
 add_test( http_method_handlers_http_options_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_method_handlers_http_options_acceptance_test_suite )
-
 add_test( custom_service_authentication_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_service_authentication_acceptance_test_suite )
 add_test( custom_resource_authentication_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_resource_authentication_acceptance_test_suite )
-
 add_test( custom_failed_service_filter_validation_handler_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_failed_service_filter_validation_handler_acceptance_test_suite )
-
 add_test( custom_failed_resource_filter_validation_handler_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_failed_resource_filter_validation_handler_acceptance_test_suite )
-
 add_test( custom_method_not_allowed_handler_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_method_not_allowed_handler_acceptance_test_suite )
-
 add_test( custom_method_not_implemented_handler_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_method_not_implemented_handler_acceptance_test_suite )
-
 add_test( custom_resource_not_found_handler_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_resource_not_found_handler_acceptance_test_suite )
-
 add_test( path_parameters_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/path_parameters_acceptance_test_suite )
-
 add_test( query_parameters_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/query_parameters_acceptance_test_suite )
-
 add_test( resource_method_filters_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_method_filters_acceptance_test_suite )
-
 add_test( runtime_service_modifications_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/runtime_service_modifications_acceptance_test_suite )
-
 add_test( publish_duplicate_resources_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publish_duplicate_resources_acceptance_test_suite )
-
 add_test( custom_service_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_service_error_handling_acceptance_test_suite )
 add_test( custom_resource_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_resource_error_handling_acceptance_test_suite )

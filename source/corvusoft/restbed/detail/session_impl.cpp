@@ -1,15 +1,5 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * http://corvusoft.co.uk/license
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.
- *
- * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
- * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 //System Includes
@@ -224,73 +214,24 @@ namespace restbed
                 {
                      //if error -> log + close
 
-                     const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
-                     const auto data = Bytes( data_ptr, data_ptr + length );
-                     this->m_buffer->consume( length );
-
-                     const auto request = this->m_session->m_pimpl->get_request( );
-                     auto body = request->get_body( );
-
-                     if ( body.empty( ) )
-                     {
-                         request->m_pimpl->set_body( data );
-                     }
-                     else
-                     {
-                         body.insert( body.end( ), data.begin( ), data.end( ) );
-                         request->m_pimpl->set_body( body );
-                     }
-                     
-                     callback( m_session, data );
+                    const auto data = this->fetch_body( length );
+                    callback( m_session, data );
                  } );
             }
             else
             {
-                const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
-                const auto data = Bytes( data_ptr, data_ptr + length );
-                m_buffer->consume( length );
-
-                const auto request = m_session->m_pimpl->get_request( );
-                auto body = request->get_body( );
-
-                if ( body.empty( ) )
-                {
-                    request->m_pimpl->set_body( data );
-                }
-                else
-                {
-                    body.insert( body.end( ), data.begin( ), data.end( ) );
-                    request->m_pimpl->set_body( body );
-                }
-
+                const auto data = this->fetch_body( length );
                 callback( m_session, data );
             }
         }
 
         void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
         {
-            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code&, size_t bytes_transferred )
+            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code&, size_t length )
             {
                  //if error -> log + close
-
-                 const auto data_ptr = asio::buffer_cast< const Byte* >( this->m_buffer->data( ) );
-                 const auto data = Bytes( data_ptr, data_ptr + bytes_transferred );
-                 m_buffer->consume( bytes_transferred );
-
-                 const auto request = this->m_session->m_pimpl->get_request( );
-                 auto body = request->get_body( );
-
-                 if ( body.empty( ) )
-                 {
-                     request->m_pimpl->set_body( data );
-                 }
-                 else
-                 {
-                     body.insert( body.end( ), data.begin( ), data.end( ) );
-                     request->m_pimpl->set_body( body );
-                 }
-                 
-                 callback( m_session, data );
+                const auto data = this->fetch_body( length );
+                callback( m_session, data );
              } );
         }
 
@@ -405,6 +346,28 @@ namespace restbed
         void SessionImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
         {
             m_error_handler = value;
+        }
+
+        Bytes SessionImpl::fetch_body( const size_t length )
+        {
+             const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
+             const auto data = Bytes( data_ptr, data_ptr + length );
+             m_buffer->consume( length );
+
+             const auto request = m_session->m_pimpl->get_request( );
+             auto body = request->get_body( );
+
+             if ( body.empty( ) )
+             {
+                 request->m_pimpl->set_body( data );
+             }
+             else
+             {
+                 body.insert( body.end( ), data.begin( ), data.end( ) );
+                 request->m_pimpl->set_body( body );
+             }
+
+             return data;
         }
 
         void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session )

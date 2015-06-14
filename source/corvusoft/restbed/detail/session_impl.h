@@ -1,15 +1,5 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * http://corvusoft.co.uk/license
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.
- *
- * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
- * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifndef _RESTBED_DETAIL_SESSION_IMPL_H
@@ -162,6 +152,8 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                framework::Bytes fetch_body( const std::size_t length );
+
                 void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ); //const
 
                 void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;

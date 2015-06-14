@@ -1,15 +1,5 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * http://corvusoft.co.uk/license
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT.
- *
- * IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
- * FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 //System Includes
@@ -496,7 +486,7 @@ namespace restbed
             const auto folders = String::split( request->get_path( ), '/' );
             const auto declarations = String::split( m_resource_paths.at( sanitised_path ), '/' );
 
-            for ( size_t index = 0; index < folders.size( ); index++ )
+            for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
             {
                 const auto declaration = declarations[ index ];
 
