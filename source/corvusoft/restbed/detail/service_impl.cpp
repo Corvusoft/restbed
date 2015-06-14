@@ -132,12 +132,24 @@ namespace restbed
             
             listen( );
 
-            log( Logger::Level::INFO, "Service online" );
+            auto endpoint = m_acceptor->local_endpoint( );
+            auto address = endpoint.address( );
+            auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            location += ::to_string( endpoint.port( ) );
+            log( Logger::Level::INFO, String::format( "Service accepting connections at '%s'.",  location.data( ) ) );
+
+            for ( const auto& route : m_resource_paths )
+            {
+                auto path = String::format( "/%s/%s", settings->get_root( ).data( ), route.second.data( ) );
+                path = String::replace( "//", "/", path );
+
+                log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
+            }
 
             m_is_running = true;
             m_io_service->run( );
 
-            log( Logger::Level::INFO, "Service halted" );
+            log( Logger::Level::INFO, String::format( "Service halted at '%s'.", location.data( ) ) );
         }
 
         void ServiceImpl::restart( const shared_ptr< const Settings >& settings )
@@ -175,7 +187,7 @@ namespace restbed
 
             for ( auto& path : paths )
             {
-                const string sanitised_path = sanitise_path( path ); //paths_case_insensitive!!!!!!
+                const string sanitised_path = sanitise_path( path );
 
                 m_resource_paths[ sanitised_path ] = path;
                 m_resource_routes[ sanitised_path ] = resource;
@@ -183,8 +195,6 @@ namespace restbed
 
             const auto& methods = resource->m_pimpl->get_methods( );
             m_supported_methods.insert( methods.begin( ), methods.end( ) );
-
-            //log( Logger::Level::INFO, String::format( "Resource published at routes '%s'.", String::join( paths, ", " ).data( ) ) );
         }
         
         void ServiceImpl::suppress( const shared_ptr< const Resource >& resource )
@@ -350,14 +360,15 @@ namespace restbed
 
         void ServiceImpl::not_found( const shared_ptr< Session >& session ) const
         {
+            log( Logger::Level::INFO, String::format( "'%s' resource not found '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
             if ( m_not_found_handler not_eq nullptr )
             {
                 m_not_found_handler( session );
             }
             else
             {
-                //log not found
-
                 if ( session->is_open( ) )
                 {
                     session->close( NOT_FOUND );
@@ -393,14 +404,17 @@ namespace restbed
 
         void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session ) const
         {
+            log( Logger::Level::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_method( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
             if ( m_method_not_allowed_handler not_eq nullptr )
             {
                 m_method_not_allowed_handler( session );
             }
             else
             {
-                //log not found
-
                 if ( session->is_open( ) )
                 {
                     session->close( METHOD_NOT_ALLOWED );
@@ -410,14 +424,17 @@ namespace restbed
 
         void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session ) const
         {
+            log( Logger::Level::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_method( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
             if ( m_method_not_implemented_handler not_eq nullptr )
             {
                 m_method_not_implemented_handler( session );
             }
             else
             {
-                //log not found
-
                 if ( session->is_open( ) )
                 {
                     session->close( NOT_IMPLEMENTED );
@@ -427,14 +444,16 @@ namespace restbed
 
         void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session ) const
         {
+            log( Logger::Level::INFO, String::format( "'%s' failed filter validation '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
             if ( m_failed_filter_validation_handler not_eq nullptr )
             {
                 m_failed_filter_validation_handler( session );
             }
             else
             {
-                //log not found
-
                 if ( session->is_open( ) )
                 {
                     session->close( BAD_REQUEST, { { "Connection", "close" } } );
@@ -491,8 +510,12 @@ namespace restbed
             }
             else
             {
-                //socket.close()?
-                //log, error handler, close connection.
+                if ( socket not_eq nullptr and socket->is_open( ) )
+                {
+                    socket->close( );
+                }
+
+                log( Logger::Level::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
             }
 
             listen( );
@@ -567,6 +590,11 @@ namespace restbed
 
         bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const pair< string, shared_ptr< const Resource > >& route ) const
         {
+            log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
+                                                      session->get_request( )->get_method( ).data( ),
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
             const auto root = m_settings->get_root( );
             auto route_folders = String::split( route.first, '/' );
 
