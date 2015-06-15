@@ -58,12 +58,9 @@ Find more examples [here](http://google.com)
 
 ## License
 
-Copyright (c) 2013, 2014, 2015 Corvusoft Limited, United Kingdom. All rights reserved.
+Copyright (c) 2013, 2014, 2015 Corvusoft Limited, United Kingdom. All rights reserved. 
 
-Corvusoft's Restbed Framework is dual licensed; See LICENSE.md for full details.
-
-Corvusoft's Restbed Framework is provided AS IS WITHOUT WARRANTY OF ANY KIND; without
-even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+The Restbed Framework is dual licensed; See LICENSE.md for full details.
 
 ## Support
 
