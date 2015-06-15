@@ -11,6 +11,7 @@
  - Path Parameters
  - Built-in HTTP Header, Path/Query parameter conversions
  - Request filters
+ - Multi-path resources
  - Custom Logging
  - Service & Resource level authentication
  - Service & Resource level error handling
