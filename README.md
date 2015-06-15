@@ -9,7 +9,7 @@
 
  - Asynchronous single threaded architecture
  - Path Parameters
- - Built-in HTTP Header, Path/Query parameter conversions
+ - Built-in HTTP Header and Path/Query parameter conversions
  - Request filters
  - Multi-path resources
  - Custom Logging
