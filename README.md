@@ -3,7 +3,7 @@
 ----------
 
 > "It's akin to embedding NGINX into your companies own product line"
->  -- lead architect Bellrock Technology
+>  -- Solutions Architect, Bellrock Technology
 
 ## Features
 
