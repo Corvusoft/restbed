@@ -77,17 +77,18 @@ purchase here or contact sales@corvusoft.co.uk for further information.
 
 ## Build
 
-> git clone --recursive http://github.com/corvusoft/restbed.git
->
-> mkdir restbed/build
->
-> cd restbed/build
->
-> cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
->
-> make test
->
-> make install
+
+```
+#!bash
+
+git clone --recursive http://github.com/corvusoft/restbed.git
+mkdir restbed/build
+cd restbed/build
+cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
+make test
+make install
+```
+
 
 You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and issues via the issue tracker.
 
