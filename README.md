@@ -18,7 +18,7 @@
  - Web Sockets
  - Extensively tested & developed over 3+ years
 
-## [Example](http://google.com)
+## Example
 
 
 ```
@@ -54,6 +54,7 @@ int main( const int, const char** )
 }
 ```
 
+Find more examples [here](http://google.com)
 
 ## License
 
