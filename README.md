@@ -94,7 +94,7 @@ make install
 make test
 ```
 
-You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and issues via the issue tracker.
+You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and defects via the issue tracker.
 
 ## Minimum Requirements
 
