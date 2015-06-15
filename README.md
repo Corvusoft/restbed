@@ -76,7 +76,7 @@ Please contact support@corvusoft.co.uk, for support options including bespoke so
 |     4-10     |          3          |         £360.00               |
 |     11+      |          3+         |  contact sales@corvusoft.co.uk |
 
-purchase here or contact sales@corvusoft.co.uk for further information.
+purchase online or contact sales@corvusoft.co.uk for further information.
 
 Are you a start-up? Contact sales@corvusoft.co.uk for discounts.
 
