@@ -58,7 +58,7 @@ int main( const int, const char** )
 }
 ```
 
-Find more involved examples please see [source](http://google.com)
+More in depth examples can be found in within the project [source](http://google.com).
 
 ## License
 
