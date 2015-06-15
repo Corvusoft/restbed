@@ -82,8 +82,8 @@ git clone --recursive http://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
 cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
-make test
 make install
+make test
 ```
 
 
