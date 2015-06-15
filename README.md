@@ -10,13 +10,17 @@
  - HTTP 1.1 compliance
  - Asynchronous single threaded architecture
  - Path Parameters
+ - Built-in HTTP Header, Path/Query parameter conversions
  - Request filters
  - Custom Logging
  - Service & Resource level authentication
  - Service & Resource level error handling
+ - Customisable HTTP methods
  - Long Polling
  - Web Sockets
- - Extensively tested & developed over 3+ years
+ - Secure, Stable, and extensively tested over 3+ years
+ - Flexibility to address HTTP 1.0/1.1+ compliance
+ - Active and vibrant community
 
 ## Example
 
@@ -64,13 +68,17 @@ The Restbed Framework is dual licensed; See LICENSE.md for full details.
 
 ## Support
 
+Please contact support@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
+
 | Install Base   |        Tickets      |      Anual Fee (inc vat)  |
 | :------------: |:-------------------:|:-------------------------:| 
-|     1-4      |          3          |         £1600             | 
-|     5-10     |          3          |         £12               |
-|     11+      |          3+         |         £1                |
+|     1-3      |          3          |         £280.00            | 
+|     4-10     |          3          |         £360.00               |
+|     11+      |          3+         |  contact sales@corvusoft.co.uk |
 
 purchase here or contact sales@corvusoft.co.uk for further information.
+
+Are you a start-up? Contact sales@corvusoft.co.uk for discounts.
 
 ## Build
 
@@ -86,10 +94,15 @@ make install
 make test
 ```
 
-
 You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and issues via the issue tracker.
 
 ## Minimum Requirements
+
+Compiler:  C++11 compliant or above.
+CPU: Single core
+RAM:
+Disk: 1MB maximum
+OS: BSD, Linux, Mac OSX, Solaris, Windows, Raspbian
 
 ## Road Map
 
