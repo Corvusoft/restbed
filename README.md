@@ -64,7 +64,6 @@ Corvusoft's Restbed Framework is dual licensed; See LICENSE.md for full details.
 
 Corvusoft's Restbed Framework is provided AS IS WITHOUT WARRANTY OF ANY KIND; without
 even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the GNU General Public License for more details.
 
 ## Support
 
