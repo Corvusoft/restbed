@@ -107,3 +107,11 @@ OS: BSD, Linux, Mac OSX, Solaris, Windows, Raspbian
 ## Road Map
 
  - Statically Link Framework
+0.0  - asynchronous HTTP service
+1.0  - HTTP 1.0 compliance
+2.0  - HTTP 1.1 compliance
+2.5  - Secure Socket Layer
+3.0  - Session Management
+3.5  - Resource Caching
+4.0  - Dynamic runtime resource publishing/suppression
+x.x  - HTTP 2.0 compliance
