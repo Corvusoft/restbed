@@ -14,6 +14,8 @@
  - Custom Logging
  - Service & Resource level authentication
  - Service & Resource level error handling
+ - Long Polling
+ - Web Sockets
 
 ## Example
 
