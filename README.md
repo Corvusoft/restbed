@@ -58,6 +58,13 @@ Find more examples [here](http://google.com)
 
 ## License
 
+Copyright (c) 2013, 2014, 2015 Corvusoft Limited, United Kingdom. All rights reserved.
+
+Corvusoft's Restbed Framework is dual licensed; See LICENSE.md for full details.
+
+Corvusoft's Restbed Framework is provided AS IS WITHOUT WARRANTY OF ANY KIND; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
 
 ## Support
 
@@ -71,16 +78,19 @@ purchase here or contact sales@corvusoft.co.uk for further information.
 
 ## Build
 
-build instruction including how to install in an alternative directory.
-cmake -DCMAKE_INSTALL_PREFIX=/tmp ..
+> git clone --recursive http://github.com/corvusoft/restbed.git
+>
+> mkdir restbed/build
+> cd restbed/build
+ 
+> cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
+> make test
+> make install
 
-ctest -N
-ctest -R 'test name'
-
-option to statically link the framework to reduce size further.
-
-Please submit all enhancements, proposals, and issues via the issue tracker.
+You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and issues via the issue tracker.
 
 ## Minimum Requirements
 
 ## Road Map
+
+ - Statically Link Framework
