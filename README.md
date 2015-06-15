@@ -16,6 +16,7 @@
  - Service & Resource level error handling
  - Long Polling
  - Web Sockets
+ - Extensively tested & developed over 3+ years
 
 ## Example
 
@@ -78,5 +79,7 @@ ctest -R 'test name'
 option to statically link the framework to reduce size further.
 
 Please submit all enhancements, proposals, and issues via the issue tracker.
+
+## Minimum Requirements
 
 ## Road Map
