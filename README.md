@@ -70,7 +70,7 @@ The Restbed Framework is dual licensed; See LICENSE.md for full details.
 
 Please contact support@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
 
-| Install Base   |        Tickets      |      Anual Fee (inc vat)  |
+| Install Base   |        Tickets      |      Anual Fee Per Install (inc vat)  |
 | :------------: |:-------------------:|:-------------------------:| 
 |     1-3      |          3          |         £280.00            | 
 |     4-10     |          3          |         £360.00               |
