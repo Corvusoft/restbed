@@ -7,7 +7,6 @@
 
 ## Features
 
- - HTTP 1.1 compliance
  - Asynchronous single threaded architecture
  - Path Parameters
  - Built-in HTTP Header, Path/Query parameter conversions
