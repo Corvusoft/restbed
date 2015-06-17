@@ -13,7 +13,7 @@ void get_method_handler( const shared_ptr< Session >& session )
     const auto request = session->get_request( );
     const string filename = request->get_path_parameter( "filename" );
     
-    ifstream stream( "./resource/serving_html/" + filename, ifstream::in );
+    ifstream stream( "./resource/" + filename, ifstream::in );
 
     if ( stream.is_open( ) )
     {

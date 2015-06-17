@@ -68,17 +68,18 @@ The Restbed Framework is dual licensed; See LICENSE.md for full details.
 
 ## Support
 
-Please contact support@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
+Please contact sales@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
 
-| Install Base   |        Tickets      |      Anual Fee Per Install (inc vat)  |
-| :------------: |:-------------------:|:-------------------------:| 
-|     1-3      |          3          |         £280.00            | 
-|     4-10     |          3          |         £360.00               |
-|     11+      |          3+         |  contact sales@corvusoft.co.uk |
+| Install Base   |        Tickets      |   Anual Fee Per Install (inc vat)   |
+| :------------: |:-------------------:|:-----------------------------------:| 
+|     1-3        |          3          |              £280.00                | 
+|     4-10       |          3          |              £360.00                |
+|     11+        |          3+         |               AABUS                 |                
 
-purchase [online](http://google.com) or contact sales@corvusoft.co.uk for further information.
+purchase by contacting sales@corvusoft.co.uk for further information.
 
-Are you a start-up? Contact sales@corvusoft.co.uk for discounts.
+Are you a start-up?
+Contact sales@corvusoft.co.uk for discounts.
 
 ## Build
 
@@ -94,24 +95,30 @@ make install
 make test
 ```
 
-You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and defects via the [issue](http://google.com) tracker.
+You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker.
 
 ## Minimum Requirements
 
-Compiler:  C++11 compliant or above.
-CPU: Single core
-RAM:
-Disk: 1MB maximum
-OS: BSD, Linux, Mac OSX, Solaris, Windows, Raspbian
+|   Install Base  |                   Tickets                       |
+| :--------------:|:-----------------------------------------------:| 
+|       CPU       |                    40mhz                        |
+|       RAM       |                     2mb                         |
+|       Disk      |                     1mb                         |
+|     Compiler    |          C++11 compliant or above               |
+|        OS       | BSD, Linux, Mac OSX, Solaris, Windows, Raspbian |
 
 ## Road Map
 
- - Statically Link Framework
-0.0  - asynchronous HTTP service
-1.0  - HTTP 1.0 compliance
-2.0  - HTTP 1.1 compliance
-2.5  - Secure Socket Layer
-3.0  - Session Management
-3.5  - Resource Caching
-4.0  - Dynamic runtime resource publishing/suppression
-x.x  - HTTP 2.0 compliance
+|   Release   |                   Feature                       |      Status     |
+|:-----------:|:-----------------------------------------------:|:---------------:| 
+|     0.0     |         Asynchrounous HTTP Service              |     complete    |
+|     1.0     |             HTTP 1.0 Compliance                 |     complete    |
+|     2.0     |             HTTP 1.1 Compliance                 |     complete    |
+|     2.5     |             Secure Socket Layer                 |  in-development |
+|     2.7     |                 Event Hooks                     |     pending     |
+|     2.8     |                 Localisation                    |     pending     |
+|     3.0     |             Session Management                  |     pending     |
+|     3.5     |               Resource Caching                  |     pending     |
+|     4.0     |             HTTP 2.0 compliance                 |     pending     |
+|     4.x     | Dynamic runtime resource publishing/suppression |     pending     |
+|     x.x     |         Statically Linked Framework             |     pending     |

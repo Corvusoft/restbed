@@ -64,4 +64,4 @@ target_link_libraries( persistent_connection ${CMAKE_PROJECT_NAME} )
 # Install
 #
 install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION ${CMAKE_INSTALL_PREFIX} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
-install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/serving_html/index.html" DESTINATION "resource" )
+install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION "resource" )

@@ -23,4 +23,4 @@ own terms, e.g. a closed source license, you MUST purchase a Corvusoft Enterpris
 
 The Enterprise License, gives you -- under certain conditions -- the right to
 use any license you wish for your work based on Corvusoft's Restbed Framework. For the full
-terms of the Enterprise License, please visit: https://www.corvusoft.co.uk/licensing
+terms of the Enterprise License, please contact sales@corvusoft.co.uk
