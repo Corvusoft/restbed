@@ -99,13 +99,13 @@ You will now find all required components installed in the restbed distribution 
 
 ## Minimum Requirements
 
-|   Install Base  |                   Tickets                       |
-| :--------------:|:-----------------------------------------------:| 
-|       CPU       |                    40mhz                        |
-|       RAM       |                     2mb                         |
-|       Disk      |                     1mb                         |
-|     Compiler    |          C++11 compliant or above               |
-|        OS       | BSD, Linux, Mac OSX, Solaris, Windows, Raspbian |
+|     Resource   |                   Requirement                   |
+|:--------------:|:-----------------------------------------------:| 
+|       CPU      |                    40mhz                        |
+|       RAM      |                     2mb                         |
+|       Disk     |                     1mb                         |
+|     Compiler   |          C++11 compliant or above               |
+|        OS      | BSD, Linux, Mac OSX, Solaris, Windows, Raspbian |
 
 ## Road Map
 
