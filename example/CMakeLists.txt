@@ -60,6 +60,9 @@ target_link_libraries( transfer_encoding_response ${CMAKE_PROJECT_NAME} )
 add_executable( persistent_connection persistent_connection/source/example.cpp )
 target_link_libraries( persistent_connection ${CMAKE_PROJECT_NAME} )
 
+add_executable( gzipped_service gzip/source/example.cpp )
+target_link_libraries( gzipped_service ${CMAKE_PROJECT_NAME} )
+
 #
 # Install
 #
