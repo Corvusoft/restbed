@@ -102,7 +102,7 @@ You will now find all required components installed in the restbed distribution 
 |     Resource   |                   Requirement                   |
 |:--------------:|:-----------------------------------------------:| 
 |       CPU      |                    40mhz                        |
-|       RAM      |                     2mb                         |
+|       RAM      |                     3mb                         |
 |       Disk     |                     1mb                         |
 |     Compiler   |          C++11 compliant or above               |
 |        OS      | BSD, Linux, Mac OSX, Solaris, Windows, Raspbian |
