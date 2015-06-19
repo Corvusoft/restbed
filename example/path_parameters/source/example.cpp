@@ -1,3 +1,13 @@
+/*
+ * Example illustrating path parameters.
+ *
+ * Server Usage:
+ *    ./distribution/example/path_parameters
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://localhost:1984/resource/<YOUR NAME HERE>'
+ */
+
 #include <string>
 #include <memory>
 #include <cstdlib>

@@ -1,3 +1,13 @@
+/*
+ * Example illustrating Transfer-Encoding request processing.
+ *
+ * Server Usage:
+ *    ./distribution/example/transfer_encoding_request
+ *
+ * Client Usage:
+ *    curl -v -X POST --header "Transfer-Encoding: chunked" -d @distribution/resource/request.txt 'http://localhost:1984/resources'
+ */
+
 #include <string>
 #include <memory>
 #include <cstdlib>

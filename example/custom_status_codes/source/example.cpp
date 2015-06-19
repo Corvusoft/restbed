@@ -1,3 +1,13 @@
+/*
+ * Example illustrating custom HTTP status codes.
+ *
+ * Server Usage:
+ *    ./distribution/example/custom_status_codes
+ *
+ * Client Usage:
+ *    curl -v -X GET 'http://localhost:1984/resource'
+ */
+
 #include <memory>
 #include <cstdlib>
 #include <restbed>

@@ -1,3 +1,13 @@
+/*
+ * Example illustrating custom logging with syslog.
+ *
+ * Server Usage:
+ *    ./distribution/example/syslog_logging
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://localhost:1984/resource'
+ */
+
 #include <memory>
 #include <cstdarg>
 #include <cstdlib>

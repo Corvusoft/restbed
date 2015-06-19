@@ -1,3 +1,13 @@
+/*
+ * Example illustrating custom HTTP methods.
+ *
+ * Server Usage:
+ *    ./distribution/example/custom_methods
+ *
+ * Client Usage:
+ *    curl -v -X NOP 'http://localhost:1984/resource'
+ */
+
 #include <memory>
 #include <cstdlib>
 #include <restbed>

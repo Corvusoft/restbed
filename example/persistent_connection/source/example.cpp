@@ -1,3 +1,13 @@
+/*
+ * Example illustrating persistent connections.
+ *
+ * Server Usage:
+ *    ./distribution/example/persistent_connection
+ *
+ * Client Usage:
+ *    curl -v 'http://localhost:1984/resources/persistent' 'http://localhost:1984/resources/intermittent'
+ */
+
 #include <string>
 #include <memory>
 #include <cstdlib>

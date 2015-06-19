@@ -1,3 +1,13 @@
+/*
+ * Example illustrating Transfer-Encoding response processing.
+ *
+ * Server Usage:
+ *    ./distribution/example/transfer_encoding_response
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://localhost:1984/resources/item'
+ */
+
 #include <string>
 #include <chrono>
 #include <memory>

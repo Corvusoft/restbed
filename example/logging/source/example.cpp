@@ -1,3 +1,13 @@
+/*
+ * Example illustrating custom logging.
+ *
+ * Server Usage:
+ *    ./distribution/example/logging
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://localhost:1984/resource'
+ */
+
 #include <memory>
 #include <cstdlib>
 #include <restbed>

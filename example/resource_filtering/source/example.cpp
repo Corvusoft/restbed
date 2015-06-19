@@ -1,3 +1,18 @@
+/*
+ * Example illustrating resource request filteration.
+ *
+ * Server Usage:
+ *    ./distribution/example/resource_filtering
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json'
+ *    curl -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml'
+ *    curl -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json' -H'Content-Type: application/json'
+ *    curl -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml' -H'Content-Type: application/xml'
+ *    curl -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json' -H'Content-Type: application/xml'
+ *    curl -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml' -H'Content-Type: application/json'
+ */
+
 #include <string>
 #include <memory>
 #include <cstdlib>

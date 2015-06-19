@@ -1,3 +1,13 @@
+/*
+ * Example illustrating HTTP Digest service authentication.
+ *
+ * Server Usage:
+ *    ./distribution/example/digest_authentication
+ *
+ * Client Usage:
+ *    curl -v --digest -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
+ */
+
 #include <regex>
 #include <memory>
 #include <string>

@@ -1,3 +1,13 @@
+/*
+ * Example illustrating the display of HTML webpages.
+ *
+ * Server Usage:
+ *    ./distribution/example/serving_html
+ *
+ * Client Usage:
+ *    curl -v -X GET 'http://localhost:1984/static/index.html'
+ */
+
 #include <string>
 #include <memory>
 #include <cstdlib>
@@ -13,7 +23,7 @@ void get_method_handler( const shared_ptr< Session >& session )
     const auto request = session->get_request( );
     const string filename = request->get_path_parameter( "filename" );
     
-    ifstream stream( "./resource/" + filename, ifstream::in );
+    ifstream stream( "./distribution/resource/" + filename, ifstream::in );
 
     if ( stream.is_open( ) )
     {

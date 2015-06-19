@@ -1,3 +1,13 @@
+/*
+ * Example illustrating PAM (Portable Authentication Module) authentication.
+ *
+ * Server Usage:
+ *    ./distribution/example/pam_authentication
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'
+ */
+
 #include <string>
 #include <memory>
 #include <utility>
