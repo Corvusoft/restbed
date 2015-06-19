@@ -60,11 +60,12 @@ target_link_libraries( transfer_encoding_response ${CMAKE_PROJECT_NAME} )
 add_executable( persistent_connection persistent_connection/source/example.cpp )
 target_link_libraries( persistent_connection ${CMAKE_PROJECT_NAME} )
 
-add_executable( gzipped_service gzip/source/example.cpp )
-target_link_libraries( gzipped_service ${CMAKE_PROJECT_NAME} )
+add_executable( compression compression/source/example.cpp )
+target_link_libraries( compression ${CMAKE_PROJECT_NAME} )
 
 #
 # Install
 #
 install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION ${CMAKE_INSTALL_PREFIX} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
 install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION "resource" )
+install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION "resource" )
