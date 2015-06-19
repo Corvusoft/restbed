@@ -26,8 +26,6 @@
 ## Example
 
 ```
-#!c++
-
 #include <memory>
 #include <cstdlib>
 #include <restbed>
