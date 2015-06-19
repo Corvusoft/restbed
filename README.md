@@ -3,22 +3,24 @@
 ----------
 
 > "It's akin to embedding NGINX into your companies own product line."
->  -- Solutions Architect, Bellrock Technology
+>
+>                                                       -- Solutions Architect, Bellrock Technology
 
 ## Features
 
- - Asynchronous single threaded architecture
- - Path Parameters
- - Built-in HTTP Header and Path/Query parameter conversions
- - Request filters
- - Multi-path resources
- - Custom Logging
- - Service & Resource level authentication
- - Service & Resource level error handling
- - Customisable HTTP methods
  - Long Polling
  - Web Sockets
+ - Path Parameters
+ - Query Parameters
+ - Request filters
+ - Custom Logging
+ - Multi-path resources
+ - Customisable HTTP methods
  - Compression GZip, Deflate, etc...
+ - Asynchronous single threaded architecture
+ - Built-in Path, Query, and Header conversions
+ - Service & Resource level authentication
+ - Service & Resource level error handling
  - Secure, Stable, and extensively tested over 3+ years
  - Flexibility to address HTTP 1.0/1.1+ compliance
  - Active, vibrant community
