@@ -25,7 +25,7 @@
 
 ## Example
 
-```
+```C++
 #include <memory>
 #include <cstdlib>
 #include <restbed>
