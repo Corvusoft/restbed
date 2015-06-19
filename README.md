@@ -92,9 +92,7 @@ Contact sales@corvusoft.co.uk for discounts.
 ## Build
 
 
-```
-#!bash
-
+```bash
 git clone --recursive http://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
