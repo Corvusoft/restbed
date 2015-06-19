@@ -7,8 +7,11 @@
 
 //System Includes
 #include <map>
+#include <set>
+#include <memory>
 #include <string>
-#include <vector>
+#include <utility>
+#include <stdexcept>
 #include <functional>
 
 //Project Includes
@@ -24,9 +27,7 @@
 namespace restbed
 {
     //Forward Declarations
-    class Method;
-    class Request;
-    class Response;
+    class Session;
     
     namespace detail
     {
@@ -42,48 +43,40 @@ namespace restbed
                 //Constructors
                 ResourceImpl( void );
                 
-                ResourceImpl( const ResourceImpl& original );
-                
                 virtual ~ResourceImpl( void );
                 
                 //Functionality
-                
+                void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 //Getters
-                std::string get_path( void ) const;
-            
-                std::vector< std::string > get_paths( void ) const;
-                
-                std::string get_header_filter( const std::string& name ) const;
-                
-                std::map< std::string, std::string > get_header_filters( void ) const;
-                
-                std::function< Response ( const Request& ) > get_method_handler( const Method& verb ) const;
-            
-                std::map< Method, std::function< Response ( const Request& ) > > get_method_handlers( void ) const;
+                const std::set< std::string >& get_paths( void ) const;
+
+                const std::set< std::string >& get_methods( void ) const;
+
+                const std::multimap< std::string, std::string >& get_default_headers( void ) const;
+
+                const std::function< void ( const std::shared_ptr< Session >& ) >& get_failed_filter_validation_handler( void ) const;
+
+                const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > get_error_handler( void ) const;
+
+                std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > > get_method_handlers( const std::string& method ) const;
 
                 //Setters
-                void set_path( const std::string& value );
-            
-                void set_paths( const std::vector< std::string >& values );
-                
-                void set_header_filter( const std::string& name, const std::string& value );
-            
-                void set_header_filters( const std::map< std::string, std::string >& values );
-            
-                void set_method_handler( const Method& verb, const std::function< Response ( const Request& ) >& callback );
-            
-                void set_method_handlers( const std::map< Method, std::function< Response ( const Request& ) > >& values );
-            
+                void set_paths( const std::set< std::string >& values );
+
+                void set_default_header( const std::string& name, const std::string& value );
+
+                void set_default_headers( const std::multimap< std::string, std::string >& values );
+
+                void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+                void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) >& value );
+
+                void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
+
+                void set_method_handler( const std::string& method, const std::multimap< std::string, std::string >& filters, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 //Operators
-                bool operator <( const ResourceImpl& value ) const;
-                
-                bool operator >( const ResourceImpl& value ) const;
-                
-                bool operator ==( const ResourceImpl& value ) const;
-                
-                bool operator !=( const ResourceImpl& value ) const;
-                
-                ResourceImpl& operator =( const ResourceImpl& value );
                 
                 //Properties
                 
@@ -110,30 +103,31 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                ResourceImpl( const ResourceImpl& original ) = delete;
                 
                 //Functionality
-                static std::string rebuild_path( const Request& request );
 
-                static Response default_trace_handler( const Request& request );
-
-                static Response default_options_handler( const Request& request, const std::vector< std::string >& allow_methods );
-            
-                static Response default_method_not_allowed_handler( const Request& request, const std::vector< std::string >& allow_methods );
-                
                 //Getters
                 
                 //Setters
                 
                 //Operators
-                
+                ResourceImpl& operator =( const ResourceImpl& value ) = delete;
+
                 //Properties
-                std::vector< std::string > m_paths;
-            
-                std::vector< std::string > m_allow_methods;
-            
-                std::map< std::string, std::string > m_header_filters;
-                
-                std::map< Method, std::function< Response ( const Request& ) > > m_method_handlers;
+                std::set< std::string > m_paths;
+
+                std::set< std::string > m_methods;
+
+                std::multimap< std::string, std::string > m_default_headers;
+
+                std::function< void ( const std::shared_ptr< Session >& ) > m_failed_filter_validation_handler;
+
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > m_error_handler;
+
+                std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > m_authentication_handler;
+
+                std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > > m_method_handlers;
         };
     }
 }

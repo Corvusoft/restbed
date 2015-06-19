@@ -9,17 +9,20 @@
 #include "corvusoft/restbed/detail/response_impl.h"
 
 //External Includes
+#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::string;
-using std::function;
 using std::multimap;
+using std::shared_ptr;
+using std::make_shared;
 
 //Project Namespaces
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
 using framework::Bytes;
+using framework::String;
 
 namespace restbed
 {
@@ -27,60 +30,70 @@ namespace restbed
     {
         return;
     }
-    
-    Response::Response( const Response& original ) : m_pimpl( new ResponseImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
-    Response::Response( const ResponseImpl& implementation ) : m_pimpl( new ResponseImpl( implementation ) )
-    {
-        return;
-    }
-    
+
     Response::~Response( void )
     {
         return;
     }
-    
-    Bytes Response::get_body( void ) const
+
+    Bytes Response::to_bytes( void ) const
     {
-        return m_pimpl->get_body( );
+        return m_pimpl->to_bytes( );
     }
-    
+
     double Response::get_version( void ) const
     {
         return m_pimpl->get_version( );
     }
-    
+
     int Response::get_status_code( void ) const
     {
         return m_pimpl->get_status_code( );
+    }
+
+    Bytes Response::get_body( void ) const
+    {
+        return m_pimpl->get_body( );
+    }
+
+    string Response::get_protocol( void ) const
+    {
+        return m_pimpl->get_protocol( );
     }
 
     string Response::get_status_message( void ) const
     {
         return m_pimpl->get_status_message( );
     }
-    
-    string Response::get_header( const string& name ) const
-    {
-        return m_pimpl->get_header( name );
-    }
-    
+
     multimap< string, string > Response::get_headers( void ) const
     {
         return m_pimpl->get_headers( );
     }
 
-    multimap< string, string > Response::get_headers( const string& name ) const
+    void Response::set_version( const double value )
     {
-        return m_pimpl->get_headers( name );
+        m_pimpl->set_version( value );
+    }
+
+    void Response::set_protocol( const string& value )
+    {
+        m_pimpl->set_protocol( value );
+    }
+
+    void Response::set_status_code( const int value )
+    {
+        m_pimpl->set_status_code( value );
+    }
+
+    void Response::set_status_message( const string& value )
+    {
+        m_pimpl->set_status_message( value );
     }
 
     void Response::set_body( const string& value )
     {
-        m_pimpl->set_body( value );
+        m_pimpl->set_body( String::to_bytes( value ) );
     }
 
     void Response::set_body( const Bytes& value )
@@ -88,26 +101,6 @@ namespace restbed
         m_pimpl->set_body( value );
     }
 
-    void Response::set_body( const function< Bytes ( void ) >& value )
-    {
-        m_pimpl->set_body_callback( value );
-    }
-    
-    void Response::set_version( const double value )
-    {
-        m_pimpl->set_version( value );
-    }
-    
-    void Response::set_status_code( const int value )
-    {
-        m_pimpl->set_status_code( value );
-    }
-    
-    void Response::set_status_message( const string& value )
-    {
-        m_pimpl->set_status_message( value );
-    }
-    
     void Response::set_header( const string& name, const string& value )
     {
         m_pimpl->set_header( name, value );
@@ -116,32 +109,5 @@ namespace restbed
     void Response::set_headers( const multimap< string, string >& values )
     {
         m_pimpl->set_headers( values );
-    }
-    
-    Response& Response::operator =( const Response& value )
-    {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
-    }
-    
-    bool Response::operator <( const Response& value ) const
-    {
-        return *m_pimpl < *value.m_pimpl;
-    }
-    
-    bool Response::operator >( const Response& value ) const
-    {
-        return *m_pimpl > *value.m_pimpl;
-    }
-    
-    bool Response::operator ==( const Response& value ) const
-    {
-        return *m_pimpl == *value.m_pimpl;
-    }
-    
-    bool Response::operator !=( const Response& value ) const
-    {
-        return *m_pimpl != *value.m_pimpl;
     }
 }

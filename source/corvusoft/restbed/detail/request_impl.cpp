@@ -3,25 +3,23 @@
  */
 
 //System Includes
-#include <istream>
 
 //Project Includes
-#include "corvusoft/restbed/status_code.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 
 //External Includes
 #include <corvusoft/framework/map>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
+using std::stoi;
 using std::stod;
+using std::stof;
+using std::stoul;
 using std::string;
-using std::istream;
 using std::multimap;
+using std::function;
 using std::shared_ptr;
-using std::istreambuf_iterator;
-using asio::ip::tcp;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -35,382 +33,571 @@ namespace restbed
 {
     namespace detail
     {
-        RequestImpl::RequestImpl( void ) : m_body_processed( false ),
-            m_body( ),
+        RequestImpl::RequestImpl( void ) :
             m_version( 1.1 ),
             m_path( "/" ),
             m_method( "GET" ),
-            m_origin( String::empty ),
-            m_destination( String::empty ),
             m_protocol( "HTTP" ),
-            m_buffer( nullptr ),
-            m_socket( nullptr ),
+            m_body( ),
             m_headers( ),
             m_path_parameters( ),
             m_query_parameters( )
         {
             return;
         }
-        
-        RequestImpl::RequestImpl( const RequestImpl& original ) : m_body_processed( original.m_body_processed ),
-            m_body( original.m_body ),
-            m_version( original.m_version ),
-            m_path( original.m_path ),
-            m_method( original.m_method ),
-            m_origin( original.m_origin ),
-            m_destination( original.m_destination ),
-            m_protocol( original.m_protocol ),
-            m_buffer( original.m_buffer ),
-            m_socket( original.m_socket ),
-            m_headers( original.m_headers ),
-            m_path_parameters( original.m_path_parameters ),
-            m_query_parameters( original.m_query_parameters )
-        {
-            return;
-        }
-        
+
         RequestImpl::~RequestImpl( void )
         {
             return;
         }
-        
+
         bool RequestImpl::has_header( const string& name ) const
         {
             return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
-        
-        bool RequestImpl::has_path_parameter( const string& name ) const
+
+        bool RequestImpl::has_path_parameter( const string& name, const bool ignore_case ) const
         {
-            return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
-        }
-        
-        bool RequestImpl::has_query_parameter( const string& name ) const
-        {
-            return ( m_query_parameters.find( name ) not_eq m_query_parameters.end( ) );
-        }
-        
-        Bytes RequestImpl::get_body( void )
-        {
-            if ( has_header( "Content-Length" ) and not m_body_processed )
+            if ( ignore_case )
             {
-                auto header = get_header( "Content-Length", String::empty );
-                size_t length = header.empty( ) ? 0 : stoul( header );
-
-                if ( length > m_buffer->size( ) )
-                {
-                    size_t size = length - m_buffer->size( );
-                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
-                }
-
-                m_body_processed = true;
-
-                istream stream( m_buffer );
-                istreambuf_iterator< char > end_of_stream;
-                m_body.insert( m_body.end( ), istreambuf_iterator< char >( stream ), end_of_stream );
+                return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
             }
 
-            return m_body;
+            return m_path_parameters.find( name ) not_eq m_path_parameters.end( );
         }
 
-        Bytes RequestImpl::get_body( const size_t length )
+        bool RequestImpl::has_query_parameter( const string& name, const bool ignore_case ) const
         {
-            if ( has_header( "Content-Length" ) )
+            if ( ignore_case )
             {
-                if ( not m_body_processed )
-                {
-                    get_body( );
-                }
-
-                return Bytes( m_body.begin( ), m_body.begin( ) + length );
+                return ( Map::find_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
             }
-            else
-            {
-                if ( length > m_buffer->size( ) )
-                {
-                    size_t size = length - m_buffer->size( );
-                    asio::read( *m_socket, *m_buffer, asio::transfer_at_least( size ) );
-                }
 
-                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
-                Bytes body( data, data + length );
-                m_buffer->consume( length );
-
-                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
-                return body;
-            }
-        }
-
-        Bytes RequestImpl::get_body( const string& delimiter )
-        {
-            if ( has_header( "Content-Length" ) )
-            {
-                if ( not m_body_processed )
-                {
-                    get_body( );
-                }
-
-                return Bytes( m_body.begin( ), search( m_body.begin( ), m_body.end( ), delimiter.begin( ), delimiter.end( ) ) );
-            }
-            else
-            {
-                size_t length = asio::read_until( *m_socket, *m_buffer, delimiter );
-
-                const char* data = asio::buffer_cast< const char* >( m_buffer->data( ) );
-                Bytes body( data, data + length );
-                m_buffer->consume( length );
-
-                m_body.insert( m_body.end( ), body.begin( ), body.end( ) );
-                return body;
-            }
+            return m_query_parameters.find( name ) not_eq m_query_parameters.end( );
         }
 
         double RequestImpl::get_version( void ) const
         {
             return m_version;
         }
-        
-        string RequestImpl::get_path( void ) const
+
+        const string RequestImpl::get_path( const function< string ( const string& ) >& transform ) const
         {
+            if ( transform not_eq nullptr )
+            {
+                return transform( m_path );
+            }
+
             return m_path;
         }
-        
-        string RequestImpl::get_method( void ) const
+
+        const string RequestImpl::get_method( const function< string ( const string& ) >& transform ) const
         {
+            if ( transform not_eq nullptr )
+            {
+                return transform( m_method );
+            }
+
             return m_method;
         }
-        
-        string RequestImpl::get_origin( void ) const
-        {
-            return m_origin;
-        }
 
-        string RequestImpl::get_destination( void ) const
+        const string RequestImpl::get_protocol( const function< string ( const string& ) >& transform ) const
         {
-            return m_destination;
-        }
+            if ( transform not_eq nullptr )
+            {
+                return transform( m_protocol );
+            }
 
-        string RequestImpl::get_protocol( void ) const
-        {
             return m_protocol;
         }
-        
-        string RequestImpl::get_header( const string& name, const string& default_value ) const
+
+        const Bytes RequestImpl::get_body( const function< Bytes ( const Bytes& ) >& transform ) const
+        {
+            if ( transform not_eq nullptr )
+            {
+                return transform( m_body );
+            }
+
+            return m_body;
+        }
+
+        void RequestImpl::get_body( string& body, const function< Bytes ( const Bytes& ) >& transform ) const
+        {
+            body = String::to_string( get_body( transform ) );
+        }
+
+        void RequestImpl::get_header( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stoi( header );
+        }
+
+        void RequestImpl::get_header( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stoul( header );
+        }
+
+        void RequestImpl::get_header( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stol( header );
+        }
+
+        void RequestImpl::get_header( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stoul( header );
+        }
+
+        void RequestImpl::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stof( header );
+        }
+
+        void RequestImpl::get_header( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_header( name ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string header = get_header( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                header = transform( header );
+            }
+
+            value = stod( header );
+        }
+
+        string RequestImpl::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
         {
             string value = default_value;
-            
-            if ( has_header( name ) )
+
+            const auto headers = get_headers( name, transform );
+
+            if ( headers.size( ) not_eq 0 )
             {
-                const auto iterator = Map::find_ignoring_case( name, m_headers );
-                
-                value = iterator->second;
+                value = headers.begin( )->second;
             }
-            
+
             return value;
         }
-        
-        multimap< string, string > RequestImpl::get_headers( void ) const
-        {
-            return m_headers;
-        }
-        
-        multimap< string, string > RequestImpl::get_headers( const string& name ) const
+
+        multimap< string, string > RequestImpl::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
         {
             multimap< string, string > headers;
-            
-            auto key = String::lowercase( name );
-            
-            for ( auto header : m_headers )
+
+            const auto key = String::lowercase( name );
+
+            for ( const auto& header : m_headers )
             {
                 if ( String::lowercase( header.first ) == key )
                 {
-                    headers.insert( header );
+                    if ( transform == nullptr )
+                    {
+                        headers.insert( header );
+                    }
+                    else
+                    {
+                        headers.insert( make_pair( header.first, transform( header.second ) ) );
+                    }
                 }
             }
-            
+
             return headers;
         }
-        
-        string RequestImpl::get_query_parameter( const string& name, const string& default_value ) const
+
+        void RequestImpl::get_query_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
         {
-            string parameter = default_value;
-            
-            if ( has_query_parameter( name ) )
+            if ( not has_query_parameter( name, true ) )
             {
-                const auto iterator = m_query_parameters.find( name );
-                
-                parameter = iterator->second;
+                value = default_value;
+                return;
             }
-            
-            return parameter;
-        }
-        
-        multimap< string, string > RequestImpl::get_query_parameters( void ) const
-        {
-            return m_query_parameters;
+
+            string parameter = get_query_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stoi( parameter );
         }
 
-        multimap< string, string > RequestImpl::get_query_parameters( const string& name ) const
+        void RequestImpl::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_query_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_query_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stoul( parameter );
+        }
+
+        void RequestImpl::get_query_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_query_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_query_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stol( parameter );
+        }
+
+        void RequestImpl::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_query_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_query_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stoul( parameter );
+        }
+
+        void RequestImpl::get_query_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+        {
+            if ( not has_query_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_query_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stof( parameter );
+        }
+
+        void RequestImpl::get_query_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_query_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_query_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stod( parameter );
+        }
+
+        string RequestImpl::get_query_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+        {
+            string value = default_value;
+
+            const auto parameters = get_query_parameters( name, transform );
+
+            if ( parameters.size( ) not_eq 0 )
+            {
+                value = parameters.begin( )->second;
+            }
+
+            return value;
+        }
+
+        multimap< string, string > RequestImpl::get_query_parameters( const string& name, const function< string ( const string& ) >& transform ) const
         {
             multimap< string, string > parameters;
-            
-            for ( auto parameter : m_query_parameters )
+
+            for ( const auto& parameter : m_query_parameters )
             {
                 if ( parameter.first == name )
                 {
-                    parameters.insert( parameter );
+                    if ( transform == nullptr )
+                    {
+                        parameters.insert( parameter );
+                    }
+                    else
+                    {
+                        parameters.insert( make_pair( parameter.first, transform( parameter.second ) ) );
+                    }
                 }
             }
-            
+
             return parameters;
         }
-        
-        string RequestImpl::get_path_parameter( const string& name, const string& default_value ) const
+
+        void RequestImpl::get_path_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
         {
-            string parameter = default_value;
-            
-            if ( has_path_parameter( name ) )
+            if ( not has_path_parameter( name, true ) )
             {
-                const auto iterator = Map::find_ignoring_case( name, m_path_parameters );
-                
-                parameter = iterator->second;
+                value = default_value;
+                return;
             }
-            
-            return parameter;
+
+            string parameter = get_path_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stoi( parameter );
         }
-        
-        map< string, string > RequestImpl::get_path_parameters( void ) const
+
+        void RequestImpl::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
         {
-            return m_path_parameters;
+            if ( not has_path_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_path_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stoul( parameter );
         }
-        
-        void RequestImpl::set_body( const Bytes& value )
+
+        void RequestImpl::get_path_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
         {
-            m_body = value;
+            if ( not has_path_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_path_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stol( parameter );
         }
-        
+
+        void RequestImpl::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_path_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_path_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stoul( parameter );
+        }
+
+        void RequestImpl::get_path_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+        {
+            if ( not has_path_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_path_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stof( parameter );
+        }
+
+        void RequestImpl::get_path_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+        {
+            if ( not has_path_parameter( name, true ) )
+            {
+                value = default_value;
+                return;
+            }
+
+            string parameter = get_path_parameter( name, String::empty, nullptr );
+
+            if ( transform not_eq nullptr )
+            {
+                parameter = transform( parameter );
+            }
+
+            value = stod( parameter );
+        }
+
+        string RequestImpl::get_path_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+        {
+            string value = default_value;
+
+            const auto parameters = get_path_parameters( name, transform );
+
+            if ( parameters.size( ) not_eq 0 )
+            {
+                value = parameters.begin( )->second;
+            }
+
+            return value;
+        }
+
+        map< string, string > RequestImpl::get_path_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+        {
+            map< string, string > parameters;
+
+            for ( const auto& parameter : m_path_parameters )
+            {
+                if ( parameter.first == name )
+                {
+                    if ( transform == nullptr )
+                    {
+                        parameters.insert( parameter );
+                    }
+                    else
+                    {
+                        parameters.insert( make_pair( parameter.first, transform( parameter.second ) ) );
+                    }
+                }
+            }
+
+            return parameters;
+        }
+
         void RequestImpl::set_version( const double value )
         {
-            if ( value not_eq 1.0 and value not_eq 1.1 )
-            {
-                throw StatusCode::HTTP_VERSION_NOT_SUPPORTED;
-            }
-            
             m_version = value;
         }
-        
+
         void RequestImpl::set_path( const string& value )
         {
             m_path = value;
         }
-        
+
         void RequestImpl::set_method( const string& value )
         {
             m_method = value;
         }
-        
-        void RequestImpl::set_origin( const string& value )
-        {
-            m_origin = value;
-        }
-
-        void RequestImpl::set_destination( const string& value )
-        {
-            m_destination = value;
-        }
 
         void RequestImpl::set_protocol( const string& value )
         {
-            auto protocol = String::uppercase( value );
-
-            if ( protocol not_eq "HTTP" and protocol not_eq "HTTPS" )
-            {
-                throw StatusCode::BAD_REQUEST;
-            }
-            
             m_protocol = value;
         }
 
-        void RequestImpl::set_socket( const shared_ptr< tcp::socket >& value, asio::streambuf* buffer )
+        void RequestImpl::set_body( const Bytes& value )
         {
-            m_socket = value;
-            m_buffer = buffer;
+            m_body = value;
         }
-        
+
         void RequestImpl::set_headers( const multimap< string, string >& values )
         {
             m_headers = values;
         }
-        
-        void RequestImpl::set_path_parameters( const map< string, string >& values )
+
+        void RequestImpl::set_path_parameter( const string& name, const string& value )
         {
-            m_path_parameters = values;
+            m_path_parameters.insert( make_pair( name, value ) );
         }
-        
+
         void RequestImpl::set_query_parameters( const multimap< string, string >& values )
         {
             m_query_parameters = values;
-        }
-        
-        bool RequestImpl::operator <( const RequestImpl& value ) const
-        {
-            return m_path < value.m_path;
-        }
-        
-        bool RequestImpl::operator >( const RequestImpl& value ) const
-        {
-            return m_path > value.m_path;
-        }
-        
-        bool RequestImpl::operator ==( const RequestImpl& value ) const
-        {
-            return ( m_body_processed == value.m_body_processed and
-                     m_path == value.m_path and
-                     m_method == value.m_method and
-                     m_origin == value.m_origin and
-                     m_destination == value.m_destination and
-                     m_version == value.m_version and
-                     m_headers == value.m_headers and
-                     m_protocol == value.m_protocol and
-                     m_buffer == value.m_buffer and
-                     m_socket == value.m_socket and
-                     m_path_parameters == value.m_path_parameters and
-                     m_query_parameters == value.m_query_parameters );
-        }
-        
-        bool RequestImpl::operator !=( const RequestImpl& value ) const
-        {
-            return not ( *this == value );
-        }
-        
-        RequestImpl& RequestImpl::operator =( const RequestImpl& value )
-        {
-            m_body_processed = value.m_body_processed;
-
-            m_body = value.m_body;
-            
-            m_path = value.m_path;
-            
-            m_method = value.m_method;
-            
-            m_origin = value.m_origin;
-
-            m_destination = value.m_destination;
-            
-            m_version = value.m_version;
-            
-            m_headers = value.m_headers;
-            
-            m_protocol = value.m_protocol;
-
-            m_buffer = value.m_buffer;
-
-            m_socket = value.m_socket;
-            
-            m_path_parameters = value.m_path_parameters;
-            
-            m_query_parameters = value.m_query_parameters;
-            
-            return *this;
         }
     }
 }

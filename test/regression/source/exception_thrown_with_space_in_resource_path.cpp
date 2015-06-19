@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * bug tracker issue #53
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 #include <functional>
 
@@ -16,6 +15,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -25,29 +25,28 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-Response get_handler( const Request& )
+void get_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
+    session->close( 200 );
 }
 
 TEST_CASE( "with space in path", "[resource]" )
 {
-    Resource resource;
-    resource.set_path( "test queue" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test queue" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_root( "queues" );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_root( "queues" );
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
+    Service service;
+    service.publish( resource );
     
-    service->start( );
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -59,24 +58,27 @@ TEST_CASE( "with space in path", "[resource]" )
     
     REQUIRE( 400 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }
 
 TEST_CASE( "without space in path", "[resource]" )
 {
-    Resource resource;
-    resource.set_path( "testQueue" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "testQueue" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_root( "queues" );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_root( "queues" );
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
+    Service service;
+    service.publish( resource );
     
-    service->start( );
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -88,5 +90,6 @@ TEST_CASE( "without space in path", "[resource]" )
     
     REQUIRE( 200 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

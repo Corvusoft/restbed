@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * bug tracker issue #57
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 #include <string>
 #include <vector>
@@ -16,9 +15,10 @@
 //External Includes
 #include <catch.hpp>
 #include <corvusoft/framework/http>
-#include <corvusoft/framework/bytes>
+#include <corvusoft/framework/byte>
 
 //System Namespaces
+using std::thread;
 using std::vector;
 using std::to_string;
 using std::shared_ptr;
@@ -40,30 +40,34 @@ const char* body = R"(
    ]
  })";
 
-Response post_handler( const Request& request )
+void post_handler( const shared_ptr< Session >& session )
 {
-    Bytes expectation( body, body + 492 );
-    
-    Response response;
-    response.set_status_code( ( request.get_body( ) == expectation ) ? StatusCode::CREATED : StatusCode::BAD_REQUEST );
+    session->fetch( 492, [ ]( const shared_ptr< Session >& session, const Bytes& )
+    {
+        auto expectation = Bytes( body, body + 492 );
+        const auto request = session->get_request( );
+        const auto status = ( request->get_body( ) == expectation ) ? 201 : 400;
 
-    return response;
+        session->close( status, expectation, { { "Content-Length", "492" } } );
+    } );
 }
 
 TEST_CASE( "large request bodies being trimmed", "[request]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    resource.set_method_handler( "POST", &post_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "POST", &post_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
-    
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
-    
-    service->start( );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+
+    Service service;
+    service.publish( resource );
+
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "POST";
@@ -77,5 +81,6 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
     
     REQUIRE( 201 == response.status_code );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

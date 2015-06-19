@@ -1,7 +1,5 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * bug tracker issue #29
  */
 
 //System Includes
@@ -34,11 +32,11 @@ using namespace framework;
 
 bool exception_was_thrown = false;
 
-void worker( shared_ptr< Service > service )
+void worker( shared_ptr< Service > service, shared_ptr< Settings > settings )
 {
     try
     {
-        service->start( );
+        service->start( settings );
     }
     catch ( const system_error& se )
     {
@@ -56,17 +54,16 @@ void wait_for_service_initialisation( void )
 
 TEST_CASE( "peer closes connection without sending data", "[service]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( SYNCHRONOUS );
-    
-    auto service = make_shared< Service >( settings );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+
+    auto service = make_shared< Service >( );
     service->publish( resource );
     
-    thread restbed_thread( worker, service );
+    thread restbed_thread( worker, service, settings );
     
     wait_for_service_initialisation( );
     

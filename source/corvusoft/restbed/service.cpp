@@ -3,23 +3,22 @@
  */
 
 //System Includes
-#include <functional>
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/service.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
-#include "corvusoft/restbed/response.h"
 #include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/detail/service_impl.h"
 
 //External Includes
 
 //System Namespaces
+using std::map;
 using std::string;
 using std::function;
+using std::exception;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -29,17 +28,7 @@ using restbed::detail::ServiceImpl;
 
 namespace restbed
 {
-    Service::Service( const Settings& settings ) : m_pimpl( new ServiceImpl( settings ) )
-    {
-        return;
-    }
-    
-    Service::Service( const Service& original ) : m_pimpl( new ServiceImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
-    Service::Service( const ServiceImpl& implementation ) : m_pimpl( new ServiceImpl( implementation ) )
+    Service::Service( void ) : m_pimpl( new ServiceImpl )
     {
         return;
     }
@@ -49,50 +38,63 @@ namespace restbed
         return;
     }
     
-    void Service::start( void )
-    {
-        m_pimpl->start( );
-    }
-    
-    void Service::start( const Mode& value )
-    {
-        m_pimpl->start( value );
-    }
-    
     void Service::stop( void )
     {
         m_pimpl->stop( );
     }
     
-    void Service::publish( const Resource& value )
+    void Service::start( const shared_ptr< const Settings >& settings )
     {
-        m_pimpl->publish( value );
+        m_pimpl->start( settings );
+    }
+
+    void Service::restart( const shared_ptr< const Settings >& settings )
+    {
+        m_pimpl->restart( settings );
+    }
+
+    void Service::publish( const shared_ptr< const Resource >& resource )
+    {
+        m_pimpl->publish( resource );
     }
     
-    void Service::suppress( const Resource& value )
+    void Service::suppress( const shared_ptr< const Resource >& resource )
     {
-        m_pimpl->suppress( value );
+        m_pimpl->suppress( resource );
     }
-    
+
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
-        m_pimpl->set_log_handler( value );
+        m_pimpl->set_logger( value );
     }
-    
-    void Service::set_authentication_handler( function< void ( const Request&, Response& ) > value )
+
+    void Service::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
     {
-        m_pimpl->set_authentication_handler( value );
+        m_pimpl->set_not_found_handler( value );
     }
-    
-    void Service::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
+
+    void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_method_not_allowed_handler( value );
+    }
+
+    void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_method_not_implemented_handler( value );
+    }
+
+    void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_failed_filter_validation_handler( value );
+    }
+
+    void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session >& ) > value )
     {
         m_pimpl->set_error_handler( value );
     }
-    
-    Service& Service::operator =( const Service& value )
+
+    void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
     {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
+        m_pimpl->set_authentication_handler( value );
     }
 }

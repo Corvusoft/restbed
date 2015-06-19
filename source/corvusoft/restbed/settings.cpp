@@ -5,7 +5,6 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/settings.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
 
@@ -14,6 +13,7 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::multimap;
 using std::chrono::seconds;
 
 //Project Namespaces
@@ -28,24 +28,9 @@ namespace restbed
         return;
     }
     
-    Settings::Settings( const Settings& original ) : m_pimpl( new SettingsImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
-    Settings::Settings( const SettingsImpl& implementation ) : m_pimpl( new SettingsImpl( implementation ) )
-    {
-        return;
-    }
-    
     Settings::~Settings( void )
     {
         return;
-    }
-    
-    Mode Settings::get_mode( void ) const
-    {
-        return m_pimpl->get_mode( );
     }
     
     uint16_t Settings::get_port( void ) const
@@ -58,14 +43,24 @@ namespace restbed
         return m_pimpl->get_root( );
     }
     
-    int Settings::get_maximum_connections( void ) const
+    int32_t Settings::get_connection_limit( void ) const
     {
-        return m_pimpl->get_maximum_connections( );
+        return m_pimpl->get_connection_limit( );
     }
 
     seconds Settings::get_connection_timeout( void ) const
     {
         return m_pimpl->get_connection_timeout( );
+    }
+
+    string Settings::get_status_message( const int code ) const
+    {
+        return m_pimpl->get_status_message( code );
+    }
+
+    map< int, string > Settings::get_status_messages( void ) const
+    {
+        return m_pimpl->get_status_messages( );
     }
 
     string Settings::get_property( const string& name ) const
@@ -77,12 +72,12 @@ namespace restbed
     {
         return m_pimpl->get_properties( );
     }
-    
-    void Settings::set_mode( const Mode value )
+
+    multimap< string, string > Settings::get_default_headers( void ) const
     {
-        m_pimpl->set_mode( value );
+        return m_pimpl->get_default_headers( );
     }
-    
+
     void Settings::set_port( const uint16_t value )
     {
         m_pimpl->set_port( value );
@@ -93,14 +88,24 @@ namespace restbed
         m_pimpl->set_root( value );
     }
     
-    void Settings::set_maximum_connections( const int value )
+    void Settings::set_connection_limit( const int32_t value )
     {
-        m_pimpl->set_maximum_connections( value );
+        m_pimpl->set_connection_limit( value );
     }
 
     void Settings::set_connection_timeout( const seconds& value )
     {
         m_pimpl->set_connection_timeout( value );
+    }
+
+    void Settings::set_status_message( const int code, const string& message )
+    {
+        m_pimpl->set_status_message( code, message );
+    }
+
+    void Settings::set_status_messages( const map< int, string >& values )
+    {
+        m_pimpl->set_status_messages( values );
     }
 
     void Settings::set_property( const string& name, const string& value )
@@ -112,11 +117,14 @@ namespace restbed
     {
         m_pimpl->set_properties( values );
     }
-    
-    Settings& Settings::operator =( const Settings& value )
+
+    void Settings::set_default_header( const string& name, const string& value )
     {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
+        m_pimpl->set_default_header( name, value );
+    }
+
+    void Settings::set_default_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->set_default_headers( values );
     }
 }

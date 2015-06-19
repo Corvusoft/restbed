@@ -1,47 +1,60 @@
+/*
+ * Example illustrating the display of HTML webpages.
+ *
+ * Server Usage:
+ *    ./distribution/example/serving_html
+ *
+ * Client Usage:
+ *    curl -v -X GET 'http://localhost:1984/static/index.html'
+ */
+
 #include <string>
+#include <memory>
 #include <cstdlib>
 #include <fstream>
+#include <restbed>
 #include <streambuf>
-
-#include "restbed"
 
 using namespace std;
 using namespace restbed;
 
-Response get_method_handler( const Request& request )
+void get_method_handler( const shared_ptr< Session >& session )
 {
-    string filename = request.get_path_parameter( "filename" );
+    const auto request = session->get_request( );
+    const string filename = request->get_path_parameter( "filename" );
     
-    ifstream stream( "./resource/serving_html/" + filename, ifstream::in );
-    
-    Response response;
-    response.set_header( "Content-Type", "text/html" );
-    
+    ifstream stream( "./distribution/resource/" + filename, ifstream::in );
+
     if ( stream.is_open( ) )
     {
-        response.set_body( string( istreambuf_iterator< char >( stream ), istreambuf_iterator< char >( ) ) );
-        response.set_status_code( StatusCode::OK );
+        const string body = string( istreambuf_iterator< char >( stream ), istreambuf_iterator< char >( ) );
+
+        const multimap< string, string > headers {
+            { "Content-Type", "text/html" },
+            { "Content-Length", ::to_string( body.length( ) ) }
+        };
+
+        session->close( OK, body, headers );
     }
     else
     {
-        response.set_status_code( StatusCode::NOT_FOUND );
+        session->close( NOT_FOUND );
     }
-    
-    return response;
 }
 
 int main( const int, const char** )
 {
-    Resource resource;
-    resource.set_path( "/static/{filename: [a-z]*\\.html}" );
-    resource.set_method_handler( "GET", &get_method_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/static/{filename: [a-z]*\\.html}" );
+    resource->set_method_handler( "GET", &get_method_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
     
-    Service service( settings );
+    Service service;
     service.publish( resource );
-    service.start( );
+    service.start( settings );
     
     return EXIT_SUCCESS;
 }

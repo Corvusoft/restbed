@@ -6,8 +6,10 @@
 #define _RESTBED_SERVICE_H 1
 
 //System Includes
+#include <map>
 #include <memory>
 #include <string>
+#include <stdexcept>
 #include <functional>
 
 //Project Includes
@@ -24,16 +26,10 @@ namespace restbed
 {
     //Forward Declarations
     class Logger;
-    class Request;
-    class Response;
+    class Session;
     class Resource;
     class Settings;
-    
-    enum Mode : int;
 
-    enum LogLevel :
-    int;
-    
     namespace detail
     {
         class ServiceImpl;
@@ -47,36 +43,39 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Service( const Settings& settings );
-            
-            Service( const Service& original );
+            Service( void );
         
-            Service( const detail::ServiceImpl& implementation );
-            
             virtual ~Service( void );
             
             //Functionality
-            void start( void );
-        
-            void start( const Mode& value );
-            
             void stop( void );
+
+            void start( const std::shared_ptr< const Settings >& settings = nullptr );
+
+            void restart( const std::shared_ptr< const Settings >& settings = nullptr );
+
+            void publish( const std::shared_ptr< const Resource >& resource );
             
-            void publish( const Resource& value );
-            
-            void suppress( const Resource& value );
+            void suppress( const std::shared_ptr< const Resource >& resource );
             
             //Getters
-            
+
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
             
-            void set_authentication_handler( std::function< void ( const Request&, Response& ) > value );
-            
-            void set_error_handler( std::function< void ( const int, const Request&, Response& ) > value );
+            void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
+
+            void set_error_handler( std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > value );
+
+            void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
             
             //Operators
-            Service& operator =( const Service& value );
             
             //Properties
             
@@ -103,6 +102,7 @@ namespace restbed
             //Definitions
             
             //Constructors
+            Service( const Service& original ) = delete;
             
             //Functionality
             
@@ -111,6 +111,7 @@ namespace restbed
             //Setters
             
             //Operators
+            Service& operator =( const Service& value ) = delete;
             
             //Properties
             std::unique_ptr< detail::ServiceImpl > m_pimpl;

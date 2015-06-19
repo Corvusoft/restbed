@@ -5,40 +5,34 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
 #include "corvusoft/restbed/detail/settings_impl.h"
+#include "corvusoft/restbed/detail/status_messages_impl.h"
 
 //External Includes
-#include <corvusoft/framework/map>
 #include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
-using std::stoi;
 using std::string;
-using std::to_string;
+using std::multimap;
 using std::chrono::seconds;
 
 //Project Namespaces
 
 //External Namespaces
-using framework::Map;
 using framework::String;
 
 namespace restbed
 {
     namespace detail
     {
-        SettingsImpl::SettingsImpl( void ) : m_properties( )
-        {
-            m_properties[ "ROOT" ] = "/";
-            m_properties[ "PORT" ] = "80";
-            m_properties[ "MODE" ] = ::to_string( SYNCHRONOUS );
-            m_properties[ "MAXIMUM CONNECTIONS" ] = "1024";
-            m_properties[ "CONNECTION TIMEOUT" ] = "5";
-        }
-        
-        SettingsImpl::SettingsImpl( const SettingsImpl& original ) : m_properties( original.m_properties )
+        SettingsImpl::SettingsImpl( void ) : m_port( 80 ),
+            m_root( "/" ),
+            m_connection_limit( 128 ),
+            m_connection_timeout( 5 ),
+            m_status_messages( status_messages ),
+            m_properties( ),
+            m_default_headers( )
         {
             return;
         }
@@ -48,95 +42,115 @@ namespace restbed
             return;
         }
         
-        Mode SettingsImpl::get_mode( void ) const
-        {
-            return static_cast< Mode >( stoi( get_property( "MODE" ) ) );
-        }
-        
         uint16_t SettingsImpl::get_port( void ) const
         {
-            return stoi( get_property( "PORT" ) );
+            return m_port;
         }
         
         string SettingsImpl::get_root( void ) const
         {
-            return get_property( "ROOT" );
+            return m_root;
         }
         
-        int SettingsImpl::get_maximum_connections( void ) const
+        int32_t SettingsImpl::get_connection_limit( void ) const
         {
-            return stoi( get_property( "MAXIMUM CONNECTIONS" ) );
+            return m_connection_limit;
         }
 
         seconds SettingsImpl::get_connection_timeout( void ) const
         {
-            return seconds( stoll( get_property( "CONNECTION TIMEOUT" ) ) );
+            return m_connection_timeout;
+        }
+
+        string SettingsImpl::get_status_message( const int code ) const
+        {
+            string message = String::empty;
+
+            if ( m_status_messages.count( code ) )
+            {
+                message = m_status_messages.at( code );
+            }
+            else
+            {
+                message = m_status_messages.at( 0 );
+            }
+
+            return message;
+        }
+
+        map< int, string > SettingsImpl::get_status_messages( void ) const
+        {
+            return m_status_messages;
         }
 
         string SettingsImpl::get_property( const string& name ) const
         {
-            string property = String::empty;
-            
-            auto iterator = Map::find_ignoring_case( name, m_properties );
-            
-            if ( iterator not_eq m_properties.end( ) )
+            if ( m_properties.count( name ) )
             {
-                property = iterator->second;
+                return m_properties.at( name );
             }
             
-            return property;
+            return String::empty;
         }
         
         map< string, string > SettingsImpl::get_properties( void ) const
         {
             return m_properties;
         }
-        
-        void SettingsImpl::set_mode( const Mode value )
+
+        multimap< string, string > SettingsImpl::get_default_headers( void ) const
         {
-            set_property( "MODE", ::to_string( value ) );
+            return m_default_headers;
         }
-        
+
         void SettingsImpl::set_port( const uint16_t value )
         {
-            set_property( "PORT", ::to_string( value ) );
+            m_port = value;
         }
         
         void SettingsImpl::set_root( const string& value )
         {
-            set_property( "ROOT", value );
+            m_root = value;
         }
         
-        void SettingsImpl::set_maximum_connections( const int value )
+        void SettingsImpl::set_connection_limit( const int32_t value )
         {
-            set_property( "MAXIMUM CONNECTIONS", ::to_string( value ) );
+            m_connection_limit = value;
         }
 
         void SettingsImpl::set_connection_timeout( const seconds& value )
         {
-            set_property( "CONNECTION TIMEOUT", ::to_string( value.count( ) ) );
+            m_connection_timeout = value;
+        }
+
+        void SettingsImpl::set_status_message( const int code, const string& message )
+        {
+            m_status_messages[ code ] = message;
+        }
+
+        void SettingsImpl::set_status_messages( const map< int, string >& values )
+        {
+            m_status_messages = values;
         }
 
         void SettingsImpl::set_property( const string& name, const string& value )
         {
-            const string key = String::uppercase( name );
-            
-            m_properties[ key ] = value;
+            m_properties[ name ] = value;
         }
         
         void SettingsImpl::set_properties( const map< string, string >& values )
         {
-            for ( const auto& value : values )
-            {
-                set_property( value.first, value.second );
-            }
+            m_properties.insert( values.begin( ), values.end( ) );
         }
-        
-        SettingsImpl& SettingsImpl::operator =( const SettingsImpl& value )
+
+        void SettingsImpl::set_default_header( const string& name, const string& value )
         {
-            m_properties = value.m_properties;
-            
-            return *this;
+            m_default_headers.insert( make_pair( name, value ) );
+        }
+
+        void SettingsImpl::set_default_headers( const multimap< string, string >& values )
+        {
+            m_default_headers = values;
         }
     }
 }

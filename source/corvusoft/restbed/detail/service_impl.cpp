@@ -3,35 +3,36 @@
  */
 
 //System Includes
+#include <regex>
 #include <cstdio>
+#include <utility>
 #include <stdexcept>
 #include <functional>
 
 //Project Includes
-#include "corvusoft/restbed/mode.h"
-#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/logger.h"
 #include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/log_level.h"
 #include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/session_manager.h"
+#include "corvusoft/restbed/detail/request_impl.h"
 #include "corvusoft/restbed/detail/service_impl.h"
-#include "corvusoft/restbed/detail/path_parameter_impl.h"
-#include "corvusoft/restbed/detail/request_builder_impl.h"
-#include "corvusoft/restbed/detail/response_builder_impl.h"
-#include "corvusoft/restbed/detail/resource_matcher_impl.h"
+#include "corvusoft/restbed/detail/session_impl.h"
+#include "corvusoft/restbed/detail/resource_impl.h"
+#include "corvusoft/restbed/detail/session_manager_impl.h"
 
 //External Includes
 #include <corvusoft/framework/string>
 
 //System Namespaces
-using std::list;
-using std::find;
+using std::set;
+using std::pair;
 using std::bind;
-using std::thread;
+using std::regex;
 using std::string;
+using std::smatch;
 using std::find_if;
 using std::function;
 using std::to_string;
@@ -41,8 +42,6 @@ using std::make_shared;
 using std::runtime_error;
 using std::invalid_argument;
 using std::placeholders::_1;
-using std::placeholders::_2;
-using std::placeholders::_3;
 
 //Project Namespaces
 
@@ -58,36 +57,21 @@ namespace restbed
 {
     namespace detail
     {
-        ServiceImpl::ServiceImpl( const Settings& settings ) : m_mode( settings.get_mode( ) ),
-            m_port( settings.get_port( ) ),
-            m_root( settings.get_root( ) ),
-            m_maximum_connections( settings.get_maximum_connections( ) ),
-            m_connection_timeout( settings.get_connection_timeout( ).count( ) ),
-            m_resources( ),
-            m_log_handler( nullptr ),
-            m_thread( nullptr ),
-            m_work( nullptr ),
+        ServiceImpl::ServiceImpl( void ) : m_is_running( false ),
+            m_logger( nullptr ),
+            m_supported_methods( ),
+            m_settings( nullptr ),
             m_io_service( nullptr ),
+            m_session_manager( nullptr ),
             m_acceptor( nullptr ),
-            m_authentication_handler( bind( &ServiceImpl::authentication_handler, this, _1, _2 ) ),
-            m_error_handler( bind( &ServiceImpl::error_handler, this, _1, _2, _3 ) )
-        {
-            return;
-        }
-        
-        ServiceImpl::ServiceImpl( const ServiceImpl& original ) : m_mode( original.m_mode ),
-            m_port( original.m_port ),
-            m_root( original.m_root ),
-            m_maximum_connections( original.m_maximum_connections ),
-            m_connection_timeout( original.m_connection_timeout ),
-            m_resources( original.m_resources ),
-            m_log_handler( original.m_log_handler ),
-            m_thread( original.m_thread ),
-            m_work( original.m_work ),
-            m_io_service( original.m_io_service ),
-            m_acceptor( original.m_acceptor ),
-            m_authentication_handler( original.m_authentication_handler ),
-            m_error_handler( original.m_error_handler )
+            m_resource_paths( ),
+            m_resource_routes( ),
+            m_not_found_handler( nullptr ),
+            m_method_not_allowed_handler( nullptr ),
+            m_method_not_implemented_handler( nullptr ),
+            m_failed_filter_validation_handler( nullptr ),
+            m_error_handler( nullptr ),
+            m_authentication_handler( nullptr )
         {
             return;
         }
@@ -100,336 +84,574 @@ namespace restbed
             }
             catch ( ... )
             {
-                log( LogLevel::WARNING, "Service failed graceful shutdown." );
-            }
-        }
-        
-        void ServiceImpl::start( void )
-        {
-            start( m_mode );
-        }
-
-        void ServiceImpl::start( const Mode& value )
-        {
-            m_io_service = make_shared< io_service >( );
-            
-            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_port ) );
-            
-            m_acceptor->set_option( socket_base::reuse_address( true ) );
-            
-            m_acceptor->listen( m_maximum_connections );
-            
-            listen( );
-            
-            switch ( value )
-            {
-                case SYNCHRONOUS:
-                    start_synchronous( );
-                    break;
-                    
-                case ASYNCHRONOUS:
-                    start_asynchronous( );
-                    break;
-                    
-                default:
-                    log( LogLevel::FATAL, String::format( "Service failed, unknown service mode: %i",  m_mode ) );
+                log( Logger::Level::WARNING, "Service failed graceful teardown." );
             }
         }
         
         void ServiceImpl::stop( void )
         {
-            if ( m_work not_eq nullptr )
-            {
-                m_work.reset( );
-            }
-            
+            m_is_running = false;
+
             if ( m_io_service not_eq nullptr )
             {
                 m_io_service->stop( );
             }
-            
-            if ( m_thread not_eq nullptr and m_thread->joinable( ) )
+
+            if ( m_session_manager not_eq nullptr )
             {
-                m_thread->join( );
+                m_session_manager->stop( );
             }
+
+            if ( m_logger not_eq nullptr )
+            {
+                m_logger->stop( );
+            }
+        }
+
+        void ServiceImpl::start( const shared_ptr< const Settings >& settings )
+        {
+            m_settings = settings;
+
+            if ( m_session_manager == nullptr )
+            {
+                m_session_manager = make_shared< SessionManagerImpl >( );
+            }
+
+            m_session_manager->start( settings );
+
+            if ( m_logger not_eq nullptr )
+            {
+                m_logger->start( settings );
+            }
+
+            m_io_service = make_shared< io_service >( );
+
+            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
+            m_acceptor->set_option( socket_base::reuse_address( true ) );
+            m_acceptor->listen( settings->get_connection_limit( ) );
             
-            log( LogLevel::INFO, "Service stopped" );
+            listen( );
+
+            auto endpoint = m_acceptor->local_endpoint( );
+            auto address = endpoint.address( );
+            auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            location += ::to_string( endpoint.port( ) );
+            log( Logger::Level::INFO, String::format( "Service accepting connections at '%s'.",  location.data( ) ) );
+
+            for ( const auto& route : m_resource_paths )
+            {
+                auto path = String::format( "/%s/%s", settings->get_root( ).data( ), route.second.data( ) );
+                path = String::replace( "//", "/", path );
+
+                log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
+            }
+
+            m_is_running = true;
+            m_io_service->run( );
+
+            log( Logger::Level::INFO, String::format( "Service halted at '%s'.", location.data( ) ) );
+        }
+
+        void ServiceImpl::restart( const shared_ptr< const Settings >& settings )
+        {
+            try
+            {
+                stop( );
+            }
+            catch ( ... )
+            {
+                log( Logger::Level::WARNING, "Service failed graceful teardown." );
+            }
+
+            start( settings );
         }
         
-        void ServiceImpl::publish( const Resource& value )
+        void ServiceImpl::publish( const shared_ptr< const Resource >& resource )
         {
-            auto paths = value.get_paths( );
-            
-            if ( paths.empty( ) )
+            if ( m_is_running )
             {
-                paths.push_back( m_root );
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
             }
-            else if ( m_root not_eq "/" )
+
+            if ( resource == nullptr )
             {
-                for ( auto& path : paths )
+                return;
+            }
+
+            auto paths = resource->m_pimpl->get_paths( );
+
+            if ( not has_unique_paths( paths ) )
+            {
+                throw invalid_argument( "Resource would pollute namespace. Please ensure all published resources have unique paths." );
+            }
+
+            for ( auto& path : paths )
+            {
+                const string sanitised_path = sanitise_path( path );
+
+                m_resource_paths[ sanitised_path ] = path;
+                m_resource_routes[ sanitised_path ] = resource;
+            }
+
+            const auto& methods = resource->m_pimpl->get_methods( );
+            m_supported_methods.insert( methods.begin( ), methods.end( ) );
+        }
+        
+        void ServiceImpl::suppress( const shared_ptr< const Resource >& resource )
+        {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            if ( resource == nullptr )
+            {
+                return;
+            }
+
+            for ( const auto& path : resource->m_pimpl->get_paths( ) )
+            {
+                if ( m_resource_routes.erase( path ) )
                 {
-                    path = String::format( "/%s/%s", m_root.data( ), path.data( ) );
+                    log( Logger::Level::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
+                }
+                else
+                {
+                    log( Logger::Level::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
                 }
             }
-            
-            Resource resource( value );
-            resource.set_paths( paths );
-            
-            auto iterator = find_if( m_resources.begin( ),
-                                     m_resources.end( ),
-                                     [&] ( const Resource & item )
-            {
-                return item == resource;
-            } );
-            
-            if ( iterator not_eq m_resources.end( ) )
-            {
-                *iterator = resource;
-            }
-            else
-            {
-                m_resources.push_back( resource );
-            }
-            
-            log( LogLevel::INFO, String::format( "Published '%s' resource", resource.get_path( ).data( ) ) );
         }
-        
-        void ServiceImpl::suppress( const Resource& value )
+
+        void ServiceImpl::set_logger(  const shared_ptr< Logger >& value )
         {
-            auto position = find( m_resources.begin( ), m_resources.end( ), value );
-            
-            if ( position not_eq m_resources.end( ) )
+            if ( m_is_running )
             {
-                string path = position->get_path( );
-                
-                m_resources.erase( position );
-                
-                log( LogLevel::INFO, String::format( "Suppressed '%s' resource", path.data( ) ) );
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
             }
-            else
+
+            m_logger = value;
+        }
+
+        void ServiceImpl::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            if ( m_is_running )
             {
-                log( LogLevel::INFO, String::format( "Failed to suppress  '%s' resource, not found", value.get_path( ).data( ) ) );
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
             }
+
+            m_not_found_handler = value;
         }
-        
-        void ServiceImpl::set_log_handler(  const shared_ptr< Logger >& value )
+
+        void ServiceImpl::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
-            m_log_handler = value;
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            m_method_not_allowed_handler = value;
         }
-        
-        void ServiceImpl::set_authentication_handler( function< void ( const Request&, Response& ) > value )
+
+        void ServiceImpl::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            m_method_not_implemented_handler = value;
+        }
+
+        void ServiceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            m_failed_filter_validation_handler = value;
+        }
+
+        void ServiceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
+        {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            m_error_handler = value;
+        }
+
+        void ServiceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+        {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
             m_authentication_handler = value;
         }
         
-        void ServiceImpl::set_error_handler( function< void ( const int, const Request&, Response& ) > value )
-        {
-            m_error_handler = value;
-        }
-        
-        ServiceImpl& ServiceImpl::operator =( const ServiceImpl& value )
-        {
-            m_mode = value.m_mode;
-            
-            m_port = value.m_port;
-            
-            m_root = value.m_root;
-            
-            m_resources = value.m_resources;
-            
-            m_log_handler = value.m_log_handler;
-
-            m_connection_timeout = value.m_connection_timeout;
-            
-            m_maximum_connections = value.m_maximum_connections;
-            
-            m_error_handler = value.m_error_handler;
-            
-            m_authentication_handler = value.m_authentication_handler;
-            
-            return *this;
-        }
-        
-        void ServiceImpl::listen( void )
+        void ServiceImpl::listen( void ) const
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
             
-            m_acceptor->async_accept( *socket, bind( &ServiceImpl::router, this, socket, _1 ) );
+            m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
-        
-        void ServiceImpl::start_synchronous( void )
-        {
-            log( LogLevel::INFO, "Synchronous Service Started" );
 
-            m_io_service->run( );
-        }
-        
-        void ServiceImpl::start_asynchronous( void )
+        string ServiceImpl::sanitise_path( const string& path ) const
         {
-            m_work = make_shared< io_service::work >( *m_io_service );
-            
-            auto task = static_cast< size_t ( io_service::* )( ) >( &io_service::run );
-            
-            m_thread = make_shared< thread >( task, m_io_service );
-            
-            log( LogLevel::INFO, "Asynchronous Service Started" );
-        }
-        
-        void ServiceImpl::router( shared_ptr< tcp::socket > socket, const error_code& error )
-        {
-            Request request;
-            Response response;
-
-            do
+            if ( path == "/" )
             {
-                try
-                {
-                    if ( error )
-                    {
-                        throw asio::system_error( error );
-                    }
-
-                    set_socket_timeout( socket );
-                    
-                    RequestBuilderImpl builder( socket );
-                    request = builder.build( );
-                    
-                    Resource resource = resolve_resource_route( request );
-                    
-                    auto parameters = PathParameterImpl::parse( request.get_path( ), resource.get_path( ) );
-                    builder.set_path_parameters( parameters );
-                    
-                    request = builder.build( );
-
-                    m_authentication_handler( request, response );
-                    
-                    const int status = response.get_status_code( );
-                    
-                    if ( status == StatusCode::OK )
-                    {
-                        log( LogLevel::INFO, String::format( "Incoming %s request for '%s' resource from %s",
-                                                             request.get_method( ).to_string( ).data( ),
-                                                             request.get_path( ).data( ),
-                                                             request.get_origin( ).data( ) ) );
-                                                             
-                        response = invoke_method_handler( request, resource );
-                    }
-                    else
-                    {
-                        log( LogLevel::SECURITY, String::format( "Unauthorised %s request for '%s' resource from %s",
-                                                                 request.get_method( ).to_string( ).data( ),
-                                                                 request.get_path( ).data( ),
-                                                                 request.get_origin( ).data( ) ) );
-                    }
-                }
-                catch ( const asio::system_error& se )
-                {
-                    log( LogLevel::FATAL, se.what( ) );
-                    response.set_status_code( StatusCode::INTERNAL_SERVER_ERROR );
-                }
-                catch ( const StatusCode::Value status_code )
-                {
-                    m_error_handler( status_code, request, response );
-                }
-                catch ( const exception& ex )
-                {
-                    log( LogLevel::ERROR, String::format( "Error 500 (Internal Server Error) '%s'\nrequest:\n%s\n",
-                                                         ex.what( ),
-                                                         RequestBuilderImpl::to_bytes( request ).data( ) ) );
-
-                    m_error_handler( StatusCode::INTERNAL_SERVER_ERROR, request, response );
-                }
-
-                ResponseBuilderImpl::write( response, socket );
+                return path;
             }
-            while ( "keep-alive" == String::lowercase( response.get_header( "Connection" ) ) );
 
-            listen( );
-        }
-        
-        Resource ServiceImpl::resolve_resource_route( const Request& request ) const
-        {
-            Resource resource;
-            
-            auto iterator = find_if( m_resources.begin( ), m_resources.end( ), ResourceMatcherImpl( request ) );
-            
-            if ( iterator not_eq m_resources.end( ) )
+            smatch matches;
+            string sanitised_path = String::empty;
+            static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
+
+            for ( auto folder : String::split( path, '/' ) )
             {
-                resource = *iterator;
+                if ( folder.front( ) == '{' and folder.back( ) == '}' )
+                {
+                    if ( not regex_match( folder, matches, pattern ) or matches.size( ) not_eq 2 )
+                    {
+                        throw runtime_error( String::format( "Resource path parameter declaration is malformed '%s'.", folder.data( ) ) );
+                    }
+
+                    sanitised_path += '/' + matches[ 1 ].str( );
+                }
+                else
+                {
+                    sanitised_path += '/' + folder;
+                }
+            }
+
+            if ( path.back( ) == '/' )
+            {
+                sanitised_path += '/';
+            }
+
+            return sanitised_path;
+        }
+
+        void ServiceImpl::router( const shared_ptr< Session >& session ) const
+        {
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
+
+            const auto root = m_settings->get_root( );
+
+            const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
+
+            if ( resource_route == m_resource_routes.end( ) )
+            {
+                return not_found( session );
+            }
+
+            const auto path = resource_route->first;
+            const auto resource = resource_route->second;
+            session->m_pimpl->set_resource( resource );
+
+            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
+        }
+
+        void ServiceImpl::not_found( const shared_ptr< Session >& session ) const
+        {
+            log( Logger::Level::INFO, String::format( "'%s' resource not found '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+            if ( m_not_found_handler not_eq nullptr )
+            {
+                m_not_found_handler( session );
             }
             else
             {
-                throw StatusCode::NOT_FOUND;
-            }
-
-            return resource;
-        }
-        
-        Response ServiceImpl::invoke_method_handler( const Request& request, const Resource& resource  ) const
-        {
-            Method method = request.get_method( );
-            
-            auto handle = resource.get_method_handler( method );
-            
-            return handle( request );
-        }
-        
-        void ServiceImpl::log( const LogLevel level, const string& message )
-        {
-            if ( m_log_handler not_eq nullptr )
-            {
-                m_log_handler->log( level, "%s", message.data( ) );
+                if ( session->is_open( ) )
+                {
+                    session->close( NOT_FOUND );
+                }
             }
         }
 
-        void ServiceImpl::authentication_handler( const Request&, Response& response )
+        bool ServiceImpl::has_unique_paths( const set< string >& paths ) const
         {
-            response.set_status_code( StatusCode::OK );
-        }
-        
-        void ServiceImpl::error_handler( const int status_code, const Request& request, Response& response )
-        {
-            string status_message = String::empty;
-            
-            try
+            if ( paths.empty( ) )
             {
-                status_message = StatusCode::to_string( status_code );
+                return false;
             }
-            catch ( const invalid_argument& ia )
+
+            for ( const auto& path : paths )
             {
-                status_message = ia.what( );
+                if ( m_resource_routes.count( path ) )
+                {
+                    return false;
+                }
             }
-            
-            log( LogLevel::ERROR, String::format( "Error %i (%s) requesting '%s' resource\n",
-                                                  status_code,
-                                                  status_message.data( ),
-                                                  request.get_path( ).data( ) ) );
-                                                  
-            response.set_status_code( status_code );
-            response.set_header( "Content-Type", "text/plain; charset=us-ascii" );
-            response.set_body( status_message );
+
+            return true;
         }
 
-        void ServiceImpl::set_socket_timeout( shared_ptr< tcp::socket > socket )
+        void ServiceImpl::log( const Logger::Level level, const string& message ) const
+        {
+             if ( m_logger not_eq nullptr )
+             {
+                 m_logger->log( level, "%s", message.data( ) );
+             }
+        }
+
+        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session ) const
+        {
+            log( Logger::Level::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_method( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
+            if ( m_method_not_allowed_handler not_eq nullptr )
+            {
+                m_method_not_allowed_handler( session );
+            }
+            else
+            {
+                if ( session->is_open( ) )
+                {
+                    session->close( METHOD_NOT_ALLOWED );
+                }
+            }
+        }
+
+        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session ) const
+        {
+            log( Logger::Level::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_method( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
+            if ( m_method_not_implemented_handler not_eq nullptr )
+            {
+                m_method_not_implemented_handler( session );
+            }
+            else
+            {
+                if ( session->is_open( ) )
+                {
+                    session->close( NOT_IMPLEMENTED );
+                }
+            }
+        }
+
+        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session ) const
+        {
+            log( Logger::Level::INFO, String::format( "'%s' failed filter validation '%s'.",
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
+            if ( m_failed_filter_validation_handler not_eq nullptr )
+            {
+                m_failed_filter_validation_handler( session );
+            }
+            else
+            {
+                if ( session->is_open( ) )
+                {
+                    session->close( BAD_REQUEST, { { "Connection", "close" } } );
+                }
+            }
+        }
+
+        void ServiceImpl::set_socket_timeout( const shared_ptr< tcp::socket >& socket ) const
         {
             struct timeval value;
             value.tv_usec = 0;
-            value.tv_sec = m_connection_timeout;
+            value.tv_sec = m_settings->get_connection_timeout( ).count( );
 
-            auto native_socket = socket->native( );
-            int status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
-
-            if ( status == -1 )
-            {
-                throw runtime_error( "Failed to set socket receive timeout" );
-            }
-
-            status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+            auto native_socket = socket->native_handle( );
+            int status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
 
             if ( status == -1 )
             {
-                throw runtime_error( "Failed to set socket send timeout" );
+                log( Logger::Level::WARNING, "Failed to set socket option, send timeout." );
             }
+
+            status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
+
+            if ( status == -1 )
+            {
+                log( Logger::Level::WARNING, "Failed to set socket option, receive timeout." );
+            }
+        }
+
+        void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path ) const
+        {
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
+
+            const auto request = session->get_request( );
+            const auto method_handler = find_method_handler( session );
+
+            extract_path_parameters( sanitised_path, request );
+
+            if ( method_handler == nullptr )
+            {
+                if ( m_supported_methods.count( request->get_method( ) ) == 0 )
+                {
+                    return method_not_implemented( session );
+                }
+                else
+                {
+                    return method_not_allowed( session );
+                }
+            }
+
+            method_handler( session );
+        }
+
+        void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const
+        {
+            if ( not error )
+            {
+                set_socket_timeout( socket );
+
+                const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
+                const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
+                const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
+                const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
+
+                const auto logger = m_logger;
+                const auto settings = m_settings;
+
+                m_session_manager->create( [ socket, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
+                {
+                    session->m_pimpl->set_logger( logger );
+                    session->m_pimpl->set_socket( socket );
+                    session->m_pimpl->set_settings( settings );
+                    session->m_pimpl->set_error_handler( error_handler );
+                    session->m_pimpl->fetch( session, authenticate );
+                } );
+            }
+            else
+            {
+                if ( socket not_eq nullptr and socket->is_open( ) )
+                {
+                    socket->close( );
+                }
+
+                log( Logger::Level::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+            }
+
+            listen( );
+        }
+
+        void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
+        {
+            smatch matches;
+            static const regex pattern( "^\\{([a-zA-Z0-9]+): ?.*\\}$" );
+
+            const auto folders = String::split( request->get_path( ), '/' );
+            const auto declarations = String::split( m_resource_paths.at( sanitised_path ), '/' );
+
+            for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
+            {
+                const auto declaration = declarations[ index ];
+
+                if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
+                {
+                    regex_match( declaration, matches, pattern );
+                    request->m_pimpl->set_path_parameter( matches[ 1 ].str( ), folders[ index ] );
+                }
+            }
+        }
+
+        function< void ( const shared_ptr< Session >& ) > ServiceImpl::find_method_handler( const shared_ptr< Session >& session ) const
+        {
+            const auto request = session->get_request( );
+            const auto resource = session->get_resource( );
+            const auto method_handlers = resource->m_pimpl->get_method_handlers( request->get_method( ) );
+
+            bool failed_filter_validation = false;
+            function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
+
+            for ( auto handler = method_handlers.begin( ); handler not_eq method_handlers.end( ) and method_handler == nullptr; handler++ )
+            {
+                method_handler = handler->second.second;
+
+                for ( const auto& filter : handler->second.first )
+                {
+                    for ( const auto& header : request->get_headers( filter.first ) )
+                    {
+                         if ( not regex_match( header.second, regex( filter.second ) ) )
+                         {
+                            method_handler = nullptr;
+                            failed_filter_validation = true;
+                         }
+                    }
+                }
+            }
+
+            if ( failed_filter_validation and method_handler == nullptr )
+            {
+                const auto handler = resource->m_pimpl->get_failed_filter_validation_handler( );
+                method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
+            }
+
+            return method_handler;
+        }
+
+        void ServiceImpl::authenticate( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) const
+        {
+            if ( m_authentication_handler not_eq nullptr )
+            {
+                m_authentication_handler( session, callback );
+            }
+            else
+            {
+                callback( session );
+            }
+        }
+
+        bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const pair< string, shared_ptr< const Resource > >& route ) const
+        {
+            log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
+                                                      session->get_request( )->get_method( ).data( ),
+                                                      session->get_origin( ).data( ),
+                                                      session->get_request( )->get_path( ).data( ) ) );
+
+            const auto root = m_settings->get_root( );
+            auto route_folders = String::split( route.first, '/' );
+
+            if ( not root.empty( ) and root not_eq "/" )
+            {
+                route_folders.insert( route_folders.begin( ), root );
+            }
+
+            const auto request = session->get_request( );
+            const auto path_folders = String::split( request->get_path( ), '/' );
+
+            if ( path_folders.empty( ) and route_folders.empty( ) )
+            {
+                return true;
+            }
+
+            bool match = false;
+
+            if ( path_folders.size( ) == route_folders.size( ) )
+            {
+                for ( size_t index = 0; index < path_folders.size( ); index++ )
+                {
+                    match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+
+                    if ( not match )
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return match;
         }
     }
 }

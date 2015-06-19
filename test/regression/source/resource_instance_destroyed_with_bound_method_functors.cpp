@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * bug tracker issue #98
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 #include <functional>
 
@@ -16,6 +15,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -28,17 +28,20 @@ using namespace framework;
 TEST_CASE( "resource instance destroyed with bound method functors", "[resource]" )
 {
     auto resource = make_shared< Resource >( );
+    resource->set_path( "/" );
 
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
 
-    auto service = make_shared< Service >( settings );
-    service->publish( *resource );
+    Service service;
+    service.publish( resource );
 
     resource.reset( );
 
-    service->start( );
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
 
     Http::Request request;
     request.method = "GET";
@@ -48,7 +51,8 @@ TEST_CASE( "resource instance destroyed with bound method functors", "[resource]
 
     auto response = Http::get( request );
 
-    REQUIRE( 405 == response.status_code );
+    REQUIRE( 501 == response.status_code );
 
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

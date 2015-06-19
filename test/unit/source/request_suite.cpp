@@ -11,7 +11,7 @@
 
 //External Includes
 #include <catch.hpp>
-#include <corvusoft/framework/bytes>
+#include <corvusoft/framework/byte>
 
 //System Namespaces
 using std::map;
@@ -24,221 +24,79 @@ using restbed::Request;
 //External Namespaces
 using framework::Bytes;
 
-SCENARIO( "constructor", "[request]" )
+TEST_CASE( "validate default instance values", "[request]" )
 {
-    GIVEN( "a default object" )
-    {
-        Request request;
+    const Request request;
 
-        WHEN( "the properties are retrieved" )
-        {
-            const Bytes body = request.get_body( );
-            const string path = request.get_path( );
-            const string origin = request.get_origin( );
-            const string destination = request.get_destination( );
-            const string protocol = request.get_protocol( );
-            const double version = request.get_version( );
-            const multimap< string, string > headers = request.get_headers( );
-            const map< string, string > path_parameters = request.get_path_parameters( );
-            const multimap< string, string > query_parameters = request.get_query_parameters( );
-
-            THEN( "i should see default values" )
-            {
-                REQUIRE( body.empty( ) );
-                REQUIRE( path == "/" );
-                REQUIRE( origin.empty( ) );
-                REQUIRE( destination.empty( ) );
-                REQUIRE( version == 1.1 );
-                REQUIRE( headers.empty( ) );
-                REQUIRE( protocol == "HTTP" );
-                REQUIRE( path_parameters.empty( ) );
-                REQUIRE( query_parameters.empty( ) );
-            }
-        }
-    }
+    REQUIRE( request.get_version( ) == 1.1 );
+    REQUIRE( request.get_path( ) == "/" );
+    REQUIRE( request.get_body( ).empty( ) );
+    REQUIRE( request.get_method( ) == "GET" );
+    REQUIRE( request.get_protocol( ) == "HTTP" );
+    REQUIRE( request.get_headers( ).empty( ) );
+    REQUIRE( request.get_path_parameters( ).empty( ) );
+    REQUIRE( request.get_query_parameters( ).empty( ) );
+    REQUIRE( request.has_query_parameter( "q" ) == false );
+    REQUIRE( request.has_path_parameter( "id" ) == false );
+    REQUIRE( request.has_header( "Content-Type" ) == false );
 }
 
-SCENARIO( "copy constructor", "[request]" )
+TEST_CASE( "confirm default destructor throws no exceptions", "[request]" )
 {
-    GIVEN( "i want to copy an existing request" )
-    {
-        Request request;
+    auto request = new Request;
 
-
-        WHEN( "i instantiate the object with the copy-constructor" )
-        {
-            Request copy( request );
-
-            THEN( "i should see the same properties" )
-            {
-                REQUIRE( copy.get_body( ).empty( ) );
-                REQUIRE( copy.get_path( ) == "/" );
-                REQUIRE( copy.get_origin( ).empty( ) );
-                REQUIRE( copy.get_destination( ).empty( ) );
-                REQUIRE( copy.get_version( ) == 1.1 );
-                REQUIRE( copy.get_headers( ).empty( ) );
-                REQUIRE( copy.get_protocol( ) == "HTTP" );
-                REQUIRE( copy.get_path_parameters( ).empty( ) );
-                REQUIRE( copy.get_query_parameters( ).empty( ) );
-            }
-        }
-    }
+    REQUIRE_NOTHROW( delete request );
 }
 
-SCENARIO( "destructor", "[request]" )
+TEST_CASE( "validate getter default value", "[request]" )
 {
-    GIVEN( "i instantiate a new object" )
-    {
-        Request* request = new Request( );
+    const Request request;
 
-        WHEN( "i deallocate the object" )
-        {
-            THEN( "i should not see any exceptions" )
-            {
-                REQUIRE_NOTHROW( delete request );
-            }
-        }
+    SECTION( "integer" )
+    {
+        int value;
+        request.get_header( "Var", value, 12 );
+        REQUIRE( value == 12 );
     }
-}
 
-SCENARIO( "assignment-operator", "[request]" )
-{
-    GIVEN( "i want to copy an existing request" )
+    SECTION( "unsigned integer" )
     {
-        Request request;
-
-        WHEN( "i instantiate the object with the assignment-operator" )
-        {
-            Request copy = request;
-
-            THEN( "i should see the same properties" )
-            {
-                REQUIRE( copy.get_body( ).empty( ) );
-                REQUIRE( copy.get_path( ) == "/" );
-                REQUIRE( copy.get_origin( ).empty( ) );
-                REQUIRE( copy.get_destination( ).empty( ) );
-                REQUIRE( copy.get_version( ) == 1.1 );
-                REQUIRE( copy.get_headers( ).empty( ) );
-                REQUIRE( copy.get_protocol( ) == "HTTP" );
-                REQUIRE( copy.get_path_parameters( ).empty( ) );
-                REQUIRE( copy.get_query_parameters( ).empty( ) );
-            }
-        }
+        unsigned int value;
+        request.get_header( "Var", value, -6 );
+        REQUIRE( value == -6 );
     }
-}
 
-SCENARIO( "less-than-operator", "[request]" )
-{
-    GIVEN( "i want to compare two objects" )
+    SECTION( "long" )
     {
-        Request lhs;
-        Request rhs;
-
-        WHEN( "i perform a comparison with the less-than-operator" )
-        {
-            THEN( "i should see the lhs is not less than the rhs" )
-            {
-                REQUIRE( not ( lhs < rhs ) );
-            }
-        }
+        long value;
+        request.get_header( "Var", value, 6 );
+        REQUIRE( value == 6 );
     }
-}
 
-SCENARIO( "greater-than-operator", "[request]" )
-{
-    GIVEN( "i want to compare two objects" )
+    SECTION( "unsigned long" )
     {
-        Request lhs;
-        Request rhs;
-
-        WHEN( "i perform a comparison with the greater-than-operator" )
-        {
-            THEN( "i should see the lhs is not greater than the rhs" )
-            {
-                REQUIRE( not ( lhs > rhs ) );
-            }
-        }
+        unsigned long value;
+        unsigned long default_value = -33;
+        request.get_header( "Var", value, default_value );
+        REQUIRE( value == default_value );
     }
-}
 
-SCENARIO( "equality-operator", "[request]" )
-{
-    GIVEN( "i want to compare two objects" )
+    SECTION( "float" )
     {
-        Request lhs;
-        Request rhs;
-
-        WHEN( "i perform a comparison with the equality-operator" )
-        {
-            THEN( "i should see identical instances" )
-            {
-                REQUIRE( lhs == rhs );
-            }
-        }
+        float value;
+        request.get_header( "Var", value, 3.6 );
+        REQUIRE( value == 3.6f );
     }
-}
 
-SCENARIO( "inequality-operator", "[request]" )
-{
-    GIVEN( "i want to compare two objects" )
+    SECTION( "double" )
     {
-        Request lhs;
-        Request rhs;
-
-        WHEN( "i perform a comparison with the inequality-operator" )
-        {
-            THEN( "i should not see differing instances" )
-            {
-                REQUIRE( not ( lhs not_eq rhs ) );
-            }
-        }
+        double value;
+        request.get_header( "Var", value, 34443 );
+        REQUIRE( value == 34443 );
     }
-}
 
-SCENARIO( "has_header", "[request]" )
-{
-    GIVEN( "i want to test for an available request header" )
+    SECTION( "string" )
     {
-        Request request;
-
-        WHEN( "i invoke has_header on a default request with 'Content-Type'" )
-        {
-            THEN( "i should see false" )
-            {
-                REQUIRE( request.has_header( "Content-Type" ) == false );
-            }
-        }
-    }
-}
-
-SCENARIO( "has_path_parameter", "[request]" )
-{
-    GIVEN( "i want to test for an available request header" )
-    {
-        Request request;
-
-        WHEN( "i invoke has_path_parameter on a default request with 'keys'" )
-        {
-            THEN( "i should see false" )
-            {
-                REQUIRE( request.has_path_parameter( "keys" ) == false );
-            }
-        }
-    }
-}
-
-SCENARIO( "has_query_parameter", "[request]" )
-{
-    GIVEN( "i want to test for an available request header" )
-    {
-        Request request;
-
-        WHEN( "i invoke has_query_parameter on a default request with 'version'" )
-        {
-            THEN( "i should see false" )
-            {
-                REQUIRE( request.has_query_parameter( "version" ) == false );
-            }
-        }
+        REQUIRE( request.get_header( "Var", "open" ) == "open" );
     }
 }

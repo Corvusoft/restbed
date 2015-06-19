@@ -3,39 +3,28 @@
  */
 
 //System Includes
-#include <regex>
-#include <algorithm>
+#include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
-#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
-#include "corvusoft/restbed/detail/path_parameter_impl.h"
 
 //External Includes
-#include <corvusoft/framework/map>
-#include <corvusoft/framework/regex>
 #include <corvusoft/framework/string>
 
 //System Namespaces
-using std::map;
-using std::bind;
-using std::find;
-using std::regex;
+using std::set;
+using std::pair;
 using std::string;
-using std::vector;
 using std::function;
-using std::regex_error;
+using std::multimap;
+using std::exception;
+using std::shared_ptr;
 using std::invalid_argument;
-using std::placeholders::_1;
 
 //Project Namespaces
 
 //External Namespaces
-using framework::Map;
-using framework::Regex;
 using framework::String;
 
 namespace restbed
@@ -43,275 +32,108 @@ namespace restbed
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
-            m_allow_methods( { "OPTIONS", "TRACE" } ),
-            m_header_filters( ),
+            m_methods( ),
+            m_default_headers( ),
+            m_failed_filter_validation_handler( nullptr ),
+            m_error_handler( nullptr ),
+            m_authentication_handler( nullptr ),
             m_method_handlers( )
         {
             return;
         }
-        
-        ResourceImpl::ResourceImpl( const ResourceImpl& original ) : m_paths( original.m_paths ),
-            m_allow_methods( original.m_allow_methods ),
-            m_header_filters( original.m_header_filters ),
-            m_method_handlers( original.m_method_handlers )
-        {
-            return;
-        }
-        
+
         ResourceImpl::~ResourceImpl( void )
         {
             return;
         }
 
-        string ResourceImpl::get_path( void ) const
+        void ResourceImpl::authenticate( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            return m_paths.empty( ) ? String::empty : m_paths.front( );
+            if ( m_authentication_handler not_eq nullptr )
+            {
+                m_authentication_handler( session, callback );
+            }
+            else
+            {
+                callback( session );
+            }
         }
-        
-        vector< string > ResourceImpl::get_paths( void ) const
+
+        const set< string >& ResourceImpl::get_paths( void ) const
         {
             return m_paths;
         }
-        
-        string ResourceImpl::get_header_filter( const string& name ) const
-        {
-            string filter = String::empty;
-            
-            const auto iterator = Map::find_ignoring_case( name, m_header_filters );
-            
-            if ( iterator not_eq m_header_filters.end( ) )
-            {
-                filter = iterator->second;
-            }
-            
-            return filter;
-        }
-        
-        map< string, string > ResourceImpl::get_header_filters( void ) const
-        {
-            return m_header_filters;
-        }
-        
-        function< Response ( const Request& ) > ResourceImpl::get_method_handler( const Method& verb ) const
-        {
-            if ( m_method_handlers.count( verb ) not_eq 0 )
-            {
-                return m_method_handlers.at( verb );
-            }
-            else if ( verb == "TRACE" )
-            {
-                return &ResourceImpl::default_trace_handler;
-            }
-            else if ( verb == "OPTIONS" )
-            {
-                return bind( &ResourceImpl::default_options_handler, _1, m_allow_methods );
-            }
-            else
-            {
-                return bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-        }
-        
-        map< Method, function< Response ( const Request& ) > > ResourceImpl::get_method_handlers( void ) const
-        {
-            map< Method, function< Response ( const Request& ) > > handlers = m_method_handlers;
 
-            if ( handlers.count( "TRACE" ) == 0 )
-            {
-                handlers[ "TRACE" ] = &ResourceImpl::default_trace_handler;
-            }
-
-            if ( handlers.count( "OPTIONS" ) == 0 )
-            {
-                handlers[ "OPTIONS" ] = bind( &ResourceImpl::default_options_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "GET" ) == 0 )
-            {
-                handlers[ "GET" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "PUT" ) == 0 )
-            {
-                handlers[ "PUT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "POST" ) == 0 )
-            {
-                handlers[ "POST" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "HEAD" ) == 0 )
-            {
-                handlers[ "HEAD" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "DELETE" ) == 0 )
-            {
-                handlers[ "DELETE" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            if ( handlers.count( "CONNECT" ) == 0 )
-            {
-                handlers[ "CONNECT" ] = bind( &ResourceImpl::default_method_not_allowed_handler, _1, m_allow_methods );
-            }
-
-            return handlers;
-        }
-        
-        void ResourceImpl::set_path( const string& value )
+        const set< string >& ResourceImpl::get_methods( void ) const
         {
-            m_paths.clear( );
-            m_paths.push_back( value );
-        }
-        
-        void ResourceImpl::set_paths( const vector< string >& values )
-        {
-            for ( auto value : values )
-            {
-                auto path = String::split( value, '/' );
-                
-                for ( auto directory : path )
-                {
-                    string pattern = PathParameterImpl::parse( directory );
-                    
-                    if ( not Regex::is_valid( pattern ) )
-                    {
-                        throw invalid_argument( String::empty );
-                    }
-                }
-                
-                
-                m_paths.push_back( value );
-            }
-        }
-        
-        void ResourceImpl::set_header_filter( const string& name, const string& value )
-        {
-            if ( not Regex::is_valid( value ) )
-            {
-                throw invalid_argument( String::empty );
-            }
-            
-            auto entry = Map::find_ignoring_case( name, m_header_filters );
-            
-            if ( entry not_eq m_header_filters.end( ) )
-            {
-                entry->second = value;
-            }
-            else
-            {
-                m_header_filters[ name ] = value;
-            }
-        }
-        
-        void ResourceImpl::set_header_filters( const map< string, string >& values )
-        {
-            for ( auto value : values )
-            {
-                set_header_filter( value.first, value.second );
-            }
-        }
-        
-        void ResourceImpl::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
-        {
-            auto method = verb.to_string( );
-            
-            m_method_handlers[ method ] = callback;
-            
-            auto iterator = find( m_allow_methods.begin( ), m_allow_methods.end( ), method );
-            
-            if ( iterator == m_allow_methods.end( ) )
-            {
-                m_allow_methods.push_back( method );
-            }
-        }
-        
-        void ResourceImpl::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
-        {
-            for ( const auto value : values )
-            {
-                set_method_handler( value.first, value.second );
-            }
-        }
-        
-        bool ResourceImpl::operator <( const ResourceImpl& value ) const
-        {
-            return m_paths < value.m_paths;
-        }
-        
-        bool ResourceImpl::operator >( const ResourceImpl& value ) const
-        {
-            return m_paths > value.m_paths;
-        }
-        
-        bool ResourceImpl::operator ==( const ResourceImpl& value ) const
-        {
-            return m_paths == value.m_paths and m_header_filters == value.m_header_filters;
-        }
-        
-        bool ResourceImpl::operator !=( const ResourceImpl& value ) const
-        {
-            return not ( *this == value );
-        }
-        
-        ResourceImpl& ResourceImpl::operator =( const ResourceImpl& value )
-        {
-            m_paths = value.m_paths;
-
-            m_allow_methods = value.m_allow_methods;
-            
-            m_header_filters = value.m_header_filters;
-            
-            m_method_handlers = value.m_method_handlers;
-            
-            return *this;
-        }
-        
-        string ResourceImpl::rebuild_path( const Request& request )
-        {
-            string query = String::join( request.get_query_parameters( ), "=", "&" );
-            
-            if ( not query.empty( ) )
-            {
-                query = "?" + query;
-            }
-            
-            return request.get_path( ) + query;
+            return m_methods;
         }
 
-        Response ResourceImpl::default_trace_handler( const Request& request )
+        const multimap< string, string >& ResourceImpl::get_default_headers( void ) const
         {
-            string path = rebuild_path( request );
+            return m_default_headers;
+        }
 
-            string headers = String::join( request.get_headers( ), ": ", "\r\n" );
+        const function< void ( const shared_ptr< Session >& ) >& ResourceImpl::get_failed_filter_validation_handler( void ) const
+        {
+            return m_failed_filter_validation_handler;
+        }
 
-            string body = String::format( "TRACE %s HTTP/1.1\r\n%s", path.data( ), headers.data( ) );
+        const function< void ( const int, const exception&, const shared_ptr< Session >& ) > ResourceImpl::get_error_handler( void ) const
+        {
+            return m_error_handler;
+        }
 
-            Response response;
-            response.set_body( body );
-            response.set_status_code( StatusCode::OK );
-            response.set_header( "Content-Type", "message/http" );
+        multimap< string, pair< multimap< string, string >, function< void ( const shared_ptr< Session >& ) > > > ResourceImpl::get_method_handlers( const string& method ) const
+        {
+            if ( method.empty( ) )
+            {
+                return m_method_handlers;
+            }
 
-            return response;
+            return decltype( m_method_handlers )( m_method_handlers.lower_bound( method ),
+                                                  m_method_handlers.upper_bound( method ) );
+        }
+
+        void ResourceImpl::set_paths( const set< string >& values )
+        {
+            m_paths = values;
+        }
+
+        void ResourceImpl::set_default_header( const string& name, const string& value )
+        {
+            m_default_headers.insert( make_pair( name, value ) );
+        }
+
+        void ResourceImpl::set_default_headers( const multimap< string, string >& values )
+        {
+            m_default_headers = values;
+        }
+
+        void ResourceImpl::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+        {
+            m_failed_filter_validation_handler = value;
+        }
+
+        void ResourceImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
+        {
+            m_error_handler = value;
+        }
+
+        void ResourceImpl::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+        {
+            m_authentication_handler = value;
         }
         
-        Response ResourceImpl::default_options_handler( const Request&, const vector< string >& allow_methods )
+        void ResourceImpl::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            Response response;
-            response.set_status_code( StatusCode::OK );
-            response.set_header( "Allow", String::join( allow_methods, ", " ) );
-            
-            return response;
-        }
-        
-        Response ResourceImpl::default_method_not_allowed_handler( const Request&, const vector< string >& allow_methods )
-        {
-            Response response;
-            response.set_status_code( StatusCode::METHOD_NOT_ALLOWED );
-            response.set_header( "Allow", String::join( allow_methods, ", " ) );
-            
-            return response;
+            if ( method.empty( ) )
+            {
+                throw invalid_argument( "Attempt to set resource handler to an empty protocol method." );
+            }
+
+            m_methods.insert( method );
+            m_method_handlers.insert( make_pair( method, make_pair( filters, callback ) ) );
         }
     }
 }

@@ -6,7 +6,7 @@ if ( catch_INCLUDE )
     set( CATCH_FOUND TRUE )
 
     if ( NOT catch_FIND_QUIETLY )
-        message( STATUS "Found catch header: ${catch_INCLUDE}" )
+        message( STATUS "Found catch source: ${catch_INCLUDE}" )
     endif ( )
 else ( )
     if ( catch_FIND_REQUIRED )

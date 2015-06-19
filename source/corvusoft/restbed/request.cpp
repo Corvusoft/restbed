@@ -5,7 +5,6 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
 #include "corvusoft/restbed/request.h"
 #include "corvusoft/restbed/detail/request_impl.h"
 
@@ -14,13 +13,16 @@
 //System Namespaces
 using std::map;
 using std::string;
+using std::function;
 using std::multimap;
+using std::shared_ptr;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
 
 //External Namespaces
 using framework::Bytes;
+using framework::String;
 
 namespace restbed
 {
@@ -28,146 +30,189 @@ namespace restbed
     {
         return;
     }
-    
-    Request::Request( const Request& original ) : m_pimpl( new RequestImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
-    Request::Request( const RequestImpl& implementation ) : m_pimpl( new RequestImpl( implementation ) )
-    {
-        return;
-    }
-    
+
     Request::~Request( void )
     {
         return;
     }
-    
+
     bool Request::has_header( const string& name ) const
     {
         return m_pimpl->has_header( name );
     }
-    
-    bool Request::has_path_parameter( const string& name ) const
+
+    bool Request::has_path_parameter( const string& name, const bool ignore_case ) const
     {
-        return m_pimpl->has_path_parameter( name );
-    }
-    
-    bool Request::has_query_parameter( const string& name ) const
-    {
-        return m_pimpl->has_query_parameter( name );
-    }
-    
-    Bytes Request::get_body( void ) const
-    {
-        return m_pimpl->get_body( );
+        return m_pimpl->has_path_parameter( name, ignore_case );
     }
 
-    Bytes Request::get_body( const size_t length ) const
+    bool Request::has_query_parameter( const string& name, const bool ignore_case ) const
     {
-        return m_pimpl->get_body( length );
+        return m_pimpl->has_query_parameter( name, ignore_case );
     }
 
-    Bytes Request::get_body( const string& delimiter ) const
-    {
-        return m_pimpl->get_body( delimiter );
-    }
-
-    Method Request::get_method( void ) const
-    {
-        return m_pimpl->get_method( );
-    }
-    
     double Request::get_version( void ) const
     {
         return m_pimpl->get_version( );
     }
-    
-    string Request::get_path( void ) const
+
+    const string Request::get_path( const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path( );
-    }
-    
-    string Request::get_origin( void ) const
-    {
-        return m_pimpl->get_origin( );
+        return m_pimpl->get_path( transform );
     }
 
-    string Request::get_destination( void ) const
+    const string Request::get_method( const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_destination( );
+        return m_pimpl->get_method( transform );
     }
 
-    string Request::get_protocol( void ) const
+    const string Request::get_protocol( const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_protocol( );
-    }
-    
-    string Request::get_header( const string& name, const string& default_value ) const
-    {
-        return m_pimpl->get_header( name, default_value );
-    }
-    
-    multimap< string, string > Request::get_headers( void ) const
-    {
-        return m_pimpl->get_headers( );
-    }
-    
-    multimap< string, string > Request::get_headers( const string& name ) const
-    {
-        return m_pimpl->get_headers( name );
-    }
-    
-    string Request::get_query_parameter( const string& name, const string& default_value ) const
-    {
-        return m_pimpl->get_query_parameter( name, default_value );
+        return m_pimpl->get_protocol( transform );
     }
 
-    multimap< string, string > Request::get_query_parameters( void ) const
+    const Bytes Request::get_body( const function< Bytes ( const Bytes& ) >& transform ) const
     {
-        return m_pimpl->get_query_parameters( );
+        return m_pimpl->get_body( transform );
     }
-    
-    multimap< string, string > Request::get_query_parameters( const string& name ) const
+
+    void Request::get_body( string& body, const function< Bytes ( const Bytes& ) >& transform ) const
     {
-        return m_pimpl->get_query_parameters( name );
+        return m_pimpl->get_body( body, transform );
     }
-    
-    string Request::get_path_parameter( const string& name, const string& default_value ) const
+
+    void Request::get_header( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path_parameter( name, default_value );
+        m_pimpl->get_header( name, value, default_value, transform );
     }
-    
-    map< string, string > Request::get_path_parameters( void ) const
+
+    void Request::get_header( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path_parameters( );
+        m_pimpl->get_header( name, value, default_value, transform );
     }
-    
-    Request& Request::operator =( const Request& value )
+
+    void Request::get_header( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
     {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
+        m_pimpl->get_header( name, value, default_value, transform );
     }
-    
-    bool Request::operator <( const Request& value ) const
+
+    void Request::get_header( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
     {
-        return *m_pimpl < *value.m_pimpl;
+        m_pimpl->get_header( name, value, default_value, transform );
     }
-    
-    bool Request::operator >( const Request& value ) const
+
+    void Request::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
     {
-        return *m_pimpl > *value.m_pimpl;
+        m_pimpl->get_header( name, value, default_value, transform );
     }
-    
-    bool Request::operator ==( const Request& value ) const
+
+    void Request::get_header( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
     {
-        return *m_pimpl == *value.m_pimpl;
+        m_pimpl->get_header( name, value, default_value, transform );
     }
-    
-    bool Request::operator !=( const Request& value ) const
+
+    string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        return *m_pimpl != *value.m_pimpl;
+        return m_pimpl->get_header( name, String::empty, transform );
+    }
+
+    string Request::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_header( name, default_value, transform );
+    }
+
+    multimap< string, string > Request::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_headers( name, transform );
+    }
+
+    void Request::get_query_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_query_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_query_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_query_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_query_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_query_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_query_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+    {
+        m_pimpl->get_query_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_query_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_query_parameter( name, value, default_value, transform );
+    }
+
+    string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_query_parameter( name, String::empty, transform );
+    }
+
+    string Request::get_query_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_query_parameter( name, default_value, transform );
+    }
+
+    multimap< string, string > Request::get_query_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_query_parameters( name, transform );
+    }
+
+    void Request::get_path_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_path_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_path_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_path_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_path_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform  ) const
+    {
+        m_pimpl->get_path_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_path_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+    {
+        m_pimpl->get_path_parameter( name, value, default_value, transform );
+    }
+
+    void Request::get_path_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+    {
+        m_pimpl->get_path_parameter( name, value, default_value, transform );
+    }
+
+    string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_path_parameter( name, String::empty, transform );
+    }
+
+    string Request::get_path_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_path_parameter( name, default_value, transform );
+    }
+
+    map< string, string > Request::get_path_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        return m_pimpl->get_path_parameters( name, transform );
     }
 }

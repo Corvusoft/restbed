@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2013, 2014, 2015 Corvusoft
- *
- * bug tracker issue #77
  */
 
 //System Includes
+#include <thread>
 #include <memory>
 #include <functional>
 
@@ -16,6 +15,7 @@
 #include <corvusoft/framework/http>
 
 //System Namespaces
+using std::thread;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -25,29 +25,28 @@ using namespace restbed;
 //External Namespaces
 using namespace framework;
 
-Response get_handler( const Request& )
+void get_handler( const shared_ptr< Session >& session )
 {
-    Response response;
-    response.set_status_code( StatusCode::OK );
-    
-    return response;
+    session->close( 200 );
 }
 
 TEST_CASE( "content type present on empty response body", "[response]" )
 {
-    Resource resource;
-    resource.set_path( "test" );
-    resource.set_method_handler( "GET", &get_handler );
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "test" );
+    resource->set_method_handler( "GET", &get_handler );
     
-    Settings settings;
-    settings.set_port( 1984 );
-    settings.set_mode( ASYNCHRONOUS );
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
     
-    auto service = make_shared< Service >( settings );
-    service->publish( resource );
+    Service service;
+    service.publish( resource );
     
-    service->start( );
-    
+    thread service_thread( [ &service, settings ] ( )
+    {
+        service.start( settings );
+    } );
+
     Http::Request request;
     request.method = "GET";
     request.port = 1984;
@@ -55,8 +54,10 @@ TEST_CASE( "content type present on empty response body", "[response]" )
     request.path = "/test";
 
     auto response = Http::get( request );
-    
+
+    REQUIRE( 200 == response.status_code );
     REQUIRE( response.headers.end( ) == response.headers.find( "Content-Type" ) );
     
-    service->stop( );
+    service.stop( );
+    service_thread.join( );
 }

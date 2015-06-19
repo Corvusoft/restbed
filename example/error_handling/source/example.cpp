@@ -1,35 +1,72 @@
+/*
+ * Example illustrating custom service and resource error hanlding.
+ *
+ * Server Usage:
+ *    ./distribution/example/error_handling
+ *
+ * Client Usage:
+ *    curl -v -XGET 'http://localhost:1984/resources/1'
+ *    curl -v -XGET 'http://localhost:1984/resources/2'
+ */
+
+#include <memory>
 #include <cstdlib>
+#include <stdexcept>
+#include <restbed>
 
-#include "restbed"
-
+using namespace std;
 using namespace restbed;
 
-Response faulty_method_handler( const Request& )
+void faulty_method_handler( const shared_ptr< Session >& )
 {
-    throw StatusCode::SERVICE_UNAVAILABLE;
-    
-    Response response;
-    return response;
+    throw SERVICE_UNAVAILABLE;
 }
 
-void error_handler( const int status_code, const Request&, /*out*/ Response& response )
+void resource_error_handler( const int, const exception&, const shared_ptr< Session >& session )
 {
-    response.set_status_code( status_code );
-    response.set_body( StatusCode::to_string( status_code ) );
+    if ( session->is_open( ) )
+    {
+        session->close( 6000, "Custom Resource Internal Server Error", { { "Content-Length", "37" } } );
+    }
+    else
+    {
+        fprintf( stderr, "Custom Resource Internal Server Error\n" );
+    }
+}
+
+void service_error_handler( const int, const exception&, const shared_ptr< Session >& session )
+{
+    if ( session->is_open( ) )
+    {
+        session->close( 5000, "Custom Service Internal Server Error", { { "Content-Length", "36" } } );
+    }
+    else
+    {
+        fprintf( stderr, "Custom Service Internal Server Error\n" );
+    }
 }
 
 int main( const int, const char** )
 {
-    Resource resource;
-    resource.set_method_handler( "GET", &faulty_method_handler );
-    
-    Settings settings;
-    settings.set_port( 1984 );
-    
-    Service service( settings );
-    service.set_error_handler( &error_handler );
-    service.publish( resource );
-    service.start( );
-    
+    auto one = make_shared< Resource >( );
+    one->set_path( "/resources/1" );
+    one->set_method_handler( "GET", &faulty_method_handler );
+
+    auto two = make_shared< Resource >( );
+    two->set_path( "/resources/2" );
+    two->set_method_handler( "GET", &faulty_method_handler );
+    two->set_error_handler( &resource_error_handler );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+
+    Service service;
+    service.publish( one );
+    service.publish( two );
+    service.set_error_handler( &service_error_handler );
+
+    service.start( settings );
+
     return EXIT_SUCCESS;
 }

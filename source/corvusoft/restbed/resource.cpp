@@ -5,19 +5,19 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/method.h"
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
+#include "corvusoft/restbed/session.h"
 #include "corvusoft/restbed/resource.h"
 #include "corvusoft/restbed/detail/resource_impl.h"
 
 //External Includes
 
 //System Namespaces
-using std::map;
-using std::vector;
+using std::set;
 using std::string;
+using std::multimap;
 using std::function;
+using std::exception;
+using std::shared_ptr;
 
 //Project Namespaces
 using restbed::detail::ResourceImpl;
@@ -31,105 +31,54 @@ namespace restbed
         return;
     }
     
-    Resource::Resource( const Resource& original ) : m_pimpl( new ResourceImpl( *original.m_pimpl ) )
-    {
-        return;
-    }
-    
-    Resource::Resource( const ResourceImpl& implementation ) : m_pimpl( new ResourceImpl( implementation ) )
-    {
-        return;
-    }
-    
     Resource::~Resource( void )
     {
         return;
     }
-    
-    string Resource::get_path( void ) const
-    {
-        return m_pimpl->get_path( );
-    }
 
-    vector< string > Resource::get_paths( void ) const
-    {
-        return m_pimpl->get_paths( );
-    }
-    
-    string Resource::get_header_filter( const string& name ) const
-    {
-        return m_pimpl->get_header_filter( name );
-    }
-    
-    map< string, string > Resource::get_header_filters( void ) const
-    {
-        return m_pimpl->get_header_filters( );
-    }
-    
-    function< Response ( const Request& ) > Resource::get_method_handler( const Method& method ) const
-    {
-        return m_pimpl->get_method_handler( method );
-    }
-    
-    map< Method, function< Response ( const Request& ) > > Resource::get_method_handlers( void ) const
-    {
-        return m_pimpl->get_method_handlers( );
-    }
-    
     void Resource::set_path( const string& value )
     {
-        m_pimpl->set_path( value );
+        m_pimpl->set_paths( { value } );
     }
 
-    void Resource::set_paths( const vector< string >& values )
+    void Resource::set_paths( const set< string >& values )
     {
         m_pimpl->set_paths( values );
     }
-    
-    void Resource::set_header_filter( const string& name, const string& value )
+
+    void Resource::set_default_header( const string& name, const string& value )
     {
-        m_pimpl->set_header_filter( name, value );
+        m_pimpl->set_default_header( name, value );
+    }
+
+    void Resource::set_default_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->set_default_headers( values );
+    }
+
+    void Resource::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_failed_filter_validation_handler( value );
+    }
+
+    void Resource::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
+    {
+        m_pimpl->set_error_handler( value );
+    }
+
+    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+    {
+        m_pimpl->set_authentication_handler( value );
+    }
+
+    void Resource::set_method_handler( const string& method, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        static const multimap< string, string > empty;
+        m_pimpl->set_method_handler( method, empty, callback );
     }
     
-    void Resource::set_header_filters( const map< string, string >& values )
+    void Resource::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->set_header_filters( values );
-    }
-    
-    void Resource::set_method_handler( const Method& verb, const function< Response ( const Request& ) >& callback )
-    {
-        m_pimpl->set_method_handler( verb, callback );
-    }
-    
-    void Resource::set_method_handlers( const map< Method, function< Response ( const Request& ) > >& values )
-    {
-        m_pimpl->set_method_handlers( values );
-    }
-    
-    Resource& Resource::operator =( const Resource& value )
-    {
-        *m_pimpl = *value.m_pimpl;
-        
-        return *this;
-    }
-    
-    bool Resource::operator <( const Resource& value ) const
-    {
-        return *m_pimpl < *value.m_pimpl;
-    }
-    
-    bool Resource::operator >( const Resource& value ) const
-    {
-        return *m_pimpl > *value.m_pimpl;
-    }
-    
-    bool Resource::operator ==( const Resource& value ) const
-    {
-        return *m_pimpl == *value.m_pimpl;
-    }
-    
-    bool Resource::operator !=( const Resource& value ) const
-    {
-        return *m_pimpl != *value.m_pimpl;
+        m_pimpl->set_method_handler( method, filters, callback );
     }
 }
