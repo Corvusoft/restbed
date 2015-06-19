@@ -25,7 +25,6 @@
 
 ## Example
 
-
 ```
 #!c++
 
@@ -69,7 +68,7 @@ int main( const int, const char** )
 }
 ```
 
-More in depth examples can be found in within the project [source](http://google.com).
+More in depth examples can be found in within the project [source](https://github.com/Corvusoft/restbed/tree/master/example).
 
 ## License
 
