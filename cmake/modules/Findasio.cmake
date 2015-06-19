@@ -1,6 +1,6 @@
 # Copyright (c) 2013, 2014, 2015 Corvusoft
 
-find_path( asio_INCLUDE asio.hpp HINTS "${CMAKE_SOURCE_DIR}/dependency/asio/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_path( asio_INCLUDE asio.hpp HINTS "${CMAKE_SOURCE_DIR}/dependency/asio/asio/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 
 if ( asio_INCLUDE )
     set( ASIO_FOUND TRUE )

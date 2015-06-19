@@ -1,10 +1,9 @@
 [submodule "dependency/asio"]
-        branch = master
 	path = dependency/asio
-	url = http://source.corvusoft.co.uk/asio-dependency.git
+	url = https://github.com/corvusoft/asio-dependency
 [submodule "dependency/catch"]
 	path = dependency/catch
-	url = http://source.corvusoft.co.uk/catch-dependency.git
+	url = https://github.com/corvusoft/catch-dependency
 [submodule "dependency/framework"]
 	path = dependency/framework
-	url = http://source.corvusoft.co.uk/cpp-framework.git
+	url = https://github.com/corvusoft/framework
