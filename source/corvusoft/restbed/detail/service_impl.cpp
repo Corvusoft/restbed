@@ -521,15 +521,16 @@ namespace restbed
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
                 const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
 
+                const auto logger = m_logger;
                 const auto settings = m_settings;
 
-                m_session_manager->create( [ socket, authenticate, settings, error_handler ]( const shared_ptr< Session >& session )
+                m_session_manager->create( [ socket, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
                 {
+                    session->m_pimpl->set_logger( logger );
                     session->m_pimpl->set_socket( socket );
-                    session->m_pimpl->fetch( session, authenticate );
                     session->m_pimpl->set_settings( settings );
                     session->m_pimpl->set_error_handler( error_handler );
-                    //set socket timeout etc...
+                    session->m_pimpl->fetch( session, authenticate );
                 } );
             }
             else

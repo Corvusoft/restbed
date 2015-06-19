@@ -14,6 +14,7 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/logger.h"
 
 //External Includes
 #include <asio.hpp>
@@ -28,6 +29,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Logger;
     class Session;
     class Request;
     class Response;
@@ -109,6 +111,8 @@ namespace restbed
                 //Setters
                 void set_id( const std::string& value );
 
+                void set_logger( const std::shared_ptr< Logger >& value );
+
                 void set_request( const std::shared_ptr< const Request >& value );
 
                 void set_resource( const std::shared_ptr< const Resource >& value );
@@ -154,6 +158,8 @@ namespace restbed
                 //Functionality
                 framework::Bytes fetch_body( const std::size_t length ) const;
 
+                void log( const Logger::Level level, const std::string& message ) const;
+
                 void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ) const;
 
                 void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
@@ -179,6 +185,8 @@ namespace restbed
                 std::string m_origin;
 
                 std::string m_destination;
+
+                std::shared_ptr< Logger > m_logger;
 
                 std::shared_ptr< Session > m_session;
 

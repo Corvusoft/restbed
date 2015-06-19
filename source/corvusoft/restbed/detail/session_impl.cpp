@@ -71,6 +71,7 @@ namespace restbed
             m_id( String::empty ),
             m_origin( String::empty ),
             m_destination( String::empty ),
+            m_logger( nullptr ),
             m_session( nullptr ),
             m_request( nullptr ),
             m_resource( nullptr ),
@@ -119,10 +120,17 @@ namespace restbed
 
         void SessionImpl::close( const Bytes& body )
         {
-            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this ]( const asio::error_code&, size_t )
+            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this ]( const asio::error_code& error, size_t )
             {
-                //if error log
-                this->close( );
+                if ( error )
+                {
+                    const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
+                }
+                else
+                {
+                    this->close( );
+                }
             } );
         }
 
@@ -140,11 +148,15 @@ namespace restbed
             response.set_headers( headers );
             response.set_status_code( status );
 
-            auto socket = m_socket;
-            transmit( response, [ socket ]( const asio::error_code&, size_t )
+            transmit( response, [ this ]( const asio::error_code& error, size_t )
             {
-                //if error -> log
-                socket->close( );
+                if ( error )
+                {
+                    const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
+                }
+
+                this->m_socket->close( );
             } );
         }
 
@@ -155,10 +167,17 @@ namespace restbed
 
         void SessionImpl::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this, callback ]( const asio::error_code&, size_t )
+            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this, callback ]( const asio::error_code& error, size_t )
             {
-                //if error -> log + close
-                callback( this->m_session );
+                if ( error )
+                {
+                    const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
+                }
+                else
+                {
+                    callback( this->m_session );
+                }
             } );
         }
 
@@ -174,16 +193,23 @@ namespace restbed
             response.set_headers( headers );
             response.set_status_code( status );
 
-            transmit( response, [ this, callback ]( const asio::error_code&, size_t )
+            transmit( response, [ this, callback ]( const asio::error_code& error, size_t )
             {
-                //if error -> log + close
-                if ( callback == nullptr )
+                if ( error )
                 {
-                    this->fetch( this->m_session, this->m_router );
+                    const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
                 }
                 else
                 {
-                    callback( this->m_session );
+                    if ( callback == nullptr )
+                    {
+                        this->fetch( this->m_session, this->m_router );
+                    }
+                    else
+                    {
+                        callback( this->m_session );
+                    }
                 }
             } );
         }
@@ -212,12 +238,18 @@ namespace restbed
             {
                 size_t size = length - m_buffer->size( );
 
-                asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code&, size_t )
+                asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code& error, size_t )
                 {
-                     //if error -> log + close
-
-                    const auto data = this->fetch_body( length );
-                    callback( m_session, data );
+                    if ( error )
+                    {
+                        const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
+                        failure( 500, runtime_error( message ), this->m_session );
+                    }
+                    else
+                    {
+                        const auto data = this->fetch_body( length );
+                        callback( this->m_session, data );
+                    }
                  } );
             }
             else
@@ -229,11 +261,18 @@ namespace restbed
 
         void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
         {
-            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code&, size_t length )
+            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code& error, size_t length )
             {
-                 //if error -> log + close
-                const auto data = this->fetch_body( length );
-                callback( m_session, data );
+                if ( error )
+                {
+                    const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
+                }
+                else
+                {
+                    const auto data = this->fetch_body( length );
+                    callback( this->m_session, data );
+                }
              } );
         }
 
@@ -263,10 +302,17 @@ namespace restbed
 
             m_timer = make_shared< asio::steady_timer >( m_socket->get_io_service( ) );
             m_timer->expires_from_now( delay );
-            m_timer->async_wait( [ callback, session ]( const error_code& )
+            m_timer->async_wait( [ callback, this ]( const error_code& error )
             {
-               //if error -> log + close
-               callback( session );
+                if ( error )
+                {
+                    const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
+                }
+                else
+                {
+                    callback( this->m_session );
+                }
             } );
         }
 
@@ -303,6 +349,11 @@ namespace restbed
         void SessionImpl::set_id( const string& value )
         {
             m_id = value;
+        }
+
+        void SessionImpl::set_logger(  const shared_ptr< Logger >& value )
+        {
+            m_logger = value;
         }
 
         void SessionImpl::set_request( const shared_ptr< const Request >& value )
@@ -372,6 +423,14 @@ namespace restbed
              return data;
         }
 
+        void SessionImpl::log( const Logger::Level level, const string& message ) const
+        {
+            if ( m_logger not_eq nullptr )
+            {
+                m_logger->log( level, "%s", message.data( ) );
+            }
+        }
+
         void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session ) const
         {
             auto error_handler = m_error_handler;
@@ -393,7 +452,7 @@ namespace restbed
             }
             else
             {
-                //log failure
+                log( Logger::Level::ERROR, String::format( "Error %i, %s", status, error.what( ) ) );
 
                 if ( session->is_open( ) )
                 {
