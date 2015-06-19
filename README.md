@@ -68,7 +68,7 @@ int main( const int, const char** )
 }
 ```
 
-More in depth examples [here](https://github.com/Corvusoft/restbed/tree/master/example).
+More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/tree/master/example).
 
 ## License
 
