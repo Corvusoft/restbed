@@ -41,7 +41,8 @@ void get_method_handler( const shared_ptr< Session >& session )
     size_t content_length = 0;
     request->get_header( "Content-Length", content_length );
 
-    session->fetch( content_length, [ ]( const shared_ptr< Session >& session, const Bytes& body )
+    session->fetch( content_length, [ ]( const shared_ptr< Session >& session,
+                                         const Bytes& body )
     {
         fprintf( stdout, "%.*s\n", ( int ) body.size( ), body.data( ) );
 
@@ -67,7 +68,7 @@ int main( const int, const char** )
 }
 ```
 
-More in depth examples can be found in within the project [source](https://github.com/Corvusoft/restbed/tree/master/example).
+More in depth examples [here](https://github.com/Corvusoft/restbed/tree/master/example).
 
 ## License
 
