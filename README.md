@@ -18,6 +18,7 @@
  - Customisable HTTP methods
  - Long Polling
  - Web Sockets
+ - Compression GZip, Deflate, etc...
  - Secure, Stable, and extensively tested over 3+ years
  - Flexibility to address HTTP 1.0/1.1+ compliance
  - Active, vibrant community
