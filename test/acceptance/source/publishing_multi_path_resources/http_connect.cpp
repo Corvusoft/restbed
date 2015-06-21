@@ -39,7 +39,7 @@ SCENARIO( "publishing multi path resources", "[resource]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_paths( { "/resources/1", "/resources/one" } );
-        resource->set_method_handler( "GET", &get_handler );
+        resource->set_method_handler( "GET", get_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );

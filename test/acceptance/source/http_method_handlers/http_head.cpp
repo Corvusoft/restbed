@@ -39,7 +39,7 @@ SCENARIO( "publishing single path resources", "[resource]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-        resource->set_method_handler( "HEAD", &head_handler );
+        resource->set_method_handler( "HEAD", head_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );

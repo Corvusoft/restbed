@@ -49,7 +49,7 @@ SCENARIO( "custom resource method not implemented handler", "[resource]" )
 
         Service service;
         service.publish( resource );
-        service.set_method_not_implemented_handler( &method_not_implemented_handler );
+        service.set_method_not_implemented_handler( method_not_implemented_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {

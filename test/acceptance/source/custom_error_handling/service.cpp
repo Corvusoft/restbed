@@ -48,7 +48,7 @@ SCENARIO( "custom service error handler", "[service]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-        resource->set_method_handler( "GET", &faulty_method_handler );
+        resource->set_method_handler( "GET", faulty_method_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
@@ -56,7 +56,7 @@ SCENARIO( "custom service error handler", "[service]" )
 
         Service service;
         service.publish( resource );
-        service.set_error_handler( &error_handler );
+        service.set_error_handler( error_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {

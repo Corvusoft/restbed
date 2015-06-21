@@ -47,7 +47,7 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-        resource->set_method_handler( "GET", { { "Content-Type", "application/csv" } }, &get_method_handler );
+        resource->set_method_handler( "GET", { { "Content-Type", "application/csv" } }, get_method_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
@@ -55,7 +55,7 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
 
         Service service;
         service.publish( resource );
-        service.set_failed_filter_validation_handler( &failed_filter_validation_handler );
+        service.set_failed_filter_validation_handler( failed_filter_validation_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {

@@ -50,11 +50,11 @@ int main( const int, const char** )
 {
     auto one = make_shared< Resource >( );
     one->set_path( "/resources/1" );
-    one->set_method_handler( "GET", &faulty_method_handler );
+    one->set_method_handler( "GET", faulty_method_handler );
 
     auto two = make_shared< Resource >( );
     two->set_path( "/resources/2" );
-    two->set_method_handler( "GET", &faulty_method_handler );
+    two->set_method_handler( "GET", faulty_method_handler );
     two->set_error_handler( &resource_error_handler );
 
     auto settings = make_shared< Settings >( );
@@ -64,7 +64,7 @@ int main( const int, const char** )
     Service service;
     service.publish( one );
     service.publish( two );
-    service.set_error_handler( &service_error_handler );
+    service.set_error_handler( service_error_handler );
 
     service.start( settings );
 

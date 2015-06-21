@@ -26,7 +26,7 @@ int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resources" );
-    resource->set_method_handler( "POST", &post_method_handler );
+    resource->set_method_handler( "POST", post_method_handler );
 
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
@@ -43,9 +43,9 @@ void post_method_handler( const shared_ptr< Session >& session )
 {
     const auto request = session->get_request( );
 
-    if ( request->get_header( "Transfer-Encoding", &String::lowercase ) == "chunked" )
+    if ( request->get_header( "Transfer-Encoding", String::lowercase ) == "chunked" )
     {
-        session->fetch( "\r\n", &read_chunk_size );
+        session->fetch( "\r\n", read_chunk_size );
     }
     else if ( request->has_header( "Content-Length" ) )
     {
@@ -76,7 +76,7 @@ void read_chunk_size( const shared_ptr< Session >& session, const Bytes& data )
         if ( length not_eq "0\r\n" )
         {
             const auto chunk_size = stoul( length, nullptr, 16 ) + strlen( "\r\n" );
-            session->fetch( chunk_size, &read_chunk );
+            session->fetch( chunk_size, read_chunk );
             return;
         }
     }
@@ -93,5 +93,5 @@ void read_chunk( const shared_ptr< Session >& session, const Bytes& data )
 {
     fprintf( stdout, "Partial body chunk: %lu bytes\n", data.size( ) );
 
-    session->fetch( "\r\n", &read_chunk_size );
+    session->fetch( "\r\n", read_chunk_size );
 }

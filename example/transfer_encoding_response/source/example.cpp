@@ -35,7 +35,7 @@ int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resources/item" );
-    resource->set_method_handler( "GET", &get_method_handler );
+    resource->set_method_handler( "GET", get_method_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );

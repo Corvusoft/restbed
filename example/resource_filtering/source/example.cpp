@@ -50,7 +50,7 @@ int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
-    resource->set_failed_filter_validation_handler( &failed_filter_validation_handler );
+    resource->set_failed_filter_validation_handler( failed_filter_validation_handler );
     resource->set_method_handler( "GET", { { "Accept", "application/xml" }, { "Content-Type", "application/xml" } }, &get_xml_method_handler );
     resource->set_method_handler( "GET", { { "Accept", "application/json" }, { "Content-Type", "application/json" } }, &get_json_method_handler );
     

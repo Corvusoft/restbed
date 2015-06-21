@@ -47,8 +47,8 @@ SCENARIO( "resource method filters", "[resource]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-        resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, &xml_method_handler );
-        resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, &json_method_handler );
+        resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, xml_method_handler );
+        resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, json_method_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );

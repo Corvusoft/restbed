@@ -66,8 +66,8 @@ SCENARIO( "custom resource authentication", "[resource]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-        resource->set_method_handler( "GET", &get_method_handler );
-        resource->set_authentication_handler( &resource_handler );
+        resource->set_method_handler( "GET", get_method_handler );
+        resource->set_authentication_handler( resource_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
@@ -75,7 +75,7 @@ SCENARIO( "custom resource authentication", "[resource]" )
 
         Service service;
         service.publish( resource );
-        service.set_authentication_handler( &service_handler );
+        service.set_authentication_handler( service_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {

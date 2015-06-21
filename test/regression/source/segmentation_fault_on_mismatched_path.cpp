@@ -34,7 +34,7 @@ TEST_CASE( "mismatched resource path", "[service]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-    resource->set_method_handler( "GET", &get_handler );
+    resource->set_method_handler( "GET", get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
@@ -65,7 +65,7 @@ TEST_CASE( "matched resource path", "[service]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-    resource->set_method_handler( "GET", &get_handler );
+    resource->set_method_handler( "GET", get_handler );
 
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );

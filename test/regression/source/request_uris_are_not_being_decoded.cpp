@@ -39,7 +39,7 @@ TEST_CASE( "encoded uri test", "[request]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "uri test" );
-    resource->set_method_handler( "GET", &get_handler );
+    resource->set_method_handler( "GET", get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 8989 );

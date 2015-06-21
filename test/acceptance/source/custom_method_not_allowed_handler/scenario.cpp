@@ -47,11 +47,11 @@ SCENARIO( "custom resource method not allowed handler", "[resource]" )
     {
         auto resource_one = make_shared< Resource >( );
         resource_one->set_path( "/resources/1" );
-        resource_one->set_method_handler( "GET", &jack_of_all_trades_method_handler );
+        resource_one->set_method_handler( "GET", jack_of_all_trades_method_handler );
 
         auto resource_two = make_shared< Resource >( );
         resource_two->set_path( "/resources/2" );
-        resource_two->set_method_handler( "PUT", &jack_of_all_trades_method_handler );
+        resource_two->set_method_handler( "PUT", jack_of_all_trades_method_handler );
 
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
@@ -60,7 +60,7 @@ SCENARIO( "custom resource method not allowed handler", "[resource]" )
         Service service;
         service.publish( resource_one );
         service.publish( resource_two );
-        service.set_method_not_allowed_handler( &method_not_allowed_handler );
+        service.set_method_not_allowed_handler( method_not_allowed_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {

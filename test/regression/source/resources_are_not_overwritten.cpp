@@ -38,11 +38,11 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
 {
     auto initial_resource = make_shared< Resource >( );
     initial_resource->set_path( "TestResource" );
-    initial_resource->set_method_handler( "GET", &json_get_handler );
+    initial_resource->set_method_handler( "GET", json_get_handler );
 
     auto secondary_resource = make_shared< Resource >( );
     secondary_resource->set_path( "TestResource" );
-    secondary_resource->set_method_handler( "GET", &xml_get_handler );
+    secondary_resource->set_method_handler( "GET", xml_get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
@@ -74,11 +74,11 @@ TEST_CASE( "add alternative resource", "[resource]" )
 {
     auto initial_resource = make_shared< Resource >( );
     initial_resource->set_path( "TestResource" );
-    initial_resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, &json_get_handler );
+    initial_resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, json_get_handler );
     
     auto secondary_resource = make_shared< Resource >( );
     secondary_resource->set_path( "TestResource" );
-    secondary_resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, &xml_get_handler );
+    secondary_resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, xml_get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );

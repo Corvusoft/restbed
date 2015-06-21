@@ -47,7 +47,7 @@ SCENARIO( "request path parameters", "[resource]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/queues/{name: [a-z]*}/messages/{id: [0-9]*}" );
-        resource->set_method_handler( "GET", &get_handler );
+        resource->set_method_handler( "GET", get_handler );
         resource->set_default_header( "Connection", "close" );
 
         auto settings = make_shared< Settings >( );

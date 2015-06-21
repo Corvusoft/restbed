@@ -41,7 +41,7 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-    resource->set_method_handler( "GET", &faulty_method_handler );
+    resource->set_method_handler( "GET", faulty_method_handler );
 
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
@@ -49,7 +49,7 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
 
     Service service;
     service.publish( resource );
-    service.set_error_handler( &error_handler );
+    service.set_error_handler( error_handler );
 
     thread service_thread( [ &service, settings ] ( )
     {

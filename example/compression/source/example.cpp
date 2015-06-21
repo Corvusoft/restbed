@@ -57,7 +57,7 @@ int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/api/deflate" );
-    resource->set_method_handler( "POST", &deflate_method_handler );
+    resource->set_method_handler( "POST", deflate_method_handler );
 
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );

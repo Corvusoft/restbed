@@ -56,7 +56,7 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-    resource->set_method_handler( "POST", &post_handler );
+    resource->set_method_handler( "POST", post_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );

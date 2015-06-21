@@ -45,7 +45,7 @@ SCENARIO( "custom resource not found handler", "[resource]" )
         settings->set_default_header( "Connection", "close" );
 
         Service service;
-        service.set_not_found_handler( &not_found_handler );
+        service.set_not_found_handler( not_found_handler );
 
         thread service_thread( [ &service, settings ] ( )
         {

@@ -34,7 +34,7 @@ TEST_CASE( "with space in path", "[resource]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test queue" );
-    resource->set_method_handler( "GET", &get_handler );
+    resource->set_method_handler( "GET", get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
@@ -66,7 +66,7 @@ TEST_CASE( "without space in path", "[resource]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "testQueue" );
-    resource->set_method_handler( "GET", &get_handler );
+    resource->set_method_handler( "GET", get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
