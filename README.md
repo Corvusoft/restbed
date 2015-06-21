@@ -8,7 +8,6 @@
 ## Features
 
  - Long Polling
- - Web Sockets
  - Path Parameters
  - Query Parameters
  - Request filters
@@ -123,7 +122,8 @@ You will now find all required components installed in the restbed distribution 
 |     1.0     |             HTTP 1.0 Compliance                 |     complete    |
 |     2.0     |             HTTP 1.1 Compliance                 |     complete    |
 |     2.5     |             Secure Socket Layer                 |  in-development |
-|     2.7     |                 Event Hooks                     |     pending     |
+|     2.6     |                 Event Hooks                     |     pending     |
+|     2.7     |                 Web Sockets                     |     pending     |
 |     2.8     |                 Localisation                    |     pending     |
 |     3.0     |             Session Management                  |     pending     |
 |     3.5     |               Resource Caching                  |     pending     |
