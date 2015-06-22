@@ -124,11 +124,12 @@ You will now find all required components installed in the restbed distribution 
 |     1.0     |             HTTP 1.0 Compliance                 |     complete    |
 |     2.0     |             HTTP 1.1 Compliance                 |     complete    |
 |     2.5     |             Secure Socket Layer                 |  in-development |
-|     2.6     |                 Event Hooks                     |     pending     |
-|     2.7     |                 Web Sockets                     |     pending     |
-|     2.8     |                 Localisation                    |     pending     |
-|     3.0     |             Session Management                  |     pending     |
-|     3.5     |               Resource Caching                  |     pending     |
-|     4.0     |             HTTP 2.0 compliance                 |     pending     |
-|     4.x     | Dynamic runtime resource publishing/suppression |     pending     |
+|     2.7     |                 Localisation                    |     pending     |
+|     3.0     |                 Rules Engine                    |     pending     |
+|     3.2     |                 Event Hooks                     |     pending     |
+|     3.7     |                 Web Sockets                     |     pending     |
+|     4.0     |             Session Management                  |     pending     |
+|     4.5     |               Resource Caching                  |     pending     |
+|     5.0     |             HTTP 2.0 compliance                 |     pending     |
+|     5.x     | Dynamic runtime resource publishing/suppression |     pending     |
 |     x.x     |         Statically Linked Framework             |     pending     |
