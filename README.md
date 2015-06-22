@@ -1,5 +1,7 @@
 # Restbed
 
+[![Join the chat at https://gitter.im/Corvusoft/restbed](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ----------
 
 > It's akin to embedding NGINX into your companies own product line.
