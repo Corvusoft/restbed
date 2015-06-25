@@ -96,7 +96,7 @@ Contact sales@corvusoft.co.uk for discounts.
 
 
 ```bash
-git clone --recursive http://github.com/corvusoft/restbed.git
+git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
 cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
