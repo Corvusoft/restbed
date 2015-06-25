@@ -29,7 +29,7 @@ namespace restbed
     class Session;
     class Resource;
     class Settings;
-
+    
     namespace detail
     {
         class ServiceImpl;
@@ -44,35 +44,35 @@ namespace restbed
             
             //Constructors
             Service( void );
-        
+            
             virtual ~Service( void );
             
             //Functionality
             void stop( void );
-
+            
             void start( const std::shared_ptr< const Settings >& settings = nullptr );
-
+            
             void restart( const std::shared_ptr< const Settings >& settings = nullptr );
-
+            
             void publish( const std::shared_ptr< const Resource >& resource );
             
             void suppress( const std::shared_ptr< const Resource >& resource );
             
             //Getters
-
+            
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
             
             void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-
+            
             void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-
+            
             void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-
+            
             void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
-
+            
             void set_error_handler( std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > value );
-
+            
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
             
             //Operators

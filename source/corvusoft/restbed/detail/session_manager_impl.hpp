@@ -9,7 +9,7 @@
 #include <memory>
 
 //Project Includes
-#include "corvusoft/restbed/session_manager.h"
+#include "corvusoft/restbed/session_manager.hpp"
 
 //External Includes
 
@@ -38,22 +38,22 @@ namespace restbed
                 
                 //Constructors
                 SessionManagerImpl( void );
-            
+                
                 virtual ~SessionManagerImpl( void );
                 
                 //Functionality
                 void stop( void );
-
+                
                 void start( const std::shared_ptr< const Settings >& settings );
-
+                
                 void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
+                
                 void purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
+                
                 void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
+                
                 //Getters
-
+                
                 //Setters
                 
                 //Operators
@@ -84,9 +84,9 @@ namespace restbed
                 
                 //Constructors
                 SessionManagerImpl( const SessionManagerImpl& original ) = delete;
-
+                
                 //Functionality
-
+                
                 //Getters
                 
                 //Setters

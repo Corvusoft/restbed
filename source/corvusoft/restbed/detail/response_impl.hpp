@@ -24,7 +24,7 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     namespace detail
     {
         //Forward Declarations
@@ -38,34 +38,34 @@ namespace restbed
                 
                 //Constructors
                 ResponseImpl( void );
-
+                
                 virtual ~ResponseImpl( void );
                 
                 //Functionality
                 framework::Bytes to_bytes( void ) const;
-
+                
                 //Getters
                 double get_version( void ) const;
-            
+                
                 int get_status_code( void ) const;
-
+                
                 const framework::Bytes& get_body( void ) const;
-
+                
                 const std::string& get_protocol( void ) const;
-            
+                
                 const std::string& get_status_message( void ) const;
-
+                
                 const std::multimap< std::string, std::string >& get_headers( void ) const;
                 
                 //Setters
                 void set_version( const double value );
-
+                
                 void set_status_code( const int value );
-
+                
                 void set_protocol( const std::string& value );
-
+                
                 void set_body( const framework::Bytes& value );
-            
+                
                 void set_status_message( const std::string& value );
                 
                 void set_header( const std::string& name, const std::string& value );
@@ -100,7 +100,7 @@ namespace restbed
                 
                 //Constructors
                 ResponseImpl( const ResponseImpl& original ) = delete;
-
+                
                 //Functionality
                 
                 //Getters
@@ -112,15 +112,15 @@ namespace restbed
                 
                 //Properties
                 double m_version;
-            
+                
                 int m_status_code;
-
+                
                 std::string m_protocol;
-
+                
                 framework::Bytes m_body;
-
+                
                 std::string m_status_message;
-            
+                
                 std::multimap< std::string, std::string > m_headers;
         };
     }

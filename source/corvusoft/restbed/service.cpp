@@ -5,12 +5,12 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/logger.h"
-#include "corvusoft/restbed/service.h"
-#include "corvusoft/restbed/session.h"
-#include "corvusoft/restbed/resource.h"
-#include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/detail/service_impl.h"
+#include "corvusoft/restbed/logger.hpp"
+#include "corvusoft/restbed/service.hpp"
+#include "corvusoft/restbed/session.hpp"
+#include "corvusoft/restbed/resource.hpp"
+#include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/detail/service_impl.hpp"
 
 //External Includes
 
@@ -47,12 +47,12 @@ namespace restbed
     {
         m_pimpl->start( settings );
     }
-
+    
     void Service::restart( const shared_ptr< const Settings >& settings )
     {
         m_pimpl->restart( settings );
     }
-
+    
     void Service::publish( const shared_ptr< const Resource >& resource )
     {
         m_pimpl->publish( resource );
@@ -62,37 +62,37 @@ namespace restbed
     {
         m_pimpl->suppress( resource );
     }
-
+    
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
         m_pimpl->set_logger( value );
     }
-
+    
     void Service::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_not_found_handler( value );
     }
-
+    
     void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_method_not_allowed_handler( value );
     }
-
+    
     void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_method_not_implemented_handler( value );
     }
-
+    
     void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
     {
         m_pimpl->set_failed_filter_validation_handler( value );
     }
-
+    
     void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session >& ) > value )
     {
         m_pimpl->set_error_handler( value );
     }
-
+    
     void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
     {
         m_pimpl->set_authentication_handler( value );

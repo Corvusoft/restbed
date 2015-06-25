@@ -33,20 +33,20 @@ namespace restbed
             //Definitions
             
             //Constructors
-
+            
             //Functionality
             virtual void stop( void ) = 0;
-
+            
             virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
-
+            
             virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
-
+            
             virtual void purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
-
+            
             virtual void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
-
+            
             //Getters
-
+            
             //Setters
             
             //Operators
@@ -55,31 +55,31 @@ namespace restbed
             
         protected:
             SessionManager( void ) = default;
-
+            
             SessionManager( const SessionManager& original ) = default;
-
+            
             virtual ~SessionManager( void ) = default;
-
+            
             //Functionality
-
+            
             //Getters
-
+            
             //Setters
-
+            
             //Operators
             SessionManager& operator =( const SessionManager& value ) = default;
-
+            
             //Properties
-
+            
         private:
             //Friends
             
             //Definitions
             
             //Constructors
-
+            
             //Functionality
-
+            
             //Getters
             
             //Setters

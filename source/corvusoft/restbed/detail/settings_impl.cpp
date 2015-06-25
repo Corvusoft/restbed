@@ -5,8 +5,8 @@
 //System Includes
 
 //Project Includes
-#include "corvusoft/restbed/detail/settings_impl.h"
-#include "corvusoft/restbed/detail/status_messages_impl.h"
+#include "corvusoft/restbed/detail/settings_impl.hpp"
+#include "corvusoft/restbed/detail/status_messages_impl.hpp"
 
 //External Includes
 #include <corvusoft/framework/string>
@@ -56,16 +56,16 @@ namespace restbed
         {
             return m_connection_limit;
         }
-
+        
         seconds SettingsImpl::get_connection_timeout( void ) const
         {
             return m_connection_timeout;
         }
-
+        
         string SettingsImpl::get_status_message( const int code ) const
         {
             string message = String::empty;
-
+            
             if ( m_status_messages.count( code ) )
             {
                 message = m_status_messages.at( code );
@@ -74,15 +74,15 @@ namespace restbed
             {
                 message = m_status_messages.at( 0 );
             }
-
+            
             return message;
         }
-
+        
         map< int, string > SettingsImpl::get_status_messages( void ) const
         {
             return m_status_messages;
         }
-
+        
         string SettingsImpl::get_property( const string& name ) const
         {
             if ( m_properties.count( name ) )
@@ -97,12 +97,12 @@ namespace restbed
         {
             return m_properties;
         }
-
+        
         multimap< string, string > SettingsImpl::get_default_headers( void ) const
         {
             return m_default_headers;
         }
-
+        
         void SettingsImpl::set_port( const uint16_t value )
         {
             m_port = value;
@@ -117,22 +117,22 @@ namespace restbed
         {
             m_connection_limit = value;
         }
-
+        
         void SettingsImpl::set_connection_timeout( const seconds& value )
         {
             m_connection_timeout = value;
         }
-
+        
         void SettingsImpl::set_status_message( const int code, const string& message )
         {
             m_status_messages[ code ] = message;
         }
-
+        
         void SettingsImpl::set_status_messages( const map< int, string >& values )
         {
             m_status_messages = values;
         }
-
+        
         void SettingsImpl::set_property( const string& name, const string& value )
         {
             m_properties[ name ] = value;
@@ -142,12 +142,12 @@ namespace restbed
         {
             m_properties.insert( values.begin( ), values.end( ) );
         }
-
+        
         void SettingsImpl::set_default_header( const string& name, const string& value )
         {
             m_default_headers.insert( make_pair( name, value ) );
         }
-
+        
         void SettingsImpl::set_default_headers( const multimap< string, string >& values )
         {
             m_default_headers = values;

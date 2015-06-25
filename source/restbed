@@ -2,11 +2,11 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#include "corvusoft/restbed/logger.h"
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/service.h"
-#include "corvusoft/restbed/session.h"
-#include "corvusoft/restbed/response.h"
-#include "corvusoft/restbed/resource.h"
-#include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/status_code.h"
+#include "corvusoft/restbed/logger.hpp"
+#include "corvusoft/restbed/request.hpp"
+#include "corvusoft/restbed/service.hpp"
+#include "corvusoft/restbed/session.hpp"
+#include "corvusoft/restbed/response.hpp"
+#include "corvusoft/restbed/resource.hpp"
+#include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/status_code.hpp"

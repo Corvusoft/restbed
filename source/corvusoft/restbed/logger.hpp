@@ -23,7 +23,7 @@ namespace restbed
 {
     //Forward Declarations
     class Settings;
-
+    
     class Logger
     {
         public:
@@ -44,9 +44,9 @@ namespace restbed
             
             //Functionality
             virtual void stop( void ) = 0;
-
+            
             virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
-
+            
             virtual void log( const Level level, const std::string format, ... ) = 0;
             
             virtual void log_if( bool expression, const Level level, const std::string format, ... ) = 0;
@@ -68,7 +68,7 @@ namespace restbed
             Logger( void ) = default;
             
             Logger( const Logger& original ) = default;
-        
+            
             virtual ~Logger( void ) = default;
             
             //Functionality

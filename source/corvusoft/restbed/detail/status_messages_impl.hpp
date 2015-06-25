@@ -23,7 +23,8 @@ namespace restbed
 {
     //Forward Declarations
     
-    static std::map< int, std::string > status_messages {
+    static std::map< int, std::string > status_messages
+    {
         { 0, "No Appropriate Status Message Found" },
         { 100, "Continue" },
         { 101, "Switching Protocols" },

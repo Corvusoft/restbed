@@ -8,14 +8,14 @@
 #include <stdexcept>
 
 //Project Includes
-#include "corvusoft/restbed/session.h"
-#include "corvusoft/restbed/request.h"
-#include "corvusoft/restbed/response.h"
-#include "corvusoft/restbed/resource.h"
-#include "corvusoft/restbed/settings.h"
-#include "corvusoft/restbed/detail/request_impl.h"
-#include "corvusoft/restbed/detail/session_impl.h"
-#include "corvusoft/restbed/detail/resource_impl.h"
+#include "corvusoft/restbed/session.hpp"
+#include "corvusoft/restbed/request.hpp"
+#include "corvusoft/restbed/response.hpp"
+#include "corvusoft/restbed/resource.hpp"
+#include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/detail/request_impl.hpp"
+#include "corvusoft/restbed/detail/session_impl.hpp"
+#include "corvusoft/restbed/detail/resource_impl.hpp"
 
 //External Includes
 #include <corvusoft/framework/uri>

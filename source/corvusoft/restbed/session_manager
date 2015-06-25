@@ -2,4 +2,4 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
-#include "session_manager.h"
+#include "session_manager.hpp"
