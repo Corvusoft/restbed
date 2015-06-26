@@ -5,7 +5,7 @@
  *    ./distribution/example/custom_methods
  *
  * Client Usage:
- *    curl -v -X NOP 'http://localhost:1984/resource'
+ *    curl -w'\n' -v -X NOP 'http://localhost:1984/resource'
  */
 
 #include <memory>

@@ -5,7 +5,7 @@
  *    ./distribution/example/path_parameters
  *
  * Client Usage:
- *    curl -v -XGET 'http://localhost:1984/resource/<YOUR NAME HERE>'
+ *    curl -w'\n' -v -XGET 'http://localhost:1984/resource/<YOUR NAME HERE>'
  */
 
 #include <string>

@@ -5,7 +5,7 @@
  *    ./distribution/example/transfer_encoding_response
  *
  * Client Usage:
- *    curl -v -XGET 'http://localhost:1984/resources/item'
+ *    curl -w'\n' -v -XGET 'http://localhost:1984/resources/item'
  */
 
 #include <string>

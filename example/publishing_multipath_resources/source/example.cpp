@@ -5,8 +5,8 @@
  *    ./distribution/example/publishing_multipath_resources
  *
  * Client Usage:
- *    curl -v 'http://localhost:1984/messages'
- *    curl -v 'http://localhost:1984/queues/12/messages'
+ *    curl -w'\n' -v 'http://localhost:1984/messages'
+ *    curl -w'\n' -v 'http://localhost:1984/queues/12/messages'
  */
 
 #include <memory>

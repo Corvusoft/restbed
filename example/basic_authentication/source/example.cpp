@@ -5,7 +5,7 @@
  *    ./distribution/example/basic_authentication
  *
  * Client Usage:
- *    curl -v -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
+ *    curl -w'\n' -v -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
  */
 
 #include <memory>

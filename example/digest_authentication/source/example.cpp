@@ -5,7 +5,7 @@
  *    ./distribution/example/digest_authentication
  *
  * Client Usage:
- *    curl -v --digest -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
+ *    curl -w'\n' -v --digest -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
  */
 
 #include <regex>

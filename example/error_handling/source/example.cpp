@@ -5,8 +5,8 @@
  *    ./distribution/example/error_handling
  *
  * Client Usage:
- *    curl -v -XGET 'http://localhost:1984/resources/1'
- *    curl -v -XGET 'http://localhost:1984/resources/2'
+ *    curl -w'\n' -v -XGET 'http://localhost:1984/resources/1'
+ *    curl -w'\n' -v -XGET 'http://localhost:1984/resources/2'
  */
 
 #include <memory>

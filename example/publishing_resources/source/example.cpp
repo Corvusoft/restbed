@@ -5,7 +5,7 @@
  *    ./distribution/example/publishing_resources
  *
  * Client Usage:
- *    curl -v -X POST --data 'Hello, Restbed' 'http://localhost:1984/resource'
+ *    curl -w'\n' -v -X POST --data 'Hello, Restbed' 'http://localhost:1984/resource'
  */
 
 #include <memory>

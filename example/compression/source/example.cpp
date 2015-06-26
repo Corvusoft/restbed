@@ -5,7 +5,7 @@
  *    ./distribution/example/compression
  *
  * Client Usage:
- *    curl -v -H"Content-Encoding: deflate" -X POST --data-binary @'distribution/resource/data.zlib' 'http://localhost:1984/api/deflate'
+ *    curl -w'\n' -v -H"Content-Encoding: deflate" -X POST --data-binary @'distribution/resource/data.zlib' 'http://localhost:1984/api/deflate'
  */
 
 #include <map>

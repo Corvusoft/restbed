@@ -5,7 +5,7 @@
  *    ./distribution/example/serving_html
  *
  * Client Usage:
- *    curl -v -X GET 'http://localhost:1984/static/index.html'
+ *    curl -w'\n' -v -X GET 'http://localhost:1984/static/index.html'
  */
 
 #include <string>

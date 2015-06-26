@@ -5,7 +5,7 @@
  *    ./distribution/example/pam_authentication
  *
  * Client Usage:
- *    curl -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'
+ *    curl -w'\n' -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'
  */
 
 #include <string>

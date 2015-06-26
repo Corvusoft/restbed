@@ -5,7 +5,7 @@
  *    ./distribution/example/custom_status_codes
  *
  * Client Usage:
- *    curl -v -X GET 'http://localhost:1984/resource'
+ *    curl -w'\n' -v -X GET 'http://localhost:1984/resource'
  */
 
 #include <memory>
