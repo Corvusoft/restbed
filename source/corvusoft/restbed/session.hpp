@@ -103,9 +103,9 @@ namespace restbed
             //Getters
             const std::string& get_id( void ) const;
             
-            const std::string& get_origin( void ) const;
+            const std::string get_origin( void ) const;
             
-            const std::string& get_destination( void ) const;
+            const std::string get_destination( void ) const;
             
             const std::shared_ptr< const Request > get_request(  void ) const;
             

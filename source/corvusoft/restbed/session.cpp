@@ -174,12 +174,12 @@ namespace restbed
         return m_pimpl->get_id( );
     }
     
-    const string& Session::get_origin( void ) const
+    const string Session::get_origin( void ) const
     {
         return m_pimpl->get_origin( );
     }
     
-    const string& Session::get_destination( void ) const
+    const string Session::get_destination( void ) const
     {
         return m_pimpl->get_destination( );
     }

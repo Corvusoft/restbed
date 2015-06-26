@@ -34,7 +34,7 @@ include_directories( ${INCLUDE_DIR} )
 
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
 
-target_link_libraries( ${PROJECT_NAME} pthread ${framework_LIBRARY} )
+target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} pthread ssl crypto )
 
 if ( BUILD_EXAMPLES )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/example" )

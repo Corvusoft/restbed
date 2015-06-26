@@ -13,6 +13,7 @@
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
@@ -53,11 +54,7 @@ using restbed::detail::SessionImpl;
 
 //External Namespaces
 using asio::buffer;
-using asio::ip::tcp;
 using asio::error_code;
-using asio::async_write;
-using asio::steady_timer;
-using asio::async_read_until;
 using framework::Uri;
 using framework::Byte;
 using framework::Bytes;
@@ -67,18 +64,14 @@ namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_is_closed( false ),
-            m_id( String::empty ),
-            m_origin( String::empty ),
-            m_destination( String::empty ),
+        SessionImpl::SessionImpl( void ) : m_id( String::empty ),
             m_logger( nullptr ),
             m_session( nullptr ),
+            m_socket( nullptr ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
             m_buffer( nullptr ),
-            m_timer( nullptr ),
-            m_socket( nullptr ),
             m_headers( ),
             m_router( nullptr ),
             m_error_handler( nullptr )
@@ -93,12 +86,12 @@ namespace restbed
         
         bool SessionImpl::is_open( void ) const
         {
-            return not is_closed( );
+            return m_socket not_eq nullptr and m_socket->is_open( );
         }
         
         bool SessionImpl::is_closed( void ) const
         {
-            return ( m_is_closed or m_socket == nullptr or not m_socket->is_open( ) );
+            return not is_open( );
         }
         
         void SessionImpl::purge( const function< void ( const shared_ptr< Session >& ) >& )
@@ -109,7 +102,6 @@ namespace restbed
         
         void SessionImpl::close( void )
         {
-            m_is_closed = true;
             m_socket->close( );
         }
         
@@ -120,7 +112,7 @@ namespace restbed
         
         void SessionImpl::close( const Bytes& body )
         {
-            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this ]( const asio::error_code & error, size_t )
+            m_socket->write( body, [ this ]( const asio::error_code & error, size_t )
             {
                 if ( error )
                 {
@@ -141,8 +133,6 @@ namespace restbed
         
         void SessionImpl::close( const int status, const Bytes& body, const multimap< string, string >& headers )
         {
-            m_is_closed = true;
-            
             Response response;
             response.set_body( body );
             response.set_headers( headers );
@@ -167,7 +157,7 @@ namespace restbed
         
         void SessionImpl::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            asio::async_write( *m_socket, asio::buffer( body.data( ), body.size( ) ), [ this, callback ]( const asio::error_code & error, size_t )
+            m_socket->write( body, [ this, callback ]( const asio::error_code & error, size_t )
             {
                 if ( error )
                 {
@@ -229,7 +219,7 @@ namespace restbed
             
             m_buffer = make_shared< asio::streambuf >( );
             
-            asio::async_read_until( *m_socket, *m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, m_session, callback ) );
+            m_socket->read( m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, m_session, callback ) );
         }
         
         void SessionImpl::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
@@ -238,7 +228,7 @@ namespace restbed
             {
                 size_t size = length - m_buffer->size( );
                 
-                asio::async_read( *m_socket, *m_buffer, asio::transfer_at_least( size ), [ this, length, callback ]( const asio::error_code & error, size_t )
+                m_socket->read( m_buffer, size, [ this, length, callback ]( const asio::error_code & error, size_t )
                 {
                     if ( error )
                     {
@@ -261,7 +251,7 @@ namespace restbed
         
         void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
         {
-            asio::async_read_until( *m_socket, *m_buffer, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
+            m_socket->read( m_buffer, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
             {
                 if ( error )
                 {
@@ -298,11 +288,7 @@ namespace restbed
         
         void SessionImpl::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            auto session = m_session;
-            
-            m_timer = make_shared< asio::steady_timer >( m_socket->get_io_service( ) );
-            m_timer->expires_from_now( delay );
-            m_timer->async_wait( [ callback, this ]( const error_code & error )
+            m_socket->wait( delay, [ callback, this ]( const error_code & error )
             {
                 if ( error )
                 {
@@ -321,14 +307,24 @@ namespace restbed
             return m_id;
         }
         
-        const string& SessionImpl::get_origin( void ) const
+        const string SessionImpl::get_origin( void ) const
         {
-            return m_origin;
+            if ( m_socket == nullptr )
+            {
+                return String::empty;
+            }
+
+            return m_socket->get_remote_endpoint( );
         }
         
-        const string& SessionImpl::get_destination( void ) const
+        const string SessionImpl::get_destination( void ) const
         {
-            return m_destination;
+            if ( m_socket == nullptr )
+            {
+                return String::empty;
+            }
+            
+            return m_socket->get_local_endpoint( );
         }
         
         const shared_ptr< const Request >& SessionImpl::get_request( void ) const
@@ -355,6 +351,11 @@ namespace restbed
         {
             m_logger = value;
         }
+
+        void SessionImpl::set_socket( const shared_ptr< SocketImpl >& value )
+        {            
+            m_socket = value;
+        }
         
         void SessionImpl::set_request( const shared_ptr< const Request >& value )
         {
@@ -369,21 +370,6 @@ namespace restbed
         void SessionImpl::set_settings( const shared_ptr< const Settings >& value )
         {
             m_settings = value;
-        }
-        
-        void SessionImpl::set_socket( const shared_ptr< tcp::socket >& value )
-        {
-            auto endpoint = value->remote_endpoint( );
-            auto address = endpoint.address( );
-            m_origin = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            m_origin += ::to_string( endpoint.port( ) );
-            
-            endpoint = value->local_endpoint( );
-            address = endpoint.address( );
-            m_destination = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            m_destination += ::to_string( endpoint.port( ) );
-            
-            m_socket = value;
         }
         
         void SessionImpl::set_header( const string& name, const string& value )
@@ -483,9 +469,8 @@ namespace restbed
             {
                 response.set_status_message( m_settings->get_status_message( response.get_status_code( ) ) );
             }
-            
-            const auto data = response.to_bytes( );
-            asio::async_write( *m_socket, asio::buffer( data.data( ), data.size( ) ), callback );
+
+            m_socket->write( response.to_bytes( ), callback );
         }
         
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
@@ -553,7 +538,7 @@ namespace restbed
             request->m_pimpl->set_query_parameters( uri.get_query_parameters( ) );
             
             session->m_pimpl->set_request( request );
-            
+
             callback( session );
         }
         catch ( const int status_code )

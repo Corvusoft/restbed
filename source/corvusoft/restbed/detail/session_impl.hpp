@@ -35,6 +35,7 @@ namespace restbed
     class Response;
     class Resource;
     class Settings;
+    class SocketImpl;
     
     namespace detail
     {
@@ -98,9 +99,9 @@ namespace restbed
                 //Getters
                 const std::string& get_id( void ) const;
                 
-                const std::string& get_origin( void ) const;
+                const std::string get_origin( void ) const;
                 
-                const std::string& get_destination( void ) const;
+                const std::string get_destination( void ) const;
                 
                 const std::shared_ptr< const Request >& get_request( void ) const;
                 
@@ -112,14 +113,14 @@ namespace restbed
                 void set_id( const std::string& value );
                 
                 void set_logger( const std::shared_ptr< Logger >& value );
+
+                void set_socket( const std::shared_ptr< SocketImpl >& value );
                 
                 void set_request( const std::shared_ptr< const Request >& value );
                 
                 void set_resource( const std::shared_ptr< const Resource >& value );
                 
                 void set_settings( const std::shared_ptr< const Settings >& value );
-                
-                void set_socket( const std::shared_ptr< asio::ip::tcp::socket >& value );
                 
                 void set_header( const std::string& name, const std::string& value );
                 
@@ -154,7 +155,8 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                
+                SessionImpl( const SessionImpl& original ) = delete;
+
                 //Functionality
                 framework::Bytes fetch_body( const std::size_t length ) const;
                 
@@ -178,17 +180,13 @@ namespace restbed
                 SessionImpl& operator =( const SessionImpl& value ) = delete;
                 
                 //Properties
-                bool m_is_closed;
-                
                 std::string m_id;
-                
-                std::string m_origin;
-                
-                std::string m_destination;
                 
                 std::shared_ptr< Logger > m_logger;
                 
                 std::shared_ptr< Session > m_session;
+
+                std::shared_ptr< SocketImpl > m_socket;
                 
                 std::shared_ptr< const Request > m_request;
                 
@@ -197,11 +195,7 @@ namespace restbed
                 std::shared_ptr< const Settings > m_settings;
                 
                 std::shared_ptr< asio::streambuf > m_buffer;
-                
-                std::shared_ptr< asio::steady_timer > m_timer;
-                
-                std::shared_ptr< asio::ip::tcp::socket > m_socket;
-                
+
                 std::multimap< std::string, std::string > m_headers;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_router;

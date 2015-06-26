@@ -17,6 +17,7 @@
 
 //External Includes
 #include <asio.hpp>
+#include <asio/ssl.hpp>
 
 //System Namespaces
 
@@ -131,6 +132,8 @@ namespace restbed
                 void route( const std::shared_ptr< Session >& session, const std::string sanitised_path ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error ) const;
+
+                void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
                 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
                 
@@ -159,6 +162,8 @@ namespace restbed
                 std::shared_ptr< asio::io_service > m_io_service;
                 
                 std::shared_ptr< SessionManager > m_session_manager;
+
+                std::shared_ptr< asio::ssl::context > m_ssl_context;
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 

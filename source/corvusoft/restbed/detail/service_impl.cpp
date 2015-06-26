@@ -17,6 +17,7 @@
 #include "corvusoft/restbed/settings.hpp"
 #include "corvusoft/restbed/status_code.hpp"
 #include "corvusoft/restbed/session_manager.hpp"
+#include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/service_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
@@ -63,6 +64,7 @@ namespace restbed
             m_settings( nullptr ),
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
+            m_ssl_context( nullptr ),
             m_acceptor( nullptr ),
             m_resource_paths( ),
             m_resource_routes( ),
@@ -294,9 +296,16 @@ namespace restbed
         
         void ServiceImpl::listen( void ) const
         {
-            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
-            
-            m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
+            if ( m_ssl_context not_eq nullptr )
+            {
+                auto socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( m_acceptor->get_io_service( ), *m_ssl_context );
+                m_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
+            }
+            else
+            {
+                auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+                m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
+            }
         }
         
         string ServiceImpl::sanitise_path( const string& path ) const
@@ -516,6 +525,7 @@ namespace restbed
             if ( not error )
             {
                 set_socket_timeout( socket );
+                auto connection = make_shared< SocketImpl >( socket );
                 
                 const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
@@ -525,10 +535,10 @@ namespace restbed
                 const auto logger = m_logger;
                 const auto settings = m_settings;
                 
-                m_session_manager->create( [ socket, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
+                m_session_manager->create( [ connection, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
                 {
                     session->m_pimpl->set_logger( logger );
-                    session->m_pimpl->set_socket( socket );
+                    session->m_pimpl->set_socket( connection );
                     session->m_pimpl->set_settings( settings );
                     session->m_pimpl->set_error_handler( error_handler );
                     session->m_pimpl->fetch( session, authenticate );
@@ -545,6 +555,11 @@ namespace restbed
             }
             
             listen( );
+        }
+
+        void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const error_code& error ) const
+        {
+
         }
         
         void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
