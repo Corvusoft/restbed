@@ -542,7 +542,7 @@ namespace restbed
         }
 
 #ifdef BUILD_SSL
-        void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const error_code& error ) const
+        void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >&, const error_code& ) const
         {
 
         }

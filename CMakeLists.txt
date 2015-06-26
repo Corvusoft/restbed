@@ -24,6 +24,10 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" 
 find_package( asio REQUIRED )
 find_package( framework REQUIRED )
 
+if ( BUILD_SSL )
+    find_package( openssl REQUIRED )
+endif ( )
+
 include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
 
 #
@@ -36,7 +40,7 @@ include_directories( ${INCLUDE_DIR} )
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} pthread ssl crypto )
+    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} pthread ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
     target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} pthread )
 endif ( )
