@@ -15,8 +15,11 @@
 
 //External Includes
 #include <asio.hpp>
-#include <asio/ssl.hpp>
 #include <corvusoft/framework/byte>
+
+#ifdef BUILD_SSL
+    #include <asio/ssl.hpp>
+#endif
 
 //System Namespaces
 
@@ -43,9 +46,9 @@ namespace restbed
                 
                 //Constructors
                 SocketImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::shared_ptr< Logger >& logger );
-
+#ifdef BUILD_SSL
                 SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger );
-                
+#endif
                 virtual ~SocketImpl( void );
                 
                 //Functionality
@@ -117,8 +120,9 @@ namespace restbed
                 std::shared_ptr< asio::steady_timer > m_timer;
 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
-
+#ifdef BUILD_SSL
                 std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;
+#endif
         };
     }
 }

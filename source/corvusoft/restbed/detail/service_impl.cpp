@@ -64,7 +64,9 @@ namespace restbed
             m_settings( nullptr ),
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
+#ifdef BUILD_SSL
             m_ssl_context( nullptr ),
+#endif
             m_acceptor( nullptr ),
             m_resource_paths( ),
             m_resource_routes( ),
@@ -296,6 +298,7 @@ namespace restbed
         
         void ServiceImpl::listen( void ) const
         {
+#ifdef BUILD_SSL
             if ( m_ssl_context not_eq nullptr )
             {
                 auto socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( m_acceptor->get_io_service( ), *m_ssl_context );
@@ -303,9 +306,12 @@ namespace restbed
             }
             else
             {
+#endif
                 auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
                 m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
+#ifdef BUILD_SSL
             }
+#endif
         }
         
         string ServiceImpl::sanitise_path( const string& path ) const
@@ -535,10 +541,12 @@ namespace restbed
             listen( );
         }
 
+#ifdef BUILD_SSL
         void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const error_code& error ) const
         {
 
         }
+#endif
         
         void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
         {
