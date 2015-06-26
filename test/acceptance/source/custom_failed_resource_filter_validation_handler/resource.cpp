@@ -68,7 +68,43 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
             service.start( settings );
         } );
 
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/yaml'" )
+        WHEN( "I perform an valid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/csv'" )
+        {
+            Http::Request request;
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/resources/1";
+            request.headers.insert( make_pair( "Content-Type", "application/csv" ) );
+
+            auto response = Http::get( request );
+
+            THEN( "I should see a '200' (OK) status code" )
+            {
+                REQUIRE( 200 == response.status_code );
+            }
+
+            AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+            {
+                Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                REQUIRE( response.body == expection );
+            }
+
+            AND_THEN( "I should see a 'Connection' header value of 'close'" )
+            {
+                auto header = response.headers.find( "Connection" );
+                REQUIRE( header not_eq response.headers.end( ) );
+                REQUIRE( "close" == response.headers.find( "Connection" )->second );
+            }
+
+            AND_THEN( "I should see a 'Content-Length' header value of '32'" )
+            {
+                auto header = response.headers.find( "Content-Length" );
+                REQUIRE( header not_eq response.headers.end( ) );
+                REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
+            }
+        }
+
+        WHEN( "I perform an invalid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/yaml'" )
         {
             Http::Request request;
             request.port = 1984;
