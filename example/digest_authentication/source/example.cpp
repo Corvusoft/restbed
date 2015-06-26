@@ -33,19 +33,18 @@ void authentication_handler( const shared_ptr< Session >& session,
 {
     const auto request = session->get_request( );
 
-    if ( request->has_header( "Authorization" ) )
+    auto authorisation = request->get_header( "Authorization" );
+
+    bool authorised = regex_match( authorisation, regex( ".*response=\"02863beb15feb659dfe4703d610d1b73\".*" ) );
+    
+    if ( authorised )
     {
-        auto authorisation = request->get_header( "Authorization" );
-
-        bool authorised = regex_match( authorisation, regex( ".*response=\"02863beb15feb659dfe4703d610d1b73\".*" ) );
-        
-        if ( authorised )
-        {
-            callback( session );
-        }
+        callback( session );
     }
-
-    session->close( UNAUTHORIZED, { { "WWW-Authenticate", build_authenticate_header( ) } } );
+    else
+    {
+        session->close( UNAUTHORIZED, { { "WWW-Authenticate", build_authenticate_header( ) } } );
+    }
 }
 
 void get_method_handler( const shared_ptr< Session >& session )

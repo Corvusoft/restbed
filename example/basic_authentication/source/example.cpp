@@ -25,8 +25,10 @@ void authentication_handler( const shared_ptr< Session >& session,
     {
         session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
     }
-    
-    callback( session );
+    else
+    {
+        callback( session );
+    }
 }
 
 void get_method_handler( const shared_ptr< Session >& session )
