@@ -39,8 +39,10 @@ void resource_handler( const shared_ptr< Session >& session, const function< voi
     {
         session->close( FORBIDDEN, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
     }
-
-    callback( session );
+    else
+    {
+        callback( session );
+    }
 }
 
 void service_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -51,8 +53,10 @@ void service_handler( const shared_ptr< Session >& session, const function< void
     {
         session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
     }
-
-    callback( session );
+    else
+    {
+        callback( session );
+    }
 }
 
 void get_method_handler( const shared_ptr< Session >& session )
@@ -82,7 +86,43 @@ SCENARIO( "custom resource authentication", "[resource]" )
             service.start( settings );
         } );
 
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29y28fsoOkdsYXNnb3c'" )
+        WHEN( "I perform an authorised HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29ydnVzb2Z0OkdsYXNnb3c='" )
+        {
+            Http::Request request;
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/resources/1";
+            request.headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
+
+            auto response = Http::get( request );
+
+            THEN( "I should see a '200' (OK) status code" )
+            {
+                REQUIRE( 200 == response.status_code );
+            }
+
+            AND_THEN( "I should see a repsonse body of 'Password Protected Hello, World!'" )
+            {
+                Bytes expection { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                REQUIRE( response.body == expection );
+            }
+
+            AND_THEN( "I should see a 'Connection' header value of 'close'" )
+            {
+                auto header = response.headers.find( "Connection" );
+                REQUIRE( header not_eq response.headers.end( ) );
+                REQUIRE( "close" == response.headers.find( "Connection" )->second );
+            }
+
+            AND_THEN( "I should see a 'Content-Length' header value of '32'" )
+            {
+                auto header = response.headers.find( "Content-Length" );
+                REQUIRE( header not_eq response.headers.end( ) );
+                REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
+            }
+        }
+
+        WHEN( "I perform an unauthorised HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29y28fsoOkdsYXNnb3c'" )
         {
             Http::Request request;
             request.port = 1984;
