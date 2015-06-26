@@ -27,6 +27,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Logger;
     class Session;
     
     namespace detail
@@ -41,9 +42,9 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SocketImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket );
+                SocketImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::shared_ptr< Logger >& logger );
 
-                SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket );
+                SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger );
                 
                 virtual ~SocketImpl( void );
                 
@@ -68,6 +69,7 @@ namespace restbed
                 std::string get_remote_endpoint( void ) const;
                 
                 //Setters
+                void set_timeout( const std::chrono::seconds& value );
 
                 //Operators
                 
@@ -109,6 +111,8 @@ namespace restbed
                 
                 //Properties
                 bool m_is_open;
+
+                std::shared_ptr< Logger > m_logger;
 
                 std::shared_ptr< asio::steady_timer > m_timer;
 

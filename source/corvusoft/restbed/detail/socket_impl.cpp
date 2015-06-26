@@ -5,6 +5,7 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/logger.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 
 //External Includes
@@ -17,6 +18,7 @@ using std::function;
 using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
+using std::chrono::seconds;
 using std::chrono::microseconds;
 
 //Project Namespaces
@@ -33,7 +35,8 @@ namespace restbed
 {
     namespace detail
     {
-        SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket ) : m_is_open( socket->is_open( ) ),
+        SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->is_open( ) ),
+            m_logger( logger ),
             m_timer( nullptr ),
             m_socket( socket ),
             m_ssl_socket( nullptr )
@@ -41,7 +44,8 @@ namespace restbed
         	return;
         }
 
-        SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket ) : m_is_open( socket->lowest_layer( ).is_open( ) ),
+        SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->lowest_layer( ).is_open( ) ),
+            m_logger( logger ),
             m_timer( nullptr ),
             m_socket( nullptr ),
             m_ssl_socket( socket )
@@ -173,6 +177,38 @@ namespace restbed
             remote += ::to_string( endpoint.port( ) );
 
             return remote;
+        }
+
+        void SocketImpl::set_timeout( const seconds& value )
+        {
+        	tcp::socket::native_handle_type native_socket;
+
+        	if ( m_socket not_eq nullptr )
+        	{
+        		native_socket = m_socket->native_handle( );
+        	}
+        	else
+        	{
+        		native_socket = m_ssl_socket->lowest_layer( ).native_handle( );
+        	}
+
+            struct timeval timeout;
+            timeout.tv_usec = 0;
+            timeout.tv_sec = value.count( );
+            
+            int status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &timeout ), sizeof( timeout ) );
+            
+            if ( status == -1 and m_logger not_eq nullptr )
+            {
+                m_logger->log( Logger::Level::WARNING, "Failed to set socket option, send timeout." );
+            }
+            
+            status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &timeout ), sizeof( timeout ) );
+            
+            if ( status == -1 and m_logger not_eq nullptr )
+            {
+                m_logger->log( Logger::Level::WARNING, "Failed to set socket option, receive timeout." );
+            }
         }
     }
 }

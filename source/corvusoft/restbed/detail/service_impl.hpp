@@ -127,8 +127,6 @@ namespace restbed
                 
                 void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
                 
-                void set_socket_timeout( const std::shared_ptr< asio::ip::tcp::socket >& socket ) const;
-                
                 void route( const std::shared_ptr< Session >& session, const std::string sanitised_path ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error ) const;

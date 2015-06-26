@@ -471,28 +471,6 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::set_socket_timeout( const shared_ptr< tcp::socket >& socket ) const
-        {
-            struct timeval value;
-            value.tv_usec = 0;
-            value.tv_sec = m_settings->get_connection_timeout( ).count( );
-            
-            auto native_socket = socket->native_handle( );
-            int status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
-            
-            if ( status == -1 )
-            {
-                log( Logger::Level::WARNING, "Failed to set socket option, send timeout." );
-            }
-            
-            status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &value ), sizeof( value ) );
-            
-            if ( status == -1 )
-            {
-                log( Logger::Level::WARNING, "Failed to set socket option, receive timeout." );
-            }
-        }
-        
         void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path ) const
         {
             if ( session->is_closed( ) )
@@ -524,8 +502,8 @@ namespace restbed
         {
             if ( not error )
             {
-                set_socket_timeout( socket );
-                auto connection = make_shared< SocketImpl >( socket );
+                auto connection = make_shared< SocketImpl >( socket, m_logger );
+                connection->set_timeout( m_settings->get_connection_timeout( ) );
                 
                 const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
