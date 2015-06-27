@@ -3,6 +3,8 @@
 set( BUILD_MANIFEST
      ${SOURCE_DIR}/settings.cpp
      ${SOURCE_DIR}/detail/settings_impl.cpp
+     ${SOURCE_DIR}/ssl_settings.cpp
+     ${SOURCE_DIR}/detail/ssl_settings_impl.cpp
      ${SOURCE_DIR}/resource.cpp
      ${SOURCE_DIR}/detail/resource_impl.cpp
      ${SOURCE_DIR}/request.cpp
