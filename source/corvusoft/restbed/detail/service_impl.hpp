@@ -112,7 +112,9 @@ namespace restbed
                 ServiceImpl( const ServiceImpl& original ) = delete;
                 
                 //Functionality
-                void listen( void ) const;
+                void http_listen( void ) const;
+
+                void https_listen( void ) const;
                 
                 std::string sanitise_path( const std::string& path ) const;
                 
@@ -165,6 +167,8 @@ namespace restbed
                 std::shared_ptr< SessionManager > m_session_manager;
 #ifdef BUILD_SSL
                 std::shared_ptr< asio::ssl::context > m_ssl_context;
+
+                std::shared_ptr< asio::ip::tcp::acceptor > m_ssl_acceptor;
 #endif
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 
