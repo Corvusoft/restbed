@@ -16,6 +16,7 @@
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
 #include "corvusoft/restbed/status_code.hpp"
+#include "corvusoft/restbed/ssl_settings.hpp"
 #include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
@@ -65,6 +66,7 @@ namespace restbed
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
 #ifdef BUILD_SSL
+            m_ssl_settings( nullptr ),
             m_ssl_context( nullptr ),
             m_ssl_acceptor( nullptr ),
 #endif
@@ -113,9 +115,14 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::start( const shared_ptr< const Settings >& settings )
+        void ServiceImpl::start( const shared_ptr< const SSLSettings >& settings )
         {
-            m_settings = settings;
+            start( nullptr, settings );
+        }
+
+        void ServiceImpl::start( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+        {
+            m_settings = ( settings not_eq nullptr ) ? settings : make_shared< Settings >( );
             
             if ( m_session_manager == nullptr )
             {
@@ -141,30 +148,35 @@ namespace restbed
             auto address = endpoint.address( );
             auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
             location += ::to_string( endpoint.port( ) );
-            log( Logger::Level::INFO, String::format( "Service accepting connections at '%s'.",  location.data( ) ) );
+            log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
             
 #ifdef BUILD_SSL
-            m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
-            m_ssl_context->set_options( asio::ssl::context::default_workarounds | asio::ssl::context::no_sslv2 | asio::ssl::context::single_dh_use );
-            m_ssl_context->use_certificate_chain_file( "/Users/laurabruynseels/Desktop/ssl/server.crt" );
-            m_ssl_context->use_private_key_file( "/Users/laurabruynseels/Desktop/ssl/server.key", asio::ssl::context::pem );
-            m_ssl_context->use_tmp_dh_file( "/Users/laurabruynseels/Desktop/ssl/dh512.pem" );
-            m_ssl_context->set_password_callback( [ ]( const size_t, const asio::ssl::context::password_purpose& )
+            if ( ssl_settings not_eq nullptr )
             {
-                return "test";
-            } );
+                m_ssl_settings = ssl_settings;
 
-            m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), 8081 ) );//ssl_settings->get_port( ) ) );
-            m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
-            m_ssl_acceptor->listen( settings->get_connection_limit( ) ); 
+                m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
+                m_ssl_context->set_options( asio::ssl::context::default_workarounds | asio::ssl::context::no_sslv2 | asio::ssl::context::single_dh_use );
+                m_ssl_context->use_certificate_chain_file( "/Users/laurabruynseels/Desktop/ssl/server.crt" );
+                m_ssl_context->use_private_key_file( "/Users/laurabruynseels/Desktop/ssl/server.key", asio::ssl::context::pem );
+                m_ssl_context->use_tmp_dh_file( "/Users/laurabruynseels/Desktop/ssl/dh512.pem" );
+                m_ssl_context->set_password_callback( [ ]( const size_t, const asio::ssl::context::password_purpose& )
+                {
+                    return "test";
+                } );
 
-            endpoint = m_ssl_acceptor->local_endpoint( );
-            address = endpoint.address( );
-            location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            location += ::to_string( endpoint.port( ) );
-            log( Logger::Level::INFO, String::format( "Service accepting connections at '%s'.",  location.data( ) ) );
+                m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
+                m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_ssl_acceptor->listen( settings->get_connection_limit( ) ); 
 
-            https_listen( );
+                endpoint = m_ssl_acceptor->local_endpoint( );
+                address = endpoint.address( );
+                location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+                location += ::to_string( endpoint.port( ) );
+                log( Logger::Level::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
+
+                https_listen( );
+            }
 #endif
             for ( const auto& route : m_resource_paths )
             {
@@ -180,7 +192,12 @@ namespace restbed
             log( Logger::Level::INFO, String::format( "Service halted at '%s'.", location.data( ) ) );
         }
         
-        void ServiceImpl::restart( const shared_ptr< const Settings >& settings )
+        void ServiceImpl::restart( const shared_ptr< const SSLSettings >& settings )
+        {
+            restart( nullptr, settings );
+        }
+        
+        void ServiceImpl::restart( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
         {
             try
             {
@@ -191,9 +208,9 @@ namespace restbed
                 log( Logger::Level::WARNING, "Service failed graceful teardown." );
             }
             
-            start( settings );
+            start( settings, ssl_settings );
         }
-        
+
         void ServiceImpl::publish( const shared_ptr< const Resource >& resource )
         {
             if ( m_is_running )
@@ -368,29 +385,6 @@ namespace restbed
             return sanitised_path;
         }
         
-        void ServiceImpl::router( const shared_ptr< Session >& session ) const
-        {
-            if ( session->is_closed( ) )
-            {
-                return;
-            }
-            
-            const auto root = m_settings->get_root( );
-            
-            const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
-            
-            if ( resource_route == m_resource_routes.end( ) )
-            {
-                return not_found( session );
-            }
-            
-            const auto path = resource_route->first;
-            const auto resource = resource_route->second;
-            session->m_pimpl->set_resource( resource );
-            
-            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
-        }
-        
         void ServiceImpl::not_found( const shared_ptr< Session >& session ) const
         {
             log( Logger::Level::INFO, String::format( "'%s' resource not found '%s'.",
@@ -495,6 +489,27 @@ namespace restbed
             }
         }
         
+        void ServiceImpl::router( const shared_ptr< Session >& session, const string& root ) const
+        {
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
+            
+            const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, root, _1 ) );
+            
+            if ( resource_route == m_resource_routes.end( ) )
+            {
+                return not_found( session );
+            }
+            
+            const auto path = resource_route->first;
+            const auto resource = resource_route->second;
+            session->m_pimpl->set_resource( resource );
+            
+            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
+        }
+
         void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path ) const
         {
             if ( session->is_closed( ) )
@@ -529,7 +544,7 @@ namespace restbed
                 auto connection = make_shared< SocketImpl >( socket, m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
                 
-                const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
+                const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1, m_settings->get_root( ) );
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
                 const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
@@ -558,7 +573,7 @@ namespace restbed
             
             http_listen( );
         }
-        
+
 #ifdef BUILD_SSL
         void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const error_code& error ) const
         {
@@ -573,15 +588,15 @@ namespace restbed
                     }
 
                     auto connection = make_shared< SocketImpl >( socket, m_logger );
-                    connection->set_timeout( m_settings->get_connection_timeout( ) );
+                    connection->set_timeout( m_ssl_settings->get_connection_timeout( ) );
 
-                    const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
+                    const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1, m_ssl_settings->get_root( ) );
                     const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                     const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
                     const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
                 
                     const auto logger = m_logger;
-                    const auto settings = m_settings;
+                    const auto settings = m_ssl_settings;
 
                     m_session_manager->create( [ connection, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
                     {
@@ -674,14 +689,13 @@ namespace restbed
             }
         }
         
-        bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const pair< string, shared_ptr< const Resource > >& route ) const
+        bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const string& root, const pair< string, shared_ptr< const Resource > >& route ) const
         {
             log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
                     session->get_request( )->get_method( ).data( ),
                     session->get_origin( ).data( ),
                     session->get_request( )->get_path( ).data( ) ) );
-                    
-            const auto root = m_settings->get_root( );
+            
             auto route_folders = String::split( route.first, '/' );
             
             if ( not root.empty( ) and root not_eq "/" )

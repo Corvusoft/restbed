@@ -36,7 +36,7 @@ namespace restbed
     class Resource;
     class Settings;
     class SocketImpl;
-    
+
     namespace detail
     {
         //Forward Declarations

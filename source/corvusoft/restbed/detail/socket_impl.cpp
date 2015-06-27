@@ -33,7 +33,6 @@ using framework::Bytes;
     using asio::ssl::stream;
 #endif
 
-
 namespace restbed
 {
     namespace detail
@@ -48,7 +47,6 @@ namespace restbed
         {
         	return;
         }
-
 #ifdef BUILD_SSL
         SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->lowest_layer( ).is_open( ) ),
             m_logger( logger ),
@@ -73,7 +71,6 @@ namespace restbed
 	    	{
 	    		m_socket->close( );
 	    	}
-
 #ifdef BUILD_SSL
 	    	if ( m_ssl_socket not_eq nullptr )
 	    	{
@@ -98,14 +95,12 @@ namespace restbed
 	    	{
 	    		return not m_socket->is_open( );
 	    	}
-
 #ifdef BUILD_SSL
 	    	if ( m_ssl_socket not_eq nullptr )
 	    	{
 	    		return not m_ssl_socket->lowest_layer( ).is_open( );
 	    	}
 #endif
-
 	    	return true;
 	    }
 
@@ -123,7 +118,6 @@ namespace restbed
 	    		m_timer = make_shared< asio::steady_timer >( m_ssl_socket->lowest_layer( ).get_io_service( ) );
 	    	}
 #endif
-
             m_timer->expires_from_now( delay );
             m_timer->async_wait( callback );
 	    }
@@ -179,7 +173,6 @@ namespace restbed
         string SocketImpl::get_local_endpoint( void ) const
         {
         	tcp::endpoint endpoint;
-
 #ifdef BUILD_SSL 
         	if ( m_socket not_eq nullptr )
         	{
@@ -192,7 +185,6 @@ namespace restbed
         		endpoint = m_ssl_socket->lowest_layer( ).local_endpoint( );
         	}
 #endif
-
             auto address = endpoint.address( );
             auto local = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
             local += ::to_string( endpoint.port( ) );
@@ -203,7 +195,6 @@ namespace restbed
         string SocketImpl::get_remote_endpoint( void ) const
         {
         	tcp::endpoint endpoint;
-
 #ifdef BUILD_SSL 
         	if ( m_socket not_eq nullptr )
         	{
@@ -216,7 +207,6 @@ namespace restbed
         		endpoint = m_ssl_socket->lowest_layer( ).remote_endpoint( );
         	}
 #endif
-
             auto address = endpoint.address( );
             auto remote = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
             remote += ::to_string( endpoint.port( ) );
@@ -227,7 +217,6 @@ namespace restbed
         void SocketImpl::set_timeout( const seconds& value )
         {
         	tcp::socket::native_handle_type native_socket;
-
 #ifdef BUILD_SSL 
         	if ( m_socket not_eq nullptr )
         	{
@@ -240,7 +229,6 @@ namespace restbed
         		native_socket = m_ssl_socket->lowest_layer( ).native_handle( );
         	}
 #endif
-
             struct timeval timeout;
             timeout.tv_usec = 0;
             timeout.tv_sec = value.count( );

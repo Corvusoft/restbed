@@ -37,6 +37,7 @@ namespace restbed
     class Resource;
     class Settings;
     class SessionManager;
+    class SSLSettings;
     
     namespace detail
     {
@@ -57,9 +58,13 @@ namespace restbed
                 //Functionality
                 void stop( void );
                 
-                void start( const std::shared_ptr< const Settings >& settings );
+                void start( const std::shared_ptr< const SSLSettings >& settings = nullptr );
+
+                void start( const std::shared_ptr< const Settings >& settings, const std::shared_ptr< const SSLSettings >& ssl_settings = nullptr );
                 
-                void restart( const std::shared_ptr< const Settings >& settings );
+                void restart( const std::shared_ptr< const SSLSettings >& settings = nullptr );
+
+                void restart( const std::shared_ptr< const Settings >& settings, const std::shared_ptr< const SSLSettings >& ssl_settings = nullptr );
                 
                 void publish( const std::shared_ptr< const Resource >& resource );
                 
@@ -118,8 +123,6 @@ namespace restbed
                 
                 std::string sanitise_path( const std::string& path ) const;
                 
-                void router( const std::shared_ptr< Session >& session ) const;
-                
                 void not_found( const std::shared_ptr< Session >& session ) const;
                 
                 bool has_unique_paths( const std::set< std::string >& paths ) const;
@@ -131,6 +134,8 @@ namespace restbed
                 void method_not_implemented( const std::shared_ptr< Session >& session ) const;
                 
                 void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
+
+                void router( const std::shared_ptr< Session >& session, const std::string& root ) const;
                 
                 void route( const std::shared_ptr< Session >& session, const std::string sanitised_path ) const;
                 
@@ -144,7 +149,7 @@ namespace restbed
                 
                 void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
                 
-                bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
+                bool resource_router( const std::shared_ptr< Session >& session, const std::string& root, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
                 //Getters
                 
@@ -166,6 +171,8 @@ namespace restbed
                 
                 std::shared_ptr< SessionManager > m_session_manager;
 #ifdef BUILD_SSL
+                std::shared_ptr< const SSLSettings > m_ssl_settings;
+
                 std::shared_ptr< asio::ssl::context > m_ssl_context;
 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_ssl_acceptor;
