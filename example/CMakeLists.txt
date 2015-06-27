@@ -63,6 +63,9 @@ target_link_libraries( persistent_connection ${CMAKE_PROJECT_NAME} )
 add_executable( compression compression/source/example.cpp )
 target_link_libraries( compression ${CMAKE_PROJECT_NAME} )
 
+add_executable( simple_service simple_service/source/example.cpp )
+target_link_libraries( simple_service ${CMAKE_PROJECT_NAME} )
+
 #
 # Install
 #

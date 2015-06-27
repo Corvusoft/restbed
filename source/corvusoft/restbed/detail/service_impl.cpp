@@ -129,18 +129,18 @@ namespace restbed
                 m_session_manager = make_shared< SessionManagerImpl >( );
             }
             
-            m_session_manager->start( settings );
+            m_session_manager->start( m_settings );
             
             if ( m_logger not_eq nullptr )
             {
-                m_logger->start( settings );
+                m_logger->start( m_settings );
             }
 
             m_io_service = make_shared< io_service >( );
 
-            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
+            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
             m_acceptor->set_option( socket_base::reuse_address( true ) );
-            m_acceptor->listen( settings->get_connection_limit( ) );
+            m_acceptor->listen( m_settings->get_connection_limit( ) );
             
             http_listen( );
             
@@ -167,7 +167,7 @@ namespace restbed
 
                 m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
                 m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
-                m_ssl_acceptor->listen( settings->get_connection_limit( ) ); 
+                m_ssl_acceptor->listen( m_ssl_settings->get_connection_limit( ) ); 
 
                 endpoint = m_ssl_acceptor->local_endpoint( );
                 address = endpoint.address( );
@@ -180,7 +180,7 @@ namespace restbed
 #endif
             for ( const auto& route : m_resource_paths )
             {
-                auto path = String::format( "/%s/%s", settings->get_root( ).data( ), route.second.data( ) );
+                auto path = String::format( "/%s/%s", m_settings->get_root( ).data( ), route.second.data( ) );
                 path = String::replace( "//", "/", path );
                 
                 log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
