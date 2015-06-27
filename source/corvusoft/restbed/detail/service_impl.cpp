@@ -156,14 +156,34 @@ namespace restbed
                 m_ssl_settings = ssl_settings;
 
                 m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
-                //set_default_verify_paths();
-                m_ssl_context->set_options( asio::ssl::context::default_workarounds | asio::ssl::context::no_sslv2 | asio::ssl::context::single_dh_use );
-                m_ssl_context->use_certificate_chain_file( "/Users/laurabruynseels/Desktop/ssl/server.crt" );
-                m_ssl_context->use_private_key_file( "/Users/laurabruynseels/Desktop/ssl/server.key", asio::ssl::context::pem );
-                m_ssl_context->use_tmp_dh_file( "/Users/laurabruynseels/Desktop/ssl/dh512.pem" );
-                m_ssl_context->set_password_callback( [ ]( const size_t, const asio::ssl::context::password_purpose& )
+                m_ssl_context->set_default_verify_paths( );
+
+                m_ssl_context->use_tmp_dh_file( m_ssl_settings->get_temporary_diffie_hellman( ) );
+                m_ssl_context->add_verify_path( m_ssl_settings->get_certificate_authority_pool( ) );
+                m_ssl_context->use_certificate_chain_file( m_ssl_settings->get_certificate_chain( ) );
+                m_ssl_context->use_certificate_file( m_ssl_settings->get_certificate( ), asio::ssl::context::pem );
+                m_ssl_context->use_private_key_file( m_ssl_settings->get_private_key( ), asio::ssl::context::pem );
+                m_ssl_context->use_rsa_private_key_file( m_ssl_settings->get_private_rsa_key( ), asio::ssl::context::pem );
+
+                //m_ssl_context->set_options( asio::ssl::context::default_workarounds | asio::ssl::context::no_sslv2 | asio::ssl::context::single_dh_use );
+                //m_ssl_context->use_certificate_chain_file( "/Users/laurabruynseels/Desktop/ssl/server.crt" );
+                //m_ssl_context->use_private_key_file( "/Users/laurabruynseels/Desktop/ssl/server.key", asio::ssl::context::pem );
+                //m_ssl_context->use_tmp_dh_file( "/Users/laurabruynseels/Desktop/ssl/dh512.pem" );
+
+                asio::ssl::context::options options = 0;
+                options = ( not m_ssl_settings->has_enabled_tlsv1( ) ) ? options :options | asio::ssl::context::no_tlsv1;
+                options = ( not m_ssl_settings->has_enabled_sslv2( ) ) ? options : options | asio::ssl::context::no_sslv2;
+                options = ( not m_ssl_settings->has_enabled_sslv3( ) ) ? options : options | asio::ssl::context::no_sslv3;
+                options = ( not m_ssl_settings->has_enabled_tlsv11( ) ) ? options :options | asio::ssl::context::no_tlsv1_1;
+                options = ( not m_ssl_settings->has_enabled_tlsv12( ) ) ? options :options | asio::ssl::context::no_tlsv1_2;
+                options = ( not m_ssl_settings->has_enabled_compression( ) ) ? options :options | asio::ssl::context::no_compression;
+                options = ( not m_ssl_settings->has_enabled_default_workarounds( ) ) ? options :options | asio::ssl::context::default_workarounds;
+                options = ( not m_ssl_settings->has_enabled_single_diffie_hellman_use( ) ) ? options : options | asio::ssl::context::single_dh_use;
+
+                auto callback = m_ssl_settings->get_password_callback( );
+                m_ssl_context->set_password_callback( [ callback ]( const size_t, const asio::ssl::context::password_purpose& purpose )
                 {
-                    return "test";
+                    return callback( purpose == asio::ssl::context::for_reading );
                 } );
 
                 m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );

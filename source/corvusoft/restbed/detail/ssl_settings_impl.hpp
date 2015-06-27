@@ -62,7 +62,20 @@ namespace restbed
                 bool has_enabled_single_diffie_hellman_use( void ) const;
                 
                 //Getters
+                std::string get_certificate( void ) const;
+
+                std::string get_private_key( void ) const;
+
+                std::string get_private_rsa_key( void ) const;
+
+                std::string get_certificate_chain( void ) const;
                 
+                std::string get_temporary_diffie_hellman( void ) const;
+
+                std::string get_certificate_authority_pool( void ) const;
+
+                std::function< std::string ( bool ) > get_password_callback( void ) const;
+
                 //Setters
                 void set_sslv2_enabled( const bool value );
 
@@ -92,7 +105,7 @@ namespace restbed
 
                 void set_temporary_diffie_hellman( const framework::Uri& value );
 
-                void set_password_callback( const std::function< std::string ( void ) >& value );
+                void set_password_callback( const std::function< std::string ( bool ) >& value );
 
                 //Operators
                 
@@ -161,7 +174,7 @@ namespace restbed
 
                 std::string m_temporary_diffie_hellman;
 
-                std::function< std::string ( void ) > m_password_callback;
+                std::function< std::string ( bool is_read ) > m_password_callback;
 
         };
     }

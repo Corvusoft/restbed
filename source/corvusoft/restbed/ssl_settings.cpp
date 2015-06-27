@@ -74,6 +74,41 @@ namespace restbed
         return m_pimpl->has_enabled_single_diffie_hellman_use( );
     }
 
+    string SSLSettings::get_certificate( void ) const
+    {
+        return m_pimpl->get_certificate( );
+    }
+
+    string SSLSettings::get_private_key( void ) const
+    {
+        return m_pimpl->get_private_key( );
+    }
+
+    string SSLSettings::get_private_rsa_key( void ) const
+    {
+        return m_pimpl->get_private_rsa_key( );
+    }
+
+    string SSLSettings::get_certificate_chain( void ) const
+    {
+        return m_pimpl->get_certificate_chain( );
+    }
+            
+    string SSLSettings::get_temporary_diffie_hellman( void ) const
+    {
+        return m_pimpl->get_temporary_diffie_hellman( );
+    }
+
+    string SSLSettings::get_certificate_authority_pool( void ) const
+    {
+        return m_pimpl->get_certificate_authority_pool( );
+    }
+
+    function< string ( bool ) > SSLSettings::get_password_callback( void ) const
+    {
+        return m_pimpl->get_password_callback( );
+    }
+
     void SSLSettings::set_sslv2_enabled( const bool value )
     {
         m_pimpl->set_sslv2_enabled( value );
@@ -144,7 +179,7 @@ namespace restbed
         m_pimpl->set_temporary_diffie_hellman( value );
     }
 
-    void SSLSettings::set_password_callback( const function< string ( void ) >& value )
+    void SSLSettings::set_password_callback( const function< string ( bool ) >& value )
     {
         m_pimpl->set_password_callback( value );
     }

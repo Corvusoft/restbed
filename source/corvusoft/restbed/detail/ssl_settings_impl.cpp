@@ -90,6 +90,41 @@ namespace restbed
             return m_single_diffie_hellman_use_enabled;
         }
 
+        string SSLSettingsImpl::get_certificate( void ) const
+        {
+            return m_certificate;
+        }
+
+        string SSLSettingsImpl::get_private_key( void ) const
+        {
+            return m_private_key;
+        }
+
+        string SSLSettingsImpl::get_private_rsa_key( void ) const
+        {
+            return m_private_rsa_key;
+        }
+
+        string SSLSettingsImpl::get_certificate_chain( void ) const
+        {
+            return m_certificate_chain;
+        }
+                
+        string SSLSettingsImpl::get_temporary_diffie_hellman( void ) const
+        {
+            return m_temporary_diffie_hellman;
+        }
+
+        string SSLSettingsImpl::get_certificate_authority_pool( void ) const
+        {
+            return m_certificate_authority_pool;
+        }
+
+        function< string ( bool ) > SSLSettingsImpl::get_password_callback( void ) const
+        {
+            return m_password_callback;
+        }
+
         void SSLSettingsImpl::set_sslv2_enabled( const bool value )
         {
             m_sslv2_enabled = value;
@@ -160,7 +195,7 @@ namespace restbed
             m_temporary_diffie_hellman = String::remove( value.to_string( ), "file://" );
         }
 
-        void SSLSettingsImpl::set_password_callback( const function< string ( void ) >& value )
+        void SSLSettingsImpl::set_password_callback( const function< string ( bool ) >& value )
         {
             m_password_callback = value;
         }
