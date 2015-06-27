@@ -156,6 +156,7 @@ namespace restbed
                 m_ssl_settings = ssl_settings;
 
                 m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
+                //set_default_verify_paths();
                 m_ssl_context->set_options( asio::ssl::context::default_workarounds | asio::ssl::context::no_sslv2 | asio::ssl::context::single_dh_use );
                 m_ssl_context->use_certificate_chain_file( "/Users/laurabruynseels/Desktop/ssl/server.crt" );
                 m_ssl_context->use_private_key_file( "/Users/laurabruynseels/Desktop/ssl/server.key", asio::ssl::context::pem );

@@ -6,10 +6,9 @@
 #define _RESTBED_SSL_SETTINGS_H 1
 
 //System Includes
-#include <map>
-#include <chrono>
-#include <memory>
 #include <string>
+#include <memory>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restbed/settings>
@@ -21,6 +20,10 @@
 //Project Namespaces
 
 //External Namespaces
+namespace framework
+{
+    class Uri;
+}
 
 namespace restbed
 {
@@ -43,11 +46,55 @@ namespace restbed
             virtual ~SSLSettings( void );
             
             //Functionality
+            bool has_enabled_sslv2( void ) const;
+
+            bool has_enabled_sslv3( void ) const;
+
+            bool has_enabled_tlsv1( void ) const;
+
+            bool has_enabled_tlsv11( void ) const;
+
+            bool has_enabled_tlsv12( void ) const;
+
+            bool has_enabled_compression( void ) const;
+
+            bool has_enabled_default_workarounds( void ) const;
+
+            bool has_enabled_single_diffie_hellman_use( void ) const;
             
             //Getters
             
             //Setters
+            void set_sslv2_enabled( const bool value );
+
+            void set_sslv3_enabled( const bool value );
+
+            void set_tlsv1_enabled( const bool value );
+
+            void set_tlsv11_enabled( const bool value );
+
+            void set_tlsv12_enabled( const bool value );
+
+            void set_compression_enabled( const bool value );
+
+            void set_default_workarounds_enabled( const bool value );
+
+            void set_single_diffie_hellman_use_enabled( const bool value );
+
+            void set_certificate( const framework::Uri& value );
+
+            void set_certificate_chain( const framework::Uri& value );
             
+            void set_certificate_authority_pool( const framework::Uri& value );
+
+            void set_private_key( const framework::Uri& value );
+
+            void set_private_rsa_key( const framework::Uri& value );
+
+            void set_temporary_diffie_hellman( const framework::Uri& value );
+
+            void set_password_callback( const std::function< std::string ( void ) >& value );
+
             //Operators
             
             //Properties
