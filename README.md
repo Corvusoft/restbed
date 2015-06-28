@@ -17,6 +17,7 @@
  - Multi-path resources
  - Customisable HTTP methods
  - Compression GZip, Deflate, etc...
+ - IPv4/IPv6 Network Support
  - Asynchronous single threaded architecture
  - Built-in Path, Query, and Header conversions
  - Service & Resource level authentication
