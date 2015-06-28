@@ -25,13 +25,12 @@ namespace restbed
 {
     namespace detail
     {
-        SSLSettingsImpl::SSLSettingsImpl( void ) : SettingsImpl( ),
-            m_sslv2_enabled( true ),
+        SSLSettingsImpl::SSLSettingsImpl( void ) : m_sslv2_enabled( true ),
             m_sslv3_enabled( true ),
             m_tlsv1_enabled( true ),
             m_tlsv11_enabled( true ),
             m_tlsv12_enabled( true ),
-            m_compression_enabled( true ),
+            m_compression_enabled( false ),
             m_default_workarounds_enabled( true ),
             m_single_diffie_hellman_use_enabled( true ),
             m_private_key( String::empty ),
@@ -167,32 +166,32 @@ namespace restbed
 
         void SSLSettingsImpl::set_certificate( const Uri& value )
         {
-            m_certificate = String::remove( value.to_string( ), "file://" );
+            m_certificate = String::remove( "file://", value.to_string( ) );
         }
 
         void SSLSettingsImpl::set_certificate_chain( const Uri& value )
         {
-            m_certificate_chain = String::remove( value.to_string( ), "file://" );
+            m_certificate_chain = String::remove( "file://", value.to_string( ) );
         }
         
         void SSLSettingsImpl::set_certificate_authority_pool( const Uri& value )
         {
-            m_certificate_authority_pool = String::remove( value.to_string( ), "file://" );
+            m_certificate_authority_pool = String::remove( "file://", value.to_string( ) );
         }
 
         void SSLSettingsImpl::set_private_key( const Uri& value )
         {
-            m_private_key = String::remove( value.to_string( ), "file://" );
+            m_private_key = String::remove( "file://", value.to_string( ) );
         }
 
         void SSLSettingsImpl::set_private_rsa_key( const Uri& value )
         {
-            m_private_rsa_key = String::remove( value.to_string( ), "file://" );
+            m_private_rsa_key = String::remove( "file://", value.to_string( ) );
         }
 
         void SSLSettingsImpl::set_temporary_diffie_hellman( const Uri& value )
         {
-            m_temporary_diffie_hellman = String::remove( value.to_string( ), "file://" );
+            m_temporary_diffie_hellman = String::remove( "file://", value.to_string( ) );
         }
 
         void SSLSettingsImpl::set_password_callback( const function< string ( bool ) >& value )

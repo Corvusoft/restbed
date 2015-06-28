@@ -10,7 +10,6 @@
 #include <functional>
 
 //Project Includes
-#include "corvusoft/restbed/detail/settings_impl.hpp"
 
 //External Includes
 
@@ -32,7 +31,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class SSLSettingsImpl : public SettingsImpl
+        class SSLSettingsImpl
         {
             public:
                 //Friends

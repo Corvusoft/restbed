@@ -10,3 +10,4 @@
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
 #include "corvusoft/restbed/status_code.hpp"
+#include "corvusoft/restbed/ssl_settings.hpp"

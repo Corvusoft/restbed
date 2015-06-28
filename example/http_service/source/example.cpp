@@ -1,8 +1,8 @@
 /*
- * Example illustrating simple POST method handler.
+ * Example illustrating HTTP service.
  *
  * Server Usage:
- *    sudo ./distribution/example/simple_service
+ *    sudo ./distribution/example/http_service
  *
  * Client Usage:
  *    curl -w'\n' -v -X POST --data 'Hello, Restbed' 'http://localhost/resource'
@@ -11,6 +11,7 @@
 #include <memory>
 #include <cstdlib>
 #include <restbed>
+#include <framework>
 
 using namespace std;
 using namespace restbed;

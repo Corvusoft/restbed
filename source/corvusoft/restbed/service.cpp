@@ -10,6 +10,7 @@
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/ssl_settings.hpp"
 #include "corvusoft/restbed/detail/service_impl.hpp"
 
 //External Includes
@@ -45,12 +46,32 @@ namespace restbed
     
     void Service::start( const shared_ptr< const Settings >& settings )
     {
-        m_pimpl->start( settings );
+        m_pimpl->start( settings, nullptr );
+    }
+
+    void Service::start( const shared_ptr< const SSLSettings >& settings )
+    {
+        m_pimpl->start( nullptr, settings );
     }
     
+    void Service::start( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+    {
+        m_pimpl->start( settings, ssl_settings );
+    }
+
     void Service::restart( const shared_ptr< const Settings >& settings )
     {
-        m_pimpl->restart( settings );
+        m_pimpl->restart( settings, nullptr );
+    }
+
+    void Service::restart( const shared_ptr< const SSLSettings >& settings )
+    {
+        m_pimpl->restart( nullptr, settings );
+    }
+
+    void Service::restart( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+    {
+        m_pimpl->restart( settings, ssl_settings );
     }
     
     void Service::publish( const shared_ptr< const Resource >& resource )

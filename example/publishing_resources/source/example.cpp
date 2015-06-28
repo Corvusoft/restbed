@@ -11,6 +11,7 @@
 #include <memory>
 #include <cstdlib>
 #include <restbed>
+#include <framework>
 
 using namespace std;
 using namespace restbed;
