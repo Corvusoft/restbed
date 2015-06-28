@@ -123,8 +123,8 @@ You will now find all required components installed in the restbed distribution 
 |     0.0       |         Asynchrounous HTTP Service              |     complete    |
 |     1.0       |             HTTP 1.0 Compliance                 |     complete    |
 |     2.0       |             HTTP 1.1 Compliance                 |     complete    |
-|     2.5       |             Secure Socket Layer                 |       75+%      |
-|     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |       75+%      |
+|     2.5       |             Secure Socket Layer                 |        85%      |
+|     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |        99%      |
 |     3.0       |                 Rules Engine                    |     pending     |
 |     3.2       |                 Event Hooks                     |     pending     |
 |     3.7       |                 Web Sockets                     |     pending     |
