@@ -137,3 +137,4 @@ You will now find all required components installed in the restbed distribution 
 |     x.x       |         Statically Linked Framework             |     pending     |
 |     x.x       |                 Localisation                    |     pending     |
 |     x.x       |         Bind Service to specific NIC            |     pending     |
+|     x.x       |         Client-side SSL certificates            |     pending     |
