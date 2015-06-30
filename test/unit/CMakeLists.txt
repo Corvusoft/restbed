@@ -21,6 +21,7 @@ add_executable( request_unit_test_suite ${SOURCE_DIR}/request_suite.cpp )
 add_executable( settings_unit_test_suite ${SOURCE_DIR}/settings_suite.cpp )
 add_executable( response_unit_test_suite ${SOURCE_DIR}/response_suite.cpp )
 add_executable( resource_unit_test_suite ${SOURCE_DIR}/resource_suite.cpp )
+add_executable( ssl_settings_unit_test_suite ${SOURCE_DIR}/ssl_settings_suite.cpp )
 
 target_link_libraries( session_unit_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( service_unit_test_suite ${CMAKE_PROJECT_NAME} )
@@ -28,6 +29,7 @@ target_link_libraries( request_unit_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( settings_unit_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( response_unit_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( resource_unit_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( ssl_settings_unit_test_suite ${CMAKE_PROJECT_NAME} )
 
 #
 # Setup
@@ -39,3 +41,4 @@ add_test( request_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/request_unit_test_su
 add_test( settings_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/settings_unit_test_suite )
 add_test( response_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/response_unit_test_suite )
 add_test( resource_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_unit_test_suite )
+add_test( ssl_settings_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/ssl_settings_unit_test_suite )
