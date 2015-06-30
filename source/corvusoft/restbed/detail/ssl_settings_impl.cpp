@@ -26,6 +26,7 @@ namespace restbed
     namespace detail
     {
         SSLSettingsImpl::SSLSettingsImpl( void ) : m_port( 443 ),
+            m_http_disabled( false ),
             m_sslv2_enabled( true ),
             m_sslv3_enabled( true ),
             m_tlsv1_enabled( true ),
@@ -47,6 +48,11 @@ namespace restbed
         SSLSettingsImpl::~SSLSettingsImpl( void )
         {
             return;
+        }
+
+        bool SSLSettingsImpl::has_disabled_http( void ) const
+        {
+            return m_http_disabled;
         }
 
         bool SSLSettingsImpl::has_enabled_sslv2( void ) const
@@ -127,6 +133,11 @@ namespace restbed
         void SSLSettingsImpl::set_port( const uint16_t value )
         {
             m_port = value;
+        }
+
+        void SSLSettingsImpl::set_http_disabled( const bool value )
+        {
+            m_http_disabled = value;
         }
 
         void SSLSettingsImpl::set_sslv2_enabled( const bool value )

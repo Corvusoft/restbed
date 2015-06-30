@@ -33,6 +33,11 @@ namespace restbed
         return;
     }
 
+    bool SSLSettings::has_disabled_http( void ) const
+    {
+        return m_pimpl->has_disabled_http( );
+    }
+
     bool SSLSettings::has_enabled_sslv2( void ) const
     {
         return m_pimpl->has_enabled_sslv2( );
@@ -111,6 +116,11 @@ namespace restbed
     void SSLSettings::set_port( const uint16_t value )
     {
         m_pimpl->set_port( value );
+    }
+
+    void SSLSettings::set_http_disabled( const bool value )
+    {
+        m_pimpl->set_http_disabled( value );
     }
 
     void SSLSettings::set_sslv2_enabled( const bool value )

@@ -123,6 +123,8 @@ namespace restbed
             {
                 m_settings = make_shared< Settings >( );
             }
+
+            m_ssl_settings = m_settings->get_ssl_settings( );
             
             if ( m_session_manager == nullptr )
             {
@@ -298,17 +300,24 @@ namespace restbed
 
         void ServiceImpl::http_start( void )
         {
-            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
-            m_acceptor->set_option( socket_base::reuse_address( true ) );
-            m_acceptor->listen( m_settings->get_connection_limit( ) );
+#ifdef BUILD_SSL
+            if ( m_ssl_settings == nullptr or m_ssl_settings->has_disabled_http( ) == false )
+            {
+#endif
+                m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
+                m_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_acceptor->listen( m_settings->get_connection_limit( ) );
             
-            http_listen( );
+                http_listen( );
 
-            auto endpoint = m_acceptor->local_endpoint( );
-            auto address = endpoint.address( );
-            auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            location += ::to_string( endpoint.port( ) );
-            log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+                auto endpoint = m_acceptor->local_endpoint( );
+                auto address = endpoint.address( );
+                auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+                location += ::to_string( endpoint.port( ) );
+                log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+#ifdef BUILD_SSL
+            }
+#endif
         }
 
         void ServiceImpl::http_listen( void ) const
@@ -320,8 +329,6 @@ namespace restbed
 #ifdef BUILD_SSL
         void ServiceImpl::https_start( void )
         {
-            m_ssl_settings = m_settings->get_ssl_settings( );
-
             if ( m_ssl_settings not_eq nullptr )
             {
                 m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );

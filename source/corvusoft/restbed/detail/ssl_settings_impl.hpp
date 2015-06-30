@@ -46,6 +46,8 @@ namespace restbed
                 virtual ~SSLSettingsImpl( void );
                 
                 //Functionality
+                bool has_disabled_http( void ) const;
+
                 bool has_enabled_sslv2( void ) const;
 
                 bool has_enabled_sslv3( void ) const;
@@ -79,6 +81,8 @@ namespace restbed
 
                 //Setters
                 void set_port( const uint16_t value );
+
+                void set_http_disabled( const bool value );
                 
                 void set_sslv2_enabled( const bool value );
 
@@ -148,6 +152,8 @@ namespace restbed
                 
                 //Properties
                 uint16_t m_port;
+
+                bool m_http_disabled;
 
                 bool m_sslv2_enabled;
 

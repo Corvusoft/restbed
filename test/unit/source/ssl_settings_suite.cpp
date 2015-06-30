@@ -40,6 +40,7 @@ TEST_CASE( "validate default instance values", "[ssl-settings]" )
     REQUIRE( settings.get_certificate_chain( ).empty( ) );
     REQUIRE( settings.get_temporary_diffie_hellman( ).empty( ) );
     REQUIRE( settings.get_certificate_authority_pool( ).empty( ) );
+    REQUIRE( settings.has_disabled_http( ) == false );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[ssl-settings]" )
@@ -58,6 +59,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_tlsv1_enabled( false );
     settings.set_tlsv11_enabled( false );
     settings.set_tlsv12_enabled( false );
+    settings.set_http_disabled( true );
     settings.set_compression_enabled( false );
     settings.set_default_workarounds_enabled( false );
     settings.set_single_diffie_hellman_use_enabled( false );
@@ -83,4 +85,5 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_certificate_chain( ) == "/tmp/chain.crt" );
     REQUIRE( settings.get_temporary_diffie_hellman( ) == "/tmp/dh512.pem" );
     REQUIRE( settings.get_certificate_authority_pool( ) == "/tmp" );
+    REQUIRE( settings.has_disabled_http( ) == true );
 }

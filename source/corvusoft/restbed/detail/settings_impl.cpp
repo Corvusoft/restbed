@@ -43,7 +43,7 @@ namespace restbed
         {
             return;
         }
-        
+
         uint16_t SettingsImpl::get_port( void ) const
         {
             return m_port;

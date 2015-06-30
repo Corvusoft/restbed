@@ -36,6 +36,7 @@ int main( const int, const char** )
     resource->set_method_handler( "GET", get_method_handler );
 
     auto ssl_settings = make_shared< SSLSettings >( );
+    ssl_settings->set_http_disabled( true );
     ssl_settings->set_private_key( Uri( "file:///tmp/server.key" ) );
     ssl_settings->set_certificate( Uri( "file:///tmp/server.crt" ) );
     ssl_settings->set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
