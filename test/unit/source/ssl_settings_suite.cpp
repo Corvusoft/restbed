@@ -42,7 +42,7 @@ TEST_CASE( "validate default instance values", "[ssl-settings]" )
     REQUIRE( settings.get_certificate_authority_pool( ).empty( ) );
 }
 
-TEST_CASE( "confirm default destructor throws no exceptions", "[settings]" )
+TEST_CASE( "confirm default destructor throws no exceptions", "[ssl-settings]" )
 {
     auto settings = new SSLSettings;
 

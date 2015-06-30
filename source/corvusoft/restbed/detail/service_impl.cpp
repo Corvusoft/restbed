@@ -65,8 +65,8 @@ namespace restbed
             m_settings( nullptr ),
             m_io_service( nullptr ),
             m_session_manager( nullptr ),
-            m_ssl_settings( nullptr ),
 #ifdef BUILD_SSL
+            m_ssl_settings( nullptr ),
             m_ssl_context( nullptr ),
             m_ssl_acceptor( nullptr ),
 #endif
@@ -139,8 +139,9 @@ namespace restbed
             m_io_service = make_shared< io_service >( );
 
             http_start( );
+#ifdef BUILD_SSL
             https_start( );
-
+#endif
             for ( const auto& route : m_resource_paths )
             {
                 auto path = String::format( "/%s/%s", m_settings->get_root( ).data( ), route.second.data( ) );
@@ -310,6 +311,13 @@ namespace restbed
             log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
         }
 
+        void ServiceImpl::http_listen( void ) const
+        {
+            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+            m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
+        }
+
+#ifdef BUILD_SSL
         void ServiceImpl::https_start( void )
         {
             m_ssl_settings = m_settings->get_ssl_settings( );
@@ -380,17 +388,58 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::http_listen( void ) const
-        {
-            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
-            m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
-        }
-
         void ServiceImpl::https_listen( void ) const
         {
             auto socket = make_shared< asio::ssl::stream< tcp::socket > >( m_ssl_acceptor->get_io_service( ), *m_ssl_context );
             m_ssl_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
         }
+
+        void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const error_code& error ) const
+        {
+            if ( not error )
+            {
+                socket->async_handshake( asio::ssl::stream_base::server, [ this, socket ]( const asio::error_code& error )
+                {
+                    if ( error )
+                    {
+                        log( Logger::Level::ERROR, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
+                        return;
+                    }
+
+                    auto connection = make_shared< SocketImpl >( socket, m_logger );
+                    connection->set_timeout( m_settings->get_connection_timeout( ) );
+
+                    const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
+                    const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
+                    const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
+                    const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
+                
+                    const auto logger = m_logger;
+                    const auto settings = m_settings;
+
+                    m_session_manager->create( [ connection, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
+                    {
+                        session->m_pimpl->set_logger( logger );
+                        session->m_pimpl->set_socket( connection );
+                        session->m_pimpl->set_settings( settings );
+                        session->m_pimpl->set_error_handler( error_handler );
+                        session->m_pimpl->fetch( session, authenticate );
+                    } );
+                } );
+            }
+            else
+            {
+                if ( socket not_eq nullptr and socket->lowest_layer( ).is_open( ) )
+                {
+                    socket->lowest_layer( ).close( );
+                }
+                
+                log( Logger::Level::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+            }
+            
+            https_listen( );
+        }
+#endif
 
         string ServiceImpl::sanitise_path( const string& path ) const
         {
@@ -616,54 +665,6 @@ namespace restbed
             
             http_listen( );
         }
-
-#ifdef BUILD_SSL
-        void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const error_code& error ) const
-        {
-            if ( not error )
-            {
-                socket->async_handshake( asio::ssl::stream_base::server, [ this, socket ]( const asio::error_code& error )
-                {
-                    if ( error )
-                    {
-                        log( Logger::Level::ERROR, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
-                        return;
-                    }
-
-                    auto connection = make_shared< SocketImpl >( socket, m_logger );
-                    connection->set_timeout( m_settings->get_connection_timeout( ) );
-
-                    const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
-                    const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
-                    const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
-                    const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
-                
-                    const auto logger = m_logger;
-                    const auto settings = m_settings;
-
-                    m_session_manager->create( [ connection, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
-                    {
-                        session->m_pimpl->set_logger( logger );
-                        session->m_pimpl->set_socket( connection );
-                        session->m_pimpl->set_settings( settings );
-                        session->m_pimpl->set_error_handler( error_handler );
-                        session->m_pimpl->fetch( session, authenticate );
-                    } );
-                } );
-            }
-            else
-            {
-                if ( socket not_eq nullptr and socket->lowest_layer( ).is_open( ) )
-                {
-                    socket->lowest_layer( ).close( );
-                }
-                
-                log( Logger::Level::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
-            }
-            
-            https_listen( );
-        }
-#endif
         
         void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
         {
