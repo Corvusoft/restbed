@@ -149,8 +149,17 @@ namespace restbed
 
                 for ( const auto& route : m_resource_paths )
                 {
-                    auto path = String::format( "/%s/%s", m_settings->get_root( ).data( ), route.second.data( ) );
-                    path = String::replace( "//", "/", path );
+                    auto path = m_settings->get_root( );
+                    auto route_path = route.second;
+
+                    if ( path.back( ) not_eq '/' and route_path.front( ) not_eq '/' )
+                    {
+                        path += "/" + route_path;
+                    }
+                    else
+                    {
+                        path += route_path;
+                    }
                     
                     log( Logger::Level::INFO, String::format( "HTTP resource published on route '%s'.", path.data( ) ) );
                 }
@@ -161,7 +170,6 @@ namespace restbed
                 location += ::to_string( endpoint.port( ) );
                 log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
             }
-            
 #ifdef BUILD_SSL
             if ( m_ssl_settings not_eq nullptr )
             {
@@ -223,8 +231,17 @@ namespace restbed
             
                 for ( const auto& route : m_resource_paths )
                 {
-                    auto path = String::format( "/%s/%s", m_ssl_settings->get_root( ).data( ), route.second.data( ) );
-                    path = String::replace( "//", "/", path );
+                    auto path = m_ssl_settings->get_root( );
+                    auto route_path = route.second;
+
+                    if ( path.back( ) not_eq '/' and route_path.front( ) not_eq '/' )
+                    {
+                        path += "/" + route_path;
+                    }
+                    else
+                    {
+                        path += route_path;
+                    }
                     
                     log( Logger::Level::INFO, String::format( "HTTPS resource published on route '%s'.", path.data( ) ) );
                 }
@@ -433,7 +450,7 @@ namespace restbed
         
         void ServiceImpl::not_found( const shared_ptr< Session >& session ) const
         {
-            log( Logger::Level::INFO, String::format( "'%s' resource not found '%s'.",
+            log( Logger::Level::INFO, String::format( "'%s' resource route not found '%s'.",
                     session->get_origin( ).data( ),
                     session->get_request( )->get_path( ).data( ) ) );
                     
@@ -742,15 +759,9 @@ namespace restbed
                     session->get_origin( ).data( ),
                     session->get_request( )->get_path( ).data( ) ) );
             
-            auto route_folders = String::split( route.first, '/' );
-            
-            if ( not root.empty( ) and root not_eq "/" )
-            {
-                route_folders.insert( route_folders.begin( ), root );
-            }
-            
             const auto request = session->get_request( );
             const auto path_folders = String::split( request->get_path( ), '/' );
+            const auto route_folders = String::split( root + "/" + route.first, '/' );
             
             if ( path_folders.empty( ) and route_folders.empty( ) )
             {
@@ -758,7 +769,7 @@ namespace restbed
             }
             
             bool match = false;
-            
+
             if ( path_folders.size( ) == route_folders.size( ) )
             {
                 for ( size_t index = 0; index < path_folders.size( ); index++ )
