@@ -123,9 +123,9 @@ namespace restbed
             {
                 m_settings = make_shared< Settings >( );
             }
-
+#ifdef BUILD_SSL
             m_ssl_settings = m_settings->get_ssl_settings( );
-            
+#endif
             if ( m_session_manager == nullptr )
             {
                 m_session_manager = make_shared< SessionManagerImpl >( );

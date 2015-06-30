@@ -73,12 +73,12 @@ namespace restbed
     {
         return m_pimpl->get_properties( );
     }
-        
+#ifdef BUILD_SSL        
     shared_ptr< const SSLSettings > Settings::get_ssl_settings( void ) const
     {
         return m_pimpl->get_ssl_settings( );
     }
-
+#endif
     multimap< string, string > Settings::get_default_headers( void ) const
     {
         return m_pimpl->get_default_headers( );
@@ -123,12 +123,12 @@ namespace restbed
     {
         m_pimpl->set_properties( values );
     }
-    
+#ifdef BUILD_SSL
     void Settings::set_ssl_settings( const shared_ptr< const SSLSettings >& values )
     {
         m_pimpl->set_ssl_settings( values );
     }
-
+#endif
     void Settings::set_default_header( const string& name, const string& value )
     {
         m_pimpl->set_default_header( name, value );

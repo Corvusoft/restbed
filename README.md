@@ -10,6 +10,7 @@
 ## Features
 
  - Long Polling
+ - Secure Socket Layer (SSL/TLS)
  - Path Parameters
  - Query Parameters
  - Request filters
@@ -100,7 +101,7 @@ Contact sales@corvusoft.co.uk for discounts.
 git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
-cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
+cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DBUILD_SSL=NO] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
 make install
 make test
 ```
@@ -124,9 +125,9 @@ You will now find all required components installed in the restbed distribution 
 |     0.0       |         Asynchrounous HTTP Service              |     complete    |
 |     1.0       |             HTTP 1.0 Compliance                 |     complete    |
 |     2.0       |             HTTP 1.1 Compliance                 |     complete    |
-|     2.5       |             Secure Socket Layer                 |        90%      |
-|     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |        99%      |
-|     3.0       |                 Rules Engine                    |     pending     |
+|     2.5       |             Secure Socket Layer                 |     complete    |
+|     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |     complete    |
+|     3.0       |                 Rules Engine                    |  in-development |
 |     3.5       |             Session Management                  |     pending     |
 |     3.6       |               Resource Caching                  |     pending     |
 |     4.0       |                 Event Hooks                     |     pending     |

@@ -7,9 +7,9 @@ cmake_minimum_required( VERSION 2.8.10 )
 #
 # Build Options
 #
-option( BUILD_EXAMPLES "Build the examples." OFF )
-option( BUILD_SSL "Build Secure Socket Layer Support." OFF )
-option( BUILD_TESTS "Build all test suites using CTest." OFF )
+option( BUILD_SSL "Build Secure Socket Layer Support." ON )
+option( BUILD_EXAMPLES "Build examples applications." OFF )
+option( BUILD_TESTS "Build all available test suites." OFF )
 
 #
 # Configuration
