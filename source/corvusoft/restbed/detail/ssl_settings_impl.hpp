@@ -73,8 +73,6 @@ namespace restbed
 
                 std::string get_certificate_authority_pool( void ) const;
 
-                std::function< std::string ( bool ) > get_password_callback( void ) const;
-
                 //Setters
                 void set_sslv2_enabled( const bool value );
 
@@ -103,8 +101,6 @@ namespace restbed
                 void set_private_rsa_key( const framework::Uri& value );
 
                 void set_temporary_diffie_hellman( const framework::Uri& value );
-
-                void set_password_callback( const std::function< std::string ( bool ) >& value );
 
                 //Operators
                 
@@ -172,9 +168,6 @@ namespace restbed
                 std::string m_certificate_authority_pool;
 
                 std::string m_temporary_diffie_hellman;
-
-                std::function< std::string ( bool is_read ) > m_password_callback;
-
         };
     }
 }

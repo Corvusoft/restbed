@@ -104,11 +104,6 @@ namespace restbed
         return m_pimpl->get_certificate_authority_pool( );
     }
 
-    function< string ( bool ) > SSLSettings::get_password_callback( void ) const
-    {
-        return m_pimpl->get_password_callback( );
-    }
-
     void SSLSettings::set_sslv2_enabled( const bool value )
     {
         m_pimpl->set_sslv2_enabled( value );
@@ -177,10 +172,5 @@ namespace restbed
     void SSLSettings::set_temporary_diffie_hellman( const Uri& value )
     {
         m_pimpl->set_temporary_diffie_hellman( value );
-    }
-
-    void SSLSettings::set_password_callback( const function< string ( bool ) >& value )
-    {
-        m_pimpl->set_password_callback( value );
     }
 }

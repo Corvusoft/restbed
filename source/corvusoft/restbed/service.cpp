@@ -44,32 +44,32 @@ namespace restbed
         m_pimpl->stop( );
     }
     
-    void Service::start( const shared_ptr< const Settings >& settings )
+    void Service::start( const shared_ptr< Settings >& settings )
     {
         m_pimpl->start( settings, nullptr );
     }
 
-    void Service::start( const shared_ptr< const SSLSettings >& settings )
+    void Service::start( const shared_ptr< SSLSettings >& settings )
     {
         m_pimpl->start( nullptr, settings );
     }
     
-    void Service::start( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+    void Service::start( const shared_ptr< Settings >& settings, const shared_ptr< SSLSettings >& ssl_settings )
     {
         m_pimpl->start( settings, ssl_settings );
     }
 
-    void Service::restart( const shared_ptr< const Settings >& settings )
+    void Service::restart( const shared_ptr< Settings >& settings )
     {
         m_pimpl->restart( settings, nullptr );
     }
 
-    void Service::restart( const shared_ptr< const SSLSettings >& settings )
+    void Service::restart( const shared_ptr< SSLSettings >& settings )
     {
         m_pimpl->restart( nullptr, settings );
     }
 
-    void Service::restart( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+    void Service::restart( const shared_ptr< Settings >& settings, const shared_ptr< SSLSettings >& ssl_settings )
     {
         m_pimpl->restart( settings, ssl_settings );
     }

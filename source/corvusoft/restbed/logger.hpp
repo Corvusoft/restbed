@@ -23,6 +23,7 @@ namespace restbed
 {
     //Forward Declarations
     class Settings;
+    class SSLSettings;
     
     class Logger
     {
@@ -45,7 +46,7 @@ namespace restbed
             //Functionality
             virtual void stop( void ) = 0;
             
-            virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
+            virtual void start( const std::shared_ptr< const Settings >& settings, const std::shared_ptr< const SSLSettings >& ssl_settings ) = 0;
             
             virtual void log( const Level level, const std::string format, ... ) = 0;
             

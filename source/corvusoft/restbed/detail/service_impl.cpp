@@ -115,7 +115,7 @@ namespace restbed
             }
         }
 
-        void ServiceImpl::start( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+        void ServiceImpl::start( const shared_ptr< Settings >& settings, const shared_ptr< SSLSettings >& ssl_settings )
         {
             m_settings = settings;
             m_ssl_settings = ssl_settings;
@@ -130,26 +130,37 @@ namespace restbed
                 m_session_manager = make_shared< SessionManagerImpl >( );
             }
             
-            m_session_manager->start( m_settings );
+            m_session_manager->start( m_settings, m_ssl_settings );
             
             if ( m_logger not_eq nullptr )
             {
-                m_logger->start( m_settings );
+                m_logger->start( m_settings, m_ssl_settings );
             }
 
             m_io_service = make_shared< io_service >( );
 
-            m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
-            m_acceptor->set_option( socket_base::reuse_address( true ) );
-            m_acceptor->listen( m_settings->get_connection_limit( ) );
-            
-            http_listen( );
-            
-            auto endpoint = m_acceptor->local_endpoint( );
-            auto address = endpoint.address( );
-            auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            location += ::to_string( endpoint.port( ) );
-            log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+            if ( m_settings not_eq nullptr )
+            {
+                m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
+                m_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_acceptor->listen( m_settings->get_connection_limit( ) );
+                
+                http_listen( );
+
+                for ( const auto& route : m_resource_paths )
+                {
+                    auto path = String::format( "/%s/%s", m_settings->get_root( ).data( ), route.second.data( ) );
+                    path = String::replace( "//", "/", path );
+                    
+                    log( Logger::Level::INFO, String::format( "HTTP resource published on route '%s'.", path.data( ) ) );
+                }
+
+                auto endpoint = m_acceptor->local_endpoint( );
+                auto address = endpoint.address( );
+                auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+                location += ::to_string( endpoint.port( ) );
+                log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+            }
             
 #ifdef BUILD_SSL
             if ( m_ssl_settings not_eq nullptr )
@@ -157,12 +168,41 @@ namespace restbed
                 m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
                 m_ssl_context->set_default_verify_paths( );
 
-                m_ssl_context->use_tmp_dh_file( m_ssl_settings->get_temporary_diffie_hellman( ) );
-                //m_ssl_context->add_verify_path( m_ssl_settings->get_certificate_authority_pool( ) );
-                m_ssl_context->use_certificate_chain_file( m_ssl_settings->get_certificate_chain( ) );
-                //m_ssl_context->use_certificate_file( m_ssl_settings->get_certificate( ), asio::ssl::context::pem );
-                m_ssl_context->use_private_key_file( m_ssl_settings->get_private_key( ), asio::ssl::context::pem );
-                //m_ssl_context->use_rsa_private_key_file( m_ssl_settings->get_private_rsa_key( ), asio::ssl::context::pem );
+                auto filename = m_ssl_settings->get_temporary_diffie_hellman( );
+                if ( not filename.empty( ) )
+                {
+                    m_ssl_context->use_tmp_dh_file( filename );
+                }
+
+                filename = m_ssl_settings->get_certificate_authority_pool( );
+                if ( not filename.empty( ) )
+                {
+                    m_ssl_context->add_verify_path( filename );
+                }
+
+                filename = m_ssl_settings->get_certificate_chain( );
+                if ( not filename.empty( ) )
+                {
+                    m_ssl_context->use_certificate_chain_file( filename );
+                }
+
+                filename = m_ssl_settings->get_certificate( );
+                if ( not filename.empty( ) )
+                {
+                    m_ssl_context->use_certificate_file( filename, asio::ssl::context::pem );
+                }
+
+                filename = m_ssl_settings->get_private_key( );
+                if ( not filename.empty( ) )
+                {
+                    m_ssl_context->use_private_key_file( filename, asio::ssl::context::pem );
+                }
+
+                filename = m_ssl_settings->get_private_rsa_key( );
+                if ( not filename.empty( ) )
+                {
+                    m_ssl_context->use_rsa_private_key_file( filename, asio::ssl::context::pem );
+                }
 
                 asio::ssl::context::options options = 0;
                 options = ( m_ssl_settings->has_enabled_tlsv1( ) ) ? options : options | asio::ssl::context::no_tlsv1;
@@ -173,41 +213,37 @@ namespace restbed
                 options = ( m_ssl_settings->has_enabled_compression( ) ) ? options : options | asio::ssl::context::no_compression;
                 options = ( m_ssl_settings->has_enabled_default_workarounds( ) ) ? options | asio::ssl::context::default_workarounds : options;
                 options = ( m_ssl_settings->has_enabled_single_diffie_hellman_use( ) ) ? options | asio::ssl::context::single_dh_use : options;
-
-                auto callback = m_ssl_settings->get_password_callback( );
-                m_ssl_context->set_password_callback( [ callback ]( const size_t, const asio::ssl::context::password_purpose& purpose )
-                {
-                    return callback( purpose == asio::ssl::context::for_reading );
-                } );
+                m_ssl_context->set_options( options );
 
                 m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
                 m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
                 m_ssl_acceptor->listen( m_ssl_settings->get_connection_limit( ) ); 
 
-                endpoint = m_ssl_acceptor->local_endpoint( );
-                address = endpoint.address( );
-                location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+                https_listen( );
+            
+                for ( const auto& route : m_resource_paths )
+                {
+                    auto path = String::format( "/%s/%s", m_ssl_settings->get_root( ).data( ), route.second.data( ) );
+                    path = String::replace( "//", "/", path );
+                    
+                    log( Logger::Level::INFO, String::format( "HTTPS resource published on route '%s'.", path.data( ) ) );
+                }
+
+                auto endpoint = m_ssl_acceptor->local_endpoint( );
+                auto address = endpoint.address( );
+                auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
                 location += ::to_string( endpoint.port( ) );
                 log( Logger::Level::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
 
-                https_listen( );
             }
-#endif
-            for ( const auto& route : m_resource_paths ) //what about ssl root!!!
-            {
-                auto path = String::format( "/%s/%s", m_settings->get_root( ).data( ), route.second.data( ) );
-                path = String::replace( "//", "/", path );
-                
-                log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
-            }
-            
+#endif       
             m_is_running = true;
             m_io_service->run( );
             
-            log( Logger::Level::INFO, String::format( "Service halted at '%s'.", location.data( ) ) );
+            log( Logger::Level::INFO, String::format( "Service halted." ) );
         }
         
-        void ServiceImpl::restart( const shared_ptr< const Settings >& settings, const shared_ptr< const SSLSettings >& ssl_settings )
+        void ServiceImpl::restart( const shared_ptr< Settings >& settings, const shared_ptr< SSLSettings >& ssl_settings )
         {
             try
             {

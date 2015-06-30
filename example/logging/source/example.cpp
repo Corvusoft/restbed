@@ -23,7 +23,7 @@ public:
         return;
     }
 
-    void start( const shared_ptr< const Settings >& )
+    void start( const shared_ptr< const Settings >&, const shared_ptr< const SSLSettings >& )
     {
         return;
     }
