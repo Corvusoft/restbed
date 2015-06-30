@@ -135,3 +135,4 @@ You will now find all required components installed in the restbed distribution 
 |     5.x       | Dynamic runtime resource publishing/suppression |     pending     |
 |     x.x       |         Statically Linked Framework             |     pending     |
 |     x.x       |                 Localisation                    |     pending     |
+|     x.x       |         Bind Service to specific NIC            |     pending     |
