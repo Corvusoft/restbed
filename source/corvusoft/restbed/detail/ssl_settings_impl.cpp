@@ -25,7 +25,8 @@ namespace restbed
 {
     namespace detail
     {
-        SSLSettingsImpl::SSLSettingsImpl( void ) : m_sslv2_enabled( true ),
+        SSLSettingsImpl::SSLSettingsImpl( void ) : m_port( 443 ),
+            m_sslv2_enabled( true ),
             m_sslv3_enabled( true ),
             m_tlsv1_enabled( true ),
             m_tlsv11_enabled( true ),
@@ -88,6 +89,11 @@ namespace restbed
             return m_single_diffie_hellman_use_enabled;
         }
 
+        uint16_t SSLSettingsImpl::get_port( void ) const
+        {
+            return m_port;
+        }
+
         string SSLSettingsImpl::get_certificate( void ) const
         {
             return m_certificate;
@@ -116,6 +122,11 @@ namespace restbed
         string SSLSettingsImpl::get_certificate_authority_pool( void ) const
         {
             return m_certificate_authority_pool;
+        }
+
+        void SSLSettingsImpl::set_port( const uint16_t value )
+        {
+            m_port = value;
         }
 
         void SSLSettingsImpl::set_sslv2_enabled( const bool value )

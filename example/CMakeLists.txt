@@ -66,8 +66,10 @@ target_link_libraries( compression ${CMAKE_PROJECT_NAME} )
 add_executable( http_service http_service/source/example.cpp )
 target_link_libraries( http_service ${CMAKE_PROJECT_NAME} )
 
-add_executable( https_service https_service/source/example.cpp )
-target_link_libraries( https_service ${CMAKE_PROJECT_NAME} )
+if ( BUILD_SSL )
+    add_executable( https_service https_service/source/example.cpp )
+    target_link_libraries( https_service ${CMAKE_PROJECT_NAME} )
+endif ( )
 
 #
 # Install

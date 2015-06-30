@@ -57,11 +57,11 @@ namespace restbed
                 
                 //Functionality
                 void stop( void );
+
+                void start( const std::shared_ptr< const Settings >& settings );
                 
-                void start( const std::shared_ptr< Settings >& settings, const std::shared_ptr< SSLSettings >& ssl_settings );
-                
-                void restart( const std::shared_ptr< Settings >& settings, const std::shared_ptr< SSLSettings >& ssl_settings );
-                
+                void restart( const std::shared_ptr< const Settings >& settings );          
+
                 void publish( const std::shared_ptr< const Resource >& resource );
                 
                 void suppress( const std::shared_ptr< const Resource >& resource );
@@ -113,6 +113,10 @@ namespace restbed
                 ServiceImpl( const ServiceImpl& original ) = delete;
                 
                 //Functionality
+                void http_start( void );
+
+                void https_start( void );
+
                 void http_listen( void ) const;
 
                 void https_listen( void ) const;
@@ -131,7 +135,7 @@ namespace restbed
                 
                 void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
 
-                void router( const std::shared_ptr< Session >& session, const std::string& root ) const;
+                void router( const std::shared_ptr< Session >& session ) const;
                 
                 void route( const std::shared_ptr< Session >& session, const std::string sanitised_path ) const;
                 
@@ -145,7 +149,7 @@ namespace restbed
                 
                 void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
                 
-                bool resource_router( const std::shared_ptr< Session >& session, const std::string& root, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
+                bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
                 //Getters
                 

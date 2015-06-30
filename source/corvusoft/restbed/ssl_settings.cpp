@@ -23,10 +23,9 @@ using framework::Uri;
 
 namespace restbed
 {
-    SSLSettings::SSLSettings( void ) : Settings( ),
-        m_pimpl( new SSLSettingsImpl )
+    SSLSettings::SSLSettings( void ) : m_pimpl( new SSLSettingsImpl )
     {
-        set_port( 443 );
+        return;
     }
     
     SSLSettings::~SSLSettings( void )
@@ -74,6 +73,11 @@ namespace restbed
         return m_pimpl->has_enabled_single_diffie_hellman_use( );
     }
 
+    uint16_t SSLSettings::get_port( void ) const
+    {
+        return m_pimpl->get_port( );
+    }
+
     string SSLSettings::get_certificate( void ) const
     {
         return m_pimpl->get_certificate( );
@@ -102,6 +106,11 @@ namespace restbed
     string SSLSettings::get_certificate_authority_pool( void ) const
     {
         return m_pimpl->get_certificate_authority_pool( );
+    }
+
+    void SSLSettings::set_port( const uint16_t value )
+    {
+        m_pimpl->set_port( value );
     }
 
     void SSLSettings::set_sslv2_enabled( const bool value )

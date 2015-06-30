@@ -25,6 +25,7 @@ TEST_CASE( "validate default instance values", "[ssl-settings]" )
 {
     const SSLSettings settings;
 
+    REQUIRE( settings.get_port( ) == 443 );
     REQUIRE( settings.has_enabled_sslv2( ) );
     REQUIRE( settings.has_enabled_sslv3( ) );
     REQUIRE( settings.has_enabled_tlsv1( ) );
@@ -51,6 +52,7 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[settings]" )
 TEST_CASE( "validate setters modify default values", "[settings]" )
 {
     SSLSettings settings;
+    settings.set_port( 8080 );
     settings.set_sslv2_enabled( false );
     settings.set_sslv3_enabled( false );
     settings.set_tlsv1_enabled( false );
@@ -66,6 +68,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_certificate_authority_pool( Uri( "file:///tmp" ) );
     settings.set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
 
+    REQUIRE( settings.get_port( ) == 8080 );
     REQUIRE( not settings.has_enabled_sslv2( ) );
     REQUIRE( not settings.has_enabled_sslv3( ) );
     REQUIRE( not settings.has_enabled_tlsv1( ) );

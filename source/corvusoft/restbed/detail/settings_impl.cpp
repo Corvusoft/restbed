@@ -5,6 +5,7 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/ssl_settings.hpp"
 #include "corvusoft/restbed/detail/settings_impl.hpp"
 #include "corvusoft/restbed/detail/status_messages_impl.hpp"
 
@@ -15,6 +16,7 @@
 using std::map;
 using std::string;
 using std::multimap;
+using std::shared_ptr;
 using std::chrono::seconds;
 
 //Project Namespaces
@@ -97,6 +99,11 @@ namespace restbed
         {
             return m_properties;
         }
+
+        shared_ptr< const SSLSettings > SettingsImpl::get_ssl_settings( void ) const
+        {
+            return m_ssl_settings;
+        }
         
         multimap< string, string > SettingsImpl::get_default_headers( void ) const
         {
@@ -141,6 +148,11 @@ namespace restbed
         void SettingsImpl::set_properties( const map< string, string >& values )
         {
             m_properties.insert( values.begin( ), values.end( ) );
+        }
+
+        void SettingsImpl::set_ssl_settings( const shared_ptr< const SSLSettings >& value )
+        {
+            m_ssl_settings = value;
         }
         
         void SettingsImpl::set_default_header( const string& name, const string& value )

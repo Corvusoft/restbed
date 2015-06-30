@@ -50,19 +50,11 @@ namespace restbed
             
             //Functionality
             void stop( void );
-            
-            void start( const std::shared_ptr< Settings >& settings );
+   
+            void start( const std::shared_ptr< const Settings >& settings = nullptr );
 
-            void start( const std::shared_ptr< SSLSettings >& settings = nullptr );
+            void restart( const std::shared_ptr< const Settings >& settings = nullptr );
 
-            void start( const std::shared_ptr< Settings >& settings, const std::shared_ptr< SSLSettings >& ssl_settings );
-            
-            void restart( const std::shared_ptr< Settings >& settings );
-
-            void restart( const std::shared_ptr< SSLSettings >& settings = nullptr );
-
-            void restart( const std::shared_ptr< Settings >& settings, const std::shared_ptr< SSLSettings >& ssl_settings );
-            
             void publish( const std::shared_ptr< const Resource >& resource );
             
             void suppress( const std::shared_ptr< const Resource >& resource );

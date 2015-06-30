@@ -8,10 +8,10 @@
 //System Includes
 #include <string>
 #include <memory>
+#include <cstdint>
 #include <functional>
 
 //Project Includes
-#include <corvusoft/restbed/settings>
 
 //External Includes
 
@@ -33,7 +33,7 @@ namespace restbed
         class SSLSettingsImpl;
     }
     
-    class SSLSettings : public Settings
+    class SSLSettings
     {
         public:
             //Friends
@@ -63,6 +63,8 @@ namespace restbed
             bool has_enabled_single_diffie_hellman_use( void ) const;
             
             //Getters
+            uint16_t get_port( void ) const;
+
             std::string get_certificate( void ) const;
 
             std::string get_private_key( void ) const;
@@ -76,6 +78,8 @@ namespace restbed
             std::string get_certificate_authority_pool( void ) const;
 
             //Setters
+            void set_port( const uint16_t value );
+
             void set_sslv2_enabled( const bool value );
 
             void set_sslv3_enabled( const bool value );

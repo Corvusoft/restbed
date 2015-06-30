@@ -8,7 +8,9 @@
 //System Includes
 #include <map>
 #include <string>
+#include <memory>
 #include <chrono>
+#include <cstdint>
 
 //Project Includes
 
@@ -23,7 +25,8 @@
 namespace restbed
 {
     //Forward Declarations
-    
+    class SSLSettings;
+
     namespace detail
     {
         //Forward Declarations
@@ -58,6 +61,8 @@ namespace restbed
                 std::string get_property( const std::string& name ) const;
                 
                 std::map< std::string, std::string > get_properties( void ) const;
+
+                std::shared_ptr< const SSLSettings > get_ssl_settings( void ) const;
                 
                 std::multimap< std::string, std::string > get_default_headers( void ) const;
                 
@@ -77,6 +82,8 @@ namespace restbed
                 void set_property( const std::string& name, const std::string& value );
                 
                 void set_properties( const std::map< std::string, std::string >& values );
+
+                void set_ssl_settings( const std::shared_ptr< const SSLSettings >& value );
                 
                 void set_default_header( const std::string& name, const std::string& value );
                 
@@ -132,6 +139,8 @@ namespace restbed
                 std::map< int, std::string > m_status_messages;
                 
                 std::map< std::string, std::string > m_properties;
+
+                std::shared_ptr< const SSLSettings > m_ssl_settings;
                 
                 std::multimap< std::string, std::string > m_default_headers;
         };

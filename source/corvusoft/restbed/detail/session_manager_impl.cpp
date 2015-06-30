@@ -40,12 +40,12 @@ namespace restbed
         {
             return;
         }
-        
-        void SessionManagerImpl::start( const shared_ptr< const Settings >&, const shared_ptr< const SSLSettings >& )
+
+        void SessionManagerImpl::start( const shared_ptr< const Settings >& )
         {
             return;
         }
-        
+
         void SessionManagerImpl::create( const function< void ( const shared_ptr< Session >& ) >& callback )
         {
             auto session = make_shared< Session >( UniqueId::generate( ).to_string( ) );

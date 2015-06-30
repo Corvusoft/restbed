@@ -35,10 +35,13 @@ int main( const int, const char** )
     resource->set_path( "/resource" );
     resource->set_method_handler( "GET", get_method_handler );
 
-    auto settings = make_shared< SSLSettings >( );
-    settings->set_private_key( Uri( "file:///tmp/server.key" ) );
-    settings->set_certificate( Uri( "file:///tmp/server.crt" ) );
-    settings->set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
+    auto ssl_settings = make_shared< SSLSettings >( );
+    ssl_settings->set_private_key( Uri( "file:///tmp/server.key" ) );
+    ssl_settings->set_certificate( Uri( "file:///tmp/server.crt" ) );
+    ssl_settings->set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_ssl_settings( ssl_settings );
 
     Service service;
     service.publish( resource );

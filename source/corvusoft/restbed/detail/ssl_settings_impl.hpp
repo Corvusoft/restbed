@@ -7,6 +7,8 @@
 
 //System Includes
 #include <string>
+#include <memory>
+#include <cstdint>
 #include <functional>
 
 //Project Includes
@@ -61,6 +63,8 @@ namespace restbed
                 bool has_enabled_single_diffie_hellman_use( void ) const;
                 
                 //Getters
+                uint16_t get_port( void ) const;
+
                 std::string get_certificate( void ) const;
 
                 std::string get_private_key( void ) const;
@@ -74,6 +78,8 @@ namespace restbed
                 std::string get_certificate_authority_pool( void ) const;
 
                 //Setters
+                void set_port( const uint16_t value );
+                
                 void set_sslv2_enabled( const bool value );
 
                 void set_sslv3_enabled( const bool value );
@@ -141,6 +147,8 @@ namespace restbed
                 SSLSettingsImpl& operator =( const SSLSettingsImpl& value ) = delete;
                 
                 //Properties
+                uint16_t m_port;
+
                 bool m_sslv2_enabled;
 
                 bool m_sslv3_enabled;
