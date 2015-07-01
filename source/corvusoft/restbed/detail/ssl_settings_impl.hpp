@@ -9,7 +9,6 @@
 #include <string>
 #include <memory>
 #include <cstdint>
-#include <functional>
 
 //Project Includes
 
@@ -69,6 +68,8 @@ namespace restbed
 
                 std::string get_certificate( void ) const;
 
+                std::string get_passphrase( void ) const;
+
                 std::string get_private_key( void ) const;
 
                 std::string get_private_rsa_key( void ) const;
@@ -105,6 +106,8 @@ namespace restbed
                 void set_certificate_chain( const framework::Uri& value );
                 
                 void set_certificate_authority_pool( const framework::Uri& value );
+
+                void set_passphrase( const std::string& value );
 
                 void set_private_key( const framework::Uri& value );
 
@@ -170,6 +173,8 @@ namespace restbed
                 bool m_default_workarounds_enabled;
 
                 bool m_single_diffie_hellman_use_enabled;
+
+                std::string m_passphrase;
 
                 std::string m_private_key;
 

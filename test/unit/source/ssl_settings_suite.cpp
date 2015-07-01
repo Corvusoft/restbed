@@ -34,6 +34,7 @@ TEST_CASE( "validate default instance values", "[ssl-settings]" )
     REQUIRE( settings.has_enabled_compression( ) );
     REQUIRE( settings.has_enabled_default_workarounds( ) );
     REQUIRE( settings.has_enabled_single_diffie_hellman_use( ) );
+    REQUIRE( settings.get_passphrase( ).empty( ) );
     REQUIRE( settings.get_certificate( ).empty( ) );
     REQUIRE( settings.get_private_key( ).empty( ) );
     REQUIRE( settings.get_private_rsa_key( ).empty( ) );
@@ -63,6 +64,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_compression_enabled( false );
     settings.set_default_workarounds_enabled( false );
     settings.set_single_diffie_hellman_use_enabled( false );
+    settings.set_passphrase( "my-passphrase" );
     settings.set_certificate( Uri( "file:///tmp/server.crt" ) );
     settings.set_private_key( Uri( "file:///tmp/server.key" ) );
     settings.set_private_rsa_key( Uri( "file:///tmp/rsa.key" ) );
@@ -79,6 +81,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( not settings.has_enabled_compression( ) );
     REQUIRE( not settings.has_enabled_default_workarounds( ) );
     REQUIRE( not settings.has_enabled_single_diffie_hellman_use( ) );
+    REQUIRE( settings.get_passphrase( ) == "my-passphrase" );
     REQUIRE( settings.get_certificate( ) == "/tmp/server.crt" );
     REQUIRE( settings.get_private_key( ) == "/tmp/server.key" );
     REQUIRE( settings.get_private_rsa_key( ) == "/tmp/rsa.key" );

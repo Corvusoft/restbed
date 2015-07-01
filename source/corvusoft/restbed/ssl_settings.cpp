@@ -13,7 +13,6 @@
 
 //System Namespaces
 using std::string;
-using std::function;
 
 //Project Namespaces
 using restbed::detail::SSLSettingsImpl;
@@ -86,6 +85,11 @@ namespace restbed
     string SSLSettings::get_certificate( void ) const
     {
         return m_pimpl->get_certificate( );
+    }
+
+    string SSLSettings::get_passphrase( void ) const
+    {
+        return m_pimpl->get_passphrase( );
     }
 
     string SSLSettings::get_private_key( void ) const
@@ -176,6 +180,11 @@ namespace restbed
     void SSLSettings::set_certificate_authority_pool( const Uri& value )
     {
         m_pimpl->set_certificate_authority_pool( value );
+    }
+
+    void SSLSettings::set_passphrase( const string& value )
+    {
+        m_pimpl->set_passphrase( value );
     }
 
     void SSLSettings::set_private_key( const Uri& value )

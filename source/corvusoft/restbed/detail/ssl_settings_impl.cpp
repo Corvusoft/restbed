@@ -13,7 +13,6 @@
 
 //System Namespaces
 using std::string;
-using std::function;
 
 //Project Namespaces
 
@@ -35,6 +34,7 @@ namespace restbed
             m_compression_enabled( true ),
             m_default_workarounds_enabled( true ),
             m_single_diffie_hellman_use_enabled( true ),
+            m_passphrase( String::empty ),
             m_private_key( String::empty ),
             m_private_rsa_key( String::empty ),
             m_certificate( String::empty ),
@@ -103,6 +103,11 @@ namespace restbed
         string SSLSettingsImpl::get_certificate( void ) const
         {
             return m_certificate;
+        }
+
+        string SSLSettingsImpl::get_passphrase( void ) const
+        {
+            return m_passphrase;
         }
 
         string SSLSettingsImpl::get_private_key( void ) const
@@ -193,6 +198,11 @@ namespace restbed
         void SSLSettingsImpl::set_certificate_authority_pool( const Uri& value )
         {
             m_certificate_authority_pool = String::remove( "file://", value.to_string( ) );
+        }
+
+        void SSLSettingsImpl::set_passphrase( const string& value )
+        {
+            m_passphrase = value;
         }
 
         void SSLSettingsImpl::set_private_key( const Uri& value )

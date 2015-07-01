@@ -334,6 +334,12 @@ namespace restbed
                 m_ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
                 m_ssl_context->set_default_verify_paths( );
 
+                auto passphrase = m_ssl_settings->get_passphrase( );
+                m_ssl_context->set_password_callback( [ passphrase ]( size_t, asio::ssl::context::password_purpose )
+                {
+                    return passphrase;
+                } );
+
                 auto filename = m_ssl_settings->get_temporary_diffie_hellman( );
                 if ( not filename.empty( ) )
                 {
