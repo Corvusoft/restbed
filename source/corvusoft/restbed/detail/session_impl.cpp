@@ -38,6 +38,7 @@ using std::ssub_match;
 using std::shared_ptr;
 using std::make_shared;
 using std::regex_match;
+using std::regex_error;
 using std::runtime_error;
 using std::placeholders::_1;
 using std::rethrow_exception;
@@ -476,7 +477,7 @@ namespace restbed
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
         {
             smatch matches;
-            static const regex pattern( "^([0-9a-zA-Z]*) ([a-zA-Z0-9\\/\\?:@\\-\\._~!$&'\\(\\)\\*\\+\\,;\\=#%]*) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
+            static const regex pattern( "^([0-9a-zA-Z]*) ([a-zA-Z0-9:@_~!,;=#%&'\\-\\.\\/\\?\\$\\(\\)\\*\\+]+) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
             string data = String::empty;
             getline( stream, data );
             
@@ -545,6 +546,10 @@ namespace restbed
         {
             runtime_error re( m_settings->get_status_message( status_code ) );
             failure( status_code, re, session );
+        }
+        catch ( const regex_error & re )
+        {
+            failure( 500, re, session );
         }
         catch ( const runtime_error& re )
         {
