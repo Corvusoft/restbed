@@ -10,6 +10,7 @@
 
 #include <string>
 #include <memory>
+#include <cstring>
 #include <cstdlib>
 #include <restbed>
 #include <framework>

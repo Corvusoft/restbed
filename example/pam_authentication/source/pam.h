@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 #include <cstdlib>
 #include <security/pam_appl.h>
 
