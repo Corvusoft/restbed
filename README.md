@@ -75,7 +75,7 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 
 ## License
 
-Copyright (c) 2013, 2014, 2015 Corvusoft Limited, United Kingdom. All rights reserved. 
+Copyright (c) 2013 Corvusoft Limited, United Kingdom. All rights reserved. 
 
 The Restbed Framework is dual licensed; See LICENSE.md for full details.
 
@@ -83,16 +83,13 @@ The Restbed Framework is dual licensed; See LICENSE.md for full details.
 
 Please contact sales@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
 
-| Install Base   |        Tickets      |   Anual Fee Per Install (ex vat @20%)   |
+| Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
 | :------------: |:-------------------:|:---------------------------------------:| 
 |     1-3        |          3          |                £280.00                  | 
 |     4-10       |          3          |                £360.00                  |
 |     11+        |          3+         |                 AABUS                   |                
 
-purchase by contacting sales@corvusoft.co.uk for further information.
-
-Are you a start-up?
-Contact sales@corvusoft.co.uk for discounts.
+Purchase by contacting sales@corvusoft.co.uk for further information.
 
 ## Build
 
@@ -127,11 +124,11 @@ You will now find all required components installed in the restbed distribution 
 |     2.0       |             HTTP 1.1 Compliance                 |     complete    |
 |     2.5       |             Secure Socket Layer                 |     complete    |
 |     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |     complete    |
-|     3.0       |                 Rules Engine                    |  in-development |
+|     2.8       |                 Event Hooks                     |  in-development |
+|     3.0       |                 Rules Engine                    |     pending     |
 |     3.5       |             Session Management                  |     pending     |
 |     3.6       |               Resource Caching                  |     pending     |
-|     4.0       |                 Event Hooks                     |     pending     |
-|     4.5       |                 Web Sockets                     |     pending     |
+|     4.0       |                 Web Sockets                     |     pending     |
 |     5.0       |             HTTP 2.0 compliance                 |     pending     |
 |     5.x       | Dynamic runtime resource publishing/suppression |     pending     |
 |     x.x       |         Statically Linked Framework             |     pending     |
