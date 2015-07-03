@@ -81,7 +81,7 @@ namespace restbed
         LOOP_DETECTED = 508,
         NOT_EXTENDED = 510,
         NETWORK_AUTHENTICATION_REQUIRED = 511
-    } status_code;
+    };
 }
 
 #endif  /* _RESTBED_STATUS_CODE_H */

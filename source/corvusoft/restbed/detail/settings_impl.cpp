@@ -34,6 +34,7 @@ namespace restbed
             m_connection_timeout( 5 ),
             m_status_messages( status_messages ),
             m_properties( ),
+            m_ssl_settings( nullptr ),
             m_default_headers( )
         {
             return;

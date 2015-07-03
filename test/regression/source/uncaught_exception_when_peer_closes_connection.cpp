@@ -13,8 +13,13 @@
 #include <restbed>
 
 //External Includes
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #include <asio.hpp>
 #include <catch.hpp>
+#pragma GCC diagnostic pop
 
 //System Namespaces
 using std::thread;
