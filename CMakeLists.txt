@@ -38,6 +38,7 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 include_directories( ${INCLUDE_DIR} )
 
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
+add_dependencies( ${PROJECT_NAME} ${framework_LIBRARY} )
 
 if ( BUILD_SSL )
     target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )

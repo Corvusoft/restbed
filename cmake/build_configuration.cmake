@@ -27,6 +27,6 @@ else ( )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2 -Wall -Wextra -Weffc++ -pedantic" )
 endif ( )
 
-if ( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+if ( UNIX AND NOT APPLE )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread" )
 endif ( )
