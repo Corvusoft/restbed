@@ -92,7 +92,7 @@ void read_chunk_size( const shared_ptr< Session >& session, const Bytes& data )
 
 void read_chunk( const shared_ptr< Session >& session, const Bytes& data )
 {
-    fprintf( stdout, "Partial body chunk: %lu bytes\n", data.size( ) );
+    fprintf( stdout, "Partial body chunk: %u bytes\n", data.size( ) );
 
     session->fetch( "\r\n", read_chunk_size );
 }
