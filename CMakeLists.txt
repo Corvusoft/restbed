@@ -40,9 +40,9 @@ include_directories( ${INCLUDE_DIR} )
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} pthread ${ssl_LIBRARY} ${crypto_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
-    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} pthread )
+    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} )
 endif ( )
 
 if ( BUILD_EXAMPLES )
