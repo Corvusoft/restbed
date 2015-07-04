@@ -37,7 +37,7 @@ void deflate_method_handler( const shared_ptr< Session >& session )
         
         if ( request->get_header( "Content-Encoding", String::lowercase ) == "deflate" )
         {
-            size_t length = compressBound( body.size( ) );
+            mz_ulong length = compressBound( body.size( ) );
             unsigned char* data = new unsigned char[ length ];
             const int status = uncompress( data, &length, body.data( ), body.size( ) );
             
