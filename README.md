@@ -77,7 +77,7 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 
 Copyright (c) 2013 Corvusoft Limited, United Kingdom. All rights reserved. 
 
-The Restbed Framework is dual licensed; See LICENSE.md for full details.
+The Restbed Framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
 ## Support
 
