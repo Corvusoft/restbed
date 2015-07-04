@@ -12,6 +12,7 @@
 #include <memory>
 #include <cstring>
 #include <cstdlib>
+#include <iostream>
 #include <restbed>
 #include <framework>
 
@@ -92,7 +93,7 @@ void read_chunk_size( const shared_ptr< Session >& session, const Bytes& data )
 
 void read_chunk( const shared_ptr< Session >& session, const Bytes& data )
 {
-    fprintf( stdout, "Partial body chunk: %u bytes\n", data.size( ) );
+    cout << "Partial body chunk: " << data.size( ) << " bytes" << endl;
 
     session->fetch( "\r\n", read_chunk_size );
 }
