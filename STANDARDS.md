@@ -1,4 +1,4 @@
-**most importantly:** know when to be inconsistent -- sometimes the style guide just doesn't apply.  When in doubt, use your best judgment.  Look at other examples and decide what looks best.  And don't hesitate to ask! -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
+**most importantly:** "know when to be inconsistent -- sometimes the style guide just doesn't apply.  When in doubt, use your best judgment.  Look at other examples and decide what looks best.  And don't hesitate to ask!" -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
 
 **Brackets**
 
