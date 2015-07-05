@@ -28,7 +28,7 @@ if ( BUILD_SSL )
     find_package( openssl REQUIRED )
 endif ( )
 
-include_directories( ${framework_INCLUDE} ${asio_INCLUDE} )
+include_directories( SYSTEM ${framework_INCLUDE} ${asio_INCLUDE} )
 
 #
 # Build

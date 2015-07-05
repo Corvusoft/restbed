@@ -16,15 +16,10 @@
 //Project Includes
 
 //External Includes
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #include <asio.hpp>
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
-#pragma GCC diagnostic pop
 
 //System Namespaces
 
