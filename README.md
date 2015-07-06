@@ -75,7 +75,7 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 
 ## License
 
-Copyright (c) 2013 Corvusoft Limited, United Kingdom. All rights reserved. 
+Copyright (c) 2015 Corvusoft Limited, United Kingdom. All rights reserved. 
 
 The Restbed Framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
@@ -99,7 +99,7 @@ git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
 cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DBUILD_SSL=NO] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
-make install
+make [-j CPU_CORES+1] install
 make test
 ```
 
