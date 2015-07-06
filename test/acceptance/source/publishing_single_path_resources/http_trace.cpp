@@ -45,47 +45,50 @@ SCENARIO( "publishing single path resources", "[resource]" )
         settings->set_port( 1984 );
         settings->set_default_header( "Connection", "close" );
 
+        shared_ptr< thread > worker = nullptr;
+
         Service service;
         service.publish( resource );
-
-        thread service_thread( [ &service, settings ] ( )
+        service.set_ready_handler( [ &worker ]( Service& service )
         {
-            service.start( settings );
+            worker = make_shared< thread >( [ &service ] ( )
+            {
+                WHEN( "I perform a HTTP 'TRACE' request to '/resources/1'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/1";
+
+                    auto response = Http::trace( request );
+
+                    THEN( "I should see a '501' (Not Implemented) status code" )
+                    {
+                        REQUIRE( 501 == response.status_code );
+                    }
+
+                    AND_THEN( "I should see an empty repsonse body" )
+                    {
+                        REQUIRE( response.body.empty( ) );
+                    }
+
+                    AND_THEN( "I should see a 'Connection' header value of 'close'" )
+                    {
+                        auto header = response.headers.find( "Connection" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                    }
+
+                    AND_THEN( "I should not see a 'Content-Length' header value" )
+                    {
+                        REQUIRE( response.headers.find( "Content-Length" ) == response.headers.end( ) );
+                    }
+                }
+
+                service.stop( );
+            } );
         } );
-
-        WHEN( "I perform a HTTP 'TRACE' request to '/resources/1'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/1";
-
-            auto response = Http::trace( request );
-
-            THEN( "I should see a '501' (Not Implemented) status code" )
-            {
-                REQUIRE( 501 == response.status_code );
-            }
-
-            AND_THEN( "I should see an empty repsonse body" )
-            {
-                REQUIRE( response.body.empty( ) );
-            }
-
-            AND_THEN( "I should see a 'Connection' header value of 'close'" )
-            {
-                auto header = response.headers.find( "Connection" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "close" == response.headers.find( "Connection" )->second );
-            }
-
-            AND_THEN( "I should not see a 'Content-Length' header value" )
-            {
-                REQUIRE( response.headers.find( "Content-Length" ) == response.headers.end( ) );
-            }
-        }
-
-        service.stop( );
-        service_thread.join( );
+        service.start( settings );
+        worker->join( );
     }
 }

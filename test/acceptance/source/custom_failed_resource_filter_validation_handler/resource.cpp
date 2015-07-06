@@ -59,88 +59,91 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
         settings->set_port( 1984 );
         settings->set_default_header( "Connection", "close" );
 
+        shared_ptr< thread > worker = nullptr;
+
         Service service;
         service.publish( resource );
         service.set_failed_filter_validation_handler( service_failed_filter_validation_handler );
-
-        thread service_thread( [ &service, settings ] ( )
+        service.set_ready_handler( [ &worker ]( Service& service )
         {
-            service.start( settings );
+            worker = make_shared< thread >( [ &service ] ( )
+            {
+                WHEN( "I perform an valid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/csv'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/1";
+                    request.headers.insert( make_pair( "Content-Type", "application/csv" ) );
+
+                    auto response = Http::get( request );
+
+                    THEN( "I should see a '200' (OK) status code" )
+                    {
+                        REQUIRE( 200 == response.status_code );
+                    }
+
+                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    {
+                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( response.body == expection );
+                    }
+
+                    AND_THEN( "I should see a 'Connection' header value of 'close'" )
+                    {
+                        auto header = response.headers.find( "Connection" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                    }
+
+                    AND_THEN( "I should see a 'Content-Length' header value of '32'" )
+                    {
+                        auto header = response.headers.find( "Content-Length" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
+                    }
+                }
+
+                WHEN( "I perform an invalid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/yaml'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/1";
+                    request.headers.insert( make_pair( "Content-Type", "application/yaml" ) );
+
+                    auto response = Http::get( request );
+
+                    THEN( "I should see a '-949' (Failed Filter Validation) status code" )
+                    {
+                        REQUIRE( -949 == response.status_code );
+                    }
+
+                    AND_THEN( "I should see a repsonse body of 'Yikes! Filters Mismatched.'" )
+                    {
+                        Bytes expection { 'Y', 'i', 'k', 'e', 's', '!', ' ', 'F', 'i', 'l', 't', 'e', 'r', 's', ' ', 'M', 'i', 's', 'm', 'a', 't', 'c', 'h', 'e', 'd', '.' };
+                        REQUIRE( response.body == expection );
+                    }
+
+                    AND_THEN( "I should see a 'Connection' header value of 'close'" )
+                    {
+                        auto header = response.headers.find( "Connection" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                    }
+
+                    AND_THEN( "I should see a 'Content-Length' header value of '26'" )
+                    {
+                        auto header = response.headers.find( "Content-Length" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "26" == response.headers.find( "Content-Length" )->second );
+                    }
+                }
+
+                service.stop( );
+            } );
         } );
-
-        WHEN( "I perform an valid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/csv'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/1";
-            request.headers.insert( make_pair( "Content-Type", "application/csv" ) );
-
-            auto response = Http::get( request );
-
-            THEN( "I should see a '200' (OK) status code" )
-            {
-                REQUIRE( 200 == response.status_code );
-            }
-
-            AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
-            {
-                Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                REQUIRE( response.body == expection );
-            }
-
-            AND_THEN( "I should see a 'Connection' header value of 'close'" )
-            {
-                auto header = response.headers.find( "Connection" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "close" == response.headers.find( "Connection" )->second );
-            }
-
-            AND_THEN( "I should see a 'Content-Length' header value of '32'" )
-            {
-                auto header = response.headers.find( "Content-Length" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
-            }
-        }
-
-        WHEN( "I perform an invalid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/yaml'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/1";
-            request.headers.insert( make_pair( "Content-Type", "application/yaml" ) );
-
-            auto response = Http::get( request );
-
-            THEN( "I should see a '-949' (Failed Filter Validation) status code" )
-            {
-                REQUIRE( -949 == response.status_code );
-            }
-
-            AND_THEN( "I should see a repsonse body of 'Yikes! Filters Mismatched.'" )
-            {
-                Bytes expection { 'Y', 'i', 'k', 'e', 's', '!', ' ', 'F', 'i', 'l', 't', 'e', 'r', 's', ' ', 'M', 'i', 's', 'm', 'a', 't', 'c', 'h', 'e', 'd', '.' };
-                REQUIRE( response.body == expection );
-            }
-
-            AND_THEN( "I should see a 'Connection' header value of 'close'" )
-            {
-                auto header = response.headers.find( "Connection" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "close" == response.headers.find( "Connection" )->second );
-            }
-
-            AND_THEN( "I should see a 'Content-Length' header value of '26'" )
-            {
-                auto header = response.headers.find( "Content-Length" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "26" == response.headers.find( "Content-Length" )->second );
-            }
-        }
-
-        service.stop( );
-        service_thread.join( );
+        service.start( settings );
+        worker->join( );
     }
 }

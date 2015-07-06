@@ -44,50 +44,53 @@ SCENARIO( "custom resource not found handler", "[resource]" )
         settings->set_port( 1984 );
         settings->set_default_header( "Connection", "close" );
 
+        shared_ptr< thread > worker = nullptr;
+
         Service service;
         service.set_not_found_handler( not_found_handler );
-
-        thread service_thread( [ &service, settings ] ( )
+        service.set_ready_handler( [ &worker ]( Service& service )
         {
-            service.start( settings );
+            worker = make_shared< thread >( [ &service ] ( )
+            {
+                WHEN( "I perform a HTTP 'PUT' request to '/resources/1'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/1";
+
+                    auto response = Http::put( request );
+
+                    THEN( "I should see a '0' (Saw Nothing) status code" )
+                    {
+                        REQUIRE( 0 == response.status_code );
+                    }
+
+                    AND_THEN( "I should see a repsonse body of 'I see nothing!'" )
+                    {
+                        Bytes expection { 'I', ' ', 's', 'e', 'e', ' ', 'n', 'o', 't', 'h', 'i', 'n', 'g', '!' };
+                        REQUIRE( response.body == expection );
+                    }
+
+                    AND_THEN( "I should see a 'Connection' header value of 'close'" )
+                    {
+                        auto header = response.headers.find( "Connection" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                    }
+
+                    AND_THEN( "I should see a 'Content-Length' header value of '14'" )
+                    {
+                        auto header = response.headers.find( "Content-Length" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "14" == response.headers.find( "Content-Length" )->second );
+                    }
+                }
+
+                service.stop( );
+            } );
         } );
-
-        WHEN( "I perform a HTTP 'PUT' request to '/resources/1'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/1";
-
-            auto response = Http::put( request );
-
-            THEN( "I should see a '0' (Saw Nothing) status code" )
-            {
-                REQUIRE( 0 == response.status_code );
-            }
-
-            AND_THEN( "I should see a repsonse body of 'I see nothing!'" )
-            {
-                Bytes expection { 'I', ' ', 's', 'e', 'e', ' ', 'n', 'o', 't', 'h', 'i', 'n', 'g', '!' };
-                REQUIRE( response.body == expection );
-            }
-
-            AND_THEN( "I should see a 'Connection' header value of 'close'" )
-            {
-                auto header = response.headers.find( "Connection" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "close" == response.headers.find( "Connection" )->second );
-            }
-
-            AND_THEN( "I should see a 'Content-Length' header value of '14'" )
-            {
-                auto header = response.headers.find( "Content-Length" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "14" == response.headers.find( "Content-Length" )->second );
-            }
-        }
-
-        service.stop( );
-        service_thread.join( );
+        service.start( settings );
+        worker->join( );
     }
 }

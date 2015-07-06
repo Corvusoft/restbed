@@ -53,42 +53,45 @@ SCENARIO( "request path parameters", "[resource]" )
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
 
+        shared_ptr< thread > worker = nullptr;
+
         Service service;
         service.publish( resource );
-
-        thread service_thread( [ &service, settings ] ( )
+        service.set_ready_handler( [ &worker ]( Service& service )
         {
-            service.start( settings );
+            worker = make_shared< thread >( [ &service ] ( )
+            {
+                WHEN( "I perform a HTTP 'GET' request to '/resources/queues/events/messages/100'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/queues/events/messages/100";
+
+                    auto response = Http::get( request );
+
+                    THEN( "I should see a '204' (No Content) status code" )
+                    {
+                        REQUIRE( 204 == response.status_code );
+                    }
+
+                    AND_THEN( "I should see an empty repsonse body" )
+                    {
+                        REQUIRE( response.body.empty( ) );
+                    }
+
+                    AND_THEN( "I should see a 'Connection' header value of 'close'" )
+                    {
+                        auto header = response.headers.find( "Connection" );
+                        REQUIRE( header not_eq response.headers.end( ) );
+                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                    }
+                }
+
+                service.stop( );
+            } );
         } );
-
-        WHEN( "I perform a HTTP 'GET' request to '/resources/queues/events/messages/100'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/queues/events/messages/100";
-
-            auto response = Http::get( request );
-
-            THEN( "I should see a '204' (No Content) status code" )
-            {
-                REQUIRE( 204 == response.status_code );
-            }
-
-            AND_THEN( "I should see an empty repsonse body" )
-            {
-                REQUIRE( response.body.empty( ) );
-            }
-
-            AND_THEN( "I should see a 'Connection' header value of 'close'" )
-            {
-                auto header = response.headers.find( "Connection" );
-                REQUIRE( header not_eq response.headers.end( ) );
-                REQUIRE( "close" == response.headers.find( "Connection" )->second );
-            }
-        }
-        
-        service.stop( );
-        service_thread.join( );
+        service.start( settings );
+        worker->join( );
     }
 }

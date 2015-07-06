@@ -46,11 +46,6 @@ void authentication_handler( const shared_ptr< Session >&, const function< void 
     return;
 }
 
-void wait_for_service_initialisation( void )
-{
-    std::this_thread::sleep_for( seconds( 1 ) );
-}
-
 SCENARIO( "runtime service modifications", "[service]" )
 {
     GIVEN( "I publish a resource at '/resources/1' with a HTTP 'GET' method handler" )
@@ -58,34 +53,36 @@ SCENARIO( "runtime service modifications", "[service]" )
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
 
+        shared_ptr< thread > worker = nullptr;
+
         Service service;
-        thread service_thread( [ &service, settings ] ( )
+        service.set_ready_handler( [ &worker ]( Service& service )
         {
-            service.start( settings );
-        } );
-
-        wait_for_service_initialisation( );
-
-        WHEN( "I attempt to modify service settings" )
-        {
-            auto resource = make_shared< Resource >( );
-            resource->set_path( "/acceptance-tests/runtime service modifications" );
-
-            THEN( "I should see an runtime error of 'Runtime modifications of the service are prohibited.'" )
+            worker = make_shared< thread >( [ &service ] ( )
             {
-                REQUIRE_THROWS_AS( service.publish( resource ), runtime_error );
-                REQUIRE_THROWS_AS( service.suppress( resource ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_logger( nullptr ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_not_found_handler( handler ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_error_handler( error_handler ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_method_not_allowed_handler( handler ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_method_not_implemented_handler( handler ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_failed_filter_validation_handler( handler ), runtime_error );
-                REQUIRE_THROWS_AS( service.set_authentication_handler( authentication_handler ), runtime_error );
-            }
-        }
-        
-        service.stop( );
-        service_thread.join( );
+                WHEN( "I attempt to modify service settings" )
+                {
+                    auto resource = make_shared< Resource >( );
+                    resource->set_path( "/acceptance-tests/runtime service modifications" );
+
+                    THEN( "I should see an runtime error of 'Runtime modifications of the service are prohibited.'" )
+                    {
+                        REQUIRE_THROWS_AS( service.publish( resource ), runtime_error );
+                        REQUIRE_THROWS_AS( service.suppress( resource ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_logger( nullptr ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_not_found_handler( handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_error_handler( error_handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_method_not_allowed_handler( handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_method_not_implemented_handler( handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_failed_filter_validation_handler( handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_authentication_handler( authentication_handler ), runtime_error );
+                    }
+                }
+
+                service.stop( );
+            } );
+        } );
+        service.start( settings );
+        worker->join( );
     }
 }

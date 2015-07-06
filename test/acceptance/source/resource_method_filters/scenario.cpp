@@ -54,47 +54,50 @@ SCENARIO( "resource method filters", "[resource]" )
         settings->set_port( 1984 );
         settings->set_default_header( "Connection", "close" );
 
+        shared_ptr< thread > worker = nullptr;
+
         Service service;
         service.publish( resource );
-
-        thread service_thread( [ &service, settings ] ( )
+        service.set_ready_handler( [ &worker ]( Service& service )
         {
-            service.start( settings );
+            worker = make_shared< thread >( [ &service ] ( )
+            {
+                WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/xml'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/1";
+                    request.headers.insert( make_pair( "Content-Type", "application/xml" ) );
+
+                    auto response = Http::get( request );
+
+                    THEN( "I should see a '1' (Failed Filter Validation) status code" )
+                    {
+                        REQUIRE( 1 == response.status_code );
+                    }
+                }
+
+                WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/json'" )
+                {
+                    Http::Request request;
+                    request.port = 1984;
+                    request.host = "localhost";
+                    request.path = "/resources/1";
+                    request.headers.insert( make_pair( "Content-Type", "application/json" ) );
+
+                    auto response = Http::get( request );
+
+                    THEN( "I should see a '2' (Failed Filter Validation) status code" )
+                    {
+                        REQUIRE( 2 == response.status_code );
+                    }
+                }
+
+                service.stop( );
+            } );
         } );
-
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/xml'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/1";
-            request.headers.insert( make_pair( "Content-Type", "application/xml" ) );
-
-            auto response = Http::get( request );
-
-            THEN( "I should see a '1' (Failed Filter Validation) status code" )
-            {
-                REQUIRE( 1 == response.status_code );
-            }
-        }
-
-        WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/json'" )
-        {
-            Http::Request request;
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/1";
-            request.headers.insert( make_pair( "Content-Type", "application/json" ) );
-
-            auto response = Http::get( request );
-
-            THEN( "I should see a '2' (Failed Filter Validation) status code" )
-            {
-                REQUIRE( 2 == response.status_code );
-            }
-        }
-
-        service.stop( );
-        service_thread.join( );
+        service.start( settings );
+        worker->join( );
     }
 }
