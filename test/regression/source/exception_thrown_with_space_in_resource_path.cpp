@@ -40,26 +40,29 @@ TEST_CASE( "with space in path", "[resource]" )
     settings->set_port( 1984 );
     settings->set_root( "queues" );
     
+    shared_ptr< thread > worker = nullptr;
+
     Service service;
     service.publish( resource );
-    
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/queues/test queue";
+
+            auto response = Http::get( request );
+            
+            REQUIRE( 400 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/queues/test queue";
-
-    auto response = Http::get( request );
-    
-    REQUIRE( 400 == response.status_code );
-    
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }
 
 TEST_CASE( "without space in path", "[resource]" )
@@ -72,24 +75,27 @@ TEST_CASE( "without space in path", "[resource]" )
     settings->set_port( 1984 );
     settings->set_root( "queues" );
     
+    shared_ptr< thread > worker = nullptr;
+    
     Service service;
     service.publish( resource );
-    
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/queues/testQueue";
+
+            auto response = Http::get( request );
+            
+            REQUIRE( 200 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/queues/testQueue";
-
-    auto response = Http::get( request );
-    
-    REQUIRE( 200 == response.status_code );
-    
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }

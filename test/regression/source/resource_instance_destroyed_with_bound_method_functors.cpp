@@ -33,26 +33,28 @@ TEST_CASE( "resource instance destroyed with bound method functors", "[resource]
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
 
+    shared_ptr< thread > worker = nullptr;
+    
     Service service;
     service.publish( resource );
-
     resource.reset( );
-
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/";
+
+            auto response = Http::get( request );
+
+            REQUIRE( 501 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/";
-
-    auto response = Http::get( request );
-
-    REQUIRE( 501 == response.status_code );
-
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }

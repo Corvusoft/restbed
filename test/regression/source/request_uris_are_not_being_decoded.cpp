@@ -44,24 +44,27 @@ TEST_CASE( "encoded uri test", "[request]" )
     auto settings = make_shared< Settings >( );
     settings->set_port( 8989 );
     
+    shared_ptr< thread > worker = nullptr;
+    
     Service service;
     service.publish( resource );
-    
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 8989;
+            request.host = "localhost";
+            request.path = "/uri%20test?ben+crowhurst=%4030";
+
+            auto response = Http::get( request );
+            
+            REQUIRE( 200 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 8989;
-    request.host = "localhost";
-    request.path = "/uri%20test?ben+crowhurst=%4030";
-
-    auto response = Http::get( request );
-    
-    REQUIRE( 200 == response.status_code );
-    
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }

@@ -47,27 +47,30 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     
+    shared_ptr< thread > worker = nullptr;
+    
     Service service;
     service.publish( initial_resource );
     service.publish( secondary_resource );
-
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/TestResource";
+
+            auto response = Http::get( request );
+
+            REQUIRE( 401 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/TestResource";
-
-    auto response = Http::get( request );
-
-    REQUIRE( 401 == response.status_code );
-
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }
 
 TEST_CASE( "add alternative resource", "[resource]" )
@@ -83,26 +86,29 @@ TEST_CASE( "add alternative resource", "[resource]" )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     
+    shared_ptr< thread > worker = nullptr;
+    
     Service service;
     service.publish( initial_resource );
     service.publish( secondary_resource );
-
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/TestResource";
+            request.headers = { { "Content-Type", "application/xml" } };
+
+            auto response = Http::get( request );
+
+            REQUIRE( 401 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/TestResource";
-    request.headers = { { "Content-Type", "application/xml" } };
-
-    auto response = Http::get( request );
-
-    REQUIRE( 401 == response.status_code );
-
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }

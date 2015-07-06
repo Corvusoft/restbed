@@ -39,25 +39,28 @@ TEST_CASE( "content length present on empty response body", "[response]" )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     
+    shared_ptr< thread > worker = nullptr;
+
     Service service;
     service.publish( resource );
-    
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/test";
+            
+            auto response = Http::get( request );
+
+            REQUIRE( 200 == response.status_code );
+            REQUIRE( response.headers.end( ) == response.headers.find( "Content-Length" ) );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/test";
-    
-    auto response = Http::get( request );
-
-    REQUIRE( 200 == response.status_code );
-    REQUIRE( response.headers.end( ) == response.headers.find( "Content-Length" ) );
-
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }

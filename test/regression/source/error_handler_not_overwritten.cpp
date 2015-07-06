@@ -47,25 +47,28 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     settings->set_port( 1984 );
     settings->set_root( "queues" );
 
+    shared_ptr< thread > worker = nullptr;
+
     Service service;
     service.publish( resource );
     service.set_error_handler( error_handler );
-
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "GET";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/queues/test";
+
+            auto response = Http::get( request );
+
+            REQUIRE( 444 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "GET";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/queues/test";
-
-    auto response = Http::get( request );
-
-    REQUIRE( 444 == response.status_code );
-    
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }

@@ -61,26 +61,29 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
 
+    shared_ptr< thread > worker = nullptr;
+    
     Service service;
     service.publish( resource );
-
-    thread service_thread( [ &service, settings ] ( )
+    service.set_ready_handler( [ &worker ]( Service& service )
     {
-        service.start( settings );
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            Http::Request request;
+            request.method = "POST";
+            request.port = 1984;
+            request.host = "localhost";
+            request.path = "/test";
+            request.body = Bytes( body, body + 492 );
+            request.headers = { { "Content-Length", ::to_string( request.body.size( ) ) } };
+
+            auto response = Http::post( request );
+            
+            REQUIRE( 201 == response.status_code );
+
+            service.stop( );
+        } );
     } );
-
-    Http::Request request;
-    request.method = "POST";
-    request.port = 1984;
-    request.host = "localhost";
-    request.path = "/test";
-    request.body = Bytes( body, body + 492 );
-    request.headers = { { "Content-Length", ::to_string( request.body.size( ) ) } };
-
-    auto response = Http::post( request );
-    
-    REQUIRE( 201 == response.status_code );
-    
-    service.stop( );
-    service_thread.join( );
+    service.start( settings );
+    worker->join( );
 }
