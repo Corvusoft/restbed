@@ -69,6 +69,8 @@ namespace restbed
                 
                 //Setters
                 void set_logger( const std::shared_ptr< Logger >& value );
+
+                void set_ready_handler( const std::function< void ( void ) >& value );
                 
                 void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
                 
@@ -181,6 +183,8 @@ namespace restbed
                 std::map< std::string, std::string > m_resource_paths;
                 
                 std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
+
+                std::function< void ( void ) > m_ready_handler;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_not_found_handler;
                 

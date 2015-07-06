@@ -17,6 +17,7 @@
 
 //System Namespaces
 using std::map;
+using std::bind;
 using std::string;
 using std::function;
 using std::exception;
@@ -67,6 +68,11 @@ namespace restbed
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
         m_pimpl->set_logger( value );
+    }
+
+    void Service::set_ready_handler( const function< void ( Service& ) >& value )
+    {
+        m_pimpl->set_ready_handler( bind( value, std::ref( *this ) ) );
     }
     
     void Service::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )

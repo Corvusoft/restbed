@@ -73,6 +73,7 @@ namespace restbed
             m_acceptor( nullptr ),
             m_resource_paths( ),
             m_resource_routes( ),
+            m_ready_handler( nullptr ),
             m_not_found_handler( nullptr ),
             m_method_not_allowed_handler( nullptr ),
             m_method_not_implemented_handler( nullptr ),
@@ -113,6 +114,8 @@ namespace restbed
             {
                 m_logger->stop( );
             }
+
+            log( Logger::Level::INFO, String::format( "Service halted." ) );
         }
 
         void ServiceImpl::start( const shared_ptr< const Settings >& settings )
@@ -151,11 +154,14 @@ namespace restbed
                 
                 log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
             }
-      
+            
+            if ( m_ready_handler not_eq nullptr )
+            {
+                m_io_service->post( m_ready_handler );
+            }
+
             m_is_running = true;
             m_io_service->run( );
-            
-            log( Logger::Level::INFO, String::format( "Service halted." ) );
         }
         
         void ServiceImpl::restart( const shared_ptr< const Settings >& settings )
@@ -238,6 +244,11 @@ namespace restbed
             m_logger = value;
         }
         
+        void ServiceImpl::set_ready_handler( const function< void ( void ) >& value )
+        {
+            m_ready_handler = value;
+        }
+
         void ServiceImpl::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
         {
             if ( m_is_running )
