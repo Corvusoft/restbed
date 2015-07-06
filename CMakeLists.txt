@@ -38,11 +38,12 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 include_directories( ${INCLUDE_DIR} )
 
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
+add_dependencies( ${PROJECT_NAME} corvusoft-framework )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} ${ssl_LIBRARY} ${crypto_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} framework ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
-    target_link_libraries( ${PROJECT_NAME} ${framework_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} framework )
 endif ( )
 
 if ( BUILD_EXAMPLES )
