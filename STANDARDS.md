@@ -203,8 +203,8 @@ catch ( const exception& ex )
 1. **Do not** include entire Namespaces, import only the artifact you're interested in.
 2. Namespace names **must only** contain lowercased letters.
 ``` C++
-using std::string;
 using std::mutex;
+using std::string;
 using std::thread;
 
 using namespace restq
