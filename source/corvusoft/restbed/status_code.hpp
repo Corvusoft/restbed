@@ -21,7 +21,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    enum
+    enum : int
     {
         CONTINUE = 100,
         SWITCHING_PROTOCOLS = 101,
