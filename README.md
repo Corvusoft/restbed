@@ -130,7 +130,6 @@ You will now find all required components installed in the restbed distribution 
 |     4.0       |                 Web Sockets                     |     pending     |
 |     5.0       |             HTTP 2.0 compliance                 |     pending     |
 |     5.x       | Dynamic runtime resource publishing/suppression |     pending     |
-|     x.x       |         Statically Linked Framework             |     pending     |
 |     x.x       |                 Localisation                    |     pending     |
 |     x.x       |         Bind Service to specific NIC            |     pending     |
 |     x.x       |         Client-side SSL certificates            |     pending     |
