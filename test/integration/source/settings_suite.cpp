@@ -6,8 +6,8 @@
 #include <memory>
 
 //Project Includes
-#include <corvusoft/restbed/settings>
-#include <corvusoft/restbed/ssl_settings>
+#include <corvusoft/restbed/settings.hpp>
+#include <corvusoft/restbed/ssl_settings.hpp>
 
 //External Includes
 #include <catch.hpp>

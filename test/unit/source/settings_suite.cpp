@@ -8,7 +8,7 @@
 #include <chrono>
 
 //Project Includes
-#include <corvusoft/restbed/settings>
+#include <corvusoft/restbed/settings.hpp>
 
 //External Includes
 #include <catch.hpp>

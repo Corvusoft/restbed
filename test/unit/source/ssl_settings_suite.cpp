@@ -6,7 +6,7 @@
 #include <string>
 
 //Project Includes
-#include <corvusoft/restbed/ssl_settings>
+#include <corvusoft/restbed/ssl_settings.hpp>
 
 //External Includes
 #include <catch.hpp>

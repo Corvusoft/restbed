@@ -5,9 +5,9 @@
 //System Includes
 
 //Project Includes
-#include <corvusoft/restbed/session>
-#include <corvusoft/restbed/request>
-#include <corvusoft/restbed/resource>
+#include <corvusoft/restbed/session.hpp>
+#include <corvusoft/restbed/request.hpp>
+#include <corvusoft/restbed/resource.hpp>
 
 //External Includes
 #include <catch.hpp>

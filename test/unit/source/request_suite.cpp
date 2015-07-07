@@ -7,7 +7,7 @@
 #include <string>
 
 //Project Includes
-#include <corvusoft/restbed/request>
+#include <corvusoft/restbed/request.hpp>
 
 //External Includes
 #include <catch.hpp>

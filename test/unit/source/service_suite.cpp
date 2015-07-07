@@ -5,7 +5,7 @@
 //System Includes
 
 //Project Includes
-#include <corvusoft/restbed/service>
+#include <corvusoft/restbed/service.hpp>
 
 //External Includes
 #include <catch.hpp>

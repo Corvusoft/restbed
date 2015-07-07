@@ -7,7 +7,7 @@
 #include <string>
 
 //Project Includes
-#include <corvusoft/restbed/session>
+#include <corvusoft/restbed/session.hpp>
 
 //External Includes
 #include <catch.hpp>
