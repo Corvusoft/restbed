@@ -8,6 +8,8 @@
 #include <stdexcept>
 
 //Project Includes
+#include "corvusoft/restbed/uri.hpp"
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
@@ -19,8 +21,6 @@
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/uri>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -56,16 +56,12 @@ using restbed::detail::SessionImpl;
 //External Namespaces
 using asio::buffer;
 using asio::error_code;
-using framework::Uri;
-using framework::Byte;
-using framework::Bytes;
-using framework::String;
 
 namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_id( String::empty ),
+        SessionImpl::SessionImpl( void ) : m_id( "" ),
             m_logger( nullptr ),
             m_session( nullptr ),
             m_socket( nullptr ),
@@ -312,7 +308,7 @@ namespace restbed
         {
             if ( m_socket == nullptr )
             {
-                return String::empty;
+                return "";
             }
 
             return m_socket->get_remote_endpoint( );
@@ -322,7 +318,7 @@ namespace restbed
         {
             if ( m_socket == nullptr )
             {
-                return String::empty;
+                return "";
             }
             
             return m_socket->get_local_endpoint( );
@@ -466,7 +462,7 @@ namespace restbed
             headers.insert( hdrs.begin( ), hdrs.end( ) );
             response.set_headers( headers );
             
-            if ( response.get_status_message( ) == String::empty )
+            if ( response.get_status_message( ).empty( ) )
             {
                 response.set_status_message( m_settings->get_status_message( response.get_status_code( ) ) );
             }
@@ -478,7 +474,7 @@ namespace restbed
         {
             smatch matches;
             static const regex pattern( "^([0-9a-zA-Z]*) ([a-zA-Z0-9:@_~!,;=#%&'\\-\\.\\/\\?\\$\\(\\)\\*\\+]+) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
-            string data = String::empty;
+            string data = "";
             getline( stream, data );
             
             if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 4 )
@@ -501,7 +497,7 @@ namespace restbed
         const multimap< string, string > SessionImpl::parse_request_headers( istream& stream )
         {
             smatch matches;
-            string data = String::empty;
+            string data = "";
             multimap< string, string > headers;
             static const regex pattern( "^([^:.]*): *(.*)\\s*$" );
             

@@ -14,11 +14,9 @@
 #include <cstdlib>
 #include <iostream>
 #include <restbed>
-#include <framework>
 
 using namespace std;
 using namespace restbed;
-using namespace framework;
 
 void post_method_handler( const shared_ptr< Session >& );
 void read_chunk( const shared_ptr< Session >&, const Bytes& );

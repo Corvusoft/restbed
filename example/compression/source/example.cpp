@@ -12,7 +12,6 @@
 #include <memory>
 #include <cstdlib>
 #include <restbed>
-#include <framework>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wextra"
@@ -22,7 +21,6 @@
 
 using namespace std;
 using namespace restbed;
-using namespace framework;
 
 void deflate_method_handler( const shared_ptr< Session >& session )
 {

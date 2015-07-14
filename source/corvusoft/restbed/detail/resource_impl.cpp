@@ -10,7 +10,7 @@
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/string>
+#include <corvusoft/restbed/string.hpp>
 
 //System Namespaces
 using std::set;
@@ -25,7 +25,6 @@ using std::invalid_argument;
 //Project Namespaces
 
 //External Namespaces
-using framework::String;
 
 namespace restbed
 {
@@ -91,8 +90,7 @@ namespace restbed
                 return m_method_handlers;
             }
             
-            return decltype( m_method_handlers )( m_method_handlers.lower_bound( method ),
-                                                  m_method_handlers.upper_bound( method ) );
+            return decltype( m_method_handlers )( m_method_handlers.lower_bound( method ), m_method_handlers.upper_bound( method ) );
         }
         
         void ResourceImpl::set_paths( const set< string >& values )

@@ -5,11 +5,11 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/detail/response_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::string;
@@ -21,8 +21,6 @@ using std::make_shared;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
-using framework::Bytes;
-using framework::String;
 
 namespace restbed
 {

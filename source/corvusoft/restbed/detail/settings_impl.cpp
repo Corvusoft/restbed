@@ -5,12 +5,12 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
 #include "corvusoft/restbed/detail/settings_impl.hpp"
 #include "corvusoft/restbed/detail/status_messages_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::map;
@@ -22,7 +22,6 @@ using std::chrono::seconds;
 //Project Namespaces
 
 //External Namespaces
-using framework::String;
 
 namespace restbed
 {
@@ -67,7 +66,7 @@ namespace restbed
         
         string SettingsImpl::get_status_message( const int code ) const
         {
-            string message = String::empty;
+            string message = "";
             
             if ( m_status_messages.count( code ) )
             {
@@ -93,7 +92,7 @@ namespace restbed
                 return m_properties.at( name );
             }
             
-            return String::empty;
+            return "";
         }
         
         map< string, string > SettingsImpl::get_properties( void ) const

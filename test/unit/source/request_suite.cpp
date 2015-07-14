@@ -11,7 +11,6 @@
 
 //External Includes
 #include <catch.hpp>
-#include <corvusoft/framework/byte>
 
 //System Namespaces
 using std::map;
@@ -22,7 +21,6 @@ using std::multimap;
 using restbed::Request;
 
 //External Namespaces
-using framework::Bytes;
 
 TEST_CASE( "validate default instance values", "[request]" )
 {

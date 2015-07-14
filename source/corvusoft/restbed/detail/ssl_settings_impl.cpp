@@ -5,11 +5,11 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/uri.hpp"
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/detail/ssl_settings_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/uri>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::string;
@@ -17,8 +17,6 @@ using std::string;
 //Project Namespaces
 
 //External Namespaces
-using framework::Uri;
-using framework::String;
 
 namespace restbed
 {
@@ -34,13 +32,13 @@ namespace restbed
             m_compression_enabled( true ),
             m_default_workarounds_enabled( true ),
             m_single_diffie_hellman_use_enabled( true ),
-            m_passphrase( String::empty ),
-            m_private_key( String::empty ),
-            m_private_rsa_key( String::empty ),
-            m_certificate( String::empty ),
-            m_certificate_chain( String::empty ),
-            m_certificate_authority_pool( String::empty ),
-            m_temporary_diffie_hellman( String::empty )
+            m_passphrase( "" ),
+            m_private_key( "" ),
+            m_private_rsa_key( "" ),
+            m_certificate( "" ),
+            m_certificate_chain( "" ),
+            m_certificate_authority_pool( "" ),
+            m_temporary_diffie_hellman( "" )
         {
             return;
         }

@@ -12,13 +12,13 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/byte.hpp"
 
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
-#include <corvusoft/framework/byte>
 
 //System Namespaces
 
@@ -59,7 +59,7 @@ namespace restbed
 
                 void wait( const std::chrono::microseconds& delay, const std::function< void ( const asio::error_code & ) >& callback );
 
-                void write( const framework::Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
+                void write( const Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
 
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
 

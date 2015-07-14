@@ -5,10 +5,10 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/detail/response_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::string;
@@ -19,8 +19,6 @@ using std::make_shared;
 //Project Namespaces
 
 //External Namespaces
-using framework::Bytes;
-using framework::String;
 
 namespace restbed
 {
@@ -30,7 +28,7 @@ namespace restbed
             m_status_code( 200 ),
             m_protocol( "HTTP" ),
             m_body( ),
-            m_status_message( String::empty ),
+            m_status_message( "" ),
             m_headers( )
         {
             return;

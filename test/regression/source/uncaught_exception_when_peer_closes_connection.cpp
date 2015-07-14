@@ -11,15 +11,11 @@
 
 //Project Includes
 #include <restbed>
+#include "http.hpp"
 
 //External Includes
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #include <asio.hpp>
 #include <catch.hpp>
-#pragma GCC diagnostic pop
 
 //System Namespaces
 using std::thread;
@@ -33,7 +29,6 @@ using namespace restbed;
 //External Namespaces
 using asio::ip::tcp;
 using asio::system_error;
-using namespace framework;
 
 bool exception_was_thrown = false;
 

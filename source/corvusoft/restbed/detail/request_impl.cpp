@@ -8,7 +8,7 @@
 #include "corvusoft/restbed/detail/request_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/map>
+#include "corvusoft/restbed/detail/map_impl.hpp"
 
 //System Namespaces
 using std::map;
@@ -25,9 +25,6 @@ using std::shared_ptr;
 using restbed::detail::RequestImpl;
 
 //External Namespaces
-using framework::Map;
-using framework::Bytes;
-using framework::String;
 
 namespace restbed
 {
@@ -53,14 +50,14 @@ namespace restbed
         
         bool RequestImpl::has_header( const string& name ) const
         {
-            return ( Map::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
+            return ( MapImpl::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
         }
         
         bool RequestImpl::has_path_parameter( const string& name, const bool ignore_case ) const
         {
             if ( ignore_case )
             {
-                return ( Map::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
+                return ( MapImpl::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
             }
             
             return m_path_parameters.find( name ) not_eq m_path_parameters.end( );
@@ -70,7 +67,7 @@ namespace restbed
         {
             if ( ignore_case )
             {
-                return ( Map::find_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
+                return ( MapImpl::find_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
             }
             
             return m_query_parameters.find( name ) not_eq m_query_parameters.end( );
@@ -134,7 +131,7 @@ namespace restbed
                 return;
             }
             
-            string header = get_header( name, String::empty, nullptr );
+            string header = get_header( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -152,7 +149,7 @@ namespace restbed
                 return;
             }
             
-            string header = get_header( name, String::empty, nullptr );
+            string header = get_header( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -170,7 +167,7 @@ namespace restbed
                 return;
             }
             
-            string header = get_header( name, String::empty, nullptr );
+            string header = get_header( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -188,7 +185,7 @@ namespace restbed
                 return;
             }
             
-            string header = get_header( name, String::empty, nullptr );
+            string header = get_header( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -206,7 +203,7 @@ namespace restbed
                 return;
             }
             
-            string header = get_header( name, String::empty, nullptr );
+            string header = get_header( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -224,7 +221,7 @@ namespace restbed
                 return;
             }
             
-            string header = get_header( name, String::empty, nullptr );
+            string header = get_header( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -280,7 +277,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, String::empty, nullptr );
+            string parameter = get_query_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -298,7 +295,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, String::empty, nullptr );
+            string parameter = get_query_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -316,7 +313,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, String::empty, nullptr );
+            string parameter = get_query_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -334,7 +331,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, String::empty, nullptr );
+            string parameter = get_query_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -352,7 +349,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, String::empty, nullptr );
+            string parameter = get_query_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -370,7 +367,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, String::empty, nullptr );
+            string parameter = get_query_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -424,7 +421,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, String::empty, nullptr );
+            string parameter = get_path_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -442,7 +439,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, String::empty, nullptr );
+            string parameter = get_path_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -460,7 +457,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, String::empty, nullptr );
+            string parameter = get_path_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -478,7 +475,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, String::empty, nullptr );
+            string parameter = get_path_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -496,7 +493,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, String::empty, nullptr );
+            string parameter = get_path_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -514,7 +511,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, String::empty, nullptr );
+            string parameter = get_path_parameter( name, "", nullptr );
             
             if ( transform not_eq nullptr )
             {

@@ -7,8 +7,11 @@ set( BUILD_ARTIFACTS
    ${SOURCE_DIR}/resource.hpp
    ${SOURCE_DIR}/request.hpp
    ${SOURCE_DIR}/response.hpp
+   ${SOURCE_DIR}/byte.hpp
+   ${SOURCE_DIR}/uri.hpp
+   ${SOURCE_DIR}/string.hpp
+   ${SOURCE_DIR}/logger.hpp
    ${SOURCE_DIR}/service.hpp
    ${SOURCE_DIR}/session.hpp
-   ${SOURCE_DIR}/logger.hpp
    ${SOURCE_DIR}/session_manager.hpp
 )

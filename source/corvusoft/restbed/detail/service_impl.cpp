@@ -11,6 +11,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/logger.hpp"
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/resource.hpp"
@@ -26,7 +27,6 @@
 #include "corvusoft/restbed/detail/session_manager_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/string>
 
 //System Namespaces
 using std::set;
@@ -53,7 +53,6 @@ using asio::io_service;
 using asio::error_code;
 using asio::socket_base;
 using asio::system_error;
-using framework::String;
 
 namespace restbed
 {
@@ -473,7 +472,7 @@ namespace restbed
             }
             
             smatch matches;
-            string sanitised_path = String::empty;
+            string sanitised_path = "";
             static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
             
             for ( auto folder : String::split( path, '/' ) )

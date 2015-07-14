@@ -13,10 +13,10 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/string.hpp>
 
 //External Includes
-#include <corvusoft/framework/byte>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -56,39 +56,39 @@ namespace restbed
             
             void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
-            void close( const framework::Bytes& body );
+            void close( const Bytes& body );
             
-            void close( const std::string& body = framework::String::empty );
+            void close( const std::string& body = "" );
             
-            void close( const int status, const framework::Bytes& body );
+            void close( const int status, const Bytes& body );
             
-            void close( const int status, const std::string& body = framework::String::empty );
+            void close( const int status, const std::string& body = "" );
             
             void close( const int status, const std::multimap< std::string, std::string >& headers );
             
             void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
             
-            void close( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers );
+            void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
             
             void yield( const std::string& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
-            void yield( const framework::Bytes& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+            void yield( const Bytes& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void yield( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
-            void yield( const int status, const framework::Bytes& body = { }, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+            void yield( const int status, const Bytes& body = { }, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void yield( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
-            void yield( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+            void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             
-            void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
+            void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const Bytes& ) >& callback );
             
-            void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
+            void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const Bytes& ) >& callback );
             
             void wait_for( const std::chrono::hours& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             

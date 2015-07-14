@@ -25,8 +25,6 @@ using std::chrono::microseconds;
 using restbed::detail::SessionImpl;
 
 //External Namespaces
-using framework::Bytes;
-using framework::String;
 
 namespace restbed
 {
@@ -79,7 +77,7 @@ namespace restbed
     
     void Session::close( const int status, const multimap< string, string >& headers )
     {
-        m_pimpl->close( status, String::empty, headers );
+        m_pimpl->close( status, "", headers );
     }
     
     void Session::close( const int status, const string& body, const multimap< string, string >& headers )
@@ -116,7 +114,7 @@ namespace restbed
     
     void Session::yield( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->yield( status, String::empty, headers, callback );
+        m_pimpl->yield( status, "", headers, callback );
     }
     
     void Session::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )

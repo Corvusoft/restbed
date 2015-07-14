@@ -19,14 +19,11 @@
 //Project Namespaces
 
 //External Namespaces
-namespace framework
-{
-    class Uri;
-}
 
 namespace restbed
 {
     //Forward Declarations
+    class Uri;
     
     namespace detail
     {
@@ -101,19 +98,19 @@ namespace restbed
 
                 void set_single_diffie_hellman_use_enabled( const bool value );
 
-                void set_certificate( const framework::Uri& value );
+                void set_certificate( const Uri& value );
 
-                void set_certificate_chain( const framework::Uri& value );
+                void set_certificate_chain( const Uri& value );
                 
-                void set_certificate_authority_pool( const framework::Uri& value );
+                void set_certificate_authority_pool( const Uri& value );
 
                 void set_passphrase( const std::string& value );
 
-                void set_private_key( const framework::Uri& value );
+                void set_private_key( const Uri& value );
 
-                void set_private_rsa_key( const framework::Uri& value );
+                void set_private_rsa_key( const Uri& value );
 
-                void set_temporary_diffie_hellman( const framework::Uri& value );
+                void set_temporary_diffie_hellman( const Uri& value );
 
                 //Operators
                 

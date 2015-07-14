@@ -13,10 +13,10 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/byte.hpp"
+#include "corvusoft/restbed/string.hpp"
 
 //External Includes
-#include <corvusoft/framework/byte>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -59,13 +59,13 @@ namespace restbed
             
             const std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            const std::string get_method( const std::function< std::string ( const std::string& ) >& transform = &framework::String::uppercase ) const;
+            const std::string get_method( const std::function< std::string ( const std::string& ) >& transform = String::uppercase ) const;
             
-            const std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = &framework::String::uppercase ) const;
+            const std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = String::uppercase ) const;
             
-            const framework::Bytes get_body( const std::function< framework::Bytes ( const framework::Bytes& ) >& transform = nullptr ) const;
+            const Bytes get_body( const std::function< Bytes ( const Bytes& ) >& transform = nullptr ) const;
             
-            void get_body( std::string& body, const std::function< framework::Bytes ( const framework::Bytes& ) >& transform = nullptr ) const;
+            void get_body( std::string& body, const std::function< Bytes ( const Bytes& ) >& transform = nullptr ) const;
             
             void get_header( const std::string& name,
                              int& value, /*out*/
@@ -104,8 +104,8 @@ namespace restbed
                                     const std::string& default_value,
                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                     
-            std::multimap< std::string, std::string > get_headers( const std::string& name = framework::String::empty,
-                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            std::multimap< std::string, std::string > get_headers( const std::string& name = "",
+                                                                   const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                     
             void get_query_parameter( const std::string& name,
                                       int& value, /*out*/
@@ -144,8 +144,8 @@ namespace restbed
                                              const std::string& default_value,
                                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                              
-            std::multimap< std::string, std::string > get_query_parameters( const std::string& name = framework::String::empty,
-                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "",
+                                                                            const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                     
             void get_path_parameter( const std::string& name,
                                      int& value, /*out*/
@@ -184,8 +184,8 @@ namespace restbed
                                             const std::string& default_value,
                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                             
-            std::map< std::string, std::string > get_path_parameters( const std::string& name = framework::String::empty,
-                    const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            std::map< std::string, std::string > get_path_parameters( const std::string& name = "",
+                                                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                     
             //Setters
             

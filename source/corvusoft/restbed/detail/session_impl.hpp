@@ -14,11 +14,11 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/byte.hpp"
 #include "corvusoft/restbed/logger.hpp"
 
 //External Includes
 #include <asio.hpp>
-#include <corvusoft/framework/byte>
 
 //System Namespaces
 
@@ -64,27 +64,27 @@ namespace restbed
                 
                 void close( const std::string& body );
                 
-                void close( const framework::Bytes& body );
+                void close( const Bytes& body );
                 
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
                 
-                void close( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers );
+                void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
                 
                 void yield( const std::string& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
-                void yield( const framework::Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void yield( const Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
-                void yield( const int status, const framework::Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
-                void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
+                void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >&, const Bytes& ) >& callback );
                 
-                void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const framework::Bytes& ) >& callback );
+                void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >&, const Bytes& ) >& callback );
                 
                 void wait_for( const std::chrono::hours& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
@@ -158,7 +158,7 @@ namespace restbed
                 SessionImpl( const SessionImpl& original ) = delete;
 
                 //Functionality
-                framework::Bytes fetch_body( const std::size_t length ) const;
+                Bytes fetch_body( const std::size_t length ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 

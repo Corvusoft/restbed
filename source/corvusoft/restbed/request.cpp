@@ -21,8 +21,6 @@ using std::shared_ptr;
 using restbed::detail::RequestImpl;
 
 //External Namespaces
-using framework::Bytes;
-using framework::String;
 
 namespace restbed
 {
@@ -113,7 +111,7 @@ namespace restbed
     
     string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_header( name, String::empty, transform );
+        return m_pimpl->get_header( name, "", transform );
     }
     
     string Request::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
@@ -158,7 +156,7 @@ namespace restbed
     
     string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_query_parameter( name, String::empty, transform );
+        return m_pimpl->get_query_parameter( name, "", transform );
     }
     
     string Request::get_query_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
@@ -203,7 +201,7 @@ namespace restbed
     
     string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path_parameter( name, String::empty, transform );
+        return m_pimpl->get_path_parameter( name, "", transform );
     }
     
     string Request::get_path_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const

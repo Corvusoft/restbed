@@ -18,11 +18,9 @@
 #include <memory>
 #include <cstdlib>
 #include <restbed>
-#include <framework>
 
 using namespace std;
 using namespace restbed;
-using namespace framework;
 
 void get_method_handler( const shared_ptr< Session >& session )
 {

@@ -3,6 +3,8 @@
  */
 
 //System Includes
+#include <chrono>
+#include <random>
 
 //Project Includes
 #include "corvusoft/restbed/session.hpp"
@@ -10,17 +12,19 @@
 #include "corvusoft/restbed/detail/session_manager_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/unique_id>
 
 //System Namespaces
+using std::string;
+using std::mt19937;
 using std::function;
 using std::shared_ptr;
 using std::make_shared;
+using std::chrono::system_clock;
+using std::uniform_int_distribution;
 
 //Project Namespaces
 
 //External Namespaces
-using framework::UniqueId;
 
 namespace restbed
 {
@@ -48,7 +52,17 @@ namespace restbed
 
         void SessionManagerImpl::create( const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            auto session = make_shared< Session >( UniqueId::generate( ).to_string( ) );
+            static const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            static uniform_int_distribution< > selector( 0, charset.size( ) - 1 );
+            static mt19937 generator( system_clock::now( ).time_since_epoch( ).count( ) );
+
+            string key = "";
+            for ( int index = 0; index < 32; index++ )
+            {
+                key += ( charset.at( selector( generator ) ) );
+            }
+
+            auto session = make_shared< Session >( key );
             callback( session );
         }
         

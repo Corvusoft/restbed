@@ -27,7 +27,6 @@ using restbed::detail::SocketImpl;
 using asio::ip::tcp;
 using asio::error_code;
 using asio::steady_timer;
-using framework::Bytes;
 
 #ifdef BUILD_SSL
     using asio::ssl::stream;

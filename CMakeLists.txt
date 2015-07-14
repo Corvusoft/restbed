@@ -22,13 +22,12 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( asio REQUIRED )
-find_package( framework REQUIRED )
 
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
 endif ( )
 
-include_directories( SYSTEM ${framework_INCLUDE} ${asio_INCLUDE} )
+include_directories( SYSTEM ${asio_INCLUDE} )
 
 #
 # Build
@@ -38,12 +37,11 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 include_directories( ${INCLUDE_DIR} )
 
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
-add_dependencies( ${PROJECT_NAME} corvusoft-framework )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} framework ${ssl_LIBRARY} ${crypto_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
-    target_link_libraries( ${PROJECT_NAME} framework )
+    target_link_libraries( ${PROJECT_NAME} )
 endif ( )
 
 if ( BUILD_EXAMPLES )

@@ -15,9 +15,11 @@ include_directories( ${catch_INCLUDE} )
 #
 # Build
 #
+add_executable( string_integration_test_suite ${SOURCE_DIR}/string_suite.cpp )
 add_executable( session_integration_test_suite ${SOURCE_DIR}/session_suite.cpp )
 add_executable( resource_integration_test_suite ${SOURCE_DIR}/resource_suite.cpp )
 
+target_link_libraries( string_integration_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( session_integration_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( resource_integration_test_suite ${CMAKE_PROJECT_NAME} )
 
@@ -25,6 +27,7 @@ target_link_libraries( resource_integration_test_suite ${CMAKE_PROJECT_NAME} )
 # Setup
 #
 enable_testing( )
+add_test( string_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/string_integration_test_suite )
 add_test( session_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/session_integration_test_suite )
 add_test( resource_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_integration_test_suite )
 

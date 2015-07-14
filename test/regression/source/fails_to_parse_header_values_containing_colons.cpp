@@ -13,10 +13,10 @@
 
 //Project Includes
 #include <restbed>
+#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
-#include <corvusoft/framework/http>
 
 //System Namespaces
 using std::thread;
@@ -28,7 +28,6 @@ using std::make_shared;
 using namespace restbed;
 
 //External Namespaces
-using namespace framework;
 
 void get_handler( const shared_ptr< Session >& session )
 {

@@ -5,11 +5,11 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/uri.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
 #include "corvusoft/restbed/detail/ssl_settings_impl.hpp"
 
 //External Includes
-#include <corvusoft/framework/uri>
 
 //System Namespaces
 using std::string;
@@ -18,7 +18,6 @@ using std::string;
 using restbed::detail::SSLSettingsImpl;
 
 //External Namespaces
-using framework::Uri;
 
 namespace restbed
 {

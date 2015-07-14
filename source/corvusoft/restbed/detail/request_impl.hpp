@@ -12,10 +12,10 @@
 #include <functional>
 
 //Project Includes
+#include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/string.hpp>
 
 //External Includes
-#include <corvusoft/framework/byte>
-#include <corvusoft/framework/string>
 
 //System Namespaces
 
@@ -59,9 +59,9 @@ namespace restbed
                 
                 const std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform ) const;
                 
-                const framework::Bytes get_body( const std::function< framework::Bytes ( const framework::Bytes& ) >& transform ) const;
+                const Bytes get_body( const std::function< Bytes ( const Bytes& ) >& transform ) const;
                 
-                void get_body( std::string& body, const std::function< framework::Bytes ( const framework::Bytes& ) >& transform ) const;
+                void get_body( std::string& body, const std::function< Bytes ( const Bytes& ) >& transform ) const;
                 
                 void get_header( const std::string& name, int& value, const int default_value, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
@@ -120,7 +120,7 @@ namespace restbed
                 
                 void set_protocol( const std::string& value );
                 
-                void set_body( const framework::Bytes& value );
+                void set_body( const Bytes& value );
                 
                 void set_headers( const std::multimap< std::string, std::string >& values );
                 
@@ -175,7 +175,7 @@ namespace restbed
                 
                 std::string m_protocol;
                 
-                framework::Bytes m_body;
+                Bytes m_body;
                 
                 std::multimap< std::string, std::string > m_headers;
                 

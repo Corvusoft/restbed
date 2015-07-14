@@ -11,9 +11,9 @@
 #include <string>
 
 //Project Includes
+#include "corvusoft/restbed/byte.hpp"
 
 //External Includes
-#include <corvusoft/framework/byte>
 
 //System Namespaces
 
@@ -42,14 +42,14 @@ namespace restbed
                 virtual ~ResponseImpl( void );
                 
                 //Functionality
-                framework::Bytes to_bytes( void ) const;
+                Bytes to_bytes( void ) const;
                 
                 //Getters
                 double get_version( void ) const;
                 
                 int get_status_code( void ) const;
                 
-                const framework::Bytes& get_body( void ) const;
+                const Bytes& get_body( void ) const;
                 
                 const std::string& get_protocol( void ) const;
                 
@@ -64,7 +64,7 @@ namespace restbed
                 
                 void set_protocol( const std::string& value );
                 
-                void set_body( const framework::Bytes& value );
+                void set_body( const Bytes& value );
                 
                 void set_status_message( const std::string& value );
                 
@@ -117,7 +117,7 @@ namespace restbed
                 
                 std::string m_protocol;
                 
-                framework::Bytes m_body;
+                Bytes m_body;
                 
                 std::string m_status_message;
                 
