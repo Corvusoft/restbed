@@ -6,6 +6,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/session.hpp"
+#include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
 
 //External Includes
@@ -58,6 +59,11 @@ namespace restbed
         m_pimpl->close( body );
     }
     
+    void Session::close( const Response& response )
+    {
+        m_pimpl->close( response );
+    }
+
     void Session::close( const string& body )
     {
         m_pimpl->close( body );
@@ -90,23 +96,28 @@ namespace restbed
         m_pimpl->close( status, body, headers );
     }
     
+    void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->yield( body, callback );
+    }
+
     void Session::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         m_pimpl->yield( body, callback );
     }
     
-    void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const Response& response, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        m_pimpl->yield( body, callback );
+        m_pimpl->yield( response, callback );
     }
-    
-    void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+
+    void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static multimap< string, string > empty;
         m_pimpl->yield( status, body, empty, callback );
     }
-    
-    void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+
+    void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static multimap< string, string > empty;
         m_pimpl->yield( status, body, empty, callback );

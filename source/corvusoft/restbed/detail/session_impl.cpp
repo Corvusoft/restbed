@@ -102,11 +102,6 @@ namespace restbed
             m_socket->close( );
         }
         
-        void SessionImpl::close( const string& body )
-        {
-            close( String::to_bytes( body ) );
-        }
-        
         void SessionImpl::close( const Bytes& body )
         {
             m_socket->write( body, [ this ]( const asio::error_code & error, size_t )
@@ -122,6 +117,25 @@ namespace restbed
                 }
             } );
         }
+
+        void SessionImpl::close( const string& body )
+        {
+            close( Bytes( body.begin( ), body.end( ) ) );
+        }
+
+        void SessionImpl::close( const Response& response )
+        {
+            transmit( response, [ this ]( const asio::error_code & error, size_t )
+            {
+                if ( error )
+                {
+                    const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), this->m_session );
+                }
+                
+                this->m_socket->close( );
+            } );
+        }
         
         void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
         {
@@ -135,21 +149,7 @@ namespace restbed
             response.set_headers( headers );
             response.set_status_code( status );
             
-            transmit( response, [ this ]( const asio::error_code & error, size_t )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
-                }
-                
-                this->m_socket->close( );
-            } );
-        }
-        
-        void SessionImpl::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            yield( String::to_bytes( body ), callback );
+            close( response );
         }
         
         void SessionImpl::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -167,19 +167,14 @@ namespace restbed
                 }
             } );
         }
-        
-        void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+
+        void SessionImpl::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            yield( status, String::to_bytes( body ), headers, callback );
+            yield( String::to_bytes( body ), callback );
         }
         
-        void SessionImpl::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionImpl::yield( const Response& response, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            Response response;
-            response.set_body( body );
-            response.set_headers( headers );
-            response.set_status_code( status );
-            
             transmit( response, [ this, callback ]( const asio::error_code & error, size_t )
             {
                 if ( error )
@@ -199,6 +194,21 @@ namespace restbed
                     }
                 }
             } );
+        }
+
+        void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            yield( status, String::to_bytes( body ), headers, callback );
+        }
+        
+        void SessionImpl::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            Response response;
+            response.set_body( body );
+            response.set_headers( headers );
+            response.set_status_code( status );
+            
+            yield( response, callback );
         }
         
         void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -445,7 +455,7 @@ namespace restbed
             }
         }
         
-        void SessionImpl::transmit( Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
+        void SessionImpl::transmit( const Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
         {
             auto headers = m_settings->get_default_headers( );
             
@@ -460,14 +470,21 @@ namespace restbed
             
             hdrs = response.get_headers( );
             headers.insert( hdrs.begin( ), hdrs.end( ) );
-            response.set_headers( headers );
+
+            Response payload;
+            payload.set_headers( headers );
+            payload.set_body( response.get_body( ) );
+            payload.set_version( response.get_version( ) );
+            payload.set_protocol( response.get_protocol( ) );
+            payload.set_status_code( response.get_status_code( ) );
+            payload.set_status_message( response.get_status_message( ) );
             
-            if ( response.get_status_message( ).empty( ) )
+            if ( payload.get_status_message( ).empty( ) )
             {
-                response.set_status_message( m_settings->get_status_message( response.get_status_code( ) ) );
+                payload.set_status_message( m_settings->get_status_message( payload.get_status_code( ) ) );
             }
 
-            m_socket->write( response.to_bytes( ), callback );
+            m_socket->write( payload.to_bytes( ), callback );
         }
         
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
@@ -543,7 +560,7 @@ namespace restbed
             runtime_error re( m_settings->get_status_message( status_code ) );
             failure( status_code, re, session );
         }
-        catch ( const regex_error & re )
+        catch ( const regex_error& re )
         {
             failure( 500, re, session );
         }

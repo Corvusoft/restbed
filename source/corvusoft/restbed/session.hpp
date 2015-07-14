@@ -29,6 +29,7 @@ namespace restbed
     //Forward Declarations
     class Request;
     class Session;
+    class Response;
     class Resource;
     
     namespace detail
@@ -57,6 +58,8 @@ namespace restbed
             void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void close( const Bytes& body );
+
+            void close( const Response& response );
             
             void close( const std::string& body = "" );
             
@@ -70,19 +73,21 @@ namespace restbed
             
             void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
             
+            void yield( const Bytes& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+
             void yield( const std::string& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
-            void yield( const Bytes& data, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
-            
+            void yield( const Response& response, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+
             void yield( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void yield( const int status, const Bytes& body = { }, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void yield( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
-            void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
-            
             void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
+
+            void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
             
             void fetch( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             

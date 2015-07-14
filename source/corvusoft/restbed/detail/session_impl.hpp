@@ -61,19 +61,23 @@ namespace restbed
                 void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void close( void );
+
+                void close( const Bytes& body );
                 
                 void close( const std::string& body );
-                
-                void close( const Bytes& body );
+
+                void close( const Response& response );
                 
                 void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
                 
                 void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
                 
+                void yield( const Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 void yield( const std::string& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
-                void yield( const Bytes& body, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-                
+                void yield( const Response& response, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
@@ -164,7 +168,7 @@ namespace restbed
                 
                 void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ) const;
                 
-                void transmit( Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
+                void transmit( const Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
                 
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
                 
