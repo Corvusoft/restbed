@@ -2,7 +2,7 @@
  * Example illustrating service initialisation callback.
  *
  * Server Usage:
- *    ./distribution/example/http_service
+ *    ./distribution/example/service_ready_handler
  *
  * Client Usage:
  *    curl -w'\n' -v -X GET 'http://localhost:1984/resource'

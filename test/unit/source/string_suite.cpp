@@ -43,7 +43,6 @@ TEST_CASE( "empty to lowercase", "[string]" )
     REQUIRE( String::lowercase( "" ) == "" );
 }
 
-
 TEST_CASE( "uppercase to uppercase", "[string]" )
 {
     REQUIRE( String::uppercase( "corvusoft" ) == "CORVUSOFT" );

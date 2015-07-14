@@ -63,12 +63,6 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_default_workarounds_enabled( false );
     settings.set_single_diffie_hellman_use_enabled( false );
     settings.set_passphrase( "my-passphrase" );
-    //settings.set_certificate( Uri( "file:///tmp/server.crt" ) );
-    //settings.set_private_key( Uri( "file:///tmp/server.key" ) );
-    //settings.set_private_rsa_key( Uri( "file:///tmp/rsa.key" ) );
-    //settings.set_certificate_chain( Uri( "file:///tmp/chain.crt" ) );
-    //settings.set_certificate_authority_pool( Uri( "file:///tmp" ) );
-    //settings.set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
 
     REQUIRE( settings.get_port( ) == 8080 );
     REQUIRE( not settings.has_enabled_sslv2( ) );
@@ -80,11 +74,5 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( not settings.has_enabled_default_workarounds( ) );
     REQUIRE( not settings.has_enabled_single_diffie_hellman_use( ) );
     REQUIRE( settings.get_passphrase( ) == "my-passphrase" );
-    //REQUIRE( settings.get_certificate( ) == "/tmp/server.crt" );
-    //REQUIRE( settings.get_private_key( ) == "/tmp/server.key" );
-    //REQUIRE( settings.get_private_rsa_key( ) == "/tmp/rsa.key" );
-    //REQUIRE( settings.get_certificate_chain( ) == "/tmp/chain.crt" );
-    //REQUIRE( settings.get_temporary_diffie_hellman( ) == "/tmp/dh512.pem" );
-    //REQUIRE( settings.get_certificate_authority_pool( ) == "/tmp" );
     REQUIRE( settings.has_disabled_http( ) == true );
 }
