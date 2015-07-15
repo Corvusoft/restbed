@@ -109,11 +109,11 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
+                    failure( 500, runtime_error( message ), m_session );
                 }
                 else
                 {
-                    this->close( );
+                    close( );
                 }
             } );
         }
@@ -130,10 +130,10 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
+                    failure( 500, runtime_error( message ), m_session );
                 }
                 
-                this->m_socket->close( );
+                m_socket->close( );
             } );
         }
         
@@ -159,11 +159,11 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
+                    failure( 500, runtime_error( message ), m_session );
                 }
                 else
                 {
-                    callback( this->m_session );
+                    callback( m_session );
                 }
             } );
         }
@@ -180,17 +180,17 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
+                    failure( 500, runtime_error( message ), m_session );
                 }
                 else
                 {
                     if ( callback == nullptr )
                     {
-                        this->fetch( this->m_session, this->m_router );
+                        fetch( m_session, m_router );
                     }
                     else
                     {
-                        callback( this->m_session );
+                        callback( m_session );
                     }
                 }
             } );
@@ -240,18 +240,18 @@ namespace restbed
                     if ( error )
                     {
                         const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                        failure( 500, runtime_error( message ), this->m_session );
+                        failure( 500, runtime_error( message ), m_session );
                     }
                     else
                     {
-                        const auto data = this->fetch_body( length );
-                        callback( this->m_session, data );
+                        const auto data = fetch_body( length );
+                        callback( m_session, data );
                     }
                 } );
             }
             else
             {
-                const auto data = this->fetch_body( length );
+                const auto data = fetch_body( length );
                 callback( m_session, data );
             }
         }
@@ -263,12 +263,12 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
+                    failure( 500, runtime_error( message ), m_session );
                 }
                 else
                 {
-                    const auto data = this->fetch_body( length );
-                    callback( this->m_session, data );
+                    const auto data = fetch_body( length );
+                    callback( m_session, data );
                 }
             } );
         }
@@ -300,11 +300,11 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), this->m_session );
+                    failure( 500, runtime_error( message ), m_session );
                 }
                 else
                 {
-                    callback( this->m_session );
+                    callback( m_session );
                 }
             } );
         }
