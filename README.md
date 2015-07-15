@@ -1,4 +1,4 @@
-# Restbed
+# Restbed 
 
 [![twitter][1.1]][1]
 [![google+][2.1]][2]
@@ -93,11 +93,11 @@ The Restbed Framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
 Please contact sales@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
 
-| Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
-| :------------: |:-------------------:|:---------------------------------------:| 
-|     1-3        |          3          |                £280.00                  | 
-|     4-10       |          3          |                £360.00                  |
-|     11+        |          3+         |                 AABUS                   |                
+| Production Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
+| :-----------------------: |:-------------------:|:---------------------------------------:| 
+|            1-3            |          3          |                £280.00                  | 
+|            4-10           |          3          |                £360.00                  |
+|             11+           |          3+         |                 AABUS                   |                
 
 Purchase by contacting sales@corvusoft.co.uk for further information.
 
