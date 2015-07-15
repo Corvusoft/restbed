@@ -10,6 +10,8 @@
 ## Features
 
  - Long Polling
+ - Streaming
+ - Comet
  - Secure Socket Layer (SSL/TLS)
  - Path Parameters
  - Query Parameters
