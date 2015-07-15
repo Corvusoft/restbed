@@ -1,6 +1,14 @@
-# Restbed
+# Restbed 
 
+[![twitter][1.1]][1]
+[![google+][2.1]][2]
 [![Join the chat at https://gitter.im/Corvusoft/restbed](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
+[2.1]: http://i.imgur.com/yCsTjba.png (google plus icon with padding)
+
+[1]: http://www.twitter.com/corvusoft
+[2]: https://plus.google.com/+CorvusoftCoUkSolutions
 
 ----------
 
@@ -10,6 +18,8 @@
 ## Features
 
  - Long Polling
+ - Streaming
+ - Comet
  - Secure Socket Layer (SSL/TLS)
  - Path Parameters
  - Query Parameters
@@ -83,11 +93,11 @@ The Restbed Framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
 Please contact sales@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
 
-| Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
-| :------------: |:-------------------:|:---------------------------------------:| 
-|     1-3        |          3          |                £280.00                  | 
-|     4-10       |          3          |                £360.00                  |
-|     11+        |          3+         |                 AABUS                   |                
+| Production Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
+| :-----------------------: |:-------------------:|:---------------------------------------:| 
+|            1-3            |          3          |                £280.00                  | 
+|            4-10           |          3          |                £360.00                  |
+|             11+           |          3+         |                 AABUS                   |                
 
 Purchase by contacting sales@corvusoft.co.uk for further information.
 
@@ -103,7 +113,7 @@ make [-j CPU_CORES+1] install
 make test
 ```
 
-You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker.
+You will now find all required components installed in the restbed distribution folder.  Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/) tagged with #restbed.
 
 ## Minimum Requirements
 
