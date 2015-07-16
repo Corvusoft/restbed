@@ -308,6 +308,63 @@ namespace restbed
                 }
             } );
         }
+
+        void SessionImpl::wait_for( const hours& interval, const function< hours ( const hours& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< hours >( interval ) ) );
+            }, callback );
+        }
+        
+        void SessionImpl::wait_for( const minutes& interval, const function< minutes ( const minutes& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< minutes >( interval ) ) );
+            }, callback );
+        }
+        
+        void SessionImpl::wait_for( const seconds& interval, const function< seconds ( const seconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< seconds >( interval ) ) );
+            }, callback );
+        }
+        
+        void SessionImpl::wait_for( const milliseconds& interval, const function< milliseconds ( const milliseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< milliseconds >( interval ) ) );
+            }, callback );
+        }
+        
+        void SessionImpl::wait_for( const microseconds& interval, const function< microseconds ( const microseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+        {
+            m_socket->wait( interval, [ interval, trigger, callback, this ]( const error_code & error )
+            {
+                if ( error )
+                {
+                    const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
+                    failure( 500, runtime_error( message ), m_session );
+                }
+                else
+                {
+                    const microseconds new_interval = trigger( interval );
+
+                    if ( new_interval == microseconds::zero( ) )
+                    {
+                        callback( m_session );
+                    }
+                    else
+                    {
+                        wait_for( new_interval, trigger, callback );
+                    }
+                }
+            } );
+        }
         
         const string& SessionImpl::get_id( void ) const
         {

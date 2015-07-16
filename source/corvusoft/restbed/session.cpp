@@ -177,6 +177,31 @@ namespace restbed
     {
         m_pimpl->wait_for( delay, callback );
     }
+
+    void Session::wait_for( const hours& interval, const function< hours ( const hours& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( interval, trigger, callback );
+    }
+    
+    void Session::wait_for( const minutes& interval, const function< minutes ( const minutes& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( interval, trigger, callback );
+    }
+    
+    void Session::wait_for( const seconds& interval, const function< seconds ( const seconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( interval, trigger, callback );
+    }
+    
+    void Session::wait_for( const milliseconds& interval, const function< milliseconds ( const milliseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( interval, trigger, callback );
+    }
+    
+    void Session::wait_for( const microseconds& interval, const function< microseconds ( const microseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
+    {
+        m_pimpl->wait_for( interval, trigger, callback );
+    }
     
     const string& Session::get_id( void ) const
     {

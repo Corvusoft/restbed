@@ -100,6 +100,16 @@ namespace restbed
                 
                 void wait_for( const std::chrono::microseconds& delay, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
+                void wait_for( const std::chrono::hours& interval, const std::function< std::chrono::hours ( const std::chrono::hours& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                
+                void wait_for( const std::chrono::minutes& interval, const std::function< std::chrono::minutes ( const std::chrono::minutes& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                
+                void wait_for( const std::chrono::seconds& interval, const std::function< std::chrono::seconds ( const std::chrono::seconds& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                
+                void wait_for( const std::chrono::milliseconds& interval, const std::function< std::chrono::milliseconds ( const std::chrono::milliseconds& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                
+                void wait_for( const std::chrono::microseconds& interval, const std::function< std::chrono::microseconds ( const std::chrono::microseconds& ) >& trigger, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+
                 //Getters
                 const std::string& get_id( void ) const;
                 
