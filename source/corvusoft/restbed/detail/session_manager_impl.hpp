@@ -6,7 +6,10 @@
 #define _RESTBED_DETAIL_SESSION_MANAGER_IMPL_H 1
 
 //System Includes
+#include <map>
+#include <string>
 #include <memory>
+#include <functional> 
 
 //Project Includes
 #include "corvusoft/restbed/session_manager.hpp"
@@ -95,6 +98,7 @@ namespace restbed
                 SessionManagerImpl& operator =( const SessionManagerImpl& value ) = delete;
                 
                 //Properties
+                std::map< std::string, std::shared_ptr< Session > > m_sessions;
         };
     }
 }

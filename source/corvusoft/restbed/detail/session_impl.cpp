@@ -15,6 +15,7 @@
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
@@ -68,6 +69,7 @@ namespace restbed
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
+            m_session_manager( nullptr ),
             m_buffer( nullptr ),
             m_headers( ),
             m_router( nullptr ),
@@ -91,15 +93,12 @@ namespace restbed
             return not is_open( );
         }
         
-        void SessionImpl::purge( const function< void ( const shared_ptr< Session >& ) >& )
-        {
-            close( );
-            //m_session_manager->purge( m_session, callback );
-        }
-        
         void SessionImpl::close( void )
         {
-            m_socket->close( );
+            m_session_manager->purge( m_session, [ this ]( const shared_ptr< Session >& session )
+            {
+                m_socket->close( );
+            } );
         }
         
         void SessionImpl::close( const Bytes& body )
@@ -134,6 +133,7 @@ namespace restbed
                 }
                 
                 m_socket->close( );
+                m_session_manager->purge( m_session, nullptr );
             } );
         }
         
@@ -444,6 +444,11 @@ namespace restbed
         void SessionImpl::set_headers( const multimap< string, string >& values )
         {
             m_headers = values;
+        }
+
+        void SessionImpl::set_session_manager( const shared_ptr< SessionManager >& value )
+        {
+            m_session_manager = value;
         }
         
         void SessionImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )

@@ -49,11 +49,6 @@ namespace restbed
         return m_pimpl->is_closed( );
     }
     
-    void Session::purge( const function< void ( const shared_ptr< Session >& ) >& callback )
-    {
-        m_pimpl->purge( callback );
-    }
-    
     void Session::close( const Bytes& body )
     {
         m_pimpl->close( body );

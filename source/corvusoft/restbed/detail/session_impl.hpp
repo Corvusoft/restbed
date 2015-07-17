@@ -36,6 +36,7 @@ namespace restbed
     class Resource;
     class Settings;
     class SocketImpl;
+    class SessionManager;
 
     namespace detail
     {
@@ -57,8 +58,6 @@ namespace restbed
                 bool is_open( void ) const;
                 
                 bool is_closed( void ) const;
-                
-                void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 void close( void );
 
@@ -140,6 +139,8 @@ namespace restbed
                 
                 void set_headers( const std::multimap< std::string, std::string >& values );
                 
+                void set_session_manager( const std::shared_ptr< SessionManager >& value );
+
                 void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) >& value );
                 
                 //Operators
@@ -207,6 +208,8 @@ namespace restbed
                 std::shared_ptr< const Resource > m_resource;
                 
                 std::shared_ptr< const Settings > m_settings;
+
+                std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::shared_ptr< asio::streambuf > m_buffer;
 

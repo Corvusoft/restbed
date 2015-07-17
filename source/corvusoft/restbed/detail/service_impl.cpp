@@ -662,17 +662,14 @@ namespace restbed
                 const function< void ( const shared_ptr< Session >& ) > route = bind( &ServiceImpl::router, this, _1 );
                 const function< void ( const shared_ptr< Session >& ) > load = bind( &SessionManager::load, m_session_manager, _1, route );
                 const function< void ( const shared_ptr< Session >& ) > authenticate = bind( &ServiceImpl::authenticate, this, _1, load );
-                const function< void ( const int, const exception&, const shared_ptr< Session >& ) > error_handler = m_error_handler;
                 
-                const auto logger = m_logger;
-                const auto settings = m_settings;
-                
-                m_session_manager->create( [ connection, authenticate, settings, error_handler, logger ]( const shared_ptr< Session >& session )
+                m_session_manager->create( [ this, connection, &authenticate ]( const shared_ptr< Session >& session )
                 {
-                    session->m_pimpl->set_logger( logger );
+                    session->m_pimpl->set_logger( m_logger );
                     session->m_pimpl->set_socket( connection );
-                    session->m_pimpl->set_settings( settings );
-                    session->m_pimpl->set_error_handler( error_handler );
+                    session->m_pimpl->set_settings( m_settings );
+                    session->m_pimpl->set_error_handler( m_error_handler );
+                    session->m_pimpl->set_session_manager( m_session_manager );
                     session->m_pimpl->fetch( session, authenticate );
                 } );
             }

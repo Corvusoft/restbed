@@ -55,8 +55,6 @@ namespace restbed
             
             bool is_closed( void ) const;
             
-            void purge( const std::function< void ( const std::shared_ptr< Session >& ) >& callback = nullptr );
-            
             void close( const Bytes& body );
 
             void close( const Response& response );

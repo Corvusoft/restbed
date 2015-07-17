@@ -14,6 +14,7 @@
 //External Includes
 
 //System Namespaces
+using std::map;
 using std::string;
 using std::mt19937;
 using std::function;
@@ -30,7 +31,7 @@ namespace restbed
 {
     namespace detail
     {
-        SessionManagerImpl::SessionManagerImpl( void )
+        SessionManagerImpl::SessionManagerImpl( void ) : m_sessions( )
         {
             return;
         }
@@ -52,6 +53,11 @@ namespace restbed
 
         void SessionManagerImpl::create( const function< void ( const shared_ptr< Session >& ) >& callback )
         {
+            if ( callback == nullptr )
+            {
+                return;
+            }
+
             static const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             static uniform_int_distribution< > selector( 0, charset.size( ) - 1 );
             static mt19937 generator( system_clock::now( ).time_since_epoch( ).count( ) );
@@ -62,19 +68,27 @@ namespace restbed
                 key += ( charset.at( selector( generator ) ) );
             }
 
-            auto session = make_shared< Session >( key );
-            callback( session );
+            m_sessions[ key ] = make_shared< Session >( key );
+            callback( m_sessions.at( key ) );
         }
         
         void SessionManagerImpl::purge( shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            session.reset( );
-            callback( nullptr );
+            if ( session not_eq nullptr )
+            {
+                m_sessions.erase( session->get_id( ) );
+                session.reset( );
+            }
+
+            if ( callback not_eq nullptr )
+            {
+                callback( nullptr );
+            }
         }
         
         void SessionManagerImpl::load( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            if ( session->is_closed( ) )
+            if ( session == nullptr or session->is_closed( ) or callback == nullptr )
             {
                 return;
             }
