@@ -615,34 +615,24 @@ namespace restbed
             const auto resource = resource_route->second;
             session->m_pimpl->set_resource( resource );
             
-            resource->m_pimpl->authenticate( session, bind( &ServiceImpl::route, this, _1, path ) );
-        }
-
-        void ServiceImpl::route( const shared_ptr< Session >& session, const string sanitised_path ) const
-        {
-            if ( session->is_closed( ) )
-            {
-                return;
-            }
-            
             const auto request = session->get_request( );
-            const auto method_handler = find_method_handler( session );
+            auto method_handler = find_method_handler( session );
             
-            extract_path_parameters( sanitised_path, request );
+            extract_path_parameters( path, request );
             
             if ( method_handler == nullptr )
             {
                 if ( m_supported_methods.count( request->get_method( ) ) == 0 )
                 {
-                    return method_not_implemented( session );
+                    method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
                 }
                 else
                 {
-                    return method_not_allowed( session );
+                    method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
                 }
             }
-            
-            method_handler( session );
+
+            resource->m_pimpl->authenticate( session, method_handler );
         }
         
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const

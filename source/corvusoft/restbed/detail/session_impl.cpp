@@ -95,7 +95,7 @@ namespace restbed
         
         void SessionImpl::close( void )
         {
-            m_session_manager->purge( m_session, [ this ]( const shared_ptr< Session >& session )
+            m_session_manager->purge( m_session, [ this ]( const shared_ptr< Session >& )
             {
                 m_socket->close( );
             } );
