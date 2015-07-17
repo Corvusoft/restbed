@@ -148,7 +148,7 @@ namespace restbed
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > find_method_handler( const std::shared_ptr< Session >& session ) const;
                 
-                void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
+                void authenticate( const std::shared_ptr< Session >& session ) const;
                 
                 bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
