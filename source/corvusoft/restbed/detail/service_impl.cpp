@@ -505,10 +505,7 @@ namespace restbed
             }
             else
             {
-                if ( session->is_open( ) )
-                {
-                    session->close( NOT_FOUND );
-                }
+                session->close( NOT_FOUND );
             }
         }
         
@@ -551,10 +548,7 @@ namespace restbed
             }
             else
             {
-                if ( session->is_open( ) )
-                {
-                    session->close( METHOD_NOT_ALLOWED );
-                }
+                session->close( METHOD_NOT_ALLOWED );
             }
         }
         
@@ -571,10 +565,7 @@ namespace restbed
             }
             else
             {
-                if ( session->is_open( ) )
-                {
-                    session->close( NOT_IMPLEMENTED );
-                }
+                session->close( NOT_IMPLEMENTED );
             }
         }
         
@@ -590,10 +581,7 @@ namespace restbed
             }
             else
             {
-                if ( session->is_open( ) )
-                {
-                    session->close( BAD_REQUEST, { { "Connection", "close" } } );
-                }
+                session->close( BAD_REQUEST, { { "Connection", "close" } } );
             }
         }
         
