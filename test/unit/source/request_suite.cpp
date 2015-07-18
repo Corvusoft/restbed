@@ -37,6 +37,8 @@ TEST_CASE( "validate default instance values", "[request]" )
     REQUIRE( request.has_query_parameter( "q" ) == false );
     REQUIRE( request.has_path_parameter( "id" ) == false );
     REQUIRE( request.has_header( "Content-Type" ) == false );
+    REQUIRE( request.has_query_parameter( "q", true ) == false );
+    REQUIRE( request.has_path_parameter( "id", true ) == false );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[request]" )

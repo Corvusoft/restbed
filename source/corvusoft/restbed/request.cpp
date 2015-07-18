@@ -124,93 +124,93 @@ namespace restbed
         return m_pimpl->get_headers( name, transform );
     }
     
-    void Request::get_query_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, int& value, const int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, transform );
+        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, transform );
+        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_query_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, long& value, const long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, transform );
+        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, transform );
+        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_query_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+    void Request::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, transform );
+        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_query_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, double& value, const double default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, transform );
+        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform ) const
+    string Request::get_query_parameter( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_query_parameter( name, "", transform );
+        return m_pimpl->get_query_parameter( name, "", ignore_case, transform );
     }
     
-    string Request::get_query_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    string Request::get_query_parameter( const string& name, const string& default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_query_parameter( name, default_value, transform );
+        return m_pimpl->get_query_parameter( name, default_value, ignore_case, transform );
     }
     
-    multimap< string, string > Request::get_query_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+    multimap< string, string > Request::get_query_parameters( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_query_parameters( name, transform );
+        return m_pimpl->get_query_parameters( name, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_path_parameter( const string& name, int& value, const int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_path_parameter( name, value, default_value, transform );
+        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_path_parameter( name, value, default_value, transform );
+        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_path_parameter( const string& name, long& value, const long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_path_parameter( name, value, default_value, transform );
+        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform  ) const
+    void Request::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const function< string ( const string& ) >& transform  ) const
     {
-        m_pimpl->get_path_parameter( name, value, default_value, transform );
+        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+    void Request::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
     {
-        m_pimpl->get_path_parameter( name, value, default_value, transform );
+        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_path_parameter( const string& name, double& value, const double default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        m_pimpl->get_path_parameter( name, value, default_value, transform );
+        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform ) const
+    string Request::get_path_parameter( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path_parameter( name, "", transform );
+        return m_pimpl->get_path_parameter( name, "", ignore_case, transform );
     }
     
-    string Request::get_path_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    string Request::get_path_parameter( const string& name, const string& default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path_parameter( name, default_value, transform );
+        return m_pimpl->get_path_parameter( name, default_value, ignore_case, transform );
     }
     
-    map< string, string > Request::get_path_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+    map< string, string > Request::get_path_parameters( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_path_parameters( name, transform );
+        return m_pimpl->get_path_parameters( name, ignore_case, transform );
     }
 }

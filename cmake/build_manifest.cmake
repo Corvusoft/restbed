@@ -7,7 +7,6 @@ set( BUILD_MANIFEST
    ${SOURCE_DIR}/detail/ssl_settings_impl.cpp
    ${SOURCE_DIR}/uri.cpp
    ${SOURCE_DIR}/detail/uri_impl.cpp
-   ${SOURCE_DIR}/detail/map_impl.cpp
    ${SOURCE_DIR}/string.cpp
    ${SOURCE_DIR}/detail/string_impl.cpp
    ${SOURCE_DIR}/resource.cpp

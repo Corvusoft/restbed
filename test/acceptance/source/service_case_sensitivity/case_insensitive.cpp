@@ -30,6 +30,13 @@ using namespace restbed;
 
 void get_method_handler( const shared_ptr< Session >& session )
 {
+    const auto request = session->get_request( );
+
+    REQUIRE( "1" == request->get_path_parameter( "id" ) );
+    REQUIRE( "1" == request->get_path_parameter( "ID" ) );
+    REQUIRE( "abc" == request->get_query_parameter( "q" ) );
+    REQUIRE( "abc" == request->get_query_parameter( "Q" ) );
+
     session->close( OK, "Hello, World!", { { "Content-Length", "13" } } );
 }
 
@@ -54,12 +61,12 @@ SCENARIO( "case sensitive service", "[service]" )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
-                WHEN( "I perform a HTTP 'GET' request to '/resources/1'" )
+                WHEN( "I perform a HTTP 'GET' request to '/resources/1?q=abc'" )
                 {
                     Http::Request request;
                     request.port = 1984;
                     request.host = "localhost";
-                    request.path = "/resources/1";
+                    request.path = "/resources/1?q=abc";
 
                     auto response = Http::get( request );
 
@@ -89,12 +96,12 @@ SCENARIO( "case sensitive service", "[service]" )
                     }
                 }
 
-                WHEN( "I perform a HTTP 'GET' request to '/RESOURCES/1'" )
+                WHEN( "I perform a HTTP 'GET' request to '/RESOURCES/1?q=abc'" )
                 {
                     Http::Request request;
                     request.port = 1984;
                     request.host = "localhost";
-                    request.path = "/RESOURCES/1";
+                    request.path = "/RESOURCES/1?q=abc";
 
                     auto response = Http::get( request );
 

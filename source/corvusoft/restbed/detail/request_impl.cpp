@@ -3,20 +3,22 @@
  */
 
 //System Includes
+#include <utility>
 
 //Project Includes
 #include "corvusoft/restbed/detail/request_impl.hpp"
 
 //External Includes
-#include "corvusoft/restbed/detail/map_impl.hpp"
 
 //System Namespaces
 using std::map;
+using std::pair;
 using std::stoi;
 using std::stod;
 using std::stof;
 using std::stoul;
 using std::string;
+using std::find_if;
 using std::multimap;
 using std::function;
 using std::shared_ptr;
@@ -50,14 +52,28 @@ namespace restbed
         
         bool RequestImpl::has_header( const string& name ) const
         {
-            return ( MapImpl::find_ignoring_case( name, m_headers ) not_eq m_headers.end( ) );
+            const auto key = String::lowercase( name );
+
+            auto iterator = find_if( m_headers.begin( ), m_headers.end( ), [ &key ]( const pair< string, string >& value )
+            {
+                return ( key == String::lowercase( value.first ) );
+            } );
+
+            return iterator not_eq m_headers.end( );
         }
         
         bool RequestImpl::has_path_parameter( const string& name, const bool ignore_case ) const
         {
             if ( ignore_case )
             {
-                return ( MapImpl::find_ignoring_case( name, m_path_parameters ) not_eq m_path_parameters.end( ) );
+                const auto key = String::lowercase( name );
+
+                auto iterator = find_if( m_path_parameters.begin( ), m_path_parameters.end( ), [ &key ]( const pair< string, string >& value )
+                {
+                    return ( key == String::lowercase( value.first ) );
+                } );
+
+                return iterator not_eq m_path_parameters.end( );
             }
             
             return m_path_parameters.find( name ) not_eq m_path_parameters.end( );
@@ -67,7 +83,14 @@ namespace restbed
         {
             if ( ignore_case )
             {
-                return ( MapImpl::find_ignoring_case( name, m_query_parameters ) not_eq m_query_parameters.end( ) );
+                const auto key = String::lowercase( name );
+
+                auto iterator = find_if( m_query_parameters.begin( ), m_query_parameters.end( ), [ &key ]( const pair< string, string >& value )
+                {
+                    return ( key == String::lowercase( value.first ) );
+                } );
+
+                return iterator not_eq m_query_parameters.end( );
             }
             
             return m_query_parameters.find( name ) not_eq m_query_parameters.end( );
@@ -269,7 +292,7 @@ namespace restbed
             return headers;
         }
         
-        void RequestImpl::get_query_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_query_parameter( const string& name, int& value, const int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -277,7 +300,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, "", nullptr );
+            string parameter = get_query_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -287,7 +310,7 @@ namespace restbed
             value = stoi( parameter );
         }
         
-        void RequestImpl::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -295,7 +318,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, "", nullptr );
+            string parameter = get_query_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -305,7 +328,7 @@ namespace restbed
             value = stoul( parameter );
         }
         
-        void RequestImpl::get_query_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_query_parameter( const string& name, long& value, const long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -313,7 +336,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, "", nullptr );
+            string parameter = get_query_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -323,7 +346,7 @@ namespace restbed
             value = stol( parameter );
         }
         
-        void RequestImpl::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -331,7 +354,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, "", nullptr );
+            string parameter = get_query_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -341,7 +364,7 @@ namespace restbed
             value = stoul( parameter );
         }
         
-        void RequestImpl::get_query_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+        void RequestImpl::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -349,7 +372,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, "", nullptr );
+            string parameter = get_query_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -359,7 +382,7 @@ namespace restbed
             value = stof( parameter );
         }
         
-        void RequestImpl::get_query_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_query_parameter( const string& name, double& value, const double default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -367,7 +390,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_query_parameter( name, "", nullptr );
+            string parameter = get_query_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -377,11 +400,11 @@ namespace restbed
             value = stod( parameter );
         }
         
-        string RequestImpl::get_query_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+        string RequestImpl::get_query_parameter( const string& name, const string& default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             string value = default_value;
             
-            const auto parameters = get_query_parameters( name, transform );
+            const auto parameters = get_query_parameters( name, ignore_case, transform );
             
             if ( parameters.size( ) not_eq 0 )
             {
@@ -391,13 +414,17 @@ namespace restbed
             return value;
         }
         
-        multimap< string, string > RequestImpl::get_query_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+        multimap< string, string > RequestImpl::get_query_parameters( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             multimap< string, string > parameters;
             
+            const auto rhs = ( ignore_case ) ? String::lowercase( name ) : name;
+
             for ( const auto& parameter : m_query_parameters )
             {
-                if ( parameter.first == name )
+                const auto lhs = ( ignore_case ) ? String::lowercase( parameter.first ) : parameter.first;
+
+                if ( lhs == rhs )
                 {
                     if ( transform == nullptr )
                     {
@@ -413,7 +440,7 @@ namespace restbed
             return parameters;
         }
         
-        void RequestImpl::get_path_parameter( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_path_parameter( const string& name, int& value, const int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {
@@ -421,7 +448,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, "", nullptr );
+            string parameter = get_path_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -431,7 +458,7 @@ namespace restbed
             value = stoi( parameter );
         }
         
-        void RequestImpl::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {
@@ -439,7 +466,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, "", nullptr );
+            string parameter = get_path_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -449,7 +476,7 @@ namespace restbed
             value = stoul( parameter );
         }
         
-        void RequestImpl::get_path_parameter( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_path_parameter( const string& name, long& value, const long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {
@@ -457,7 +484,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, "", nullptr );
+            string parameter = get_path_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -467,7 +494,7 @@ namespace restbed
             value = stol( parameter );
         }
         
-        void RequestImpl::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {
@@ -475,7 +502,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, "", nullptr );
+            string parameter = get_path_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -485,7 +512,7 @@ namespace restbed
             value = stoul( parameter );
         }
         
-        void RequestImpl::get_path_parameter( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+        void RequestImpl::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {
@@ -493,7 +520,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, "", nullptr );
+            string parameter = get_path_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -503,7 +530,7 @@ namespace restbed
             value = stof( parameter );
         }
         
-        void RequestImpl::get_path_parameter( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+        void RequestImpl::get_path_parameter( const string& name, double& value, const double default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {
@@ -511,7 +538,7 @@ namespace restbed
                 return;
             }
             
-            string parameter = get_path_parameter( name, "", nullptr );
+            string parameter = get_path_parameter( name, "", ignore_case, nullptr );
             
             if ( transform not_eq nullptr )
             {
@@ -521,11 +548,11 @@ namespace restbed
             value = stod( parameter );
         }
         
-        string RequestImpl::get_path_parameter( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+        string RequestImpl::get_path_parameter( const string& name, const string& default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             string value = default_value;
             
-            const auto parameters = get_path_parameters( name, transform );
+            const auto parameters = get_path_parameters( name, ignore_case, transform );
             
             if ( parameters.size( ) not_eq 0 )
             {
@@ -535,13 +562,17 @@ namespace restbed
             return value;
         }
         
-        map< string, string > RequestImpl::get_path_parameters( const string& name, const function< string ( const string& ) >& transform ) const
+        map< string, string > RequestImpl::get_path_parameters( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             map< string, string > parameters;
             
+            const auto rhs = ( ignore_case ) ? String::lowercase( name ) : name;
+
             for ( const auto& parameter : m_path_parameters )
             {
-                if ( parameter.first == name )
+                const auto lhs = ( ignore_case ) ? String::lowercase( parameter.first ) : parameter.first;
+
+                if ( lhs == rhs )
                 {
                     if ( transform == nullptr )
                     {

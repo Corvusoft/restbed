@@ -110,81 +110,99 @@ namespace restbed
             void get_query_parameter( const std::string& name,
                                       int& value, /*out*/
                                       const int default_value = 0,
+                                      const bool ignore_case = true,
                                       const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                       
             void get_query_parameter( const std::string& name,
                                       unsigned int& value, /*out*/
                                       const unsigned int default_value = 0,
+                                      const bool ignore_case = true,
                                       const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                       
             void get_query_parameter( const std::string& name,
                                       long& value, /*out*/
                                       const long default_value = 0,
+                                      const bool ignore_case = true,
                                       const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                       
             void get_query_parameter( const std::string& name,
                                       unsigned long& value, /*out*/
                                       const unsigned long default_value = 0,
+                                      const bool ignore_case = true,
                                       const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                       
             void get_query_parameter( const std::string& name,
                                       float& value, /*out*/
                                       const float default_value = 0,
+                                      const bool ignore_case = true,
                                       const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
                                       
             void get_query_parameter( const std::string& name,
                                       double& value, /*out*/
                                       const double default_value = 0,
+                                      const bool ignore_case = true,
                                       const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                       
             std::string get_query_parameter( const std::string& name,
+                                             const bool ignore_case = true,
                                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                              
             std::string get_query_parameter( const std::string& name,
                                              const std::string& default_value,
+                                             const bool ignore_case = true,
                                              const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                              
             std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "",
+                                                                            const bool ignore_case = true,
                                                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                     
             void get_path_parameter( const std::string& name,
                                      int& value, /*out*/
                                      const int default_value = 0,
+                                     const bool ignore_case = true,
                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                      
             void get_path_parameter( const std::string& name,
                                      unsigned int& value, /*out*/
                                      const unsigned int default_value = 0,
+                                     const bool ignore_case = true,
                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                      
             void get_path_parameter( const std::string& name,
                                      long& value, /*out*/
                                      const long default_value = 0,
+                                     const bool ignore_case = true,
                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                      
             void get_path_parameter( const std::string& name,
                                      unsigned long& value, /*out*/
                                      const unsigned long default_value = 0,
+                                     const bool ignore_case = true,
                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                      
             void get_path_parameter( const std::string& name,
                                      float& value, /*out*/
                                      const float default_value = 0,
+                                     const bool ignore_case = true,
                                      const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
                                      
             void get_path_parameter( const std::string& name,
                                      double& value, /*out*/
                                      const double default_value = 0,
+                                     const bool ignore_case = true,
                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                      
             std::string get_path_parameter( const std::string& name,
+                                            const bool ignore_case = true,
                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                             
             std::string get_path_parameter( const std::string& name,
                                             const std::string& default_value,
+                                            const bool ignore_case = true,
                                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                             
             std::map< std::string, std::string > get_path_parameters( const std::string& name = "",
+                                                                      const bool ignore_case = true,
                                                                       const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                     
             //Setters
