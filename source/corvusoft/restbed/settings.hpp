@@ -52,6 +52,8 @@ namespace restbed
             std::string get_root( void ) const;
             
             int32_t get_connection_limit( void ) const;
+
+            bool get_case_insensitive_uris( void ) const;
             
             std::chrono::seconds get_connection_timeout( void ) const;
             
@@ -74,6 +76,8 @@ namespace restbed
 
             void set_connection_limit( const int32_t value );
             
+            void set_case_insensitive_uris( const bool value );
+
             void set_connection_timeout( const std::chrono::seconds& value );
             
             void set_status_message( const int code, const std::string& message );

@@ -30,6 +30,7 @@ namespace restbed
         SettingsImpl::SettingsImpl( void ) : m_port( 80 ),
             m_root( "/" ),
             m_connection_limit( 128 ),
+            m_case_insensitive_uris( true ),
             m_connection_timeout( 5 ),
             m_status_messages( status_messages ),
             m_properties( ),
@@ -57,6 +58,11 @@ namespace restbed
         int32_t SettingsImpl::get_connection_limit( void ) const
         {
             return m_connection_limit;
+        }
+
+        bool SettingsImpl::get_case_insensitive_uris( void ) const
+        {
+            return m_case_insensitive_uris;
         }
         
         seconds SettingsImpl::get_connection_timeout( void ) const
@@ -125,6 +131,11 @@ namespace restbed
             m_connection_limit = value;
         }
         
+        void SettingsImpl::set_case_insensitive_uris( const bool value )
+        {
+            m_case_insensitive_uris = value;
+        }
+
         void SettingsImpl::set_connection_timeout( const seconds& value )
         {
             m_connection_timeout = value;

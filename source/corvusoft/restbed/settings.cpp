@@ -49,6 +49,11 @@ namespace restbed
         return m_pimpl->get_connection_limit( );
     }
     
+    bool Settings::get_case_insensitive_uris( void ) const
+    {
+        return m_pimpl->get_case_insensitive_uris( );
+    }
+
     seconds Settings::get_connection_timeout( void ) const
     {
         return m_pimpl->get_connection_timeout( );
@@ -99,6 +104,11 @@ namespace restbed
         m_pimpl->set_connection_limit( value );
     }
     
+    void Settings::set_case_insensitive_uris( const bool value )
+    {
+        m_pimpl->set_case_insensitive_uris( value );
+    }
+
     void Settings::set_connection_timeout( const seconds& value )
     {
         m_pimpl->set_connection_timeout( value );

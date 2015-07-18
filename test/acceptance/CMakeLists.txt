@@ -68,6 +68,9 @@ add_executable( publish_duplicate_resources_acceptance_test_suite ${SOURCE_DIR}/
 add_executable( custom_service_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/service.cpp )
 add_executable( custom_resource_error_handling_acceptance_test_suite ${SOURCE_DIR}/custom_error_handling/resource.cpp )
 
+add_executable( case_sensitive_service_acceptance_test_suite ${SOURCE_DIR}/service_case_sensitivity/case_sensitive.cpp )
+add_executable( case_insensitive_service_acceptance_test_suite ${SOURCE_DIR}/service_case_sensitivity/case_insensitive.cpp )
+
 target_link_libraries( publishing_single_path_resources_http_get_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( publishing_single_path_resources_http_put_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( publishing_single_path_resources_http_head_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
@@ -119,6 +122,9 @@ target_link_libraries( runtime_service_modifications_acceptance_test_suite ${CMA
 target_link_libraries( publish_duplicate_resources_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( custom_service_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 target_link_libraries( custom_resource_error_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( case_sensitive_service_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+target_link_libraries( case_insensitive_service_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+
 
 #
 # Setup
@@ -179,3 +185,6 @@ add_test( runtime_service_modifications_acceptance_test_suite ${EXECUTABLE_OUTPU
 add_test( publish_duplicate_resources_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/publish_duplicate_resources_acceptance_test_suite )
 add_test( custom_service_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_service_error_handling_acceptance_test_suite )
 add_test( custom_resource_error_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_resource_error_handling_acceptance_test_suite )
+add_test( case_sensitive_service_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/case_sensitive_service_acceptance_test_suite )
+add_test( case_insensitive_service_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/case_insensitive_service_acceptance_test_suite )
+

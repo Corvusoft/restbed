@@ -33,6 +33,7 @@ TEST_CASE( "validate default instance values", "[settings]" )
     REQUIRE( settings.get_properties( ).empty( ) );
     REQUIRE( settings.get_connection_limit( ) == 128 );
     REQUIRE( settings.get_default_headers( ).empty( ) );
+    REQUIRE( settings.get_case_insensitive_uris( ) == true );
     REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
 
     map< int, string > expectation = {
@@ -113,6 +114,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_port( 1984 );
     settings.set_root( "/resources" );
     settings.set_connection_limit( 1 );
+    settings.set_case_insensitive_uris( false );
     settings.set_connection_timeout( seconds( 30 ) );
     settings.set_properties( { { "name", "value" } } );
     settings.set_default_headers( { { "Connection", "close" } } );
@@ -120,6 +122,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_port( ) == 1984 );
     REQUIRE( settings.get_root( ) == "/resources" );
     REQUIRE( settings.get_connection_limit( ) == 1 );
+    REQUIRE( settings.get_case_insensitive_uris( ) == false );
     REQUIRE( settings.get_connection_timeout( ) == seconds( 30 ) );
 
     map< string, string > properties_expectation = { { "name", "value" } };

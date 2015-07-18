@@ -44,6 +44,7 @@ using std::make_shared;
 using std::runtime_error;
 using std::invalid_argument;
 using std::placeholders::_1;
+using std::regex_constants::icase;
 
 //Project Namespaces
 
@@ -751,7 +752,14 @@ namespace restbed
             {
                 for ( size_t index = 0; index < path_folders.size( ); index++ )
                 {
-                    match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+                    if ( m_settings->get_case_insensitive_uris( ) )
+                    {
+                        match = regex_match( path_folders[ index ], regex( route_folders[ index ], icase ) );
+                    }
+                    else
+                    {
+                        match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+                    }
                     
                     if ( not match )
                     {
