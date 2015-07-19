@@ -58,7 +58,7 @@ namespace restbed
             //Functionality
             bool is_mandatory( void ) const;
 
-            virtual bool condition( const Bytes& value, std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+            virtual bool condition( const Bytes& value ) = 0;
 
             virtual void action( const std::shared_ptr< Session >& session, std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 

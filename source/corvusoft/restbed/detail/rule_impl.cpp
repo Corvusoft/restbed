@@ -40,6 +40,11 @@ namespace restbed
             return;
         }
 
+        bool RuleImpl::is_mandatory( void ) const
+        {
+            return m_mandatory;
+        }
+
         Rule::Type RuleImpl::get_type( void ) const
         {
         	return m_type;

@@ -37,6 +37,11 @@ namespace restbed
         return;
     }
 
+    bool Rule::is_mandatory( void ) const
+    {
+    	return m_pimpl->is_mandatory( );
+    }
+
     Rule::Type Rule::get_type( void ) const
     {
     	return m_pimpl->get_type( );
