@@ -21,4 +21,6 @@ set( BUILD_MANIFEST
    ${SOURCE_DIR}/detail/session_impl.cpp
    ${SOURCE_DIR}/detail/session_manager_impl.cpp
    ${SOURCE_DIR}/detail/socket_impl.cpp
+   ${SOURCE_DIR}/rule.cpp
+   ${SOURCE_DIR}/detail/rule_impl.cpp
 )
