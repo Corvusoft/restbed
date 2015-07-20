@@ -63,7 +63,7 @@ namespace restbed
                 
                 void restart( const std::shared_ptr< const Settings >& settings );
 
-                void add_rule( const std::shared_ptr< const Rule >& rule ); 
+                void add_rule( const std::shared_ptr< Rule >& rule ); 
 
                 void add_rule( const std::shared_ptr< Rule >& rule, const int priority );          
 
@@ -128,8 +128,6 @@ namespace restbed
 
                 void https_listen( void ) const;
 
-                void rule_engine( const std::shared_ptr< Session >& session, const std::vector< std::shared_ptr< const Rule > >& rules ) const;
-
                 void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
 #endif              
                 std::string sanitise_path( const std::string& path ) const;
@@ -178,7 +176,7 @@ namespace restbed
                 
                 std::shared_ptr< SessionManager > m_session_manager;
 
-                std::vector< std::shared_ptr< const Rule > > m_rules;
+                std::vector< std::shared_ptr< Rule > > m_rules;
 #ifdef BUILD_SSL
                 std::shared_ptr< const SSLSettings > m_ssl_settings;
 

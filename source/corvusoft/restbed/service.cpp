@@ -56,7 +56,7 @@ namespace restbed
         m_pimpl->restart( settings );
     }
 
-    void Service::add_rule( const shared_ptr< const Rule >& rule )
+    void Service::add_rule( const shared_ptr< Rule >& rule )
     {
         m_pimpl->add_rule( rule );
     }

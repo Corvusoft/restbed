@@ -6,11 +6,9 @@
 #define _RESTBED_RULE_H 1
 
 //System Includes
-#include <memory>
 #include <functional>
 
 //Project Includes
-#include <corvusoft/restbed/byte.hpp>
 
 //External Includes
 
@@ -24,11 +22,6 @@ namespace restbed
 {
     //Forward Declarations
     class Session;
-
-    namespace detail
-    {
-    	class RuleImpl;
-    }
     
     class Rule
     {
@@ -36,53 +29,35 @@ namespace restbed
             //Friends
             
             //Definitions
-            enum Type : int
-		    {
-		    	ALL = 000,
-		        BODY = 100,
-		        PATH = 200,
-		        QUERY = 300,
-		        METHOD = 400,
-		        HEADER = 500,
-		        VERSION = 600,
-		        PROTOCOL = 700,
-                ORIGIN = 800
-		    };
 
             //Constructors
-            Rule( const Type type = ALL );
+            Rule( void ) = default;
 
-            Rule( const Rule& original );
+            Rule( const Rule& original ) = default;
             
-            virtual ~Rule( void );
+            virtual ~Rule( void ) = default;
             
             //Functionality
-            bool is_mandatory( void ) const;
+            virtual bool condition( const std::shared_ptr< Session >& session ) = 0;
 
-            virtual bool condition( const Bytes& value ) = 0;
-
-            virtual void action( const std::shared_ptr< Session >& session, std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+            virtual void action( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
             //Getters
-            Type get_type( void ) const;
-
-            int get_priority( void ) const;
+            virtual int get_priority( void ) const = 0;
             
             //Setters
-            void set_priority( const int value );
-
-            void set_mandatory( const bool value );
+            virtual void set_priority( const int value ) = 0;
 
             //Operators
-            Rule& operator =( const Rule& value );
+            virtual Rule& operator =( const Rule& value ) = 0;
             
-            bool operator >( const Rule& value ) const;
+            virtual bool operator >( const Rule& value ) const = 0;
 
-            bool operator <( const Rule& value ) const;
+            virtual bool operator <( const Rule& value ) const = 0;
 
-            bool operator ==( const Rule& value ) const;
+            virtual bool operator ==( const Rule& value ) const = 0;
 
-            bool operator !=( const Rule& value ) const;
+            virtual bool operator !=( const Rule& value ) const = 0;
             
             //Properties
             
@@ -119,7 +94,6 @@ namespace restbed
             //Operators
             
             //Properties
-            std::unique_ptr< detail::RuleImpl > m_pimpl;
     };
 }
 

@@ -48,7 +48,7 @@ namespace restbed
                 virtual ~ResourceImpl( void );
                 
                 //Functionality
-                void add_rule( const std::shared_ptr< const Rule >& rule );
+                void add_rule( const std::shared_ptr< Rule >& rule );
 
                 void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
 
@@ -59,7 +59,7 @@ namespace restbed
                 
                 const std::set< std::string > get_methods( void ) const;
 
-                const std::vector< std::shared_ptr< const Rule > >& get_rules( void ) const;
+                const std::vector< std::shared_ptr< Rule > >& get_rules( void ) const;
                 
                 const std::multimap< std::string, std::string >& get_default_headers( void ) const;
                 
@@ -125,7 +125,7 @@ namespace restbed
                 //Properties
                 std::set< std::string > m_paths;
 
-                std::vector< std::shared_ptr< const Rule > > m_rules;
+                std::vector< std::shared_ptr< Rule > > m_rules;
                 
                 std::multimap< std::string, std::string > m_default_headers;
                 

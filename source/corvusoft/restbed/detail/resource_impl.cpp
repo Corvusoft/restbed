@@ -50,7 +50,7 @@ namespace restbed
             return;
         }
 
-        void ResourceImpl::add_rule( const shared_ptr< const Rule >& rule )
+        void ResourceImpl::add_rule( const shared_ptr< Rule >& rule )
         {
             m_rules.push_back( rule );
 
@@ -100,7 +100,7 @@ namespace restbed
             return methods;
         }
 
-        const vector< shared_ptr< const Rule > >& ResourceImpl::get_rules( void ) const
+        const vector< shared_ptr< Rule > >& ResourceImpl::get_rules( void ) const
         {
             return m_rules;
         }

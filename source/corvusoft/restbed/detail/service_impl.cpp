@@ -26,6 +26,7 @@
 #include "corvusoft/restbed/detail/service_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
+#include "corvusoft/restbed/detail/rule_engine_impl.hpp"
 #include "corvusoft/restbed/detail/session_manager_impl.hpp"
 
 //External Includes
@@ -188,7 +189,7 @@ namespace restbed
             start( settings );
         }
 
-        void ServiceImpl::add_rule( const shared_ptr< const Rule >& rule )
+        void ServiceImpl::add_rule( const shared_ptr< Rule >& rule )
         {
             if ( m_is_running )
             {
@@ -449,11 +450,6 @@ namespace restbed
             m_ssl_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
         }
 
-        void ServiceImpl::rule_engine( const shared_ptr< Session >& session, const vector< shared_ptr< const Rule > >& rules ) const
-        {
-            
-        }
-
         void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const error_code& error ) const
         {
             if ( not error )
@@ -624,8 +620,6 @@ namespace restbed
         
         void ServiceImpl::router( const shared_ptr< Session >& session ) const
         {
-            rule_engine( session, m_rules );
-
             if ( session->is_closed( ) )
             {
                 return;
@@ -644,31 +638,32 @@ namespace restbed
 
             resource->m_pimpl->authenticate( session, [ this, path, resource ]( const shared_ptr< Session >& session )
             {    
-                rule_engine( session, resource->m_pimpl->get_rules( ) );
-
-                if ( session->is_closed( ) )
+                rule_engine( session, resource->m_pimpl->get_rules( ), [ this, path, resource ]( const shared_ptr< Session >& session )
                 {
-                    return;
-                }
-
-                const auto request = session->get_request( );
-                auto method_handler = find_method_handler( session );
-                
-                extract_path_parameters( path, request );
-                
-                if ( method_handler == nullptr )
-                {
-                    if ( m_supported_methods.count( request->get_method( ) ) == 0 )
+                    if ( session->is_closed( ) )
                     {
-                        method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
+                        return;
                     }
-                    else
-                    {
-                        method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
-                    }
-                }
 
-                resource->m_pimpl->authenticate( session, method_handler );
+                    const auto request = session->get_request( );
+                    auto method_handler = find_method_handler( session );
+                    
+                    extract_path_parameters( path, request );
+                    
+                    if ( method_handler == nullptr )
+                    {
+                        if ( m_supported_methods.count( request->get_method( ) ) == 0 )
+                        {
+                            method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
+                        }
+                        else
+                        {
+                            method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
+                        }
+                    }
+
+                    resource->m_pimpl->authenticate( session, method_handler );
+                } );
             } );
         }
         
@@ -765,7 +760,7 @@ namespace restbed
                 {
                     m_session_manager->load( session, [ this ]( const shared_ptr< Session >& session )
                     {
-                        router( session );
+                        rule_engine( session, m_rules, bind( &ServiceImpl::router, this, _1 ) );
                     } );
                 } );
             }
@@ -773,7 +768,7 @@ namespace restbed
             {
                 m_session_manager->load( session, [ this ]( const shared_ptr< Session >& session )
                 {
-                    router( session );
+                    rule_engine( session, m_rules, bind( &ServiceImpl::router, this, _1 ) );
                 } );
             }
         }

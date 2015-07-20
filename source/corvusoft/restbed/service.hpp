@@ -56,7 +56,7 @@ namespace restbed
 
             void restart( const std::shared_ptr< const Settings >& settings = nullptr );
 
-            void add_rule( const std::shared_ptr< const Rule >& rule );
+            void add_rule( const std::shared_ptr< Rule >& rule );
 
             void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
 
