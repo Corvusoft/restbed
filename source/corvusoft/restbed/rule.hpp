@@ -31,11 +31,6 @@ namespace restbed
             //Definitions
 
             //Constructors
-            Rule( void ) = default;
-
-            Rule( const Rule& original ) = default;
-            
-            virtual ~Rule( void ) = default;
             
             //Functionality
             virtual bool condition( const std::shared_ptr< Session >& session ) = 0;
@@ -49,15 +44,6 @@ namespace restbed
             virtual void set_priority( const int value ) = 0;
 
             //Operators
-            virtual Rule& operator =( const Rule& value ) = 0;
-            
-            virtual bool operator >( const Rule& value ) const = 0;
-
-            virtual bool operator <( const Rule& value ) const = 0;
-
-            virtual bool operator ==( const Rule& value ) const = 0;
-
-            virtual bool operator !=( const Rule& value ) const = 0;
             
             //Properties
             
@@ -67,7 +53,12 @@ namespace restbed
             //Definitions
             
             //Constructors
+            Rule( void ) = default;
             
+            Rule( const Rule& ) = default;
+
+            virtual ~Rule( void ) = default;
+
             //Functionality
             
             //Getters
@@ -75,6 +66,7 @@ namespace restbed
             //Setters
             
             //Operators
+            Rule& operator =( const Rule& ) = default;
             
             //Properties
             
@@ -84,7 +76,7 @@ namespace restbed
             //Definitions
             
             //Constructors
-            
+
             //Functionality
             
             //Getters

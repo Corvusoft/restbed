@@ -31,13 +31,14 @@ namespace restbed
                                  const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
                                  std::size_t index = 0 )
         {
-            for (; index not_eq rules.size( ); index++ )
+            while ( index not_eq rules.size( ) )
             {
                 auto rule = rules.at( index );
+                index++;
 
                 if ( rule->condition( session ) )
                 {
-                    rule->action( session, bind( rule_engine, session, rules, callback, ++index ) );
+                    rule->action( session, bind( rule_engine, session, rules, callback, index ) );
                     return;
                 }
             }

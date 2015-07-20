@@ -56,7 +56,7 @@ namespace restbed
 
             stable_sort( m_rules.begin( ), m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
             {
-                return *lhs < *rhs;
+                return lhs->get_priority( ) < rhs->get_priority( );
             } );
         }
 
@@ -67,7 +67,7 @@ namespace restbed
 
             stable_sort( m_rules.begin( ), m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
             {
-                return *lhs < *rhs;
+                return lhs->get_priority( ) < rhs->get_priority( );
             } );
         }
         
