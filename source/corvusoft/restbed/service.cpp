@@ -5,6 +5,7 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/logger.hpp"
 #include "corvusoft/restbed/service.hpp"
 #include "corvusoft/restbed/session.hpp"
@@ -53,6 +54,11 @@ namespace restbed
     void Service::restart( const shared_ptr< const Settings >& settings )
     {
         m_pimpl->restart( settings );
+    }
+
+    void Service::add_rule( const shared_ptr< const Rule >& rule )
+    {
+        m_pimpl->add_rule( rule );
     }
 
     void Service::publish( const shared_ptr< const Resource >& resource )

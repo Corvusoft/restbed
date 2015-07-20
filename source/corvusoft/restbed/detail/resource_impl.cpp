@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 //Project Includes
+#include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 
@@ -31,7 +32,7 @@ namespace restbed
     namespace detail
     {
         ResourceImpl::ResourceImpl( void ) : m_paths( ),
-            m_methods( ),
+            m_rules( ),
             m_default_headers( ),
             m_failed_filter_validation_handler( nullptr ),
             m_error_handler( nullptr ),
@@ -44,6 +45,11 @@ namespace restbed
         ResourceImpl::~ResourceImpl( void )
         {
             return;
+        }
+
+        void ResourceImpl::add_rule( const shared_ptr< const Rule >& rule )
+        {
+            m_rules.insert( rule );
         }
         
         void ResourceImpl::authenticate( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -63,9 +69,21 @@ namespace restbed
             return m_paths;
         }
         
-        const set< string >& ResourceImpl::get_methods( void ) const
+        const set< string > ResourceImpl::get_methods( void ) const
         {
-            return m_methods;
+            set< string > methods;
+
+            for ( auto entry : m_method_handlers )
+            {
+                methods.insert( entry.first );
+            }
+
+            return methods;
+        }
+
+        const set< const shared_ptr< const Rule > >& ResourceImpl::get_rules( void ) const
+        {
+            return m_rules;
         }
         
         const multimap< string, string >& ResourceImpl::get_default_headers( void ) const
@@ -130,7 +148,6 @@ namespace restbed
                 throw invalid_argument( "Attempt to set resource handler to an empty protocol method." );
             }
             
-            m_methods.insert( method );
             m_method_handlers.insert( make_pair( method, make_pair( filters, callback ) ) );
         }
     }

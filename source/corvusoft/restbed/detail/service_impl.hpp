@@ -30,6 +30,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Rule;
     class Logger;
     class Session;
     class Service;
@@ -59,7 +60,9 @@ namespace restbed
 
                 void start( const std::shared_ptr< const Settings >& settings );
                 
-                void restart( const std::shared_ptr< const Settings >& settings );          
+                void restart( const std::shared_ptr< const Settings >& settings );
+
+                void add_rule( const std::shared_ptr< const Rule >& rule );          
 
                 void publish( const std::shared_ptr< const Resource >& resource );
                 
@@ -169,6 +172,8 @@ namespace restbed
                 std::shared_ptr< asio::io_service > m_io_service;
                 
                 std::shared_ptr< SessionManager > m_session_manager;
+
+                std::set< const std::shared_ptr< const Rule > > m_rules;
 #ifdef BUILD_SSL
                 std::shared_ptr< const SSLSettings > m_ssl_settings;
 

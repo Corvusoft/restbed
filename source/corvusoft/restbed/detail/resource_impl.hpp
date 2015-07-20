@@ -27,6 +27,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Rule;
     class Session;
     
     namespace detail
@@ -46,12 +47,16 @@ namespace restbed
                 virtual ~ResourceImpl( void );
                 
                 //Functionality
+                void add_rule( const std::shared_ptr< const Rule >& rule );
+
                 void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 //Getters
                 const std::set< std::string >& get_paths( void ) const;
                 
-                const std::set< std::string >& get_methods( void ) const;
+                const std::set< std::string > get_methods( void ) const;
+
+                const std::set< const std::shared_ptr< const Rule > >& get_rules( void ) const;
                 
                 const std::multimap< std::string, std::string >& get_default_headers( void ) const;
                 
@@ -116,8 +121,8 @@ namespace restbed
                 
                 //Properties
                 std::set< std::string > m_paths;
-                
-                std::set< std::string > m_methods;
+
+                std::set< const std::shared_ptr< const Rule > > m_rules;
                 
                 std::multimap< std::string, std::string > m_default_headers;
                 

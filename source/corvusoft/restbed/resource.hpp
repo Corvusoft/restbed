@@ -25,6 +25,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Rule;
     class Session;
     
     namespace detail
@@ -47,6 +48,7 @@ namespace restbed
             virtual ~Resource( void );
             
             //Functionality
+            void add_rule( const std::shared_ptr< const Rule >& rule );
             
             //Getters
             

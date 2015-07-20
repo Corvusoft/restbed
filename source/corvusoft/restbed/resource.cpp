@@ -5,6 +5,7 @@
 //System Includes
 
 //Project Includes
+#include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
@@ -34,6 +35,11 @@ namespace restbed
     Resource::~Resource( void )
     {
         return;
+    }
+
+    void Resource::add_rule( const shared_ptr< const Rule >& rule )
+    {
+        m_pimpl->add_rule( rule );
     }
     
     void Resource::set_path( const string& value )

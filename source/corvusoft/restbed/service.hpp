@@ -25,6 +25,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Rule;
     class Logger;
     class Session;
     class Resource;
@@ -54,6 +55,8 @@ namespace restbed
             void start( const std::shared_ptr< const Settings >& settings = nullptr );
 
             void restart( const std::shared_ptr< const Settings >& settings = nullptr );
+
+            void add_rule( const std::shared_ptr< const Rule >& rule );
 
             void publish( const std::shared_ptr< const Resource >& resource );
             
