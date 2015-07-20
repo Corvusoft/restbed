@@ -64,8 +64,28 @@ namespace restbed
 
     Rule& Rule::operator =( const Rule& value )
     {
-    	*m_pimpl = *value.m_pimpl;
+        *m_pimpl = *value.m_pimpl;
 
-    	return *this;
+        return *this;
+    }
+
+    bool Rule::operator >( const Rule& value ) const
+    {
+        return *m_pimpl > *value.m_pimpl;
+    }
+
+    bool Rule::operator <( const Rule& value ) const
+    {
+        return *m_pimpl < *value.m_pimpl;
+    }
+
+    bool Rule::operator ==( const Rule& value ) const
+    {
+        return *m_pimpl == *value.m_pimpl;
+    }
+
+    bool Rule::operator !=( const Rule& value ) const
+    {
+        return *m_pimpl != *value.m_pimpl;
     }
 }

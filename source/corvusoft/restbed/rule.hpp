@@ -45,7 +45,8 @@ namespace restbed
 		        METHOD = 400,
 		        HEADER = 500,
 		        VERSION = 600,
-		        PROTOCOL = 700
+		        PROTOCOL = 700,
+                ORIGIN = 800
 		    };
 
             //Constructors
@@ -74,6 +75,14 @@ namespace restbed
 
             //Operators
             Rule& operator =( const Rule& value );
+            
+            bool operator >( const Rule& value ) const;
+
+            bool operator <( const Rule& value ) const;
+
+            bool operator ==( const Rule& value ) const;
+
+            bool operator !=( const Rule& value ) const;
             
             //Properties
             

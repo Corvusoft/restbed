@@ -61,6 +61,11 @@ namespace restbed
         m_pimpl->add_rule( rule );
     }
 
+    void Service::add_rule( const shared_ptr< Rule >& rule, const int priority )
+    {
+        m_pimpl->add_rule( rule, priority );
+    }
+
     void Service::publish( const shared_ptr< const Resource >& resource )
     {
         m_pimpl->publish( resource );

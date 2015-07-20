@@ -67,11 +67,31 @@ namespace restbed
 
         RuleImpl& RuleImpl::operator =( const RuleImpl& value )
         {
-        	m_type = value.m_type;
+            m_type = value.m_type;
             m_priority = value.m_priority;
             m_mandatory = value.m_mandatory;
 
-        	return *this;
+            return *this;
+        }
+
+        bool RuleImpl::operator >( const RuleImpl& value ) const
+        {
+            return m_priority > value.m_priority;
+        }
+
+        bool RuleImpl::operator <( const RuleImpl& value ) const
+        {
+            return m_priority < value.m_priority;
+        }
+
+        bool RuleImpl::operator ==( const RuleImpl& value ) const
+        {
+            return ( m_type == value.m_type and m_priority == value.m_priority and m_mandatory == value.m_mandatory );
+        }
+
+        bool RuleImpl::operator !=( const RuleImpl& value ) const
+        {
+            return ( m_type not_eq value.m_type and m_priority not_eq value.m_priority and m_mandatory not_eq value.m_mandatory );
         }
     }
 }

@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <utility>
 #include <stdexcept>
+#include <algorithm>
 #include <functional>
 
 //Project Includes
@@ -36,12 +37,14 @@ using std::bind;
 using std::regex;
 using std::string;
 using std::smatch;
+using std::vector;
 using std::find_if;
 using std::function;
 using std::to_string;
 using std::exception;
 using std::shared_ptr;
 using std::make_shared;
+using std::stable_sort;
 using std::runtime_error;
 using std::invalid_argument;
 using std::placeholders::_1;
@@ -128,9 +131,7 @@ namespace restbed
             {
                 m_settings = make_shared< Settings >( );
             }
-#ifdef BUILD_SSL
-            m_ssl_settings = m_settings->get_ssl_settings( );
-#endif
+
             if ( m_session_manager == nullptr )
             {
                 m_session_manager = make_shared< SessionManagerImpl >( );
@@ -143,10 +144,17 @@ namespace restbed
                 m_logger->start( m_settings );
             }
 
+            stable_sort( m_rules.begin( ), m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
+            {
+                return *lhs < *rhs;
+            } );
+
             m_io_service = make_shared< io_service >( );
 
             http_start( );
+
 #ifdef BUILD_SSL
+            m_ssl_settings = m_settings->get_ssl_settings( );
             https_start( );
 #endif
             for ( const auto& route : m_resource_paths )
@@ -187,7 +195,18 @@ namespace restbed
                 throw runtime_error( "Runtime modifications of the service are prohibited." );
             }
 
-            m_rules.insert( rule ); 
+            m_rules.push_back( rule );
+        }
+
+        void ServiceImpl::add_rule( const shared_ptr< Rule >& rule, const int priority )
+        {
+            if ( m_is_running )
+            {
+                throw runtime_error( "Runtime modifications of the service are prohibited." );
+            }
+
+            rule->set_priority( priority );
+            m_rules.push_back( rule );
         }
 
         void ServiceImpl::publish( const shared_ptr< const Resource >& resource )
@@ -430,6 +449,11 @@ namespace restbed
             m_ssl_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
         }
 
+        void ServiceImpl::rule_engine( const shared_ptr< Session >& session, const vector< shared_ptr< const Rule > >& rules ) const
+        {
+            
+        }
+
         void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const error_code& error ) const
         {
             if ( not error )
@@ -600,12 +624,12 @@ namespace restbed
         
         void ServiceImpl::router( const shared_ptr< Session >& session ) const
         {
-            // rules_engine( session, m_rules );
+            rule_engine( session, m_rules );
 
-            // if ( session->is_closed( ) )
-            // {
-            //     return;
-            // }
+            if ( session->is_closed( ) )
+            {
+                return;
+            }
             
             const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
             
@@ -620,12 +644,12 @@ namespace restbed
 
             resource->m_pimpl->authenticate( session, [ this, path, resource ]( const shared_ptr< Session >& session )
             {    
-                //rules_engine( session, resource->m_pimpl->get_rules( ) );
+                rule_engine( session, resource->m_pimpl->get_rules( ) );
 
-                // if ( session->is_close( ) )
-                // {
-                //     return;
-                // }
+                if ( session->is_closed( ) )
+                {
+                    return;
+                }
 
                 const auto request = session->get_request( );
                 auto method_handler = find_method_handler( session );

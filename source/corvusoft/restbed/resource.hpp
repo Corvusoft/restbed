@@ -48,7 +48,9 @@ namespace restbed
             virtual ~Resource( void );
             
             //Functionality
-            void add_rule( const std::shared_ptr< const Rule >& rule );
+            void add_rule( const std::shared_ptr< Rule >& rule );
+
+            void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
             
             //Getters
             

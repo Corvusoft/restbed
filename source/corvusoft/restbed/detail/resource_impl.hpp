@@ -10,6 +10,7 @@
 #include <set>
 #include <memory>
 #include <string>
+#include <vector>
 #include <utility>
 #include <stdexcept>
 #include <functional>
@@ -49,6 +50,8 @@ namespace restbed
                 //Functionality
                 void add_rule( const std::shared_ptr< const Rule >& rule );
 
+                void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
+
                 void authenticate( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
                 
                 //Getters
@@ -56,7 +59,7 @@ namespace restbed
                 
                 const std::set< std::string > get_methods( void ) const;
 
-                const std::set< const std::shared_ptr< const Rule > >& get_rules( void ) const;
+                const std::vector< std::shared_ptr< const Rule > >& get_rules( void ) const;
                 
                 const std::multimap< std::string, std::string >& get_default_headers( void ) const;
                 
@@ -122,7 +125,7 @@ namespace restbed
                 //Properties
                 std::set< std::string > m_paths;
 
-                std::set< const std::shared_ptr< const Rule > > m_rules;
+                std::vector< std::shared_ptr< const Rule > > m_rules;
                 
                 std::multimap< std::string, std::string > m_default_headers;
                 

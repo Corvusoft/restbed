@@ -58,6 +58,8 @@ namespace restbed
 
             void add_rule( const std::shared_ptr< const Rule >& rule );
 
+            void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
+
             void publish( const std::shared_ptr< const Resource >& resource );
             
             void suppress( const std::shared_ptr< const Resource >& resource );

@@ -37,9 +37,14 @@ namespace restbed
         return;
     }
 
-    void Resource::add_rule( const shared_ptr< const Rule >& rule )
+    void Resource::add_rule( const shared_ptr< Rule >& rule )
     {
         m_pimpl->add_rule( rule );
+    }
+
+    void Resource::add_rule( const shared_ptr< Rule >& rule, const int priority )
+    {
+        m_pimpl->add_rule( rule, priority );
     }
     
     void Resource::set_path( const string& value )

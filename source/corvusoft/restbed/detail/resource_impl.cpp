@@ -4,6 +4,7 @@
 
 //System Includes
 #include <stdexcept>
+#include <algorithm>
 
 //Project Includes
 #include "corvusoft/restbed/rule.hpp"
@@ -17,10 +18,12 @@
 using std::set;
 using std::pair;
 using std::string;
+using std::vector;
 using std::function;
 using std::multimap;
 using std::exception;
 using std::shared_ptr;
+using std::stable_sort;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -49,7 +52,23 @@ namespace restbed
 
         void ResourceImpl::add_rule( const shared_ptr< const Rule >& rule )
         {
-            m_rules.insert( rule );
+            m_rules.push_back( rule );
+
+            stable_sort( m_rules.begin( ), m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
+            {
+                return *lhs < *rhs;
+            } );
+        }
+
+        void ResourceImpl::add_rule( const shared_ptr< Rule >& rule, const int priority )
+        {
+            rule->set_priority( priority );
+            m_rules.push_back( rule );
+
+            stable_sort( m_rules.begin( ), m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
+            {
+                return *lhs < *rhs;
+            } );
         }
         
         void ResourceImpl::authenticate( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
@@ -81,7 +100,7 @@ namespace restbed
             return methods;
         }
 
-        const set< const shared_ptr< const Rule > >& ResourceImpl::get_rules( void ) const
+        const vector< shared_ptr< const Rule > >& ResourceImpl::get_rules( void ) const
         {
             return m_rules;
         }

@@ -57,6 +57,14 @@ namespace restbed
                 //Operators
                 RuleImpl& operator =( const RuleImpl& value );
                 
+                bool operator >( const RuleImpl& value ) const;
+
+                bool operator <( const RuleImpl& value ) const;
+
+                bool operator ==( const RuleImpl& value ) const;
+
+                bool operator !=( const RuleImpl& value ) const;
+                
                 //Properties
                 
             protected:

@@ -108,3 +108,51 @@ TEST_CASE( "validate assignment constructor", "[rule]" )
     REQUIRE( copy.get_priority( ) == 33 );
     REQUIRE( copy.is_mandatory( ) == true );
 }
+
+TEST_CASE( "validate less-then operator", "[rule]" )
+{
+	TestRule lhs( Rule::HEADER );
+	lhs.set_priority( 1 );
+
+	TestRule rhs( Rule::HEADER );
+	rhs.set_priority( 3 );
+
+    REQUIRE( lhs < rhs );
+}
+
+TEST_CASE( "validate greater-then operator", "[rule]" )
+{
+	TestRule lhs( Rule::HEADER );
+	lhs.set_priority( 3 );
+
+	TestRule rhs( Rule::HEADER );
+	rhs.set_priority( 1 );
+
+    REQUIRE( lhs > rhs );
+}
+
+TEST_CASE( "validate equality operator", "[rule]" )
+{
+	TestRule lhs( Rule::HEADER );
+	lhs.set_priority( 33 );
+	lhs.set_mandatory( true );
+
+	TestRule rhs( Rule::HEADER );
+	rhs.set_priority( 33 );
+	rhs.set_mandatory( true );
+
+    REQUIRE( lhs == rhs );
+}
+
+TEST_CASE( "validate inequality operator", "[rule]" )
+{
+	TestRule lhs( Rule::HEADER );
+	lhs.set_priority( 2 );
+	lhs.set_mandatory( false );
+
+	TestRule rhs( Rule::QUERY );
+	rhs.set_priority( 33 );
+	rhs.set_mandatory( true );
+
+    REQUIRE( lhs not_eq rhs );
+}
