@@ -2,6 +2,9 @@
  * Copyright (c) 2013, 2014, 2015 Corvusoft
  */
 
+#ifndef _RESTBED_BASE_RULE_H
+#define _RESTBED_BASE_RULE_H 1
+
 //System Includes
 #include <string>
 #include <memory>
@@ -58,3 +61,5 @@ class BaseRule : public Rule
     private:
     	int m_priority;
 };
+
+#endif  /* _RESTBED_BASE_RULE_H */

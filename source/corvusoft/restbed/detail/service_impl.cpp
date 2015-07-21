@@ -662,7 +662,7 @@ namespace restbed
                         }
                     }
 
-                    resource->m_pimpl->authenticate( session, method_handler );
+                    method_handler( session );
                 } );
             } );
         }

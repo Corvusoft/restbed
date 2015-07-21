@@ -48,7 +48,7 @@ class ContentTypeRule : public BaseRule
 
         void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
         {
-        	auto request = session->get_request( );
+        	const auto request = session->get_request( );
 
         	if ( request->get_header( "Content-Type", String::lowercase ) not_eq "application/csv" )
         	{

@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2013, 2014, 2015 Corvusoft
+ */
+
+//System Includes
+#include <string>
+#include <memory>
+#include <functional>
+
+//Project Includes
+#include <restbed>
+#include "base_rule.hpp"
+
+//External Includes
+
+//System Namespaces
+using std::string;
+using std::function;
+using std::shared_ptr;
+
+//Project Namespaces
+using namespace restbed;
+
+//External Namespaces
+
+class ContentLengthRule : public BaseRule
+{
+    public:
+        ContentLengthRule( void ) : BaseRule( )
+        {
+            return;
+        }
+
+        ContentLengthRule( const ContentLengthRule& original ) : BaseRule( original )
+        {
+            return;
+        }
+        
+        virtual ~ContentLengthRule( void )
+        {
+            return;
+        }
+        
+        bool condition( const shared_ptr< Session >& session ) final override
+        {
+        	return session->get_request( )->get_method( String::uppercase ) == "POST";
+        }
+
+        void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
+        {
+        	const auto request = session->get_request( );
+
+            if ( not request->has_header( "Content-Length" ) )
+            {
+                session->close( LENGTH_REQUIRED, "Length Required.", { { "Content-Length", "16" }, { "Content-Type", "text/plain" } } );
+            }
+
+            size_t length = 0;
+            request->get_header( "Content-Length", length );
+
+            session->fetch( length, [ length, callback ]( const shared_ptr< Session >& session, const Bytes& body )
+            {
+                if ( length not_eq body.size( ) )
+                {
+                    session->close( LENGTH_REQUIRED, "Length Required.", { { "Content-Length", "16" }, { "Content-Type", "text/plain" } } );
+                }
+                else
+                {
+                    callback( session );
+                }
+            } );
+        }
+};
