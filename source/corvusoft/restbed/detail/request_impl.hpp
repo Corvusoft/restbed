@@ -71,7 +71,7 @@ namespace restbed
                 
                 void get_header( const std::string& name, unsigned long& value, const unsigned long default_value, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
-                void get_header( const std::string& name, float& value, const float default_value, const std::function< std::string ( const std::string& ) > transform ) const;
+                void get_header( const std::string& name, float& value, const float default_value, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
                 void get_header( const std::string& name, double& value, const double default_value, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
@@ -87,7 +87,7 @@ namespace restbed
                 
                 void get_query_parameter( const std::string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
-                void get_query_parameter( const std::string& name, float& value, const float default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) > transform ) const;
+                void get_query_parameter( const std::string& name, float& value, const float default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
                 void get_query_parameter( const std::string& name, double& value, const double default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
@@ -103,7 +103,7 @@ namespace restbed
                 
                 void get_path_parameter( const std::string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
-                void get_path_parameter( const std::string& name, float& value, const float default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) > transform ) const;
+                void get_path_parameter( const std::string& name, float& value, const float default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) >& transform ) const;
                 
                 void get_path_parameter( const std::string& name, double& value, const double default_value, const bool ignore_case, const std::function< std::string ( const std::string& ) >& transform ) const;
                 

@@ -12,44 +12,10 @@
 #include <cstdlib>
 #include <restbed>
 
+#include "custom_logger.hpp"
+
 using namespace std;
 using namespace restbed;
-
-class CustomLogger : public Logger
-{
-    public:
-        void stop( void )
-        {
-            return;
-        }
-
-        void start( const shared_ptr< const Settings >& )
-        {
-            return;
-        }
-
-        void log( const Level, const string format, ... )
-        {
-            va_list arguments;
-            va_start( arguments, format );
-
-            vfprintf( stderr, format.data( ), arguments );
-            fprintf( stderr, "\n" );
-
-            va_end( arguments );
-        }
-
-        void log_if( bool expression, const Level level, const string format, ... )
-        {
-            if ( expression )
-            {
-                va_list arguments;
-                va_start( arguments, format );
-                log( level, format, arguments );
-                va_end( arguments );
-            }
-        }
-};
 
 void get_method_handler( const shared_ptr< Session >& session )
 {

@@ -49,7 +49,9 @@ namespace restbed
                 
                 static std::string uppercase( const std::string& value );
                 
-                static std::string format( const std::string format, va_list arguments );
+                static std::string format( const char* format, va_list arguments );
+
+                static std::string::size_type format( std::string& output, const std::string::size_type length, const char* format, va_list arguments );
                 
                 static std::vector< std::string > split( const std::string& text, const char delimiter );
 

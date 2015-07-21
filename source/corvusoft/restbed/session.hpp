@@ -46,7 +46,7 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Session( const std::string& id );
+            explicit Session( const std::string& id );
             
             virtual ~Session( void );
             

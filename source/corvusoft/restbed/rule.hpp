@@ -55,7 +55,7 @@ namespace restbed
             //Constructors
             Rule( void ) = default;
             
-            Rule( const Rule& ) = default;
+            explicit Rule( const Rule& ) = default;
 
             virtual ~Rule( void ) = default;
 

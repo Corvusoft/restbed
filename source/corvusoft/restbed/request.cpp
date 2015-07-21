@@ -99,7 +99,7 @@ namespace restbed
         m_pimpl->get_header( name, value, default_value, transform );
     }
     
-    void Request::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+    void Request::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) >& transform ) const
     {
         m_pimpl->get_header( name, value, default_value, transform );
     }
@@ -144,7 +144,7 @@ namespace restbed
         m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
+    void Request::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
         m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
     }
@@ -189,7 +189,7 @@ namespace restbed
         m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }
     
-    void Request::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
+    void Request::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
     {
         m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
     }

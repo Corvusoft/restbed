@@ -47,9 +47,9 @@ namespace restbed
 
             virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
 
-            virtual void log( const Level level, const std::string format, ... ) = 0;
+            virtual void log( const Level level, const char* format, ... ) = 0;
             
-            virtual void log_if( bool expression, const Level level, const std::string format, ... ) = 0;
+            virtual void log_if( bool expression, const Level level, const char* format, ... ) = 0;
             
             //Getters
             
@@ -67,7 +67,7 @@ namespace restbed
             //Constructors
             Logger( void ) = default;
             
-            Logger( const Logger& original ) = default;
+            explicit Logger( const Logger& original ) = default;
             
             virtual ~Logger( void ) = default;
             

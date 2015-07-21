@@ -42,7 +42,7 @@ namespace restbed
         return StringImpl::uppercase( value );
     }
     
-    string String::format( const string format, ... )
+    string String::format( const char* format, ... )
     {
         va_list arguments;
         va_start( arguments, format );

@@ -63,7 +63,7 @@ namespace restbed
             return result;
         }
         
-        string StringImpl::format( const string format, va_list arguments )
+        string StringImpl::format( const char* format, va_list arguments )
         {
             string formatted = "";
             string::size_type length = 1024;
@@ -77,11 +77,11 @@ namespace restbed
             return formatted;
         }
         
-        string::size_type StringImpl::format( string& output, const string::size_type length, const string format, va_list arguments )
+        string::size_type StringImpl::format( string& output, const string::size_type length, const char* format, va_list arguments )
         {
             char* formatted = new char[ length + 1 ];
             
-            int required_length = vsnprintf( formatted, length + 1, format.data( ), arguments );
+            int required_length = vsnprintf( formatted, length + 1, format, arguments );
             
             if ( required_length == -1 )
             {

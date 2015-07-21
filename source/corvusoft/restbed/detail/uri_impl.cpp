@@ -181,7 +181,7 @@ namespace restbed
                 
                 if ( not scheme.empty( ) )
                 {
-                    struct servent* entry = getservbyname( scheme.data( ), nullptr );
+                    const struct servent* entry = getservbyname( scheme.data( ), nullptr );
                     port = ::to_string( ntohs( entry->s_port ) );
                 }
             }

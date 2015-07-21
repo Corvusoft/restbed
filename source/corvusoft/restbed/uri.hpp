@@ -37,7 +37,7 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Uri( const std::string& value );
+            explicit Uri( const std::string& value );
             
             Uri( const Uri& original );
             

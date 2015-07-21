@@ -89,7 +89,7 @@ namespace restbed
             void get_header( const std::string& name,
                              float& value, /*out*/
                              const float default_value = 0,
-                             const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+                             const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                              
             void get_header( const std::string& name,
                              double& value, /*out*/
@@ -134,7 +134,7 @@ namespace restbed
                                       float& value, /*out*/
                                       const float default_value = 0,
                                       const bool ignore_case = true,
-                                      const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+                                      const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                       
             void get_query_parameter( const std::string& name,
                                       double& value, /*out*/
@@ -183,7 +183,7 @@ namespace restbed
                                      float& value, /*out*/
                                      const float default_value = 0,
                                      const bool ignore_case = true,
-                                     const std::function< std::string ( const std::string& ) > transform = nullptr ) const;
+                                     const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
                                      
             void get_path_parameter( const std::string& name,
                                      double& value, /*out*/

@@ -218,7 +218,7 @@ namespace restbed
             value = stoul( header );
         }
         
-        void RequestImpl::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) > transform ) const
+        void RequestImpl::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_header( name ) )
             {
@@ -364,7 +364,7 @@ namespace restbed
             value = stoul( parameter );
         }
         
-        void RequestImpl::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
+        void RequestImpl::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_query_parameter( name, true ) )
             {
@@ -512,7 +512,7 @@ namespace restbed
             value = stoul( parameter );
         }
         
-        void RequestImpl::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) > transform ) const
+        void RequestImpl::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
         {
             if ( not has_path_parameter( name, true ) )
             {

@@ -56,7 +56,7 @@ namespace restbed
         protected:
             SessionManager( void ) = default;
             
-            SessionManager( const SessionManager& original ) = default;
+            explicit SessionManager( const SessionManager& ) = default;
             
             virtual ~SessionManager( void ) = default;
             
