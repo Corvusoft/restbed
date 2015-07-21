@@ -1,18 +1,5 @@
 # Restbed 
 
-[![twitter][1.1]][1]
-[![google+][2.1]][2]
-
-[![Join the chat at https://gitter.im/Corvusoft/restbed](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
- [![Click here to lend your support!](https://pledgie.com/campaigns/29788.png?skin_name=chrome)](https://pledgie.com/campaigns/29788)
-
-[1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
-[2.1]: http://i.imgur.com/yCsTjba.png (google plus icon with padding)
-
-[1]: http://www.twitter.com/corvusoft
-[2]: https://plus.google.com/+CorvusoftCoUkSolutions
-
 ----------
 
 > It's akin to embedding NGINX into your companies own product line.
@@ -146,3 +133,14 @@ You will now find all required components installed in the restbed distribution 
 |     x.x       |         Bind Service to specific NIC            |     pending     |
 |     x.x       |         Client-side SSL certificates            |     pending     |
 |     x.x       |      Multi-Threaded service capability          |     pending     |
+
+## Contact
+
+|     Method   |                   Description                   |
+|:--------------|:-----------------------------------------------| 
+| [Glitter](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)     | Online Development/Support Chat Forum                      |
+| [Twitter](http://www.twitter.com/corvusoft)                  | Tweet us your questions & feature requests.   |
+| [Google+](https://plus.google.com/+CorvusoftCoUkSolutions)   | Join the community social circle.             |
+| [Pledgie](https://pledgie.com/campaigns/29788)               | Lend your support via our Pledgie campaign.   |
+| support@corvusoft.co.uk                                      | Support related queries.                      |
+| sales@corvusoft.co.uk                                        | Sale related queries.                         |
