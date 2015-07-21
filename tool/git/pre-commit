@@ -58,7 +58,7 @@ echo "Formating source code..."
 files=`git-diff-index --diff-filter=ACMR --name-only -r --cached $against --`
 
 for file in $files; do
-    x=`echo $file |grep -E '(\.cpp|\.h)'`
+    x=`echo $file |grep -E '(\.cpp|\.hpp)'`
     if test "x$x" != "x"; then
         $ASTYLE ${ASTYLE_PARAMETERS} $file
         git add $file
