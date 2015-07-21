@@ -2,8 +2,10 @@
 
 [![twitter][1.1]][1]
 [![google+][2.1]][2]
+
 [![Join the chat at https://gitter.im/Corvusoft/restbed](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
- [![Click here to lend your support to: rails best practices and make a donation at www.pledgie.com !](https://pledgie.com/campaigns/29788.png?skin_name=chrome)](https://pledgie.com/campaigns/29788)
+
+ [![Click here to lend your support!](https://pledgie.com/campaigns/29788.png?skin_name=chrome)](https://pledgie.com/campaigns/29788)
 
 [1.1]: http://i.imgur.com/tXSoThF.png (twitter icon with padding)
 [2.1]: http://i.imgur.com/yCsTjba.png (google plus icon with padding)
