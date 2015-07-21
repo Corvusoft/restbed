@@ -30,7 +30,6 @@ namespace restbed
     class Session;
     class Resource;
     class Settings;
-    class SSLSettings;
     
     namespace detail
     {

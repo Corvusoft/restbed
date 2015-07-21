@@ -23,7 +23,6 @@ namespace restbed
 {
     //Forward Declarations
     class Settings;
-    class SSLSettings;
     
     class Logger
     {

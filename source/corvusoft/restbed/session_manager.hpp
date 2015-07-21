@@ -24,7 +24,6 @@ namespace restbed
     //Forward Declarations
     class Session;
     class Settings;
-    class SSLSettings;
     
     class SessionManager
     {
