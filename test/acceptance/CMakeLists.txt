@@ -231,3 +231,11 @@ add_test( case_insensitive_service_acceptance_test_suite ${EXECUTABLE_OUTPUT_PAT
 add_executable( service_rules_engine_acceptance_test_suite ${SOURCE_DIR}/rules_engine/service.cpp )
 target_link_libraries( service_rules_engine_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( service_rules_engine_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_rules_engine_acceptance_test_suite )
+
+add_executable( resource_rules_engine_acceptance_test_suite ${SOURCE_DIR}/rules_engine/resource.cpp )
+target_link_libraries( resource_rules_engine_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( resource_rules_engine_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_rules_engine_acceptance_test_suite )
+
+add_executable( mixed_rules_engine_acceptance_test_suite ${SOURCE_DIR}/rules_engine/resource.cpp )
+target_link_libraries( mixed_rules_engine_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( mixed_rules_engine_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/mixed_rules_engine_acceptance_test_suite )
