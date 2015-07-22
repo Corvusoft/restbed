@@ -228,7 +228,7 @@ namespace restbed
         		native_socket = m_ssl_socket->lowest_layer( ).native_handle( );
         	}
 #endif
-            struct timeval timeout;
+            struct timeval timeout = { };
             timeout.tv_usec = 0;
             timeout.tv_sec = value.count( );
             
