@@ -1,45 +1,30 @@
-/*
- * Copyright (c) 2013, 2014, 2015 Corvusoft
- */
 
-#ifndef _BASE_RULE_H
-#define _BASE_RULE_H 1
+#ifndef _EXAMPLE_BASE_RULE_H
+#define _EXAMPLE_BASE_RULE_H 1
 
-//System Includes
 #include <string>
 #include <memory>
 #include <functional>
-
-//Project Includes
 #include <restbed>
 
-//External Includes
-
-//System Namespaces
-using std::string;
-using std::function;
-using std::shared_ptr;
-
-//Project Namespaces
+using namespace std;
 using namespace restbed;
 
-//External Namespaces
-
-class BaseRule : public Rule
+class ExampleBaseRule : public Rule
 {
     public:
-        BaseRule( void ) : Rule( ),
+        ExampleBaseRule( void ) : Rule( ),
             m_priority( 0 )
         {
             return;
         }
 
-        BaseRule( const BaseRule& original ) : m_priority( original.m_priority )
+        ExampleBaseRule( const ExampleBaseRule& original ) : m_priority( original.m_priority )
         {
             return;
         }
         
-        virtual ~BaseRule( void )
+        virtual ~ExampleBaseRule( void )
         {
             return;
         }
@@ -62,4 +47,4 @@ class BaseRule : public Rule
     	int m_priority;
 };
 
-#endif  /* _BASE_RULE_H */
+#endif  /* _EXAMPLE_BASE_RULE_H */
