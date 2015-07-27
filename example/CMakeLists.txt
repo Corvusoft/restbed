@@ -18,6 +18,9 @@ target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )
 add_executable( basic_authentication basic_authentication/source/example.cpp )
 target_link_libraries( basic_authentication ${CMAKE_PROJECT_NAME} )
 
+add_executable( authentication authentication/source/example.cpp )
+target_link_libraries( authentication ${CMAKE_PROJECT_NAME} )
+
 add_executable( custom_status_codes custom_status_codes/source/example.cpp )
 target_link_libraries( custom_status_codes ${CMAKE_PROJECT_NAME} )
 
