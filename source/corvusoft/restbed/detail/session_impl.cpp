@@ -15,6 +15,7 @@
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
+#include "corvusoft/restbed/context_value.hpp"
 #include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
@@ -25,6 +26,7 @@
 
 //System Namespaces
 using std::map;
+using std::set;
 using std::regex;
 using std::smatch;
 using std::string;
@@ -81,6 +83,35 @@ namespace restbed
         SessionImpl::~SessionImpl( void )
         {
             return;
+        }
+
+        void SessionImpl::erase( const string& name )
+        {
+            if ( name.empty( ) )
+            {
+                m_context.clear( );
+            }
+            else
+            {
+                m_context.erase( name );
+            }
+        }
+
+        bool SessionImpl::has( const string& name ) const
+        {
+            return m_context.find( name ) not_eq m_context.end( );
+        }
+
+        const set< string > SessionImpl::keys( void ) const
+        {
+            std::set< std::string > keys;
+
+            for( const auto& value : m_context )
+            {
+                keys.insert( keys.end( ), value.first );
+            }
+
+            return keys;
         }
         
         bool SessionImpl::is_open( void ) const
@@ -404,6 +435,26 @@ namespace restbed
         const multimap< string, string >& SessionImpl::get_headers( void ) const
         {
             return m_headers;
+        }
+
+        const ContextValue& SessionImpl::get( const string& name ) const
+        {
+            return m_context.at( name );
+        }
+
+        const ContextValue& SessionImpl::get( const string& name, const ContextValue& default_value ) const
+        {
+            if ( has( name ) )
+            {
+                return m_context.at( name );
+            }
+
+            return default_value;
+        }
+            
+        void SessionImpl::set( const string& name, const ContextValue& value )
+        {
+            m_context.insert( make_pair( name, value ) );
         }
         
         void SessionImpl::set_id( const string& value )

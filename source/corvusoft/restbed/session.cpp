@@ -12,6 +12,7 @@
 //External Includes
 
 //System Namespaces
+using std::set;
 using std::string;
 using std::function;
 using std::multimap;
@@ -37,6 +38,21 @@ namespace restbed
     Session::~Session( void )
     {
         return;
+    }
+
+    bool Session::has( const string& name ) const
+    {
+        return m_pimpl->has( name );
+    }
+
+    void Session::erase( const string& name )
+    {
+        return m_pimpl->erase( name );
+    }
+
+    const set< string > Session::keys( void ) const
+    {
+        return m_pimpl->keys( );
     }
     
     bool Session::is_open( void ) const
@@ -226,6 +242,21 @@ namespace restbed
     const multimap< string, string >& Session::get_headers( void ) const
     {
         return m_pimpl->get_headers( );
+    }
+
+    const ContextValue& Session::get( const string& name ) const
+    {
+        return m_pimpl->get( name );
+    }
+
+    const ContextValue& Session::get( const string& name, const ContextValue& default_value ) const
+    {
+        return m_pimpl->get( name, default_value );
+    }
+
+    void Session::set( const string& name, const ContextValue& value )
+    {
+        m_pimpl->set( name, value );
     }
     
     void Session::set_header( const string& name, const string& value )

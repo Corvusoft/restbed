@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <set> 
 #include <chrono>
 #include <string>
 #include <memory>
@@ -15,6 +16,7 @@
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
 #include <corvusoft/restbed/string.hpp>
+#include <corvusoft/restbed/context_value.hpp>
 
 //External Includes
 
@@ -51,6 +53,12 @@ namespace restbed
             virtual ~Session( void );
             
             //Functionality
+            bool has( const std::string& name ) const;
+
+            void erase( const std::string& name = "" );
+
+            const std::set< std::string > keys( void ) const;
+
             bool is_open( void ) const;
             
             bool is_closed( void ) const;
@@ -125,8 +133,14 @@ namespace restbed
             const std::shared_ptr< const Resource > get_resource( void ) const;
             
             const std::multimap< std::string, std::string >& get_headers( void ) const;
+
+            const ContextValue& get( const std::string& name ) const;
+
+            const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
             
             //Setters
+            void set( const std::string& name, const ContextValue& value );
+
             void set_header( const std::string& name, const std::string& value );
             
             void set_headers( const std::multimap< std::string, std::string >& values );

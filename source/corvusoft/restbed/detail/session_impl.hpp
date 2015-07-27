@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <set>
 #include <chrono>
 #include <string>
 #include <memory>
@@ -55,6 +56,12 @@ namespace restbed
                 virtual ~SessionImpl( void );
                 
                 //Functionality
+                void erase( const std::string& name );
+
+                bool has( const std::string& name ) const;
+
+                const std::set< std::string > keys( void ) const;
+
                 bool is_open( void ) const;
                 
                 bool is_closed( void ) const;
@@ -121,8 +128,14 @@ namespace restbed
                 const std::shared_ptr< const Resource >& get_resource( void ) const;
                 
                 const std::multimap< std::string, std::string >& get_headers( void ) const;
-                
+                            
+                const ContextValue& get( const std::string& name ) const;
+
+                const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
+            
                 //Setters
+                void set( const std::string& name, const ContextValue& value );
+
                 void set_id( const std::string& value );
                 
                 void set_logger( const std::shared_ptr< Logger >& value );
@@ -214,6 +227,8 @@ namespace restbed
                 std::shared_ptr< asio::streambuf > m_buffer;
 
                 std::multimap< std::string, std::string > m_headers;
+
+                std::map< std::string, const ContextValue > m_context;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > m_router;
                 

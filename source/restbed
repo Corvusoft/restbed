@@ -15,3 +15,6 @@
 #include "corvusoft/restbed/settings.hpp"
 #include "corvusoft/restbed/status_code.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
+#include "corvusoft/restbed/context_value.hpp"
+#include "corvusoft/restbed/context_placeholder.hpp"
+#include "corvusoft/restbed/context_placeholder_base.hpp"

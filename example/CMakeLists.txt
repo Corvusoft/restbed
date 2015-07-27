@@ -72,6 +72,9 @@ target_link_libraries( service_ready_handler ${CMAKE_PROJECT_NAME} )
 add_executable( wait_for_external_event wait_for_external_event/source/example.cpp )
 target_link_libraries( wait_for_external_event ${CMAKE_PROJECT_NAME} )
 
+add_executable( session_data session_data/source/example.cpp )
+target_link_libraries( session_data ${CMAKE_PROJECT_NAME} )
+
 if ( BUILD_SSL )
     add_executable( https_service https_service/source/example.cpp )
     target_link_libraries( https_service ${CMAKE_PROJECT_NAME} )

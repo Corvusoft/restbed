@@ -15,4 +15,7 @@ set( BUILD_ARTIFACTS
    ${SOURCE_DIR}/service.hpp
    ${SOURCE_DIR}/session.hpp
    ${SOURCE_DIR}/session_manager.hpp
+   ${SOURCE_DIR}/context_value.hpp
+   ${SOURCE_DIR}/context_placeholder.hpp
+   ${SOURCE_DIR}/context_placeholder_base.hpp
 )
