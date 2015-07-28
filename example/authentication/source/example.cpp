@@ -37,7 +37,7 @@ void ben_authentication_handler( const shared_ptr< Session >& session, const fun
     
     if ( authorisation not_eq "Basic YmVuOjEyMzQ=" )
     {
-        session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
+        session->close( FORBIDDEN );
     }
     else
     {
@@ -51,7 +51,7 @@ void laura_authentication_handler( const shared_ptr< Session >& session, const f
     
     if ( authorisation not_eq "Basic bGF1cmE6NDMyMQ==" )
     {
-        session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
+        session->close( FORBIDDEN );
     }
     else
     {
