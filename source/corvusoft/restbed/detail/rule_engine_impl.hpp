@@ -27,7 +27,7 @@ namespace restbed
 	namespace detail
 	{
         static void rule_engine( const std::shared_ptr< Session >& session,
-                                 const vector< std::shared_ptr< Rule > >& rules,
+                                 const std::vector< std::shared_ptr< Rule > >& rules,
                                  const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
                                  std::size_t index = 0 )
         {
