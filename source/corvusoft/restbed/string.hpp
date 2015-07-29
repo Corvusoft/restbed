@@ -53,8 +53,6 @@ namespace restbed
             
             static std::string join( const std::multimap< std::string, std::string >& values, const std::string& pair_delimiter, const std::string& delimiter );
             
-            static std::string trim( const std::string& value, const std::string& delimiter = " \t\r\n" );
-            
             static std::string remove( const std::string& needle, const std::string& haystack, const Option option = CASE_SENSITIVE );
             
             static std::string replace( const std::string& target, const std::string& substitute, const std::string& value, const Option option = CASE_SENSITIVE );
@@ -97,6 +95,7 @@ namespace restbed
             virtual ~String( void ) = delete;
             
             //Functionality
+            static std::string::size_type format( std::string& output, const std::string::size_type length, const char* format, va_list arguments );
             
             //Getters
             

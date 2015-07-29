@@ -124,21 +124,6 @@ TEST_CASE( "join map to string with missing pair delimiter", "[string]" )
     REQUIRE( String::join( values, "=", "" ) == "fields=id,revsort=rev" );
 }
 
-TEST_CASE( "trim", "[string]" )
-{
-    REQUIRE( String::trim( "\n\r\t  Corvusoft Solutions\t\n\r " ) == "Corvusoft Solutions" );
-}
-
-TEST_CASE( "trim with empty", "[string]" )
-{
-    REQUIRE( String::trim( "" ) == "" );
-}
-
-TEST_CASE( "trim with no whitespace", "[string]" )
-{
-    REQUIRE( String::trim( "CorvusoftSolutions" ) == "CorvusoftSolutions" );
-}
-
 TEST_CASE( "remove", "[string]" )
 {
     REQUIRE( String::remove( "Solutions", "Corvusoft Solutions" ) == "Corvusoft " );
@@ -217,10 +202,4 @@ TEST_CASE( "replace with empty substitue and value", "[string]" )
 TEST_CASE( "replace with empty arguments", "[string]" )
 {
     REQUIRE( String::replace( "", "", "" ) == "" );
-}
-
-TEST_CASE( "empty", "[string]" )
-{
-    REQUIRE( strlen( "" ) == 0 );
-    REQUIRE( strcmp( "", "" ) == 0 );
 }

@@ -217,8 +217,8 @@ namespace restbed
                 while ( getline( response_stream, header ) and header not_eq "\r" )
                 {
                     auto name_value = String::split( header, ':' );
-                    auto name = String::trim( name_value[ 0 ] );
-                    auto value = String::trim( name_value[ 1 ].substr( 0, name_value[ 1 ].find_last_of( '\r' ) ) );
+                    auto name = name_value[ 0 ];
+                    auto value = name_value[ 1 ].substr( 1, name_value[ 1 ].find_last_not_of( "\r\n" ) );
                     response.headers.insert( make_pair( name, value ) );
                 }
 

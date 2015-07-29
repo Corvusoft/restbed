@@ -185,17 +185,17 @@ namespace restbed
 
         void SSLSettingsImpl::set_certificate( const Uri& value )
         {
-            m_certificate = String::remove( "file://", value.to_string( ) );
+            m_certificate = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
         }
 
         void SSLSettingsImpl::set_certificate_chain( const Uri& value )
         {
-            m_certificate_chain = String::remove( "file://", value.to_string( ) );
+            m_certificate_chain = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
         }
         
         void SSLSettingsImpl::set_certificate_authority_pool( const Uri& value )
         {
-            m_certificate_authority_pool = String::remove( "file://", value.to_string( ) );
+            m_certificate_authority_pool = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
         }
 
         void SSLSettingsImpl::set_passphrase( const string& value )
@@ -205,17 +205,17 @@ namespace restbed
 
         void SSLSettingsImpl::set_private_key( const Uri& value )
         {
-            m_private_key = String::remove( "file://", value.to_string( ) );
+            m_private_key = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
         }
 
         void SSLSettingsImpl::set_private_rsa_key( const Uri& value )
         {
-            m_private_rsa_key = String::remove( "file://", value.to_string( ) );
+            m_private_rsa_key = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
         }
 
         void SSLSettingsImpl::set_temporary_diffie_hellman( const Uri& value )
         {
-            m_temporary_diffie_hellman = String::remove( "file://", value.to_string( ) );
+            m_temporary_diffie_hellman = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
         }
     }
 }

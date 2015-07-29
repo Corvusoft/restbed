@@ -8,7 +8,6 @@ set( BUILD_MANIFEST
    ${SOURCE_DIR}/uri.cpp
    ${SOURCE_DIR}/detail/uri_impl.cpp
    ${SOURCE_DIR}/string.cpp
-   ${SOURCE_DIR}/detail/string_impl.cpp
    ${SOURCE_DIR}/resource.cpp
    ${SOURCE_DIR}/detail/resource_impl.cpp
    ${SOURCE_DIR}/request.cpp
