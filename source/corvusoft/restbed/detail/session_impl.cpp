@@ -514,16 +514,15 @@ namespace restbed
             m_buffer->consume( length );
             
             const auto request = m_session->m_pimpl->get_request( );
-            auto body = request->get_body( );
+            auto& body = request->m_pimpl->body;
             
             if ( body.empty( ) )
             {
-                request->m_pimpl->set_body( data );
+                body = data;
             }
             else
             {
                 body.insert( body.end( ), data.begin( ), data.end( ) );
-                request->m_pimpl->set_body( body );
             }
             
             return data;
@@ -655,11 +654,11 @@ namespace restbed
             const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
             
             auto request = make_shared< Request >( );
-            request->m_pimpl->set_path( Uri::decode( uri.get_path( ) ) );
-            request->m_pimpl->set_method( items.at( "method" ) );
-            request->m_pimpl->set_version( stod( items.at( "version" ) ) );
-            request->m_pimpl->set_headers( parse_request_headers( stream ) );
-            request->m_pimpl->set_query_parameters( uri.get_query_parameters( ) );
+            request->m_pimpl->path = Uri::decode( uri.get_path( ) );
+            request->m_pimpl->method = items.at( "method" );
+            request->m_pimpl->version = stod( items.at( "version" ) );
+            request->m_pimpl->headers = parse_request_headers( stream );
+            request->m_pimpl->query_parameters = uri.get_query_parameters( );
             
             session->m_pimpl->set_request( request );
 

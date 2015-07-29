@@ -5,7 +5,7 @@
  *    ./distribution/example/session_data
  *
  * Client Usage:
- *    curl -w'\n' -v -X GET 'http://localhost:1984/resource'
+ *    curl -w'\n' -v -X GET 'http://localhost:1984/resource?styled=true'
  */
 
 #include <memory>
@@ -17,18 +17,15 @@ using namespace restbed;
 
 void get_method_handler( const shared_ptr< Session >& session )
 {
-    session->set( "session-data-value", string( "corvusoft" ) );
+    const auto request = session->get_request( );
+    string styled = request->get_query_parameter( "styled", "false" );
+    session->set( "styled", styled );
 
+    //pause for example, backend processing...
     session->wait_for( chrono::seconds( 5 ), [ ]( const shared_ptr< Session >& session )
     {
-        if ( session->has( "session-data-value" ) ) 
-        {
-            string value = session->get( "session-data-value" );
-            session->close( 200, "session data value: " + value );
-            return;
-        }
-
-        session->close( 200, "session data value: empty" );
+        string value = session->get( "styled" );
+        session->close( 200, "styled response body == " + value );
     } );
 }
 

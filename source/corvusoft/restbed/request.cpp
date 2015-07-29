@@ -3,8 +3,10 @@
  */
 
 //System Includes
+#include <utility>
 
 //Project Includes
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 
@@ -12,10 +14,11 @@
 
 //System Namespaces
 using std::map;
+using std::pair;
 using std::string;
 using std::function;
 using std::multimap;
-using std::shared_ptr;
+using std::invalid_argument;
 
 //Project Namespaces
 using restbed::detail::RequestImpl;
@@ -24,193 +27,441 @@ using restbed::detail::RequestImpl;
 
 namespace restbed
 {
-    Request::Request( void ) : m_pimpl( new RequestImpl )
+    Request::Request( void ) : m_pimpl( new detail::RequestImpl )
     {
         return;
     }
     
     Request::~Request( void )
     {
-        return;
+        delete m_pimpl;
     }
-    
+
     bool Request::has_header( const string& name ) const
     {
-        return m_pimpl->has_header( name );
+        const auto key = String::lowercase( name );
+
+        auto iterator = find_if( m_pimpl->headers.begin( ), m_pimpl->headers.end( ), [ &key ]( const pair< string, string >& value )
+        {
+            return ( key == String::lowercase( value.first ) );
+        } );
+
+        return iterator not_eq m_pimpl->headers.end( );
     }
-    
+
     bool Request::has_path_parameter( const string& name, const bool ignore_case ) const
     {
-        return m_pimpl->has_path_parameter( name, ignore_case );
+        if ( not ignore_case )
+        {
+            return m_pimpl->path_parameters.find( name ) not_eq m_pimpl->path_parameters.end( );
+        }
+
+        const auto key = String::lowercase( name );
+        const auto iterator = find_if( m_pimpl->path_parameters.begin( ), m_pimpl->path_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        {
+            return ( key == String::lowercase( value.first ) );
+        } );
+
+        return iterator not_eq m_pimpl->path_parameters.end( );
     }
     
     bool Request::has_query_parameter( const string& name, const bool ignore_case ) const
     {
-        return m_pimpl->has_query_parameter( name, ignore_case );
+        if ( not ignore_case )
+        {
+            return m_pimpl->query_parameters.find( name ) not_eq m_pimpl->query_parameters.end( );
+        }
+
+        const auto key = String::lowercase( name );
+        const auto iterator = find_if( m_pimpl->query_parameters.begin( ), m_pimpl->query_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        {
+            return ( key == String::lowercase( value.first ) );
+        } );
+
+        return iterator not_eq m_pimpl->query_parameters.end( );
     }
     
     double Request::get_version( void ) const
     {
-        return m_pimpl->get_version( );
+        return m_pimpl->version;
     }
-    
-    const string Request::get_path( const function< string ( const string& ) >& transform ) const
+
+    const Bytes& Request::get_body( void ) const
     {
-        return m_pimpl->get_path( transform );
+        return m_pimpl->body;
     }
     
-    const string Request::get_method( const function< string ( const string& ) >& transform ) const
+    string Request::get_path( const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_method( transform );
+        return ( transform == nullptr ) ? m_pimpl->path : transform( m_pimpl->path );
     }
     
-    const string Request::get_protocol( const function< string ( const string& ) >& transform ) const
+    string Request::get_method( const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_protocol( transform );
+        return ( transform == nullptr ) ? m_pimpl->method : transform( m_pimpl->method );
     }
     
-    const Bytes Request::get_body( const function< Bytes ( const Bytes& ) >& transform ) const
+    string Request::get_protocol( const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_body( transform );
+        return ( transform == nullptr ) ? m_pimpl->protocol : transform( m_pimpl->protocol );
     }
-    
-    void Request::get_body( string& body, const function< Bytes ( const Bytes& ) >& transform ) const
+
+    void Request::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const
     {
-        return m_pimpl->get_body( body, transform );
+        body = ( transform == nullptr ) ? string( m_pimpl->body.begin( ), m_pimpl->body.end( ) ) : transform( m_pimpl->body );
     }
     
-    void Request::get_header( const string& name, int& value, const int default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_header( const string& name, int& value, const int default_value ) const
     {
-        m_pimpl->get_header( name, value, default_value, transform );
+        try
+        {
+            value = stoi( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
-    
-    void Request::get_header( const string& name, unsigned int& value, const unsigned int default_value, const function< string ( const string& ) >& transform ) const
+
+    void Request::get_header( const string& name, long& value, const long default_value ) const
     {
-        m_pimpl->get_header( name, value, default_value, transform );
+        try
+        {
+            value = stol( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
-    
-    void Request::get_header( const string& name, long& value, const long default_value, const function< string ( const string& ) >& transform ) const
+
+    void Request::get_header( const string& name, float& value, const float default_value ) const
     {
-        m_pimpl->get_header( name, value, default_value, transform );
+        try
+        {
+            value = stof( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
-    
-    void Request::get_header( const string& name, unsigned long& value, const unsigned long default_value, const function< string ( const string& ) >& transform ) const
+                     
+    void Request::get_header( const string& name, double& value, const double default_value ) const
     {
-        m_pimpl->get_header( name, value, default_value, transform );
+        try
+        {
+            value = stod( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
-    
-    void Request::get_header( const string& name, float& value, const float default_value, const function< string ( const string& ) >& transform ) const
+                     
+    void Request::get_header( const string& name, unsigned int& value, const unsigned int default_value ) const
     {
-        m_pimpl->get_header( name, value, default_value, transform );
+        try
+        {
+            value = stoul( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
-    
-    void Request::get_header( const string& name, double& value, const double default_value, const function< string ( const string& ) >& transform ) const
+                     
+    void Request::get_header( const string& name, unsigned long& value, const unsigned long default_value ) const
     {
-        m_pimpl->get_header( name, value, default_value, transform );
+        try
+        {
+            value = stoul( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    multimap< string, string > Request::get_headers( const string& name ) const
+    {
+        if ( name.empty( ) )
+        {
+            return m_pimpl->headers;
+        }
+
+        decltype( m_pimpl->headers ) headers;
+        const auto key = String::lowercase( name );
+
+        for ( const auto& header : m_pimpl->headers )
+        {
+            if ( key == String::lowercase( header.first ) )
+            {
+                headers.insert( header );
+            }
+        }
+
+        return headers;
     }
     
+    string Request::get_header( const string& name, const string& default_value ) const
+    {
+        const auto key = String::lowercase( name );
+        const auto iterator = find_if( m_pimpl->headers.begin( ), m_pimpl->headers.end( ), [ &key ]( const pair< string, string >& value )
+        {
+            return ( key == String::lowercase( value.first ) );
+        } );
+
+        return ( iterator == m_pimpl->headers.end( ) ) ? default_value : iterator->second;
+    }
+
     string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        return m_pimpl->get_header( name, "", transform );
+        const auto header = get_header( name, "" );
+        return ( transform == nullptr ) ? header : transform( header );
     }
     
-    string Request::get_header( const string& name, const string& default_value, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, int& value, const int default_value ) const
     {
-        return m_pimpl->get_header( name, default_value, transform );
+        try
+        {
+            value = stoi( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+                              
+    void Request::get_query_parameter( const string& name, long& value, const long default_value ) const
+    {
+        try
+        {
+            value = stol( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    void Request::get_query_parameter( const string& name, float& value, const float default_value ) const
+    {
+        try
+        {
+            value = stof( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
     
-    multimap< string, string > Request::get_headers( const string& name, const function< string ( const string& ) >& transform ) const
+    void Request::get_query_parameter( const string& name, double& value, const double default_value ) const
     {
-        return m_pimpl->get_headers( name, transform );
+        try
+        {
+            value = stod( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+                              
+    void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value ) const
+    {
+        try
+        {
+            value = stoul( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    void Request::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value ) const
+    {
+        try
+        {
+            value = stoul( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    string Request::get_query_parameter( const string& name, const bool ignore_case ) const
+    {
+        return get_query_parameter( name, "", ignore_case );
     }
     
-    void Request::get_query_parameter( const string& name, int& value, const int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
+    string Request::get_query_parameter( const string& name, const string& default_value, bool ignore_case ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
+        if ( not ignore_case )
+        {
+            const auto iterator = m_pimpl->query_parameters.find( name );
+            return ( iterator == m_pimpl->query_parameters.end( ) ) ? default_value : iterator->second;
+        }
+
+        const auto key = String::lowercase( name );
+        const auto iterator = find_if( m_pimpl->query_parameters.begin( ), m_pimpl->query_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        {
+            return ( key == String::lowercase( value.first ) );
+        } );
+
+        return ( iterator == m_pimpl->query_parameters.end( ) ) ? default_value : iterator->second;
+    }
+
+    string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
+    {
+        const auto parameter = get_query_parameter( name, "", ignore_case );
+        return ( transform == nullptr ) ? parameter : transform( parameter );
+    }
+                                     
+    multimap< string, string > Request::get_query_parameters( const string& name, const bool ignore_case ) const
+    {
+        if ( not ignore_case )
+        {
+            const auto iterators = m_pimpl->query_parameters.equal_range( name );
+            return decltype( m_pimpl->query_parameters )( iterators.first, iterators.second );
+        }
+
+        const auto key = String::lowercase( name );
+        decltype( m_pimpl->query_parameters ) parameters;
+
+        for ( const auto& parameter : m_pimpl->query_parameters )
+        {
+            if ( key == String::lowercase( parameter.first ) )
+            {
+                parameters.insert( parameter );
+            }
+        }
+
+        return parameters;
+    }
+
+    void Request::get_path_parameter( const string& name, int& value, const int default_value ) const
+    {
+        try
+        {
+            value = stoi( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+                              
+    void Request::get_path_parameter( const string& name, long& value, const long default_value ) const
+    {
+        try
+        {
+            value = stol( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    void Request::get_path_parameter( const string& name, float& value, const float default_value ) const
+    {
+        try
+        {
+            value = stof( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
     }
     
-    void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
+    void Request::get_path_parameter( const string& name, double& value, const double default_value ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
+        try
+        {
+            value = stod( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+                              
+    void Request::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value ) const
+    {
+        try
+        {
+            value = stoul( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    void Request::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value ) const
+    {
+        try
+        {
+            value = stoul( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    string Request::get_path_parameter( const string& name, const bool ignore_case ) const
+    {
+        return get_path_parameter( name, "", ignore_case );
     }
     
-    void Request::get_query_parameter( const string& name, long& value, const long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
+    string Request::get_path_parameter( const string& name, const string& default_value, bool ignore_case ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
+        if ( not ignore_case )
+        {
+            const auto iterator = m_pimpl->path_parameters.find( name );
+            return ( iterator == m_pimpl->path_parameters.end( ) ) ? default_value : iterator->second;
+        }
+
+        const auto key = String::lowercase( name );
+        const auto iterator = find_if( m_pimpl->path_parameters.begin( ), m_pimpl->path_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        {
+            return ( key == String::lowercase( value.first ) );
+        } );
+
+        return ( iterator == m_pimpl->path_parameters.end( ) ) ? default_value : iterator->second;
     }
-    
-    void Request::get_query_parameter( const string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
+
+    string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
+        const auto parameter = get_path_parameter( name, "", ignore_case );
+        return ( transform == nullptr ) ? parameter : transform( parameter );
     }
-    
-    void Request::get_query_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
+                                     
+    map< string, string > Request::get_path_parameters( const string& name, const bool ignore_case ) const
     {
-        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    void Request::get_query_parameter( const string& name, double& value, const double default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        m_pimpl->get_query_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    string Request::get_query_parameter( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        return m_pimpl->get_query_parameter( name, "", ignore_case, transform );
-    }
-    
-    string Request::get_query_parameter( const string& name, const string& default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        return m_pimpl->get_query_parameter( name, default_value, ignore_case, transform );
-    }
-    
-    multimap< string, string > Request::get_query_parameters( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        return m_pimpl->get_query_parameters( name, ignore_case, transform );
-    }
-    
-    void Request::get_path_parameter( const string& name, int& value, const int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    void Request::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    void Request::get_path_parameter( const string& name, long& value, const long default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    void Request::get_path_parameter( const string& name, unsigned long& value, const unsigned long default_value, const bool ignore_case, const function< string ( const string& ) >& transform  ) const
-    {
-        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    void Request::get_path_parameter( const string& name, float& value, const float default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    void Request::get_path_parameter( const string& name, double& value, const double default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        m_pimpl->get_path_parameter( name, value, default_value, ignore_case, transform );
-    }
-    
-    string Request::get_path_parameter( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        return m_pimpl->get_path_parameter( name, "", ignore_case, transform );
-    }
-    
-    string Request::get_path_parameter( const string& name, const string& default_value, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        return m_pimpl->get_path_parameter( name, default_value, ignore_case, transform );
-    }
-    
-    map< string, string > Request::get_path_parameters( const string& name, const bool ignore_case, const function< string ( const string& ) >& transform ) const
-    {
-        return m_pimpl->get_path_parameters( name, ignore_case, transform );
+        if ( not ignore_case )
+        {
+            const auto iterators = m_pimpl->path_parameters.equal_range( name );
+            return decltype( m_pimpl->path_parameters )( iterators.first, iterators.second );
+        }
+
+        const auto key = String::lowercase( name );
+        decltype( m_pimpl->path_parameters ) parameters;
+
+        for ( const auto& parameter : m_pimpl->path_parameters )
+        {
+            if ( key == String::lowercase( parameter.first ) )
+            {
+                parameters.insert( parameter );
+            }
+        }
+
+        return parameters;
     }
 }

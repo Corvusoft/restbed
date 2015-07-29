@@ -12,7 +12,6 @@ set( BUILD_MANIFEST
    ${SOURCE_DIR}/resource.cpp
    ${SOURCE_DIR}/detail/resource_impl.cpp
    ${SOURCE_DIR}/request.cpp
-   ${SOURCE_DIR}/detail/request_impl.cpp
    ${SOURCE_DIR}/response.cpp
    ${SOURCE_DIR}/detail/response_impl.cpp
    ${SOURCE_DIR}/service.cpp

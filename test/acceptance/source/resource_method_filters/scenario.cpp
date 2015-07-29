@@ -45,7 +45,7 @@ SCENARIO( "resource method filters", "[resource]" )
     GIVEN( "I publish a resource with 'Content-Type' header filters of 'application/json' and 'application/xml'" )
     {
         auto resource = make_shared< Resource >( );
-        resource->set_path( "/resources/1" );
+        resource->set_path( "/resource" );
         resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, xml_method_handler );
         resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, json_method_handler );
 
@@ -61,33 +61,33 @@ SCENARIO( "resource method filters", "[resource]" )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
-                WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/xml'" )
+                WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/xml'" )
                 {
                     Http::Request request;
                     request.port = 1984;
                     request.host = "localhost";
-                    request.path = "/resources/1";
+                    request.path = "/resource";
                     request.headers.insert( make_pair( "Content-Type", "application/xml" ) );
 
                     auto response = Http::get( request );
 
-                    THEN( "I should see a '1' (Failed Filter Validation) status code" )
+                    THEN( "I should see a '1' (XML) status code" )
                     {
                         REQUIRE( 1 == response.status_code );
                     }
                 }
 
-                WHEN( "I perform a HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/json'" )
+                WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/json'" )
                 {
                     Http::Request request;
                     request.port = 1984;
                     request.host = "localhost";
-                    request.path = "/resources/1";
+                    request.path = "/resource";
                     request.headers.insert( make_pair( "Content-Type", "application/json" ) );
 
                     auto response = Http::get( request );
 
-                    THEN( "I should see a '2' (Failed Filter Validation) status code" )
+                    THEN( "I should see a '2' (JSON) status code" )
                     {
                         REQUIRE( 2 == response.status_code );
                     }

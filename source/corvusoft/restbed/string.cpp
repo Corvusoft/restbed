@@ -27,11 +27,6 @@ namespace restbed
         return StringImpl::to_bytes( value );
     }
     
-    string String::to_string( const Bytes& value )
-    {
-        return StringImpl::to_string( value );
-    }
-    
     string String::lowercase( const string& value )
     {
         return StringImpl::lowercase( value );

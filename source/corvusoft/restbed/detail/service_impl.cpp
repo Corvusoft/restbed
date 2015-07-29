@@ -712,7 +712,7 @@ namespace restbed
                 if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
                 {
                     regex_match( declaration, matches, pattern );
-                    request->m_pimpl->set_path_parameter( matches[ 1 ].str( ), folders[ index ] );
+                    request->m_pimpl->path_parameters.insert( make_pair( matches[ 1 ].str( ), folders[ index ] ) );
                 }
             }
         }
