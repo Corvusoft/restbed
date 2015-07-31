@@ -29,7 +29,7 @@ namespace restbed
 
     namespace detail
     {
-        class SettingsImpl;
+        struct SettingsImpl;
     }
     
     class Settings
@@ -133,7 +133,7 @@ namespace restbed
             Settings& operator =( const Settings& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::SettingsImpl > m_pimpl;
+            detail::SettingsImpl* m_pimpl;
     };
 }
 

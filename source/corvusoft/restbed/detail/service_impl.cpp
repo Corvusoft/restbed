@@ -135,7 +135,7 @@ namespace restbed
 
             if ( m_session_manager == nullptr )
             {
-                m_session_manager = make_shared< SessionManagerImpl >( );
+                m_session_manager = make_shared< SessionManager >( );
             }
             
             m_session_manager->start( m_settings );

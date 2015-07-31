@@ -30,125 +30,86 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
-        
-        class SettingsImpl
+
+        struct SettingsImpl
         {
-            public:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                SettingsImpl( void );
-                
-                virtual ~SettingsImpl( void );
-                
-                //Functionality
-                
-                //Getters
-                uint16_t get_port( void ) const;
-                
-                std::string get_root( void ) const;
-                
-                int32_t get_connection_limit( void ) const;
+            uint16_t port = 80;
+            
+            std::string root = "/";
+            
+            uint32_t connection_limit = 128;
 
-                bool get_case_insensitive_uris( void ) const;
-                
-                std::chrono::seconds get_connection_timeout( void ) const;
-                
-                std::string get_status_message( const int code ) const;
-                
-                std::map< int, std::string > get_status_messages( void ) const;
-                
-                std::string get_property( const std::string& name ) const;
-                
-                std::map< std::string, std::string > get_properties( void ) const;
+            bool case_insensitive_uris = true;
+            
+            std::map< std::string, std::string > properties = { };
 
-                std::shared_ptr< const SSLSettings > get_ssl_settings( void ) const;
-                
-                std::multimap< std::string, std::string > get_default_headers( void ) const;
-                
-                //Setters
-                void set_port( const uint16_t value );
-                
-                void set_root( const std::string& value );
-                
-                void set_connection_limit( const int32_t value );
+            std::shared_ptr< const SSLSettings > ssl_settings = nullptr;
+            
+            std::multimap< std::string, std::string > default_headers = { };
 
-                void set_case_insensitive_uris( const bool value );
-                
-                void set_connection_timeout( const std::chrono::seconds& value );
-                
-                void set_status_message( const int code, const std::string& message );
-                
-                void set_status_messages( const std::map< int, std::string >& values );
-                
-                void set_property( const std::string& name, const std::string& value );
-                
-                void set_properties( const std::map< std::string, std::string >& values );
+            std::chrono::seconds connection_timeout = std::chrono::seconds( 5 );
 
-                void set_ssl_settings( const std::shared_ptr< const SSLSettings >& value );
-                
-                void set_default_header( const std::string& name, const std::string& value );
-                
-                void set_default_headers( const std::multimap< std::string, std::string >& values );
-                
-                //Operators
-                
-                //Properties
-                
-            protected:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                
-                //Functionality
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                
-                //Properties
-                
-            private:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                SettingsImpl( const SettingsImpl& original ) = delete;
-                
-                //Functionality
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                SettingsImpl& operator =( const SettingsImpl& value ) = delete;
-                
-                //Properties
-                uint16_t m_port;
-                
-                std::string m_root;
-                
-                uint32_t m_connection_limit;
-
-                bool m_case_insensitive_uris;
-                
-                std::chrono::seconds m_connection_timeout;
-                
-                std::map< int, std::string > m_status_messages;
-                
-                std::map< std::string, std::string > m_properties;
-
-                std::shared_ptr< const SSLSettings > m_ssl_settings;
-                
-                std::multimap< std::string, std::string > m_default_headers;
+            std::map< int, std::string > status_messages
+            {
+                { 100, "Continue" },
+                { 101, "Switching Protocols" },
+                { 102, "Processing" },
+                { 200, "OK" },
+                { 201, "Created" },
+                { 202, "Accepted" },
+                { 203, "Non-Authoritative Information" },
+                { 204, "No Content" },
+                { 205, "Reset Content" },
+                { 206, "Partial Content" },
+                { 207, "Multi-Status" },
+                { 208, "Already Reported" },
+                { 226, "IM Used" },
+                { 300, "Multiple Choices" },
+                { 301, "Moved Permanently" },
+                { 302, "Found" },
+                { 303, "See Other" },
+                { 304, "Not Modified" },
+                { 305, "Use Proxy" },
+                { 306, "Reserved" },
+                { 307, "Temporary Redirect" },
+                { 308, "Permanent Redirect" },
+                { 400, "Bad Request" },
+                { 401, "Unauthorized" },
+                { 402, "Payment Required" },
+                { 403, "Forbidden" },
+                { 404, "Not Found" },
+                { 405, "Method Not Allowed" },
+                { 406, "Not Acceptable" },
+                { 407, "Proxy Authentication Required" },
+                { 408, "Request Timeout" },
+                { 409, "Conflict" },
+                { 410, "Gone" },
+                { 411, "Length Required" },
+                { 412, "Precondition Failed" },
+                { 413, "Request Entity Too Large" },
+                { 414, "Request URI Too Long" },
+                { 415, "Unsupported Media Type" },
+                { 416, "Requested Range Not Satisfiable" },
+                { 417, "Expectation Failed" },
+                { 422, "Unprocessable Entity" },
+                { 423, "Locked" },
+                { 424, "Failed Dependency" },
+                { 426, "Upgrade Required" },
+                { 428, "Precondition Required" },
+                { 429, "Too Many Requests" },
+                { 431, "Request Header Fields Too Large" },
+                { 500, "Internal Server Error" },
+                { 501, "Not Implemented" },
+                { 502, "Bad Gateway" },
+                { 503, "Service Unavailable" },
+                { 504, "Gateway Timeout" },
+                { 505, "HTTP Version Not Supported" },
+                { 506, "Variant Also Negotiates" },
+                { 507, "Insufficient Storage" },
+                { 508, "Loop Detected" },
+                { 510, "Not Extended" },
+                { 511, "Network Authentication Required" }
+            };
         };
     }
 }

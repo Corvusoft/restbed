@@ -7,9 +7,8 @@
 
 //System Includes
 #include <map>
-#include <string>
 #include <memory>
-#include <functional> 
+#include <string>
 
 //Project Includes
 #include "corvusoft/restbed/session_manager.hpp"
@@ -26,79 +25,14 @@ namespace restbed
 {
     //Forward Declarations
     class Session;
-    class Settings;
     
     namespace detail
     {
         //Forward Declarations
         
-        class SessionManagerImpl : public SessionManager
+        struct SessionManagerImpl
         {
-            public:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                SessionManagerImpl( void );
-                
-                virtual ~SessionManagerImpl( void );
-                
-                //Functionality
-                void stop( void );
-
-                void start( const std::shared_ptr< const Settings >& settings );
-                
-                void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-                
-                void purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-                
-                void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                
-                //Properties
-                
-            protected:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                
-                //Functionality
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                
-                //Properties
-                
-            private:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                SessionManagerImpl( const SessionManagerImpl& original ) = delete;
-                
-                //Functionality
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                SessionManagerImpl& operator =( const SessionManagerImpl& value ) = delete;
-                
-                //Properties
-                std::map< std::string, std::shared_ptr< Session > > m_sessions;
+            std::map< std::string, std::shared_ptr< Session > > sessions;
         };
     }
 }

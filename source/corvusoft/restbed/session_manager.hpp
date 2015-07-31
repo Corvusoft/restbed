@@ -24,6 +24,11 @@ namespace restbed
     //Forward Declarations
     class Session;
     class Settings;
+
+    namespace detail
+    {
+        struct SessionManagerImpl;
+    }
     
     class SessionManager
     {
@@ -33,17 +38,20 @@ namespace restbed
             //Definitions
             
             //Constructors
+            SessionManager( void );
+            
+            virtual ~SessionManager( void );
             
             //Functionality
-            virtual void stop( void ) = 0;
+            virtual void stop( void );
 
-            virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
+            virtual void start( const std::shared_ptr< const Settings >& settings );
 
-            virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+            virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             
-            virtual void purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+            virtual void purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             
-            virtual void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+            virtual void load( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             
             //Getters
             
@@ -54,11 +62,12 @@ namespace restbed
             //Properties
             
         protected:
-            SessionManager( void ) = default;
-            
-            explicit SessionManager( const SessionManager& ) = default;
-            
-            virtual ~SessionManager( void ) = default;
+            //Friends
+
+            //Definitions
+
+            //Constructors
+            SessionManager( const SessionManager& original ) = delete;
             
             //Functionality
             
@@ -67,7 +76,7 @@ namespace restbed
             //Setters
             
             //Operators
-            SessionManager& operator =( const SessionManager& value ) = default;
+            SessionManager& operator =( const SessionManager& value ) = delete;
             
             //Properties
             
@@ -87,6 +96,7 @@ namespace restbed
             //Operators
             
             //Properties
+            detail::SessionManagerImpl* m_pimpl;
     };
 }
 

@@ -37,7 +37,6 @@ TEST_CASE( "validate default instance values", "[settings]" )
     REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
 
     map< int, string > expectation = {
-        { 0, "No Appropriate Status Message Found" },
         { 100, "Continue" },
         { 101, "Switching Protocols" },
         { 102, "Processing" },
@@ -155,7 +154,6 @@ TEST_CASE( "manipulating status messages", "[settings]" )
     SECTION( "read all status messages" )
     {
         map< int, string > expectation = {
-            { 0, "No Appropriate Status Message Found" },
             { 100, "Continue" },
             { 101, "Switching Protocols" },
             { 102, "Processing" },
