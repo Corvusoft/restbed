@@ -538,19 +538,9 @@ namespace restbed
         
         void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session ) const
         {
-            auto error_handler = m_error_handler;
-            
-            if ( session->get_resource( ) not_eq nullptr )
-            {
-                auto resource = session->get_resource( );
-                auto handler = resource->m_pimpl->get_error_handler( );
-                
-                if ( handler not_eq nullptr )
-                {
-                    error_handler = handler;
-                }
-            }
-            
+            const auto resource = session->get_resource( );
+            const auto error_handler =  ( resource not_eq nullptr and resource->m_pimpl->error_handler not_eq nullptr ) ? resource->m_pimpl->error_handler : m_error_handler;
+
             if ( error_handler not_eq nullptr )
             {
                 error_handler( status, error, session );
@@ -570,7 +560,7 @@ namespace restbed
             
             if ( m_resource not_eq nullptr )
             {
-                const auto hdrs = m_resource->m_pimpl->get_default_headers( );
+                const auto hdrs = m_resource->m_pimpl->default_headers;
                 headers.insert( hdrs.begin( ), hdrs.end( ) );
             }
             

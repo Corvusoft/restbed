@@ -7,7 +7,6 @@
 
 //System Includes
 #include <map>
-#include <memory>
 #include <string>
 
 //Project Includes

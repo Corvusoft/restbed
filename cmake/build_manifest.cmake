@@ -9,7 +9,6 @@ set( BUILD_MANIFEST
    ${SOURCE_DIR}/detail/uri_impl.cpp
    ${SOURCE_DIR}/string.cpp
    ${SOURCE_DIR}/resource.cpp
-   ${SOURCE_DIR}/detail/resource_impl.cpp
    ${SOURCE_DIR}/request.cpp
    ${SOURCE_DIR}/response.cpp
    ${SOURCE_DIR}/service.cpp

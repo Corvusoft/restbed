@@ -8,7 +8,6 @@
 //System Includes
 #include <map>
 #include <set>
-#include <memory>
 #include <string>
 #include <functional>
 
@@ -32,7 +31,7 @@ namespace restbed
     {
         class SessionImpl;
         class ServiceImpl;
-        class ResourceImpl;
+        struct ResourceImpl;
     }
     
     class Resource
@@ -114,7 +113,7 @@ namespace restbed
             Resource& operator =( const Resource& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::ResourceImpl > m_pimpl;
+            detail::ResourceImpl* m_pimpl;
     };
 }
 

@@ -222,7 +222,7 @@ namespace restbed
                 return;
             }
             
-            auto paths = resource->m_pimpl->get_paths( );
+            auto paths = resource->m_pimpl->paths;
             
             if ( not has_unique_paths( paths ) )
             {
@@ -237,7 +237,7 @@ namespace restbed
                 m_resource_routes[ sanitised_path ] = resource;
             }
             
-            const auto& methods = resource->m_pimpl->get_methods( );
+            const auto& methods = resource->m_pimpl->methods;
             m_supported_methods.insert( methods.begin( ), methods.end( ) );
         }
         
@@ -253,7 +253,7 @@ namespace restbed
                 return;
             }
             
-            for ( const auto& path : resource->m_pimpl->get_paths( ) )
+            for ( const auto& path : resource->m_pimpl->paths )
             {
                 if ( m_resource_routes.erase( path ) )
                 {
@@ -636,9 +636,9 @@ namespace restbed
             const auto resource = resource_route->second;
             session->m_pimpl->set_resource( resource );
 
-            resource->m_pimpl->authenticate( session, [ this, path, resource ]( const shared_ptr< Session >& session )
-            {    
-                rule_engine( session, resource->m_pimpl->get_rules( ), [ this, path, resource ]( const shared_ptr< Session >& session )
+            const auto callback = [ this, path, resource ]( const shared_ptr< Session >& session )
+            {
+                rule_engine( session, resource->m_pimpl->rules, [ this, path, resource ]( const shared_ptr< Session >& session )
                 {
                     if ( session->is_closed( ) )
                     {
@@ -664,7 +664,16 @@ namespace restbed
 
                     method_handler( session );
                 } );
-            } );
+            };
+
+            if ( resource->m_pimpl->authentication_handler not_eq nullptr )
+            {
+                resource->m_pimpl->authentication_handler( session, callback );
+            }
+            else
+            {
+                callback( session );
+            }
         }
         
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const
@@ -721,12 +730,12 @@ namespace restbed
         {
             const auto request = session->get_request( );
             const auto resource = session->get_resource( );
-            const auto method_handlers = resource->m_pimpl->get_method_handlers( request->get_method( ) );
-            
+            const auto method_handlers = resource->m_pimpl->method_handlers.equal_range( request->get_method( ) );
+
             bool failed_filter_validation = false;
             function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
             
-            for ( auto handler = method_handlers.begin( ); handler not_eq method_handlers.end( ) and method_handler == nullptr; handler++ )
+            for ( auto handler = method_handlers.first; handler not_eq method_handlers.second and method_handler == nullptr; handler++ )
             {
                 method_handler = handler->second.second;
                 
@@ -745,7 +754,7 @@ namespace restbed
             
             if ( failed_filter_validation and method_handler == nullptr )
             {
-                const auto handler = resource->m_pimpl->get_failed_filter_validation_handler( );
+                const auto handler = resource->m_pimpl->failed_filter_validation_handler;
                 method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
             }
             
