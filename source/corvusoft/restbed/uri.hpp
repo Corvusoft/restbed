@@ -7,7 +7,6 @@
 
 //System Includes
 #include <map>
-#include <memory>
 #include <string>
 
 //Project Includes
@@ -26,7 +25,7 @@ namespace restbed
     //Forward Declarations
     namespace detail
     {
-        class UriImpl;
+        struct UriImpl;
     }
     
     class Uri
@@ -128,7 +127,7 @@ namespace restbed
             //Operators
             
             //Properties
-            const std::unique_ptr< detail::UriImpl > m_pimpl;
+            detail::UriImpl* m_pimpl;
     };
 }
 

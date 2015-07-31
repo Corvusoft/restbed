@@ -3,17 +3,32 @@
  */
 
 //System Includes
+#include <regex>
+#include <cstdio>
+#include <cstdlib>
+#include <netdb.h>
+#include <unistd.h>
+#include <stdexcept>
+#include <arpa/inet.h>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
+#include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/detail/uri_impl.hpp"
 
 //External Includes
 
 //System Namespaces
+using std::stoi;
+using std::regex;
+using std::smatch;
+using std::strtol;
 using std::string;
 using std::multimap;
-using std::unique_ptr;
+using std::snprintf;
+using std::to_string;
+using std::runtime_error;
+using std::invalid_argument;
 
 //Project Namespaces
 using restbed::detail::UriImpl;
@@ -24,7 +39,12 @@ namespace restbed
 {
     Uri::Uri( const string& value ) : m_pimpl( new UriImpl )
     {
-        m_pimpl->set_uri( value );
+        if ( not is_valid( value ) )
+        {
+            throw invalid_argument( "Argument is not a valid URI: " + value );
+        }
+
+        m_pimpl->uri = value;
     }
     
     Uri::Uri( const Uri& original ) : m_pimpl( new UriImpl( *original.m_pimpl ) )
@@ -34,123 +54,279 @@ namespace restbed
     
     Uri::~Uri( void )
     {
-        return;
+        delete m_pimpl;
     }
     
     string Uri::to_string( void ) const
     {
-        return m_pimpl->to_string( );
+        return m_pimpl->uri;
     }
 
     bool Uri::is_valid( const string& value )
     {
-        return UriImpl::is_valid( value );
+        static const regex pattern( "^([a-zA-Z][a-zA-Z0-9+-.]*):((\\/\\/(((([a-zA-Z0-9\\-._~!$&'()*+,;=':]|(%[0-9a-fA-F]{2}))*)@)?((\\[((((([0-9a-fA-F]{1,4}:){6}|(::([0-9a-fA-F]{1,4}:){5})|(([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:){4})|((([0-9a-fA-F]{1,4}:)?[0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:){3})|((([0-9a-fA-F]{1,4}:){0,2}[0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:){2})|((([0-9a-fA-F]{1,4}:){0,3}[0-9a-fA-F]{1,4})?::[0-9a-fA-F]{1,4}:)|((([0-9a-fA-F]{1,4}:){0,4}[0-9a-fA-F]{1,4})?::))((([0-9a-fA-F]{1,4}):([0-9a-fA-F]{1,4}))|(([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5])))))|((([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4})?::[0-9a-fA-F]{1,4})|((([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4})?::))|(v[0-9a-fA-F]+\\.[a-zA-Z0-9\\-._~!$&'()*+,;=':]+))\\])|(([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5])))|(([a-zA-Z0-9\\-._~!$&'()*+,;=']|(%[0-9a-fA-F]{2}))*))(:[0-9]*)?)((\\/([a-zA-Z0-9\\-._~!$&'()*+,;=':@]|(%[0-9a-fA-F]{2}))*)*))|(\\/?(([a-zA-Z0-9\\-._~!$&'()*+,;=':@]|(%[0-9a-fA-F]{2}))+(\\/([a-zA-Z0-9\\-._~!$&'()*+,;=':@]|(%[0-9a-fA-F]{2}))*)*)?))(\\?(([a-zA-Z0-9\\-._~!$&'()*+,;=':@\\/?]|(%[0-9a-fA-F]{2}))*))?((#(([a-zA-Z0-9\\-._~!$&'()*+,;=':@\\/?]|(%[0-9a-fA-F]{2}))*)))?$" );
+
+        return regex_match( value, pattern );
     }
 
     Uri Uri::parse( const string& value )
     {
-        Uri uri;
-        
-        uri.m_pimpl->set_uri( value );
-        
-        return uri;
+        return Uri( value );
     }
     
     string Uri::decode( const Bytes& value )
     {
-        return UriImpl::decode( value );
+        return decode( string( value.begin( ), value.end( ) ) );
     }
     
     string Uri::decode( const string& value )
     {
-        return UriImpl::decode( value );
+        string result = "";
+        
+        for ( string::size_type index = 0; index not_eq value.length( ); index++ )
+        {
+            if ( value[ index ] == '%' )
+            {
+                char hexidecimal[ 3 ] = { 0 };
+                hexidecimal[ 0 ] = value[ ++index ];
+                hexidecimal[ 1 ] = value[ ++index ];
+                
+                char byte = static_cast< char >( strtol( hexidecimal, nullptr, 16 ) );
+                result.push_back( byte );
+            }
+            else
+            {
+                result.push_back( value[ index ] );
+            }
+        }
+        
+        return result;
     }
     
     string Uri::decode_parameter( const string& value )
     {
-        return UriImpl::decode_parameter( value );
+        return decode( String::replace( "+", " ", value ) );
     }
     
     string Uri::encode( const Bytes& value )
     {
-        return UriImpl::encode( value );
+        string encoded = "";
+        
+        for ( Byte character : value )
+        {
+            char hexidecimal[ 4 ] = { 0 };
+            
+            switch ( character )
+            {
+                //unsafe carachters
+                case ' ':
+                case '\"':
+                case '<':
+                case '>':
+                case '#':
+                case '%':
+                case '{':
+                case '}':
+                case '|':
+                case '\\':
+                case '^':
+                case '~':
+                case '[':
+                case ']':
+                case '`':
+                
+                //reserved characters
+                case '$':
+                case '&':
+                case '+':
+                case ',':
+                case '/':
+                case ':':
+                case ';':
+                case '=':
+                case '?':
+                case '@':
+                    snprintf( hexidecimal, sizeof( hexidecimal ), "%%%02X", character );
+                    encoded.append( hexidecimal );
+                    break;
+                    
+                default:
+                    hexidecimal[ 0 ] = character;
+                    encoded.append( hexidecimal );
+                    break;
+            }
+        }
+        
+        return encoded;
     }
     
     string Uri::encode( const string& value )
     {
-        return UriImpl::encode( value );
+        return encode( Bytes( value.begin( ), value.end( ) ) );
     }
     
     int Uri::get_port( void ) const
     {
-        return m_pimpl->get_port( );
+        smatch match;
+        string port = "";
+        static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\]):([0-9]+)" );
+        
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            port = match[ 6 ];
+        }
+        else
+        {
+            const auto scheme = get_scheme( );
+            
+            if ( not scheme.empty( ) )
+            {
+                const struct servent* entry = getservbyname( scheme.data( ), nullptr );
+                port = ::to_string( ntohs( entry->s_port ) );
+            }
+        }
+        
+        if ( port.empty( ) )
+        {
+            return 0;
+        }
+        
+        return stoi( port );
     }
     
     string Uri::get_path( void ) const
     {
-        return m_pimpl->get_path( );
+        smatch match;
+        static const regex pattern( "^([a-zA-Z][a-zA-Z0-9+\\-.]*://([^/?#]+)?)?([a-zA-Z0-9\\-._~%!$&'()*+,;=:@/]*)" );
+        
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 3 ];
+        }
+        
+        return "";
     }
     
     string Uri::get_query( void ) const
     {
-        return m_pimpl->get_query( );
+        smatch match;
+        static const regex pattern( "^[^?#]+\\?([^#]+)" );
+
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 1 ];
+        }
+        
+        return "";
     }
     
     string Uri::get_scheme( void ) const
     {
-        return m_pimpl->get_scheme( );
+        smatch match;
+        static const regex pattern( "^([a-zA-Z][a-zA-Z0-9+\\-.]*):" );
+        
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 1 ];
+        }
+        
+        return "";
     }
     
     string Uri::get_fragment( void ) const
     {
-        return m_pimpl->get_fragment( );
+        smatch match;
+        static const regex pattern( "#(.+)" );
+
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 1 ];
+        }
+        
+        return "";
     }
     
     string Uri::get_username( void ) const
     {
-        return m_pimpl->get_username( );
+        smatch match;
+        static const regex pattern( "^[a-zA-Z0-9+\\-.]+://([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@" );
+
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 1 ];
+        }
+        
+        return "";
     }
     
     string Uri::get_password( void ) const
     {
-        return m_pimpl->get_password( );
+        smatch match;
+        static const regex pattern( "^[a-zA-Z0-9+\\-.]+://([a-zA-Z0-9\\-._~%!$&'()*+,;=]+):([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)@" );
+
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 2 ];
+        }
+        
+        return "";
     }
     
     string Uri::get_authority( void ) const
     {
-        return m_pimpl->get_authority( );
+        smatch match;
+        static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])" );
+
+        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        {
+            return match[ 5 ];
+        }
+        
+        return "";
     }
 
     multimap< string, string > Uri::get_query_parameters( void ) const
     {
-        return m_pimpl->get_query_parameters( );
+        multimap< string, string > parameters;
+
+        auto query = String::split( get_query( ), '&' );
+
+        for ( auto parameter : query )
+        {
+            auto index = parameter.find_first_of( '=' );
+            auto name = decode_parameter( parameter.substr( 0, index ) );
+            auto value = decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
+
+            parameters.insert( make_pair( name, value ) );
+        }
+
+        return parameters;
     }
     
     Uri& Uri::operator =( const Uri& rhs )
     {
-        *m_pimpl = *rhs.m_pimpl;
-        
+        m_pimpl->uri = rhs.m_pimpl->uri;
         return *this;
     }
     
     bool Uri::operator <( const Uri& rhs ) const
     {
-        return *m_pimpl < *rhs.m_pimpl;
+        return m_pimpl->uri < rhs.m_pimpl->uri;
     }
     
     bool Uri::operator >( const Uri& rhs ) const
     {
-        return *m_pimpl > *rhs.m_pimpl;
+        return m_pimpl->uri > rhs.m_pimpl->uri;
     }
     
     bool Uri::operator ==( const Uri& rhs ) const
     {
-        return *m_pimpl == *rhs.m_pimpl;
+        return m_pimpl->uri == rhs.m_pimpl->uri;
     }
     
     bool Uri::operator !=( const Uri& rhs ) const
     {
-        return *m_pimpl not_eq * rhs.m_pimpl;
+        return m_pimpl->uri not_eq rhs.m_pimpl->uri;
     }
     
     Uri::Uri( void ) : m_pimpl( new UriImpl )
