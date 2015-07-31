@@ -29,99 +29,19 @@ namespace restbed
     {
         //Forward Declarations
         
-        class ResponseImpl
+        struct ResponseImpl
         {
-            public:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                ResponseImpl( void );
-                
-                virtual ~ResponseImpl( void );
-                
-                //Functionality
-                Bytes to_bytes( void ) const;
-                
-                //Getters
-                double get_version( void ) const;
-                
-                int get_status_code( void ) const;
-                
-                const Bytes& get_body( void ) const;
-                
-                const std::string& get_protocol( void ) const;
-                
-                const std::string& get_status_message( void ) const;
-                
-                const std::multimap< std::string, std::string >& get_headers( void ) const;
-                
-                //Setters
-                void set_version( const double value );
-                
-                void set_status_code( const int value );
-                
-                void set_protocol( const std::string& value );
-                
-                void set_body( const Bytes& value );
-                
-                void set_status_message( const std::string& value );
-                
-                void set_header( const std::string& name, const std::string& value );
-                
-                void set_headers( const std::multimap< std::string, std::string >& values );
-                
-                //Operators
-                
-                //Properties
-                
-            protected:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                
-                //Functionality
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                
-                //Properties
-                
-            private:
-                //Friends
-                
-                //Definitions
-                
-                //Constructors
-                ResponseImpl( const ResponseImpl& original ) = delete;
-                
-                //Functionality
-                
-                //Getters
-                
-                //Setters
-                
-                //Operators
-                ResponseImpl& operator =( const ResponseImpl& value ) = delete;
-                
-                //Properties
-                double m_version;
-                
-                int m_status_code;
-                
-                std::string m_protocol;
-                
-                Bytes m_body;
-                
-                std::string m_status_message;
-                
-                std::multimap< std::string, std::string > m_headers;
+            Bytes body = { };
+
+            double version = 1.1;
+            
+            int status_code = 200;
+
+            std::string protocol = "HTTP";
+            
+            std::string status_message = "";
+            
+            std::multimap< std::string, std::string > headers = { };
         };
     }
 }

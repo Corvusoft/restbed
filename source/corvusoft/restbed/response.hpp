@@ -26,7 +26,7 @@ namespace restbed
     //Forward Declarations
     namespace detail
     {
-        class ResponseImpl;
+        struct ResponseImpl;
     }
     
     class Response
@@ -45,11 +45,11 @@ namespace restbed
             Bytes to_bytes( void ) const;
             
             //Getters
+            Bytes get_body( void ) const;
+            
             double get_version( void ) const;
             
             int get_status_code( void ) const;
-            
-            Bytes get_body( void ) const;
             
             std::string get_protocol( void ) const;
             
@@ -58,17 +58,17 @@ namespace restbed
             std::multimap< std::string, std::string > get_headers( void ) const;
             
             //Setters
+            void set_body( const Bytes& value );
+
+            void set_body( const std::string& value );
+
             void set_version( const double value );
+
+            void set_status_code( const int value );
             
             void set_protocol( const std::string& protocol );
             
-            void set_status_code( const int value );
-            
             void set_status_message( const std::string& value );
-            
-            void set_body( const std::string& value );
-            
-            void set_body( const Bytes& value );
             
             void set_header( const std::string& name, const std::string& value );
             
@@ -113,7 +113,7 @@ namespace restbed
             Response& operator =( const Response& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::ResponseImpl > m_pimpl;
+            detail::ResponseImpl* m_pimpl;
     };
 }
 
