@@ -7,7 +7,6 @@
 
 //System Includes
 #include <string>
-#include <memory>
 #include <cstdint>
 
 //Project Includes
@@ -27,7 +26,7 @@ namespace restbed
 
     namespace detail
     {
-        class SSLSettingsImpl;
+        struct SSLSettingsImpl;
     }
     
     class SSLSettings
@@ -152,7 +151,7 @@ namespace restbed
             SSLSettings& operator =( const SSLSettings& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::SSLSettingsImpl > m_pimpl;
+            detail::SSLSettingsImpl* m_pimpl;
     };
 }
 
