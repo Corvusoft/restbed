@@ -117,7 +117,7 @@ You will now find all required components installed in the restbed distribution 
 
 ## Road Map
 
-|   MileStone   |                   Feature                       |      Status     |
+|   Milestone   |                   Feature                       |      Status     |
 |:-------------:|:-----------------------------------------------:|:---------------:| 
 |     0.0       |         Asynchrounous HTTP Service              |     complete    |
 |     1.0       |             HTTP 1.0 Compliance                 |     complete    |
