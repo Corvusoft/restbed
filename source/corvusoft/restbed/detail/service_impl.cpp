@@ -467,11 +467,11 @@ namespace restbed
                     
                     m_session_manager->create( [ this, connection ]( const shared_ptr< Session >& session )
                     {
-                        session->m_pimpl->set_logger( m_logger );
-                        session->m_pimpl->set_socket( connection );
-                        session->m_pimpl->set_settings( m_settings );
-                        session->m_pimpl->set_error_handler( m_error_handler );
-                        session->m_pimpl->set_session_manager( m_session_manager );
+                        session->m_pimpl->logger = m_logger;
+                        session->m_pimpl->socket = connection;
+                        session->m_pimpl->settings = m_settings;
+                        session->m_pimpl->error_handler = m_error_handler;
+                        session->m_pimpl->session_manager = m_session_manager;
                         session->m_pimpl->fetch( session, bind( &ServiceImpl::authenticate, this, _1 ) );
                     } );
                 } );
@@ -633,12 +633,11 @@ namespace restbed
             }
 
             const auto path = resource_route->first;
-            const auto resource = resource_route->second;
-            session->m_pimpl->set_resource( resource );
+            session->m_pimpl->resource = resource_route->second;
 
-            const auto callback = [ this, path, resource ]( const shared_ptr< Session >& session )
+            const auto callback = [ this, path ]( const shared_ptr< Session >& session )
             {
-                rule_engine( session, resource->m_pimpl->rules, [ this, path, resource ]( const shared_ptr< Session >& session )
+                rule_engine( session, session->m_pimpl->resource->m_pimpl->rules, [ this, path ]( const shared_ptr< Session >& session )
                 {
                     if ( session->is_closed( ) )
                     {
@@ -666,9 +665,9 @@ namespace restbed
                 } );
             };
 
-            if ( resource->m_pimpl->authentication_handler not_eq nullptr )
+            if ( session->m_pimpl->resource->m_pimpl->authentication_handler not_eq nullptr )
             {
-                resource->m_pimpl->authentication_handler( session, callback );
+                session->m_pimpl->resource->m_pimpl->authentication_handler( session, callback );
             }
             else
             {
@@ -685,11 +684,11 @@ namespace restbed
                 
                 m_session_manager->create( [ this, connection ]( const shared_ptr< Session >& session )
                 {
-                    session->m_pimpl->set_logger( m_logger );
-                    session->m_pimpl->set_socket( connection );
-                    session->m_pimpl->set_settings( m_settings );
-                    session->m_pimpl->set_error_handler( m_error_handler );
-                    session->m_pimpl->set_session_manager( m_session_manager );
+                    session->m_pimpl->logger = m_logger;
+                    session->m_pimpl->socket = connection;
+                    session->m_pimpl->settings = m_settings;
+                    session->m_pimpl->error_handler = m_error_handler;
+                    session->m_pimpl->session_manager = m_session_manager;
                     session->m_pimpl->fetch( session, bind( &ServiceImpl::authenticate, this, _1 ) );
                 } );
             }

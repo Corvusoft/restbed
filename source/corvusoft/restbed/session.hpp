@@ -188,7 +188,7 @@ namespace restbed
             Session& operator =( const Session& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::SessionImpl > m_pimpl;
+            detail::SessionImpl* m_pimpl;
     };
 }
 

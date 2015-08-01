@@ -64,18 +64,18 @@ namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_id( "" ),
-            m_logger( nullptr ),
-            m_session( nullptr ),
-            m_socket( nullptr ),
-            m_request( nullptr ),
-            m_resource( nullptr ),
-            m_settings( nullptr ),
-            m_session_manager( nullptr ),
-            m_buffer( nullptr ),
-            m_headers( ),
-            m_router( nullptr ),
-            m_error_handler( nullptr )
+        SessionImpl::SessionImpl( void ) : id( "" ),
+            logger( nullptr ),
+            session( nullptr ),
+            socket( nullptr ),
+            request( nullptr ),
+            resource( nullptr ),
+            settings( nullptr ),
+            session_manager( nullptr ),
+            buffer( nullptr ),
+            headers( ),
+            router( nullptr ),
+            error_handler( nullptr )
         {
             return;
         }
@@ -84,436 +84,35 @@ namespace restbed
         {
             return;
         }
-
-        void SessionImpl::erase( const string& name )
-        {
-            if ( name.empty( ) )
-            {
-                m_context.clear( );
-            }
-            else
-            {
-                m_context.erase( name );
-            }
-        }
-
-        bool SessionImpl::has( const string& name ) const
-        {
-            return m_context.find( name ) not_eq m_context.end( );
-        }
-
-        const set< string > SessionImpl::keys( void ) const
-        {
-            std::set< std::string > keys;
-
-            for( const auto& value : m_context )
-            {
-                keys.insert( keys.end( ), value.first );
-            }
-
-            return keys;
-        }
-        
-        bool SessionImpl::is_open( void ) const
-        {
-            return m_socket not_eq nullptr and m_socket->is_open( );
-        }
-        
-        bool SessionImpl::is_closed( void ) const
-        {
-            return not is_open( );
-        }
         
         void SessionImpl::close( void )
         {
-            m_session_manager->purge( m_session, [ this ]( const shared_ptr< Session >& )
+            session_manager->purge( session, [ this ]( const shared_ptr< Session >& )
             {
-                m_socket->close( );
+                socket->close( );
             } );
-        }
-        
-        void SessionImpl::close( const Bytes& body )
-        {
-            m_socket->write( body, [ this ]( const asio::error_code & error, size_t )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                else
-                {
-                    close( );
-                }
-            } );
-        }
-
-        void SessionImpl::close( const string& body )
-        {
-            close( Bytes( body.begin( ), body.end( ) ) );
-        }
-
-        void SessionImpl::close( const Response& response )
-        {
-            transmit( response, [ this ]( const asio::error_code & error, size_t )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                
-                m_socket->close( );
-                m_session_manager->purge( m_session, nullptr );
-            } );
-        }
-        
-        void SessionImpl::close( const int status, const string& body, const multimap< string, string >& headers )
-        {
-            close( status, String::to_bytes( body ), headers );
-        }
-        
-        void SessionImpl::close( const int status, const Bytes& body, const multimap< string, string >& headers )
-        {
-            Response response;
-            response.set_body( body );
-            response.set_headers( headers );
-            response.set_status_code( status );
-            
-            close( response );
-        }
-        
-        void SessionImpl::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            m_socket->write( body, [ this, callback ]( const asio::error_code & error, size_t )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                else
-                {
-                    callback( m_session );
-                }
-            } );
-        }
-
-        void SessionImpl::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            yield( String::to_bytes( body ), callback );
-        }
-        
-        void SessionImpl::yield( const Response& response, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            transmit( response, [ this, callback ]( const asio::error_code & error, size_t )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                else
-                {
-                    if ( callback == nullptr )
-                    {
-                        fetch( m_session, m_router );
-                    }
-                    else
-                    {
-                        callback( m_session );
-                    }
-                }
-            } );
-        }
-
-        void SessionImpl::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            yield( status, String::to_bytes( body ), headers, callback );
-        }
-        
-        void SessionImpl::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            Response response;
-            response.set_body( body );
-            response.set_headers( headers );
-            response.set_status_code( status );
-            
-            yield( response, callback );
-        }
-        
-        void SessionImpl::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            fetch( m_session, callback );
         }
         
         void SessionImpl::fetch( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            if ( m_router == nullptr and m_session == nullptr )
+            if ( router == nullptr and this->session == nullptr )
             {
-                m_session = session;
-                m_router = callback;
+                this->session = session;
+                router = callback;
             }
             
-            m_buffer = make_shared< asio::streambuf >( );
+            buffer = make_shared< asio::streambuf >( );
             
-            m_socket->read( m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, m_session, callback ) );
-        }
-        
-        void SessionImpl::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
-        {
-            if ( length > m_buffer->size( ) )
-            {
-                size_t size = length - m_buffer->size( );
-                
-                m_socket->read( m_buffer, size, [ this, length, callback ]( const asio::error_code & error, size_t )
-                {
-                    if ( error )
-                    {
-                        const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                        failure( 500, runtime_error( message ), m_session );
-                    }
-                    else
-                    {
-                        const auto data = fetch_body( length );
-                        callback( m_session, data );
-                    }
-                } );
-            }
-            else
-            {
-                const auto data = fetch_body( length );
-                callback( m_session, data );
-            }
-        }
-        
-        void SessionImpl::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
-        {
-            m_socket->read( m_buffer, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                else
-                {
-                    const auto data = fetch_body( length );
-                    callback( m_session, data );
-                }
-            } );
-        }
-        
-        void SessionImpl::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback );
-        }
-        
-        void SessionImpl::wait_for( const minutes& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback );
-        }
-        
-        void SessionImpl::wait_for( const seconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback );
-        }
-        
-        void SessionImpl::wait_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback );
-        }
-        
-        void SessionImpl::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            m_socket->wait( delay, [ callback, this ]( const error_code & error )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                else
-                {
-                    callback( m_session );
-                }
-            } );
+            socket->read( buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
         }
 
-        void SessionImpl::wait_for( const hours& interval, const function< hours ( const hours& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< hours >( interval ) ) );
-            }, callback );
-        }
-        
-        void SessionImpl::wait_for( const minutes& interval, const function< minutes ( const minutes& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< minutes >( interval ) ) );
-            }, callback );
-        }
-        
-        void SessionImpl::wait_for( const seconds& interval, const function< seconds ( const seconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< seconds >( interval ) ) );
-            }, callback );
-        }
-        
-        void SessionImpl::wait_for( const milliseconds& interval, const function< milliseconds ( const milliseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< milliseconds >( interval ) ) );
-            }, callback );
-        }
-        
-        void SessionImpl::wait_for( const microseconds& interval, const function< microseconds ( const microseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-        {
-            m_socket->wait( interval, [ interval, trigger, callback, this ]( const error_code & error )
-            {
-                if ( error )
-                {
-                    const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                    failure( 500, runtime_error( message ), m_session );
-                }
-                else
-                {
-                    const microseconds new_interval = trigger( interval );
-
-                    if ( new_interval == microseconds::zero( ) )
-                    {
-                        callback( m_session );
-                    }
-                    else
-                    {
-                        wait_for( new_interval, trigger, callback );
-                    }
-                }
-            } );
-        }
-        
-        const string& SessionImpl::get_id( void ) const
-        {
-            return m_id;
-        }
-        
-        const string SessionImpl::get_origin( void ) const
-        {
-            if ( m_socket == nullptr )
-            {
-                return "";
-            }
-
-            return m_socket->get_remote_endpoint( );
-        }
-        
-        const string SessionImpl::get_destination( void ) const
-        {
-            if ( m_socket == nullptr )
-            {
-                return "";
-            }
-            
-            return m_socket->get_local_endpoint( );
-        }
-        
-        const shared_ptr< const Request >& SessionImpl::get_request( void ) const
-        {
-            return m_request;
-        }
-        
-        const shared_ptr< const Resource >& SessionImpl::get_resource( void ) const
-        {
-            return m_resource;
-        }
-        
-        const multimap< string, string >& SessionImpl::get_headers( void ) const
-        {
-            return m_headers;
-        }
-
-        const ContextValue& SessionImpl::get( const string& name ) const
-        {
-            return m_context.at( name );
-        }
-
-        const ContextValue& SessionImpl::get( const string& name, const ContextValue& default_value ) const
-        {
-            if ( has( name ) )
-            {
-                return m_context.at( name );
-            }
-
-            return default_value;
-        }
-            
-        void SessionImpl::set( const string& name, const ContextValue& value )
-        {
-            m_context.insert( make_pair( name, value ) );
-        }
-        
-        void SessionImpl::set_id( const string& value )
-        {
-            m_id = value;
-        }
-        
-        void SessionImpl::set_logger(  const shared_ptr< Logger >& value )
-        {
-            m_logger = value;
-        }
-
-        void SessionImpl::set_socket( const shared_ptr< SocketImpl >& value )
-        {            
-            m_socket = value;
-        }
-        
-        void SessionImpl::set_request( const shared_ptr< const Request >& value )
-        {
-            m_request = value;
-        }
-        
-        void SessionImpl::set_resource( const shared_ptr< const Resource >& value )
-        {
-            m_resource = value;
-        }
-        
-        void SessionImpl::set_settings( const shared_ptr< const Settings >& value )
-        {
-            m_settings = value;
-        }
-        
-        void SessionImpl::set_header( const string& name, const string& value )
-        {
-            m_headers.insert( make_pair( name, value ) );
-        }
-        
-        void SessionImpl::set_headers( const multimap< string, string >& values )
-        {
-            m_headers = values;
-        }
-
-        void SessionImpl::set_session_manager( const shared_ptr< SessionManager >& value )
-        {
-            m_session_manager = value;
-        }
-        
-        void SessionImpl::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
-        {
-            m_error_handler = value;
-        }
-        
         Bytes SessionImpl::fetch_body( const size_t length ) const
         {
-            const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
+            const auto data_ptr = asio::buffer_cast< const Byte* >( buffer->data( ) );
             const auto data = Bytes( data_ptr, data_ptr + length );
-            m_buffer->consume( length );
+            buffer->consume( length );
             
-            const auto request = m_session->m_pimpl->get_request( );
+            const auto request = session->m_pimpl->request;
             auto& body = request->m_pimpl->body;
             
             if ( body.empty( ) )
@@ -530,16 +129,16 @@ namespace restbed
         
         void SessionImpl::log( const Logger::Level level, const string& message ) const
         {
-            if ( m_logger not_eq nullptr )
+            if ( logger not_eq nullptr )
             {
-                m_logger->log( level, "%s", message.data( ) );
+                logger->log( level, "%s", message.data( ) );
             }
         }
         
         void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session ) const
         {
             const auto resource = session->get_resource( );
-            const auto error_handler =  ( resource not_eq nullptr and resource->m_pimpl->error_handler not_eq nullptr ) ? resource->m_pimpl->error_handler : m_error_handler;
+            const auto error_handler =  ( resource not_eq nullptr and resource->m_pimpl->error_handler not_eq nullptr ) ? resource->m_pimpl->error_handler : this->error_handler;
 
             if ( error_handler not_eq nullptr )
             {
@@ -556,15 +155,15 @@ namespace restbed
         
         void SessionImpl::transmit( const Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
         {
-            auto headers = m_settings->get_default_headers( );
+            auto headers = settings->get_default_headers( );
             
-            if ( m_resource not_eq nullptr )
+            if ( resource not_eq nullptr )
             {
-                const auto hdrs = m_resource->m_pimpl->default_headers;
+                const auto hdrs = resource->m_pimpl->default_headers;
                 headers.insert( hdrs.begin( ), hdrs.end( ) );
             }
             
-            auto hdrs = m_session->get_headers( );
+            auto hdrs = session->get_headers( );
             headers.insert( hdrs.begin( ), hdrs.end( ) );
             
             hdrs = response.get_headers( );
@@ -580,10 +179,10 @@ namespace restbed
             
             if ( payload.get_status_message( ).empty( ) )
             {
-                payload.set_status_message( m_settings->get_status_message( payload.get_status_code( ) ) );
+                payload.set_status_message( settings->get_status_message( payload.get_status_code( ) ) );
             }
 
-            m_socket->write( payload.to_bytes( ), callback );
+            socket->write( payload.to_bytes( ), callback );
         }
         
         const map< string, string > SessionImpl::parse_request_line( istream& stream )
@@ -639,7 +238,7 @@ namespace restbed
                 throw runtime_error( error.message( ) );
             }
             
-            istream stream( m_buffer.get( ) );
+            istream stream( buffer.get( ) );
             const auto items = parse_request_line( stream );
             const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
             
@@ -650,13 +249,13 @@ namespace restbed
             request->m_pimpl->headers = parse_request_headers( stream );
             request->m_pimpl->query_parameters = uri.get_query_parameters( );
             
-            session->m_pimpl->set_request( request );
+            session->m_pimpl->request = request;
 
             callback( session );
         }
         catch ( const int status_code )
         {
-            runtime_error re( m_settings->get_status_message( status_code ) );
+            runtime_error re( settings->get_status_message( status_code ) );
             failure( status_code, re, session );
         }
         catch ( const regex_error& re )
