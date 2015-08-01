@@ -117,7 +117,7 @@ You will now find all required components installed in the restbed distribution 
 
 ## Road Map
 
-|   MileStone   |                   Feature                       |      Status     |
+|   Milestone   |                   Feature                       |      Status     |
 |:-------------:|:-----------------------------------------------:|:---------------:| 
 |     0.0       |         Asynchrounous HTTP Service              |     complete    |
 |     1.0       |             HTTP 1.0 Compliance                 |     complete    |
@@ -129,7 +129,6 @@ You will now find all required components installed in the restbed distribution 
 |     3.6       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |
 |     5.0       |             HTTP 2.0 compliance                 |     pending     |
-|     5.x       | Dynamic runtime resource publishing/suppression |     pending     |
 |     x.x       |         Bind Service to specific NIC            |     pending     |
 |     x.x       |         Client-side SSL certificates            |     pending     |
 |     x.x       |      Multi-Threaded service capability          |     pending     |
