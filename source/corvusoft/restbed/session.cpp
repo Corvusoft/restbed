@@ -286,29 +286,77 @@ namespace restbed
         } );
     }
     
-    void Session::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< hours ( const hours& ) >& trigger )
     {
-        wait_for( duration_cast< microseconds >( delay ), callback );
+        if ( trigger not_eq nullptr )
+        {
+            const auto wrapper = [ trigger ]( const microseconds& delay )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< hours >( delay ) ) );
+            };
+
+            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
+        }
+        else
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
+        }
     }
     
-    void Session::wait_for( const minutes& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::wait_for( const minutes& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< minutes ( const minutes& ) >& trigger )
     {
-        wait_for( duration_cast< microseconds >( delay ), callback );
+        if ( trigger not_eq nullptr )
+        {
+            const auto wrapper = [ trigger ]( const microseconds& delay )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< minutes >( delay ) ) );
+            };
+
+            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
+        }
+        else
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
+        }
     }
     
-    void Session::wait_for( const seconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::wait_for( const seconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< seconds ( const seconds& ) >& trigger )
     {
-        wait_for( duration_cast< microseconds >( delay ), callback );
+        if ( trigger not_eq nullptr )
+        {
+            const auto wrapper = [ trigger ]( const microseconds& delay )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< seconds >( delay ) ) );
+            };
+
+            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
+        }
+        else
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
+        }
     }
     
-    void Session::wait_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::wait_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< milliseconds ( const milliseconds& ) >& trigger )
     {
-        wait_for( duration_cast< microseconds >( delay ), callback );
+        if ( trigger not_eq nullptr )
+        {
+            const auto wrapper = [ trigger ]( const microseconds& delay )
+            {
+                return duration_cast< microseconds >( trigger( duration_cast< milliseconds >( delay ) ) );
+            };
+
+            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
+        }
+        else
+        {
+            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
+        }
     }
     
-    void Session::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< microseconds ( const microseconds& ) >& trigger )
     {
-        m_pimpl->socket->wait( delay, [ callback, this ]( const error_code & error )
+        m_pimpl->socket->wait( delay, [ delay, trigger, callback, this ]( const error_code & error )
         {
             if ( error )
             {
@@ -317,63 +365,22 @@ namespace restbed
             }
             else
             {
-                callback( m_pimpl->session );
-            }
-        } );
-    }
-
-    void Session::wait_for( const hours& interval, const function< hours ( const hours& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-    {
-        wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-        {
-            return duration_cast< microseconds >( trigger( duration_cast< hours >( interval ) ) );
-        }, callback );
-    }
-    
-    void Session::wait_for( const minutes& interval, const function< minutes ( const minutes& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-    {
-        wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-        {
-            return duration_cast< microseconds >( trigger( duration_cast< minutes >( interval ) ) );
-        }, callback );
-    }
-    
-    void Session::wait_for( const seconds& interval, const function< seconds ( const seconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-    {
-        wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-        {
-            return duration_cast< microseconds >( trigger( duration_cast< seconds >( interval ) ) );
-        }, callback );
-    }
-    
-    void Session::wait_for( const milliseconds& interval, const function< milliseconds ( const milliseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-    {
-        wait_for( duration_cast< microseconds >( interval ), [ trigger ]( const microseconds& interval )
-        {
-            return duration_cast< microseconds >( trigger( duration_cast< milliseconds >( interval ) ) );
-        }, callback );
-    }
-    
-    void Session::wait_for( const microseconds& interval, const function< microseconds ( const microseconds& ) >& trigger, const function< void ( const shared_ptr< Session >& ) >& callback )
-    {
-        m_pimpl->socket->wait( interval, [ interval, trigger, callback, this ]( const error_code & error )
-        {
-            if ( error )
-            {
-                const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
-            }
-            else
-            {
-                const microseconds new_interval = trigger( interval );
-
-                if ( new_interval == microseconds::zero( ) )
+                if ( trigger == nullptr )
                 {
                     callback( m_pimpl->session );
                 }
                 else
                 {
-                    wait_for( new_interval, trigger, callback );
+                    const microseconds new_interval = trigger( delay );
+
+                    if ( new_interval == microseconds::zero( ) )
+                    {
+                        callback( m_pimpl->session );
+                    }
+                    else
+                    {
+                        wait_for( new_interval, callback, trigger );
+                    }
                 }
             }
         } );

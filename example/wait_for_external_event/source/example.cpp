@@ -35,16 +35,16 @@ void query_database( const string& key, /*out*/ shared_ptr< string > record )
     *record = ( entry == records.end( ) ) ? "no product found." : entry->second;
 }
 
-chrono::seconds trigger( const chrono::seconds& current_interval, shared_ptr< future< void > > query )
+chrono::seconds trigger( const chrono::seconds& current_delay, shared_ptr< future< void > > query )
 {
     if ( query->wait_for( chrono::seconds::zero( ) ) == future_status::ready )
     {
-        fprintf( stderr, "Database query complete, returning zero second interval.\n" );
+        fprintf( stderr, "Database query complete, returning zero second delay.\n" );
         return chrono::seconds::zero( );
     }
 
-    fprintf( stderr, "Database query incomplete, returning best educated guess for next interval...\n" );
-    return current_interval + chrono::seconds( 5 );
+    fprintf( stderr, "Database query incomplete, returning best educated guess for next delay...\n" );
+    return current_delay + chrono::seconds( 5 );
 }
 
 void end_get_method_handler( const shared_ptr< Session >& session, const shared_ptr< string > record )
@@ -63,8 +63,8 @@ void begin_get_method_handler( const shared_ptr< Session >& session )
     *query = async( launch::async, bind( query_database, key, record ) );
 
     session->wait_for( chrono::seconds( 5 ),
-                       bind( trigger, placeholders::_1, query ),
-                       bind( end_get_method_handler, placeholders::_1, record ) );
+                       bind( end_get_method_handler, placeholders::_1, record ),
+                       bind( trigger, placeholders::_1, query ) );
 }
 
 int main( const int, const char** )
