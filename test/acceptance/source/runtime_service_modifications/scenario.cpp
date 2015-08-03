@@ -31,7 +31,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void ready_handler( Service& service )
+void ready_handler( Service& )
 {
     return;
 }
