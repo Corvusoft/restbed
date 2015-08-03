@@ -5,6 +5,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <stdexcept>
 
 //Project Includes
 #include <corvusoft/restbed/session.hpp>
@@ -15,6 +16,7 @@
 //System Namespaces
 using std::string;
 using std::multimap;
+using std::invalid_argument;
 
 //Project Namespaces
 using restbed::Session;
@@ -31,6 +33,11 @@ TEST_CASE( "validate default instance values", "[session]" )
     REQUIRE( session.get_destination( ) == "" );
     REQUIRE( session.get_headers( ).empty( ) );
     REQUIRE( session.get_id( ) == "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
+}
+
+TEST_CASE( "confirm empty session id results in a invalid argument exception", "[session]" )
+{
+    REQUIRE_THROWS_AS( Session( "" ), invalid_argument );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )
