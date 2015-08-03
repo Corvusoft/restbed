@@ -38,16 +38,12 @@ using std::bind;
 using std::regex;
 using std::string;
 using std::smatch;
-using std::vector;
 using std::find_if;
 using std::function;
 using std::to_string;
-using std::exception;
 using std::shared_ptr;
 using std::make_shared;
-using std::stable_sort;
 using std::runtime_error;
-using std::invalid_argument;
 using std::placeholders::_1;
 using std::regex_constants::icase;
 

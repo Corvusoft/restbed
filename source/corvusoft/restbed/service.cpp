@@ -80,13 +80,13 @@ namespace restbed
         {
             m_pimpl->session_manager->stop( );
         }
-        
+
+        m_pimpl->log( Logger::Level::INFO, String::format( "Service halted." ) );
+
         if ( m_pimpl->logger not_eq nullptr )
         {
             m_pimpl->logger->stop( );
         }
-
-        m_pimpl->log( Logger::Level::INFO, String::format( "Service halted." ) );
     }
 
     void Service::start( const shared_ptr< const Settings >& settings )
@@ -96,6 +96,9 @@ namespace restbed
         if ( m_pimpl->settings == nullptr )
         {
             m_pimpl->settings = make_shared< Settings >( );
+#ifdef BUILD_SSL
+            m_pimpl->ssl_settings = m_pimpl->settings->get_ssl_settings( );
+#endif
         }
 
         if ( m_pimpl->session_manager == nullptr )
@@ -118,9 +121,7 @@ namespace restbed
         m_pimpl->io_service = make_shared< io_service >( );
 
         m_pimpl->http_start( );
-
 #ifdef BUILD_SSL
-        m_pimpl->ssl_settings = m_pimpl->settings->get_ssl_settings( );
         m_pimpl->https_start( );
 #endif
         for ( const auto& route : m_pimpl->resource_paths )
