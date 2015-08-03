@@ -31,6 +31,11 @@ using namespace restbed;
 
 //External Namespaces
 
+void ready_handler( Service& service )
+{
+    return;
+}
+
 void handler( const shared_ptr< Session >& )
 {
     return;
@@ -72,6 +77,7 @@ SCENARIO( "runtime service modifications", "[service]" )
                         REQUIRE_THROWS_AS( service.set_logger( nullptr ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_not_found_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_error_handler( error_handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_ready_handler( ready_handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_method_not_allowed_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_method_not_implemented_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_failed_filter_validation_handler( handler ), runtime_error );

@@ -121,7 +121,7 @@ namespace restbed
             Service& operator =( const Service& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::ServiceImpl > m_pimpl;
+            detail::ServiceImpl* m_pimpl;
     };
 }
 

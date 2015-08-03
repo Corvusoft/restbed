@@ -26,6 +26,7 @@ namespace restbed
     //Forward Declarations
     class Rule;
     class Session;
+    class Service;
     
     namespace detail
     {
@@ -95,8 +96,9 @@ namespace restbed
             
         private:
             //Friends
-            friend detail::SessionImpl;
+            friend Service;
             friend detail::ServiceImpl;
+            friend detail::SessionImpl;
             
             //Definitions
             
