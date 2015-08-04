@@ -22,7 +22,12 @@ namespace restbed
 {
     //Forward Declarations
     class Session;
-    
+
+    namespace detail
+    {
+        struct RuleImpl;
+    }
+
     class Rule
     {
         public:
@@ -38,10 +43,10 @@ namespace restbed
             virtual void action( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
 
             //Getters
-            virtual int get_priority( void ) const = 0;
+            int get_priority( void ) const;
             
             //Setters
-            virtual void set_priority( const int value ) = 0;
+            void set_priority( const int value );
 
             //Operators
             
@@ -53,11 +58,9 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Rule( void ) = default;
-            
-            explicit Rule( const Rule& ) = default;
+            Rule( void );
 
-            virtual ~Rule( void ) = default;
+            virtual ~Rule( void );
 
             //Functionality
             
@@ -66,7 +69,6 @@ namespace restbed
             //Setters
             
             //Operators
-            Rule& operator =( const Rule& ) = default;
             
             //Properties
             
@@ -76,6 +78,7 @@ namespace restbed
             //Definitions
             
             //Constructors
+            explicit Rule( const Rule& ) = delete;
 
             //Functionality
             
@@ -84,8 +87,10 @@ namespace restbed
             //Setters
             
             //Operators
+            Rule& operator =( const Rule& ) = delete;
             
             //Properties
+            detail::RuleImpl* m_pimpl;
     };
 }
 

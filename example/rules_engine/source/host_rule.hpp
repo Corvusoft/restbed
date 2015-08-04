@@ -2,20 +2,14 @@
 #include <memory>
 #include <functional>
 #include <restbed>
-#include "example_base_rule.hpp"
 
 using namespace std;
 using namespace restbed;
 
-class HostRule : public ExampleBaseRule
+class HostRule : public Rule
 {
     public:
-        HostRule( void ) : ExampleBaseRule( )
-        {
-            return;
-        }
-
-        HostRule( const HostRule& original ) : ExampleBaseRule( original )
+        HostRule( void ) : Rule( )
         {
             return;
         }

@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "base_rule.hpp"
 
 //External Includes
 
@@ -23,15 +22,10 @@ using namespace restbed;
 
 //External Namespaces
 
-class ContentTypeRule : public BaseRule
+class ContentTypeRule : public Rule
 {
     public:
-        ContentTypeRule( void ) : BaseRule( )
-        {
-            return;
-        }
-
-        ContentTypeRule( const ContentTypeRule& original ) : BaseRule( original )
+        ContentTypeRule( void ) : Rule( )
         {
             return;
         }
