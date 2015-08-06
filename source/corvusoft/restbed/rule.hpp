@@ -7,6 +7,7 @@
 
 //System Includes
 #include <functional>
+#include <memory>
 
 //Project Includes
 

@@ -10,6 +10,7 @@
 #include <utility>
 #include <stdexcept>
 #include <functional>
+#include <algorithm>
 
 //Project Includes
 #include "corvusoft/restbed/rule.hpp"

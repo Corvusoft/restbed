@@ -6,6 +6,7 @@
 #include <set>
 #include <map>
 #include <string>
+#include <iostream>
 
 //Project Includes
 #include <corvusoft/restbed/session.hpp>

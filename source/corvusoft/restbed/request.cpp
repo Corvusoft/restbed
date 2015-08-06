@@ -4,6 +4,7 @@
 
 //System Includes
 #include <utility>
+#include <algorithm>
 
 //Project Includes
 #include "corvusoft/restbed/string.hpp"
