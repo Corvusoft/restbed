@@ -27,10 +27,10 @@ using namespace restbed;
 void get_handler( const shared_ptr< Session >& session )
 {
     const auto request = session->get_request( );
-
+    
     REQUIRE( "/uri test" == request->get_path( ) );
     REQUIRE( "@30" == request->get_query_parameter( "ben crowhurst" ) );
-
+    
     session->close( 200 );
 }
 
@@ -47,7 +47,7 @@ TEST_CASE( "encoded uri test", "[request]" )
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -56,11 +56,11 @@ TEST_CASE( "encoded uri test", "[request]" )
             request.port = 8989;
             request.host = "localhost";
             request.path = "/uri%20test?ben+crowhurst=%4030";
-
+            
             auto response = Http::get( request );
             
             REQUIRE( 200 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

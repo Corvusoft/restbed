@@ -80,7 +80,7 @@ int main( const int, const char** )
     laura->set_path( "/laura" );
     laura->set_method_handler( "GET", get_laura_method_handler );
     laura->set_authentication_handler( laura_authentication_handler );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
@@ -89,7 +89,7 @@ int main( const int, const char** )
     service.publish( ben );
     service.publish( laura );
     service.set_authentication_handler( service_authentication_handler );
-
+    
     service.start( settings );
     
     return EXIT_SUCCESS;

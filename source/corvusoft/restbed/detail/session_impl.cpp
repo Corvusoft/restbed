@@ -105,7 +105,7 @@ namespace restbed
             
             socket->read( buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
         }
-
+        
         Bytes SessionImpl::fetch_body( const size_t length ) const
         {
             const auto data_ptr = asio::buffer_cast< const Byte* >( buffer->data( ) );
@@ -139,7 +139,7 @@ namespace restbed
         {
             const auto resource = session->get_resource( );
             const auto error_handler =  ( resource not_eq nullptr and resource->m_pimpl->error_handler not_eq nullptr ) ? resource->m_pimpl->error_handler : this->error_handler;
-
+            
             if ( error_handler not_eq nullptr )
             {
                 error_handler( status, error, session );
@@ -168,7 +168,7 @@ namespace restbed
             
             hdrs = response.get_headers( );
             headers.insert( hdrs.begin( ), hdrs.end( ) );
-
+            
             Response payload;
             payload.set_headers( headers );
             payload.set_body( response.get_body( ) );
@@ -181,7 +181,7 @@ namespace restbed
             {
                 payload.set_status_message( settings->get_status_message( payload.get_status_code( ) ) );
             }
-
+            
             socket->write( payload.to_bytes( ), callback );
         }
         
@@ -250,7 +250,7 @@ namespace restbed
             request->m_pimpl->query_parameters = uri.get_query_parameters( );
             
             session->m_pimpl->request = request;
-
+            
             callback( session );
         }
         catch ( const int status_code )

@@ -23,7 +23,7 @@
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
-    #include <asio/ssl.hpp>
+#include <asio/ssl.hpp>
 #endif
 
 //System Namespaces
@@ -63,7 +63,7 @@ namespace restbed
         {
             m_pimpl->log( Logger::Level::WARNING, "Service failed graceful teardown." );
         }
-
+        
         delete m_pimpl;
     }
     
@@ -80,19 +80,19 @@ namespace restbed
         {
             m_pimpl->session_manager->stop( );
         }
-
+        
         m_pimpl->log( Logger::Level::INFO, String::format( "Service halted." ) );
-
+        
         if ( m_pimpl->logger not_eq nullptr )
         {
             m_pimpl->logger->stop( );
         }
     }
-
+    
     void Service::start( const shared_ptr< const Settings >& settings )
     {
         m_pimpl->settings = settings;
-
+        
         if ( m_pimpl->settings == nullptr )
         {
             m_pimpl->settings = make_shared< Settings >( );
@@ -100,7 +100,7 @@ namespace restbed
             m_pimpl->ssl_settings = m_pimpl->settings->get_ssl_settings( );
 #endif
         }
-
+        
         if ( m_pimpl->session_manager == nullptr )
         {
             m_pimpl->session_manager = make_shared< SessionManager >( );
@@ -112,18 +112,19 @@ namespace restbed
         {
             m_pimpl->logger->start( m_pimpl->settings );
         }
-
+        
         stable_sort( m_pimpl->rules.begin( ), m_pimpl->rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
         {
             return lhs->get_priority( ) < rhs->get_priority( );
         } );
-
+        
         m_pimpl->io_service = make_shared< io_service >( );
-
+        
         m_pimpl->http_start( );
 #ifdef BUILD_SSL
         m_pimpl->https_start( );
 #endif
+        
         for ( const auto& route : m_pimpl->resource_paths )
         {
             auto path = String::format( "/%s/%s", m_pimpl->settings->get_root( ).data( ), route.second.data( ) );
@@ -136,11 +137,11 @@ namespace restbed
         {
             m_pimpl->io_service->post( m_pimpl->ready_handler );
         }
-
+        
         m_pimpl->is_running = true;
         m_pimpl->io_service->run( );
     }
-
+    
     void Service::restart( const shared_ptr< const Settings >& settings )
     {
         try
@@ -154,28 +155,28 @@ namespace restbed
         
         start( settings );
     }
-
+    
     void Service::add_rule( const shared_ptr< Rule >& rule )
     {
         if ( m_pimpl->is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
-
+        
         m_pimpl->rules.push_back( rule );
     }
-
+    
     void Service::add_rule( const shared_ptr< Rule >& rule, const int priority )
     {
         if ( m_pimpl->is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
-
+        
         rule->set_priority( priority );
         m_pimpl->rules.push_back( rule );
     }
-
+    
     void Service::publish( const shared_ptr< const Resource >& resource )
     {
         if ( m_pimpl->is_running )
@@ -241,14 +242,14 @@ namespace restbed
         
         m_pimpl->logger = value;
     }
-
+    
     void Service::set_ready_handler( const function< void ( Service& ) >& value )
     {
         if ( m_pimpl->is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
-
+        
         m_pimpl->ready_handler = bind( value, std::ref( *this ) );
     }
     

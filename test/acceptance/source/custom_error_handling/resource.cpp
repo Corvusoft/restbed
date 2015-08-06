@@ -54,17 +54,17 @@ SCENARIO( "custom service error handler", "[service]" )
         resource->set_path( "/resources/1" );
         resource->set_method_handler( "GET", faulty_method_handler );
         resource->set_error_handler( resource_error_handler );
-
+        
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
         settings->set_default_header( "Connection", "close" );
-
+        
         shared_ptr< thread > worker = nullptr;
-
+        
         Service service;
         service.publish( resource );
         service.set_error_handler( service_error_handler );
-        service.set_ready_handler( [ &worker ]( Service& service )
+        service.set_ready_handler( [ &worker ]( Service & service )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
@@ -74,27 +74,27 @@ SCENARIO( "custom service error handler", "[service]" )
                     request.port = 1984;
                     request.host = "localhost";
                     request.path = "/resources/1";
-
+                    
                     auto response = Http::get( request );
-
+                    
                     THEN( "I should see a '0' (Custom Error) status code" )
                     {
                         REQUIRE( 22 == response.status_code );
                     }
-
+                    
                     AND_THEN( "I should see a repsonse body of 'I see nothing!'" )
                     {
                         Bytes expection { 'o', 'v', 'e', 'r', 'r', 'i', 'd', 'd', 'e', 'n', ' ', 's', 'e', 'r', 'v', 'i', 'c', 'e', ' ', 'h', 'a', 'n', 'd', 'l', 'e', 'r', '!' };
                         REQUIRE( response.body == expection );
                     }
-
+                    
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
                         auto header = response.headers.find( "Connection" );
                         REQUIRE( header not_eq response.headers.end( ) );
                         REQUIRE( "close" == response.headers.find( "Connection" )->second );
                     }
-
+                    
                     AND_THEN( "I should see a 'Content-Length' header value of '27'" )
                     {
                         auto header = response.headers.find( "Content-Length" );
@@ -102,7 +102,7 @@ SCENARIO( "custom service error handler", "[service]" )
                         REQUIRE( "27" == response.headers.find( "Content-Length" )->second );
                     }
                 }
-
+                
                 service.stop( );
             } );
         } );

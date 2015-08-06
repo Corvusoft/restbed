@@ -30,11 +30,11 @@ int main( const int, const char** )
     resource->set_path( "/resource" );
     resource->add_rule( make_shared< AcceptRule >( ) );
     resource->set_method_handler( "GET", get_method_handler );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
-
+    
     Service service;
     service.publish( resource );
     service.add_rule( make_shared< HostRule >( ) );

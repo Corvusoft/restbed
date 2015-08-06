@@ -23,7 +23,7 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     namespace detail
     {
         //Forward Declarations

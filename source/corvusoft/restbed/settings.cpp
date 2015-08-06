@@ -54,7 +54,7 @@ namespace restbed
     {
         return m_pimpl->case_insensitive_uris;
     }
-
+    
     seconds Settings::get_connection_timeout( void ) const
     {
         return m_pimpl->connection_timeout;
@@ -79,7 +79,7 @@ namespace restbed
     {
         return m_pimpl->properties;
     }
-#ifdef BUILD_SSL        
+#ifdef BUILD_SSL
     shared_ptr< const SSLSettings > Settings::get_ssl_settings( void ) const
     {
         return m_pimpl->ssl_settings;
@@ -109,7 +109,7 @@ namespace restbed
     {
         m_pimpl->case_insensitive_uris = value;
     }
-
+    
     void Settings::set_connection_timeout( const seconds& value )
     {
         m_pimpl->connection_timeout = value;

@@ -36,7 +36,7 @@ namespace restbed
     class Settings;
     class SocketImpl;
     class SessionManager;
-
+    
     namespace detail
     {
         //Forward Declarations
@@ -54,12 +54,12 @@ namespace restbed
                 SessionImpl( const SessionImpl& original ) = delete;
                 
                 virtual ~SessionImpl( void );
-
+                
                 //Functionality
                 void close( void );
-
+                
                 void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
-
+                
                 Bytes fetch_body( const std::size_t length ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
@@ -87,7 +87,7 @@ namespace restbed
                 std::shared_ptr< Logger > logger;
                 
                 std::shared_ptr< Session > session;
-
+                
                 std::shared_ptr< SocketImpl > socket;
                 
                 std::shared_ptr< const Request > request;
@@ -95,13 +95,13 @@ namespace restbed
                 std::shared_ptr< const Resource > resource;
                 
                 std::shared_ptr< const Settings > settings;
-
+                
                 std::shared_ptr< SessionManager > session_manager;
                 
                 std::shared_ptr< asio::streambuf > buffer;
-
+                
                 std::multimap< std::string, std::string > headers;
-
+                
                 std::map< std::string, const ContextValue > context;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > router;

@@ -39,7 +39,7 @@ namespace restbed
             {
                 return;
             }
-
+            
             ContextValue( const ContextValue& original ) : m_placeholder( original.m_placeholder )
             {
                 return;

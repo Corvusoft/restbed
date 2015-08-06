@@ -30,13 +30,13 @@ using namespace restbed;
 void get_handler( const shared_ptr< Session >& session )
 {
     const auto request = session->get_request( );
-
+    
     int id = 0;
     request->get_query_parameter( "id", id );
     REQUIRE( 100 == id );
-
+    
     REQUIRE( "events" == request->get_query_parameter( "name" ) );
-
+    
     session->close( 204 );
 }
 
@@ -48,15 +48,15 @@ SCENARIO( "request query parameters", "[resource]" )
         resource->set_path( "/resources/1" );
         resource->set_method_handler( "GET", get_handler );
         resource->set_default_header( "Connection", "close" );
-
+        
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
-
+        
         shared_ptr< thread > worker = nullptr;
-
+        
         Service service;
         service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service& service )
+        service.set_ready_handler( [ &worker ]( Service & service )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
@@ -66,19 +66,19 @@ SCENARIO( "request query parameters", "[resource]" )
                     request.port = 1984;
                     request.host = "localhost";
                     request.path = "/resources/1?id=100&name=events";
-
+                    
                     auto response = Http::get( request );
-
+                    
                     THEN( "I should see a '204' (No Content) status code" )
                     {
                         REQUIRE( 204 == response.status_code );
                     }
-
+                    
                     AND_THEN( "I should see an empty repsonse body" )
                     {
                         REQUIRE( response.body.empty( ) );
                     }
-
+                    
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
                         auto header = response.headers.find( "Connection" );
@@ -86,7 +86,7 @@ SCENARIO( "request query parameters", "[resource]" )
                         REQUIRE( "close" == response.headers.find( "Connection" )->second );
                     }
                 }
-
+                
                 service.stop( );
             } );
         } );

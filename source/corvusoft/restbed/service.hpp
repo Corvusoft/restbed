@@ -50,15 +50,15 @@ namespace restbed
             
             //Functionality
             void stop( void );
-   
+            
             void start( const std::shared_ptr< const Settings >& settings = nullptr );
-
+            
             void restart( const std::shared_ptr< const Settings >& settings = nullptr );
-
+            
             void add_rule( const std::shared_ptr< Rule >& rule );
-
+            
             void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
-
+            
             void publish( const std::shared_ptr< const Resource >& resource );
             
             void suppress( const std::shared_ptr< const Resource >& resource );
@@ -67,7 +67,7 @@ namespace restbed
             
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
-
+            
             void set_ready_handler( const std::function< void ( Service& ) >& value );
             
             void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
@@ -79,7 +79,7 @@ namespace restbed
             void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session >& ) >& value );
             
             void set_error_handler( std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > value );
-
+            
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) >& value );
             
             //Operators
@@ -105,7 +105,7 @@ namespace restbed
             
         private:
             //Friends
-
+            
             //Definitions
             
             //Constructors

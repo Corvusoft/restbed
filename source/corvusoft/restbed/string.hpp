@@ -56,7 +56,7 @@ namespace restbed
             static std::string remove( const std::string& needle, const std::string& haystack, const Option option = CASE_SENSITIVE );
             
             static std::string replace( const std::string& target, const std::string& substitute, const std::string& value, const Option option = CASE_SENSITIVE );
-
+            
             //Getters
             
             //Setters

@@ -29,6 +29,6 @@ TEST_CASE( "validate invalid (empty) method argument", "[resource]" )
 {
     Resource resource;
     const std::function< void ( const std::shared_ptr< Session >& ) > callback;
-
+    
     REQUIRE_THROWS_AS( resource.set_method_handler( "", callback ), invalid_argument );
 }

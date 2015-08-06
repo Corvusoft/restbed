@@ -35,7 +35,7 @@ int main( const int, const char** )
     Service service;
     service.publish( resource );
     service.set_logger( make_shared< SyslogLogger >( ) );
-
+    
     service.start( settings );
     
     return EXIT_SUCCESS;

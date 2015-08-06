@@ -43,7 +43,7 @@ namespace restbed
         {
             throw invalid_argument( "Argument is not a valid URI: " + value );
         }
-
+        
         m_pimpl->uri = value;
     }
     
@@ -61,14 +61,14 @@ namespace restbed
     {
         return m_pimpl->uri;
     }
-
+    
     bool Uri::is_valid( const string& value )
     {
         static const regex pattern( "^([a-zA-Z][a-zA-Z0-9+-.]*):((\\/\\/(((([a-zA-Z0-9\\-._~!$&'()*+,;=':]|(%[0-9a-fA-F]{2}))*)@)?((\\[((((([0-9a-fA-F]{1,4}:){6}|(::([0-9a-fA-F]{1,4}:){5})|(([0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:){4})|((([0-9a-fA-F]{1,4}:)?[0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:){3})|((([0-9a-fA-F]{1,4}:){0,2}[0-9a-fA-F]{1,4})?::([0-9a-fA-F]{1,4}:){2})|((([0-9a-fA-F]{1,4}:){0,3}[0-9a-fA-F]{1,4})?::[0-9a-fA-F]{1,4}:)|((([0-9a-fA-F]{1,4}:){0,4}[0-9a-fA-F]{1,4})?::))((([0-9a-fA-F]{1,4}):([0-9a-fA-F]{1,4}))|(([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5])))))|((([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4})?::[0-9a-fA-F]{1,4})|((([0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4})?::))|(v[0-9a-fA-F]+\\.[a-zA-Z0-9\\-._~!$&'()*+,;=':]+))\\])|(([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5]))\\.([0-9]|(1[0-9]{2})|(2[0-4][0-9])|(25[0-5])))|(([a-zA-Z0-9\\-._~!$&'()*+,;=']|(%[0-9a-fA-F]{2}))*))(:[0-9]*)?)((\\/([a-zA-Z0-9\\-._~!$&'()*+,;=':@]|(%[0-9a-fA-F]{2}))*)*))|(\\/?(([a-zA-Z0-9\\-._~!$&'()*+,;=':@]|(%[0-9a-fA-F]{2}))+(\\/([a-zA-Z0-9\\-._~!$&'()*+,;=':@]|(%[0-9a-fA-F]{2}))*)*)?))(\\?(([a-zA-Z0-9\\-._~!$&'()*+,;=':@\\/?]|(%[0-9a-fA-F]{2}))*))?((#(([a-zA-Z0-9\\-._~!$&'()*+,;=':@\\/?]|(%[0-9a-fA-F]{2}))*)))?$" );
-
+        
         return regex_match( value, pattern );
     }
-
+    
     Uri Uri::parse( const string& value )
     {
         return Uri( value );
@@ -211,7 +211,7 @@ namespace restbed
     {
         smatch match;
         static const regex pattern( "^[^?#]+\\?([^#]+)" );
-
+        
         if ( regex_search( m_pimpl->uri, match, pattern ) )
         {
             return match[ 1 ];
@@ -237,7 +237,7 @@ namespace restbed
     {
         smatch match;
         static const regex pattern( "#(.+)" );
-
+        
         if ( regex_search( m_pimpl->uri, match, pattern ) )
         {
             return match[ 1 ];
@@ -250,7 +250,7 @@ namespace restbed
     {
         smatch match;
         static const regex pattern( "^[a-zA-Z0-9+\\-.]+://([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@" );
-
+        
         if ( regex_search( m_pimpl->uri, match, pattern ) )
         {
             return match[ 1 ];
@@ -263,7 +263,7 @@ namespace restbed
     {
         smatch match;
         static const regex pattern( "^[a-zA-Z0-9+\\-.]+://([a-zA-Z0-9\\-._~%!$&'()*+,;=]+):([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)@" );
-
+        
         if ( regex_search( m_pimpl->uri, match, pattern ) )
         {
             return match[ 2 ];
@@ -276,7 +276,7 @@ namespace restbed
     {
         smatch match;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])" );
-
+        
         if ( regex_search( m_pimpl->uri, match, pattern ) )
         {
             return match[ 5 ];
@@ -284,22 +284,22 @@ namespace restbed
         
         return "";
     }
-
+    
     multimap< string, string > Uri::get_query_parameters( void ) const
     {
         multimap< string, string > parameters;
-
+        
         auto query = String::split( get_query( ), '&' );
-
+        
         for ( auto parameter : query )
         {
             auto index = parameter.find_first_of( '=' );
             auto name = decode_parameter( parameter.substr( 0, index ) );
             auto value = decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
-
+            
             parameters.insert( make_pair( name, value ) );
         }
-
+        
         return parameters;
     }
     

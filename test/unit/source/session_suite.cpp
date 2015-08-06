@@ -26,7 +26,7 @@ using restbed::Session;
 TEST_CASE( "validate default instance values", "[session]" )
 {
     const Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
-
+    
     REQUIRE( session.is_open( ) == false );
     REQUIRE( session.is_closed( ) == true );
     REQUIRE( session.get_origin( ) == "" );
@@ -43,23 +43,24 @@ TEST_CASE( "confirm empty session id results in a invalid argument exception", "
 TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )
 {
     auto session = new Session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
-
+    
     REQUIRE_NOTHROW( delete session );
 }
 
 TEST_CASE( "validate setters modify default values", "[response]" )
 {
     Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
-
+    
     session.set_header( "Connection", "close" );
     multimap< string, string > expectation = { { "Connection", "close" } };
     REQUIRE( session.get_headers( ) == expectation );
-
-    expectation = {
+    
+    expectation =
+    {
         { "Content-Type", "application/yaml" },
         { "Content-Encoding", "" }
     };
-
+    
     session.set_headers( expectation );
     REQUIRE( session.get_headers( ) == expectation );
 }

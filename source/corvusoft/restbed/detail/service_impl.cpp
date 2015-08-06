@@ -90,19 +90,20 @@ namespace restbed
         {
             return;
         }
-
+        
         void ServiceImpl::http_start( void )
         {
 #ifdef BUILD_SSL
+        
             if ( ssl_settings == nullptr or ssl_settings->has_disabled_http( ) == false )
             {
 #endif
                 acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
                 acceptor->set_option( socket_base::reuse_address( true ) );
                 acceptor->listen( settings->get_connection_limit( ) );
-            
+                
                 http_listen( );
-
+                
                 auto endpoint = acceptor->local_endpoint( );
                 auto address = endpoint.address( );
                 auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
@@ -110,15 +111,16 @@ namespace restbed
                 log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
 #ifdef BUILD_SSL
             }
+            
 #endif
         }
-
+        
         void ServiceImpl::http_listen( void ) const
         {
             auto socket = make_shared< tcp::socket >( acceptor->get_io_service( ) );
             acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
-
+        
 #ifdef BUILD_SSL
         void ServiceImpl::https_start( void )
         {
@@ -126,49 +128,55 @@ namespace restbed
             {
                 ssl_context = make_shared< asio::ssl::context >( asio::ssl::context::sslv23 );
                 ssl_context->set_default_verify_paths( );
-
+                
                 auto passphrase = ssl_settings->get_passphrase( );
                 ssl_context->set_password_callback( [ passphrase ]( size_t, asio::ssl::context::password_purpose )
                 {
                     return passphrase;
                 } );
-
+                
                 auto filename = ssl_settings->get_temporary_diffie_hellman( );
+                
                 if ( not filename.empty( ) )
                 {
                     ssl_context->use_tmp_dh_file( filename );
                 }
-
+                
                 filename = ssl_settings->get_certificate_authority_pool( );
+                
                 if ( not filename.empty( ) )
                 {
                     ssl_context->add_verify_path( filename );
                 }
-
+                
                 filename = ssl_settings->get_certificate_chain( );
+                
                 if ( not filename.empty( ) )
                 {
                     ssl_context->use_certificate_chain_file( filename );
                 }
-
+                
                 filename = ssl_settings->get_certificate( );
+                
                 if ( not filename.empty( ) )
                 {
                     ssl_context->use_certificate_file( filename, asio::ssl::context::pem );
                 }
-
+                
                 filename = ssl_settings->get_private_key( );
+                
                 if ( not filename.empty( ) )
                 {
                     ssl_context->use_private_key_file( filename, asio::ssl::context::pem );
                 }
-
+                
                 filename = ssl_settings->get_private_rsa_key( );
+                
                 if ( not filename.empty( ) )
                 {
                     ssl_context->use_rsa_private_key_file( filename, asio::ssl::context::pem );
                 }
-
+                
                 asio::ssl::context::options options = 0;
                 options = ( ssl_settings->has_enabled_tlsv1( ) ) ? options : options | asio::ssl::context::no_tlsv1;
                 options = ( ssl_settings->has_enabled_sslv2( ) ) ? options : options | asio::ssl::context::no_sslv2;
@@ -179,13 +187,13 @@ namespace restbed
                 options = ( ssl_settings->has_enabled_default_workarounds( ) ) ? options | asio::ssl::context::default_workarounds : options;
                 options = ( ssl_settings->has_enabled_single_diffie_hellman_use( ) ) ? options | asio::ssl::context::single_dh_use : options;
                 ssl_context->set_options( options );
-
+                
                 ssl_acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( tcp::v6( ), ssl_settings->get_port( ) ) );
                 ssl_acceptor->set_option( socket_base::reuse_address( true ) );
-                ssl_acceptor->listen( settings->get_connection_limit( ) ); 
-
+                ssl_acceptor->listen( settings->get_connection_limit( ) );
+                
                 https_listen( );
-
+                
                 auto endpoint = ssl_acceptor->local_endpoint( );
                 auto address = endpoint.address( );
                 auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
@@ -193,25 +201,25 @@ namespace restbed
                 log( Logger::Level::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
             }
         }
-
+        
         void ServiceImpl::https_listen( void ) const
         {
             auto socket = make_shared< asio::ssl::stream< tcp::socket > >( ssl_acceptor->get_io_service( ), *ssl_context );
             ssl_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
         }
-
+        
         void ServiceImpl::create_ssl_session( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const error_code& error ) const
         {
             if ( not error )
             {
-                socket->async_handshake( asio::ssl::stream_base::server, [ this, socket ]( const asio::error_code& error )
+                socket->async_handshake( asio::ssl::stream_base::server, [ this, socket ]( const asio::error_code & error )
                 {
                     if ( error )
                     {
                         log( Logger::Level::ERROR, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
                         return;
                     }
-
+                    
                     auto connection = make_shared< SocketImpl >( socket, logger );
                     connection->set_timeout( settings->get_connection_timeout( ) );
                     
@@ -239,7 +247,7 @@ namespace restbed
             https_listen( );
         }
 #endif
-
+        
         string ServiceImpl::sanitise_path( const string& path ) const
         {
             if ( path == "/" )
@@ -381,10 +389,10 @@ namespace restbed
             {
                 return not_found( session );
             }
-
+            
             const auto path = resource_route->first;
             session->m_pimpl->resource = resource_route->second;
-
+            
             const auto callback = [ this, path ]( const shared_ptr< Session >& session )
             {
                 rule_engine( session, session->m_pimpl->resource->m_pimpl->rules, [ this, path ]( const shared_ptr< Session >& session )
@@ -393,7 +401,7 @@ namespace restbed
                     {
                         return;
                     }
-
+                    
                     const auto request = session->get_request( );
                     auto method_handler = find_method_handler( session );
                     
@@ -410,11 +418,11 @@ namespace restbed
                             method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
                         }
                     }
-
+                    
                     method_handler( session );
                 } );
             };
-
+            
             if ( session->m_pimpl->resource->m_pimpl->authentication_handler not_eq nullptr )
             {
                 session->m_pimpl->resource->m_pimpl->authentication_handler( session, callback );
@@ -480,7 +488,7 @@ namespace restbed
             const auto request = session->get_request( );
             const auto resource = session->get_resource( );
             const auto method_handlers = resource->m_pimpl->method_handlers.equal_range( request->get_method( ) );
-
+            
             bool failed_filter_validation = false;
             function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
             
@@ -537,7 +545,7 @@ namespace restbed
                     session->get_request( )->get_method( ).data( ),
                     session->get_origin( ).data( ),
                     session->get_request( )->get_path( ).data( ) ) );
-            
+                    
             const auto request = session->get_request( );
             const auto path_folders = String::split( request->get_path( ), '/' );
             const auto route_folders = String::split( settings->get_root( ) + "/" + route.first, '/' );
@@ -548,7 +556,7 @@ namespace restbed
             }
             
             bool match = false;
-
+            
             if ( path_folders.size( ) == route_folders.size( ) )
             {
                 for ( size_t index = 0; index < path_folders.size( ); index++ )

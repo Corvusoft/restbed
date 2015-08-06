@@ -19,7 +19,7 @@ using namespace restbed;
 void get_method_handler( const shared_ptr< Session >& session )
 {
     const auto& request = session->get_request( );
-
+    
     const string body = "Hello, " + request->get_path_parameter( "name" );
     session->close( OK, body, { { "Content-Length", ::to_string( body.size( ) ) } } );
 }

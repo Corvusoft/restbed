@@ -48,16 +48,16 @@ SCENARIO( "resource method filters", "[resource]" )
         resource->set_path( "/resource" );
         resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, xml_method_handler );
         resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, json_method_handler );
-
+        
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
         settings->set_default_header( "Connection", "close" );
-
+        
         shared_ptr< thread > worker = nullptr;
-
+        
         Service service;
         service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service& service )
+        service.set_ready_handler( [ &worker ]( Service & service )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
@@ -68,15 +68,15 @@ SCENARIO( "resource method filters", "[resource]" )
                     request.host = "localhost";
                     request.path = "/resource";
                     request.headers.insert( make_pair( "Content-Type", "application/xml" ) );
-
+                    
                     auto response = Http::get( request );
-
+                    
                     THEN( "I should see a '1' (XML) status code" )
                     {
                         REQUIRE( 1 == response.status_code );
                     }
                 }
-
+                
                 WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/json'" )
                 {
                     Http::Request request;
@@ -84,15 +84,15 @@ SCENARIO( "resource method filters", "[resource]" )
                     request.host = "localhost";
                     request.path = "/resource";
                     request.headers.insert( make_pair( "Content-Type", "application/json" ) );
-
+                    
                     auto response = Http::get( request );
-
+                    
                     THEN( "I should see a '2' (JSON) status code" )
                     {
                         REQUIRE( 2 == response.status_code );
                     }
                 }
-
+                
                 service.stop( );
             } );
         } );

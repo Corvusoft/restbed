@@ -17,7 +17,7 @@
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
-    #include <asio/ssl.hpp>
+#include <asio/ssl.hpp>
 #endif
 
 //System Namespaces
@@ -52,27 +52,27 @@ namespace restbed
                 
                 //Functionality
                 void close( void );
-
+                
                 bool is_open( void ) const;
                 
                 bool is_closed( void ) const;
-
-                void wait( const std::chrono::microseconds& delay, const std::function< void ( const asio::error_code & ) >& callback );
-
+                
+                void wait( const std::chrono::microseconds& delay, const std::function< void ( const asio::error_code& ) >& callback );
+                
                 void write( const Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
-
+                
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
-
+                
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
-
+                
                 //Getters
                 std::string get_local_endpoint( void ) const;
-
+                
                 std::string get_remote_endpoint( void ) const;
                 
                 //Setters
                 void set_timeout( const std::chrono::seconds& value );
-
+                
                 //Operators
                 
                 //Properties
@@ -101,9 +101,9 @@ namespace restbed
                 
                 //Constructors
                 SocketImpl( const SocketImpl& original ) = delete;
-
+                
                 //Functionality
-
+                
                 //Getters
                 
                 //Setters
@@ -113,11 +113,11 @@ namespace restbed
                 
                 //Properties
                 bool m_is_open;
-
+                
                 std::shared_ptr< Logger > m_logger;
-
+                
                 std::shared_ptr< asio::steady_timer > m_timer;
-
+                
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
 #ifdef BUILD_SSL
                 std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;

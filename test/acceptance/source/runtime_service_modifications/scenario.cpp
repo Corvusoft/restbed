@@ -57,11 +57,11 @@ SCENARIO( "runtime service modifications", "[service]" )
     {
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
-
+        
         shared_ptr< thread > worker = nullptr;
-
+        
         Service service;
-        service.set_ready_handler( [ &worker ]( Service& service )
+        service.set_ready_handler( [ &worker ]( Service & service )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
@@ -69,7 +69,7 @@ SCENARIO( "runtime service modifications", "[service]" )
                 {
                     auto resource = make_shared< Resource >( );
                     resource->set_path( "/acceptance-tests/runtime service modifications" );
-
+                    
                     THEN( "I should see an runtime error of 'Runtime modifications of the service are prohibited.'" )
                     {
                         REQUIRE_THROWS_AS( service.publish( resource ), runtime_error );
@@ -84,7 +84,7 @@ SCENARIO( "runtime service modifications", "[service]" )
                         REQUIRE_THROWS_AS( service.set_authentication_handler( authentication_handler ), runtime_error );
                     }
                 }
-
+                
                 service.stop( );
             } );
         } );

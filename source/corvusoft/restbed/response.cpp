@@ -40,7 +40,7 @@ namespace restbed
                                     m_pimpl->version,
                                     m_pimpl->status_code,
                                     m_pimpl->status_message.data( ) );
-        
+                                    
         if ( not m_pimpl->headers.empty( ) )
         {
             const auto headers = String::join( m_pimpl->headers, ": ", "\r\n" );
@@ -58,7 +58,7 @@ namespace restbed
         
         return bytes;
     }
-
+    
     Bytes Response::get_body( void ) const
     {
         return m_pimpl->body;
@@ -88,12 +88,12 @@ namespace restbed
     {
         return m_pimpl->headers;
     }
-
+    
     void Response::set_body( const Bytes& value )
     {
         m_pimpl->body = value;
     }
-
+    
     void Response::set_body( const string& value )
     {
         m_pimpl->body = String::to_bytes( value );
@@ -103,7 +103,7 @@ namespace restbed
     {
         m_pimpl->version = value;
     }
-
+    
     void Response::set_status_code( const int value )
     {
         m_pimpl->status_code = value;

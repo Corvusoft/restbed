@@ -39,15 +39,15 @@ SCENARIO( "publishing single path resources", "[resource]" )
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
         resource->set_method_handler( "POST", post_handler );
-
+        
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
-
+        
         shared_ptr< thread > worker = nullptr;
-
+        
         Service service;
         service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service& service )
+        service.set_ready_handler( [ &worker ]( Service & service )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
@@ -57,27 +57,27 @@ SCENARIO( "publishing single path resources", "[resource]" )
                     request.port = 1984;
                     request.host = "localhost";
                     request.path = "/resources/1";
-
+                    
                     auto response = Http::post( request );
-
+                    
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response.status_code );
                     }
-
+                    
                     AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
                     {
                         Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( response.body == expection );
                     }
-
+                    
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
                         auto header = response.headers.find( "Connection" );
                         REQUIRE( header not_eq response.headers.end( ) );
                         REQUIRE( "close" == response.headers.find( "Connection" )->second );
                     }
-
+                    
                     AND_THEN( "I should see a 'Content-Length' header value of '13'" )
                     {
                         auto header = response.headers.find( "Content-Length" );
@@ -85,7 +85,7 @@ SCENARIO( "publishing single path resources", "[resource]" )
                         REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
                     }
                 }
-
+                
                 service.stop( );
             } );
         } );

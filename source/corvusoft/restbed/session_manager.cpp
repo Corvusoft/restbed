@@ -34,7 +34,7 @@ namespace restbed
     {
         return;
     }
-
+    
     SessionManager::~SessionManager( void )
     {
         delete m_pimpl;
@@ -44,29 +44,30 @@ namespace restbed
     {
         return;
     }
-
+    
     void SessionManager::start( const shared_ptr< const Settings >& )
     {
         return;
     }
-
+    
     void SessionManager::create( const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         if ( callback == nullptr )
         {
             return;
         }
-
+        
         static const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         static uniform_int_distribution< > selector( 0, charset.size( ) - 1 );
         static mt19937 generator( system_clock::now( ).time_since_epoch( ).count( ) );
-
+        
         string key = "";
+        
         for ( int index = 0; index < 32; index++ )
         {
             key += ( charset.at( selector( generator ) ) );
         }
-
+        
         m_pimpl->sessions[ key ] = make_shared< Session >( key );
         callback( m_pimpl->sessions.at( key ) );
     }
@@ -78,7 +79,7 @@ namespace restbed
             m_pimpl->sessions.erase( session->get_id( ) );
             session.reset( );
         }
-
+        
         if ( callback not_eq nullptr )
         {
             callback( nullptr );

@@ -24,8 +24,8 @@
 
 namespace restbed
 {
-	namespace detail
-	{
+    namespace detail
+    {
         static void rule_engine( const std::shared_ptr< Session >& session,
                                  const std::vector< std::shared_ptr< Rule > >& rules,
                                  const std::function< void ( const std::shared_ptr< Session >& ) >& callback,
@@ -35,14 +35,14 @@ namespace restbed
             {
                 auto rule = rules.at( index );
                 index++;
-
+                
                 if ( rule->condition( session ) )
                 {
                     rule->action( session, bind( rule_engine, session, rules, callback, index ) );
                     return;
                 }
             }
-
+            
             if ( index == rules.size( ) )
             {
                 callback( session );

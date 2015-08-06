@@ -50,7 +50,7 @@ TEST_CASE( "fails to parse header values containing colons", "[session]" )
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -67,7 +67,7 @@ TEST_CASE( "fails to parse header values containing colons", "[session]" )
             auto response = Http::get( request );
             
             REQUIRE( 200 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

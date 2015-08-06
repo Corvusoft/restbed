@@ -30,13 +30,13 @@ SCENARIO( "publishing duplicate resources", "[service]" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
-
+        
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
-
+        
         Service service;
         service.publish( resource );
-
+        
         WHEN( "I attempt to publish another resource at '/resources/1'" )
         {
             THEN( "I should see an invalid argument error of 'Resource would pollute namespace. Please ensure all published resources have unique paths.'" )

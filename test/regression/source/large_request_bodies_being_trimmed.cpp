@@ -45,7 +45,7 @@ void post_handler( const shared_ptr< Session >& session )
         auto expectation = Bytes( body, body + 492 );
         const auto request = session->get_request( );
         const auto status = ( request->get_body( ) == expectation ) ? 201 : 400;
-
+        
         session->close( status, expectation, { { "Content-Length", "492" } } );
     } );
 }
@@ -58,12 +58,12 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
-
+    
     shared_ptr< thread > worker = nullptr;
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -74,11 +74,11 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
             request.path = "/test";
             request.body = Bytes( body, body + 492 );
             request.headers = { { "Content-Length", ::to_string( request.body.size( ) ) } };
-
+            
             auto response = Http::post( request );
             
             REQUIRE( 201 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

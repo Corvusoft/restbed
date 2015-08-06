@@ -25,7 +25,7 @@ using restbed::Request;
 TEST_CASE( "validate default instance values", "[request]" )
 {
     const Request request;
-
+    
     REQUIRE( request.get_version( ) == 1.1 );
     REQUIRE( request.get_path( ) == "/" );
     REQUIRE( request.get_body( ).empty( ) );
@@ -44,35 +44,35 @@ TEST_CASE( "validate default instance values", "[request]" )
 TEST_CASE( "confirm default destructor throws no exceptions", "[request]" )
 {
     auto request = new Request;
-
+    
     REQUIRE_NOTHROW( delete request );
 }
 
 TEST_CASE( "validate getter default value", "[request]" )
 {
     const Request request;
-
+    
     SECTION( "integer" )
     {
         int value;
         request.get_header( "Var", value, 12 );
         REQUIRE( value == 12 );
     }
-
+    
     SECTION( "unsigned integer" )
     {
         unsigned int value;
         request.get_header( "Var", value, -6 );
         REQUIRE( value == -6 );
     }
-
+    
     SECTION( "long" )
     {
         long value;
         request.get_header( "Var", value, 6 );
         REQUIRE( value == 6 );
     }
-
+    
     SECTION( "unsigned long" )
     {
         unsigned long value;
@@ -80,21 +80,21 @@ TEST_CASE( "validate getter default value", "[request]" )
         request.get_header( "Var", value, default_value );
         REQUIRE( value == default_value );
     }
-
+    
     SECTION( "float" )
     {
         float value;
         request.get_header( "Var", value, 3.6 );
         REQUIRE( value == 3.6f );
     }
-
+    
     SECTION( "double" )
     {
         double value;
         request.get_header( "Var", value, 34443 );
         REQUIRE( value == 34443 );
     }
-
+    
     SECTION( "string" )
     {
         REQUIRE( request.get_header( "Var", "open" ) == "open" );

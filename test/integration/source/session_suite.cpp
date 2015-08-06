@@ -31,7 +31,7 @@ using restbed::Resource;
 TEST_CASE( "validate default instance values", "[session]" )
 {
     const Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
-
+    
     REQUIRE( session.get_request( ) == nullptr );
     REQUIRE( session.get_resource( ) == nullptr );
     REQUIRE( session.has( "test-key" ) == false );
@@ -41,15 +41,15 @@ TEST_CASE( "validate default instance values", "[session]" )
 
 TEST_CASE( "validate setters modify default values", "[session]" )
 {
-	const set< string > filters = { "value-1", "value-2" };
-
+    const set< string > filters = { "value-1", "value-2" };
+    
     Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
     session.set( "name", string( "corvusoft" ) );
     session.set( "filters", filters );
-
+    
     const string session_name = session.get( "name" );
     const set< string > session_filters = session.get( "filters" );
-
+    
     REQUIRE( session_filters == filters );
     REQUIRE( session_name == string( "corvusoft" ) );
     REQUIRE( session.has( "name" ) == true );

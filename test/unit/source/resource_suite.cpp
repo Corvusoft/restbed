@@ -26,6 +26,6 @@ TEST_CASE( "confirm default constructor throws no exceptions", "[resource]" )
 TEST_CASE( "confirm default destructor throws no exceptions", "[resource]" )
 {
     auto resource = new Resource;
-
+    
     REQUIRE_NOTHROW( delete resource );
 }

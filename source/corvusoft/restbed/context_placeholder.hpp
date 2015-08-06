@@ -50,7 +50,7 @@ namespace restbed
             {
                 return typeid( Type );
             }
-
+            
             //Setters
             
             //Operators

@@ -23,21 +23,23 @@ using namespace restbed;
 
 void get_xml_method_handler( const shared_ptr< Session >& session )
 {
-    const multimap< string, string > headers {
+    const multimap< string, string > headers
+    {
         { "Content-Length", "30" },
         { "Content-Type", "application/xml" }
     };
-
+    
     session->close( 200, "<hello><world></world></hello>", headers );
 }
 
 void get_json_method_handler( const shared_ptr< Session >& session )
 {
-    const multimap< string, string > headers {
+    const multimap< string, string > headers
+    {
         { "Content-Length", "23" },
         { "Content-Type", "application/json" }
     };
-
+    
     session->close( 200, "{ \"Hello\": \", World!\" }" );
 }
 
@@ -57,7 +59,7 @@ int main( const int, const char** )
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
-
+    
     Service service;
     service.publish( resource );
     service.start( settings );

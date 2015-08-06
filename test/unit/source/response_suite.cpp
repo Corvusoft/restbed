@@ -24,7 +24,7 @@ using restbed::Response;
 TEST_CASE( "validate default instance values", "[response]" )
 {
     const Response response;
-
+    
     REQUIRE( response.get_version( ) == 1.1 );
     REQUIRE( response.get_status_code( ) == 200 );
     REQUIRE( response.get_protocol( ) == "HTTP" );
@@ -35,7 +35,7 @@ TEST_CASE( "validate default instance values", "[response]" )
 TEST_CASE( "confirm default destructor throws no exceptions", "[response]" )
 {
     auto response = new Response;
-
+    
     REQUIRE_NOTHROW( delete response );
 }
 
@@ -47,13 +47,14 @@ TEST_CASE( "validate setters modify default values", "[response]" )
     response.set_status_code( 400 );
     response.set_protocol( "SPDY" );
     response.set_status_message( "corvusoft ltd" );
-
-    multimap< string, string > headers {
+    
+    multimap< string, string > headers
+    {
         { "Connection", "keep-alive" }
     };
-
+    
     response.set_headers( headers );
-
+    
     REQUIRE( response.get_version( ) == 1.0 );
     REQUIRE( response.get_status_code( ) == 400 );
     REQUIRE( response.get_protocol( ) == "SPDY" );

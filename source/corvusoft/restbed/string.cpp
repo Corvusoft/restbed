@@ -60,7 +60,7 @@ namespace restbed
         {
             String::format( formatted, required_length, format, arguments );
         }
-
+        
         va_end( arguments );
         
         return formatted;
@@ -102,7 +102,7 @@ namespace restbed
         {
             result += value.first + pair_delimiter + value.second + delimiter;
         }
-
+        
         if ( not result.empty( ) )
         {
             const size_t position = result.find_last_not_of( delimiter );
@@ -136,10 +136,10 @@ namespace restbed
         {
             pattern.assign( expression, icase );
         }
-
+        
         smatch match;
         string result = value;
-
+        
         while ( regex_search( result, match, pattern ) )
         {
             result = regex_replace( result, pattern, substitute );
@@ -147,7 +147,7 @@ namespace restbed
         
         return result;
     }
-
+    
     string::size_type String::format( string& output, const string::size_type length, const char* format, va_list arguments )
     {
         char* formatted = new char[ length + 1 ];

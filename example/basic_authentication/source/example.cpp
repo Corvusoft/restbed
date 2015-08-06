@@ -49,7 +49,7 @@ int main( const int, const char** )
     Service service;
     service.publish( resource );
     service.set_authentication_handler( authentication_handler );
-
+    
     service.start( settings );
     
     return EXIT_SUCCESS;

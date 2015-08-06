@@ -31,12 +31,12 @@ using namespace restbed;
 void get_method_handler( const shared_ptr< Session >& session )
 {
     const auto request = session->get_request( );
-
+    
     REQUIRE( "1" == request->get_path_parameter( "id" ) );
     REQUIRE( "1" == request->get_path_parameter( "ID" ) );
     REQUIRE( "abc" == request->get_query_parameter( "q" ) );
     REQUIRE( "abc" == request->get_query_parameter( "Q" ) );
-
+    
     session->close( OK, "Hello, World!", { { "Content-Length", "13" } } );
 }
 
@@ -47,17 +47,17 @@ SCENARIO( "case sensitive service", "[service]" )
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/{id: [0-9]}" );
         resource->set_method_handler( "GET", get_method_handler );
-
+        
         auto settings = make_shared< Settings >( );
         settings->set_port( 1984 );
         settings->set_case_insensitive_uris( true );
         settings->set_default_header( "Connection", "close" );
-
+        
         shared_ptr< thread > worker = nullptr;
         
         Service service;
         service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service& service )
+        service.set_ready_handler( [ &worker ]( Service & service )
         {
             worker = make_shared< thread >( [ &service ] ( )
             {
@@ -67,27 +67,27 @@ SCENARIO( "case sensitive service", "[service]" )
                     request.port = 1984;
                     request.host = "localhost";
                     request.path = "/resources/1?q=abc";
-
+                    
                     auto response = Http::get( request );
-
+                    
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response.status_code );
                     }
-
+                    
                     AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
                     {
                         Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( response.body == expection );
                     }
-
+                    
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
                         auto header = response.headers.find( "Connection" );
                         REQUIRE( header not_eq response.headers.end( ) );
                         REQUIRE( "close" == response.headers.find( "Connection" )->second );
                     }
-
+                    
                     AND_THEN( "I should see a 'Content-Length' header value of '13'" )
                     {
                         auto header = response.headers.find( "Content-Length" );
@@ -95,34 +95,34 @@ SCENARIO( "case sensitive service", "[service]" )
                         REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
                     }
                 }
-
+                
                 WHEN( "I perform a HTTP 'GET' request to '/RESOURCES/1?q=abc'" )
                 {
                     Http::Request request;
                     request.port = 1984;
                     request.host = "localhost";
                     request.path = "/RESOURCES/1?q=abc";
-
+                    
                     auto response = Http::get( request );
-
+                    
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response.status_code );
                     }
-
+                    
                     AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
                     {
                         Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( response.body == expection );
                     }
-
+                    
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
                         auto header = response.headers.find( "Connection" );
                         REQUIRE( header not_eq response.headers.end( ) );
                         REQUIRE( "close" == response.headers.find( "Connection" )->second );
                     }
-
+                    
                     AND_THEN( "I should see a 'Content-Length' header value of '13'" )
                     {
                         auto header = response.headers.find( "Content-Length" );
@@ -130,7 +130,7 @@ SCENARIO( "case sensitive service", "[service]" )
                         REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
                     }
                 }
-
+                
                 service.stop( );
             } );
         } );

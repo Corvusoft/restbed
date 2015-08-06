@@ -39,10 +39,10 @@ TEST_CASE( "content type present on empty response body", "[response]" )
     settings->set_port( 1984 );
     
     shared_ptr< thread > worker = nullptr;
-
+    
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -51,12 +51,12 @@ TEST_CASE( "content type present on empty response body", "[response]" )
             request.port = 1984;
             request.host = "localhost";
             request.path = "/test";
-
+            
             auto response = Http::get( request );
-
+            
             REQUIRE( 200 == response.status_code );
             REQUIRE( response.headers.end( ) == response.headers.find( "Content-Type" ) );
-
+            
             service.stop( );
         } );
     } );

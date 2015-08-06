@@ -24,13 +24,13 @@ using restbed::String;
 TEST_CASE( "deduplicate string value", "[string]" )
 {
     const string value = "//path/to////resources/";
-
+    
     REQUIRE( String::replace( "//", "/", value ) == "/path/to/resources/" );
 }
 
 TEST_CASE( "deduplicate string value with missing target", "[string]" )
 {
     const string value = "/path/to/resources";
-
+    
     REQUIRE( String::replace( "//", "/", value ) == "/path/to/resources" );
 }

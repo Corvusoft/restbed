@@ -44,7 +44,7 @@ namespace restbed
             
             //Functionality
             std::string to_string( void ) const;
-
+            
             static bool is_valid( const std::string& value );
             
             static Uri parse( const std::string& value );
@@ -75,9 +75,9 @@ namespace restbed
             std::string get_password( void ) const;
             
             std::string get_authority( void ) const;
-
+            
             std::multimap< std::string, std::string > get_query_parameters( void ) const;
-
+            
             //Setters
             
             //Operators

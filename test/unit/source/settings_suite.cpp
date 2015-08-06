@@ -27,7 +27,7 @@ using restbed::Settings;
 TEST_CASE( "validate default instance values", "[settings]" )
 {
     const Settings settings;
-
+    
     REQUIRE( settings.get_port( ) == 80 );
     REQUIRE( settings.get_root( ) == "/" );
     REQUIRE( settings.get_properties( ).empty( ) );
@@ -35,8 +35,9 @@ TEST_CASE( "validate default instance values", "[settings]" )
     REQUIRE( settings.get_default_headers( ).empty( ) );
     REQUIRE( settings.get_case_insensitive_uris( ) == true );
     REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
-
-    map< int, string > expectation = {
+    
+    map< int, string > expectation =
+    {
         { 100, "Continue" },
         { 101, "Switching Protocols" },
         { 102, "Processing" },
@@ -96,14 +97,14 @@ TEST_CASE( "validate default instance values", "[settings]" )
         { 510, "Not Extended" },
         { 511, "Network Authentication Required" }
     };
-
+    
     REQUIRE( settings.get_status_messages( ) == expectation );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[settings]" )
 {
     auto settings = new Settings;
-
+    
     REQUIRE_NOTHROW( delete settings );
 }
 
@@ -117,16 +118,16 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_connection_timeout( seconds( 30 ) );
     settings.set_properties( { { "name", "value" } } );
     settings.set_default_headers( { { "Connection", "close" } } );
-
+    
     REQUIRE( settings.get_port( ) == 1984 );
     REQUIRE( settings.get_root( ) == "/resources" );
     REQUIRE( settings.get_connection_limit( ) == 1 );
     REQUIRE( settings.get_case_insensitive_uris( ) == false );
     REQUIRE( settings.get_connection_timeout( ) == seconds( 30 ) );
-
+    
     map< string, string > properties_expectation = { { "name", "value" } };
     REQUIRE( settings.get_properties( ) == properties_expectation );
-
+    
     multimap< string, string > headers_expectation = { { "Connection", "close" } };
     REQUIRE( settings.get_default_headers( ) == headers_expectation );
 }
@@ -135,25 +136,26 @@ TEST_CASE( "manipulating status messages", "[settings]" )
 {
     Settings settings;
     settings.set_status_message( 418, "I'm a teapot" );
-
+    
     SECTION( "read individual status message from valid status code" )
     {
         REQUIRE( settings.get_status_message( 418 ) == "I'm a teapot" );
     }
-
+    
     SECTION( "read individual status message from invalid status code" )
     {
         REQUIRE( settings.get_status_message( -2 ) == "No Appropriate Status Message Found" );
     }
-
+    
     SECTION( "read individual status message from unknown status code" )
     {
         REQUIRE( settings.get_status_message( 888 ) == "No Appropriate Status Message Found" );
     }
-
+    
     SECTION( "read all status messages" )
     {
-        map< int, string > expectation = {
+        map< int, string > expectation =
+        {
             { 100, "Continue" },
             { 101, "Switching Protocols" },
             { 102, "Processing" },
@@ -214,7 +216,7 @@ TEST_CASE( "manipulating status messages", "[settings]" )
             { 510, "Not Extended" },
             { 511, "Network Authentication Required" }
         };
-
+        
         REQUIRE( settings.get_status_messages( ) == expectation );
     }
 }
@@ -223,38 +225,39 @@ TEST_CASE( "manipulation generic properties", "[settings]" )
 {
     Settings settings;
     settings.set_property( "security-seed", "de305d54-75b4-431b-adb2-eb6b9e546014" );
-
+    
     SECTION( "read individual property from valid name" )
     {
         REQUIRE( settings.get_property( "security-seed" ) == "de305d54-75b4-431b-adb2-eb6b9e546014" );
     }
-
+    
     SECTION( "read individual property from uppercase name" )
     {
         REQUIRE( settings.get_property( "SECURITY-SEED" ) == "" );
     }
-
+    
     SECTION( "read individual property from mixedcase name" )
     {
         REQUIRE( settings.get_property( "SEcURiTY-SeeD" ) == "" );
     }
-
+    
     SECTION( "read individual propety from invalid name" )
     {
         REQUIRE( settings.get_property( "" ) == "" );
     }
-
+    
     SECTION( "read individual property from unknown name" )
     {
         REQUIRE( settings.get_property( "realm" ) == "" );
     }
-
+    
     SECTION( "read all properties" )
     {
-        map< string, string > expectation = {
+        map< string, string > expectation =
+        {
             { "security-seed", "de305d54-75b4-431b-adb2-eb6b9e546014" }
         };
-
+        
         REQUIRE( settings.get_properties( ) == expectation );
     }
 }

@@ -10,7 +10,7 @@
 #include <map>
 #include <memory>
 #include <string>
-#include <vector> 
+#include <vector>
 #include <stdexcept>
 #include <functional>
 
@@ -19,7 +19,7 @@
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
-    #include <asio/ssl.hpp>
+#include <asio/ssl.hpp>
 #endif
 
 //System Namespaces
@@ -62,11 +62,11 @@ namespace restbed
                 void http_listen( void ) const;
 #ifdef BUILD_SSL
                 void https_start( void );
-
+                
                 void https_listen( void ) const;
-
+                
                 void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
-#endif              
+#endif
                 std::string sanitise_path( const std::string& path ) const;
                 
                 void not_found( const std::shared_ptr< Session >& session ) const;
@@ -80,11 +80,11 @@ namespace restbed
                 void method_not_implemented( const std::shared_ptr< Session >& session ) const;
                 
                 void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
-
+                
                 void router( const std::shared_ptr< Session >& session ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error ) const;
-
+                
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > find_method_handler( const std::shared_ptr< Session >& session ) const;
@@ -92,7 +92,7 @@ namespace restbed
                 void authenticate( const std::shared_ptr< Session >& session ) const;
                 
                 bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
-
+                
                 //Getters
                 
                 //Setters
@@ -111,13 +111,13 @@ namespace restbed
                 std::shared_ptr< asio::io_service > io_service;
                 
                 std::shared_ptr< SessionManager > session_manager;
-
+                
                 std::vector< std::shared_ptr< Rule > > rules;
 #ifdef BUILD_SSL
                 std::shared_ptr< const SSLSettings > ssl_settings;
-
+                
                 std::shared_ptr< asio::ssl::context > ssl_context;
-
+                
                 std::shared_ptr< asio::ip::tcp::acceptor > ssl_acceptor;
 #endif
                 std::shared_ptr< asio::ip::tcp::acceptor > acceptor;
@@ -125,7 +125,7 @@ namespace restbed
                 std::map< std::string, std::string > resource_paths;
                 
                 std::map< std::string, std::shared_ptr< const Resource > > resource_routes;
-
+                
                 std::function< void ( void ) > ready_handler;
                 
                 std::function< void ( const std::shared_ptr< Session >& ) > not_found_handler;

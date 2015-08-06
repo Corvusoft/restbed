@@ -32,9 +32,9 @@ void authentication_handler( const shared_ptr< Session >& session,
                              const function< void ( const shared_ptr< Session >& ) >& callback )
 {
     const auto request = session->get_request( );
-
+    
     auto authorisation = request->get_header( "Authorization" );
-
+    
     bool authorised = regex_match( authorisation, regex( ".*response=\"02863beb15feb659dfe4703d610d1b73\".*" ) );
     
     if ( authorised )
@@ -65,7 +65,7 @@ int main( const int, const char** )
     Service service;
     service.publish( resource );
     service.set_authentication_handler( authentication_handler );
-
+    
     service.start( settings );
     
     return EXIT_SUCCESS;

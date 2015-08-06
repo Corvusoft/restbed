@@ -22,7 +22,7 @@ using restbed::SSLSettings;
 TEST_CASE( "validate default instance values", "[ssl-settings]" )
 {
     const SSLSettings settings;
-
+    
     REQUIRE( settings.get_port( ) == 443 );
     REQUIRE( settings.has_enabled_sslv2( ) );
     REQUIRE( settings.has_enabled_sslv3( ) );
@@ -45,7 +45,7 @@ TEST_CASE( "validate default instance values", "[ssl-settings]" )
 TEST_CASE( "confirm default destructor throws no exceptions", "[ssl-settings]" )
 {
     auto settings = new SSLSettings;
-
+    
     REQUIRE_NOTHROW( delete settings );
 }
 
@@ -63,7 +63,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_default_workarounds_enabled( false );
     settings.set_single_diffie_hellman_use_enabled( false );
     settings.set_passphrase( "my-passphrase" );
-
+    
     REQUIRE( settings.get_port( ) == 8080 );
     REQUIRE( not settings.has_enabled_sslv2( ) );
     REQUIRE( not settings.has_enabled_sslv3( ) );

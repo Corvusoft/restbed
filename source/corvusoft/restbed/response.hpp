@@ -58,11 +58,11 @@ namespace restbed
             
             //Setters
             void set_body( const Bytes& value );
-
+            
             void set_body( const std::string& value );
-
+            
             void set_version( const double value );
-
+            
             void set_status_code( const int value );
             
             void set_protocol( const std::string& protocol );

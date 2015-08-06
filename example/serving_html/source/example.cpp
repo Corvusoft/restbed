@@ -24,16 +24,17 @@ void get_method_handler( const shared_ptr< Session >& session )
     const string filename = request->get_path_parameter( "filename" );
     
     ifstream stream( "./distribution/resource/" + filename, ifstream::in );
-
+    
     if ( stream.is_open( ) )
     {
         const string body = string( istreambuf_iterator< char >( stream ), istreambuf_iterator< char >( ) );
-
-        const multimap< string, string > headers {
+        
+        const multimap< string, string > headers
+        {
             { "Content-Type", "text/html" },
             { "Content-Length", ::to_string( body.length( ) ) }
         };
-
+        
         session->close( OK, body, headers );
     }
     else

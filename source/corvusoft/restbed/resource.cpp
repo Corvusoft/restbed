@@ -45,17 +45,17 @@ namespace restbed
     {
         delete m_pimpl;
     }
-
+    
     void Resource::add_rule( const shared_ptr< Rule >& rule )
     {
         m_pimpl->rules.push_back( rule );
-
+        
         stable_sort( m_pimpl->rules.begin( ), m_pimpl->rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
         {
             return lhs->get_priority( ) < rhs->get_priority( );
         } );
     }
-
+    
     void Resource::add_rule( const shared_ptr< Rule >& rule, const int priority )
     {
         rule->set_priority( priority );

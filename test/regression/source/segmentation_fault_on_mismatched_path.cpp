@@ -37,12 +37,12 @@ TEST_CASE( "mismatched resource path", "[service]" )
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
-
+    
     shared_ptr< thread > worker = nullptr;
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -51,11 +51,11 @@ TEST_CASE( "mismatched resource path", "[service]" )
             request.port = 1984;
             request.host = "localhost";
             request.path = "/";
-
+            
             auto response = Http::get( request );
             
             REQUIRE( 404 == response.status_code );
-
+            
             service.stop( );
         } );
     } );
@@ -68,15 +68,15 @@ TEST_CASE( "matched resource path", "[service]" )
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
     resource->set_method_handler( "GET", get_handler );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
-
+    
     shared_ptr< thread > worker = nullptr;
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -85,11 +85,11 @@ TEST_CASE( "matched resource path", "[service]" )
             request.port = 1984;
             request.host = "localhost";
             request.path = "/test";
-
+            
             auto response = Http::get( request );
             
             REQUIRE( 200 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

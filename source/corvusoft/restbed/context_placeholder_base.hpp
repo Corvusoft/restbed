@@ -21,7 +21,7 @@
 namespace restbed
 {
     //Forward Declarations
-
+    
     class ContextPlaceholderBase
     {
         public:
@@ -35,7 +35,7 @@ namespace restbed
             
             //Getters
             virtual const std::type_info& type( void ) const = 0;
-
+            
             //Setters
             
             //Operators

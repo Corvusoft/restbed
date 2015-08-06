@@ -41,17 +41,17 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
     resource->set_method_handler( "GET", faulty_method_handler );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_root( "queues" );
-
+    
     shared_ptr< thread > worker = nullptr;
-
+    
     Service service;
     service.publish( resource );
     service.set_error_handler( error_handler );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -60,11 +60,11 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
             request.port = 1984;
             request.host = "localhost";
             request.path = "/queues/test";
-
+            
             auto response = Http::get( request );
-
+            
             REQUIRE( 444 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

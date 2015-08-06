@@ -24,7 +24,7 @@ namespace restbed
     //Forward Declarations
     class Session;
     class Settings;
-
+    
     namespace detail
     {
         struct SessionManagerImpl;
@@ -44,9 +44,9 @@ namespace restbed
             
             //Functionality
             virtual void stop( void );
-
+            
             virtual void start( const std::shared_ptr< const Settings >& settings );
-
+            
             virtual void create( const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
             
             virtual void purge( std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
@@ -63,9 +63,9 @@ namespace restbed
             
         protected:
             //Friends
-
+            
             //Definitions
-
+            
             //Constructors
             SessionManager( const SessionManager& original ) = delete;
             

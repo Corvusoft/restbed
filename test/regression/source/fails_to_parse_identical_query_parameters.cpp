@@ -34,11 +34,11 @@ using namespace restbed;
 void get_handler( const shared_ptr< Session >& session )
 {
     const auto request = session->get_request( );
-
+    
     multimap< string, string > expectation;
     expectation.insert( make_pair( "echo", "false" ) );
     expectation.insert( make_pair( "echo", "true" ) );
-
+    
     const auto actual = request->get_query_parameters( "echo" );
     
     if ( actual not_eq expectation )
@@ -64,7 +64,7 @@ TEST_CASE( "fails to parse identical query parameters", "[service]" )
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service& service )
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
@@ -73,11 +73,11 @@ TEST_CASE( "fails to parse identical query parameters", "[service]" )
             request.port = 1984;
             request.host = "localhost";
             request.path = "/test?echo=false&echo=true";
-
+            
             auto response = Http::get( request );
             
             REQUIRE( 200 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

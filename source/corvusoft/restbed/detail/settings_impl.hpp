@@ -26,11 +26,11 @@ namespace restbed
 {
     //Forward Declarations
     class SSLSettings;
-
+    
     namespace detail
     {
         //Forward Declarations
-
+        
         struct SettingsImpl
         {
             uint16_t port = 80;
@@ -38,17 +38,17 @@ namespace restbed
             std::string root = "/";
             
             uint32_t connection_limit = 128;
-
+            
             bool case_insensitive_uris = true;
             
             std::map< std::string, std::string > properties = { };
-
+            
             std::shared_ptr< const SSLSettings > ssl_settings = nullptr;
             
             std::multimap< std::string, std::string > default_headers = { };
-
+            
             std::chrono::seconds connection_timeout = std::chrono::seconds( 5 );
-
+            
             std::map< int, std::string > status_messages
             {
                 { 100, "Continue" },

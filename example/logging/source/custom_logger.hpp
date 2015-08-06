@@ -13,23 +13,23 @@ class CustomLogger : public Logger
         {
             return;
         }
-
+        
         void start( const shared_ptr< const Settings >& )
         {
             return;
         }
-
+        
         void log( const Level, const char* format, ... )
         {
             va_list arguments;
             va_start( arguments, format );
-
+            
             vfprintf( stderr, format, arguments );
             fprintf( stderr, "\n" );
-
+            
             va_end( arguments );
         }
-
+        
         void log_if( bool expression, const Level level, const char* format, ... )
         {
             if ( expression )

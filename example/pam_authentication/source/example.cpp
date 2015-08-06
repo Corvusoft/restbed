@@ -26,7 +26,7 @@ pair< string, string > decode_header( const string& value )
     auto delimiter = data.find_first_of( ':' );
     auto username = data.substr( 0, delimiter );
     auto password = data.substr( delimiter + 1 );
-
+    
     return make_pair( username, password );
 }
 
@@ -35,9 +35,9 @@ void authentication_handler( const shared_ptr< Session >& session,
 {
     const auto request = session->get_request( );
     const auto credentials = decode_header( request->get_header( "Authorization" ) );
-
+    
     bool authorised = pam_authorisation( credentials.first, credentials.second );
-
+    
     if ( not authorised )
     {
         session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"Restbed\"" } } );
@@ -66,7 +66,7 @@ int main( const int, const char** )
     Service service;
     service.publish( resource );
     service.set_authentication_handler( authentication_handler );
-
+    
     service.start( settings );
     
     return EXIT_SUCCESS;

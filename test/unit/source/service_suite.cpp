@@ -25,13 +25,13 @@ TEST_CASE( "confirm default constructor throws no exceptions", "[service]" )
 TEST_CASE( "confirm default destructor throws no exceptions", "[service]" )
 {
     auto service = new Service;
-
+    
     REQUIRE_NOTHROW( delete service );
 }
 
 TEST_CASE( "confirm calling stop before start throws no exceptions", "[service]" )
 {
     Service service;
-
+    
     REQUIRE_NOTHROW( service.stop( ) );
 }

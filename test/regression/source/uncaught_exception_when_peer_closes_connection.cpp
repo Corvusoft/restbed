@@ -56,10 +56,10 @@ TEST_CASE( "peer closes connection without sending data", "[service]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
-
+    
     auto service = make_shared< Service >( );
     service->publish( resource );
     

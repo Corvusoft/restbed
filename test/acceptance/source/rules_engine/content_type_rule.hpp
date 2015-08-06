@@ -37,22 +37,22 @@ class ContentTypeRule : public Rule
         
         bool condition( const shared_ptr< Session >& session ) final override
         {
-        	return session->get_request( )->has_header( "Content-Type" );
+            return session->get_request( )->has_header( "Content-Type" );
         }
-
+        
         void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
         {
-        	const auto request = session->get_request( );
-
-        	if ( request->get_header( "Content-Type", String::lowercase ) not_eq "application/csv" )
-        	{
-        		session->close( UNSUPPORTED_MEDIA_TYPE,
-        			            "Unsupported Media Type, must be 'application/csv'.",
-        			            { { "Content-Length", "50" }, { "Content-Type", "text/plain" } } );
-        	}
-        	else
-        	{
-        		callback( session );
-        	}
+            const auto request = session->get_request( );
+            
+            if ( request->get_header( "Content-Type", String::lowercase ) not_eq "application/csv" )
+            {
+                session->close( UNSUPPORTED_MEDIA_TYPE,
+                                "Unsupported Media Type, must be 'application/csv'.",
+                { { "Content-Length", "50" }, { "Content-Type", "text/plain" } } );
+            }
+            else
+            {
+                callback( session );
+            }
         }
 };

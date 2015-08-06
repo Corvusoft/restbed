@@ -53,7 +53,7 @@ namespace restbed
             
             //Getters
             double get_version( void ) const;
-
+            
             const Bytes& get_body( void ) const;
             
             std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
@@ -61,67 +61,67 @@ namespace restbed
             std::string get_method( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-
+            
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
             void get_header( const std::string& name, int& value, const int default_value = 0 ) const;
-
+            
             void get_header( const std::string& name, long& value, const long default_value = 0 ) const;
-
+            
             void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
-                             
+            
             void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
-                             
+            
             void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-                             
+            
             void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-
+            
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
             std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
-
+            
             std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             void get_query_parameter( const std::string& name, int& value, const int default_value = 0 ) const;
-                                      
+            
             void get_query_parameter( const std::string& name, long& value, const long default_value = 0 ) const;
-
+            
             void get_query_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
-                                      
+            
             void get_query_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-
+            
             void get_query_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-
+            
             std::string get_query_parameter( const std::string& name, const bool ignore_case = true ) const;
             
             std::string get_query_parameter( const std::string& name, const std::string& default_value, bool ignore_case = true ) const;
-
+            
             std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform, bool ignore_case = true ) const;
-                                             
+            
             std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "", const bool ignore_case = true ) const;
-
+            
             void get_path_parameter( const std::string& name, int& value, const int default_value = 0 ) const;
-                                      
+            
             void get_path_parameter( const std::string& name, long& value, const long default_value = 0 ) const;
-
+            
             void get_path_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
-                                      
+            
             void get_path_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-
+            
             void get_path_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-
+            
             std::string get_path_parameter( const std::string& name, const bool ignore_case = true ) const;
             
             std::string get_path_parameter( const std::string& name, const std::string& default_value, bool ignore_case = true ) const;
-
+            
             std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform, bool ignore_case = true ) const;
-                                             
+            
             std::map< std::string, std::string > get_path_parameters( const std::string& name = "", const bool ignore_case = true ) const;
-
+            
             //Setters
             
             //Operators

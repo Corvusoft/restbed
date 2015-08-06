@@ -45,7 +45,7 @@ namespace restbed
         {
             throw invalid_argument( "Session must have a unique identifier." );
         }
-
+        
         m_pimpl->id = id;
     }
     
@@ -53,12 +53,12 @@ namespace restbed
     {
         delete m_pimpl;
     }
-
+    
     bool Session::has( const string& name ) const
     {
         return m_pimpl->context.find( name ) not_eq m_pimpl->context.end( );
     }
-
+    
     void Session::erase( const string& name )
     {
         if ( name.empty( ) )
@@ -70,16 +70,16 @@ namespace restbed
             m_pimpl->context.erase( name );
         }
     }
-
+    
     const set< string > Session::keys( void ) const
     {
         std::set< std::string > keys;
-
-        for( const auto& value : m_pimpl->context )
+        
+        for ( const auto& value : m_pimpl->context )
         {
             keys.insert( keys.end( ), value.first );
         }
-
+        
         return keys;
     }
     
@@ -123,7 +123,7 @@ namespace restbed
             m_pimpl->session_manager->purge( m_pimpl->session, nullptr );
         } );
     }
-
+    
     void Session::close( const string& body )
     {
         close( Bytes( body.begin( ), body.end( ) ) );
@@ -176,7 +176,7 @@ namespace restbed
             }
         } );
     }
-
+    
     void Session::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         yield( String::to_bytes( body ), callback );
@@ -204,13 +204,13 @@ namespace restbed
             }
         } );
     }
-
+    
     void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static multimap< string, string > empty;
         yield( status, body, empty, callback );
     }
-
+    
     void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
         static multimap< string, string > empty;
@@ -290,11 +290,11 @@ namespace restbed
     {
         if ( trigger not_eq nullptr )
         {
-            const auto wrapper = [ trigger ]( const microseconds& delay )
+            const auto wrapper = [ trigger ]( const microseconds & delay )
             {
                 return duration_cast< microseconds >( trigger( duration_cast< hours >( delay ) ) );
             };
-
+            
             wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
         }
         else
@@ -307,11 +307,11 @@ namespace restbed
     {
         if ( trigger not_eq nullptr )
         {
-            const auto wrapper = [ trigger ]( const microseconds& delay )
+            const auto wrapper = [ trigger ]( const microseconds & delay )
             {
                 return duration_cast< microseconds >( trigger( duration_cast< minutes >( delay ) ) );
             };
-
+            
             wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
         }
         else
@@ -324,11 +324,11 @@ namespace restbed
     {
         if ( trigger not_eq nullptr )
         {
-            const auto wrapper = [ trigger ]( const microseconds& delay )
+            const auto wrapper = [ trigger ]( const microseconds & delay )
             {
                 return duration_cast< microseconds >( trigger( duration_cast< seconds >( delay ) ) );
             };
-
+            
             wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
         }
         else
@@ -341,11 +341,11 @@ namespace restbed
     {
         if ( trigger not_eq nullptr )
         {
-            const auto wrapper = [ trigger ]( const microseconds& delay )
+            const auto wrapper = [ trigger ]( const microseconds & delay )
             {
                 return duration_cast< microseconds >( trigger( duration_cast< milliseconds >( delay ) ) );
             };
-
+            
             wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
         }
         else
@@ -372,7 +372,7 @@ namespace restbed
                 else
                 {
                     const microseconds new_interval = trigger( delay );
-
+                    
                     if ( new_interval == microseconds::zero( ) )
                     {
                         callback( m_pimpl->session );
@@ -397,7 +397,7 @@ namespace restbed
         {
             return "";
         }
-
+        
         return m_pimpl->socket->get_remote_endpoint( );
     }
     
@@ -407,7 +407,7 @@ namespace restbed
         {
             return "";
         }
-
+        
         return m_pimpl->socket->get_local_endpoint( );
     }
     
@@ -425,22 +425,22 @@ namespace restbed
     {
         return m_pimpl->headers;
     }
-
+    
     const ContextValue& Session::get( const string& name ) const
     {
         return m_pimpl->context.at( name );
     }
-
+    
     const ContextValue& Session::get( const string& name, const ContextValue& default_value ) const
     {
         if ( has( name ) )
         {
             return m_pimpl->context.at( name );
         }
-
+        
         return default_value;
     }
-
+    
     void Session::set( const string& name, const ContextValue& value )
     {
         m_pimpl->context.insert( make_pair( name, value ) );

@@ -30,7 +30,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_certificate_chain( Uri( "file:///tmp/chain.crt" ) );
     settings.set_certificate_authority_pool( Uri( "file:///tmp" ) );
     settings.set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
-
+    
     REQUIRE( settings.get_certificate( ) == "/tmp/server.crt" );
     REQUIRE( settings.get_private_key( ) == "/tmp/server.key" );
     REQUIRE( settings.get_private_rsa_key( ) == "/tmp/rsa.key" );

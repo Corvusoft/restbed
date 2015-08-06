@@ -25,17 +25,17 @@ using restbed::SSLSettings;
 TEST_CASE( "validate default instance values", "[settings]" )
 {
     const Settings settings;
-
+    
     REQUIRE( settings.get_ssl_settings( ) == nullptr );
 }
 
 TEST_CASE( "validate setters modify default values", "[settings]" )
 {
-	auto ssl_settings = make_shared< SSLSettings >( );
-	ssl_settings->set_port( 3434 );
-
+    auto ssl_settings = make_shared< SSLSettings >( );
+    ssl_settings->set_port( 3434 );
+    
     Settings settings;
     settings.set_ssl_settings( ssl_settings );
-
+    
     REQUIRE( settings.get_ssl_settings( )->get_port( ) == 3434 );
 }
