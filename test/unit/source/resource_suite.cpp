@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <memory>
 
 //Project Includes
 #include <corvusoft/restbed/resource.hpp>
