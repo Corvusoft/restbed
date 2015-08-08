@@ -14,6 +14,18 @@ option( BUILD_TESTS "Build all available test suites." OFF )
 #
 # Configuration
 #
+if( NOT WIN32 )
+    string( ASCII 27 Esc )
+
+    set( Reset   "${Esc}[m"   )
+    set( Red     "${Esc}[31m" )
+    set( Blue    "${Esc}[34m" )
+    set( Green   "${Esc}[32m" )
+    set( Yellow  "${Esc}[33m" )
+endif( )
+
+message( "   ${Blue}Copyright (c) 2013, 2014, 2015 Corvusoft${Reset}" )
+
 include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 
 #
@@ -45,6 +57,8 @@ else ( )
 endif ( )
 
 if ( BUILD_EXAMPLES )
+    find_package( pam )
+    find_package( syslog )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/example" )
 endif ( )
 

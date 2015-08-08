@@ -9,7 +9,7 @@ endif ( )
 
 if ( ${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" )
     if ( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.9 )
-        message( FATAL_ERROR "\nGCC version < 4.9\nYour systems default compiler is GCC. This project makes use of c++11 features present only in versions of gcc >= 5.0. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
+        message( FATAL_ERROR "\nGCC version < 4.9\nYour systems default compiler is GCC. This project makes use of c++11 features present only in versions of gcc >= 4.9. You can use a different compiler by re-running cmake with the command switch \"-D CMAKE_CXX_COMPILER=<compiler>\" " )
     endif ( )
 elseif( ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" )
     if ( ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.3 )

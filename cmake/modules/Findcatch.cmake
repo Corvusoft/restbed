@@ -5,11 +5,7 @@ find_path( catch_INCLUDE catch.hpp HINTS "${CMAKE_SOURCE_DIR}/dependency/catch/i
 if ( catch_INCLUDE )
     set( CATCH_FOUND TRUE )
 
-    if ( NOT catch_FIND_QUIETLY )
-        message( STATUS "Found catch source: ${catch_INCLUDE}" )
-    endif ( )
+    message( STATUS "${Green}Found Catch include at ${catch_INCLUDE}${Reset}" )
 else ( )
-    if ( catch_FIND_REQUIRED )
-        message( FATAL_ERROR "Failed to locate catch!" )
-    endif ( )
+    message( FATAL_ERROR "${Red}Failed to locate Catch dependency.${Reset}" )
 endif ( )

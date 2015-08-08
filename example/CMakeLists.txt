@@ -12,9 +12,6 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example"  )
 #
 # Build
 #
-add_executable( pam_authentication pam_authentication/source/example.cpp )
-target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )
-
 add_executable( basic_authentication basic_authentication/source/example.cpp )
 target_link_libraries( basic_authentication ${CMAKE_PROJECT_NAME} )
 
@@ -51,9 +48,6 @@ target_link_libraries( resource_filtering ${CMAKE_PROJECT_NAME} )
 add_executable( serving_html serving_html/source/example.cpp )
 target_link_libraries( serving_html ${CMAKE_PROJECT_NAME} )
 
-add_executable( syslog_logging syslog_logging/source/example.cpp )
-target_link_libraries( syslog_logging ${CMAKE_PROJECT_NAME} )
-
 add_executable( transfer_encoding_request transfer_encoding_request/source/example.cpp )
 target_link_libraries( transfer_encoding_request ${CMAKE_PROJECT_NAME} )
 
@@ -80,6 +74,16 @@ target_link_libraries( session_data ${CMAKE_PROJECT_NAME} )
 
 add_executable( rules_engine rules_engine/source/example.cpp )
 target_link_libraries( rules_engine ${CMAKE_PROJECT_NAME} )
+
+if ( PAM_FOUND )
+    add_executable( pam_authentication pam_authentication/source/example.cpp )
+    target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )
+endif ( )
+
+if ( SYSLOG_FOUND )
+    add_executable( syslog_logging syslog_logging/source/example.cpp )
+    target_link_libraries( syslog_logging ${CMAKE_PROJECT_NAME} )
+endif ( )
 
 if ( BUILD_SSL )
     add_executable( https_service https_service/source/example.cpp )
