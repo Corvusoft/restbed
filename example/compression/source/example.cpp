@@ -15,7 +15,7 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wextra"
-#pragma GCC diagnostic ignored "-Wenum-compare" 
+#pragma GCC diagnostic ignored "-Wenum-compare"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #include "miniz.h"
 #pragma GCC diagnostic pop
@@ -72,4 +72,3 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
-
