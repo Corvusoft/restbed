@@ -74,6 +74,7 @@ namespace restbed
             session_manager( nullptr ),
             buffer( nullptr ),
             headers( ),
+            context( ),
             router( nullptr ),
             error_handler( nullptr )
         {
