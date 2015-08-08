@@ -34,13 +34,13 @@ namespace restbed
         
         struct ResourceImpl
         {
-            std::set< std::string > paths = { };
+            std::set< std::string > paths { };
             
-            std::set< std::string > methods = { };
+            std::set< std::string > methods { };
             
-            std::vector< std::shared_ptr< Rule > > rules = { };
+            std::vector< std::shared_ptr< Rule > > rules { };
             
-            std::multimap< std::string, std::string > default_headers = { };
+            std::multimap< std::string, std::string > default_headers { };
             
             std::function< void ( const std::shared_ptr< Session >& ) > failed_filter_validation_handler = nullptr;
             
@@ -48,7 +48,7 @@ namespace restbed
             
             std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > authentication_handler = nullptr;
             
-            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > > method_handlers = { };
+            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session >& ) > > > method_handlers { };
         };
     }
 }

@@ -99,7 +99,8 @@ namespace restbed
     
     void Resource::set_method_handler( const string& method, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        set_method_handler( method, { }, callback );
+        static const multimap< string, string > empty { };
+        set_method_handler( method, empty, callback );
     }
     
     void Resource::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session >& ) >& callback )

@@ -32,7 +32,7 @@ namespace restbed
         
         struct SessionManagerImpl
         {
-            std::map< std::string, std::shared_ptr< Session > > sessions;
+            std::map< std::string, std::shared_ptr< Session > > sessions { };
         };
     }
 }

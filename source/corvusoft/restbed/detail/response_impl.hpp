@@ -31,7 +31,7 @@ namespace restbed
         
         struct ResponseImpl
         {
-            Bytes body = { };
+            Bytes body { };
             
             double version = 1.1;
             
@@ -41,7 +41,7 @@ namespace restbed
             
             std::string status_message = "";
             
-            std::multimap< std::string, std::string > headers = { };
+            std::multimap< std::string, std::string > headers { };
         };
     }
 }

@@ -41,11 +41,11 @@ namespace restbed
             
             bool case_insensitive_uris = true;
             
-            std::map< std::string, std::string > properties = { };
+            std::map< std::string, std::string > properties { };
             
             std::shared_ptr< const SSLSettings > ssl_settings = nullptr;
             
-            std::multimap< std::string, std::string > default_headers = { };
+            std::multimap< std::string, std::string > default_headers { };
             
             std::chrono::seconds connection_timeout = std::chrono::seconds( 5 );
             

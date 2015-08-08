@@ -30,7 +30,7 @@ namespace restbed
         
         struct RequestImpl
         {
-            Bytes body = { };
+            Bytes body { };
             
             double version = 1.1;
             
@@ -40,11 +40,11 @@ namespace restbed
             
             std::string protocol = "HTTP";
             
-            std::multimap< std::string, std::string > headers = { };
+            std::multimap< std::string, std::string > headers { };
             
-            std::map< std::string, std::string > path_parameters = { };
+            std::map< std::string, std::string > path_parameters { };
             
-            std::multimap< std::string, std::string > query_parameters = { };
+            std::multimap< std::string, std::string > query_parameters { };
         };
     }
 }
