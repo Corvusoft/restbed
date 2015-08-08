@@ -48,20 +48,22 @@ class ContentLengthRule : public Rule
             {
                 session->close( LENGTH_REQUIRED, "Length Required.", { { "Content-Length", "16" }, { "Content-Type", "text/plain" } } );
             }
-            
-            size_t length = 0;
-            request->get_header( "Content-Length", length );
-            
-            session->fetch( length, [ length, callback ]( const shared_ptr< Session >& session, const Bytes & body )
+            else
             {
-                if ( length not_eq body.size( ) )
+                size_t length = 0;
+                request->get_header( "Content-Length", length );
+            
+                session->fetch( length, [ length, callback ]( const shared_ptr< Session >& session, const Bytes & body )
                 {
-                    session->close( LENGTH_REQUIRED, "Length Required.", { { "Content-Length", "16" }, { "Content-Type", "text/plain" } } );
-                }
-                else
-                {
-                    callback( session );
-                }
-            } );
+                    if ( length not_eq body.size( ) )
+                    {
+                        session->close( LENGTH_REQUIRED, "Length Required.", { { "Content-Length", "16" }, { "Content-Type", "text/plain" } } );
+                    }
+                    else
+                    {
+                        callback( session );
+                    }
+                } );
+            }
         }
 };
