@@ -248,8 +248,7 @@ namespace restbed
             }
             
 #endif
-            struct timeval timeout = { };
-            timeout.tv_usec = 0;
+            struct timeval timeout = { 0, 0 };
             timeout.tv_sec = value.count( );
             
             int status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &timeout ), sizeof( timeout ) );
