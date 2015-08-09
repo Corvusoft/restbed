@@ -1,5 +1,15 @@
 # Copyright (c) 2013, 2014, 2015 Corvusoft
 
+if( NOT WIN32 )
+    string( ASCII 27 Esc )
+
+    set( Reset   "${Esc}[m"   )
+    set( Red     "${Esc}[31m" )
+    set( Blue    "${Esc}[34m" )
+    set( Green   "${Esc}[32m" )
+    set( Yellow  "${Esc}[33m" )
+endif( )
+
 set( INCLUDE_DIR "${CMAKE_SOURCE_DIR}/source" )
 set( SOURCE_DIR "${INCLUDE_DIR}/corvusoft/${PROJECT_NAME}" )
 

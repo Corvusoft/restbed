@@ -6,7 +6,7 @@ if ( asio_INCLUDE )
     set( ASIO_FOUND TRUE )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DASIO_STANDALONE=YES" )
 
-    message( STATUS "${Green}Found ASIO include at ${asio_INCLUDE}${Reset}" )
+    message( STATUS "${Green}Found ASIO include at: ${asio_INCLUDE}${Reset}" )
 else ( )
     message( FATAL_ERROR "${Red}Failed to locate ASIO dependency.${Reset}" )
 endif ( )

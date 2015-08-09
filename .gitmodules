@@ -4,3 +4,7 @@
 [submodule "dependency/catch"]
 	path = dependency/catch
 	url = https://github.com/corvusoft/catch-dependency
+[submodule "dependency/openssl"]
+	path = dependency/openssl
+	url = https://github.com/corvusoft/openssl-dependency
+	branch = OpenSSL_1_0_0-stable

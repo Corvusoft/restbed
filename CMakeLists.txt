@@ -14,19 +14,9 @@ option( BUILD_TESTS "Build all available test suites." OFF )
 #
 # Configuration
 #
-if( NOT WIN32 )
-    string( ASCII 27 Esc )
-
-    set( Reset   "${Esc}[m"   )
-    set( Red     "${Esc}[31m" )
-    set( Blue    "${Esc}[34m" )
-    set( Green   "${Esc}[32m" )
-    set( Yellow  "${Esc}[33m" )
-endif( )
+include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 
 message( "   ${Blue}Copyright (c) 2013, 2014, 2015 Corvusoft${Reset}" )
-
-include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 
 #
 # Dependencies
@@ -34,12 +24,12 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
 
 find_package( asio REQUIRED )
+include_directories( SYSTEM ${asio_INCLUDE} )
 
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
+    include_directories( SYSTEM ${ssl_INCLUDE} )
 endif ( )
-
-include_directories( SYSTEM ${asio_INCLUDE} )
 
 #
 # Build
@@ -51,7 +41,7 @@ include_directories( ${INCLUDE_DIR} )
 add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} ${ssl_LIBRARY} ${crypto_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
     target_link_libraries( ${PROJECT_NAME} )
 endif ( )
@@ -62,18 +52,6 @@ if ( BUILD_EXAMPLES )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/example" )
 endif ( )
 
-#
-# Install
-#
-include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
-
-install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "include" )
-install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
-install( FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "library" )
-
-#
-# Test
-#
 if ( BUILD_TESTS )
     find_package( catch REQUIRED )
 
@@ -83,3 +61,12 @@ if ( BUILD_TESTS )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/test/regression" "regression-tests" )
     add_subdirectory( "${CMAKE_SOURCE_DIR}/test/integration" "integration-tests" )
 endif ( )
+
+#
+# Install
+#
+include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
+
+install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "include" )
+install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
+install( FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "library" )
