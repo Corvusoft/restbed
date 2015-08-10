@@ -43,7 +43,7 @@ void faulty_method_handler( const shared_ptr< Session >& )
 
 SCENARIO( "custom service error handler", "[service]" )
 {
-    GIVEN( "I publish no resources" )
+    GIVEN( "I publish a faulty resources and set a service error handler" )
     {
         auto resource = make_shared< Resource >( );
         resource->set_path( "/resources/1" );
