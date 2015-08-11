@@ -37,19 +37,19 @@ void not_found_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "custom resource not found handler", "[resource]" )
 {
-    GIVEN( "I publish no resources" )
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.set_not_found_handler( not_found_handler );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        settings->set_default_header( "Connection", "close" );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.set_not_found_handler( not_found_handler );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish no resources" )
             {
                 WHEN( "I perform a HTTP 'PUT' request to '/resources/1'" )
                 {
@@ -87,9 +87,10 @@ SCENARIO( "custom resource not found handler", "[resource]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

@@ -43,24 +43,24 @@ void get_method_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "case sensitive service", "[service]" )
 {
-    GIVEN( "I publish a resource at '/resources/{id: [0-9]}' with a HTTP 'GET' method handler" )
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources/{id: [0-9]}" );
+    resource->set_method_handler( "GET", get_method_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_case_insensitive_uris( false );
+    settings->set_default_header( "Connection", "close" );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.publish( resource );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_path( "/resources/{id: [0-9]}" );
-        resource->set_method_handler( "GET", get_method_handler );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        settings->set_case_insensitive_uris( false );
-        settings->set_default_header( "Connection", "close" );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource at '/resources/{id: [0-9]}' with a HTTP 'GET' method handler" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/1?q=abc'" )
                 {
@@ -130,9 +130,10 @@ SCENARIO( "case sensitive service", "[service]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

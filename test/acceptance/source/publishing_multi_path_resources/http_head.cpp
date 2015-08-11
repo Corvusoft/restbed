@@ -34,23 +34,23 @@ void get_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "publishing multi path resources", "[resource]" )
 {
-    GIVEN( "I publish a resource at '/resources/1' and '/resources/one' with a HTTP 'GET' method handler" )
+    auto resource = make_shared< Resource >( );
+    resource->set_paths( { "/resources/1", "/resources/one" } );
+    resource->set_method_handler( "GET", get_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.publish( resource );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_paths( { "/resources/1", "/resources/one" } );
-        resource->set_method_handler( "GET", get_handler );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        settings->set_default_header( "Connection", "close" );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource at '/resources/1' and '/resources/one' with a HTTP 'GET' method handler" )
             {
                 WHEN( "I perform a HTTP 'HEAD' request to '/resources/1'" )
                 {
@@ -117,9 +117,10 @@ SCENARIO( "publishing multi path resources", "[resource]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

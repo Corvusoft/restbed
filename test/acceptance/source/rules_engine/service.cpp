@@ -39,27 +39,27 @@ void get_method_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "service rules engine", "[service]" )
 {
-    GIVEN( "I publish a resource at '/resources' with a HTTP 'POST' method handler" )
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources" );
+    resource->set_method_handler( "POST", get_method_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+    
+    shared_ptr< thread > worker = nullptr;
+    const auto content_type = make_shared< ContentTypeRule >( );
+    const auto content_length = make_shared< ContentLengthRule >( );
+    
+    Service service;
+    service.publish( resource );
+    service.add_rule( content_type );
+    service.add_rule( content_length );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_path( "/resources" );
-        resource->set_method_handler( "POST", get_method_handler );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        settings->set_default_header( "Connection", "close" );
-        
-        shared_ptr< thread > worker = nullptr;
-        const auto content_type = make_shared< ContentTypeRule >( );
-        const auto content_length = make_shared< ContentLengthRule >( );
-        
-        Service service;
-        service.publish( resource );
-        service.add_rule( content_type );
-        service.add_rule( content_length );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource at '/resources' with a HTTP 'POST' method handler" )
             {
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv, Content-Length: 0'" )
                 {
@@ -225,9 +225,10 @@ SCENARIO( "service rules engine", "[service]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

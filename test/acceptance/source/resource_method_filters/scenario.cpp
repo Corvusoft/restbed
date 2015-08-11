@@ -42,24 +42,24 @@ void json_method_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "resource method filters", "[resource]" )
 {
-    GIVEN( "I publish a resource with 'Content-Type' header filters of 'application/json' and 'application/xml'" )
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resource" );
+    resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, xml_method_handler );
+    resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, json_method_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.publish( resource );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_path( "/resource" );
-        resource->set_method_handler( "GET", { { "Content-Type", "application/xml" } }, xml_method_handler );
-        resource->set_method_handler( "GET", { { "Content-Type", "application/json" } }, json_method_handler );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        settings->set_default_header( "Connection", "close" );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource with 'Content-Type' header filters of 'application/json' and 'application/xml'" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/xml'" )
                 {
@@ -94,9 +94,10 @@ SCENARIO( "resource method filters", "[resource]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

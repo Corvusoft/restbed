@@ -34,22 +34,22 @@ void options_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "publishing single path resources", "[resource]" )
 {
-    GIVEN( "I publish a resource at '/resources/1' with a HTTP 'OPTIONS' method handler" )
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources/1" );
+    resource->set_method_handler( "OPTIONS", options_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.publish( resource );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_path( "/resources/1" );
-        resource->set_method_handler( "OPTIONS", options_handler );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource at '/resources/1' with a HTTP 'OPTIONS' method handler" )
             {
                 WHEN( "I perform a HTTP 'OPTIONS' request to '/resources/1'" )
                 {
@@ -87,9 +87,10 @@ SCENARIO( "publishing single path resources", "[resource]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

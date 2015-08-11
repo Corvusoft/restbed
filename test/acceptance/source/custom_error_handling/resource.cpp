@@ -48,25 +48,25 @@ void faulty_method_handler( const shared_ptr< Session >& )
 
 SCENARIO( "custom service error handler", "[service]" )
 {
-    GIVEN( "I publish a faulty resource and set a resource error handler" )
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources/1" );
+    resource->set_method_handler( "GET", faulty_method_handler );
+    resource->set_error_handler( resource_error_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.publish( resource );
+    service.set_error_handler( service_error_handler );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_path( "/resources/1" );
-        resource->set_method_handler( "GET", faulty_method_handler );
-        resource->set_error_handler( resource_error_handler );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        settings->set_default_header( "Connection", "close" );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.publish( resource );
-        service.set_error_handler( service_error_handler );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a faulty resource and set a resource error handler" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/1'" )
                 {
@@ -104,9 +104,10 @@ SCENARIO( "custom service error handler", "[service]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

@@ -53,17 +53,17 @@ void authentication_handler( const shared_ptr< Session >&, const function< void 
 
 SCENARIO( "runtime service modifications", "[service]" )
 {
-    GIVEN( "I publish a resource at '/resources/1' with a HTTP 'GET' method handler" )
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource at '/resources/1' with a HTTP 'GET' method handler" )
             {
                 WHEN( "I attempt to modify service settings" )
                 {
@@ -86,9 +86,10 @@ SCENARIO( "runtime service modifications", "[service]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

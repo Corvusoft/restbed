@@ -42,23 +42,23 @@ void get_handler( const shared_ptr< Session >& session )
 
 SCENARIO( "request path parameters", "[resource]" )
 {
-    GIVEN( "I publish a resource at '/resources/queues/{name: [a-z]*}/messages/{id: [0-9]*}' with a HTTP 'GET' method handler" )
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resources/queues/{name: [a-z]*}/messages/{id: [0-9]*}" );
+    resource->set_method_handler( "GET", get_handler );
+    resource->set_default_header( "Connection", "close" );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    
+    shared_ptr< thread > worker = nullptr;
+    
+    Service service;
+    service.publish( resource );
+    service.set_ready_handler( [ &worker ]( Service & service )
     {
-        auto resource = make_shared< Resource >( );
-        resource->set_path( "/resources/queues/{name: [a-z]*}/messages/{id: [0-9]*}" );
-        resource->set_method_handler( "GET", get_handler );
-        resource->set_default_header( "Connection", "close" );
-        
-        auto settings = make_shared< Settings >( );
-        settings->set_port( 1984 );
-        
-        shared_ptr< thread > worker = nullptr;
-        
-        Service service;
-        service.publish( resource );
-        service.set_ready_handler( [ &worker ]( Service & service )
+        worker = make_shared< thread >( [ &service ] ( )
         {
-            worker = make_shared< thread >( [ &service ] ( )
+            GIVEN( "I publish a resource at '/resources/queues/{name: [a-z]*}/messages/{id: [0-9]*}' with a HTTP 'GET' method handler" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/queues/events/messages/100'" )
                 {
@@ -88,9 +88,10 @@ SCENARIO( "request path parameters", "[resource]" )
                 }
                 
                 service.stop( );
-            } );
+            }
         } );
-        service.start( settings );
-        worker->join( );
-    }
+    } );
+    
+    service.start( settings );
+    worker->join( );
 }

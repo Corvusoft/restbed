@@ -46,9 +46,7 @@ class ContentTypeRule : public Rule
             
             if ( request->get_header( "Content-Type", String::lowercase ) not_eq "application/csv" )
             {
-                session->close( UNSUPPORTED_MEDIA_TYPE,
-                                "Unsupported Media Type, must be 'application/csv'.",
-                { { "Content-Length", "50" }, { "Content-Type", "text/plain" } } );
+                session->close( UNSUPPORTED_MEDIA_TYPE, "Unsupported Media Type, must be 'application/csv'.", { { "Content-Length", "50" }, { "Content-Type", "text/plain" } } );
             }
             else
             {
