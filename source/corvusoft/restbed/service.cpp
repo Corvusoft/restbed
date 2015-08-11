@@ -96,10 +96,11 @@ namespace restbed
         if ( m_pimpl->settings == nullptr )
         {
             m_pimpl->settings = make_shared< Settings >( );
-#ifdef BUILD_SSL
-            m_pimpl->ssl_settings = m_pimpl->settings->get_ssl_settings( );
-#endif
         }
+        
+#ifdef BUILD_SSL
+        m_pimpl->ssl_settings = m_pimpl->settings->get_ssl_settings( );
+#endif
         
         if ( m_pimpl->session_manager == nullptr )
         {
