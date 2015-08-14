@@ -124,14 +124,14 @@ You will now find all required components installed in the restbed distribution 
 |     2.0       |             HTTP 1.1 Compliance                 |     complete    |
 |     2.5       |             Secure Socket Layer                 |     complete    |
 |     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |     complete    |
-|     3.0       |                 Rules Engine                    |  in-development |
+|     3.0       |                 Rules Engine                    |     complete    |
+|     3.2       |      Multi-Threaded service capability          |  in-development |
 |     3.5       |             Session Management                  |     pending     |
 |     3.6       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |
 |     5.0       |             HTTP 2.0 compliance                 |     pending     |
 |     x.x       |         Bind Service to specific NIC            |     pending     |
 |     x.x       |         Client-side SSL certificates            |     pending     |
-|     x.x       |      Multi-Threaded service capability          |     pending     |
 
 ## Contact
 
