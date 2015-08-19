@@ -22,13 +22,8 @@ using std::function;
 using std::multimap;
 using std::shared_ptr;
 using std::runtime_error;
-using std::chrono::hours;
-using std::chrono::minutes;
-using std::chrono::seconds;
 using std::invalid_argument;
 using std::chrono::milliseconds;
-using std::chrono::microseconds;
-using std::chrono::duration_cast;
 
 //Project Namespaces
 using restbed::detail::SessionImpl;
@@ -286,77 +281,9 @@ namespace restbed
         } );
     }
     
-    void Session::wait_for( const hours& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< hours ( const hours& ) >& trigger )
+    void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
     {
-        if ( trigger not_eq nullptr )
-        {
-            const auto wrapper = [ trigger ]( const microseconds & delay )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< hours >( delay ) ) );
-            };
-            
-            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
-        }
-        else
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
-        }
-    }
-    
-    void Session::wait_for( const minutes& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< minutes ( const minutes& ) >& trigger )
-    {
-        if ( trigger not_eq nullptr )
-        {
-            const auto wrapper = [ trigger ]( const microseconds & delay )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< minutes >( delay ) ) );
-            };
-            
-            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
-        }
-        else
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
-        }
-    }
-    
-    void Session::wait_for( const seconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< seconds ( const seconds& ) >& trigger )
-    {
-        if ( trigger not_eq nullptr )
-        {
-            const auto wrapper = [ trigger ]( const microseconds & delay )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< seconds >( delay ) ) );
-            };
-            
-            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
-        }
-        else
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
-        }
-    }
-    
-    void Session::wait_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< milliseconds ( const milliseconds& ) >& trigger )
-    {
-        if ( trigger not_eq nullptr )
-        {
-            const auto wrapper = [ trigger ]( const microseconds & delay )
-            {
-                return duration_cast< microseconds >( trigger( duration_cast< milliseconds >( delay ) ) );
-            };
-            
-            wait_for( duration_cast< microseconds >( delay ), callback, wrapper );
-        }
-        else
-        {
-            wait_for( duration_cast< microseconds >( delay ), callback, nullptr );
-        }
-    }
-    
-    void Session::wait_for( const microseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback, const function< microseconds ( const microseconds& ) >& trigger )
-    {
-        m_pimpl->socket->wait( delay, [ delay, trigger, callback, this ]( const error_code & error )
+        m_pimpl->socket->sleep_for( delay, [ delay, callback, this ]( const error_code & error )
         {
             if ( error )
             {
@@ -365,22 +292,9 @@ namespace restbed
             }
             else
             {
-                if ( trigger == nullptr )
+                if ( callback not_eq nullptr )
                 {
                     callback( m_pimpl->session );
-                }
-                else
-                {
-                    const microseconds new_interval = trigger( delay );
-                    
-                    if ( new_interval == microseconds::zero( ) )
-                    {
-                        callback( m_pimpl->session );
-                    }
-                    else
-                    {
-                        wait_for( new_interval, callback, trigger );
-                    }
                 }
             }
         } );

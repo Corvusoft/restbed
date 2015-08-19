@@ -21,9 +21,9 @@ void get_method_handler( const shared_ptr< Session >& session )
 {
     session->yield( OK, "8\r\nrestbed \r\n", { { "Transfer-Encoding", "chunked" } }, [ ]( const shared_ptr< Session >& session )
     {
-        session->wait_for( chrono::seconds( 5 ), [ ]( const shared_ptr< Session >& session )
+        session->sleep_for( chrono::milliseconds( 500 ), [ ]( const shared_ptr< Session >& session )
         {
-            session->yield( "16\r\nchunked encoding\r\n", [ ]( const shared_ptr< Session >& session )
+            session->yield( "10\r\nchunked encoding\r\n", [ ]( const shared_ptr< Session >& session )
             {
                 session->close( "0\r\n\r\n" );
             } );

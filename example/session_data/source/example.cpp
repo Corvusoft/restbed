@@ -21,8 +21,8 @@ void get_method_handler( const shared_ptr< Session >& session )
     string styled = request->get_query_parameter( "styled", "false" );
     session->set( "styled", styled );
     
-    //pause for example, backend processing...
-    session->wait_for( chrono::seconds( 5 ), [ ]( const shared_ptr< Session >& session )
+    //pause, for example backend processing...
+    session->sleep_for( chrono::milliseconds( 500 ), [ ]( const shared_ptr< Session >& session )
     {
         string value = session->get( "styled" );
         session->close( 200, "styled response body == " + value );

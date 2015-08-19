@@ -18,7 +18,7 @@ using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
 using std::chrono::seconds;
-using std::chrono::microseconds;
+using std::chrono::milliseconds;
 
 //Project Namespaces
 using restbed::detail::SocketImpl;
@@ -65,20 +65,6 @@ namespace restbed
         void SocketImpl::close( void )
         {
             m_is_open = false;
-            
-            if ( m_socket not_eq nullptr )
-            {
-                m_socket->close( );
-            }
-            
-#ifdef BUILD_SSL
-            
-            if ( m_ssl_socket not_eq nullptr )
-            {
-                m_ssl_socket->lowest_layer( ).close( );
-            }
-            
-#endif
         }
         
         bool SocketImpl::is_open( void ) const
@@ -109,7 +95,7 @@ namespace restbed
             return true;
         }
         
-        void SocketImpl::wait( const microseconds& delay, const function< void ( const error_code& ) >& callback )
+        void SocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )
         {
 #ifdef BUILD_SSL
         

@@ -57,7 +57,7 @@ namespace restbed
                 
                 bool is_closed( void ) const;
                 
-                void wait( const std::chrono::microseconds& delay, const std::function< void ( const asio::error_code& ) >& callback );
+                void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const asio::error_code& ) >& callback );
                 
                 void write( const Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
                 
