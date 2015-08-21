@@ -18,3 +18,4 @@ align-pointer=type
 quiet
 lineend=linux
 suffix=none
+indent-preproc-block
