@@ -1,5 +1,5 @@
 /*
- * Example illustrating how to scheduled work on the service runloop.
+ * Example illustrating how to schedule work on the service runloop.
  *
  * Server Usage:
  *    ./distribution/example/schedule_work_on_service_runloop
@@ -28,7 +28,7 @@ void single_run_task( void )
     fprintf( stderr, "single run task executed.\n" );
 }
 
-void create( const shared_ptr< Session >& session )
+void read( const shared_ptr< Session >& session )
 {
     session->close( 200 );
 }
@@ -37,7 +37,7 @@ int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/api" );
-    resource->set_method_handler( "GET", create );
+    resource->set_method_handler( "GET", read );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
