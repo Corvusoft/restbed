@@ -241,13 +241,12 @@ namespace restbed
             return;
         }
         
-        auto timer = new asio::steady_timer( *m_pimpl->io_service );
+        auto timer = make_shared< asio::steady_timer >( *m_pimpl->io_service );
         timer->expires_from_now( interval );
         timer->async_wait( [ this, task, interval, timer ]( const asio::error_code& )
         {
             task( );
             schedule( task, interval );
-            delete timer;
         } );
     }
     
