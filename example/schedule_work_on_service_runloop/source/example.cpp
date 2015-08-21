@@ -1,16 +1,16 @@
 /*
- * Example illustrating how to schedule work on service runloop.
+ * Example illustrating how to scheduled work on the service runloop.
  *
  * Server Usage:
  *    ./distribution/example/schedule_work_on_service_runloop
  *
  * Client Usage:
- *    curl -w'\n' -v -X GET 'http://localhost:1984/api/create/task1'
+ *    Watch service console output to ensure tasks run.
  */
 
+#include <chrono>
 #include <memory>
 #include <string>
-#include <vector>
 #include <cstdlib>
 #include <restbed>
 #include <functional>
@@ -18,27 +18,25 @@
 using namespace std;
 using namespace restbed;
 
-vector< string > tasks;
-
-void worker( const shared_ptr< Service >& service )
+void multi_run_task( void )
 {
-    if ( not tasks.empty( ) )
-    {
-        fprintf( stderr, "processed task '%s'\n", tasks.front( ).data( ) );
-    }
+    fprintf( stderr, "multi run task executed.\n" );
+}
+
+void single_run_task( void )
+{
+    fprintf( stderr, "single run task executed.\n" );
 }
 
 void create( const shared_ptr< Session >& session )
 {
-    auto request = session->get_request( );
-    auto name = request->get_path_parameter( "name" );
-    tasks.push_back( name );
+    session->close( 200 );
 }
 
 int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
-    resource->set_path( "/api/create/{name: [a-z]*}" );
+    resource->set_path( "/api" );
     resource->set_method_handler( "GET", create );
     
     auto settings = make_shared< Settings >( );
@@ -46,7 +44,8 @@ int main( const int, const char** )
     
     auto service = make_shared< Service >( );
     service->publish( resource );
-    service->schedule( bind( worker, service ) );
+    service->schedule( single_run_task );
+    service->schedule( multi_run_task, chrono::milliseconds( 1000 ) );
     service->start( settings );
     
     return EXIT_SUCCESS;

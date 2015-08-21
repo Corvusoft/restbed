@@ -29,7 +29,7 @@ using asio::error_code;
 using asio::steady_timer;
 
 #ifdef BUILD_SSL
-using asio::ssl::stream;
+    using asio::ssl::stream;
 #endif
 
 namespace restbed

@@ -64,7 +64,7 @@ namespace restbed
             logger( nullptr ),
             supported_methods( ),
             settings( nullptr ),
-            io_service( nullptr ),
+            io_service( new ::io_service ),
             session_manager( nullptr ),
             rules( ),
 #ifdef BUILD_SSL

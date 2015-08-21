@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <chrono>
 #include <memory>
 #include <string>
 #include <stdexcept>
@@ -62,6 +63,8 @@ namespace restbed
             void publish( const std::shared_ptr< const Resource >& resource );
             
             void suppress( const std::shared_ptr< const Resource >& resource );
+            
+            void schedule( const std::function< void ( void ) >& task, const std::chrono::milliseconds& interval = std::chrono::milliseconds::zero( ) );
             
             //Getters
             

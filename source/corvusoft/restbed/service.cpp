@@ -23,7 +23,7 @@
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
-#include <asio/ssl.hpp>
+    #include <asio/ssl.hpp>
 #endif
 
 //System Namespaces
@@ -39,6 +39,7 @@ using std::make_shared;
 using std::stable_sort;
 using std::runtime_error;
 using std::invalid_argument;
+using std::chrono::milliseconds;
 
 //Project Namespaces
 using restbed::detail::ServiceImpl;
@@ -118,8 +119,6 @@ namespace restbed
         {
             return lhs->get_priority( ) < rhs->get_priority( );
         } );
-        
-        m_pimpl->io_service = make_shared< io_service >( );
         
         m_pimpl->http_start( );
 #ifdef BUILD_SSL
@@ -232,6 +231,24 @@ namespace restbed
                 m_pimpl->log( Logger::Level::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
             }
         }
+    }
+    
+    void Service::schedule( const function< void ( void ) >& task, const milliseconds& interval )
+    {
+        if ( interval == milliseconds::zero( ) )
+        {
+            m_pimpl->io_service->post( task );
+            return;
+        }
+        
+        auto timer = new asio::steady_timer( *m_pimpl->io_service );
+        timer->expires_from_now( interval );
+        timer->async_wait( [ this, task, interval, timer ]( const asio::error_code& )
+        {
+            task( );
+            schedule( task, interval );
+            delete timer;
+        } );
     }
     
     void Service::set_logger( const shared_ptr< Logger >& value )
