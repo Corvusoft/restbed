@@ -17,7 +17,7 @@
 using std::map;
 using std::string;
 using std::multimap;
-using std::chrono::seconds;
+using std::chrono::milliseconds;
 
 //Project Namespaces
 using restbed::Settings;
@@ -34,7 +34,7 @@ TEST_CASE( "validate default instance values", "[settings]" )
     REQUIRE( settings.get_connection_limit( ) == 128 );
     REQUIRE( settings.get_default_headers( ).empty( ) );
     REQUIRE( settings.get_case_insensitive_uris( ) == true );
-    REQUIRE( settings.get_connection_timeout( ) == seconds( 5 ) );
+    REQUIRE( settings.get_connection_timeout( ) == milliseconds( 5000 ) );
     
     map< int, string > expectation =
     {
@@ -115,7 +115,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_root( "/resources" );
     settings.set_connection_limit( 1 );
     settings.set_case_insensitive_uris( false );
-    settings.set_connection_timeout( seconds( 30 ) );
+    settings.set_connection_timeout( milliseconds( 30 ) );
     settings.set_properties( { { "name", "value" } } );
     settings.set_default_headers( { { "Connection", "close" } } );
     
@@ -123,7 +123,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_root( ) == "/resources" );
     REQUIRE( settings.get_connection_limit( ) == 1 );
     REQUIRE( settings.get_case_insensitive_uris( ) == false );
-    REQUIRE( settings.get_connection_timeout( ) == seconds( 30 ) );
+    REQUIRE( settings.get_connection_timeout( ) == milliseconds( 30 ) );
     
     map< string, string > properties_expectation = { { "name", "value" } };
     REQUIRE( settings.get_properties( ) == properties_expectation );

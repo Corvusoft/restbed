@@ -17,7 +17,6 @@ using std::function;
 using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
-using std::chrono::seconds;
 using std::chrono::milliseconds;
 
 //Project Namespaces
@@ -217,7 +216,7 @@ namespace restbed
             return remote;
         }
         
-        void SocketImpl::set_timeout( const seconds& value )
+        void SocketImpl::set_timeout( const milliseconds& value )
         {
             tcp::socket::native_handle_type native_socket;
 #ifdef BUILD_SSL
@@ -235,7 +234,7 @@ namespace restbed
             
 #endif
             struct timeval timeout = { 0, 0 };
-            timeout.tv_sec = value.count( );
+            timeout.tv_usec = value.count( ) * 1000;
             
             int status = setsockopt( native_socket, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast< char* >( &timeout ), sizeof( timeout ) );
             

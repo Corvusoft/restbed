@@ -46,12 +46,7 @@ using std::runtime_error;
 using std::placeholders::_1;
 using std::rethrow_exception;
 using std::current_exception;
-using std::chrono::hours;
-using std::chrono::minutes;
-using std::chrono::seconds;
 using std::chrono::milliseconds;
-using std::chrono::microseconds;
-using std::chrono::duration_cast;
 
 //Project Namespaces
 using restbed::detail::SessionImpl;

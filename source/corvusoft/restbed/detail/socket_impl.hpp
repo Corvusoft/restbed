@@ -17,7 +17,7 @@
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
-#include <asio/ssl.hpp>
+    #include <asio/ssl.hpp>
 #endif
 
 //System Namespaces
@@ -71,7 +71,7 @@ namespace restbed
                 std::string get_remote_endpoint( void ) const;
                 
                 //Setters
-                void set_timeout( const std::chrono::seconds& value );
+                void set_timeout( const std::chrono::milliseconds& value );
                 
                 //Operators
                 

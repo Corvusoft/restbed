@@ -16,7 +16,7 @@ using std::string;
 using std::multimap;
 using std::make_pair;
 using std::shared_ptr;
-using std::chrono::seconds;
+using std::chrono::milliseconds;
 
 //Project Namespaces
 using restbed::detail::SettingsImpl;
@@ -55,7 +55,7 @@ namespace restbed
         return m_pimpl->case_insensitive_uris;
     }
     
-    seconds Settings::get_connection_timeout( void ) const
+    milliseconds Settings::get_connection_timeout( void ) const
     {
         return m_pimpl->connection_timeout;
     }
@@ -110,7 +110,7 @@ namespace restbed
         m_pimpl->case_insensitive_uris = value;
     }
     
-    void Settings::set_connection_timeout( const seconds& value )
+    void Settings::set_connection_timeout( const milliseconds& value )
     {
         m_pimpl->connection_timeout = value;
     }
