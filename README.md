@@ -80,7 +80,7 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 
 ## License
 
-Copyright (c) 2015 Corvusoft Limited, United Kingdom. All rights reserved. 
+&copy; 2015 Corvusoft Limited, United Kingdom. All rights reserved. 
 
 The Restbed Framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
@@ -90,9 +90,9 @@ Please contact sales@corvusoft.co.uk, for support options including bespoke soft
 
 | Production Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
 | :-----------------------: |:-------------------:|:---------------------------------------:| 
-|            1-3            |          3          |                £280.00                  | 
-|            4-10           |          3          |                £360.00                  |
-|             11+           |          3+         |                 AABUS                   |                
+|            1-3            |          3          |                  &pound;280             | 
+|            4-10           |          3          |                  &pound;360             |
+|            > 10           |          3+         |                 AABUS                   |                
 
 Purchase by contacting sales@corvusoft.co.uk for further information.
 
