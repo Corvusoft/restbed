@@ -55,6 +55,11 @@ namespace restbed
         return m_pimpl->connection_limit;
     }
     
+    string Settings::get_bind_address( void ) const
+    {
+        return m_pimpl->bind_address;
+    }
+    
     bool Settings::get_case_insensitive_uris( void ) const
     {
         return m_pimpl->case_insensitive_uris;
@@ -113,6 +118,11 @@ namespace restbed
     void Settings::set_connection_limit( const int32_t value )
     {
         m_pimpl->connection_limit = value;
+    }
+    
+    void Settings::set_bind_address( const string& value )
+    {
+        m_pimpl->bind_address = value;
     }
     
     void Settings::set_case_insensitive_uris( const bool value )

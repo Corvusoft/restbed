@@ -55,6 +55,8 @@ namespace restbed
             
             int32_t get_connection_limit( void ) const;
             
+            std::string get_bind_address( void ) const;
+            
             bool get_case_insensitive_uris( void ) const;
             
             std::chrono::milliseconds get_connection_timeout( void ) const;
@@ -79,6 +81,8 @@ namespace restbed
             void set_worker_limit( const int32_t value );
             
             void set_connection_limit( const int32_t value );
+            
+            void set_bind_address( const std::string& value );
             
             void set_case_insensitive_uris( const bool value );
             

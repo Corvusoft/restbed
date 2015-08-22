@@ -82,6 +82,11 @@ namespace restbed
         return m_pimpl->port;
     }
     
+    string SSLSettings::get_bind_address( void ) const
+    {
+        return m_pimpl->bind_address;
+    }
+    
     string SSLSettings::get_certificate( void ) const
     {
         return m_pimpl->certificate;
@@ -120,6 +125,11 @@ namespace restbed
     void SSLSettings::set_port( const uint16_t value )
     {
         m_pimpl->port = value;
+    }
+    
+    void SSLSettings::set_bind_address( const string& value )
+    {
+        m_pimpl->bind_address = value;
     }
     
     void SSLSettings::set_http_disabled( const bool value )

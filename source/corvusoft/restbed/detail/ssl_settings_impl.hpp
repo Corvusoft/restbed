@@ -50,6 +50,8 @@ namespace restbed
             
             bool single_diffie_hellman_use_enabled = true;
             
+            std::string bind_address = "";
+            
             std::string passphrase = "";
             
             std::string private_key = "";

@@ -78,6 +78,9 @@ target_link_libraries( multithreaded_service ${CMAKE_PROJECT_NAME} )
 add_executable( schedule_work_on_service_runloop schedule_work_on_service_runloop/source/example.cpp )
 target_link_libraries( schedule_work_on_service_runloop ${CMAKE_PROJECT_NAME} )
 
+add_executable( bind_service_address bind_service_address/source/example.cpp )
+target_link_libraries( bind_service_address ${CMAKE_PROJECT_NAME} )
+
 if ( PAM_FOUND )
     add_executable( pam_authentication pam_authentication/source/example.cpp )
     target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )

@@ -14,19 +14,20 @@ Restbed is a comprehensive and consistent programming model for building applica
 | Comet Support                                                                                                                       | Long polling model to allow long-held HTTP requests for pushing data from the server to client. |
 | [SSL/TLS](https://github.com/Corvusoft/restbed/blob/master/example/https_service/source/example.cpp)                                | Secure over the wire communication allowing you to transmit private data online.                |
 | [Path Parameters](https://github.com/Corvusoft/restbed/blob/master/example/path_parameters/source/example.cpp)                      | Annotate URIs with custom path parameters such as resource keys, revisions, etc...              |
-| Query Parameters                                                                                                                    | Automated query parameter parsings.                                                             |
+| Query Parameters                                                                                                                    | Automated query parameter parsing.                                                             |
 | [Header Filters](https://github.com/Corvusoft/restbed/blob/master/example/resource_filtering/source/example.cpp)                    | Filter incoming HTTP requests by headers.                                                       |
 | [Logging](https://github.com/Corvusoft/restbed/blob/master/example/logging/source/example.cpp)                                      | Customise how and where log entries are created.                                                |
 | [Multi-Path Resources](https://github.com/Corvusoft/restbed/blob/master/example/publishing_multipath_resources/source/example.cpp)  | Give a resource multiple paths for improved readability.                                        |
 | [Customisable Methods](https://github.com/Corvusoft/restbed/blob/master/example/custom_methods/source/example.cpp)                  | Add your own custom HTTP methods.                                                               |
 | [Compression](https://github.com/Corvusoft/restbed/blob/master/example/compression/source/example.cpp)                              | Adaptability to address any form of compression GZip, Deflate, etc...                           | 
 | Encoding                                                                                                                            | Adaptability to address any form of encoding UTF-32, ASCII, etc...                              | 
-| [Rules Engine](https://github.com/Corvusoft/restbed/blob/master/example/rules_engine/source/example.cpp)                            | Reduce complexity by processing incoming requests as readable units of code.                    |
+| [Rules Engine](https://github.com/Corvusoft/restbed/blob/master/example/rules_engine/source/example.cpp)                            | Reduce complexity by processing incoming requests with readable units of code.                    |
 | IPv4/IPv6                                                                                                                           | Internet Protocol Version 4/6 Network Support.                                                  |
 | Architecture                                                                                                                        | Asynchronous [single](https://github.com/Corvusoft/restbed/blob/master/example/publishing_resources/source/example.cpp) or [multi-threaded](https://github.com/Corvusoft/restbed/blob/master/example/multithreaded_service/source/example.cpp) architecture, capable of addressing the C10K problem. |
 | Converters                                                                                                                          | Built-in Path, Query, and Header conversions for string, int, long, and float data types.       |
 | [Authentication](https://github.com/Corvusoft/restbed/blob/master/example/authentication/source/example.cpp)                        | Seperate Service and/or Resource level authentication.                                          |
-| [Error Handling](https://github.com/Corvusoft/restbed/blob/master/example/error_handling/source/example.cpp)                        | Seperate Service and/or Resource level error handling .                                         |
+| [Error Handling](https://github.com/Corvusoft/restbed/blob/master/example/error_handling/source/example.cpp)                        | Seperate Service and/or Resource level error handling.                                          |
+| [Address Binding](https://github.com/Corvusoft/restbed/blob/master/example/bind_service_address/source/example.cpp)                        | Bind HTTP and/or HTTPS services to separate IP addresses.                                         |
 | Compliance                                                                                                                          | Flexibility to address HTTP 1.0/1.1+ compliance.                                                |
 | Mature                                                                                                                              | Secure, Stable, and extensively tested over 3+ years.                                           |
 | Community                                                                                                                           | Active, vibrant and energetic open source community.                                            |
@@ -132,8 +133,8 @@ You will now find all required components installed in the distribution folder. 
 |     3.0       |                 Rules Engine                    |     complete    |
 |     3.5       |      Schedule Tasks on Service run-loop         |     complete    |
 |     3.5       |      Multi-Threaded service capability          |     complete    |
-|     3.5       |       Bind Service to specific Address          |  in-development |
-|     3.5       |             Session Management                  |     pending     |
+|     3.5       |       Bind Service to specific Address          |     complete    |
+|     3.5       |             Session Management                  |  in-development |
 |     4.0       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |
 |     5.0       |             HTTP 2.0 compliance                 |     pending     |

@@ -63,6 +63,8 @@ namespace restbed
             //Getters
             uint16_t get_port( void ) const;
             
+            std::string get_bind_address( void ) const;
+            
             std::string get_certificate( void ) const;
             
             std::string get_passphrase( void ) const;
@@ -79,6 +81,8 @@ namespace restbed
             
             //Setters
             void set_port( const uint16_t value );
+            
+            void set_bind_address( const std::string& value );
             
             void set_http_disabled( const bool value );
             

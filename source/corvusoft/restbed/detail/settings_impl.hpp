@@ -41,6 +41,8 @@ namespace restbed
             
             uint32_t connection_limit = 128;
             
+            std::string bind_address = "";
+            
             bool case_insensitive_uris = true;
             
             std::map< std::string, std::string > properties { };

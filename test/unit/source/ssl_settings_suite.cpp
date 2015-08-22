@@ -32,6 +32,7 @@ TEST_CASE( "validate default instance values", "[ssl-settings]" )
     REQUIRE( settings.has_enabled_compression( ) );
     REQUIRE( settings.has_enabled_default_workarounds( ) );
     REQUIRE( settings.has_enabled_single_diffie_hellman_use( ) );
+    REQUIRE( settings.get_bind_address( ).empty( ) );
     REQUIRE( settings.get_passphrase( ).empty( ) );
     REQUIRE( settings.get_certificate( ).empty( ) );
     REQUIRE( settings.get_private_key( ).empty( ) );
@@ -62,6 +63,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_compression_enabled( false );
     settings.set_default_workarounds_enabled( false );
     settings.set_single_diffie_hellman_use_enabled( false );
+    settings.set_bind_address( "127.0.0.1" );
     settings.set_passphrase( "my-passphrase" );
     
     REQUIRE( settings.get_port( ) == 8080 );
@@ -73,6 +75,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( not settings.has_enabled_compression( ) );
     REQUIRE( not settings.has_enabled_default_workarounds( ) );
     REQUIRE( not settings.has_enabled_single_diffie_hellman_use( ) );
+    REQUIRE( settings.get_bind_address( ) == "127.0.0.1" );
     REQUIRE( settings.get_passphrase( ) == "my-passphrase" );
     REQUIRE( settings.has_disabled_http( ) == true );
 }

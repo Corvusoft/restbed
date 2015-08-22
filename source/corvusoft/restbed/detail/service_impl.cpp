@@ -53,6 +53,7 @@ using std::regex_constants::icase;
 using asio::ip::tcp;
 using asio::io_service;
 using asio::error_code;
+using asio::ip::address;
 using asio::socket_base;
 using asio::system_error;
 
@@ -99,7 +100,17 @@ namespace restbed
             if ( ssl_settings == nullptr or ssl_settings->has_disabled_http( ) == false )
             {
 #endif
-                acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
+            
+                if ( not settings->get_bind_address( ).empty( ) )
+                {
+                    const auto address = address::from_string( settings->get_bind_address( ) );
+                    acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( address, settings->get_port( ) ) );
+                }
+                else
+                {
+                    acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( tcp::v6( ), settings->get_port( ) ) );
+                }
+                
                 acceptor->set_option( socket_base::reuse_address( true ) );
                 acceptor->listen( settings->get_connection_limit( ) );
                 
@@ -189,7 +200,16 @@ namespace restbed
                 options = ( ssl_settings->has_enabled_single_diffie_hellman_use( ) ) ? options | asio::ssl::context::single_dh_use : options;
                 ssl_context->set_options( options );
                 
-                ssl_acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( tcp::v6( ), ssl_settings->get_port( ) ) );
+                if ( not ssl_settings->get_bind_address( ).empty( ) )
+                {
+                    const auto address = address::from_string( ssl_settings->get_bind_address( ) );
+                    ssl_acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( address, ssl_settings->get_port( ) ) );
+                }
+                else
+                {
+                    ssl_acceptor = make_shared< tcp::acceptor >( *io_service, tcp::endpoint( tcp::v6( ), ssl_settings->get_port( ) ) );
+                }
+                
                 ssl_acceptor->set_option( socket_base::reuse_address( true ) );
                 ssl_acceptor->listen( settings->get_connection_limit( ) );
                 
