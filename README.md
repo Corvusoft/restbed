@@ -114,7 +114,7 @@ You will now find all required components installed in the distribution folder. 
 
 |     Resource   |                   Requirement                   |
 |:--------------:|:-----------------------------------------------:| 
-|       CPU      |                    40mhz                        |
+|       CPU      |                    120mhz                       |
 |       RAM      |                     3mb                         |
 |       Disk     |                     1mb                         |
 |     Compiler   |          C++11 compliant or above               |
