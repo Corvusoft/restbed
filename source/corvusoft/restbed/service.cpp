@@ -3,7 +3,10 @@
  */
 
 //System Includes
+#include <thread>
+#include <vector>
 #include <utility>
+#include <cstdint>
 #include <stdexcept>
 #include <algorithm>
 #include <functional>
@@ -29,6 +32,7 @@
 //System Namespaces
 using std::map;
 using std::bind;
+using std::thread;
 using std::string;
 using std::vector;
 using std::function;
@@ -81,6 +85,13 @@ namespace restbed
         {
             m_pimpl->session_manager->stop( );
         }
+        
+        for ( auto& worker : m_pimpl->workers )
+        {
+            worker->join( );
+        }
+        
+        m_pimpl->workers.clear( );
         
         m_pimpl->log( Logger::Level::INFO, String::format( "Service halted." ) );
         
@@ -139,6 +150,24 @@ namespace restbed
         }
         
         m_pimpl->is_running = true;
+        uint32_t limit = m_pimpl->settings->get_worker_limit( );
+        
+        if ( limit > 0 )
+        {
+            const auto this_thread = 1;
+            limit = limit - this_thread;
+            
+            for ( uint32_t count = 0;  count < limit; count++ )
+            {
+                auto worker = make_shared< thread >( [ this ]( )
+                {
+                    m_pimpl->io_service->run( );
+                } );
+                
+                m_pimpl->workers.push_back( worker );
+            }
+        }
+        
         m_pimpl->io_service->run( );
     }
     

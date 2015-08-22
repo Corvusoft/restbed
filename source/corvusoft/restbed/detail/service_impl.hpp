@@ -8,6 +8,7 @@
 //System Includes
 #include <set>
 #include <map>
+#include <thread>
 #include <memory>
 #include <string>
 #include <vector>
@@ -19,7 +20,7 @@
 //External Includes
 #include <asio.hpp>
 #ifdef BUILD_SSL
-#include <asio/ssl.hpp>
+    #include <asio/ssl.hpp>
 #endif
 
 //System Namespaces
@@ -113,6 +114,8 @@ namespace restbed
                 std::shared_ptr< SessionManager > session_manager;
                 
                 std::vector< std::shared_ptr< Rule > > rules;
+                
+                std::vector< std::shared_ptr< std::thread > > workers;
 #ifdef BUILD_SSL
                 std::shared_ptr< const SSLSettings > ssl_settings;
                 

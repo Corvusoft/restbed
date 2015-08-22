@@ -51,6 +51,8 @@ namespace restbed
             
             std::string get_root( void ) const;
             
+            int32_t get_worker_limit( void ) const;
+            
             int32_t get_connection_limit( void ) const;
             
             bool get_case_insensitive_uris( void ) const;
@@ -73,6 +75,8 @@ namespace restbed
             void set_port( const uint16_t value );
             
             void set_root( const std::string& value );
+            
+            void set_worker_limit( const int32_t value );
             
             void set_connection_limit( const int32_t value );
             

@@ -67,6 +67,7 @@ namespace restbed
             io_service( new ::io_service ),
             session_manager( nullptr ),
             rules( ),
+            workers( ),
 #ifdef BUILD_SSL
             ssl_settings( nullptr ),
             ssl_context( nullptr ),

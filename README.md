@@ -131,8 +131,8 @@ You will now find all required components installed in the distribution folder. 
 |     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |     complete    |
 |     3.0       |                 Rules Engine                    |     complete    |
 |     3.5       |      Schedule Tasks on Service run-loop         |     complete    |
-|     3.5       |      Multi-Threaded service capability          |  in-development |
-|     3.5       |       Bind Service to specific Address          |     pending     |
+|     3.5       |      Multi-Threaded service capability          |     complete    |
+|     3.5       |       Bind Service to specific Address          |  in-development |
 |     3.5       |             Session Management                  |     pending     |
 |     4.0       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |

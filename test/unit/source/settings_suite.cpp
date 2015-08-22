@@ -30,6 +30,7 @@ TEST_CASE( "validate default instance values", "[settings]" )
     
     REQUIRE( settings.get_port( ) == 80 );
     REQUIRE( settings.get_root( ) == "/" );
+    REQUIRE( settings.get_worker_limit( ) == 0 );
     REQUIRE( settings.get_properties( ).empty( ) );
     REQUIRE( settings.get_connection_limit( ) == 128 );
     REQUIRE( settings.get_default_headers( ).empty( ) );
@@ -112,6 +113,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
 {
     Settings settings;
     settings.set_port( 1984 );
+    settings.set_worker_limit( 4 );
     settings.set_root( "/resources" );
     settings.set_connection_limit( 1 );
     settings.set_case_insensitive_uris( false );
@@ -121,6 +123,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     
     REQUIRE( settings.get_port( ) == 1984 );
     REQUIRE( settings.get_root( ) == "/resources" );
+    REQUIRE( settings.get_worker_limit( ) == 4 );
     REQUIRE( settings.get_connection_limit( ) == 1 );
     REQUIRE( settings.get_case_insensitive_uris( ) == false );
     REQUIRE( settings.get_connection_timeout( ) == milliseconds( 30 ) );
