@@ -413,45 +413,48 @@ namespace restbed
             
             const auto path = resource_route->first;
             session->m_pimpl->resource = resource_route->second;
+            const auto request = session->get_request( );
+            extract_path_parameters( path, request );
             
-            const auto callback = [ this, path ]( const shared_ptr< Session >& session )
+            rule_engine( session, rules, [ this ]( const shared_ptr< Session >& session )
             {
-                rule_engine( session, session->m_pimpl->resource->m_pimpl->rules, [ this, path ]( const shared_ptr< Session >& session )
+                const auto callback = [ this ]( const shared_ptr< Session >& session )
                 {
-                    if ( session->is_closed( ) )
+                    rule_engine( session, session->m_pimpl->resource->m_pimpl->rules, [ this ]( const shared_ptr< Session >& session )
                     {
-                        return;
-                    }
-                    
-                    const auto request = session->get_request( );
-                    auto method_handler = find_method_handler( session );
-                    
-                    extract_path_parameters( path, request );
-                    
-                    if ( method_handler == nullptr )
-                    {
-                        if ( supported_methods.count( request->get_method( ) ) == 0 )
+                        if ( session->is_closed( ) )
                         {
-                            method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
+                            return;
                         }
-                        else
+                        
+                        const auto request = session->get_request( );
+                        auto method_handler = find_method_handler( session );
+                        
+                        if ( method_handler == nullptr )
                         {
-                            method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
+                            if ( supported_methods.count( request->get_method( ) ) == 0 )
+                            {
+                                method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
+                            }
+                            else
+                            {
+                                method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
+                            }
                         }
-                    }
-                    
-                    method_handler( session );
-                } );
-            };
-            
-            if ( session->m_pimpl->resource->m_pimpl->authentication_handler not_eq nullptr )
-            {
-                session->m_pimpl->resource->m_pimpl->authentication_handler( session, callback );
-            }
-            else
-            {
-                callback( session );
-            }
+                        
+                        method_handler( session );
+                    } );
+                };
+                
+                if ( session->m_pimpl->resource->m_pimpl->authentication_handler not_eq nullptr )
+                {
+                    session->m_pimpl->resource->m_pimpl->authentication_handler( session, callback );
+                }
+                else
+                {
+                    callback( session );
+                }
+            } );
         }
         
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const
@@ -545,18 +548,12 @@ namespace restbed
             {
                 authentication_handler( session, [ this ]( const shared_ptr< Session >& session )
                 {
-                    session_manager->load( session, [ this ]( const shared_ptr< Session >& session )
-                    {
-                        rule_engine( session, rules, bind( &ServiceImpl::router, this, _1 ) );
-                    } );
+                    session_manager->load( session, bind( &ServiceImpl::router, this, _1 ) );
                 } );
             }
             else
             {
-                session_manager->load( session, [ this ]( const shared_ptr< Session >& session )
-                {
-                    rule_engine( session, rules, bind( &ServiceImpl::router, this, _1 ) );
-                } );
+                session_manager->load( session, bind( &ServiceImpl::router, this, _1 ) );
             }
         }
         
