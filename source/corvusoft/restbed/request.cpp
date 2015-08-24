@@ -324,6 +324,11 @@ namespace restbed
     
     multimap< string, string > Request::get_query_parameters( const string& name, const bool ignore_case ) const
     {
+        if ( name.empty( ) )
+        {
+            return m_pimpl->query_parameters;
+        }
+        
         if ( not ignore_case )
         {
             const auto iterators = m_pimpl->query_parameters.equal_range( name );
@@ -446,6 +451,11 @@ namespace restbed
     
     map< string, string > Request::get_path_parameters( const string& name, const bool ignore_case ) const
     {
+        if ( name.empty( ) )
+        {
+            return m_pimpl->path_parameters;
+        }
+        
         if ( not ignore_case )
         {
             const auto iterators = m_pimpl->path_parameters.equal_range( name );
