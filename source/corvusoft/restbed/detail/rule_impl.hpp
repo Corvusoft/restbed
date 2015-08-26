@@ -6,9 +6,7 @@
 #define _RESTBED_DETAIL_RULE_IMPL_H 1
 
 //System Includes
-#include <map>
 #include <memory>
-#include <string>
 
 //Project Includes
 

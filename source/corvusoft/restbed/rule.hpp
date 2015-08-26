@@ -6,8 +6,8 @@
 #define _RESTBED_RULE_H 1
 
 //System Includes
-#include <functional>
 #include <memory>
+#include <functional>
 
 //Project Includes
 
@@ -39,7 +39,7 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual bool condition( const std::shared_ptr< Session >& session ) = 0;
+            virtual bool condition( const std::shared_ptr< Session >& session );
             
             virtual void action( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
             

@@ -11,6 +11,7 @@
 //External Includes
 
 //System Namespaces
+using std::shared_ptr;
 
 //Project Namespaces
 using restbed::detail::RuleImpl;
@@ -19,6 +20,11 @@ using restbed::detail::RuleImpl;
 
 namespace restbed
 {
+    bool Rule::condition( const shared_ptr< Session >& )
+    {
+        return true;
+    }
+    
     int Rule::get_priority( void ) const
     {
         return m_pimpl->priority;
