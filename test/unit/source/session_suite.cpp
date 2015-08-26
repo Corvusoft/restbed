@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <set>
 #include <map>
 #include <string>
 #include <stdexcept>
@@ -14,8 +15,11 @@
 #include <catch.hpp>
 
 //System Namespaces
+using std::set;
 using std::string;
+using std::bad_cast;
 using std::multimap;
+using std::out_of_range;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -47,7 +51,7 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )
     REQUIRE_NOTHROW( delete session );
 }
 
-TEST_CASE( "validate setters modify default values", "[response]" )
+TEST_CASE( "validate setters modify default values", "[session]" )
 {
     Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
     
@@ -63,4 +67,33 @@ TEST_CASE( "validate setters modify default values", "[response]" )
     
     session.set_headers( expectation );
     REQUIRE( session.get_headers( ) == expectation );
+}
+
+TEST_CASE( "validate session context functionality", "[session]" )
+{
+    Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
+    
+    session.set( "Connection", string( "close" ) );
+    const string connection = session.get( "Connection" );
+    REQUIRE( connection == "close" );
+    REQUIRE( session.has( "Connection" ) );
+    REQUIRE( not session.has( "connection" ) );
+    REQUIRE( session.keys( ) == set< string >( { "Connection" } ) );
+    
+    session.erase( "Connection" );
+    REQUIRE( not session.has( "Connection" ) );
+    REQUIRE( session.get( "Connection", string( "keep-alive" ) == "keep-alive" ) );
+    REQUIRE( session.keys( ) == set< string >( ) );
+    
+    session.set( "Connection", string( "close" ) );
+    session.set( "Connection", string( "keep-alive" ) );
+    const string value = session.get( "Connection" );
+    REQUIRE( value == "keep-alive" );
+    
+    REQUIRE_THROWS_AS( int type = session.get( "Connection" ), bad_cast );
+    
+    session.erase( );
+    REQUIRE( session.keys( ) == set< string >( ) );
+    
+    REQUIRE_THROWS_AS( session.get( "Connection" ), out_of_range );
 }

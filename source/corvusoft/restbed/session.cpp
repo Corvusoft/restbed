@@ -357,6 +357,11 @@ namespace restbed
     
     void Session::set( const string& name, const ContextValue& value )
     {
+        if ( has( name ) )
+        {
+            m_pimpl->context.erase( name );
+        }
+        
         m_pimpl->context.insert( make_pair( name, value ) );
     }
     
