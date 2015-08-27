@@ -37,9 +37,9 @@ namespace restbed
             
             std::string root = "/";
             
-            uint32_t worker_limit = 0;
+            unsigned int worker_limit = 0;
             
-            uint32_t connection_limit = 128;
+            unsigned int connection_limit = 128;
             
             std::string bind_address = "";
             

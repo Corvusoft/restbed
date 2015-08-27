@@ -150,14 +150,14 @@ namespace restbed
         }
         
         m_pimpl->is_running = true;
-        uint32_t limit = m_pimpl->settings->get_worker_limit( );
+        unsigned int limit = m_pimpl->settings->get_worker_limit( );
         
         if ( limit > 0 )
         {
             const auto this_thread = 1;
             limit = limit - this_thread;
             
-            for ( uint32_t count = 0;  count < limit; count++ )
+            for ( unsigned int count = 0;  count < limit; count++ )
             {
                 auto worker = make_shared< thread >( [ this ]( )
                 {

@@ -45,12 +45,12 @@ namespace restbed
         return m_pimpl->root;
     }
     
-    int32_t Settings::get_worker_limit( void ) const
+    unsigned int Settings::get_worker_limit( void ) const
     {
         return m_pimpl->worker_limit;
     }
     
-    int32_t Settings::get_connection_limit( void ) const
+    unsigned int Settings::get_connection_limit( void ) const
     {
         return m_pimpl->connection_limit;
     }
@@ -110,12 +110,12 @@ namespace restbed
         m_pimpl->root = value;
     }
     
-    void Settings::set_worker_limit( const int32_t value )
+    void Settings::set_worker_limit( const unsigned int value )
     {
         m_pimpl->worker_limit = value;
     }
     
-    void Settings::set_connection_limit( const int32_t value )
+    void Settings::set_connection_limit( const unsigned int value )
     {
         m_pimpl->connection_limit = value;
     }

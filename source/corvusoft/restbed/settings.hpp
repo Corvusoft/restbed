@@ -51,9 +51,9 @@ namespace restbed
             
             std::string get_root( void ) const;
             
-            int32_t get_worker_limit( void ) const;
+            unsigned int get_worker_limit( void ) const;
             
-            int32_t get_connection_limit( void ) const;
+            unsigned int get_connection_limit( void ) const;
             
             std::string get_bind_address( void ) const;
             
@@ -78,9 +78,9 @@ namespace restbed
             
             void set_root( const std::string& value );
             
-            void set_worker_limit( const int32_t value );
+            void set_worker_limit( const unsigned int value );
             
-            void set_connection_limit( const int32_t value );
+            void set_connection_limit( const unsigned int value );
             
             void set_bind_address( const std::string& value );
             
