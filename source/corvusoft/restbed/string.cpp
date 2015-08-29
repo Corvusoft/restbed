@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <ciso646>
 #include <algorithm>
 
 //Project Includes

@@ -6,6 +6,7 @@
 #include <regex>
 #include <cstdio>
 #include <utility>
+#include <ciso646>
 #include <stdexcept>
 #include <algorithm>
 #include <functional>

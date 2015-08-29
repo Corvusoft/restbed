@@ -5,6 +5,7 @@
 //System Includes
 #include <regex>
 #include <utility>
+#include <ciso646>
 #include <stdexcept>
 
 //Project Includes

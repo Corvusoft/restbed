@@ -7,6 +7,7 @@
 #include <vector>
 #include <utility>
 #include <cstdint>
+#include <ciso646>
 #include <stdexcept>
 #include <algorithm>
 #include <functional>
