@@ -12,6 +12,7 @@
 #include <memory>
 #include <cstring>
 #include <cstdlib>
+#include <ciso646>
 #include <iostream>
 #include <restbed>
 
