@@ -4,6 +4,7 @@
 
 //System Includes
 #include <string>
+#include <ciso646>
 
 //Project Includes
 #include <corvusoft/restbed/ssl_settings.hpp>
