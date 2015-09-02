@@ -43,7 +43,7 @@ void get_handler( const shared_ptr< Session >& session )
     session->close( 200 );
 }
 
-TEST_CASE( "request get path and query parameters fails to return all fields", "[request]" )
+TEST_CASE( "request get parameters fails to return data", "[request]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resources/{id: .*}/messages/{key: .*}" );
