@@ -6,6 +6,7 @@
 #include <thread>
 #include <string>
 #include <memory>
+#include <ciso646>
 #include <stdexcept>
 #include <functional>
 

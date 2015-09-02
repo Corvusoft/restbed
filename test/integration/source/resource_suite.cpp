@@ -16,6 +16,7 @@
 
 //System Namespaces
 using std::string;
+using std::function;
 using std::shared_ptr;
 using std::invalid_argument;
 
@@ -28,7 +29,7 @@ using restbed::Resource;
 TEST_CASE( "validate invalid (empty) method argument", "[resource]" )
 {
     Resource resource;
-    const std::function< void ( const std::shared_ptr< Session >& ) > callback;
+    const function< void ( const shared_ptr< Session >& ) > callback;
     
     REQUIRE_THROWS_AS( resource.set_method_handler( "", callback ), invalid_argument );
 }

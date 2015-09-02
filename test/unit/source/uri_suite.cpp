@@ -4,6 +4,7 @@
 
 //System Includes
 #include <string>
+#include <ciso646>
 #include <stdexcept>
 
 //Project Includes

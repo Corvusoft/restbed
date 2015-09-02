@@ -5,6 +5,7 @@
 //System Includes
 #include <string>
 #include <memory>
+#include <ciso646>
 #include <functional>
 
 //Project Includes

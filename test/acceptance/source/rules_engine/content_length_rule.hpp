@@ -5,6 +5,7 @@
 //System Includes
 #include <string>
 #include <memory>
+#include <ciso646>
 #include <functional>
 
 //Project Includes
@@ -52,7 +53,7 @@ class ContentLengthRule : public Rule
             {
                 size_t length = 0;
                 request->get_header( "Content-Length", length );
-            
+                
                 session->fetch( length, [ length, callback ]( const shared_ptr< Session >& session, const Bytes & body )
                 {
                     if ( length not_eq body.size( ) )

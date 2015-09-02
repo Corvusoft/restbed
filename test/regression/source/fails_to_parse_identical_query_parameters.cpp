@@ -7,6 +7,7 @@
 #include <thread>
 #include <string>
 #include <memory>
+#include <ciso646>
 #include <utility>
 #include <algorithm>
 #include <functional>
