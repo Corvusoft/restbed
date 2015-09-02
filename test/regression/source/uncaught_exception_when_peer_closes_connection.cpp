@@ -6,7 +6,6 @@
 #include <thread>
 #include <chrono>
 #include <memory>
-#include <unistd.h>
 #include <functional>
 
 //Project Includes
