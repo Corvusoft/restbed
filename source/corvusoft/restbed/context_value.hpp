@@ -7,6 +7,7 @@
 
 //System Includes
 #include <memory>
+#include <ciso646>
 #include <typeinfo>
 #include <stdexcept>
 

@@ -4,6 +4,7 @@
 
 //System Includes
 #include <utility>
+#include <ciso646>
 #include <algorithm>
 
 //Project Includes
@@ -218,7 +219,7 @@ namespace restbed
     
     string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        const auto header = get_header( name, "" );
+        const auto header = get_header( name, string("") );
         return ( transform == nullptr ) ? header : transform( header );
     }
     
@@ -296,7 +297,7 @@ namespace restbed
     
     string Request::get_query_parameter( const string& name, const bool ignore_case ) const
     {
-        return get_query_parameter( name, "", ignore_case );
+        return get_query_parameter( name, string(""), ignore_case );
     }
     
     string Request::get_query_parameter( const string& name, const string& default_value, bool ignore_case ) const
@@ -318,7 +319,7 @@ namespace restbed
     
     string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
     {
-        const auto parameter = get_query_parameter( name, "", ignore_case );
+        const auto parameter = get_query_parameter( name, string(""), ignore_case );
         return ( transform == nullptr ) ? parameter : transform( parameter );
     }
     
@@ -423,7 +424,7 @@ namespace restbed
     
     string Request::get_path_parameter( const string& name, const bool ignore_case ) const
     {
-        return get_path_parameter( name, "", ignore_case );
+        return get_path_parameter( name, string(""), ignore_case );
     }
     
     string Request::get_path_parameter( const string& name, const string& default_value, bool ignore_case ) const
@@ -445,7 +446,7 @@ namespace restbed
     
     string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
     {
-        const auto parameter = get_path_parameter( name, "", ignore_case );
+        const auto parameter = get_path_parameter( name, string(""), ignore_case );
         return ( transform == nullptr ) ? parameter : transform( parameter );
     }
     

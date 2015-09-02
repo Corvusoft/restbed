@@ -5,6 +5,7 @@
 //System Includes
 #include <chrono>
 #include <random>
+#include <ciso646>
 
 //Project Includes
 #include "corvusoft/restbed/session.hpp"

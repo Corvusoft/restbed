@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <cstdlib>
+#include <ciso646>
 #include <functional>
 #include <restbed>
 

@@ -6,10 +6,16 @@
 #include <regex>
 #include <cstdio>
 #include <cstdlib>
+#include <stdexcept>
+
+#if defined(WIN32)
+#include <ciso646>
+#include <Winsock2.h>
+#else
 #include <netdb.h>
 #include <unistd.h>
-#include <stdexcept>
 #include <arpa/inet.h>
+#endif
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"

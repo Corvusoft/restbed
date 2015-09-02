@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <ciso646>
 
 //Project Includes
 #include "corvusoft/restbed/logger.hpp"
@@ -218,7 +219,8 @@ namespace restbed
         
         void SocketImpl::set_timeout( const milliseconds& value )
         {
-            tcp::socket::native_handle_type native_socket;
+            tcp::socket::native_handle_type native_socket(0);
+
 #ifdef BUILD_SSL
             
             if ( m_socket not_eq nullptr )

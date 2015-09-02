@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <cstdlib>
+#include <ciso646>
 #include <restbed>
 #include "miniz_wrapper.h"
 
