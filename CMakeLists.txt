@@ -38,7 +38,7 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_manifest.cmake" )
 
 include_directories( ${INCLUDE_DIR} )
 
-add_library( ${PROJECT_NAME} SHARED ${BUILD_MANIFEST} )
+add_library( ${PROJECT_NAME} ${BUILD_MANIFEST} )
 
 if ( BUILD_SSL )
     target_link_libraries( ${PROJECT_NAME} PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
@@ -69,4 +69,4 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "include" )
 install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
-install( FILES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PROJECT_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "library" )
+install( TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION "library" LIBRARY DESTINATION "library" COMPONENT library )
