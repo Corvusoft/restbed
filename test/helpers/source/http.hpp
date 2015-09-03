@@ -20,6 +20,8 @@
 #include <asio.hpp>
 
 //System Namespaces
+using std::stoi;
+using std::stod;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -57,7 +59,7 @@ namespace restbed
             {
                 Bytes body = { };
                 double version = 1.1;
-                long status_code = 0;
+                int status_code = 0;
                 std::string status_message = "";
                 std::multimap< std::string, std::string > headers { };
             };
@@ -208,7 +210,7 @@ namespace restbed
                 string http_version = status_line[ 0 ].substr( status_line[ 0 ].find_first_of( '/' ) + 1 );
                 response.version = stod( http_version );
                 
-                response.status_code = stod( status_line[ 1 ] );
+                response.status_code = stoi( status_line[ 1 ] );
                 response.status_message = status_line[ 2 ].substr( 0, status_line[ 2 ].length( ) - 1 );
                 
                 asio::read_until( socket, response_buffer, "\r\n\r\n", error );
