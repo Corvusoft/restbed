@@ -96,7 +96,7 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                m_pimpl->failure( 500, runtime_error( message ) );
             }
             else
             {
@@ -112,7 +112,7 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                m_pimpl->failure( 500, runtime_error( message ) );
             }
             
             m_pimpl->socket->close( );
@@ -164,7 +164,7 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                m_pimpl->failure( 500, runtime_error( message ) );
             }
             else
             {
@@ -185,7 +185,7 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                m_pimpl->failure( 500, runtime_error( message ) );
             }
             else
             {
@@ -249,7 +249,7 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                    m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                    m_pimpl->failure( 500, runtime_error( message ) );
                 }
                 else
                 {
@@ -272,7 +272,7 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                m_pimpl->failure( 500, runtime_error( message ) );
             }
             else
             {
@@ -289,7 +289,7 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ), m_pimpl->session );
+                m_pimpl->failure( 500, runtime_error( message ) );
             }
             else
             {

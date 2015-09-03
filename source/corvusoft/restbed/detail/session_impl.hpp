@@ -64,7 +64,7 @@ namespace restbed
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 
-                void failure( const int, const std::exception&, const std::shared_ptr< Session >& session ) const;
+                void failure( const int, const std::exception& ) const;
                 
                 void transmit( const Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
                 

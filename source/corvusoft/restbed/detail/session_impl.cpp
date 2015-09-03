@@ -90,11 +90,11 @@ namespace restbed
             } );
         }
         
-        void SessionImpl::fetch( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+        void SessionImpl::fetch( const shared_ptr< Session >& sesh, const function< void ( const shared_ptr< Session >& ) >& callback )
         {
-            if ( router == nullptr and this->session == nullptr )
+            if ( router == nullptr and session == nullptr )
             {
-                this->session = session;
+                session = sesh;
                 router = callback;
             }
             
@@ -109,8 +109,7 @@ namespace restbed
             const auto data = Bytes( data_ptr, data_ptr + length );
             buffer->consume( length );
             
-            const auto request = session->m_pimpl->request;
-            auto& body = request->m_pimpl->body;
+            auto& body = session->m_pimpl->request->m_pimpl->body;
             
             if ( body.empty( ) )
             {
@@ -132,14 +131,14 @@ namespace restbed
             }
         }
         
-        void SessionImpl::failure( const int status, const exception& error, const shared_ptr< Session >& session ) const
+        void SessionImpl::failure( const int status, const exception& error ) const
         {
-            const auto resource = session->get_resource( );
-            const auto error_handler =  ( resource not_eq nullptr and resource->m_pimpl->error_handler not_eq nullptr ) ? resource->m_pimpl->error_handler : this->error_handler;
+            const auto current_resource = session->get_resource( );
+            const auto handler =  ( current_resource not_eq nullptr and current_resource->m_pimpl->error_handler not_eq nullptr ) ? current_resource->m_pimpl->error_handler : this->error_handler;
             
-            if ( error_handler not_eq nullptr )
+            if ( handler not_eq nullptr )
             {
-                error_handler( status, error, session );
+                handler( status, error, session );
             }
             else
             {
@@ -152,22 +151,21 @@ namespace restbed
         
         void SessionImpl::transmit( const Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
         {
-            auto headers = settings->get_default_headers( );
+            auto hdrs = settings->get_default_headers( );
             
             if ( resource not_eq nullptr )
             {
-                const auto hdrs = resource->m_pimpl->default_headers;
-                headers.insert( hdrs.begin( ), hdrs.end( ) );
+                const auto resource_headers = resource->m_pimpl->default_headers;
+                hdrs.insert( resource_headers.begin( ), resource_headers.end( ) );
             }
             
-            auto hdrs = session->get_headers( );
-            headers.insert( hdrs.begin( ), hdrs.end( ) );
+            hdrs.insert( headers.begin( ), headers.end( ) );
             
-            hdrs = response.get_headers( );
-            headers.insert( hdrs.begin( ), hdrs.end( ) );
+            auto response_headers = response.get_headers( );
+            hdrs.insert( response_headers.begin( ), response_headers.end( ) );
             
             Response payload;
-            payload.set_headers( headers );
+            payload.set_headers( hdrs );
             payload.set_body( response.get_body( ) );
             payload.set_version( response.get_version( ) );
             payload.set_protocol( response.get_protocol( ) );
@@ -239,33 +237,31 @@ namespace restbed
             const auto items = parse_request_line( stream );
             const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
             
-            auto request = make_shared< Request >( );
+            session->m_pimpl->request = make_shared< Request >( );
             request->m_pimpl->path = Uri::decode( uri.get_path( ) );
             request->m_pimpl->method = items.at( "method" );
             request->m_pimpl->version = stod( items.at( "version" ) );
             request->m_pimpl->headers = parse_request_headers( stream );
             request->m_pimpl->query_parameters = uri.get_query_parameters( );
             
-            session->m_pimpl->request = request;
-            
             callback( session );
         }
         catch ( const int status_code )
         {
             runtime_error re( settings->get_status_message( status_code ) );
-            failure( status_code, re, session );
+            failure( status_code, re );
         }
         catch ( const regex_error& re )
         {
-            failure( 500, re, session );
+            failure( 500, re );
         }
         catch ( const runtime_error& re )
         {
-            failure( 400, re, session );
+            failure( 400, re );
         }
         catch ( const exception& ex )
         {
-            failure( 500, ex, session );
+            failure( 500, ex );
         }
         catch ( ... )
         {
@@ -279,18 +275,18 @@ namespace restbed
                 }
                 catch ( const exception& ex )
                 {
-                    failure( 500, ex, session );
+                    failure( 500, ex );
                 }
                 catch ( ... )
                 {
                     runtime_error re( "Internal Server Error" );
-                    failure( 500, re, session );
+                    failure( 500, re );
                 }
             }
             else
             {
                 runtime_error re( "Internal Server Error" );
-                failure( 500, re, session );
+                failure( 500, re );
             }
         }
     }
