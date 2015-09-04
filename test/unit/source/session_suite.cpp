@@ -82,15 +82,20 @@ TEST_CASE( "validate session context functionality", "[session]" )
     
     session.erase( "Connection" );
     REQUIRE( not session.has( "Connection" ) );
-    REQUIRE( session.get( "Connection", string( "keep-alive" ) == "keep-alive" ) );
-    REQUIRE( session.keys( ) == set< string >( ) );
+
+	const string keep_alive = session.get( "Connection", string( "keep-alive" ) );
+    REQUIRE( keep_alive == "keep-alive" );
+    
+	REQUIRE( session.keys( ) == set< string >( ) );
     
     session.set( "Connection", string( "close" ) );
     session.set( "Connection", string( "keep-alive" ) );
-    const string value = session.get( "Connection" );
-    REQUIRE( value == "keep-alive" );
-    
-    REQUIRE_THROWS_AS( int type = session.get( "Connection" ), bad_cast );
+
+    const string header = session.get( "Connection" );
+    REQUIRE( header == "keep-alive" );
+
+	int type = 0;
+    REQUIRE_THROWS_AS( type = session.get( "Connection" ), bad_cast );
     
     session.erase( );
     REQUIRE( session.keys( ) == set< string >( ) );

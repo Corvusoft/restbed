@@ -11,6 +11,7 @@
 #if defined(WIN32)
 #include <ciso646>
 #include <Winsock2.h>
+#pragma comment( lib, "Ws2_32.lib" )
 #else
 #include <netdb.h>
 #include <unistd.h>

@@ -62,8 +62,8 @@ TEST_CASE( "validate getter default value", "[request]" )
     SECTION( "unsigned integer" )
     {
         unsigned int value;
-        request.get_header( "Var", value, -6 );
-        REQUIRE( value == -6 );
+        request.get_header( "Var", value, 6 );
+        REQUIRE( value == 6 );
     }
     
     SECTION( "long" )
@@ -76,7 +76,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     SECTION( "unsigned long" )
     {
         unsigned long value;
-        unsigned long default_value = -33;
+        unsigned long default_value = 33;
         request.get_header( "Var", value, default_value );
         REQUIRE( value == default_value );
     }
@@ -97,6 +97,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     
     SECTION( "string" )
     {
-        REQUIRE( request.get_header( "Var", "open" ) == "open" );
+		string header = request.get_header( "Var", string( "open" ) );
+        REQUIRE( header == "open" );
     }
 }

@@ -21,8 +21,8 @@ using std::mt19937;
 using std::function;
 using std::shared_ptr;
 using std::make_shared;
-using std::chrono::system_clock;
 using std::uniform_int_distribution;
+using std::chrono::high_resolution_clock;
 
 //Project Namespaces
 using restbed::detail::SessionManagerImpl;
@@ -60,7 +60,7 @@ namespace restbed
         
         static const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         static uniform_int_distribution< > selector( 0, charset.size( ) - 1 );
-        static mt19937 generator( system_clock::now( ).time_since_epoch( ).count( ) );
+        static mt19937 generator( high_resolution_clock::now( ).time_since_epoch( ).count( ) );
         
         string key = "";
         
