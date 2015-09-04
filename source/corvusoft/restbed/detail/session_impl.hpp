@@ -72,7 +72,7 @@ namespace restbed
                 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
                 
-                void parse_request( const asio::error_code& error, const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
+                void parse_request( const asio::error_code& error, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
                 
                 //Getters
                 

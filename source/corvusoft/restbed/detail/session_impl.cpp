@@ -100,7 +100,7 @@ namespace restbed
             
             buffer = make_shared< asio::streambuf >( );
             
-            socket->read( buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
+            socket->read( buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, callback ) );
         }
         
         Bytes SessionImpl::fetch_body( const size_t length ) const
@@ -224,7 +224,7 @@ namespace restbed
             return headers;
         }
         
-        void SessionImpl::parse_request( const asio::error_code& error, const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) const
+        void SessionImpl::parse_request( const asio::error_code& error, const function< void ( const shared_ptr< Session >& ) >& callback ) const
         
         try
         {
