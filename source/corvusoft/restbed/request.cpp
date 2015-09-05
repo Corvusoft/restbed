@@ -219,7 +219,7 @@ namespace restbed
     
     string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        const auto header = get_header( name, string("") );
+        const string header = get_header( name );
         return ( transform == nullptr ) ? header : transform( header );
     }
     

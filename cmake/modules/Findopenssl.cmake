@@ -1,8 +1,8 @@
 # Copyright (c) 2013, 2014, 2015 Corvusoft
 
-find_library( ssl_LIBRARY ssl HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
-find_library( crypto_LIBRARY crypto HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
-find_path( ssl_INCLUDE openssl/ssl.h HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_library( ssl_LIBRARY ssl ssleay32 HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl/out32dll" "${CMAKE_SOURCE_DIR}/dependency/openssl" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
+find_library( crypto_LIBRARY crypto libeay32 HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl/out32dll" "${CMAKE_SOURCE_DIR}/dependency/openssl" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
+find_path( ssl_INCLUDE openssl/ssl.h HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl/inc32" "${CMAKE_SOURCE_DIR}/dependency/openssl/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 
 if ( ssl_INCLUDE AND ssl_LIBRARY AND crypto_LIBRARY )
     set( OPENSSL_FOUND TRUE )

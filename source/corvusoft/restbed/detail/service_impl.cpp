@@ -238,7 +238,7 @@ namespace restbed
                 {
                     if ( error )
                     {
-                        log( Logger::Level::ERROR, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
+                        log( Logger::Level::SECURITY, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
                         return;
                     }
                     

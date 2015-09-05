@@ -22,7 +22,7 @@ void deflate_method_handler( const shared_ptr< Session >& session )
 {
     const auto request = session->get_request( );
     
-    size_t content_length = 0;
+    int content_length = 0;
     request->get_header( "Content-Length", content_length );
     
     session->fetch( content_length, [ request ]( const shared_ptr< Session >& session, const Bytes & body )
