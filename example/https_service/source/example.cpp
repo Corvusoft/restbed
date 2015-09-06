@@ -6,7 +6,7 @@
  *    openssl genrsa -out server.key 1024
  *    openssl req -new -key server.key -out server.csr
  *    openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
- *    openssl dhparam -out dh512.pem 512
+ *    openssl dhparam -out dh768.pem 768
  *
  * Server Usage:
  *    sudo ./distribution/example/https_service
@@ -37,7 +37,7 @@ int main( const int, const char** )
     ssl_settings->set_http_disabled( true );
     ssl_settings->set_private_key( Uri( "file:///tmp/server.key" ) );
     ssl_settings->set_certificate( Uri( "file:///tmp/server.crt" ) );
-    ssl_settings->set_temporary_diffie_hellman( Uri( "file:///tmp/dh512.pem" ) );
+    ssl_settings->set_temporary_diffie_hellman( Uri( "file:///tmp/dh768.pem" ) );
     
     auto settings = make_shared< Settings >( );
     settings->set_ssl_settings( ssl_settings );
