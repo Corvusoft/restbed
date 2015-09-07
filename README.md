@@ -107,7 +107,9 @@ make [-j CPU_CORES+1] install
 make test
 ```
 
-You will now find all required components installed in the distribution folder.  Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/) tagged #restbed.
+You will now find all required components installed in the distribution folder.
+
+Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/) tagged #restbed.
 
 For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
 
@@ -134,8 +136,8 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     3.5       |             Session Management                  |  in-development |
 |     4.0       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |
+|     4.0       |         Client-side SSL certificates            |     pending     |
 |     5.0       |             HTTP 2.0 compliance                 |     pending     |
-|     x.x       |         Client-side SSL certificates            |     pending     |
 
 ## Contact
 
