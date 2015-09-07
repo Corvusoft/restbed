@@ -69,16 +69,30 @@ TEST_CASE( "validate getter default value", "[request]" )
     SECTION( "long" )
     {
         long value;
-        request.get_header( "Var", value, 6 );
-        REQUIRE( value == 6 );
+        request.get_header( "Var", value, 54 );
+        REQUIRE( value == 54 );
+    }
+
+    SECTION( "long long" )
+    {
+        long long value;
+        request.get_header( "Var", value, 66 );
+        REQUIRE( value == 66 );
     }
     
     SECTION( "unsigned long" )
     {
         unsigned long value;
-        unsigned long default_value = 33;
+        unsigned long default_value = -33;
         request.get_header( "Var", value, default_value );
         REQUIRE( value == default_value );
+    }
+
+    SECTION( "unsigned long long" )
+    {
+        long long value;
+        request.get_header( "Var", value, -6 );
+        REQUIRE( value == -6 );
     }
     
     SECTION( "float" )

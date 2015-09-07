@@ -161,6 +161,18 @@ namespace restbed
         }
     }
     
+    void Request::get_header( const string& name, long long& value, const long long default_value ) const
+    {
+        try
+        {
+            value = stoll( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
     void Request::get_header( const string& name, unsigned int& value, const unsigned int default_value ) const
     {
         try
@@ -177,7 +189,19 @@ namespace restbed
     {
         try
         {
-            value = stoul( get_header( name ) );
+            value = stoull( get_header( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
+    void Request::get_header( const string& name, unsigned long long& value, const unsigned long long default_value ) const
+    {
+        try
+        {
+            value = stoull( get_header( name ) );
         }
         catch ( const invalid_argument& )
         {
@@ -271,6 +295,18 @@ namespace restbed
         }
     }
     
+    void Request::get_query_parameter( const string& name, long long& value, const long long default_value ) const
+    {
+        try
+        {
+            value = stoll( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
     void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value ) const
     {
         try
@@ -295,6 +331,18 @@ namespace restbed
         }
     }
     
+    void Request::get_query_parameter( const string& name, unsigned long long& value, const unsigned long long default_value ) const
+    {
+        try
+        {
+            value = stoull( get_query_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
     string Request::get_query_parameter( const string& name, const bool ignore_case ) const
     {
         return get_query_parameter( name, string(""), ignore_case );
@@ -397,6 +445,18 @@ namespace restbed
             value = default_value;
         }
     }
+
+    void Request::get_path_parameter( const string& name, long long& value, const long long default_value ) const
+    {
+        try
+        {
+            value = stoll( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
     
     void Request::get_path_parameter( const string& name, unsigned int& value, const unsigned int default_value ) const
     {
@@ -422,6 +482,18 @@ namespace restbed
         }
     }
     
+    void Request::get_path_parameter( const string& name, unsigned long long& value, const unsigned long long default_value ) const
+    {
+        try
+        {
+            value = stoull( get_path_parameter( name ) );
+        }
+        catch ( const invalid_argument& )
+        {
+            value = default_value;
+        }
+    }
+
     string Request::get_path_parameter( const string& name, const bool ignore_case ) const
     {
         return get_path_parameter( name, string(""), ignore_case );

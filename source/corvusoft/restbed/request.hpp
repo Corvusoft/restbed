@@ -71,11 +71,15 @@ namespace restbed
             void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
+
+            void get_header( const std::string& name, long long& value, const long long default_value = 0 ) const;
             
             void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
             
             void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
             
+            void get_header( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
             std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
@@ -89,10 +93,14 @@ namespace restbed
             void get_query_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
+
+            void get_query_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
+
+            void get_query_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
             
             std::string get_query_parameter( const std::string& name, const bool ignore_case = true ) const;
             
@@ -109,10 +117,14 @@ namespace restbed
             void get_path_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
+
+            void get_path_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
+
+            void get_path_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
             
             std::string get_path_parameter( const std::string& name, const bool ignore_case = true ) const;
             

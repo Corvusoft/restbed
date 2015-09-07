@@ -51,7 +51,7 @@ class ContentLengthRule : public Rule
             }
             else
             {
-                int length = 0;
+                size_t length = 0;
                 request->get_header( "Content-Length", length );
                 
                 session->fetch( length, [ length, callback ]( const shared_ptr< Session >& session, const Bytes & body )
