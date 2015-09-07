@@ -189,7 +189,7 @@ namespace restbed
     {
         try
         {
-            value = stoull( get_header( name ) );
+            value = stoul( get_header( name ) );
         }
         catch ( const invalid_argument& )
         {
@@ -345,7 +345,7 @@ namespace restbed
 
     string Request::get_query_parameter( const string& name, const bool ignore_case ) const
     {
-        return get_query_parameter( name, string(""), ignore_case );
+        return get_query_parameter( name, string( "" ), ignore_case );
     }
     
     string Request::get_query_parameter( const string& name, const string& default_value, bool ignore_case ) const
@@ -367,7 +367,7 @@ namespace restbed
     
     string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
     {
-        const auto parameter = get_query_parameter( name, string(""), ignore_case );
+        const auto parameter = get_query_parameter( name, string( "" ), ignore_case );
         return ( transform == nullptr ) ? parameter : transform( parameter );
     }
     
@@ -496,7 +496,7 @@ namespace restbed
 
     string Request::get_path_parameter( const string& name, const bool ignore_case ) const
     {
-        return get_path_parameter( name, string(""), ignore_case );
+        return get_path_parameter( name, string( "" ), ignore_case );
     }
     
     string Request::get_path_parameter( const string& name, const string& default_value, bool ignore_case ) const
@@ -518,7 +518,7 @@ namespace restbed
     
     string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
     {
-        const auto parameter = get_path_parameter( name, string(""), ignore_case );
+        const auto parameter = get_path_parameter( name, string( "" ), ignore_case );
         return ( transform == nullptr ) ? parameter : transform( parameter );
     }
     
