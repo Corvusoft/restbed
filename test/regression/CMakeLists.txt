@@ -11,7 +11,7 @@ set( SOURCE_DIR "source" )
 set( HELPERS_DIR "${CMAKE_SOURCE_DIR}/test/helpers/source" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
 
-include_directories( ${catch_INCLUDE} ${asio_INCLUDE} ${HELPERS_DIR} )
+include_directories( SYSTEM ${catch_INCLUDE} ${asio_INCLUDE} ${HELPERS_DIR} )
 
 #
 # Build

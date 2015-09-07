@@ -10,7 +10,7 @@ cmake_minimum_required( VERSION 2.8.10 )
 set( SOURCE_DIR "source" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
 
-include_directories( ${catch_INCLUDE} )
+include_directories( SYSTEM ${catch_INCLUDE} )
 
 #
 # Build
