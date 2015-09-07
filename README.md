@@ -83,19 +83,17 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 
 &copy; 2015 Corvusoft Limited, United Kingdom. All rights reserved. 
 
-The Restbed Framework is dual licensed; See [LICENSE](LICENSE) for full details.
+The Restbed framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
 ## Support
 
-Please contact sales@corvusoft.co.uk, for support options including bespoke software development, design consultation, training, mentoring and code review.
+Please contact sales@corvusoft.co.uk, for support and licensing options including bespoke software development, design consultation, training, mentoring and code review.
 
 | Production Install Base   |        Tickets      |    Anual Fee Per Install (excl. VAT)    |
 | :-----------------------: |:-------------------:|:---------------------------------------:| 
-|            1-3            |          3          |                  &pound;280             | 
-|            4-10           |          3          |                  &pound;360             |
-|            > 10           |          3+         |                 AABUS                   |                
-
-Purchase by contacting sales@corvusoft.co.uk for further information.
+|            1-3            |          2          |                  &pound;280             | 
+|            4-10           |          5          |                  &pound;360             |
+|            > 10           |          >          |                 AABUS                   |                
 
 ## Build
 
@@ -111,13 +109,12 @@ make test
 
 You will now find all required components installed in the distribution folder.  Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/) tagged #restbed.
 
+For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
+
 ## Minimum Requirements
 
 |     Resource   |                   Requirement                   |
 |:--------------:|:-----------------------------------------------:| 
-|       CPU      |                    120mhz                       |
-|       RAM      |                     3mb                         |
-|       Disk     |                     1mb                         |
 |     Compiler   |          C++11 compliant or above               |
 |        OS      | BSD, Linux, Mac OSX, Solaris, Windows, Raspbian |
 
@@ -147,6 +144,5 @@ You will now find all required components installed in the distribution folder. 
 | [Glitter](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)     | Online Development/Support Chat Forum                      |
 | [Twitter](http://www.twitter.com/corvusoft)                  | Tweet us your questions & feature requests.   |
 | [Google+](https://plus.google.com/+CorvusoftCoUkSolutions)   | Join the community social circle.             |
-| [Pledgie](https://pledgie.com/campaigns/29788)               | Lend your support via our Pledgie campaign.   |
 | support@corvusoft.co.uk                                      | Support related queries.                      |
 | sales@corvusoft.co.uk                                        | Sale related queries.                         |
