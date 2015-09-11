@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <mutex>
 #include <memory>
 #include <string>
 
@@ -32,6 +33,8 @@ namespace restbed
         
         struct SessionManagerImpl
         {
+            std::mutex session_mutex;
+
             std::map< std::string, std::shared_ptr< Session > > sessions { };
         };
     }

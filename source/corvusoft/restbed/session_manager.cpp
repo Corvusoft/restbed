@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <mutex>
 #include <chrono>
 #include <random>
 #include <ciso646>
@@ -16,9 +17,11 @@
 
 //System Namespaces
 using std::map;
+using std::mutex;
 using std::string;
 using std::mt19937;
 using std::function;
+using std::lock_guard;
 using std::shared_ptr;
 using std::make_shared;
 using std::uniform_int_distribution;
@@ -69,6 +72,7 @@ namespace restbed
             key += ( charset.at( selector( generator ) ) );
         }
         
+        lock_guard< mutex > lock( m_pimpl->session_mutex );
         m_pimpl->sessions[ key ] = make_shared< Session >( key );
         callback( m_pimpl->sessions.at( key ) );
     }
@@ -77,6 +81,7 @@ namespace restbed
     {
         if ( session not_eq nullptr )
         {
+            lock_guard< mutex > lock( m_pimpl->session_mutex );
             m_pimpl->sessions.erase( session->get_id( ) );
             session.reset( );
         }
