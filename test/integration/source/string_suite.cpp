@@ -93,6 +93,16 @@ TEST_CASE( "case insensitive replace with empty arguments", "[string]" )
     REQUIRE( String::replace( "", "", "", String::CASE_INSENSITIVE ) == "" );
 }
 
+TEST_CASE( "to_string", "[string]" )
+{
+    REQUIRE( String::to_string( Bytes( { 'a', 'b' } ) ) == "ab" );
+}
+
+TEST_CASE( "empty to_string", "[string]" )
+{
+    REQUIRE( String::to_string( Bytes( { } ) ) == "" );
+}
+
 TEST_CASE( "to_bytes", "[string]" )
 {
     REQUIRE( String::to_bytes( "ab" ) == Bytes( { 'a', 'b' } ) );
