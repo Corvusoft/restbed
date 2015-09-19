@@ -31,7 +31,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void not_found_handler( const shared_ptr< Session >& session )
+void not_found_handler( const shared_ptr< Session > session )
 {
     session->close( 0, "I see nothing!", { { "Content-Length", "14" } } );
 }

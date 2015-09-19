@@ -31,7 +31,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void resource_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+void resource_handler( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
 {
     auto authorisation = session->get_request( )->get_header( "Authorization" );
     
@@ -45,7 +45,7 @@ void resource_handler( const shared_ptr< Session >& session, const function< voi
     }
 }
 
-void service_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+void service_handler( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
 {
     auto authorisation = session->get_request( )->get_header( "Authorization" );
     
@@ -59,7 +59,7 @@ void service_handler( const shared_ptr< Session >& session, const function< void
     }
 }
 
-void get_method_handler( const shared_ptr< Session >& session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     session->close( OK, "Password Protected Hello, World!", { { "Content-Length", "32" } } );
 }

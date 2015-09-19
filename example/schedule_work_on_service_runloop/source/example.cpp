@@ -28,7 +28,7 @@ void single_run_task( void )
     fprintf( stderr, "single run task executed.\n" );
 }
 
-void read( const shared_ptr< Session >& session )
+void read( const shared_ptr< Session > session )
 {
     session->close( 200 );
 }

@@ -38,14 +38,14 @@ class TestRule : public Rule
             return;
         }
         
-        bool condition( const shared_ptr< Session >& session ) final override
+        bool condition( const shared_ptr< Session > session ) final override
         {
             const auto request = session->get_request( );
             REQUIRE( "1a230096-928d-4958-90d1-a681bfff22b4" == request->get_path_parameter( "key" ) );
             return true;
         }
         
-        void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
+        void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
         {
             const auto request = session->get_request( );
             REQUIRE( "1a230096-928d-4958-90d1-a681bfff22b4" == request->get_path_parameter( "key" ) );
@@ -53,7 +53,7 @@ class TestRule : public Rule
         }
 };
 
-void get_handler( const shared_ptr< Session >& session )
+void get_handler( const shared_ptr< Session > session )
 {
     session->close( 200 );
 }

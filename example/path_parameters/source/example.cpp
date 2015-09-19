@@ -16,7 +16,7 @@
 using namespace std;
 using namespace restbed;
 
-void get_method_handler( const shared_ptr< Session >& session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     const auto& request = session->get_request( );
     

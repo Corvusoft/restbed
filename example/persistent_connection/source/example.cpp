@@ -16,12 +16,12 @@
 using namespace std;
 using namespace restbed;
 
-void get_intermittent_method_handler( const shared_ptr< Session >& session )
+void get_intermittent_method_handler( const shared_ptr< Session > session )
 {
     session->close( OK, "intermittent resource request", { { "Content-Length", "29" }, { "Connection", "close" } } );
 }
 
-void get_persistent_method_handler( const shared_ptr< Session >& session )
+void get_persistent_method_handler( const shared_ptr< Session > session )
 {
     session->yield( OK, "persistent resource request", { { "Content-Length", "27" }, { "Connection", "keep-alive" } } );
 }

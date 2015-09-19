@@ -82,28 +82,28 @@ namespace restbed
         m_pimpl->default_headers = values;
     }
     
-    void Resource::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    void Resource::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
         m_pimpl->failed_filter_validation_handler = value;
     }
     
-    void Resource::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session >& ) >& value )
+    void Resource::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session > ) >& value )
     {
         m_pimpl->error_handler = value;
     }
     
-    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+    void Resource::set_authentication_handler( const function< void ( const shared_ptr< Session >, const function< void ( const shared_ptr< Session > ) >& ) >& value )
     {
         m_pimpl->authentication_handler = value;
     }
     
-    void Resource::set_method_handler( const string& method, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Resource::set_method_handler( const string& method, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         static const multimap< string, string > empty { };
         set_method_handler( method, empty, callback );
     }
     
-    void Resource::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Resource::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         if ( method.empty( ) )
         {

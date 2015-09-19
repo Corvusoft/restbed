@@ -15,7 +15,7 @@
 using namespace std;
 using namespace restbed;
 
-void nop_method_handler( const shared_ptr< Session >& session )
+void nop_method_handler( const shared_ptr< Session > session )
 {
     session->close( 666 );
 }

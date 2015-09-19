@@ -198,23 +198,24 @@ namespace restbed
                 
                 asio::write( socket, request_buffer );
                 
-                Response response;
                 asio::streambuf response_buffer;
-                asio::read_until( socket, response_buffer, "\r\n" );
+                asio::read_until( socket, response_buffer, "\r\n", error );
+
                 istream response_stream( &response_buffer );
-                
+
                 string status;
                 getline( response_stream, status );
                 auto status_line = String::split( status, ' ' );
                 
                 string http_version = status_line[ 0 ].substr( status_line[ 0 ].find_first_of( '/' ) + 1 );
+                Response response;
                 response.version = stod( http_version );
-                
+
                 response.status_code = stoi( status_line[ 1 ] );
                 response.status_message = status_line[ 2 ].substr( 0, status_line[ 2 ].length( ) - 1 );
                 
                 asio::read_until( socket, response_buffer, "\r\n\r\n", error );
-                
+
                 string header = "";
                 
                 while ( getline( response_stream, header ) and header not_eq "\r" )

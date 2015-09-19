@@ -18,14 +18,14 @@
 using namespace std;
 using namespace restbed;
 
-void deflate_method_handler( const shared_ptr< Session >& session )
+void deflate_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
     
     int content_length = 0;
     request->get_header( "Content-Length", content_length );
     
-    session->fetch( content_length, [ request ]( const shared_ptr< Session >& session, const Bytes & body )
+    session->fetch( content_length, [ request ]( const shared_ptr< Session > session, const Bytes & body )
     {
         Bytes result = body;
         

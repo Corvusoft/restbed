@@ -36,12 +36,12 @@ class ContentLengthRule : public Rule
             return;
         }
         
-        bool condition( const shared_ptr< Session >& session ) final override
+        bool condition( const shared_ptr< Session > session ) final override
         {
             return session->get_request( )->get_method( String::uppercase ) == "POST";
         }
         
-        void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
+        void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
         {
             const auto request = session->get_request( );
             
@@ -54,7 +54,7 @@ class ContentLengthRule : public Rule
                 size_t length = 0;
                 request->get_header( "Content-Length", length );
                 
-                session->fetch( length, [ length, callback ]( const shared_ptr< Session >& session, const Bytes & body )
+                session->fetch( length, [ length, callback ]( const shared_ptr< Session > session, const Bytes & body )
                 {
                     if ( length not_eq body.size( ) )
                     {

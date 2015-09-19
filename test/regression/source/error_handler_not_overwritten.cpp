@@ -26,12 +26,12 @@ using namespace restbed;
 
 //External Namespaces
 
-void faulty_method_handler( const shared_ptr< Session >& )
+void faulty_method_handler( const shared_ptr< Session > )
 {
     throw 503;
 }
 
-void error_handler( const int, const exception&, const std::shared_ptr< Session >& session )
+void error_handler( const int, const exception&, const std::shared_ptr< Session > session )
 {
     session->close( 444 );
 }

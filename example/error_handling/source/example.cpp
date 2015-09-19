@@ -17,12 +17,12 @@
 using namespace std;
 using namespace restbed;
 
-void faulty_method_handler( const shared_ptr< Session >& )
+void faulty_method_handler( const shared_ptr< Session > )
 {
     throw SERVICE_UNAVAILABLE;
 }
 
-void resource_error_handler( const int, const exception&, const shared_ptr< Session >& session )
+void resource_error_handler( const int, const exception&, const shared_ptr< Session > session )
 {
     if ( session->is_open( ) )
     {
@@ -35,7 +35,7 @@ void resource_error_handler( const int, const exception&, const shared_ptr< Sess
     }
 }
 
-void service_error_handler( const int, const exception&, const shared_ptr< Session >& session )
+void service_error_handler( const int, const exception&, const shared_ptr< Session > session )
 {
     if ( session->is_open( ) )
     {

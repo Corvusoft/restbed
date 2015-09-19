@@ -30,12 +30,12 @@ using namespace restbed;
 
 //External Namespaces
 
-void xml_method_handler( const shared_ptr< Session >& session )
+void xml_method_handler( const shared_ptr< Session > session )
 {
     session->close( 1 );
 }
 
-void json_method_handler( const shared_ptr< Session >& session )
+void json_method_handler( const shared_ptr< Session > session )
 {
     session->close( 2 );
 }

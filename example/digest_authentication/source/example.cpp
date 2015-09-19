@@ -28,8 +28,8 @@ string build_authenticate_header( void )
     return header;
 }
 
-void authentication_handler( const shared_ptr< Session >& session,
-                             const function< void ( const shared_ptr< Session >& ) >& callback )
+void authentication_handler( const shared_ptr< Session > session,
+                             const function< void ( const shared_ptr< Session > ) >& callback )
 {
     const auto request = session->get_request( );
     
@@ -47,7 +47,7 @@ void authentication_handler( const shared_ptr< Session >& session,
     }
 }
 
-void get_method_handler( const shared_ptr< Session >& session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     return session->close( OK, "Password Protected Hello, World!", { { "Content-Length", "32" } } );
 }

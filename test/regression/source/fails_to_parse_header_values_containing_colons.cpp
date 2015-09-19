@@ -29,7 +29,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void get_handler( const shared_ptr< Session >& session )
+void get_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
     CHECK( "Mozilla: 4.0" == request->get_header( "User-Agent" ) );

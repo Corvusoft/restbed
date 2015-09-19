@@ -15,14 +15,14 @@
 using namespace std;
 using namespace restbed;
 
-void get_method_handler( const shared_ptr< Session >& session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
     string styled = request->get_query_parameter( "styled", "false" );
     session->set( "styled", styled );
     
     //pause, for example backend processing...
-    session->sleep_for( chrono::milliseconds( 500 ), [ ]( const shared_ptr< Session >& session )
+    session->sleep_for( chrono::milliseconds( 500 ), [ ]( const shared_ptr< Session > session )
     {
         string value = session->get( "styled" );
         session->close( 200, "styled response body == " + value );

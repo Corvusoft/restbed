@@ -20,12 +20,12 @@ class HostRule : public Rule
             return;
         }
         
-        bool condition( const shared_ptr< Session >& ) final override
+        bool condition( const shared_ptr< Session > ) final override
         {
             return true;
         }
         
-        void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
+        void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
         {
             const auto request = session->get_request( );
             

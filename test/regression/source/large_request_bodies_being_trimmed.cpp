@@ -38,9 +38,9 @@ const char* body = R"(
    ]
  })";
 
-void post_handler( const shared_ptr< Session >& session )
+void post_handler( const shared_ptr< Session > session )
 {
-    session->fetch( 492, [ ]( const shared_ptr< Session >& session, const Bytes& )
+    session->fetch( 492, [ ]( const shared_ptr< Session > session, const Bytes& )
     {
         auto expectation = Bytes( body, body + 492 );
         const auto request = session->get_request( );
@@ -78,7 +78,7 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
             auto response = Http::post( request );
             
             REQUIRE( 201 == response.status_code );
-            
+
             service.stop( );
         } );
     } );

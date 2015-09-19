@@ -17,7 +17,7 @@
 using namespace std;
 using namespace restbed;
 
-void get_method_handler( const shared_ptr< Session >& session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     stringstream id;
     id << ::this_thread::get_id( );

@@ -18,7 +18,7 @@
 using namespace std;
 using namespace restbed;
 
-void service_authentication_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+void service_authentication_handler( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
 {
     auto authorisation = session->get_request( )->get_header( "Authorization" );
     
@@ -32,7 +32,7 @@ void service_authentication_handler( const shared_ptr< Session >& session, const
     }
 }
 
-void ben_authentication_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+void ben_authentication_handler( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
 {
     auto authorisation = session->get_request( )->get_header( "Authorization" );
     
@@ -46,7 +46,7 @@ void ben_authentication_handler( const shared_ptr< Session >& session, const fun
     }
 }
 
-void laura_authentication_handler( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback )
+void laura_authentication_handler( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
 {
     auto authorisation = session->get_request( )->get_header( "Authorization" );
     
@@ -60,12 +60,12 @@ void laura_authentication_handler( const shared_ptr< Session >& session, const f
     }
 }
 
-void get_ben_method_handler( const shared_ptr< Session >& session )
+void get_ben_method_handler( const shared_ptr< Session > session )
 {
     session->close( OK, "Hi, Ben.", { { "Content-Length", "8" } } );
 }
 
-void get_laura_method_handler( const shared_ptr< Session >& session )
+void get_laura_method_handler( const shared_ptr< Session > session )
 {
     session->close( OK, "Hi, Laura.", { { "Content-Length", "10" } } );
 }

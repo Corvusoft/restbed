@@ -39,9 +39,9 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual bool condition( const std::shared_ptr< Session >& session );
+            virtual bool condition( const std::shared_ptr< Session > session );
             
-            virtual void action( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) = 0;
+            virtual void action( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback ) = 0;
             
             //Getters
             int get_priority( void ) const;

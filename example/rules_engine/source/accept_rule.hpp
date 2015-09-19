@@ -20,12 +20,12 @@ class AcceptRule : public Rule
             return;
         }
         
-        bool condition( const shared_ptr< Session >& session ) final override
+        bool condition( const shared_ptr< Session > session ) final override
         {
             return session->get_request( )->has_header( "Accept" );
         }
         
-        void action( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session >& ) >& callback ) final override
+        void action( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback ) final override
         {
             const auto request = session->get_request( );
             const auto type = request->get_header( "Accept", String::lowercase );

@@ -37,11 +37,6 @@ namespace restbed
 {
     Session::Session( const string& id ) : m_pimpl( new SessionImpl )
     {
-        if ( id.empty( ) )
-        {
-            throw invalid_argument( "Session must have a unique identifier." );
-        }
-        
         m_pimpl->id = id;
     }
     
@@ -91,12 +86,14 @@ namespace restbed
     
     void Session::close( const Bytes& body )
     {
-        m_pimpl->socket->write( body, [ this ]( const asio::error_code & error, size_t )
+        auto session = shared_from_this( );
+
+        m_pimpl->socket->write( body, [ this, session ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
                 const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ) );
+                m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             else
             {
@@ -107,22 +104,23 @@ namespace restbed
     
     void Session::close( const Response& response )
     {
-        m_pimpl->transmit( response, [ this ]( const asio::error_code & error, size_t )
+        auto session = shared_from_this( );
+
+        m_pimpl->transmit( response, [ this, session ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
                 const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ) );
+                m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             
             m_pimpl->socket->close( );
-            m_pimpl->session_manager->purge( m_pimpl->session, nullptr );
         } );
     }
     
     void Session::close( const string& body )
     {
-        close( Bytes( body.begin( ), body.end( ) ) );
+        close( String::to_bytes( body ) );
     }
     
     void Session::close( const int status, const Bytes& body )
@@ -157,73 +155,77 @@ namespace restbed
         close( response );
     }
     
-    void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        m_pimpl->socket->write( body, [ this, callback ]( const asio::error_code & error, size_t )
+        auto session = shared_from_this( );
+
+        m_pimpl->socket->write( body, [ this, session, callback ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
                 const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ) );
+                m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             else
             {
-                callback( m_pimpl->session );
+                callback( session );
             }
         } );
     }
     
-    void Session::yield( const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const string& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         yield( String::to_bytes( body ), callback );
     }
     
-    void Session::yield( const Response& response, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const Response& response, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        m_pimpl->transmit( response, [ this, callback ]( const asio::error_code & error, size_t )
+        auto session = shared_from_this( );
+
+        m_pimpl->transmit( response, [ this, session, callback ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
                 const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ) );
+                m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             else
             {
                 if ( callback == nullptr )
                 {
-                    m_pimpl->fetch( m_pimpl->session, m_pimpl->router );
+                    m_pimpl->fetch( session, m_pimpl->router );
                 }
                 else
                 {
-                    callback( m_pimpl->session );
+                    callback( session );
                 }
             }
         } );
     }
     
-    void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         static multimap< string, string > empty;
         yield( status, body, empty, callback );
     }
     
-    void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         static multimap< string, string > empty;
         yield( status, body, empty, callback );
     }
     
-    void Session::yield( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         yield( status, "", headers, callback );
     }
     
-    void Session::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         yield( status, String::to_bytes( body ), headers, callback );
     }
     
-    void Session::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         Response response;
         response.set_body( body );
@@ -233,69 +235,72 @@ namespace restbed
         yield( response, callback );
     }
     
-    void Session::fetch( const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::fetch( const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        m_pimpl->fetch( m_pimpl->session, callback );
+        m_pimpl->fetch( shared_from_this( ), callback );
     }
     
-    void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
+    void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
+        auto session = shared_from_this( );
+
         if ( length > m_pimpl->buffer->size( ) )
         {
             size_t size = length - m_pimpl->buffer->size( );
-            
-            m_pimpl->socket->read( m_pimpl->buffer, size, [ this, length, callback ]( const asio::error_code & error, size_t )
+
+            m_pimpl->socket->read( m_pimpl->buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
             {
                 if ( error )
                 {
                     const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                    m_pimpl->failure( 500, runtime_error( message ) );
+                    m_pimpl->failure( session, 500, runtime_error( message ) );
                 }
                 else
                 {
-                    const auto data = m_pimpl->fetch_body( length );
-                    callback( m_pimpl->session, data );
+                    m_pimpl->fetch_body( length, session, callback );
                 }
             } );
         }
         else
         {
-            const auto data = m_pimpl->fetch_body( length );
-            callback( m_pimpl->session, data );
+            m_pimpl->fetch_body( length, session, callback );
         }
     }
     
-    void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >&, const Bytes& ) >& callback )
+    void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
-        m_pimpl->socket->read( m_pimpl->buffer, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
+        auto session = shared_from_this( );
+
+        m_pimpl->socket->read( m_pimpl->buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
         {
             if ( error )
             {
                 const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ) );
+                m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             else
             {
-                const auto data = m_pimpl->fetch_body( length );
-                callback( m_pimpl->session, data );
+                m_pimpl->fetch_body( length, session, callback );
             }
         } );
     }
     
-    void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session >& ) >& callback )
+    void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        m_pimpl->socket->sleep_for( delay, [ delay, callback, this ]( const error_code & error )
+        auto session = shared_from_this( );
+
+        m_pimpl->socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
         {
             if ( error )
             {
                 const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( 500, runtime_error( message ) );
+                m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             else
             {
                 if ( callback not_eq nullptr )
                 {
-                    callback( m_pimpl->session );
+                    callback( session );
                 }
             }
         } );

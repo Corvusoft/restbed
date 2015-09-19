@@ -39,9 +39,9 @@ TEST_CASE( "validate default instance values", "[session]" )
     REQUIRE( session.get_id( ) == "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
 }
 
-TEST_CASE( "confirm empty session id results in a invalid argument exception", "[session]" )
+TEST_CASE( "confirm empty session id throws no exceptions", "[session]" )
 {
-    REQUIRE_THROWS_AS( Session( "" ), invalid_argument );
+   REQUIRE_NOTHROW( Session( "" ) );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )

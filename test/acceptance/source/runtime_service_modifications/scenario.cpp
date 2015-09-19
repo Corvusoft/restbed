@@ -36,17 +36,17 @@ void ready_handler( Service& )
     return;
 }
 
-void handler( const shared_ptr< Session >& )
+void handler( const shared_ptr< Session > )
 {
     return;
 }
 
-void error_handler( const int, const exception&, const shared_ptr< Session >& )
+void error_handler( const int, const exception&, const shared_ptr< Session > )
 {
     return;
 }
 
-void authentication_handler( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& )
+void authentication_handler( const shared_ptr< Session >, const function< void ( const shared_ptr< Session > ) >& )
 {
     return;
 }

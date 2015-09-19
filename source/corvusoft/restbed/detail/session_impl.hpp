@@ -58,13 +58,13 @@ namespace restbed
                 //Functionality
                 void close( void );
                 
-                void fetch( const std::shared_ptr< Session >& session, const std::function< void ( const std::shared_ptr< Session >& ) >& callback );
+                void fetch( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
-                Bytes fetch_body( const std::size_t length ) const;
+                void fetch_body( const std::size_t length, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 
-                void failure( const int, const std::exception& ) const;
+                void failure( const std::shared_ptr< Session > session, const int, const std::exception& ) const;
                 
                 void transmit( const Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
                 
@@ -72,7 +72,7 @@ namespace restbed
                 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
                 
-                void parse_request( const asio::error_code& error, const std::function< void ( const std::shared_ptr< Session >& ) >& callback ) const;
+                void parse_request( const asio::error_code& error, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
                 //Getters
                 
@@ -86,8 +86,6 @@ namespace restbed
                 
                 std::shared_ptr< Logger > logger;
                 
-                std::shared_ptr< Session > session;
-                
                 std::shared_ptr< SocketImpl > socket;
                 
                 std::shared_ptr< const Request > request;
@@ -96,17 +94,15 @@ namespace restbed
                 
                 std::shared_ptr< const Settings > settings;
                 
-                std::shared_ptr< SessionManager > session_manager;
-                
                 std::shared_ptr< asio::streambuf > buffer;
                 
                 std::multimap< std::string, std::string > headers;
                 
                 std::map< std::string, const ContextValue > context;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > router;
+                std::function< void ( const std::shared_ptr< Session > ) > router;
                 
-                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > error_handler;
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > error_handler;
                 
             protected:
                 //Friends

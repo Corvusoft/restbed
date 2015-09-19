@@ -300,7 +300,7 @@ namespace restbed
         m_pimpl->ready_handler = bind( value, std::ref( *this ) );
     }
     
-    void Service::set_not_found_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    void Service::set_not_found_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
         if ( m_pimpl->is_running )
         {
@@ -310,7 +310,7 @@ namespace restbed
         m_pimpl->not_found_handler = value;
     }
     
-    void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
         if ( m_pimpl->is_running )
         {
@@ -320,7 +320,7 @@ namespace restbed
         m_pimpl->method_not_allowed_handler = value;
     }
     
-    void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
         if ( m_pimpl->is_running )
         {
@@ -330,7 +330,7 @@ namespace restbed
         m_pimpl->method_not_implemented_handler = value;
     }
     
-    void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session >& ) >& value )
+    void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
         if ( m_pimpl->is_running )
         {
@@ -340,7 +340,7 @@ namespace restbed
         m_pimpl->failed_filter_validation_handler = value;
     }
     
-    void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session >& ) > value )
+    void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session > ) > value )
     {
         if ( m_pimpl->is_running )
         {
@@ -350,7 +350,7 @@ namespace restbed
         m_pimpl->error_handler = value;
     }
     
-    void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >&, const function< void ( const shared_ptr< Session >& ) >& ) >& value )
+    void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >, const function< void ( const shared_ptr< Session > ) >& ) >& value )
     {
         if ( m_pimpl->is_running )
         {

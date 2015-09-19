@@ -23,12 +23,12 @@ using namespace restbed;
 
 //External Namespaces
 
-void json_get_handler( const shared_ptr< Session >& session )
+void json_get_handler( const shared_ptr< Session > session )
 {
     session->close( 200, "{ name: \"value\" }", { { "Content-Length", "17" }, { "Content-Type", "application/json" } } );
 }
 
-void xml_get_handler( const shared_ptr< Session >& session )
+void xml_get_handler( const shared_ptr< Session > session )
 {
     session->close( 401, "<name>value</name>", { { "Content-Length", "18" }, { "Content-Type", "application/xml" } } );
 }

@@ -24,7 +24,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void get_handler( const shared_ptr< Session >& session )
+void get_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
     const auto path_parameters = request->get_path_parameters( );

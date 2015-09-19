@@ -19,9 +19,9 @@
 using namespace std;
 using namespace restbed;
 
-void post_method_handler( const shared_ptr< Session >& );
-void read_chunk( const shared_ptr< Session >&, const Bytes& );
-void read_chunk_size( const shared_ptr< Session >&, const Bytes& );
+void post_method_handler( const shared_ptr< Session > );
+void read_chunk( const shared_ptr< Session >, const Bytes& );
+void read_chunk_size( const shared_ptr< Session >, const Bytes& );
 
 int main( const int, const char** )
 {
@@ -40,7 +40,7 @@ int main( const int, const char** )
     return EXIT_SUCCESS;
 }
 
-void post_method_handler( const shared_ptr< Session >& session )
+void post_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
     
@@ -53,7 +53,7 @@ void post_method_handler( const shared_ptr< Session >& session )
         int length = 0;
         request->get_header( "Content-Length", length );
         
-        session->fetch( length, [ ]( const shared_ptr< Session >& session, const Bytes& )
+        session->fetch( length, [ ]( const shared_ptr< Session > session, const Bytes& )
         {
             const auto request = session->get_request( );
             const auto body = request->get_body( );
@@ -68,7 +68,7 @@ void post_method_handler( const shared_ptr< Session >& session )
     }
 }
 
-void read_chunk_size( const shared_ptr< Session >& session, const Bytes& data )
+void read_chunk_size( const shared_ptr< Session > session, const Bytes& data )
 {
     if ( not data.empty( ) )
     {
@@ -90,7 +90,7 @@ void read_chunk_size( const shared_ptr< Session >& session, const Bytes& data )
     fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), body.data( ) );
 }
 
-void read_chunk( const shared_ptr< Session >& session, const Bytes& data )
+void read_chunk( const shared_ptr< Session > session, const Bytes& data )
 {
     cout << "Partial body chunk: " << data.size( ) << " bytes" << endl;
     

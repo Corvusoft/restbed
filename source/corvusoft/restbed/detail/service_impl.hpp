@@ -70,29 +70,29 @@ namespace restbed
 #endif
                 std::string sanitise_path( const std::string& path ) const;
                 
-                void not_found( const std::shared_ptr< Session >& session ) const;
+                void not_found( const std::shared_ptr< Session > session ) const;
                 
                 bool has_unique_paths( const std::set< std::string >& paths ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 
-                void method_not_allowed( const std::shared_ptr< Session >& session ) const;
+                void method_not_allowed( const std::shared_ptr< Session > session ) const;
                 
-                void method_not_implemented( const std::shared_ptr< Session >& session ) const;
+                void method_not_implemented( const std::shared_ptr< Session > session ) const;
                 
-                void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
+                void failed_filter_validation( const std::shared_ptr< Session > session ) const;
                 
-                void router( const std::shared_ptr< Session >& session ) const;
+                void router( const std::shared_ptr< Session > session ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error ) const;
                 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > find_method_handler( const std::shared_ptr< Session >& session ) const;
+                std::function< void ( const std::shared_ptr< Session > ) > find_method_handler( const std::shared_ptr< Session > session ) const;
                 
-                void authenticate( const std::shared_ptr< Session >& session ) const;
+                void authenticate( const std::shared_ptr< Session > session ) const;
                 
-                bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
+                bool resource_router( const std::shared_ptr< Session > session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
                 //Getters
                 
@@ -131,17 +131,17 @@ namespace restbed
                 
                 std::function< void ( void ) > ready_handler;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > not_found_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > not_found_handler;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > method_not_allowed_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > method_not_allowed_handler;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > method_not_implemented_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > method_not_implemented_handler;
                 
-                std::function< void ( const std::shared_ptr< Session >& ) > failed_filter_validation_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > failed_filter_validation_handler;
                 
-                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session >& ) > error_handler;
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > error_handler;
                 
-                std::function< void ( const std::shared_ptr< Session >&, const std::function< void ( const std::shared_ptr< Session >& ) >& ) > authentication_handler;
+                std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) > authentication_handler;
                 
             protected:
                 //Friends

@@ -21,7 +21,7 @@
 using namespace std;
 using namespace restbed;
 
-void get_xml_method_handler( const shared_ptr< Session >& session )
+void get_xml_method_handler( const shared_ptr< Session > session )
 {
     const multimap< string, string > headers
     {
@@ -32,7 +32,7 @@ void get_xml_method_handler( const shared_ptr< Session >& session )
     session->close( 200, "<hello><world></world></hello>", headers );
 }
 
-void get_json_method_handler( const shared_ptr< Session >& session )
+void get_json_method_handler( const shared_ptr< Session > session )
 {
     const multimap< string, string > headers
     {
@@ -43,7 +43,7 @@ void get_json_method_handler( const shared_ptr< Session >& session )
     session->close( 200, "{ \"Hello\": \", World!\" }" );
 }
 
-void failed_filter_validation_handler( const shared_ptr< Session >& session )
+void failed_filter_validation_handler( const shared_ptr< Session > session )
 {
     session->close( 400 );
 }

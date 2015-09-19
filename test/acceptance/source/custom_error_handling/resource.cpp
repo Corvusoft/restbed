@@ -32,17 +32,17 @@ using namespace restbed;
 
 //External Namespaces
 
-void resource_error_handler( const int, const exception&, const shared_ptr< Session >& session )
+void resource_error_handler( const int, const exception&, const shared_ptr< Session > session )
 {
     session->close( 22, "overridden service handler!", { { "Content-Length", "27" } } );
 }
 
-void service_error_handler( const int, const exception&, const shared_ptr< Session >& session )
+void service_error_handler( const int, const exception&, const shared_ptr< Session > session )
 {
     session->close( 0, "I see nothing!", { { "Content-Length", "14" } } );
 }
 
-void faulty_method_handler( const shared_ptr< Session >& )
+void faulty_method_handler( const shared_ptr< Session > )
 {
     throw SERVICE_UNAVAILABLE;
 }

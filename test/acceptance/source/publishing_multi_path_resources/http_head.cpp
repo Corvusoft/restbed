@@ -28,7 +28,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void get_handler( const shared_ptr< Session >& session )
+void get_handler( const shared_ptr< Session > session )
 {
     session->close( 200, "Hello, World!", { { "Content-Length", "13" } } );
 }

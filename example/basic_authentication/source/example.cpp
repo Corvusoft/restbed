@@ -17,8 +17,8 @@
 using namespace std;
 using namespace restbed;
 
-void authentication_handler( const shared_ptr< Session >& session,
-                             const function< void ( const shared_ptr< Session >& ) >& callback )
+void authentication_handler( const shared_ptr< Session > session,
+                             const function< void ( const shared_ptr< Session > ) >& callback )
 {
     auto authorisation = session->get_request( )->get_header( "Authorization" );
     
@@ -32,7 +32,7 @@ void authentication_handler( const shared_ptr< Session >& session,
     }
 }
 
-void get_method_handler( const shared_ptr< Session >& session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     session->close( OK, "Password Protected Hello, World!", { { "Content-Length", "32" } } );
 }

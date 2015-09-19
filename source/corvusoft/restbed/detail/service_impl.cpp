@@ -28,7 +28,6 @@
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 #include "corvusoft/restbed/detail/rule_engine_impl.hpp"
-#include "corvusoft/restbed/detail/session_manager_impl.hpp"
 
 //External Includes
 
@@ -245,14 +244,14 @@ namespace restbed
                     auto connection = make_shared< SocketImpl >( socket, logger );
                     connection->set_timeout( settings->get_connection_timeout( ) );
                     
-                    session_manager->create( [ this, connection ]( const shared_ptr< Session >& session )
+                    session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                     {
                         session->m_pimpl->logger = logger;
                         session->m_pimpl->socket = connection;
                         session->m_pimpl->settings = settings;
                         session->m_pimpl->error_handler = error_handler;
-                        session->m_pimpl->session_manager = session_manager;
-                        session->m_pimpl->fetch( session, bind( &ServiceImpl::authenticate, this, _1 ) );
+                        session->m_pimpl->router = bind( &ServiceImpl::authenticate, this, _1 );
+                        session->m_pimpl->fetch( session, session->m_pimpl->router );
                     } );
                 } );
             }
@@ -306,7 +305,7 @@ namespace restbed
             return sanitised_path;
         }
         
-        void ServiceImpl::not_found( const shared_ptr< Session >& session ) const
+        void ServiceImpl::not_found( const shared_ptr< Session > session ) const
         {
             log( Logger::Level::INFO, String::format( "'%s' resource route not found '%s'.",
                     session->get_origin( ).data( ),
@@ -348,7 +347,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::method_not_allowed( const shared_ptr< Session >& session ) const
+        void ServiceImpl::method_not_allowed( const shared_ptr< Session > session ) const
         {
             log( Logger::Level::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
                     session->get_origin( ).data( ),
@@ -365,7 +364,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::method_not_implemented( const shared_ptr< Session >& session ) const
+        void ServiceImpl::method_not_implemented( const shared_ptr< Session > session ) const
         {
             log( Logger::Level::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
                     session->get_origin( ).data( ),
@@ -382,7 +381,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::failed_filter_validation( const shared_ptr< Session >& session ) const
+        void ServiceImpl::failed_filter_validation( const shared_ptr< Session > session ) const
         {
             log( Logger::Level::INFO, String::format( "'%s' failed filter validation '%s'.",
                     session->get_origin( ).data( ),
@@ -398,7 +397,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::router( const shared_ptr< Session >& session ) const
+        void ServiceImpl::router( const shared_ptr< Session > session ) const
         {
             if ( session->is_closed( ) )
             {
@@ -417,11 +416,11 @@ namespace restbed
             const auto request = session->get_request( );
             extract_path_parameters( path, request );
             
-            rule_engine( session, rules, [ this ]( const shared_ptr< Session >& session )
+            rule_engine( session, rules, [ this ]( const shared_ptr< Session > session )
             {
-                const auto callback = [ this ]( const shared_ptr< Session >& session )
+                const auto callback = [ this ]( const shared_ptr< Session > session )
                 {
-                    rule_engine( session, session->m_pimpl->resource->m_pimpl->rules, [ this ]( const shared_ptr< Session >& session )
+                    rule_engine( session, session->m_pimpl->resource->m_pimpl->rules, [ this ]( const shared_ptr< Session > session )
                     {
                         if ( session->is_closed( ) )
                         {
@@ -465,14 +464,14 @@ namespace restbed
                 auto connection = make_shared< SocketImpl >( socket, logger );
                 connection->set_timeout( settings->get_connection_timeout( ) );
                 
-                session_manager->create( [ this, connection ]( const shared_ptr< Session >& session )
+                session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                 {
                     session->m_pimpl->logger = logger;
                     session->m_pimpl->socket = connection;
                     session->m_pimpl->settings = settings;
                     session->m_pimpl->error_handler = error_handler;
-                    session->m_pimpl->session_manager = session_manager;
-                    session->m_pimpl->fetch( session, bind( &ServiceImpl::authenticate, this, _1 ) );
+                    session->m_pimpl->router = bind( &ServiceImpl::authenticate, this, _1 );
+                    session->m_pimpl->fetch( session, session->m_pimpl->router );
                 } );
             }
             else
@@ -508,14 +507,14 @@ namespace restbed
             }
         }
         
-        function< void ( const shared_ptr< Session >& ) > ServiceImpl::find_method_handler( const shared_ptr< Session >& session ) const
+        function< void ( const shared_ptr< Session > ) > ServiceImpl::find_method_handler( const shared_ptr< Session > session ) const
         {
             const auto request = session->get_request( );
             const auto resource = session->get_resource( );
             const auto method_handlers = resource->m_pimpl->method_handlers.equal_range( request->get_method( ) );
             
             bool failed_filter_validation = false;
-            function< void ( const shared_ptr< Session >& ) > method_handler = nullptr;
+            function< void ( const shared_ptr< Session > ) > method_handler = nullptr;
             
             for ( auto handler = method_handlers.first; handler not_eq method_handlers.second and method_handler == nullptr; handler++ )
             {
@@ -543,11 +542,11 @@ namespace restbed
             return method_handler;
         }
         
-        void ServiceImpl::authenticate( const shared_ptr< Session >& session ) const
+        void ServiceImpl::authenticate( const shared_ptr< Session > session ) const
         {
             if ( authentication_handler not_eq nullptr )
             {
-                authentication_handler( session, [ this ]( const shared_ptr< Session >& session )
+                authentication_handler( session, [ this ]( const shared_ptr< Session > session )
                 {
                     session_manager->load( session, bind( &ServiceImpl::router, this, _1 ) );
                 } );
@@ -558,7 +557,7 @@ namespace restbed
             }
         }
         
-        bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const pair< string, shared_ptr< const Resource > >& route ) const
+        bool ServiceImpl::resource_router( const shared_ptr< Session > session, const pair< string, shared_ptr< const Resource > >& route ) const
         {
             log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
                     session->get_request( )->get_method( ).data( ),

@@ -31,7 +31,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void method_not_implemented_handler( const shared_ptr< Session >& session )
+void method_not_implemented_handler( const shared_ptr< Session > session )
 {
     session->close( -232, "Banned Method", { { "Content-Length", "13" } } );
 }

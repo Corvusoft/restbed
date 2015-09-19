@@ -31,12 +31,12 @@ using namespace restbed;
 
 //External Namespaces
 
-void method_not_allowed_handler( const shared_ptr< Session >& session )
+void method_not_allowed_handler( const shared_ptr< Session > session )
 {
     session->close( -400, "Banned Method", { { "Content-Length", "13" } } );
 }
 
-void jack_of_all_trades_method_handler( const shared_ptr< Session >& session )
+void jack_of_all_trades_method_handler( const shared_ptr< Session > session )
 {
     session->close( OK );
 }
