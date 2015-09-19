@@ -249,6 +249,7 @@ namespace restbed
                         session->m_pimpl->logger = logger;
                         session->m_pimpl->socket = connection;
                         session->m_pimpl->settings = settings;
+                        session->m_pimpl->manager = session_manager;
                         session->m_pimpl->error_handler = error_handler;
                         session->m_pimpl->router = bind( &ServiceImpl::authenticate, this, _1 );
                         session->m_pimpl->fetch( session, session->m_pimpl->router );
@@ -469,6 +470,7 @@ namespace restbed
                     session->m_pimpl->logger = logger;
                     session->m_pimpl->socket = connection;
                     session->m_pimpl->settings = settings;
+                    session->m_pimpl->manager = session_manager;
                     session->m_pimpl->error_handler = error_handler;
                     session->m_pimpl->router = bind( &ServiceImpl::authenticate, this, _1 );
                     session->m_pimpl->fetch( session, session->m_pimpl->router );

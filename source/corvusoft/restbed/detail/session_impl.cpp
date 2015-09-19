@@ -67,6 +67,7 @@ namespace restbed
             resource( nullptr ),
             settings( nullptr ),
             buffer( nullptr ),
+            manager( nullptr ),
             headers( ),
             context( ),
             router( nullptr ),
@@ -79,12 +80,7 @@ namespace restbed
         {
             return;
         }
-        
-        void SessionImpl::close( void )
-        {
-            socket->close( );
-        }
-        
+
         void SessionImpl::fetch( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         {            
             buffer = make_shared< asio::streambuf >( );

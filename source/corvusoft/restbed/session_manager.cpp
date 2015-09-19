@@ -55,4 +55,9 @@ namespace restbed
     {
         callback( session );
     }
+
+    void SessionManager::save( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
+    {
+        callback( session );
+    }
 }

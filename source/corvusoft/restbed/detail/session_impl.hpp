@@ -56,8 +56,6 @@ namespace restbed
                 virtual ~SessionImpl( void );
                 
                 //Functionality
-                void close( void );
-                
                 void fetch( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
                 void fetch_body( const std::size_t length, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback ) const;
@@ -95,6 +93,8 @@ namespace restbed
                 std::shared_ptr< const Settings > settings;
                 
                 std::shared_ptr< asio::streambuf > buffer;
+
+                std::shared_ptr< SessionManager > manager;
                 
                 std::multimap< std::string, std::string > headers;
                 

@@ -97,7 +97,10 @@ namespace restbed
             }
             else
             {
-                m_pimpl->close( );
+                m_pimpl->manager->save( session, [ this, session ]( const shared_ptr< Session > )
+                {
+                    m_pimpl->socket->close( );
+                } );
             }
         } );
     }
@@ -114,7 +117,10 @@ namespace restbed
                 m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             
-            m_pimpl->socket->close( );
+            m_pimpl->manager->save( session, [ this, session ]( const shared_ptr< Session > )
+            {
+                m_pimpl->socket->close( );
+            } );
         } );
     }
     
