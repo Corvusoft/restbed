@@ -366,6 +366,11 @@ namespace restbed
         
         return default_value;
     }
+
+    void Session::set_id( const string& value )
+    {
+        m_pimpl->id = value;
+    }
     
     void Session::set( const string& name, const ContextValue& value )
     {

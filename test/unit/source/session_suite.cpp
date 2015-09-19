@@ -53,8 +53,10 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )
 
 TEST_CASE( "validate setters modify default values", "[session]" )
 {
-    Session session( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
-    
+    Session session( "" );
+    session.set_id( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
+    REQUIRE( session.get_id( ) == "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
+
     session.set_header( "Connection", "close" );
     multimap< string, string > expectation = { { "Connection", "close" } };
     REQUIRE( session.get_headers( ) == expectation );

@@ -132,7 +132,7 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     3.5       |      Schedule Tasks on Service run-loop         |     complete    |
 |     3.5       |      Multi-Threaded service capability          |     complete    |
 |     3.5       |       Bind Service to specific Address          |     complete    |
-|     3.5       |             Session Management                  |  in-development |
+|     3.5       |             Session Management                  |       beta      |
 |     4.0       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |
 |     4.0       |         Client-side SSL certificates            |     pending     |

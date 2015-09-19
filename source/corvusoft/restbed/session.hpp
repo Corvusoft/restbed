@@ -121,6 +121,8 @@ namespace restbed
             const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
             
             //Setters
+            void set_id( const std::string& value );
+            
             void set( const std::string& name, const ContextValue& value );
             
             void set_header( const std::string& name, const std::string& value );

@@ -65,6 +65,7 @@ namespace restbed
         void SocketImpl::close( void )
         {
             m_is_open = false;
+            m_socket.reset( );
         }
         
         bool SocketImpl::is_open( void ) const

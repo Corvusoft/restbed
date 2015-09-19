@@ -290,6 +290,16 @@ namespace restbed
         m_pimpl->logger = value;
     }
     
+    void Service::set_session_manager( const shared_ptr< SessionManager >& value )
+    {
+        if ( m_pimpl->is_running )
+        {
+            throw runtime_error( "Runtime modifications of the service are prohibited." );
+        }
+        
+        m_pimpl->session_manager = value;
+    }
+
     void Service::set_ready_handler( const function< void ( Service& ) >& value )
     {
         if ( m_pimpl->is_running )
