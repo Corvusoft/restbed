@@ -59,9 +59,9 @@ class InMemorySessionManager : public SessionManager
         
         void load( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         {
-            lock_guard< mutex > lock( sessions_lock );
-            
             const auto request = session->get_request( );
+            
+            unique_lock< mutex > lock( sessions_lock );
             auto previous_session = sessions.find( request->get_header( "SessionID" ) );
             
             if ( previous_session not_eq sessions.end( ) )
@@ -82,14 +82,17 @@ class InMemorySessionManager : public SessionManager
                 session->set_header( "SessionID", key );
             }
             
+            lock.unlock( );
+            
             callback( session );
         }
         
         void save( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         {
-            lock_guard< mutex > lock( sessions_lock );
-            
+            unique_lock< mutex > lock( sessions_lock );
             sessions[ session->get_id( ) ] = session;
+            lock.unlock( );
+            
             callback( session );
         }
         
