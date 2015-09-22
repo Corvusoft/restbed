@@ -73,10 +73,10 @@ class InMemorySessionManager : public SessionManager
                 }
             }
             
+            lock.unlock( );
+            
             const auto key = session->get_id( );
             session->set_header( "SessionID", key );
-            
-            lock.unlock( );
             
             callback( session );
         }
