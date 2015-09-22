@@ -52,9 +52,7 @@ class InMemorySessionManager : public SessionManager
                 key += charset.at( selector( generator ) );
             }
             
-            auto session = make_shared< Session >( key );
-            
-            callback( session );
+            callback( make_shared< Session >( key ) );
         }
         
         void load( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
@@ -68,19 +66,15 @@ class InMemorySessionManager : public SessionManager
             {
                 const auto key = previous_session->second->get_id( );
                 session->set_id( key );
-                session->set_header( "SessionID", key );
                 
                 for ( const auto key : previous_session->second->keys( ) )
                 {
                     session->set( key, previous_session->second->get( key ) );
                 }
             }
-            else
-            {
-                const auto key = session->get_id( );
-                session->set_id( key );
-                session->set_header( "SessionID", key );
-            }
+            
+            const auto key = session->get_id( );
+            session->set_header( "SessionID", key );
             
             lock.unlock( );
             
