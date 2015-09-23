@@ -32,7 +32,7 @@ Restbed is a comprehensive and consistent programming model for building applica
 | Compliance                                                                                                                          | Flexibility to address HTTP 1.0/1.1+ compliance.                                                |
 | Mature                                                                                                                              | Secure, Stable, and extensively tested over 3+ years.                                           |
 | Community                                                                                                                           | Active, vibrant and energetic open source community.                                            |
-| Support                                                                                                                             | Commercial support is available from Corvusoft.                                                 |
+| Support                                                                                                                             | Commercial support is available from [Corvusoft](http://www.corvusoft.co.uk).                                                |
 
 ## Example
 
@@ -136,7 +136,7 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     4.0       |               Resource Caching                  |     pending     |
 |     4.0       |                 Web Sockets                     |     pending     |
 |     4.0       |         Client-side SSL certificates            |     pending     |
-|     5.0       |             HTTP 2.0 compliance                 |     pending     |
+|     5.0       |               HTTP 2 compliance                 |     pending     |
 
 ## Contact
 
