@@ -36,13 +36,17 @@ namespace restbed
             //Definitions
             
             //Constructors
-            explicit Uri( const std::string& value );
+            explicit Uri( const std::string& value, bool relative = false );
             
             Uri( const Uri& original );
             
             virtual ~Uri( void );
             
             //Functionality
+            bool is_relative( void ) const;
+            
+            bool is_absolute( void ) const;
+            
             std::string to_string( void ) const;
             
             static bool is_valid( const std::string& value );

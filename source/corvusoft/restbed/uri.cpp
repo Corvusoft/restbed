@@ -9,13 +9,13 @@
 #include <stdexcept>
 
 #if defined(WIN32)
-#include <ciso646>
-#include <Winsock2.h>
-#pragma comment( lib, "Ws2_32.lib" )
+    #include <ciso646>
+    #include <Winsock2.h>
+    #pragma comment( lib, "Ws2_32.lib" )
 #else
-#include <netdb.h>
-#include <unistd.h>
-#include <arpa/inet.h>
+    #include <netdb.h>
+    #include <unistd.h>
+    #include <arpa/inet.h>
 #endif
 
 //Project Includes
@@ -44,7 +44,7 @@ using restbed::detail::UriImpl;
 
 namespace restbed
 {
-    Uri::Uri( const string& value ) : m_pimpl( new UriImpl )
+    Uri::Uri( const string& value, bool relative ) : m_pimpl( new UriImpl )
     {
         if ( not is_valid( value ) )
         {
@@ -52,6 +52,7 @@ namespace restbed
         }
         
         m_pimpl->uri = value;
+        m_pimpl->relative = relative;
     }
     
     Uri::Uri( const Uri& original ) : m_pimpl( new UriImpl( *original.m_pimpl ) )
@@ -62,6 +63,16 @@ namespace restbed
     Uri::~Uri( void )
     {
         delete m_pimpl;
+    }
+    
+    bool Uri::is_relative( void ) const
+    {
+        return m_pimpl->relative;
+    }
+    
+    bool Uri::is_absolute( void ) const
+    {
+        return not m_pimpl->relative;
     }
     
     string Uri::to_string( void ) const
@@ -88,7 +99,7 @@ namespace restbed
     
     string Uri::decode( const string& value )
     {
-        string result = "";
+        string result = String::empty;
         
         for ( string::size_type index = 0; index not_eq value.length( ); index++ )
         {
@@ -117,7 +128,7 @@ namespace restbed
     
     string Uri::encode( const Bytes& value )
     {
-        string encoded = "";
+        string encoded = String::empty;
         
         for ( Byte character : value )
         {
@@ -175,7 +186,7 @@ namespace restbed
     int Uri::get_port( void ) const
     {
         smatch match;
-        string port = "";
+        string port = String::empty;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\]):([0-9]+)" );
         
         if ( regex_search( m_pimpl->uri, match, pattern ) )
@@ -189,7 +200,11 @@ namespace restbed
             if ( not scheme.empty( ) )
             {
                 const struct servent* entry = getservbyname( scheme.data( ), nullptr );
-                port = ::to_string( ntohs( entry->s_port ) );
+                
+                if ( entry not_eq nullptr )
+                {
+                    port = ::to_string( ntohs( entry->s_port ) );
+                }
             }
         }
         
@@ -203,15 +218,16 @@ namespace restbed
     
     string Uri::get_path( void ) const
     {
-        smatch match;
         static const regex pattern( "^([a-zA-Z][a-zA-Z0-9+\\-.]*://([^/?#]+)?)?([a-zA-Z0-9\\-._~%!$&'()*+,;=:@/]*)" );
+        
+        smatch match;
         
         if ( regex_search( m_pimpl->uri, match, pattern ) )
         {
-            return match[ 3 ];
+            return ( is_absolute( ) ) ? match[ 3 ] : string( match[ 2 ] ) + string( match[ 3 ] );
         }
         
-        return "";
+        return String::empty;
     }
     
     string Uri::get_query( void ) const
@@ -224,7 +240,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return "";
+        return String::empty;
     }
     
     string Uri::get_scheme( void ) const
@@ -237,7 +253,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return "";
+        return String::empty;
     }
     
     string Uri::get_fragment( void ) const
@@ -250,7 +266,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return "";
+        return String::empty;
     }
     
     string Uri::get_username( void ) const
@@ -263,7 +279,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return "";
+        return String::empty;
     }
     
     string Uri::get_password( void ) const
@@ -276,11 +292,16 @@ namespace restbed
             return match[ 2 ];
         }
         
-        return "";
+        return String::empty;
     }
     
     string Uri::get_authority( void ) const
     {
+        if ( is_relative( ) )
+        {
+            return String::empty;
+        }
+        
         smatch match;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])" );
         
@@ -289,7 +310,7 @@ namespace restbed
             return match[ 5 ];
         }
         
-        return "";
+        return String::empty;
     }
     
     multimap< string, string > Uri::get_query_parameters( void ) const

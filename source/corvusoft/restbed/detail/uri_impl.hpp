@@ -29,6 +29,8 @@ namespace restbed
         struct UriImpl
         {
             std::string uri = "";
+            
+            bool relative = false;
         };
     }
 }
