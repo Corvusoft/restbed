@@ -129,14 +129,14 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     2.5       |             Secure Socket Layer                 |     complete    |
 |     2.5       |     Simultaneous Network Ports (HTTP/HTTPS)     |     complete    |
 |     3.0       |                 Rules Engine                    |     complete    |
-|     3.5       |      Schedule Tasks on Service run-loop         |     complete    |
-|     3.5       |      Multi-Threaded service capability          |     complete    |
-|     3.5       |       Bind Service to specific Address          |     complete    |
-|     3.5       |             Session Management                  |       beta      |
-|     4.0       |               Resource Caching                  |     pending     |
-|     4.0       |                 Web Sockets                     |     pending     |
-|     4.0       |         Client-side SSL certificates            |     pending     |
-|     5.0       |               HTTP 2 compliance                 |     pending     |
+|     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |      Schedule Tasks on Service run-loop         |     complete    |
+|     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |      Multi-Threaded service capability          |     complete    |
+|     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |       Bind Service to specific Address          |     complete    |
+|     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |             Session Management                  |       beta      |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Resource Caching                  |     pending     |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 Web Sockets                     |     pending     |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)        |         Client-side SSL certificates            |     pending     |
+|     [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)       |               HTTP 2 compliance                 |     pending     |
 
 ## Contact
 
