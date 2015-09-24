@@ -16,7 +16,6 @@
 
 //External Includes
 #pragma warning( push )
-#pragma warning( push )
 #pragma warning( disable:4702 )
 #include <catch.hpp>
 #pragma warning( pop )
