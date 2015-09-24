@@ -12,7 +12,9 @@
 #include <corvusoft/restbed/session.hpp>
 
 //External Includes
+#pragma warning disable 4702
 #include <catch.hpp>
+#pragma warning restore 4702
 
 //System Namespaces
 using std::set;
@@ -41,7 +43,7 @@ TEST_CASE( "validate default instance values", "[session]" )
 
 TEST_CASE( "confirm empty session id throws no exceptions", "[session]" )
 {
-   REQUIRE_NOTHROW( Session( "" ) );
+    REQUIRE_NOTHROW( Session( "" ) );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[session]" )
@@ -56,7 +58,7 @@ TEST_CASE( "validate setters modify default values", "[session]" )
     Session session( "" );
     session.set_id( "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
     REQUIRE( session.get_id( ) == "f47ac10b-58cc-4372-a567-0e02b2c3d479" );
-
+    
     session.set_header( "Connection", "close" );
     multimap< string, string > expectation = { { "Connection", "close" } };
     REQUIRE( session.get_headers( ) == expectation );
@@ -84,19 +86,19 @@ TEST_CASE( "validate session context functionality", "[session]" )
     
     session.erase( "Connection" );
     REQUIRE( not session.has( "Connection" ) );
-
-	const string keep_alive = session.get( "Connection", string( "keep-alive" ) );
+    
+    const string keep_alive = session.get( "Connection", string( "keep-alive" ) );
     REQUIRE( keep_alive == "keep-alive" );
     
-	REQUIRE( session.keys( ) == set< string >( ) );
+    REQUIRE( session.keys( ) == set< string >( ) );
     
     session.set( "Connection", string( "close" ) );
     session.set( "Connection", string( "keep-alive" ) );
-
+    
     const string header = session.get( "Connection" );
     REQUIRE( header == "keep-alive" );
-
-	int type = 0;
+    
+    int type = 0;
     REQUIRE_THROWS_AS( type = session.get( "Connection" ), bad_cast );
     
     session.erase( );

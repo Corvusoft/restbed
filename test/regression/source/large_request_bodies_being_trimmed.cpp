@@ -14,7 +14,9 @@
 #include "http.hpp"
 
 //External Includes
+#pragma warning disable 4702
 #include <catch.hpp>
+#pragma warning restore 4702
 
 //System Namespaces
 using std::thread;
@@ -78,7 +80,7 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
             auto response = Http::post( request );
             
             REQUIRE( 201 == response.status_code );
-
+            
             service.stop( );
         } );
     } );

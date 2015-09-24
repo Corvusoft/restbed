@@ -10,7 +10,9 @@
 #include <corvusoft/restbed/request.hpp>
 
 //External Includes
+#pragma warning disable 4702
 #include <catch.hpp>
+#pragma warning restore 4702
 
 //System Namespaces
 using std::map;
@@ -72,7 +74,7 @@ TEST_CASE( "validate getter default value", "[request]" )
         request.get_header( "Var", value, 54 );
         REQUIRE( value == 54 );
     }
-
+    
     SECTION( "long long" )
     {
         long long value;
@@ -87,7 +89,7 @@ TEST_CASE( "validate getter default value", "[request]" )
         request.get_header( "Var", value, default_value );
         REQUIRE( value == default_value );
     }
-
+    
     SECTION( "unsigned long long" )
     {
         long long value;
@@ -111,7 +113,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     
     SECTION( "string" )
     {
-		string header = request.get_header( "Var", string( "open" ) );
+        string header = request.get_header( "Var", string( "open" ) );
         REQUIRE( header == "open" );
     }
 }

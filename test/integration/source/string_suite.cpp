@@ -11,7 +11,9 @@
 #include "corvusoft/restbed/string.hpp"
 
 //External Includes
+#pragma warning disable 4702
 #include <catch.hpp>
+#pragma warning restore 4702
 
 //System Namespaces
 using std::string;
