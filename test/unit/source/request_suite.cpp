@@ -83,7 +83,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     SECTION( "unsigned long" )
     {
         unsigned long value;
-        unsigned long default_value = unsigned long( -33 );
+        unsigned long default_value = static_cast< unsigned long >( -33 );
         request.get_header( "Var", value, default_value );
         REQUIRE( value == default_value );
     }

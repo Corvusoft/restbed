@@ -28,7 +28,7 @@ void single_run_task( void )
     fprintf( stderr, "single run task executed.\n" );
 }
 
-void read( const shared_ptr< Session > session )
+void get_method_handler( const shared_ptr< Session > session )
 {
     session->close( 200 );
 }
@@ -37,7 +37,7 @@ int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/api" );
-    resource->set_method_handler( "GET", read );
+    resource->set_method_handler( "GET", get_method_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
