@@ -44,8 +44,8 @@ class InMemorySessionManager : public SessionManager
         {
             static const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             static uniform_int_distribution< > selector( 0, 35 );
-			
-			auto seed = static_cast< unsigned int >( chrono::high_resolution_clock::now( ).time_since_epoch( ).count( ) );
+            
+            auto seed = static_cast< unsigned int >( chrono::high_resolution_clock::now( ).time_since_epoch( ).count( ) );
             static mt19937 generator( seed );
             
             string key = "";
