@@ -42,8 +42,10 @@ class InMemorySessionManager : public SessionManager
         void create( const function< void ( const shared_ptr< Session > ) >& callback )
         {
             static const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            static uniform_int_distribution< > selector( 0, charset.size( ) - 1 );
-            static mt19937 generator( chrono::high_resolution_clock::now( ).time_since_epoch( ).count( ) );
+            static uniform_int_distribution< > selector( 0, 35 );
+			
+			auto seed = static_cast< unsigned int >( chrono::high_resolution_clock::now( ).time_since_epoch( ).count( ) );
+            static mt19937 generator( seed );
             
             string key = "";
             
@@ -64,8 +66,8 @@ class InMemorySessionManager : public SessionManager
             
             if ( previous_session not_eq sessions.end( ) )
             {
-                const auto key = previous_session->second->get_id( );
-                session->set_id( key );
+                const auto id = previous_session->second->get_id( );
+                session->set_id( id );
                 
                 for ( const auto key : previous_session->second->keys( ) )
                 {

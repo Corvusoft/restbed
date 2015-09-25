@@ -12,10 +12,8 @@
 #include <corvusoft/restbed/resource.hpp>
 
 //External Includes
-#pragma warning( push )
-#pragma warning( disable:4702 )
 #include <catch.hpp>
-#pragma warning( pop )
+
 
 //System Namespaces
 using std::string;

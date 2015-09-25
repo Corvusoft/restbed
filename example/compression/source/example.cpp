@@ -31,9 +31,9 @@ void deflate_method_handler( const shared_ptr< Session > session )
         
         if ( request->get_header( "Content-Encoding", String::lowercase ) == "deflate" )
         {
-            mz_ulong length = compressBound( body.size( ) );
+            mz_ulong length = compressBound( static_cast< mz_ulong >( body.size( ) ) );
             unsigned char* data = new unsigned char[ length ];
-            const int status = uncompress( data, &length, body.data( ), body.size( ) );
+            const int status = uncompress( data, &length, body.data( ), static_cast< mz_ulong >( body.size( ) ) );
             
             if ( status not_eq MZ_OK )
             {

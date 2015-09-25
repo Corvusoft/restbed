@@ -10,10 +10,8 @@
 #include <corvusoft/restbed/request.hpp>
 
 //External Includes
-#pragma warning( push )
-#pragma warning( disable:4702 )
 #include <catch.hpp>
-#pragma warning( pop )
+
 
 //System Namespaces
 using std::map;
@@ -86,7 +84,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     SECTION( "unsigned long" )
     {
         unsigned long value;
-        unsigned long default_value = -33;
+        unsigned long default_value = unsigned long( -33 );
         request.get_header( "Var", value, default_value );
         REQUIRE( value == default_value );
     }
@@ -101,7 +99,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     SECTION( "float" )
     {
         float value;
-        request.get_header( "Var", value, 3.6 );
+        request.get_header( "Var", value, float( 3.6 ) );
         REQUIRE( value == 3.6f );
     }
     
