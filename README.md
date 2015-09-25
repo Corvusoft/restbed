@@ -134,10 +134,10 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |       Bind Service to specific Address          |     complete    |
 |     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |             Session Management                  |     complete    |
 |     [3.5](https://github.com/Corvusoft/restbed/milestones/3.5)       |                 HTTP Client                     |  in-development |
-|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Resource Caching                  |     pending     |
-|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 Web Sockets                     |     pending     |
 |     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Signal Handling                   |     pending     |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 Web Sockets                     |     pending     |
 |     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |         Client-side SSL certificates            |     pending     |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Resource Caching                  |     pending     |
 |     [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)       |               HTTP 2 compliance                 |     pending     |
 
 ## Contact
