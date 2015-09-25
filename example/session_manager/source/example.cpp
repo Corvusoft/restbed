@@ -24,7 +24,8 @@ using namespace restbed;
 class InMemorySessionManager : public SessionManager
 {
     public:
-        InMemorySessionManager( void ) : sessions( )
+        InMemorySessionManager( void ) : sessions_lock( ),
+            sessions( )
         {
             return;
         }
