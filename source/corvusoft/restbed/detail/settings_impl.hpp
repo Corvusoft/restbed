@@ -33,27 +33,27 @@ namespace restbed
         
         struct SettingsImpl
         {
-            uint16_t port = 80;
+            uint16_t m_port = 80;
             
-            std::string root = "/";
+            std::string m_root = "/";
             
-            unsigned int worker_limit = 0;
+            unsigned int m_worker_limit = 0;
             
-            unsigned int connection_limit = 128;
+            unsigned int m_connection_limit = 128;
             
-            std::string bind_address = "";
+            std::string m_bind_address = "";
             
-            bool case_insensitive_uris = true;
+            bool m_case_insensitive_uris = true;
             
-            std::map< std::string, std::string > properties { };
+            std::map< std::string, std::string > m_properties { };
             
-            std::shared_ptr< const SSLSettings > ssl_settings = nullptr;
+            std::shared_ptr< const SSLSettings > m_ssl_settings = nullptr;
             
-            std::multimap< std::string, std::string > default_headers { };
+            std::multimap< std::string, std::string > m_default_headers { };
             
-            std::chrono::milliseconds connection_timeout = std::chrono::milliseconds( 5000 );
+            std::chrono::milliseconds m_connection_timeout = std::chrono::milliseconds( 5000 );
             
-            std::map< int, std::string > status_messages
+            std::map< int, std::string > m_status_messages
             {
                 { 100, "Continue" },
                 { 101, "Switching Protocols" },

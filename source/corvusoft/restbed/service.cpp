@@ -75,59 +75,59 @@ namespace restbed
     
     void Service::stop( void )
     {
-        m_pimpl->is_running = false;
+        m_pimpl->m_is_running = false;
         
-        if ( m_pimpl->io_service not_eq nullptr )
+        if ( m_pimpl->m_io_service not_eq nullptr )
         {
-            m_pimpl->io_service->stop( );
+            m_pimpl->m_io_service->stop( );
         }
         
-        if ( m_pimpl->session_manager not_eq nullptr )
+        if ( m_pimpl->m_session_manager not_eq nullptr )
         {
-            m_pimpl->session_manager->stop( );
+            m_pimpl->m_session_manager->stop( );
         }
         
-        for ( auto& worker : m_pimpl->workers )
+        for ( auto& worker : m_pimpl->m_workers )
         {
             worker->join( );
         }
         
-        m_pimpl->workers.clear( );
+        m_pimpl->m_workers.clear( );
         
         m_pimpl->log( Logger::Level::INFO, String::format( "Service halted." ) );
         
-        if ( m_pimpl->logger not_eq nullptr )
+        if ( m_pimpl->m_logger not_eq nullptr )
         {
-            m_pimpl->logger->stop( );
+            m_pimpl->m_logger->stop( );
         }
     }
     
     void Service::start( const shared_ptr< const Settings >& settings )
     {
-        m_pimpl->settings = settings;
+        m_pimpl->m_settings = settings;
         
-        if ( m_pimpl->settings == nullptr )
+        if ( m_pimpl->m_settings == nullptr )
         {
-            m_pimpl->settings = make_shared< Settings >( );
+            m_pimpl->m_settings = make_shared< Settings >( );
         }
         
 #ifdef BUILD_SSL
-        m_pimpl->ssl_settings = m_pimpl->settings->get_ssl_settings( );
+        m_pimpl->m_ssl_settings = m_pimpl->m_settings->get_ssl_settings( );
 #endif
         
-        if ( m_pimpl->session_manager == nullptr )
+        if ( m_pimpl->m_session_manager == nullptr )
         {
-            m_pimpl->session_manager = make_shared< SessionManager >( );
+            m_pimpl->m_session_manager = make_shared< SessionManager >( );
         }
         
-        m_pimpl->session_manager->start( m_pimpl->settings );
+        m_pimpl->m_session_manager->start( m_pimpl->m_settings );
         
-        if ( m_pimpl->logger not_eq nullptr )
+        if ( m_pimpl->m_logger not_eq nullptr )
         {
-            m_pimpl->logger->start( m_pimpl->settings );
+            m_pimpl->m_logger->start( m_pimpl->m_settings );
         }
         
-        stable_sort( m_pimpl->rules.begin( ), m_pimpl->rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
+        stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
         {
             return lhs->get_priority( ) < rhs->get_priority( );
         } );
@@ -137,21 +137,21 @@ namespace restbed
         m_pimpl->https_start( );
 #endif
         
-        for ( const auto& route : m_pimpl->resource_paths )
+        for ( const auto& route : m_pimpl->m_resource_paths )
         {
-            auto path = String::format( "/%s/%s", m_pimpl->settings->get_root( ).data( ), route.second.data( ) );
+            auto path = String::format( "/%s/%s", m_pimpl->m_settings->get_root( ).data( ), route.second.data( ) );
             path = String::replace( "//", "/", path );
             
             m_pimpl->log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
         }
         
-        if ( m_pimpl->ready_handler not_eq nullptr )
+        if ( m_pimpl->m_ready_handler not_eq nullptr )
         {
-            m_pimpl->io_service->post( m_pimpl->ready_handler );
+            m_pimpl->m_io_service->post( m_pimpl->m_ready_handler );
         }
         
-        m_pimpl->is_running = true;
-        unsigned int limit = m_pimpl->settings->get_worker_limit( );
+        m_pimpl->m_is_running = true;
+        unsigned int limit = m_pimpl->m_settings->get_worker_limit( );
         
         if ( limit > 0 )
         {
@@ -162,14 +162,14 @@ namespace restbed
             {
                 auto worker = make_shared< thread >( [ this ]( )
                 {
-                    m_pimpl->io_service->run( );
+                    m_pimpl->m_io_service->run( );
                 } );
                 
-                m_pimpl->workers.push_back( worker );
+                m_pimpl->m_workers.push_back( worker );
             }
         }
         
-        m_pimpl->io_service->run( );
+        m_pimpl->m_io_service->run( );
     }
     
     void Service::restart( const shared_ptr< const Settings >& settings )
@@ -188,28 +188,28 @@ namespace restbed
     
     void Service::add_rule( const shared_ptr< Rule >& rule )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->rules.push_back( rule );
+        m_pimpl->m_rules.push_back( rule );
     }
     
     void Service::add_rule( const shared_ptr< Rule >& rule, const int priority )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
         rule->set_priority( priority );
-        m_pimpl->rules.push_back( rule );
+        m_pimpl->m_rules.push_back( rule );
     }
     
     void Service::publish( const shared_ptr< const Resource >& resource )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -219,7 +219,7 @@ namespace restbed
             return;
         }
         
-        auto paths = resource->m_pimpl->paths;
+        auto paths = resource->m_pimpl->m_paths;
         
         if ( not m_pimpl->has_unique_paths( paths ) )
         {
@@ -230,17 +230,17 @@ namespace restbed
         {
             const string sanitised_path = m_pimpl->sanitise_path( path );
             
-            m_pimpl->resource_paths[ sanitised_path ] = path;
-            m_pimpl->resource_routes[ sanitised_path ] = resource;
+            m_pimpl->m_resource_paths[ sanitised_path ] = path;
+            m_pimpl->m_resource_routes[ sanitised_path ] = resource;
         }
         
-        const auto& methods = resource->m_pimpl->methods;
-        m_pimpl->supported_methods.insert( methods.begin( ), methods.end( ) );
+        const auto& methods = resource->m_pimpl->m_methods;
+        m_pimpl->m_supported_methods.insert( methods.begin( ), methods.end( ) );
     }
     
     void Service::suppress( const shared_ptr< const Resource >& resource )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -250,9 +250,9 @@ namespace restbed
             return;
         }
         
-        for ( const auto& path : resource->m_pimpl->paths )
+        for ( const auto& path : resource->m_pimpl->m_paths )
         {
-            if ( m_pimpl->resource_routes.erase( path ) )
+            if ( m_pimpl->m_resource_routes.erase( path ) )
             {
                 m_pimpl->log( Logger::Level::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
             }
@@ -267,11 +267,11 @@ namespace restbed
     {
         if ( interval == milliseconds::zero( ) )
         {
-            m_pimpl->io_service->post( task );
+            m_pimpl->m_io_service->post( task );
             return;
         }
         
-        auto timer = make_shared< asio::steady_timer >( *m_pimpl->io_service );
+        auto timer = make_shared< asio::steady_timer >( *m_pimpl->m_io_service );
         timer->expires_from_now( interval );
         timer->async_wait( [ this, task, interval, timer ]( const asio::error_code& )
         {
@@ -282,91 +282,91 @@ namespace restbed
     
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->logger = value;
+        m_pimpl->m_logger = value;
     }
     
     void Service::set_session_manager( const shared_ptr< SessionManager >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->session_manager = value;
+        m_pimpl->m_session_manager = value;
     }
-
+    
     void Service::set_ready_handler( const function< void ( Service& ) >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->ready_handler = bind( value, std::ref( *this ) );
+        m_pimpl->m_ready_handler = bind( value, std::ref( *this ) );
     }
     
     void Service::set_not_found_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->not_found_handler = value;
+        m_pimpl->m_not_found_handler = value;
     }
     
     void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->method_not_allowed_handler = value;
+        m_pimpl->m_method_not_allowed_handler = value;
     }
     
     void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->method_not_implemented_handler = value;
+        m_pimpl->m_method_not_implemented_handler = value;
     }
     
     void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->failed_filter_validation_handler = value;
+        m_pimpl->m_failed_filter_validation_handler = value;
     }
     
     void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session > ) > value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->error_handler = value;
+        m_pimpl->m_error_handler = value;
     }
     
     void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >, const function< void ( const shared_ptr< Session > ) >& ) >& value )
     {
-        if ( m_pimpl->is_running )
+        if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->authentication_handler = value;
+        m_pimpl->m_authentication_handler = value;
     }
 }

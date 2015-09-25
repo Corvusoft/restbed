@@ -30,21 +30,21 @@ namespace restbed
         
         struct RequestImpl
         {
-            Bytes body { };
+            Bytes m_body { };
             
-            double version = 1.1;
+            double m_version = 1.1;
             
-            std::string path = "/";
+            std::string m_path = "/";
             
-            std::string method = "GET";
+            std::string m_method = "GET";
             
-            std::string protocol = "HTTP";
+            std::string m_protocol = "HTTP";
             
-            std::multimap< std::string, std::string > headers { };
+            std::multimap< std::string, std::string > m_headers { };
             
-            std::map< std::string, std::string > path_parameters { };
+            std::map< std::string, std::string > m_path_parameters { };
             
-            std::multimap< std::string, std::string > query_parameters { };
+            std::multimap< std::string, std::string > m_query_parameters { };
         };
     }
 }

@@ -28,7 +28,7 @@ namespace restbed
         
         struct RuleImpl
         {
-            int priority = 0;
+            int m_priority = 0;
         };
     }
 }

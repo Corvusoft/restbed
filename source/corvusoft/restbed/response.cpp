@@ -37,14 +37,14 @@ namespace restbed
     Bytes Response::to_bytes( void ) const
     {
         auto data = String::format( "%s/%.1f %i %s\r\n",
-                                    m_pimpl->protocol.data( ),
-                                    m_pimpl->version,
-                                    m_pimpl->status_code,
-                                    m_pimpl->status_message.data( ) );
+                                    m_pimpl->m_protocol.data( ),
+                                    m_pimpl->m_version,
+                                    m_pimpl->m_status_code,
+                                    m_pimpl->m_status_message.data( ) );
                                     
-        if ( not m_pimpl->headers.empty( ) )
+        if ( not m_pimpl->m_headers.empty( ) )
         {
-            const auto headers = String::join( m_pimpl->headers, ": ", "\r\n" );
+            const auto headers = String::join( m_pimpl->m_headers, ": ", "\r\n" );
             data += headers + "\r\n";
         }
         
@@ -52,9 +52,9 @@ namespace restbed
         
         Bytes bytes = String::to_bytes( data );
         
-        if ( not m_pimpl->body.empty( ) )
+        if ( not m_pimpl->m_body.empty( ) )
         {
-            bytes.insert( bytes.end( ), m_pimpl->body.begin( ), m_pimpl->body.end( ) );
+            bytes.insert( bytes.end( ), m_pimpl->m_body.begin( ), m_pimpl->m_body.end( ) );
         }
         
         return bytes;
@@ -62,71 +62,71 @@ namespace restbed
     
     Bytes Response::get_body( void ) const
     {
-        return m_pimpl->body;
+        return m_pimpl->m_body;
     }
     
     double Response::get_version( void ) const
     {
-        return m_pimpl->version;
+        return m_pimpl->m_version;
     }
     
     int Response::get_status_code( void ) const
     {
-        return m_pimpl->status_code;
+        return m_pimpl->m_status_code;
     }
     
     string Response::get_protocol( void ) const
     {
-        return m_pimpl->protocol;
+        return m_pimpl->m_protocol;
     }
     
     string Response::get_status_message( void ) const
     {
-        return m_pimpl->status_message;
+        return m_pimpl->m_status_message;
     }
     
     multimap< string, string > Response::get_headers( void ) const
     {
-        return m_pimpl->headers;
+        return m_pimpl->m_headers;
     }
     
     void Response::set_body( const Bytes& value )
     {
-        m_pimpl->body = value;
+        m_pimpl->m_body = value;
     }
     
     void Response::set_body( const string& value )
     {
-        m_pimpl->body = String::to_bytes( value );
+        m_pimpl->m_body = String::to_bytes( value );
     }
     
     void Response::set_version( const double value )
     {
-        m_pimpl->version = value;
+        m_pimpl->m_version = value;
     }
     
     void Response::set_status_code( const int value )
     {
-        m_pimpl->status_code = value;
+        m_pimpl->m_status_code = value;
     }
     
     void Response::set_protocol( const string& value )
     {
-        m_pimpl->protocol = value;
+        m_pimpl->m_protocol = value;
     }
     
     void Response::set_status_message( const string& value )
     {
-        m_pimpl->status_message = value;
+        m_pimpl->m_status_message = value;
     }
     
     void Response::set_header( const string& name, const string& value )
     {
-        m_pimpl->headers.insert( make_pair( name, value ) );
+        m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
     
     void Response::set_headers( const multimap< string, string >& values )
     {
-        m_pimpl->headers = values;
+        m_pimpl->m_headers = values;
     }
 }

@@ -80,29 +80,29 @@ namespace restbed
                 SessionImpl& operator =( const SessionImpl& value ) = delete;
                 
                 //Properties
-                std::string id;
+                std::string m_id;
                 
-                std::shared_ptr< Logger > logger;
+                std::shared_ptr< Logger > m_logger;
                 
-                std::shared_ptr< SocketImpl > socket;
+                std::shared_ptr< SocketImpl > m_socket;
                 
-                std::shared_ptr< const Request > request;
+                std::shared_ptr< const Request > m_request;
                 
-                std::shared_ptr< const Resource > resource;
+                std::shared_ptr< const Resource > m_resource;
                 
-                std::shared_ptr< const Settings > settings;
+                std::shared_ptr< const Settings > m_settings;
                 
-                std::shared_ptr< asio::streambuf > buffer;
-
-                std::shared_ptr< SessionManager > manager;
+                std::shared_ptr< asio::streambuf > m_buffer;
                 
-                std::multimap< std::string, std::string > headers;
+                std::shared_ptr< SessionManager > m_manager;
                 
-                std::map< std::string, const ContextValue > context;
+                std::multimap< std::string, std::string > m_headers;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > router;
+                std::map< std::string, const ContextValue > m_context;
                 
-                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > error_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > m_router;
+                
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler;
                 
             protected:
                 //Friends

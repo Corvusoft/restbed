@@ -37,136 +37,136 @@ namespace restbed
     
     uint16_t Settings::get_port( void ) const
     {
-        return m_pimpl->port;
+        return m_pimpl->m_port;
     }
     
     string Settings::get_root( void ) const
     {
-        return m_pimpl->root;
+        return m_pimpl->m_root;
     }
     
     unsigned int Settings::get_worker_limit( void ) const
     {
-        return m_pimpl->worker_limit;
+        return m_pimpl->m_worker_limit;
     }
     
     unsigned int Settings::get_connection_limit( void ) const
     {
-        return m_pimpl->connection_limit;
+        return m_pimpl->m_connection_limit;
     }
     
     string Settings::get_bind_address( void ) const
     {
-        return m_pimpl->bind_address;
+        return m_pimpl->m_bind_address;
     }
     
     bool Settings::get_case_insensitive_uris( void ) const
     {
-        return m_pimpl->case_insensitive_uris;
+        return m_pimpl->m_case_insensitive_uris;
     }
     
     milliseconds Settings::get_connection_timeout( void ) const
     {
-        return m_pimpl->connection_timeout;
+        return m_pimpl->m_connection_timeout;
     }
     
     string Settings::get_status_message( const int code ) const
     {
-        return ( m_pimpl->status_messages.count( code ) ) ?  m_pimpl->status_messages.at( code ) : "No Appropriate Status Message Found";
+        return ( m_pimpl->m_status_messages.count( code ) ) ?  m_pimpl->m_status_messages.at( code ) : "No Appropriate Status Message Found";
     }
     
     map< int, string > Settings::get_status_messages( void ) const
     {
-        return m_pimpl->status_messages;
+        return m_pimpl->m_status_messages;
     }
     
     string Settings::get_property( const string& name ) const
     {
-        return ( m_pimpl->properties.count( name ) ) ? m_pimpl->properties.at( name ) : "";
+        return ( m_pimpl->m_properties.count( name ) ) ? m_pimpl->m_properties.at( name ) : "";
     }
     
     map< string, string > Settings::get_properties( void ) const
     {
-        return m_pimpl->properties;
+        return m_pimpl->m_properties;
     }
 #ifdef BUILD_SSL
     shared_ptr< const SSLSettings > Settings::get_ssl_settings( void ) const
     {
-        return m_pimpl->ssl_settings;
+        return m_pimpl->m_ssl_settings;
     }
 #endif
     multimap< string, string > Settings::get_default_headers( void ) const
     {
-        return m_pimpl->default_headers;
+        return m_pimpl->m_default_headers;
     }
     
     void Settings::set_port( const uint16_t value )
     {
-        m_pimpl->port = value;
+        m_pimpl->m_port = value;
     }
     
     void Settings::set_root( const string& value )
     {
-        m_pimpl->root = value;
+        m_pimpl->m_root = value;
     }
     
     void Settings::set_worker_limit( const unsigned int value )
     {
-        m_pimpl->worker_limit = value;
+        m_pimpl->m_worker_limit = value;
     }
     
     void Settings::set_connection_limit( const unsigned int value )
     {
-        m_pimpl->connection_limit = value;
+        m_pimpl->m_connection_limit = value;
     }
     
     void Settings::set_bind_address( const string& value )
     {
-        m_pimpl->bind_address = value;
+        m_pimpl->m_bind_address = value;
     }
     
     void Settings::set_case_insensitive_uris( const bool value )
     {
-        m_pimpl->case_insensitive_uris = value;
+        m_pimpl->m_case_insensitive_uris = value;
     }
     
     void Settings::set_connection_timeout( const milliseconds& value )
     {
-        m_pimpl->connection_timeout = value;
+        m_pimpl->m_connection_timeout = value;
     }
     
     void Settings::set_status_message( const int code, const string& message )
     {
-        m_pimpl->status_messages[ code ] = message;
+        m_pimpl->m_status_messages[ code ] = message;
     }
     
     void Settings::set_status_messages( const map< int, string >& values )
     {
-        m_pimpl->status_messages = values;
+        m_pimpl->m_status_messages = values;
     }
     
     void Settings::set_property( const string& name, const string& value )
     {
-        m_pimpl->properties[ name ] = value;
+        m_pimpl->m_properties[ name ] = value;
     }
     
     void Settings::set_properties( const map< string, string >& values )
     {
-        m_pimpl->properties = values;
+        m_pimpl->m_properties = values;
     }
 #ifdef BUILD_SSL
     void Settings::set_ssl_settings( const shared_ptr< const SSLSettings >& values )
     {
-        m_pimpl->ssl_settings = values;
+        m_pimpl->m_ssl_settings = values;
     }
 #endif
     void Settings::set_default_header( const string& name, const string& value )
     {
-        m_pimpl->default_headers.insert( make_pair( name, value ) );
+        m_pimpl->m_default_headers.insert( make_pair( name, value ) );
     }
     
     void Settings::set_default_headers( const multimap< string, string >& values )
     {
-        m_pimpl->default_headers = values;
+        m_pimpl->m_default_headers = values;
     }
 }

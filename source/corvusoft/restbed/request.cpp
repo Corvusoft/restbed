@@ -43,74 +43,74 @@ namespace restbed
     {
         const auto key = String::lowercase( name );
         
-        auto iterator = find_if( m_pimpl->headers.begin( ), m_pimpl->headers.end( ), [ &key ]( const pair< string, string >& value )
+        auto iterator = find_if( m_pimpl->m_headers.begin( ), m_pimpl->m_headers.end( ), [ &key ]( const pair< string, string >& value )
         {
             return ( key == String::lowercase( value.first ) );
         } );
         
-        return iterator not_eq m_pimpl->headers.end( );
+        return iterator not_eq m_pimpl->m_headers.end( );
     }
     
     bool Request::has_path_parameter( const string& name, const bool ignore_case ) const
     {
         if ( not ignore_case )
         {
-            return m_pimpl->path_parameters.find( name ) not_eq m_pimpl->path_parameters.end( );
+            return m_pimpl->m_path_parameters.find( name ) not_eq m_pimpl->m_path_parameters.end( );
         }
         
         const auto key = String::lowercase( name );
-        const auto iterator = find_if( m_pimpl->path_parameters.begin( ), m_pimpl->path_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        const auto iterator = find_if( m_pimpl->m_path_parameters.begin( ), m_pimpl->m_path_parameters.end( ), [ &key ]( const pair< string, string >& value )
         {
             return ( key == String::lowercase( value.first ) );
         } );
         
-        return iterator not_eq m_pimpl->path_parameters.end( );
+        return iterator not_eq m_pimpl->m_path_parameters.end( );
     }
     
     bool Request::has_query_parameter( const string& name, const bool ignore_case ) const
     {
         if ( not ignore_case )
         {
-            return m_pimpl->query_parameters.find( name ) not_eq m_pimpl->query_parameters.end( );
+            return m_pimpl->m_query_parameters.find( name ) not_eq m_pimpl->m_query_parameters.end( );
         }
         
         const auto key = String::lowercase( name );
-        const auto iterator = find_if( m_pimpl->query_parameters.begin( ), m_pimpl->query_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        const auto iterator = find_if( m_pimpl->m_query_parameters.begin( ), m_pimpl->m_query_parameters.end( ), [ &key ]( const pair< string, string >& value )
         {
             return ( key == String::lowercase( value.first ) );
         } );
         
-        return iterator not_eq m_pimpl->query_parameters.end( );
+        return iterator not_eq m_pimpl->m_query_parameters.end( );
     }
     
     double Request::get_version( void ) const
     {
-        return m_pimpl->version;
+        return m_pimpl->m_version;
     }
     
     const Bytes& Request::get_body( void ) const
     {
-        return m_pimpl->body;
+        return m_pimpl->m_body;
     }
     
     string Request::get_path( const function< string ( const string& ) >& transform ) const
     {
-        return ( transform == nullptr ) ? m_pimpl->path : transform( m_pimpl->path );
+        return ( transform == nullptr ) ? m_pimpl->m_path : transform( m_pimpl->m_path );
     }
     
     string Request::get_method( const function< string ( const string& ) >& transform ) const
     {
-        return ( transform == nullptr ) ? m_pimpl->method : transform( m_pimpl->method );
+        return ( transform == nullptr ) ? m_pimpl->m_method : transform( m_pimpl->m_method );
     }
     
     string Request::get_protocol( const function< string ( const string& ) >& transform ) const
     {
-        return ( transform == nullptr ) ? m_pimpl->protocol : transform( m_pimpl->protocol );
+        return ( transform == nullptr ) ? m_pimpl->m_protocol : transform( m_pimpl->m_protocol );
     }
     
     void Request::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const
     {
-        body = ( transform == nullptr ) ? string( m_pimpl->body.begin( ), m_pimpl->body.end( ) ) : transform( m_pimpl->body );
+        body = ( transform == nullptr ) ? string( m_pimpl->m_body.begin( ), m_pimpl->m_body.end( ) ) : transform( m_pimpl->m_body );
     }
     
     void Request::get_header( const string& name, int& value, const int default_value ) const
@@ -172,7 +172,7 @@ namespace restbed
             value = default_value;
         }
     }
-
+    
     void Request::get_header( const string& name, unsigned int& value, const unsigned int default_value ) const
     {
         try
@@ -196,7 +196,7 @@ namespace restbed
             value = default_value;
         }
     }
-
+    
     void Request::get_header( const string& name, unsigned long long& value, const unsigned long long default_value ) const
     {
         try
@@ -213,13 +213,13 @@ namespace restbed
     {
         if ( name.empty( ) )
         {
-            return m_pimpl->headers;
+            return m_pimpl->m_headers;
         }
         
-        decltype( m_pimpl->headers ) headers;
+        decltype( m_pimpl->m_headers ) headers;
         const auto key = String::lowercase( name );
         
-        for ( const auto& header : m_pimpl->headers )
+        for ( const auto& header : m_pimpl->m_headers )
         {
             if ( key == String::lowercase( header.first ) )
             {
@@ -233,12 +233,12 @@ namespace restbed
     string Request::get_header( const string& name, const string& default_value ) const
     {
         const auto key = String::lowercase( name );
-        const auto iterator = find_if( m_pimpl->headers.begin( ), m_pimpl->headers.end( ), [ &key ]( const pair< string, string >& value )
+        const auto iterator = find_if( m_pimpl->m_headers.begin( ), m_pimpl->m_headers.end( ), [ &key ]( const pair< string, string >& value )
         {
             return ( key == String::lowercase( value.first ) );
         } );
         
-        return ( iterator == m_pimpl->headers.end( ) ) ? default_value : iterator->second;
+        return ( iterator == m_pimpl->m_headers.end( ) ) ? default_value : iterator->second;
     }
     
     string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
@@ -306,7 +306,7 @@ namespace restbed
             value = default_value;
         }
     }
-
+    
     void Request::get_query_parameter( const string& name, unsigned int& value, const unsigned int default_value ) const
     {
         try
@@ -342,7 +342,7 @@ namespace restbed
             value = default_value;
         }
     }
-
+    
     string Request::get_query_parameter( const string& name, const bool ignore_case ) const
     {
         return get_query_parameter( name, string( "" ), ignore_case );
@@ -352,17 +352,17 @@ namespace restbed
     {
         if ( not ignore_case )
         {
-            const auto iterator = m_pimpl->query_parameters.find( name );
-            return ( iterator == m_pimpl->query_parameters.end( ) ) ? default_value : iterator->second;
+            const auto iterator = m_pimpl->m_query_parameters.find( name );
+            return ( iterator == m_pimpl->m_query_parameters.end( ) ) ? default_value : iterator->second;
         }
         
         const auto key = String::lowercase( name );
-        const auto iterator = find_if( m_pimpl->query_parameters.begin( ), m_pimpl->query_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        const auto iterator = find_if( m_pimpl->m_query_parameters.begin( ), m_pimpl->m_query_parameters.end( ), [ &key ]( const pair< string, string >& value )
         {
             return ( key == String::lowercase( value.first ) );
         } );
         
-        return ( iterator == m_pimpl->query_parameters.end( ) ) ? default_value : iterator->second;
+        return ( iterator == m_pimpl->m_query_parameters.end( ) ) ? default_value : iterator->second;
     }
     
     string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
@@ -375,19 +375,19 @@ namespace restbed
     {
         if ( name.empty( ) )
         {
-            return m_pimpl->query_parameters;
+            return m_pimpl->m_query_parameters;
         }
         
         if ( not ignore_case )
         {
-            const auto iterators = m_pimpl->query_parameters.equal_range( name );
-            return decltype( m_pimpl->query_parameters )( iterators.first, iterators.second );
+            const auto iterators = m_pimpl->m_query_parameters.equal_range( name );
+            return decltype( m_pimpl->m_query_parameters )( iterators.first, iterators.second );
         }
         
         const auto key = String::lowercase( name );
-        decltype( m_pimpl->query_parameters ) parameters;
+        decltype( m_pimpl->m_query_parameters ) parameters;
         
-        for ( const auto& parameter : m_pimpl->query_parameters )
+        for ( const auto& parameter : m_pimpl->m_query_parameters )
         {
             if ( key == String::lowercase( parameter.first ) )
             {
@@ -445,7 +445,7 @@ namespace restbed
             value = default_value;
         }
     }
-
+    
     void Request::get_path_parameter( const string& name, long long& value, const long long default_value ) const
     {
         try
@@ -493,7 +493,7 @@ namespace restbed
             value = default_value;
         }
     }
-
+    
     string Request::get_path_parameter( const string& name, const bool ignore_case ) const
     {
         return get_path_parameter( name, string( "" ), ignore_case );
@@ -503,17 +503,17 @@ namespace restbed
     {
         if ( not ignore_case )
         {
-            const auto iterator = m_pimpl->path_parameters.find( name );
-            return ( iterator == m_pimpl->path_parameters.end( ) ) ? default_value : iterator->second;
+            const auto iterator = m_pimpl->m_path_parameters.find( name );
+            return ( iterator == m_pimpl->m_path_parameters.end( ) ) ? default_value : iterator->second;
         }
         
         const auto key = String::lowercase( name );
-        const auto iterator = find_if( m_pimpl->path_parameters.begin( ), m_pimpl->path_parameters.end( ), [ &key ]( const pair< string, string >& value )
+        const auto iterator = find_if( m_pimpl->m_path_parameters.begin( ), m_pimpl->m_path_parameters.end( ), [ &key ]( const pair< string, string >& value )
         {
             return ( key == String::lowercase( value.first ) );
         } );
         
-        return ( iterator == m_pimpl->path_parameters.end( ) ) ? default_value : iterator->second;
+        return ( iterator == m_pimpl->m_path_parameters.end( ) ) ? default_value : iterator->second;
     }
     
     string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
@@ -526,19 +526,19 @@ namespace restbed
     {
         if ( name.empty( ) )
         {
-            return m_pimpl->path_parameters;
+            return m_pimpl->m_path_parameters;
         }
         
         if ( not ignore_case )
         {
-            const auto iterators = m_pimpl->path_parameters.equal_range( name );
-            return decltype( m_pimpl->path_parameters )( iterators.first, iterators.second );
+            const auto iterators = m_pimpl->m_path_parameters.equal_range( name );
+            return decltype( m_pimpl->m_path_parameters )( iterators.first, iterators.second );
         }
         
         const auto key = String::lowercase( name );
-        decltype( m_pimpl->path_parameters ) parameters;
+        decltype( m_pimpl->m_path_parameters ) parameters;
         
-        for ( const auto& parameter : m_pimpl->path_parameters )
+        for ( const auto& parameter : m_pimpl->m_path_parameters )
         {
             if ( key == String::lowercase( parameter.first ) )
             {

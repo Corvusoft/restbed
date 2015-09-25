@@ -101,47 +101,47 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                bool is_running;
+                bool m_is_running;
                 
-                std::shared_ptr< Logger > logger;
+                std::shared_ptr< Logger > m_logger;
                 
-                std::set< std::string > supported_methods;
+                std::set< std::string > m_supported_methods;
                 
-                std::shared_ptr< const Settings > settings;
+                std::shared_ptr< const Settings > m_settings;
                 
-                std::shared_ptr< asio::io_service > io_service;
+                std::shared_ptr< asio::io_service > m_io_service;
                 
-                std::shared_ptr< SessionManager > session_manager;
+                std::shared_ptr< SessionManager > m_session_manager;
                 
-                std::vector< std::shared_ptr< Rule > > rules;
+                std::vector< std::shared_ptr< Rule > > m_rules;
                 
-                std::vector< std::shared_ptr< std::thread > > workers;
+                std::vector< std::shared_ptr< std::thread > > m_workers;
 #ifdef BUILD_SSL
-                std::shared_ptr< const SSLSettings > ssl_settings;
+                std::shared_ptr< const SSLSettings > m_ssl_settings;
                 
-                std::shared_ptr< asio::ssl::context > ssl_context;
+                std::shared_ptr< asio::ssl::context > m_ssl_context;
                 
-                std::shared_ptr< asio::ip::tcp::acceptor > ssl_acceptor;
+                std::shared_ptr< asio::ip::tcp::acceptor > m_ssl_acceptor;
 #endif
-                std::shared_ptr< asio::ip::tcp::acceptor > acceptor;
+                std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 
-                std::map< std::string, std::string > resource_paths;
+                std::map< std::string, std::string > m_resource_paths;
                 
-                std::map< std::string, std::shared_ptr< const Resource > > resource_routes;
+                std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
                 
-                std::function< void ( void ) > ready_handler;
+                std::function< void ( void ) > m_ready_handler;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > not_found_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > m_not_found_handler;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > method_not_allowed_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > m_method_not_allowed_handler;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > method_not_implemented_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > m_method_not_implemented_handler;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > failed_filter_validation_handler;
+                std::function< void ( const std::shared_ptr< Session > ) > m_failed_filter_validation_handler;
                 
-                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > error_handler;
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler;
                 
-                std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) > authentication_handler;
+                std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) > m_authentication_handler;
                 
             protected:
                 //Friends

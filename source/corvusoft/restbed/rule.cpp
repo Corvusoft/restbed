@@ -27,12 +27,12 @@ namespace restbed
     
     int Rule::get_priority( void ) const
     {
-        return m_pimpl->priority;
+        return m_pimpl->m_priority;
     }
     
     void Rule::set_priority( const int value )
     {
-        m_pimpl->priority = value;
+        m_pimpl->m_priority = value;
     }
     
     Rule::Rule( void ) : m_pimpl( new RuleImpl )

@@ -30,41 +30,41 @@ namespace restbed
         
         struct SSLSettingsImpl
         {
-            uint16_t port = 443;
+            uint16_t m_port = 443;
             
-            bool http_disabled = false;
+            bool m_http_disabled = false;
             
-            bool sslv2_enabled = true;
+            bool m_sslv2_enabled = true;
             
-            bool sslv3_enabled = true;
+            bool m_sslv3_enabled = true;
             
-            bool tlsv1_enabled = true;
+            bool m_tlsv1_enabled = true;
             
-            bool tlsv11_enabled = true;
+            bool m_tlsv11_enabled = true;
             
-            bool tlsv12_enabled = true;
+            bool m_tlsv12_enabled = true;
             
-            bool compression_enabled = true;
+            bool m_compression_enabled = true;
             
-            bool default_workarounds_enabled = true;
+            bool m_default_workarounds_enabled = true;
             
-            bool single_diffie_hellman_use_enabled = true;
+            bool m_single_diffie_hellman_use_enabled = true;
             
-            std::string bind_address = "";
+            std::string m_bind_address = "";
             
-            std::string passphrase = "";
+            std::string m_passphrase = "";
             
-            std::string private_key = "";
+            std::string m_private_key = "";
             
-            std::string private_rsa_key = "";
+            std::string m_private_rsa_key = "";
             
-            std::string certificate = "";
+            std::string m_certificate = "";
             
-            std::string certificate_chain = "";
+            std::string m_certificate_chain = "";
             
-            std::string certificate_authority_pool = "";
+            std::string m_certificate_authority_pool = "";
             
-            std::string temporary_diffie_hellman = "";
+            std::string m_temporary_diffie_hellman = "";
         };
     }
 }

@@ -34,21 +34,21 @@ namespace restbed
         
         struct ResourceImpl
         {
-            std::set< std::string > paths { };
+            std::set< std::string > m_paths { };
             
-            std::set< std::string > methods { };
+            std::set< std::string > m_methods { };
             
-            std::vector< std::shared_ptr< Rule > > rules { };
+            std::vector< std::shared_ptr< Rule > > m_rules { };
             
-            std::multimap< std::string, std::string > default_headers { };
+            std::multimap< std::string, std::string > m_default_headers { };
             
-            std::function< void ( const std::shared_ptr< Session > ) > failed_filter_validation_handler = nullptr;
+            std::function< void ( const std::shared_ptr< Session > ) > m_failed_filter_validation_handler = nullptr;
             
-            std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > error_handler = nullptr;
+            std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler = nullptr;
             
-            std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) > authentication_handler = nullptr;
+            std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) > m_authentication_handler = nullptr;
             
-            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session > ) > > > method_handlers { };
+            std::multimap< std::string, std::pair< std::multimap< std::string, std::string >, std::function< void ( const std::shared_ptr< Session > ) > > > m_method_handlers { };
         };
     }
 }

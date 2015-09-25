@@ -37,7 +37,7 @@ namespace restbed
 {
     Session::Session( const string& id ) : m_pimpl( new SessionImpl )
     {
-        m_pimpl->id = id;
+        m_pimpl->m_id = id;
     }
     
     Session::~Session( void )
@@ -47,18 +47,18 @@ namespace restbed
     
     bool Session::has( const string& name ) const
     {
-        return m_pimpl->context.find( name ) not_eq m_pimpl->context.end( );
+        return m_pimpl->m_context.find( name ) not_eq m_pimpl->m_context.end( );
     }
     
     void Session::erase( const string& name )
     {
         if ( name.empty( ) )
         {
-            m_pimpl->context.clear( );
+            m_pimpl->m_context.clear( );
         }
         else
         {
-            m_pimpl->context.erase( name );
+            m_pimpl->m_context.erase( name );
         }
     }
     
@@ -66,7 +66,7 @@ namespace restbed
     {
         std::set< std::string > keys;
         
-        for ( const auto& value : m_pimpl->context )
+        for ( const auto& value : m_pimpl->m_context )
         {
             keys.insert( keys.end( ), value.first );
         }
@@ -76,7 +76,7 @@ namespace restbed
     
     bool Session::is_open( void ) const
     {
-        return m_pimpl->socket not_eq nullptr and m_pimpl->socket->is_open( );
+        return m_pimpl->m_socket not_eq nullptr and m_pimpl->m_socket->is_open( );
     }
     
     bool Session::is_closed( void ) const
@@ -87,8 +87,8 @@ namespace restbed
     void Session::close( const Bytes& body )
     {
         auto session = shared_from_this( );
-
-        m_pimpl->socket->write( body, [ this, session ]( const asio::error_code & error, size_t )
+        
+        m_pimpl->m_socket->write( body, [ this, session ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
@@ -97,9 +97,9 @@ namespace restbed
             }
             else
             {
-                m_pimpl->manager->save( session, [ this, session ]( const shared_ptr< Session > )
+                m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
                 {
-                    m_pimpl->socket->close( );
+                    m_pimpl->m_socket->close( );
                 } );
             }
         } );
@@ -108,7 +108,7 @@ namespace restbed
     void Session::close( const Response& response )
     {
         auto session = shared_from_this( );
-
+        
         m_pimpl->transmit( response, [ this, session ]( const asio::error_code & error, size_t )
         {
             if ( error )
@@ -117,9 +117,9 @@ namespace restbed
                 m_pimpl->failure( session, 500, runtime_error( message ) );
             }
             
-            m_pimpl->manager->save( session, [ this, session ]( const shared_ptr< Session > )
+            m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
             {
-                m_pimpl->socket->close( );
+                m_pimpl->m_socket->close( );
             } );
         } );
     }
@@ -164,8 +164,8 @@ namespace restbed
     void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
-
-        m_pimpl->socket->write( body, [ this, session, callback ]( const asio::error_code & error, size_t )
+        
+        m_pimpl->m_socket->write( body, [ this, session, callback ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
@@ -187,7 +187,7 @@ namespace restbed
     void Session::yield( const Response& response, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
-
+        
         m_pimpl->transmit( response, [ this, session, callback ]( const asio::error_code & error, size_t )
         {
             if ( error )
@@ -199,7 +199,7 @@ namespace restbed
             {
                 if ( callback == nullptr )
                 {
-                    m_pimpl->fetch( session, m_pimpl->router );
+                    m_pimpl->fetch( session, m_pimpl->m_router );
                 }
                 else
                 {
@@ -249,12 +249,12 @@ namespace restbed
     void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
         auto session = shared_from_this( );
-
-        if ( length > m_pimpl->buffer->size( ) )
+        
+        if ( length > m_pimpl->m_buffer->size( ) )
         {
-            size_t size = length - m_pimpl->buffer->size( );
-
-            m_pimpl->socket->read( m_pimpl->buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
+            size_t size = length - m_pimpl->m_buffer->size( );
+            
+            m_pimpl->m_socket->read( m_pimpl->m_buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
             {
                 if ( error )
                 {
@@ -276,8 +276,8 @@ namespace restbed
     void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
         auto session = shared_from_this( );
-
-        m_pimpl->socket->read( m_pimpl->buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
+        
+        m_pimpl->m_socket->read( m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
         {
             if ( error )
             {
@@ -294,8 +294,8 @@ namespace restbed
     void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
-
-        m_pimpl->socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
+        
+        m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
         {
             if ( error )
             {
@@ -314,81 +314,81 @@ namespace restbed
     
     const string& Session::get_id( void ) const
     {
-        return m_pimpl->id;
+        return m_pimpl->m_id;
     }
     
     const string Session::get_origin( void ) const
     {
-        if ( m_pimpl->socket == nullptr )
+        if ( m_pimpl->m_socket == nullptr )
         {
             return "";
         }
         
-        return m_pimpl->socket->get_remote_endpoint( );
+        return m_pimpl->m_socket->get_remote_endpoint( );
     }
     
     const string Session::get_destination( void ) const
     {
-        if ( m_pimpl->socket == nullptr )
+        if ( m_pimpl->m_socket == nullptr )
         {
             return "";
         }
         
-        return m_pimpl->socket->get_local_endpoint( );
+        return m_pimpl->m_socket->get_local_endpoint( );
     }
     
     const shared_ptr< const Request > Session::get_request(  void ) const
     {
-        return m_pimpl->request;
+        return m_pimpl->m_request;
     }
     
     const shared_ptr< const Resource > Session::get_resource(  void ) const
     {
-        return m_pimpl->resource;
+        return m_pimpl->m_resource;
     }
     
     const multimap< string, string >& Session::get_headers( void ) const
     {
-        return m_pimpl->headers;
+        return m_pimpl->m_headers;
     }
     
     const ContextValue& Session::get( const string& name ) const
     {
-        return m_pimpl->context.at( name );
+        return m_pimpl->m_context.at( name );
     }
     
     const ContextValue& Session::get( const string& name, const ContextValue& default_value ) const
     {
         if ( has( name ) )
         {
-            return m_pimpl->context.at( name );
+            return m_pimpl->m_context.at( name );
         }
         
         return default_value;
     }
-
+    
     void Session::set_id( const string& value )
     {
-        m_pimpl->id = value;
+        m_pimpl->m_id = value;
     }
     
     void Session::set( const string& name, const ContextValue& value )
     {
         if ( has( name ) )
         {
-            m_pimpl->context.erase( name );
+            m_pimpl->m_context.erase( name );
         }
         
-        m_pimpl->context.insert( make_pair( name, value ) );
+        m_pimpl->m_context.insert( make_pair( name, value ) );
     }
     
     void Session::set_header( const string& name, const string& value )
     {
-        m_pimpl->headers.insert( make_pair( name, value ) );
+        m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
     
     void Session::set_headers( const multimap< string, string >& values )
     {
-        m_pimpl->headers = values;
+        m_pimpl->m_headers = values;
     }
 }

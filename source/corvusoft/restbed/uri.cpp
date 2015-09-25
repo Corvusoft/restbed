@@ -51,8 +51,8 @@ namespace restbed
             throw invalid_argument( "Argument is not a valid URI: " + value );
         }
         
-        m_pimpl->uri = value;
-        m_pimpl->relative = relative;
+        m_pimpl->m_uri = value;
+        m_pimpl->m_relative = relative;
     }
     
     Uri::Uri( const Uri& original ) : m_pimpl( new UriImpl( *original.m_pimpl ) )
@@ -67,17 +67,17 @@ namespace restbed
     
     bool Uri::is_relative( void ) const
     {
-        return m_pimpl->relative;
+        return m_pimpl->m_relative;
     }
     
     bool Uri::is_absolute( void ) const
     {
-        return not m_pimpl->relative;
+        return not m_pimpl->m_relative;
     }
     
     string Uri::to_string( void ) const
     {
-        return m_pimpl->uri;
+        return m_pimpl->m_uri;
     }
     
     bool Uri::is_valid( const string& value )
@@ -189,7 +189,7 @@ namespace restbed
         string port = String::empty;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\]):([0-9]+)" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             port = match[ 6 ];
         }
@@ -222,7 +222,7 @@ namespace restbed
         
         smatch match;
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return ( is_absolute( ) ) ? match[ 3 ] : string( match[ 2 ] ) + string( match[ 3 ] );
         }
@@ -235,7 +235,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "^[^?#]+\\?([^#]+)" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return match[ 1 ];
         }
@@ -248,7 +248,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "^([a-zA-Z][a-zA-Z0-9+\\-.]*):" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return match[ 1 ];
         }
@@ -261,7 +261,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "#(.+)" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return match[ 1 ];
         }
@@ -274,7 +274,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "^[a-zA-Z0-9+\\-.]+://([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return match[ 1 ];
         }
@@ -287,7 +287,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "^[a-zA-Z0-9+\\-.]+://([a-zA-Z0-9\\-._~%!$&'()*+,;=]+):([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)@" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return match[ 2 ];
         }
@@ -305,7 +305,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])" );
         
-        if ( regex_search( m_pimpl->uri, match, pattern ) )
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
             return match[ 5 ];
         }
@@ -333,28 +333,28 @@ namespace restbed
     
     Uri& Uri::operator =( const Uri& rhs )
     {
-        m_pimpl->uri = rhs.m_pimpl->uri;
+        m_pimpl->m_uri = rhs.m_pimpl->m_uri;
         return *this;
     }
     
     bool Uri::operator <( const Uri& rhs ) const
     {
-        return m_pimpl->uri < rhs.m_pimpl->uri;
+        return m_pimpl->m_uri < rhs.m_pimpl->m_uri;
     }
     
     bool Uri::operator >( const Uri& rhs ) const
     {
-        return m_pimpl->uri > rhs.m_pimpl->uri;
+        return m_pimpl->m_uri > rhs.m_pimpl->m_uri;
     }
     
     bool Uri::operator ==( const Uri& rhs ) const
     {
-        return m_pimpl->uri == rhs.m_pimpl->uri;
+        return m_pimpl->m_uri == rhs.m_pimpl->m_uri;
     }
     
     bool Uri::operator !=( const Uri& rhs ) const
     {
-        return m_pimpl->uri not_eq rhs.m_pimpl->uri;
+        return m_pimpl->m_uri not_eq rhs.m_pimpl->m_uri;
     }
     
     Uri::Uri( void ) : m_pimpl( new UriImpl )
