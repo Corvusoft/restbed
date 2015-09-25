@@ -10,7 +10,6 @@
 //External Includes
 #include <catch.hpp>
 
-
 //System Namespaces
 
 //Project Namespaces

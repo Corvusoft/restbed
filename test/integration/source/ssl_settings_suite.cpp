@@ -12,7 +12,6 @@
 //External Includes
 #include <catch.hpp>
 
-
 //System Namespaces
 using std::string;
 

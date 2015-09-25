@@ -16,7 +16,6 @@
 #include <asio.hpp>
 #include <catch.hpp>
 
-
 //System Namespaces
 using std::thread;
 using std::shared_ptr;

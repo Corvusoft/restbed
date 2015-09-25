@@ -14,7 +14,6 @@
 //External Includes
 #include <catch.hpp>
 
-
 //System Namespaces
 using std::thread;
 using std::function;
