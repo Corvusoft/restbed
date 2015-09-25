@@ -99,13 +99,13 @@ TEST_CASE( "validate session context functionality", "[session]" )
     try
     {
         int type = session.get( "Connection" );
-        REQUIRE( false );
+        REQUIRE( type == 0 );
     }
-    catch( const bad_cast& )
+    catch ( const bad_cast& )
     {
         REQUIRE( true );
     }
-
+    
     session.erase( );
     REQUIRE( session.keys( ) == set< string >( ) );
     
