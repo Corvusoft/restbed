@@ -24,8 +24,8 @@ using namespace restbed;
 class InMemorySessionManager : public SessionManager
 {
     public:
-        InMemorySessionManager( void ) : sessions_lock( ),
-            sessions( )
+        InMemorySessionManager( void ) : m_sessions_lock( ),
+            m_sessions( )
         {
             return;
         }
@@ -62,10 +62,10 @@ class InMemorySessionManager : public SessionManager
         {
             const auto request = session->get_request( );
             
-            unique_lock< mutex > lock( sessions_lock );
-            auto previous_session = sessions.find( request->get_header( "SessionID" ) );
+            unique_lock< mutex > lock( m_sessions_lock );
+            auto previous_session = m_sessions.find( request->get_header( "SessionID" ) );
             
-            if ( previous_session not_eq sessions.end( ) )
+            if ( previous_session not_eq m_sessions.end( ) )
             {
                 const auto id = previous_session->second->get_id( );
                 session->set_id( id );
@@ -86,8 +86,8 @@ class InMemorySessionManager : public SessionManager
         
         void save( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         {
-            unique_lock< mutex > lock( sessions_lock );
-            sessions[ session->get_id( ) ] = session;
+            unique_lock< mutex > lock( m_sessions_lock );
+            m_sessions[ session->get_id( ) ] = session;
             lock.unlock( );
             
             callback( session );
@@ -99,9 +99,9 @@ class InMemorySessionManager : public SessionManager
         }
         
     private:
-        mutex sessions_lock;
+        mutex m_sessions_lock;
         
-        map< string, shared_ptr< Session > > sessions;
+        map< string, shared_ptr< Session > > m_sessions;
 };
 
 void get_method_handler( const shared_ptr< Session > session )
