@@ -128,8 +128,11 @@ namespace restbed
             {
                 log( Logger::Level::ERROR, String::format( "Error %i, %s", status, error.what( ) ) );
                 
-                string body = error.what( );
-                session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+                if ( session not_eq nullptr and session->is_open( ) )
+                {
+                    string body = error.what( );
+                    session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+                }
             }
         }
         
