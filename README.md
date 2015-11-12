@@ -144,7 +144,6 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 
 |     Method   |                   Description                   |
 |:--------------|:-----------------------------------------------| 
-| [Glitter](https://gitter.im/Corvusoft/restbed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)     | Online Development/Support Chat Forum                      |
 | [Twitter](http://www.twitter.com/corvusoft)                  | Tweet us your questions & feature requests.   |
 | [Google+](https://plus.google.com/+CorvusoftCoUkSolutions)   | Join the community social circle.             |
 | support@corvusoft.co.uk                                      | Support related queries.                      |
