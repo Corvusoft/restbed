@@ -26,7 +26,7 @@ namespace restbed
 {
     //Forward Declarations
     class Http;
-
+    
     namespace detail
     {
         class SessionImpl;
@@ -55,12 +55,12 @@ namespace restbed
             
             //Getters
             uint16_t get_port( void ) const;
-
+            
             double get_version( void ) const;
-
+            
             const Bytes& get_body( void ) const;
-
-            std::string get_host( void ) const;
+            
+            std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
@@ -77,7 +77,7 @@ namespace restbed
             void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
-
+            
             void get_header( const std::string& name, long long& value, const long long default_value = 0 ) const;
             
             void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
@@ -85,7 +85,7 @@ namespace restbed
             void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
             
             void get_header( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
-
+            
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
             std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
@@ -99,13 +99,13 @@ namespace restbed
             void get_query_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
-
+            
             void get_query_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
             
             void get_query_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-
+            
             void get_query_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
             
             std::string get_query_parameter( const std::string& name, const bool ignore_case = true ) const;
@@ -123,13 +123,13 @@ namespace restbed
             void get_path_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
-
+            
             void get_path_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
             
             void get_path_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-
+            
             void get_path_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
             
             std::string get_path_parameter( const std::string& name, const bool ignore_case = true ) const;
@@ -142,21 +142,21 @@ namespace restbed
             
             //Setters
             void set_body( const Bytes& value );
-
+            
             void set_port( const uint16_t value );
-
+            
             void set_version( const double value );
-
+            
             void set_path( const std::string& value );
-
+            
             void set_host( const std::string& value );
-
+            
             void set_method( const std::string& value );
-
+            
             void set_protocol( const std::string& value );
-
+            
             void set_headers( const std::multimap< std::string, std::string >& values );
-
+            
             void set_query_parameters( const std::multimap< std::string, std::string >& values );
             
             //Operators
