@@ -82,6 +82,11 @@ namespace restbed
         
         return iterator not_eq m_pimpl->m_query_parameters.end( );
     }
+
+    uint16_t Request::get_port( void ) const
+    {
+        return m_pimpl->m_port;
+    }
     
     double Request::get_version( void ) const
     {
@@ -91,6 +96,11 @@ namespace restbed
     const Bytes& Request::get_body( void ) const
     {
         return m_pimpl->m_body;
+    }
+
+    string Request::get_host( void ) const
+    {
+        return m_pimpl->m_host;
     }
     
     string Request::get_path( const function< string ( const string& ) >& transform ) const
@@ -547,5 +557,50 @@ namespace restbed
         }
         
         return parameters;
+    }
+
+    void Request::set_body( const Bytes& value )
+    {
+        m_pimpl->m_body = value;
+    }
+
+    void Request::set_port( const uint16_t value )
+    {
+        m_pimpl->m_port = value;
+    }
+
+    void Request::set_version( const double value )
+    {
+        m_pimpl->m_version = value;
+    }
+
+    void Request::set_path( const string& value )
+    {
+        m_pimpl->m_path = value;
+    }
+
+    void Request::set_host( const string& value )
+    {
+        m_pimpl->m_host = value;
+    }
+
+    void Request::set_method( const string& value )
+    {
+        m_pimpl->m_method = value;
+    }
+
+    void Request::set_protocol( const string& value )
+    {
+        m_pimpl->m_protocol = value;
+    }
+
+    void Request::set_headers( const multimap< string, string >& values )
+    {
+        m_pimpl->m_headers = values;
+    }
+
+    void Request::set_query_parameters( const multimap< string, string >& values )
+    {
+        m_pimpl->m_query_parameters = values;
     }
 }

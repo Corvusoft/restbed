@@ -3,6 +3,7 @@
  */
 
 #include "corvusoft/restbed/uri.hpp"
+#include "corvusoft/restbed/http.hpp"
 #include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/byte.hpp"
 #include "corvusoft/restbed/string.hpp"

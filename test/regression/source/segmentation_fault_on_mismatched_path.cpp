@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -46,15 +45,14 @@ TEST_CASE( "mismatched resource path", "[service]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/";
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/" );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 404 == response.status_code );
+            REQUIRE( 404 == response->get_status_code( ) );
             
             service.stop( );
         } );
@@ -80,15 +78,14 @@ TEST_CASE( "matched resource path", "[service]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/test";
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/test" );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 200 == response.status_code );
+            REQUIRE( 200 == response->get_status_code( ) );
             
             service.stop( );
         } );

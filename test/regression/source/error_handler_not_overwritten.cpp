@@ -10,7 +10,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -54,16 +53,15 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
-        {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/queues/test";
+        {            
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/queues/test" );
             
-            auto response = Http::get( request );
+            auto response = Http::sync( request );
             
-            REQUIRE( 444 == response.status_code );
+            REQUIRE( 444 == response->get_status_code( ) );
             
             service.stop( );
         } );

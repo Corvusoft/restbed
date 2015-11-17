@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -46,16 +45,15 @@ TEST_CASE( "with space in path", "[resource]" )
     service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
-        {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/queues/test queue";
+        {            
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/queues/test queue" );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 400 == response.status_code );
+            auto response = Http::sync( request );
+
+            REQUIRE( 400 == response->get_status_code( ) );
             
             service.stop( );
         } );
@@ -82,15 +80,14 @@ TEST_CASE( "without space in path", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/queues/testQueue";
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/queues/testQueue" );
             
-            auto response = Http::get( request );
+            auto response = Http::sync( request );
             
-            REQUIRE( 200 == response.status_code );
+            REQUIRE( 200 == response->get_status_code( ) );
             
             service.stop( );
         } );

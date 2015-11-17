@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <cstdint>
 #include <functional>
 
 //Project Includes
@@ -24,7 +25,8 @@
 namespace restbed
 {
     //Forward Declarations
-    
+    class Http;
+
     namespace detail
     {
         class SessionImpl;
@@ -52,9 +54,13 @@ namespace restbed
             bool has_query_parameter( const std::string& name, const bool ignore_case = true ) const;
             
             //Getters
+            uint16_t get_port( void ) const;
+
             double get_version( void ) const;
-            
+
             const Bytes& get_body( void ) const;
+
+            std::string get_host( void ) const;
             
             std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
@@ -135,6 +141,23 @@ namespace restbed
             std::map< std::string, std::string > get_path_parameters( const std::string& name = "", const bool ignore_case = true ) const;
             
             //Setters
+            void set_body( const Bytes& value );
+
+            void set_port( const uint16_t value );
+
+            void set_version( const double value );
+
+            void set_path( const std::string& value );
+
+            void set_host( const std::string& value );
+
+            void set_method( const std::string& value );
+
+            void set_protocol( const std::string& value );
+
+            void set_headers( const std::multimap< std::string, std::string >& values );
+
+            void set_query_parameters( const std::multimap< std::string, std::string >& values );
             
             //Operators
             
@@ -159,6 +182,7 @@ namespace restbed
             
         private:
             //Friends
+            friend Http;
             friend detail::ServiceImpl;
             friend detail::SessionImpl;
             

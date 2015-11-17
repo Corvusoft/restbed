@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -13,7 +14,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -22,6 +22,7 @@
 using std::thread;
 using std::string;
 using std::function;
+using std::multimap;
 using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
@@ -88,116 +89,128 @@ SCENARIO( "custom resource authentication", "[resource]" )
             {
                 WHEN( "I perform an authorised HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29ydnVzb2Z0OkdsYXNnb3c='" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/1";
-                    request.headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
-                    
-                    auto response = Http::get( request );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources/1" );
+
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
+                    request.set_headers( headers );
+
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '200' (OK) status code" )
                     {
-                        REQUIRE( 200 == response.status_code );
+                        REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'Password Protected Hello, World!'" )
                     {
                         Bytes expection { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response.body == expection );
+                        REQUIRE( response->get_body( ) == expection );
                     }
+
+                    headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '32'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "32" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "32" == headers.find( "Content-Length" )->second );
                     }
                 }
                 
                 WHEN( "I perform an unauthorised HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29y28fsoOkdsYXNnb3c'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/1";
-                    request.headers.insert( make_pair( "Authorization", "Basic Q29y28fsoOkdsYXNnb3c" ) );
-                    
-                    auto response = Http::get( request );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources/1" );
+
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Authorization", "Basic Q29y28fsoOkdsYXNnb3c" ) );
+                    request.set_headers( headers );
+
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '403' (Forbidden) status code" )
                     {
-                        REQUIRE( 403 == response.status_code );
+                        REQUIRE( 403 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see an empty repsonse body" )
                     {
-                        REQUIRE( response.body.empty( ) );
+                        REQUIRE( response->get_body( ).empty( ) );
                     }
+
+                    headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should not see a 'Content-Length' header" )
                     {
-                        REQUIRE( response.headers.find( "Content-Length" ) == response.headers.end( ) );
+                        REQUIRE( headers.find( "Content-Length" ) == headers.end( ) );
                     }
                     
                     AND_THEN( "I should see a 'WWW-Authenticate' header value of 'Basic realm=\"restbed\"'" )
                     {
-                        auto header = response.headers.find( "WWW-Authenticate" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "Basic realm=\"restbed\"" == response.headers.find( "WWW-Authenticate" )->second );
+                        auto header = headers.find( "WWW-Authenticate" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "Basic realm=\"restbed\"" == headers.find( "WWW-Authenticate" )->second );
                     }
                 }
                 
                 WHEN( "I perform an unauthorised HTTP 'GET' request to '/resources/1' without an 'Authorization' header" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/1";
-                    
-                    auto response = Http::get( request );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources/1" );
+
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '401' (Unauthorization) status code" )
                     {
-                        REQUIRE( 401 == response.status_code );
+                        REQUIRE( 401 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see an empty repsonse body" )
                     {
-                        REQUIRE( response.body.empty( ) );
+                        REQUIRE( response->get_body( ).empty( ) );
                     }
+
+                    multimap< string, string > headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should not see a 'Content-Length' header" )
                     {
-                        REQUIRE( response.headers.find( "Content-Length" ) == response.headers.end( ) );
+                        REQUIRE( headers.find( "Content-Length" ) == headers.end( ) );
                     }
                     
                     AND_THEN( "I should see a 'WWW-Authenticate' header value of 'Basic realm=\"restbed\"'" )
                     {
-                        auto header = response.headers.find( "WWW-Authenticate" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "Basic realm=\"restbed\"" == response.headers.find( "WWW-Authenticate" )->second );
+                        auto header = headers.find( "WWW-Authenticate" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "Basic realm=\"restbed\"" == headers.find( "WWW-Authenticate" )->second );
                     }
                 }
                 

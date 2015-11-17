@@ -3,6 +3,7 @@
 set( BUILD_MANIFEST
    ${SOURCE_DIR}/uri.cpp
    ${SOURCE_DIR}/rule.cpp
+   ${SOURCE_DIR}/http.cpp
    ${SOURCE_DIR}/string.cpp
    ${SOURCE_DIR}/request.cpp
    ${SOURCE_DIR}/resource.cpp

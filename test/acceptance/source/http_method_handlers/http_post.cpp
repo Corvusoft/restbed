@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -12,7 +13,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -20,6 +20,7 @@
 //System Namespaces
 using std::thread;
 using std::string;
+using std::multimap;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -54,36 +55,39 @@ SCENARIO( "publishing single path resources", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'POST' request to '/resources/1'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/1";
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_method( "POST" );
+                    request.set_path( "/resources/1" );
                     
-                    auto response = Http::post( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '200' (OK) status code" )
                     {
-                        REQUIRE( 200 == response.status_code );
+                        REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
                     {
                         Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response.body == expection );
+                        REQUIRE( response->get_body( ) == expection );
                     }
+
+                    multimap< string, string > headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '13'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "13" == headers.find( "Content-Length" )->second );
                     }
                 }
                 

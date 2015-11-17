@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -12,7 +13,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -20,6 +20,7 @@
 //System Namespaces
 using std::thread;
 using std::string;
+using std::multimap;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -63,28 +64,29 @@ SCENARIO( "request path parameters", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/queues/events/messages/100'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/queues/events/messages/100";
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources/queues/events/messages/100" );
                     
-                    auto response = Http::get( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '204' (No Content) status code" )
                     {
-                        REQUIRE( 204 == response.status_code );
+                        REQUIRE( 204 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see an empty repsonse body" )
                     {
-                        REQUIRE( response.body.empty( ) );
+                        REQUIRE( response->get_body( ).empty( ) );
                     }
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto headers = response->get_headers( );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                 }
                 

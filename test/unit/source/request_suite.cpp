@@ -26,6 +26,8 @@ TEST_CASE( "validate default instance values", "[request]" )
 {
     const Request request;
     
+    REQUIRE( request.get_port( ) == 80 );
+    REQUIRE( request.get_host( ) == "" );
     REQUIRE( request.get_version( ) == 1.1 );
     REQUIRE( request.get_path( ) == "/" );
     REQUIRE( request.get_body( ).empty( ) );
@@ -46,6 +48,37 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[request]" )
     auto request = new Request;
     
     REQUIRE_NOTHROW( delete request );
+}
+
+TEST_CASE( "validate setters modify default values", "[request]" )
+{
+    Request request;
+    request.set_body( { 'a', 'b', 'c' } );
+    request.set_port( 1984 );
+    request.set_version( 1.0 );
+    request.set_path( "/test case" );
+    request.set_host( "www.google.co.uk" );
+    request.set_method( "CONNECT" );
+    request.set_protocol( "HTTPS" );
+
+    multimap< string, string > headers { { "X-CUST", "1223" } };
+    request.set_headers( headers );
+
+    multimap< string, string > parameters { { "q", "search" } };
+    request.set_query_parameters( parameters );
+
+    REQUIRE( request.get_port( ) == 1984 );
+    REQUIRE( request.get_host( ) == "www.google.co.uk" );
+    REQUIRE( request.get_version( ) == 1.0 );
+    REQUIRE( request.get_path( ) == "/test case" );
+    REQUIRE( request.get_body( ).empty( ) == false );
+    REQUIRE( request.get_method( ) == "CONNECT" );
+    REQUIRE( request.get_protocol( ) == "HTTPS" );
+    REQUIRE( request.get_headers( ) == headers );
+    REQUIRE( request.get_path_parameters( ).empty( ) );
+    REQUIRE( request.get_query_parameters( ) == parameters );
+    REQUIRE( request.has_query_parameter( "q" ) == true );
+    REQUIRE( request.has_header( "X-CUST" ) == true );
 }
 
 TEST_CASE( "validate getter default value", "[request]" )

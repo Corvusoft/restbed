@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -13,7 +14,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -22,6 +22,7 @@
 using std::thread;
 using std::string;
 using std::function;
+using std::multimap;
 using std::exception;
 using std::make_pair;
 using std::shared_ptr;
@@ -71,36 +72,38 @@ SCENARIO( "custom service error handler", "[service]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/1'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/1";
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources/1" );
                     
-                    auto response = Http::get( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '0' (Custom Error) status code" )
                     {
-                        REQUIRE( 22 == response.status_code );
+                        REQUIRE( 22 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'I see nothing!'" )
                     {
                         Bytes expection { 'o', 'v', 'e', 'r', 'r', 'i', 'd', 'd', 'e', 'n', ' ', 's', 'e', 'r', 'v', 'i', 'c', 'e', ' ', 'h', 'a', 'n', 'd', 'l', 'e', 'r', '!' };
-                        REQUIRE( response.body == expection );
+                        REQUIRE( response->get_body( ) == expection );
                     }
-                    
+
+                    multimap< string, string > headers = response->get_headers( );
+
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '27'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "27" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "27" == headers.find( "Content-Length" )->second );
                     }
                 }
                 

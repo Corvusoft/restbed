@@ -3,18 +3,23 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
+#include <string>
 #include <memory>
+#include <utility>
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
 
 //System Namespaces
+using std::string;
 using std::thread;
+using std::multimap;
+using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -55,15 +60,14 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/TestResource";
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/TestResource" );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 401 == response.status_code );
+            REQUIRE( 401 == response->get_status_code( ) );
             
             service.stop( );
         } );
@@ -94,16 +98,18 @@ TEST_CASE( "add alternative resource", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/TestResource";
-            request.headers = { { "Content-Type", "application/xml" } };
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/TestResource" );
+
+            multimap< string, string > headers;
+            headers.insert( make_pair( "Content-Type", "application/xml" ) );
+            request.set_headers( headers );
             
-            auto response = Http::get( request );
+            auto response = Http::sync( request );
             
-            REQUIRE( 401 == response.status_code );
+            REQUIRE( 401 == response->get_status_code( ) );
             
             service.stop( );
         } );

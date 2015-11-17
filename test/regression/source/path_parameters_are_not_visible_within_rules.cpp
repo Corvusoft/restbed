@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -76,15 +75,14 @@ TEST_CASE( "path parameters are not visible within rules", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/queues/1a230096-928d-4958-90d1-a681bfff22b4";
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/queues/1a230096-928d-4958-90d1-a681bfff22b4" );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 200 == response.status_code );
+            REQUIRE( 200 == response->get_status_code( ) );
             
             service.stop( );
         } );

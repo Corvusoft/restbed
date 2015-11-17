@@ -13,7 +13,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -21,6 +20,8 @@
 //System Namespaces
 using std::thread;
 using std::string;
+using std::multimap;
+using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -54,19 +55,18 @@ TEST_CASE( "fails to parse header values containing colons", "[session]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/test";
-            request.headers =
-            {
-                { "User-Agent", "Mozilla: 4.0" }
-            };
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/test" );
+
+            multimap< string, string > headers;
+            headers.insert( make_pair( "User-Agent", "Mozilla: 4.0" ) );
+            request.set_headers( headers );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 200 == response.status_code );
+            auto response = Http::sync( request );
+
+            REQUIRE( 200 == response->get_status_code( ) );
             
             service.stop( );
         } );

@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -12,7 +13,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -20,6 +20,7 @@
 //System Namespaces
 using std::thread;
 using std::string;
+using std::multimap;
 using std::shared_ptr;
 using std::make_shared;
 
@@ -55,33 +56,36 @@ SCENARIO( "publishing single path resources", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'DELETE' request to '/resources/1'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources/1";
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources/1" );
+                    request.set_method( "DELETE" );
                     
-                    auto response = Http::destroy( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '501' (Not Implemented) status code" )
                     {
-                        REQUIRE( 501 == response.status_code );
+                        REQUIRE( 501 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see an empty repsonse body" )
                     {
-                        REQUIRE( response.body.empty( ) );
+                        REQUIRE( response->get_body( ).empty( ) );
                     }
+
+                    multimap< string, string > headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should not see a 'Content-Length' header value" )
                     {
-                        REQUIRE( response.headers.find( "Content-Length" ) == response.headers.end( ) );
+                        REQUIRE( headers.find( "Content-Length" ) == headers.end( ) );
                     }
                 }
                 

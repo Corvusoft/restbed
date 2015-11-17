@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -50,16 +49,15 @@ TEST_CASE( "encoded uri test", "[request]" )
     service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
-        {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 8989;
-            request.host = "localhost";
-            request.path = "/uri%20test?ben+crowhurst=%4030";
+        {            
+            Request request;
+            request.set_port( 8989 );
+            request.set_host( "localhost" );
+            request.set_path( "/uri%20test?ben+crowhurst=%4030" );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 200 == response.status_code );
+            REQUIRE( 200 == response->get_status_code( ) );
             
             service.stop( );
         } );

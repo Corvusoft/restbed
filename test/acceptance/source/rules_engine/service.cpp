@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -13,7 +14,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 #include "content_type_rule.hpp"
 #include "content_length_rule.hpp"
 
@@ -24,6 +24,7 @@
 using std::thread;
 using std::string;
 using std::function;
+using std::multimap;
 using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
@@ -64,164 +65,190 @@ SCENARIO( "service rules engine", "[service]" )
             {
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv, Content-Length: 0'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources";
-                    request.headers.insert( make_pair( "Content-Length", "0" ) );
-                    request.headers.insert( make_pair( "Content-Type", "application/csv" ) );
-                    
-                    auto response = Http::post( request );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources" );
+                    request.set_method( "POST" );
+
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Content-Length", "0" ) );
+                    headers.insert( make_pair( "Content-Type", "application/csv" ) );
+                    request.set_headers( headers );
+
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '200' (OK) status code" )
                     {
-                        REQUIRE( 200 == response.status_code );
+                        REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
                     {
                         Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response.body == expection );
+                        REQUIRE( response->get_body( ) == expection );
                     }
+
+                    headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '13'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "13" == headers.find( "Content-Length" )->second );
                     }
                 }
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/json, Content-Length: 0'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources";
-                    request.headers.insert( make_pair( "Content-Length", "0" ) );
-                    request.headers.insert( make_pair( "Content-Type", "application/json" ) );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources" );
+                    request.set_method( "POST" );
+
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Content-Length", "0" ) );
+                    headers.insert( make_pair( "Content-Type", "application/json" ) );
+                    request.set_headers( headers );
                     
-                    auto response = Http::post( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '415' (Unsupported Media Type) status code" )
                     {
-                        REQUIRE( 415 == response.status_code );
+                        REQUIRE( 415 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'Unsupported Media Type, must be 'application/csv'.'" )
                     {
-                        string body( response.body.begin( ), response.body.end( ) );
+                        auto data = response->get_body( );
+                        string body( data.begin( ), data.end( ) );
                         REQUIRE( body == "Unsupported Media Type, must be 'application/csv'." );
                     }
+
+                    headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Type' header value of 'text/plain'" )
                     {
-                        auto header = response.headers.find( "Content-Type" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "text/plain" == response.headers.find( "Content-Type" )->second );
+                        auto header = headers.find( "Content-Type" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "text/plain" == headers.find( "Content-Type" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '50'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "50" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "50" == headers.find( "Content-Length" )->second );
                     }
                 }
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv, Content-Length: 4' and body 'data'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources";
-                    request.body = { 'd', 'a', 't', 'a' };
-                    request.headers.insert( make_pair( "Content-Length", "4" ) );
-                    request.headers.insert( make_pair( "Content-Type", "application/csv" ) );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources" );
+                    request.set_body( { 'd', 'a', 't', 'a' } );
+                    request.set_method( "POST" );
+
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Content-Length", "4" ) );
+                    headers.insert( make_pair( "Content-Type", "application/csv" ) );
+                    request.set_headers( headers );
                     
-                    auto response = Http::post( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '200' (OK) status code" )
                     {
-                        REQUIRE( 200 == response.status_code );
+                        REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
                     {
                         Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response.body == expection );
+                        REQUIRE( response->get_body( ) == expection );
                     }
+
+                    headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '13'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "13" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "13" == headers.find( "Content-Length" )->second );
                     }
                 }
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv' and body 'data'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resources";
-                    request.body = { 'd', 'a', 't', 'a' };
-                    request.headers.insert( make_pair( "Content-Type", "application/csv" ) );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resources" );
+                    request.set_body( { 'd', 'a', 't', 'a' } );
+                    request.set_method( "POST" );
+
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Content-Type", "application/csv" ) );
+                    request.set_headers( headers );
                     
-                    auto response = Http::post( request );
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '411' (Length Required) status code" )
                     {
-                        REQUIRE( 411 == response.status_code );
+                        REQUIRE( 411 == response->get_status_code( ) );
                     }
                     
                     AND_THEN( "I should see a repsonse body of 'Length Required.'" )
                     {
-                        string body( response.body.begin( ), response.body.end( ) );
+                        auto data = response->get_body( );
+                        string body( data.begin( ), data.end( ) );
                         REQUIRE( body == "Length Required." );
                     }
+
+                    headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
-                        auto header = response.headers.find( "Connection" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "close" == response.headers.find( "Connection" )->second );
+                        auto header = headers.find( "Connection" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "close" == headers.find( "Connection" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Type' header value of 'text/plain'" )
                     {
-                        auto header = response.headers.find( "Content-Type" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "text/plain" == response.headers.find( "Content-Type" )->second );
+                        auto header = headers.find( "Content-Type" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "text/plain" == headers.find( "Content-Type" )->second );
                     }
                     
                     AND_THEN( "I should see a 'Content-Length' header value of '16'" )
                     {
-                        auto header = response.headers.find( "Content-Length" );
-                        REQUIRE( header not_eq response.headers.end( ) );
-                        REQUIRE( "16" == response.headers.find( "Content-Length" )->second );
+                        auto header = headers.find( "Content-Length" );
+                        REQUIRE( header not_eq headers.end( ) );
+                        REQUIRE( "16" == headers.find( "Content-Length" )->second );
                     }
                 }
                 

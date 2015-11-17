@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -41,15 +40,14 @@ TEST_CASE( "resource instance destroyed with bound method functors", "[resource]
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/";
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/" );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::get( request );
-            
-            REQUIRE( 501 == response.status_code );
+            REQUIRE( 501 == response->get_status_code( ) );
             
             service.stop( );
         } );

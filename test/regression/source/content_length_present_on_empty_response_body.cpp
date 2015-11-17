@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -46,16 +45,18 @@ TEST_CASE( "content length present on empty response body", "[response]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/test";
+            Request request;
+            request.set_method( "GET" );
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/test" );
             
-            auto response = Http::get( request );
+            auto response = Http::sync( request );
             
-            REQUIRE( 200 == response.status_code );
-            REQUIRE( response.headers.end( ) == response.headers.find( "Content-Length" ) );
+            REQUIRE( 200 == response->get_status_code( ) );
+
+            auto headers = response->get_headers( );
+            REQUIRE( headers.end( ) == headers.find( "Content-Length" ) );
             
             service.stop( );
         } );

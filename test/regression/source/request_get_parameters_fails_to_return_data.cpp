@@ -9,7 +9,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -60,15 +59,14 @@ TEST_CASE( "request get parameters fails to return data", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "GET";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/resources/123/messages/abc?style=true&name=test%20item";
-            
-            auto response = Http::get( request );
-            
-            REQUIRE( 200 == response.status_code );
+            Request request;
+            request.set_port( 1984 );
+            request.set_host( "localhost" );
+            request.set_path( "/resources/123/messages/abc?style=true&name=test%20item" );
+
+            auto response = Http::sync( request );
+
+            REQUIRE( 200 == response->get_status_code( ) );
             
             service.stop( );
         } );

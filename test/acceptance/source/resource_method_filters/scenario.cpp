@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <string>
 #include <memory>
@@ -12,7 +13,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -20,6 +20,7 @@
 //System Namespaces
 using std::thread;
 using std::string;
+using std::multimap;
 using std::function;
 using std::make_pair;
 using std::shared_ptr;
@@ -63,33 +64,39 @@ SCENARIO( "resource method filters", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/xml'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resource";
-                    request.headers.insert( make_pair( "Content-Type", "application/xml" ) );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resource" );
                     
-                    auto response = Http::get( request );
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Content-Type", "application/xml" ) );
+                    request.set_headers( headers );
+                    
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '1' (XML) status code" )
                     {
-                        REQUIRE( 1 == response.status_code );
+                        REQUIRE( 1 == response->get_status_code( ) );
                     }
                 }
                 
                 WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/json'" )
                 {
-                    Http::Request request;
-                    request.port = 1984;
-                    request.host = "localhost";
-                    request.path = "/resource";
-                    request.headers.insert( make_pair( "Content-Type", "application/json" ) );
+                    Request request;
+                    request.set_port( 1984 );
+                    request.set_host( "localhost" );
+                    request.set_path( "/resource" );
                     
-                    auto response = Http::get( request );
+                    multimap< string, string > headers;
+                    headers.insert( make_pair( "Content-Type", "application/json" ) );
+                    request.set_headers( headers );
+
+                    auto response = Http::sync( request );
                     
                     THEN( "I should see a '2' (JSON) status code" )
                     {
-                        REQUIRE( 2 == response.status_code );
+                        REQUIRE( 2 == response->get_status_code( ) );
                     }
                 }
                 

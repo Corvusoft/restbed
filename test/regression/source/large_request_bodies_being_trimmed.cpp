@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <memory>
 #include <string>
@@ -11,7 +12,6 @@
 
 //Project Includes
 #include <restbed>
-#include "http.hpp"
 
 //External Includes
 #include <catch.hpp>
@@ -19,6 +19,9 @@
 //System Namespaces
 using std::thread;
 using std::vector;
+using std::string;
+using std::multimap;
+using std::make_pair;
 using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
@@ -67,17 +70,22 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Http::Request request;
-            request.method = "POST";
-            request.port = 1984;
-            request.host = "localhost";
-            request.path = "/test";
-            request.body = Bytes( body, body + 492 );
-            request.headers = { { "Content-Length", ::to_string( request.body.size( ) ) } };
+            Request request;
+            request.set_port( 1984 );
+            request.set_method( "POST" );
+            request.set_host( "localhost" );
+            request.set_path( "/test" );
+
+            Bytes data( body, body + 492 );
+            request.set_body( data );
+
+            multimap< string, string > headers;
+            headers.insert( make_pair( "Content-Length", ::to_string( data.size( ) ) ) );
+            request.set_headers( headers );
+
+            auto response = Http::sync( request );
             
-            auto response = Http::post( request );
-            
-            REQUIRE( 201 == response.status_code );
+            REQUIRE( 201 == response->get_status_code( ) );
             
             service.stop( );
         } );

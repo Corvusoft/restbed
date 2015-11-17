@@ -15,6 +15,10 @@ include_directories( SYSTEM ${catch_INCLUDE} )
 #
 # Build
 #
+add_executable( request_integration_test_suite ${SOURCE_DIR}/request_suite.cpp )
+target_link_libraries( request_integration_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( request_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/request_integration_test_suite )
+
 add_executable( string_integration_test_suite ${SOURCE_DIR}/string_suite.cpp )
 target_link_libraries( string_integration_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( string_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/string_integration_test_suite )
