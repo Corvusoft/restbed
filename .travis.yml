@@ -1,0 +1,31 @@
+language: cpp
+
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+            - kubuntu-backports
+        packages:
+            - cmake
+            - g++-5
+            - gcc-5
+
+compiler:
+  - gcc
+
+install:
+    - if [ "$CXX" = "g++"     ]; then export CXX="g++-5" CC="gcc-5"; fi
+
+before_script:  
+    - mkdir build
+    - cd build
+    - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
+
+script: make -j5 && make test 
+
+notifications:
+  recipients:
+    - support@corvusoft.co.uk
+  email:
+    on_success: change
+    on_failure: always
