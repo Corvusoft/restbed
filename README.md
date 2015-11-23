@@ -1,4 +1,4 @@
-# Restbed 
+# Restbed [![Build Status](https://travis-ci.org/Corvusoft/restbed.svg?branch=master)](https://travis-ci.org/Corvusoft/restbed) 
 
 ----------
 
