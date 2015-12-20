@@ -54,3 +54,7 @@ endif ( )
 if ( UNIX AND NOT APPLE )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread" )
 endif ( )
+
+if ( APPLE )
+    set( CMAKE_MACOSX_RPATH ON )
+endif ( )
