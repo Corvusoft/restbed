@@ -101,7 +101,7 @@ Please contact sales@corvusoft.co.uk, for support and licensing options includin
 git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
-cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DBUILD_SSL=NO] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
+cmake [-DBUILD_TESTS=YES] [-DBUILD_EXAMPLES=YES] [-DBUILD_SSL=NO] [-DBUILD_SHARED=YES] [-DCMAKE_INSTALL_PREFIX=/output-directory] ..
 make [-j CPU_CORES+1] install
 make test
 ```
