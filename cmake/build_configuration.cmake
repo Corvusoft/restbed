@@ -10,6 +10,10 @@ if( NOT WIN32 )
     set( Yellow  "${Esc}[33m" )
 endif( )
 
+if ( BUILD_SHARED )
+    set( BUILD_SHARED_LIBS ON )
+endif ( )
+
 set( INCLUDE_DIR "${CMAKE_SOURCE_DIR}/source" )
 set( SOURCE_DIR "${INCLUDE_DIR}/corvusoft/${PROJECT_NAME}" )
 
