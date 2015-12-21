@@ -70,4 +70,6 @@ include( "${CMAKE_SOURCE_DIR}/cmake/build_artifacts.cmake" )
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "include" )
 install( FILES ${BUILD_ARTIFACTS} DESTINATION "include/corvusoft/${PROJECT_NAME}" )
-install( TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION "library" LIBRARY DESTINATION "library" COMPONENT library )
+install( TARGETS ${PROJECT_NAME}
+         LIBRARY DESTINATION "library"
+         ARCHIVE DESTINATION "library" COMPONENT library )
