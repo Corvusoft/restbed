@@ -21,24 +21,6 @@
 
 //External Namespaces
 
-//1. Fix Tests.
-//2. Move buffer to request.
-//3. Move socket to request.
-//4. Link iostream to request.
-//5. Http::sync should use Socket.
-//6. SSL client.
-//x. merge code
-//y. transfer encoding client example, examples...
-
-
-// *Test*
-//test fetch on empty body returns eof.
-//test fetch on closed socket.
-//test keep-alive
-//transfer encoding
-//response.get_header( int, transform ) methods
-//test ssl client
- 
 namespace restbed
 {
     //Forward Declarations

@@ -135,7 +135,7 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5)       |             Session Management                  |     complete    |
 |     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 HTTP Client                     |  in-development     |
 |     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Signal Handling                   |     pending     |
-|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 Web Sockets                     |     pending     |
+|     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |                 Web Sockets                     |     pending     |
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |         Client-side SSL certificates            |     pending     |
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |               Resource Caching                  |     pending     |
 |     [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)       |               HTTP 2 compliance                 |     pending     |
