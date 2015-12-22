@@ -12,6 +12,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
+#include "corvusoft/restbed/request.hpp"
 
 //External Includes
 
@@ -24,6 +25,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Request;
     
     namespace detail
     {
@@ -40,6 +42,8 @@ namespace restbed
             std::string m_protocol = "HTTP";
             
             std::string m_status_message = "";
+
+            std::shared_ptr< const Request > m_request = nullptr;
             
             std::multimap< std::string, std::string > m_headers { };
         };

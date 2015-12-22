@@ -64,14 +64,14 @@ SCENARIO( "resource method filters", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/xml'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resource" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resource" );
                     
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/xml" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -83,14 +83,14 @@ SCENARIO( "resource method filters", "[resource]" )
                 
                 WHEN( "I perform a HTTP 'GET' request to '/resource' with header 'Content-Type: application/json'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resource" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resource" );
                     
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/json" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
 
                     auto response = Http::sync( request );
                     

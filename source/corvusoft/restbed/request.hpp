@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <memory>
 #include <cstdint>
 #include <functional>
 
@@ -26,6 +27,7 @@ namespace restbed
 {
     //Forward Declarations
     class Http;
+    class Response;
     
     namespace detail
     {
@@ -59,6 +61,8 @@ namespace restbed
             double get_version( void ) const;
             
             const Bytes& get_body( void ) const;
+
+            const std::shared_ptr< const Response > get_response( void ) const;
             
             std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             

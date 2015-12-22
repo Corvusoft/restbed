@@ -10,7 +10,9 @@
 //Project Includes
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
+#include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
+#include "corvusoft/restbed/detail/response_impl.hpp"
 
 //External Includes
 
@@ -20,6 +22,7 @@ using std::pair;
 using std::string;
 using std::function;
 using std::multimap;
+using std::shared_ptr;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -96,6 +99,11 @@ namespace restbed
     const Bytes& Request::get_body( void ) const
     {
         return m_pimpl->m_body;
+    }
+
+    const shared_ptr< const Response > Request::get_response( void ) const
+    {
+        return m_pimpl->m_response;
     }
     
     string Request::get_host( const function< string ( const string& ) >& transform ) const

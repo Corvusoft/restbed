@@ -46,10 +46,10 @@ TEST_CASE( "with space in path", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {            
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/queues/test queue" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/queues/test queue" );
             
             auto response = Http::sync( request );
 
@@ -80,10 +80,10 @@ TEST_CASE( "without space in path", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/queues/testQueue" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/queues/testQueue" );
             
             auto response = Http::sync( request );
             

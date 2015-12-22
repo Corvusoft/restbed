@@ -68,10 +68,10 @@ TEST_CASE( "fails to parse identical query parameters", "[service]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/test?echo=false&echo=true" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/test?echo=false&echo=true" );
 
             auto response = Http::sync( request );
             

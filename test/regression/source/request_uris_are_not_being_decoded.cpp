@@ -50,10 +50,10 @@ TEST_CASE( "encoded uri test", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {            
-            Request request;
-            request.set_port( 8989 );
-            request.set_host( "localhost" );
-            request.set_path( "/uri%20test?ben+crowhurst=%4030" );
+            auto request = make_shared< Request >( );
+            request->set_port( 8989 );
+            request->set_host( "localhost" );
+            request->set_path( "/uri%20test?ben+crowhurst=%4030" );
 
             auto response = Http::sync( request );
             

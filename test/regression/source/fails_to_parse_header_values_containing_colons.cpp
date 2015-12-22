@@ -55,14 +55,14 @@ TEST_CASE( "fails to parse header values containing colons", "[session]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/test" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/test" );
 
             multimap< string, string > headers;
             headers.insert( make_pair( "User-Agent", "Mozilla: 4.0" ) );
-            request.set_headers( headers );
+            request->set_headers( headers );
             
             auto response = Http::sync( request );
 

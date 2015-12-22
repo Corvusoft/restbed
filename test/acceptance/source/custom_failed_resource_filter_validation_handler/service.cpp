@@ -65,14 +65,14 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
             {
                 WHEN( "I perform an valid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/csv'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -81,10 +81,11 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Hello, World!'" )
                     {
-                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 13, response );
+                        Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     headers = response->get_headers( );
@@ -106,14 +107,14 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                 
                 WHEN( "I perform an invalid HTTP 'GET' request to '/resources/1' with header 'Content-Type: application/yaml'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1" );
                     
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/yaml" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -122,10 +123,11 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                         REQUIRE( -949 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Yikes! Filters Mismatched.'" )
+                    AND_THEN( "I should see a response body of 'Yikes! Filters Mismatched.'" )
                     {
-                        Bytes expection { 'Y', 'i', 'k', 'e', 's', '!', ' ', 'F', 'i', 'l', 't', 'e', 'r', 's', ' ', 'M', 'i', 's', 'm', 'a', 't', 'c', 'h', 'e', 'd', '.' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 26, response );                        
+                        Bytes expectation { 'Y', 'i', 'k', 'e', 's', '!', ' ', 'F', 'i', 'l', 't', 'e', 'r', 's', ' ', 'M', 'i', 's', 'm', 'a', 't', 'c', 'h', 'e', 'd', '.' };
+                        REQUIRE( actual == expectation );
                     }
 
                     headers = response->get_headers( );

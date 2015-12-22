@@ -55,11 +55,11 @@ SCENARIO( "custom resource not found handler", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'PUT' request to '/resources/1'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_method( "PUT" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_method( "PUT" );
+                    request->set_path( "/resources/1" );
                     
                     auto response = Http::sync( request );
                     
@@ -68,10 +68,11 @@ SCENARIO( "custom resource not found handler", "[resource]" )
                         REQUIRE( 0 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'I see nothing!'" )
+                    AND_THEN( "I should see a response body of 'I see nothing!'" )
                     {
-                        Bytes expection { 'I', ' ', 's', 'e', 'e', ' ', 'n', 'o', 't', 'h', 'i', 'n', 'g', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 14, response );
+                        Bytes expectation { 'I', ' ', 's', 'e', 'e', ' ', 'n', 'o', 't', 'h', 'i', 'n', 'g', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     multimap< string, string > headers = response->get_headers( );

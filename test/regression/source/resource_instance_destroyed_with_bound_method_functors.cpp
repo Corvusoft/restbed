@@ -40,10 +40,10 @@ TEST_CASE( "resource instance destroyed with bound method functors", "[resource]
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/" );
 
             auto response = Http::sync( request );
             

@@ -26,6 +26,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Response;
     
     namespace detail
     {
@@ -46,12 +47,16 @@ namespace restbed
             std::string m_method = "GET";
             
             std::string m_protocol = "HTTP";
+
+            std::shared_ptr< const Response > m_response = nullptr;
             
             std::multimap< std::string, std::string > m_headers { };
             
             std::map< std::string, std::string > m_path_parameters { };
             
             std::multimap< std::string, std::string > m_query_parameters { };
+
+            std::shared_ptr< asio::streambuf > m_buffer = nullptr;
 
             std::shared_ptr< asio::io_service > m_io_service = nullptr;
 

@@ -56,11 +56,11 @@ SCENARIO( "publishing custom HTTP methods", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'TRACE' request to '/resources/1'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_method( "TRACE" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_method( "TRACE" );
+                    request->set_path( "/resources/1" );
                     
                     auto response = Http::sync( request );
                     
@@ -69,7 +69,7 @@ SCENARIO( "publishing custom HTTP methods", "[resource]" )
                         REQUIRE( 501 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see an empty repsonse body" )
+                    AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }

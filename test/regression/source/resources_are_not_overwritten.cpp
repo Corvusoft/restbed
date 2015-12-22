@@ -60,10 +60,10 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/TestResource" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/TestResource" );
 
             auto response = Http::sync( request );
             
@@ -98,14 +98,14 @@ TEST_CASE( "add alternative resource", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/TestResource" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/TestResource" );
 
             multimap< string, string > headers;
             headers.insert( make_pair( "Content-Type", "application/xml" ) );
-            request.set_headers( headers );
+            request->set_headers( headers );
             
             auto response = Http::sync( request );
             

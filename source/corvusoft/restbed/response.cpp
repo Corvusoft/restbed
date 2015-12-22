@@ -7,6 +7,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/string.hpp"
+#include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/detail/response_impl.hpp"
 
@@ -16,8 +17,10 @@
 using std::string;
 using std::multimap;
 using std::make_pair;
+using std::shared_ptr;
 
 //Project Namespaces
+using restbed::Request;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
@@ -88,6 +91,11 @@ namespace restbed
     multimap< string, string > Response::get_headers( void ) const
     {
         return m_pimpl->m_headers;
+    }
+
+    const shared_ptr< const Request > Response::get_request( void ) const
+    {
+        return m_pimpl->m_request;
     }
     
     void Response::set_body( const Bytes& value )

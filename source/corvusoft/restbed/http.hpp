@@ -6,7 +6,9 @@
 #define _RESTBED_HTTP_H 1
 
 //System Includes
+#include <string>
 #include <memory>
+#include <cstddef>
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
@@ -19,11 +21,30 @@
 
 //External Namespaces
 
+//1. Fix Tests.
+//2. Move buffer to request.
+//3. Move socket to request.
+//4. Link iostream to request.
+//5. Http::sync should use Socket.
+//6. SSL client.
+//x. merge code
+//y. transfer encoding client example, examples...
+
+
+// *Test*
+//test fetch on empty body returns eof.
+//test fetch on closed socket.
+//test keep-alive
+//transfer encoding
+//response.get_header( int, transform ) methods
+//test ssl client
+ 
 namespace restbed
 {
     //Forward Declarations
     class Request;
     class Response;
+    class SSLSettings;
     
     class Http
     {
@@ -35,8 +56,18 @@ namespace restbed
             //Constructors
             
             //Functionality
-            static std::shared_ptr< const Response > sync( const Request& request );
+            static std::shared_ptr< const Response > sync( const std::shared_ptr< const Request >& request );
+
+            //static std::shared_ptr< Response > sync( const Request& request, const SSLSettings& settings );
             
+            //static void async( const Request& request, const std::function< void ( const std::shared_ptr< const Request >, std::shared_ptr< const Response > ) >& callback );
+
+            //static void async( const Request& request, const SSLSettings& settings, const std::function< void ( const std::shared_ptr< const Request >, std::shared_ptr< const Response > ) >& callback );
+
+            static Bytes fetch( const std::size_t length, const std::shared_ptr< const Response >& response );
+
+            static Bytes fetch( const std::string& delimiter, const std::shared_ptr< const Response >& response );
+
             //Getters
 
             //Setters

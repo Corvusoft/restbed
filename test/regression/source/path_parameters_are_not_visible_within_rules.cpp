@@ -75,10 +75,10 @@ TEST_CASE( "path parameters are not visible within rules", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/queues/1a230096-928d-4958-90d1-a681bfff22b4" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/queues/1a230096-928d-4958-90d1-a681bfff22b4" );
 
             auto response = Http::sync( request );
             

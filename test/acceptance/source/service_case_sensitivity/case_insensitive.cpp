@@ -63,10 +63,10 @@ SCENARIO( "case sensitive service", "[service]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/1?q=abc'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1?q=abc" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1?q=abc" );
                     
                     auto response = Http::sync( request );
                     
@@ -75,10 +75,11 @@ SCENARIO( "case sensitive service", "[service]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Hello, World!'" )
                     {
-                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 13, response );
+                        Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     auto headers = response->get_headers( );
@@ -100,10 +101,10 @@ SCENARIO( "case sensitive service", "[service]" )
                 
                 WHEN( "I perform a HTTP 'GET' request to '/RESOURCES/1?q=abc'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/RESOURCES/1?q=abc" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/RESOURCES/1?q=abc" );
                     
                     auto response = Http::sync( request );
                     
@@ -112,10 +113,11 @@ SCENARIO( "case sensitive service", "[service]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Hello, World!'" )
                     {
-                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 13, response );
+                        Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     auto headers = response->get_headers( );

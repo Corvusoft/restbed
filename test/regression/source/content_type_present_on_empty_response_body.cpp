@@ -45,11 +45,11 @@ TEST_CASE( "content type present on empty response body", "[response]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_method( "GET" );
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/test" );
+            auto request = make_shared< Request >( );
+            request->set_method( "GET" );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/test" );
             
             auto response = Http::sync( request );
             

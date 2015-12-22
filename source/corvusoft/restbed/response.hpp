@@ -7,6 +7,7 @@
 
 //System Includes
 #include <map>
+#include <memory>
 #include <string>
 
 //Project Includes
@@ -23,6 +24,9 @@
 namespace restbed
 {
     //Forward Declarations
+    class Http;
+    class Request;
+
     namespace detail
     {
         struct ResponseImpl;
@@ -55,6 +59,8 @@ namespace restbed
             std::string get_status_message( void ) const;
             
             std::multimap< std::string, std::string > get_headers( void ) const;
+
+            const std::shared_ptr< const Request > get_request( void ) const;
             
             //Setters
             void set_body( const Bytes& value );
@@ -96,6 +102,7 @@ namespace restbed
             
         private:
             //Friends
+            friend Http;
             
             //Definitions
             

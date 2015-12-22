@@ -54,10 +54,10 @@ TEST_CASE( "overwrite existing resource", "[resource]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {            
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/queues/test" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/queues/test" );
             
             auto response = Http::sync( request );
             

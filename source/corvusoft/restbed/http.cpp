@@ -19,7 +19,9 @@
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
+#include "corvusoft/restbed/ssl_settings.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
+#include "corvusoft/restbed/detail/response_impl.hpp"
 
 //External Includes
 #include <asio.hpp>
@@ -43,30 +45,31 @@ using std::ostream_iterator;
 using std::istreambuf_iterator;
 
 //Project Namespaces
+using restbed::detail::ResponseImpl;
 
 //External Namespaces
 
 namespace restbed
-{    
-    shared_ptr< const Response > Http::sync( const Request& request )
+{
+    shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request )
     {
-        request.m_pimpl->m_io_service = make_shared< asio::io_service >( );
-        asio::ip::tcp::resolver resolver( *request.m_pimpl->m_io_service );
-        asio::ip::tcp::resolver::query query( request.get_host( ), ::to_string( request.get_port( ) ) );
+        request->m_pimpl->m_io_service = make_shared< asio::io_service >( );
+        asio::ip::tcp::resolver resolver( *request->m_pimpl->m_io_service );
+        asio::ip::tcp::resolver::query query( request->get_host( ), ::to_string( request->get_port( ) ) );
         asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
         static const asio::ip::tcp::resolver::iterator end;
 
-        if ( request.m_pimpl->m_socket == nullptr or not request.m_pimpl->m_socket->is_open( ) )
+        if ( request->m_pimpl->m_socket == nullptr or not request->m_pimpl->m_socket->is_open( ) )
         {
-            request.m_pimpl->m_socket = make_shared< asio::ip::tcp::socket >( *request.m_pimpl->m_io_service );
+            request->m_pimpl->m_socket = make_shared< asio::ip::tcp::socket >( *request->m_pimpl->m_io_service );
         }
 
         asio::error_code error = asio::error::host_not_found;
         
         do
         {
-            request.m_pimpl->m_socket->close( );
-            request.m_pimpl->m_socket->connect( *endpoint_iterator++, error );
+            request->m_pimpl->m_socket->close( ); //would this not kill keep alive sockets requests?
+            request->m_pimpl->m_socket->connect( *endpoint_iterator++, error );
         }
         while ( error and endpoint_iterator not_eq end );
         
@@ -75,20 +78,20 @@ namespace restbed
         	throw runtime_error( String::format( "Failed to locate interface: %s\n", error.message( ).data( ) ) );
         }
         
-        const auto data = to_bytes( request );
+        const auto data = to_bytes( *request );
 
-        asio::streambuf buffer;
-        ostream request_stream( &buffer );
+        request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+        ostream request_stream( request->m_pimpl->m_buffer.get( ) );
         copy( data.begin( ), data.end( ), ostream_iterator< Byte >( request_stream ) );
-        asio::write( *request.m_pimpl->m_socket, buffer, error );
+        asio::write( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, error );
 
         if ( error )
         {
         	throw runtime_error( String::format( "Failed to transmit request: %s\n", error.message( ).data( ) ) );
         }
         
-        istream response_stream( &buffer );
-        asio::read_until( *request.m_pimpl->m_socket, buffer, "\r\n", error );
+        istream response_stream( request->m_pimpl->m_buffer.get( ) );
+        asio::read_until( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, "\r\n", error );
 
         if ( error )
         {
@@ -107,12 +110,14 @@ namespace restbed
         }
 
         auto response = make_shared< Response >( );
+        response->m_pimpl->m_request = request;
+        request->m_pimpl->m_response = response;
         response->set_protocol( matches[ 1 ].str( ) );
         response->set_version( stod( matches[ 2 ].str( ) ) );
         response->set_status_code( stoi( matches[ 3 ].str( ) ) );
         response->set_status_message( matches[ 4 ].str( ) );
 
-        asio::read_until( *request.m_pimpl->m_socket, buffer, "\r\n\r\n", error );
+        asio::read_until( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, "\r\n\r\n", error );
 
         if ( error == asio::error::eof )
         {
@@ -140,27 +145,68 @@ namespace restbed
         }
 
         response->set_headers( headers );
-        
-        Bytes body = { };
-
-        while ( not error )
-        {
-        	auto response_body = Bytes( istreambuf_iterator< char >( &buffer ), istreambuf_iterator< char >( ) );
-            body.insert( body.end( ), response_body.begin( ), response_body.end( ) );
-
-            buffer.consume( response_body.size( ) );
-
-            asio::read( *request.m_pimpl->m_socket, buffer, asio::transfer_all( ), error );
-        }
-
-        response->set_body( body );
-        
-        if ( error not_eq asio::error::eof )
-        {
-            throw runtime_error( String::format( "Failed to recieve response body: '%s'\n", error.message( ).data( ) ) );
-        }
 
         return response;
+    }
+
+    Bytes Http::fetch( const size_t length, const shared_ptr< const Response >& response )
+    {
+        Bytes data = { };
+        auto request = response->get_request( );
+
+        if ( length > request->m_pimpl->m_buffer->size( ) )
+        {
+            asio::error_code error;
+            const size_t adjusted_length = length - request->m_pimpl->m_buffer->size( );
+
+            const size_t size = asio::read( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, asio::transfer_at_least( adjusted_length ), error );
+
+            if ( error and error not_eq asio::error::eof )
+            {
+                throw runtime_error( String::format( "Failed to recieve response body: '%s'\n", error.message( ).data( ) ) );
+            }
+
+            const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
+            data = Bytes( data_ptr, data_ptr + size );
+            request->m_pimpl->m_buffer->consume( size );
+        }
+        else
+        {
+            const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
+            data = Bytes( data_ptr, data_ptr + length );
+            request->m_pimpl->m_buffer->consume( length );
+        }
+
+        auto& body = response->m_pimpl->m_body;
+
+        if ( body.empty( ) )
+        {
+            body = data;
+        }
+        else
+        {
+            body.insert( body.end( ), data.begin( ), data.end( ) );
+        }
+
+        return data;
+    }
+
+    Bytes Http::fetch( const string& delimiter, const shared_ptr< const Response >& response )
+    {
+        // asio::error_code error;
+        // auto buffer = make_shared< asio::streambuf >( );
+        // asio::read_until( *response->get_request( )->m_pimpl->m_socket, *buffer, delimiter, error );
+
+        // if ( error )
+        // {
+        //     throw runtime_error( String::format( "Failed to recieve response body: '%s'\n", error.message( ).data( ) ) );
+        // }
+
+        // const auto data = asio::buffer_cast< const Byte* >( buffer->data( ) );
+        // const Bytes body( data, data + buffer->size( ) );
+
+        // response->m_pimpl->m_body = body;
+        // return body;
     }
 
     Bytes Http::to_bytes( const Request& request )

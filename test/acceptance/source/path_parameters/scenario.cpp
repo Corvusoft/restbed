@@ -64,10 +64,10 @@ SCENARIO( "request path parameters", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/queues/events/messages/100'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/queues/events/messages/100" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/queues/events/messages/100" );
                     
                     auto response = Http::sync( request );
                     
@@ -76,7 +76,7 @@ SCENARIO( "request path parameters", "[resource]" )
                         REQUIRE( 204 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see an empty repsonse body" )
+                    AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }

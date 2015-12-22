@@ -34,6 +34,7 @@ TEST_CASE( "validate default instance values", "[request]" )
     REQUIRE( request.get_method( ) == "GET" );
     REQUIRE( request.get_protocol( ) == "HTTP" );
     REQUIRE( request.get_headers( ).empty( ) );
+    REQUIRE( request.get_response( ) == nullptr );
     REQUIRE( request.get_path_parameters( ).empty( ) );
     REQUIRE( request.get_query_parameters( ).empty( ) );
     REQUIRE( request.has_query_parameter( "q" ) == false );
@@ -75,6 +76,7 @@ TEST_CASE( "validate setters modify default values", "[request]" )
     REQUIRE( request.get_method( ) == "CONNECT" );
     REQUIRE( request.get_protocol( ) == "HTTPS" );
     REQUIRE( request.get_headers( ) == headers );
+    REQUIRE( request.get_response( ) == nullptr );
     REQUIRE( request.get_path_parameters( ).empty( ) );
     REQUIRE( request.get_query_parameters( ) == parameters );
     REQUIRE( request.has_query_parameter( "q" ) == true );

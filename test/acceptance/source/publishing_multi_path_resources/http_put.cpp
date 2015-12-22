@@ -56,11 +56,11 @@ SCENARIO( "publishing multi path resources", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'PUT' request to '/resources/1'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1" );
-                    request.set_method( "PUT" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1" );
+                    request->set_method( "PUT" );
                     
                     auto response = Http::sync( request );
                     
@@ -69,7 +69,7 @@ SCENARIO( "publishing multi path resources", "[resource]" )
                         REQUIRE( 501 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see an empty repsonse body" )
+                    AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }
@@ -91,11 +91,11 @@ SCENARIO( "publishing multi path resources", "[resource]" )
                 
                 WHEN( "I perform a HTTP 'PUT' request to '/resources/one'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/one" );
-                    request.set_method( "PUT" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/one" );
+                    request->set_method( "PUT" );
                     
                     auto response = Http::sync( request );
                     
@@ -104,7 +104,7 @@ SCENARIO( "publishing multi path resources", "[resource]" )
                         REQUIRE( 501 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see an empty repsonse body" )
+                    AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }

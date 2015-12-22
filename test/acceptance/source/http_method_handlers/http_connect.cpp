@@ -55,11 +55,11 @@ SCENARIO( "publishing single path resources", "[resource]" )
             {
                 WHEN( "I perform a HTTP 'CONNECT' request to '/resources/1'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_method( "CONNECT" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_method( "CONNECT" );
+                    request->set_path( "/resources/1" );
                     
                     auto response = Http::sync( request );
                     
@@ -68,10 +68,11 @@ SCENARIO( "publishing single path resources", "[resource]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Hello, World!'" )
                     {
-                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 13, response );
+                        Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     multimap< string, string > headers = response->get_headers( );

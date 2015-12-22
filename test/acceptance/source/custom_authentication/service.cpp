@@ -74,14 +74,14 @@ SCENARIO( "custom service authentication", "[service]" )
             {
                 WHEN( "I perform an authorised HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29ydnVzb2Z0OkdsYXNnb3c='" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
 
                     auto response = Http::sync( request );
                     
@@ -90,10 +90,11 @@ SCENARIO( "custom service authentication", "[service]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Password Protected Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Password Protected Hello, World!'" )
                     {
-                        Bytes expection { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 32, response );
+                        Bytes expectation { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     headers = response->get_headers( );
@@ -115,14 +116,14 @@ SCENARIO( "custom service authentication", "[service]" )
                 
                 WHEN( "I perform an unauthorised HTTP 'GET' request to '/resources/1' with header 'Authorization: Basic Q29ydndsYXNnb3c='" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Authorization", "Basic Q29ydndsYXNnb3c=" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
 
                     auto response = Http::sync( request );
                     
@@ -131,7 +132,7 @@ SCENARIO( "custom service authentication", "[service]" )
                         REQUIRE( 401 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see an empty repsonse body" )
+                    AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }

@@ -236,6 +236,6 @@ add_executable( resource_rules_engine_acceptance_test_suite ${SOURCE_DIR}/rules_
 target_link_libraries( resource_rules_engine_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( resource_rules_engine_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_rules_engine_acceptance_test_suite )
 
-add_executable( mixed_rules_engine_acceptance_test_suite ${SOURCE_DIR}/rules_engine/resource.cpp )
+add_executable( mixed_rules_engine_acceptance_test_suite ${SOURCE_DIR}/rules_engine/mixed.cpp )
 target_link_libraries( mixed_rules_engine_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( mixed_rules_engine_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/mixed_rules_engine_acceptance_test_suite )

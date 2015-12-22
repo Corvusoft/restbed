@@ -70,18 +70,18 @@ TEST_CASE( "large request bodies being trimmed", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_method( "POST" );
-            request.set_host( "localhost" );
-            request.set_path( "/test" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_method( "POST" );
+            request->set_host( "localhost" );
+            request->set_path( "/test" );
 
             Bytes data( body, body + 492 );
-            request.set_body( data );
+            request->set_body( data );
 
             multimap< string, string > headers;
             headers.insert( make_pair( "Content-Length", ::to_string( data.size( ) ) ) );
-            request.set_headers( headers );
+            request->set_headers( headers );
 
             auto response = Http::sync( request );
             

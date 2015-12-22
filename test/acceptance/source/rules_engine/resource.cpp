@@ -65,16 +65,16 @@ SCENARIO( "resource rules engine", "[resource]" )
             {
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv, Content-Length: 0'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources" );
-                    request.set_method( "POST" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources" );
+                    request->set_method( "POST" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Length", "0" ) );
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -83,10 +83,11 @@ SCENARIO( "resource rules engine", "[resource]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Hello, World!'" )
                     {
-                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 13, response );
+                        Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     headers = response->get_headers( );
@@ -108,16 +109,16 @@ SCENARIO( "resource rules engine", "[resource]" )
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/json, Content-Length: 0'" )
                 {                    
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources" );
-                    request.set_method( "POST" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources" );
+                    request->set_method( "POST" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Length", "0" ) );
                     headers.insert( make_pair( "Content-Type", "application/json" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -126,10 +127,10 @@ SCENARIO( "resource rules engine", "[resource]" )
                         REQUIRE( 415 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Unsupported Media Type, must be 'application/csv'.'" )
+                    AND_THEN( "I should see a response body of 'Unsupported Media Type, must be 'application/csv'.'" )
                     {
-                        auto data = response->get_body( );
-                        string body( data.begin( ), data.end( ) );
+                        auto actual = Http::fetch( 50, response );
+                        string body( actual.begin( ), actual.end( ) );
                         REQUIRE( body == "Unsupported Media Type, must be 'application/csv'." );
                     }
 
@@ -159,17 +160,17 @@ SCENARIO( "resource rules engine", "[resource]" )
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv, Content-Length: 4' and body 'data'" )
                 {   
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources" );
-                    request.set_body( { 'd', 'a', 't', 'a' } );
-                    request.set_method( "POST" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources" );
+                    request->set_body( { 'd', 'a', 't', 'a' } );
+                    request->set_method( "POST" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Length", "4" ) );
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -178,10 +179,11 @@ SCENARIO( "resource rules engine", "[resource]" )
                         REQUIRE( 200 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Hello, World!'" )
+                    AND_THEN( "I should see a response body of 'Hello, World!'" )
                     {
-                        Bytes expection { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 13, response );
+                        Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     headers = response->get_headers( );
@@ -203,16 +205,16 @@ SCENARIO( "resource rules engine", "[resource]" )
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv' and body 'data'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources" );
-                    request.set_body( { 'd', 'a', 't', 'a' } );
-                    request.set_method( "POST" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources" );
+                    request->set_body( { 'd', 'a', 't', 'a' } );
+                    request->set_method( "POST" );
 
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
-                    request.set_headers( headers );
+                    request->set_headers( headers );
                     
                     auto response = Http::sync( request );
                     
@@ -221,11 +223,11 @@ SCENARIO( "resource rules engine", "[resource]" )
                         REQUIRE( 411 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'Length Required.'" )
+                    AND_THEN( "I should see a response body of 'Length Required.'" )
                     {
-                        auto data = response->get_body( );
-                        string body( data.begin( ), data.end( ) );
-                        REQUIRE( body == "Length Required." );
+                        auto actual = Http::fetch( 16, response );
+                        Bytes expectation { 'L', 'e', 'n', 'g', 't', 'h', ' ', 'R', 'e', 'q', 'u', 'i', 'r', 'e', 'd', '.' };
+                        REQUIRE( actual == expectation );
                     }
 
                     headers = response->get_headers( );

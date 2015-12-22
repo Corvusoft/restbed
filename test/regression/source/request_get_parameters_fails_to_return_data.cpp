@@ -59,10 +59,10 @@ TEST_CASE( "request get parameters fails to return data", "[request]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            Request request;
-            request.set_port( 1984 );
-            request.set_host( "localhost" );
-            request.set_path( "/resources/123/messages/abc?style=true&name=test%20item" );
+            auto request = make_shared< Request >( );
+            request->set_port( 1984 );
+            request->set_host( "localhost" );
+            request->set_path( "/resources/123/messages/abc?style=true&name=test%20item" );
 
             auto response = Http::sync( request );
 

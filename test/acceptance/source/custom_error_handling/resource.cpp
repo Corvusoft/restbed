@@ -72,10 +72,10 @@ SCENARIO( "custom service error handler", "[service]" )
             {
                 WHEN( "I perform a HTTP 'GET' request to '/resources/1'" )
                 {
-                    Request request;
-                    request.set_port( 1984 );
-                    request.set_host( "localhost" );
-                    request.set_path( "/resources/1" );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resources/1" );
                     
                     auto response = Http::sync( request );
                     
@@ -84,10 +84,11 @@ SCENARIO( "custom service error handler", "[service]" )
                         REQUIRE( 22 == response->get_status_code( ) );
                     }
                     
-                    AND_THEN( "I should see a repsonse body of 'I see nothing!'" )
+                    AND_THEN( "I should see a response body of 'I see nothing!'" )
                     {
-                        Bytes expection { 'o', 'v', 'e', 'r', 'r', 'i', 'd', 'd', 'e', 'n', ' ', 's', 'e', 'r', 'v', 'i', 'c', 'e', ' ', 'h', 'a', 'n', 'd', 'l', 'e', 'r', '!' };
-                        REQUIRE( response->get_body( ) == expection );
+                        auto actual = Http::fetch( 27, response );
+                        Bytes expectation { 'o', 'v', 'e', 'r', 'r', 'i', 'd', 'd', 'e', 'n', ' ', 's', 'e', 'r', 'v', 'i', 'c', 'e', ' ', 'h', 'a', 'n', 'd', 'l', 'e', 'r', '!' };
+                        REQUIRE( actual == expectation );
                     }
 
                     multimap< string, string > headers = response->get_headers( );
