@@ -21,6 +21,21 @@
 
 //External Namespaces
 
+//3. Move socket to request.
+//4. Link iostream to request.
+//5. Http::sync should use Socket.
+//6. SSL client.
+//x. merge code
+//y. transfer encoding client example, examples...
+
+// *Test*
+//test fetch on empty body returns eof.
+//test fetch on closed socket.
+//test keep-alive
+//transfer encoding
+//response.get_header( int, transform ) methods
+//test ssl client
+
 namespace restbed
 {
     //Forward Declarations
@@ -47,6 +62,8 @@ namespace restbed
             //static void async( const Request& request, const SSLSettings& settings, const std::function< void ( const std::shared_ptr< const Request >, std::shared_ptr< const Response > ) >& callback );
 
             static Bytes fetch( const std::size_t length, const std::shared_ptr< const Response >& response );
+
+            static Bytes fetch( const std::string& delimiter, const std::shared_ptr< const Response >& response );
 
             //Getters
 

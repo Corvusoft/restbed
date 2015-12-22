@@ -96,7 +96,7 @@ namespace restbed
 
         if ( error )
         {
-            throw runtime_error( String::format( "Failed to recieve response: %s\n", error.message( ).data( ) ) );
+            throw runtime_error( String::format( "Failed to receive response: %s\n", error.message( ).data( ) ) );
         }
 
         string status_line = String::empty;
@@ -127,7 +127,7 @@ namespace restbed
 
         if ( error )
         {
-        	throw runtime_error( String::format( "Failed to recieve response headers: '%s'\n", error.message( ).data( ) ) );
+        	throw runtime_error( String::format( "Failed to receive response headers: '%s'\n", error.message( ).data( ) ) );
         }
 
         string header = String::empty;
@@ -164,7 +164,7 @@ namespace restbed
 
             if ( error and error not_eq asio::error::eof )
             {
-                throw runtime_error( String::format( "Failed to recieve response body: '%s'\n", error.message( ).data( ) ) );
+                throw runtime_error( String::format( "Failed to receive response body: '%s'\n", error.message( ).data( ) ) );
             }
 
             const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
@@ -177,6 +177,35 @@ namespace restbed
             data = Bytes( data_ptr, data_ptr + length );
             request->m_pimpl->m_buffer->consume( length );
         }
+
+        auto& body = response->m_pimpl->m_body;
+
+        if ( body.empty( ) )
+        {
+            body = data;
+        }
+        else
+        {
+            body.insert( body.end( ), data.begin( ), data.end( ) );
+        }
+
+        return data;
+    }
+
+    Bytes Http::fetch( const string& delimiter, const shared_ptr< const Response >& response )
+    {
+        asio::error_code error;
+        auto request = response->m_pimpl->m_request;
+        const size_t size = asio::read_until( *response->get_request( )->m_pimpl->m_socket, *request->m_pimpl->m_buffer, delimiter, error );
+
+        if ( error )
+        {
+            throw runtime_error( String::format( "Failed to receive response body: '%s'\n", error.message( ).data( ) ) );
+        }
+
+        const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
+        const Bytes data( data_ptr, data_ptr + size );
+        request->m_pimpl->m_buffer->consume( size );
 
         auto& body = response->m_pimpl->m_body;
 
