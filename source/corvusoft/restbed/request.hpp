@@ -27,6 +27,7 @@ namespace restbed
 {
     //Forward Declarations
     class Http;
+    class Session;
     class Response;
     
     namespace detail
@@ -187,8 +188,9 @@ namespace restbed
         private:
             //Friends
             friend Http;
-            friend detail::ServiceImpl;
+            friend Session;
             friend detail::SessionImpl;
+            friend detail::ServiceImpl;
             
             //Definitions
             

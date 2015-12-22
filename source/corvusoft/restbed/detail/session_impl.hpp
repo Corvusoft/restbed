@@ -92,8 +92,6 @@ namespace restbed
                 
                 std::shared_ptr< const Settings > m_settings;
                 
-                std::shared_ptr< asio::streambuf > m_buffer;
-                
                 std::shared_ptr< SessionManager > m_manager;
                 
                 std::multimap< std::string, std::string > m_headers;

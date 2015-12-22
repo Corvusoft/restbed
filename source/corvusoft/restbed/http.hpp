@@ -48,8 +48,6 @@ namespace restbed
 
             static Bytes fetch( const std::size_t length, const std::shared_ptr< const Response >& response );
 
-            static Bytes fetch( const std::string& delimiter, const std::shared_ptr< const Response >& response );
-
             //Getters
 
             //Setters

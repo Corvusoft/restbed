@@ -7,11 +7,13 @@
 
 //Project Includes
 #include "corvusoft/restbed/session.hpp"
+#include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/context_value.hpp"
 #include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
-#include "corvusoft/restbed/detail/session_impl.hpp"
+#include "corvusoft/restbed/detail/request_impl.hpp"
+#include "corvusoft/restbed/detail/session_impl.hpp" 
 
 //External Includes
 #include <asio.hpp>
@@ -250,11 +252,11 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
-        if ( length > m_pimpl->m_buffer->size( ) )
+        if ( length > m_pimpl->m_request->m_pimpl->m_buffer->size( ) )
         {
-            size_t size = length - m_pimpl->m_buffer->size( );
+            size_t size = length - m_pimpl->m_request->m_pimpl->m_buffer->size( );
             
-            m_pimpl->m_socket->read( m_pimpl->m_buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
+            m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
             {
                 if ( error )
                 {
@@ -277,7 +279,7 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
-        m_pimpl->m_socket->read( m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
+        m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
         {
             if ( error )
             {

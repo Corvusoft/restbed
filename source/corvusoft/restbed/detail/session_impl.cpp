@@ -54,6 +54,7 @@ using restbed::detail::SessionImpl;
 
 //External Namespaces
 using asio::buffer;
+using asio::streambuf;
 using asio::error_code;
 
 namespace restbed
@@ -66,7 +67,6 @@ namespace restbed
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
-            m_buffer( nullptr ),
             m_manager( nullptr ),
             m_headers( ),
             m_context( ),
@@ -83,16 +83,17 @@ namespace restbed
         
         void SessionImpl::fetch( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         {
-            m_buffer = make_shared< asio::streambuf >( );
+            m_request = make_shared< Request >( );
+            session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
             
-            m_socket->read( m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
+            m_socket->read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
         }
         
         void SessionImpl::fetch_body( const size_t length, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback ) const
         {
-            const auto data_ptr = asio::buffer_cast< const Byte* >( m_buffer->data( ) );
+            const auto data_ptr = asio::buffer_cast< const Byte* >( session->m_pimpl->m_request->m_pimpl->m_buffer->data( ) );
             const auto data = Bytes( data_ptr, data_ptr + length );
-            m_buffer->consume( length );
+            session->m_pimpl->m_request->m_pimpl->m_buffer->consume( length );
             
             auto& body = m_request->m_pimpl->m_body;
             
@@ -220,11 +221,10 @@ namespace restbed
                 throw runtime_error( error.message( ) );
             }
             
-            istream stream( m_buffer.get( ) );
+            istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
             const auto items = parse_request_line( stream );
             const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
             
-            m_request = make_shared< Request >( );
             m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
             m_request->m_pimpl->m_method = items.at( "method" );
             m_request->m_pimpl->m_version = stod( items.at( "version" ) );

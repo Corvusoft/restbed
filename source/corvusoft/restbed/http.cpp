@@ -48,6 +48,7 @@ using std::istreambuf_iterator;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
+using asio::buffer; //etc...
 
 namespace restbed
 {
@@ -189,24 +190,6 @@ namespace restbed
         }
 
         return data;
-    }
-
-    Bytes Http::fetch( const string& delimiter, const shared_ptr< const Response >& response )
-    {
-        // asio::error_code error;
-        // auto buffer = make_shared< asio::streambuf >( );
-        // asio::read_until( *response->get_request( )->m_pimpl->m_socket, *buffer, delimiter, error );
-
-        // if ( error )
-        // {
-        //     throw runtime_error( String::format( "Failed to recieve response body: '%s'\n", error.message( ).data( ) ) );
-        // }
-
-        // const auto data = asio::buffer_cast< const Byte* >( buffer->data( ) );
-        // const Bytes body( data, data + buffer->size( ) );
-
-        // response->m_pimpl->m_body = body;
-        // return body;
     }
 
     Bytes Http::to_bytes( const Request& request )
