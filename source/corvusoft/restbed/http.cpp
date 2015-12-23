@@ -60,17 +60,17 @@ namespace restbed
         asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
         static const asio::ip::tcp::resolver::iterator end;
 
-        if ( request->m_pimpl->m_socket == nullptr or not request->m_pimpl->m_socket->is_open( ) )
+        if ( request->m_pimpl->m_raw_socket == nullptr or not request->m_pimpl->m_raw_socket->is_open( ) )
         {
-            request->m_pimpl->m_socket = make_shared< asio::ip::tcp::socket >( *request->m_pimpl->m_io_service );
+            request->m_pimpl->m_raw_socket = make_shared< asio::ip::tcp::socket >( *request->m_pimpl->m_io_service );
         }
 
         asio::error_code error = asio::error::host_not_found;
         
         do
         {
-            request->m_pimpl->m_socket->close( ); //would this not kill keep alive sockets requests?
-            request->m_pimpl->m_socket->connect( *endpoint_iterator++, error );
+            request->m_pimpl->m_raw_socket->close( ); //would this not kill keep alive sockets requests?
+            request->m_pimpl->m_raw_socket->connect( *endpoint_iterator++, error );
         }
         while ( error and endpoint_iterator not_eq end );
         
@@ -84,7 +84,7 @@ namespace restbed
         request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
         ostream request_stream( request->m_pimpl->m_buffer.get( ) );
         copy( data.begin( ), data.end( ), ostream_iterator< Byte >( request_stream ) );
-        asio::write( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, error );
+        asio::write( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, error );
 
         if ( error )
         {
@@ -92,7 +92,7 @@ namespace restbed
         }
         
         istream response_stream( request->m_pimpl->m_buffer.get( ) );
-        asio::read_until( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, "\r\n", error );
+        asio::read_until( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, "\r\n", error );
 
         if ( error )
         {
@@ -118,7 +118,7 @@ namespace restbed
         response->set_status_code( stoi( matches[ 3 ].str( ) ) );
         response->set_status_message( matches[ 4 ].str( ) );
 
-        asio::read_until( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, "\r\n\r\n", error );
+        asio::read_until( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, "\r\n\r\n", error );
 
         if ( error == asio::error::eof )
         {
@@ -160,7 +160,7 @@ namespace restbed
             asio::error_code error;
             const size_t adjusted_length = length - request->m_pimpl->m_buffer->size( );
 
-            const size_t size = asio::read( *request->m_pimpl->m_socket, *request->m_pimpl->m_buffer, asio::transfer_at_least( adjusted_length ), error );
+            const size_t size = asio::read( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, asio::transfer_at_least( adjusted_length ), error );
 
             if ( error and error not_eq asio::error::eof )
             {
@@ -196,7 +196,7 @@ namespace restbed
     {
         asio::error_code error;
         auto request = response->m_pimpl->m_request;
-        const size_t size = asio::read_until( *response->get_request( )->m_pimpl->m_socket, *request->m_pimpl->m_buffer, delimiter, error );
+        const size_t size = asio::read_until( *response->get_request( )->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, delimiter, error );
 
         if ( error )
         {

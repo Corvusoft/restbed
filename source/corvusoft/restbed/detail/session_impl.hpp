@@ -34,7 +34,6 @@ namespace restbed
     class Response;
     class Resource;
     class Settings;
-    class SocketImpl;
     class SessionManager;
     
     namespace detail
@@ -83,8 +82,6 @@ namespace restbed
                 std::string m_id;
                 
                 std::shared_ptr< Logger > m_logger;
-                
-                std::shared_ptr< SocketImpl > m_socket;
                 
                 std::shared_ptr< const Request > m_request;
                 

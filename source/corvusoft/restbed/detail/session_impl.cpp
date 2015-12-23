@@ -61,9 +61,8 @@ namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_id( "" ),
+        SessionImpl::SessionImpl( void ) : m_id( String::empty ),
             m_logger( nullptr ),
-            m_socket( nullptr ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
@@ -83,10 +82,9 @@ namespace restbed
         
         void SessionImpl::fetch( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         {
-            m_request = make_shared< Request >( );
             session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
             
-            m_socket->read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
+            m_request->m_pimpl->m_socket->read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
         }
         
         void SessionImpl::fetch_body( const size_t length, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback ) const
@@ -165,7 +163,7 @@ namespace restbed
                 payload.set_status_message( m_settings->get_status_message( payload.get_status_code( ) ) );
             }
             
-            m_socket->write( payload.to_bytes( ), callback );
+            m_request->m_pimpl->m_socket->write( payload.to_bytes( ), callback );
         }
         
         const map< string, string > SessionImpl::parse_request_line( istream& stream )

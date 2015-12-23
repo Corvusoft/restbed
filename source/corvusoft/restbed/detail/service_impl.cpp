@@ -247,10 +247,11 @@ namespace restbed
                     m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                     {
                         session->m_pimpl->m_logger = m_logger;
-                        session->m_pimpl->m_socket = connection;
                         session->m_pimpl->m_settings = m_settings;
                         session->m_pimpl->m_manager = m_session_manager;
                         session->m_pimpl->m_error_handler = m_error_handler;
+                        session->m_pimpl->m_request = make_shared< Request >( );
+                        session->m_pimpl->m_request->m_pimpl->m_socket = connection;
                         session->m_pimpl->m_router = bind( &ServiceImpl::authenticate, this, _1 );
                         session->m_pimpl->fetch( session, session->m_pimpl->m_router );
                     } );
@@ -468,10 +469,11 @@ namespace restbed
                 m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                 {
                     session->m_pimpl->m_logger = m_logger;
-                    session->m_pimpl->m_socket = connection;
                     session->m_pimpl->m_settings = m_settings;
                     session->m_pimpl->m_manager = m_session_manager;
                     session->m_pimpl->m_error_handler = m_error_handler;
+                    session->m_pimpl->m_request = make_shared< Request >( );
+                    session->m_pimpl->m_request->m_pimpl->m_socket = connection;
                     session->m_pimpl->m_router = bind( &ServiceImpl::authenticate, this, _1 );
                     session->m_pimpl->fetch( session, session->m_pimpl->m_router );
                 } );

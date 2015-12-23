@@ -78,7 +78,9 @@ namespace restbed
     
     bool Session::is_open( void ) const
     {
-        return m_pimpl->m_socket not_eq nullptr and m_pimpl->m_socket->is_open( );
+        return m_pimpl->m_request not_eq nullptr and
+               m_pimpl->m_request->m_pimpl->m_socket not_eq nullptr and
+               m_pimpl->m_request->m_pimpl->m_socket->is_open( );
     }
     
     bool Session::is_closed( void ) const
@@ -90,7 +92,7 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
-        m_pimpl->m_socket->write( body, [ this, session ]( const asio::error_code & error, size_t )
+        m_pimpl->m_request->m_pimpl->m_socket->write( body, [ this, session ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
@@ -101,7 +103,7 @@ namespace restbed
             {
                 m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
                 {
-                    m_pimpl->m_socket->close( );
+                    m_pimpl->m_request->m_pimpl->m_socket->close( );
                 } );
             }
         } );
@@ -121,7 +123,7 @@ namespace restbed
             
             m_pimpl->m_manager->save( session, [ this ]( const shared_ptr< Session > )
             {
-                m_pimpl->m_socket->close( );
+                m_pimpl->m_request->m_pimpl->m_socket->close( );
             } );
         } );
     }
@@ -167,7 +169,7 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
-        m_pimpl->m_socket->write( body, [ this, session, callback ]( const asio::error_code & error, size_t )
+        m_pimpl->m_request->m_pimpl->m_socket->write( body, [ this, session, callback ]( const asio::error_code & error, size_t )
         {
             if ( error )
             {
@@ -256,7 +258,7 @@ namespace restbed
         {
             size_t size = length - m_pimpl->m_request->m_pimpl->m_buffer->size( );
             
-            m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
+            m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, size, [ this, session, length, callback ]( const asio::error_code & error, size_t )
             {
                 if ( error )
                 {
@@ -279,7 +281,7 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
-        m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
+        m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const asio::error_code & error, size_t length )
         {
             if ( error )
             {
@@ -297,7 +299,7 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
-        m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
+        m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
         {
             if ( error )
             {
@@ -321,22 +323,22 @@ namespace restbed
     
     const string Session::get_origin( void ) const
     {
-        if ( m_pimpl->m_socket == nullptr )
+        if ( m_pimpl->m_request == nullptr or m_pimpl->m_request->m_pimpl->m_socket == nullptr )
         {
             return "";
         }
         
-        return m_pimpl->m_socket->get_remote_endpoint( );
+        return m_pimpl->m_request->m_pimpl->m_socket->get_remote_endpoint( );
     }
     
     const string Session::get_destination( void ) const
     {
-        if ( m_pimpl->m_socket == nullptr )
+        if ( m_pimpl->m_request == nullptr or m_pimpl->m_request->m_pimpl->m_socket == nullptr )
         {
             return "";
         }
         
-        return m_pimpl->m_socket->get_local_endpoint( );
+        return m_pimpl->m_request->m_pimpl->m_socket->get_local_endpoint( );
     }
     
     const shared_ptr< const Request > Session::get_request(  void ) const

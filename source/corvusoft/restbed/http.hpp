@@ -40,12 +40,6 @@ namespace restbed
             //Functionality
             static std::shared_ptr< const Response > sync( const std::shared_ptr< const Request >& request );
 
-            //static std::shared_ptr< Response > sync( const Request& request, const SSLSettings& settings );
-            
-            //static void async( const Request& request, const std::function< void ( const std::shared_ptr< const Request >, std::shared_ptr< const Response > ) >& callback );
-
-            //static void async( const Request& request, const SSLSettings& settings, const std::function< void ( const std::shared_ptr< const Request >, std::shared_ptr< const Response > ) >& callback );
-
             static Bytes fetch( const std::size_t length, const std::shared_ptr< const Response >& response );
 
             static Bytes fetch( const std::string& delimiter, const std::shared_ptr< const Response >& response );
