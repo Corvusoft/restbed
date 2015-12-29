@@ -45,35 +45,23 @@ using restbed::detail::RequestImpl;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
-using asio::buffer; //etc...
+using asio::buffer;
+using asio::ip::tcp;
 
 namespace restbed
 {
     shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request )
     {
-        asio::error_code error = asio::error::host_not_found;
-        auto io_service = make_shared< asio::io_service >( );
+        asio::error_code error;
         
         if ( request->m_pimpl->m_socket == nullptr or request->m_pimpl->m_socket->is_closed( ) )
         {
-            asio::ip::tcp::resolver resolver( *io_service );
-            asio::ip::tcp::resolver::query query( request->get_host( ), ::to_string( request->get_port( ) ) );
-            asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
-            static const asio::ip::tcp::resolver::iterator end;
-            
-            auto socket = make_shared< asio::ip::tcp::socket >( *io_service );
-            request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
-            
-            do
-            {
-                socket->close( );
-                socket->connect( *endpoint_iterator++, error );
-            }
-            while ( error and endpoint_iterator not_eq end );
+            request->m_pimpl->m_socket = make_shared< SocketImpl >( );
+            request->m_pimpl->m_socket->connect( request->get_host( ), request->get_port( ), error );
             
             if ( error )
             {
-                throw runtime_error( String::format( "Failed to locate interface: %s\n", error.message( ).data( ) ) );
+                throw runtime_error( String::format( "Failed to locate endpoint: %s\n", error.message( ).data( ) ) );
             }
         }
         

@@ -9,6 +9,7 @@
 #include <chrono>
 #include <string>
 #include <memory>
+#include <cstdint>
 #include <functional>
 
 //Project Includes
@@ -44,6 +45,8 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
+                SocketImpl( void );
+                
                 SocketImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::shared_ptr< Logger >& logger = nullptr );
 #ifdef BUILD_SSL
                 SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
@@ -57,10 +60,12 @@ namespace restbed
                 
                 bool is_closed( void ) const;
                 
+                void connect(  const std::string& hostname, const uint16_t port, asio::error_code& error );
+                
                 void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const asio::error_code& ) >& callback );
                 
                 size_t write( const Bytes& data, asio::error_code& error );
-
+                
                 void write( const Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
                 
                 size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, asio::error_code& error );
@@ -68,7 +73,7 @@ namespace restbed
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
                 
                 size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, asio::error_code& error );
-
+                
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
                 
                 //Getters
@@ -82,6 +87,7 @@ namespace restbed
                 //Operators
                 
                 //Properties
+                static const std::shared_ptr< asio::io_service > m_io_service;
                 
             protected:
                 //Friends
