@@ -60,10 +60,6 @@ namespace restbed
             std::shared_ptr< SocketImpl > m_socket = nullptr;
 
             std::shared_ptr< asio::streambuf > m_buffer = nullptr;
-
-            std::shared_ptr< asio::io_service > m_io_service = nullptr;
-
-            std::shared_ptr< asio::ip::tcp::socket > m_raw_socket = nullptr;
         };
     }
 }

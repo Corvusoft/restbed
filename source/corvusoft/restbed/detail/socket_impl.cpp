@@ -115,6 +115,23 @@ namespace restbed
             m_timer->expires_from_now( delay );
             m_timer->async_wait( callback );
         }
+
+        size_t SocketImpl::write( const Bytes& data, asio::error_code& error )
+        {
+#ifdef BUILD_SSL
+        
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                return asio::write( *m_socket, asio::buffer( data.data( ), data.size( ) ), error );
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                return asio::write( *m_ssl_socket, asio::buffer( data.data( ), data.size( ) ), error );
+            }      
+#endif
+        }
         
         void SocketImpl::write( const Bytes& data, const function< void ( const asio::error_code&, size_t ) >& callback )
         {
@@ -133,6 +150,23 @@ namespace restbed
             
 #endif
         }
+
+        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, asio::error_code& error )
+        {
+#ifdef BUILD_SSL
+        
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                return asio::read( *m_socket, *data, asio::transfer_at_least( length ), error );
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                return asio::read( *m_ssl_socket, *data, asio::transfer_at_least( length ), error );
+            }
+#endif
+        }
         
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const asio::error_code&, size_t ) >& callback )
         {
@@ -149,6 +183,22 @@ namespace restbed
                 asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ), callback );
             }
             
+#endif
+        }
+
+        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, asio::error_code& error )
+        {
+#ifdef BUILD_SSL
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                return asio::read_until( *m_socket, *data, delimiter, error );
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                return asio::read_until( *m_ssl_socket, *data, delimiter, error );
+            } 
 #endif
         }
         

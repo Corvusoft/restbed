@@ -20,6 +20,7 @@
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
+#include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/response_impl.hpp"
 
@@ -29,7 +30,6 @@
 //System Namespaces
 using std::stoi;
 using std::stod;
-using std::copy;
 using std::regex;
 using std::string;
 using std::smatch;
@@ -45,6 +45,8 @@ using std::ostream_iterator;
 using std::istreambuf_iterator;
 
 //Project Namespaces
+using restbed::detail::SocketImpl;
+using restbed::detail::RequestImpl;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
@@ -54,23 +56,24 @@ namespace restbed
 {
     shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request )
     {
-        request->m_pimpl->m_io_service = make_shared< asio::io_service >( );
-        asio::ip::tcp::resolver resolver( *request->m_pimpl->m_io_service );
+        auto io_service = make_shared< asio::io_service >( );
+        asio::ip::tcp::resolver resolver( *io_service );
         asio::ip::tcp::resolver::query query( request->get_host( ), ::to_string( request->get_port( ) ) );
         asio::ip::tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
         static const asio::ip::tcp::resolver::iterator end;
 
-        if ( request->m_pimpl->m_raw_socket == nullptr or not request->m_pimpl->m_raw_socket->is_open( ) )
-        {
-            request->m_pimpl->m_raw_socket = make_shared< asio::ip::tcp::socket >( *request->m_pimpl->m_io_service );
-        }
+        //if ( request->m_pimpl->m_socket == nullptr or not request->m_pimpl->m_socket->is_open( ) )
+        //{
+            auto socket = make_shared< asio::ip::tcp::socket >( *io_service );
+            request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
+        //}
 
         asio::error_code error = asio::error::host_not_found;
         
         do
         {
-            request->m_pimpl->m_raw_socket->close( ); //would this not kill keep alive sockets requests?
-            request->m_pimpl->m_raw_socket->connect( *endpoint_iterator++, error );
+            socket->close( ); //would this not kill keep alive sockets requests?
+            socket->connect( *endpoint_iterator++, error );
         }
         while ( error and endpoint_iterator not_eq end );
         
@@ -79,20 +82,17 @@ namespace restbed
         	throw runtime_error( String::format( "Failed to locate interface: %s\n", error.message( ).data( ) ) );
         }
         
-        const auto data = to_bytes( *request );
-
-        request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-        ostream request_stream( request->m_pimpl->m_buffer.get( ) );
-        copy( data.begin( ), data.end( ), ostream_iterator< Byte >( request_stream ) );
-        asio::write( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, error );
+        const auto data = to_bytes( *request ); //move to request + response
+        request->m_pimpl->m_socket->write( data, error );
 
         if ( error )
         {
         	throw runtime_error( String::format( "Failed to transmit request: %s\n", error.message( ).data( ) ) );
         }
-        
+
+        request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
         istream response_stream( request->m_pimpl->m_buffer.get( ) );
-        asio::read_until( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, "\r\n", error );
+        request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n", error );
 
         if ( error )
         {
@@ -118,7 +118,7 @@ namespace restbed
         response->set_status_code( stoi( matches[ 3 ].str( ) ) );
         response->set_status_message( matches[ 4 ].str( ) );
 
-        asio::read_until( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, "\r\n\r\n", error );
+        request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n\r\n", error );
 
         if ( error == asio::error::eof )
         {
@@ -160,7 +160,7 @@ namespace restbed
             asio::error_code error;
             const size_t adjusted_length = length - request->m_pimpl->m_buffer->size( );
 
-            const size_t size = asio::read( *request->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, asio::transfer_at_least( adjusted_length ), error );
+            const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, adjusted_length, error );
 
             if ( error and error not_eq asio::error::eof )
             {
@@ -196,7 +196,7 @@ namespace restbed
     {
         asio::error_code error;
         auto request = response->m_pimpl->m_request;
-        const size_t size = asio::read_until( *response->get_request( )->m_pimpl->m_raw_socket, *request->m_pimpl->m_buffer, delimiter, error );
+        const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, delimiter, error );
 
         if ( error )
         {
