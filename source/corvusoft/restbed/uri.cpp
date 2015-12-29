@@ -182,6 +182,11 @@ namespace restbed
     {
         return encode( Bytes( value.begin( ), value.end( ) ) );
     }
+
+    string Uri::encode_parameter( const string& value )
+    {
+        return encode( value );
+    }
     
     int Uri::get_port( void ) const
     {

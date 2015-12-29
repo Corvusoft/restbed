@@ -168,3 +168,8 @@ TEST_CASE( "encode", "[uri]" )
 {
     REQUIRE( Uri::encode( "a=b" ) == "a%3Db" );
 }
+
+TEST_CASE( "encode parameter", "[uri]" )
+{
+    REQUIRE( Uri::encode_parameter( "a=b" ) == "a%3Db" );
+}

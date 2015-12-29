@@ -62,6 +62,8 @@ namespace restbed
             static std::string encode( const Bytes& value );
             
             static std::string encode( const std::string& value );
+
+            static std::string encode_parameter( const std::string& value );
             
             //Getters
             int get_port( void ) const;

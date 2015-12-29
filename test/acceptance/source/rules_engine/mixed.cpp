@@ -165,7 +165,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources" );
-                    request->set_body( { 'd', 'a', 't', 'a' } );
+                    request->set_body( Bytes( { 'd', 'a', 't', 'a' } ) );
                     request->set_method( "POST" );
 
                     multimap< string, string > headers;
@@ -210,7 +210,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources" );
-                    request->set_body( { 'd', 'a', 't', 'a' } );
+                    request->set_body( Bytes( { 'd', 'a', 't', 'a' } ) );
                     request->set_method( "POST" );
 
                     multimap< string, string > headers;

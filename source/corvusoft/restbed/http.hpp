@@ -82,7 +82,6 @@ namespace restbed
             Http( const Http& original ) = delete;
             
             //Functionality
-            static Bytes to_bytes( const Request& request );
             
             //Getters
             

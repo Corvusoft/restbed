@@ -50,6 +50,8 @@ namespace restbed
             virtual ~Request( void );
             
             //Functionality
+            Bytes to_bytes( void ) const;
+
             bool has_header( const std::string& name ) const;
             
             bool has_path_parameter( const std::string& name, const bool ignore_case = true ) const;
@@ -147,6 +149,8 @@ namespace restbed
             
             //Setters
             void set_body( const Bytes& value );
+
+            void set_body( const std::string& value );
             
             void set_port( const uint16_t value );
             

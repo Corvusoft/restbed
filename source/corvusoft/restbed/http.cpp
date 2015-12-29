@@ -81,9 +81,8 @@ namespace restbed
         {
         	throw runtime_error( String::format( "Failed to locate interface: %s\n", error.message( ).data( ) ) );
         }
-        
-        const auto data = to_bytes( *request ); //move to request + response
-        request->m_pimpl->m_socket->write( data, error );
+
+        request->m_pimpl->m_socket->write( request->to_bytes( ), error );
 
         if ( error )
         {
@@ -219,40 +218,5 @@ namespace restbed
         }
 
         return data;
-    }
-
-    Bytes Http::to_bytes( const Request& request )
-    {
-        string query = String::empty;
-
-        for ( const auto parameter : request.get_query_parameters( ) )
-        {
-           query += parameter.first + "=" + parameter.second + "&";
-        }
-
-        if ( query.back( ) == '&' )
-        {
-            query = "?" + query.substr( 0, query.length( ) - 1 );
-        }
-
-        ostringstream stream;
-        stream << request.get_method( )      << " ";
-        stream << request.get_path( )              ;
-        stream << query                      << " ";
-        stream << request.get_protocol( )    << "/";
-        stream << request.get_version( )  << "\r\n";
-
-        for ( const auto header : request.get_headers( ) )
-        {
-            stream << header.first << ": " << header.second << "\r\n";
-        }
-
-        const auto data = stream.str( ) + "\r\n";
-        Bytes result( data.begin( ), data.end( ) );
-
-        Bytes body = request.get_body( );
-        result.insert( result.end( ), body.begin( ), body.end( ) );
-
-        return result;
     }
 }

@@ -54,7 +54,7 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[request]" )
 TEST_CASE( "validate setters modify default values", "[request]" )
 {
     Request request;
-    request.set_body( { 'a', 'b', 'c' } );
+    request.set_body( "abc" );
     request.set_port( 1984 );
     request.set_version( 1.0 );
     request.set_path( "/test case" );
