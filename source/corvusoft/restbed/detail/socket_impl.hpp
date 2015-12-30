@@ -45,8 +45,6 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SocketImpl( void );
-                
                 SocketImpl( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::shared_ptr< Logger >& logger = nullptr );
 #ifdef BUILD_SSL
                 SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
@@ -87,7 +85,6 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                static const std::shared_ptr< asio::io_service > m_io_service;
                 
             protected:
                 //Friends

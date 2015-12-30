@@ -38,19 +38,6 @@ namespace restbed
 {
     namespace detail
     {
-        const shared_ptr< io_service > SocketImpl::m_io_service( new io_service );
-        
-        SocketImpl::SocketImpl( void ) : m_is_open( false ),
-            m_logger( nullptr ),
-            m_timer( nullptr ),
-            m_socket( nullptr )
-#ifdef BUILD_SSL
-            , m_ssl_socket( nullptr )
-#endif
-        {
-            return;
-        }
-        
         SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->is_open( ) ),
             m_logger( logger ),
             m_timer( nullptr ),
@@ -113,21 +100,29 @@ namespace restbed
         
         void SocketImpl::connect( const string& hostname, const uint16_t port, asio::error_code& error )
         {
-            tcp::resolver resolver( *m_io_service );
+            auto& io_service = ( m_socket not_eq nullptr ) ? m_socket->get_io_service( ) : m_ssl_socket->lowest_layer( ).get_io_service( );
+            
+            tcp::resolver resolver( io_service );
             tcp::resolver::query query( hostname, ::to_string( port ) );
             
             tcp::resolver::iterator endpoint_iterator = resolver.resolve( query );
             static const asio::ip::tcp::resolver::iterator end;
             
             error = asio::error::host_not_found;
-            m_socket = make_shared< asio::ip::tcp::socket >( *m_io_service );
+            
+            auto& socket = ( m_socket not_eq nullptr ) ? *m_socket : m_ssl_socket->lowest_layer( );
             
             do
             {
-                m_socket->close( );
-                m_socket->connect( *endpoint_iterator++, error );
+                socket.close( );
+                socket.connect( *endpoint_iterator++, error );
             }
             while ( error and endpoint_iterator not_eq end );
+            
+            if ( m_ssl_socket not_eq nullptr )
+            {
+                m_ssl_socket->handshake( asio::ssl::stream_base::client, error );
+            }
         }
         
         void SocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )

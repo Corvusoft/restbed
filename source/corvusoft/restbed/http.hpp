@@ -38,14 +38,14 @@ namespace restbed
             //Constructors
             
             //Functionality
-            static std::shared_ptr< const Response > sync( const std::shared_ptr< const Request >& request );
-
+            static std::shared_ptr< const Response > sync( const std::shared_ptr< const Request >& request, const std::shared_ptr< const SSLSettings >& ssl_settings = nullptr );
+            
             static Bytes fetch( const std::size_t length, const std::shared_ptr< const Response >& response );
-
+            
             static Bytes fetch( const std::string& delimiter, const std::shared_ptr< const Response >& response );
-
+            
             //Getters
-
+            
             //Setters
             
             //Operators
@@ -78,7 +78,7 @@ namespace restbed
             Http( void ) = delete;
             
             virtual ~Http( void ) = delete;
-
+            
             Http( const Http& original ) = delete;
             
             //Functionality
