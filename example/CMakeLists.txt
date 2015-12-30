@@ -84,6 +84,9 @@ target_link_libraries( bind_service_address ${CMAKE_PROJECT_NAME} )
 add_executable( session_manager session_manager/source/example.cpp )
 target_link_libraries( session_manager ${CMAKE_PROJECT_NAME} )
 
+add_executable( http_client http_client/source/example.cpp )
+target_link_libraries( http_client ${CMAKE_PROJECT_NAME} )
+
 if ( PAM_FOUND )
     add_executable( pam_authentication pam_authentication/source/example.cpp )
     target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )

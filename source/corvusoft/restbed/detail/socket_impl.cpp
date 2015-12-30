@@ -100,8 +100,11 @@ namespace restbed
         
         void SocketImpl::connect( const string& hostname, const uint16_t port, asio::error_code& error )
         {
+#ifdef BUILD_SSL
             auto& io_service = ( m_socket not_eq nullptr ) ? m_socket->get_io_service( ) : m_ssl_socket->lowest_layer( ).get_io_service( );
-            
+#else
+            auto& io_service = m_socket->get_io_service( );
+#endif
             tcp::resolver resolver( io_service );
             tcp::resolver::query query( hostname, ::to_string( port ) );
             
@@ -110,7 +113,11 @@ namespace restbed
             
             error = asio::error::host_not_found;
             
+#ifdef BUILD_SSL
             auto& socket = ( m_socket not_eq nullptr ) ? *m_socket : m_ssl_socket->lowest_layer( );
+#else
+            auto& socket = *m_socket;
+#endif
             
             do
             {
@@ -119,10 +126,14 @@ namespace restbed
             }
             while ( error and endpoint_iterator not_eq end );
             
+#ifdef BUILD_SSL
+            
             if ( m_ssl_socket not_eq nullptr )
             {
                 m_ssl_socket->handshake( asio::ssl::stream_base::client, error );
             }
+            
+#endif
         }
         
         void SocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )

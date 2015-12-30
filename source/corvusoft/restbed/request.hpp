@@ -51,7 +51,7 @@ namespace restbed
             
             //Functionality
             Bytes to_bytes( void ) const;
-
+            
             bool has_header( const std::string& name ) const;
             
             bool has_path_parameter( const std::string& name, const bool ignore_case = true ) const;
@@ -64,7 +64,7 @@ namespace restbed
             double get_version( void ) const;
             
             const Bytes& get_body( void ) const;
-
+            
             const std::shared_ptr< const Response > get_response( void ) const;
             
             std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
@@ -149,7 +149,7 @@ namespace restbed
             
             //Setters
             void set_body( const Bytes& value );
-
+            
             void set_body( const std::string& value );
             
             void set_port( const uint16_t value );
@@ -164,7 +164,11 @@ namespace restbed
             
             void set_protocol( const std::string& value );
             
+            void set_header( const std::string& name, const std::string& value );
+            
             void set_headers( const std::multimap< std::string, std::string >& values );
+            
+            void set_query_parameter( const std::string& name, const std::string& value );
             
             void set_query_parameters( const std::multimap< std::string, std::string >& values );
             

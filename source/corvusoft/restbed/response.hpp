@@ -7,8 +7,10 @@
 
 //System Includes
 #include <map>
-#include <memory>
 #include <string>
+#include <memory>
+#include <cstdint>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
@@ -26,7 +28,7 @@ namespace restbed
     //Forward Declarations
     class Http;
     class Request;
-
+    
     namespace detail
     {
         struct ResponseImpl;
@@ -47,6 +49,8 @@ namespace restbed
             //Functionality
             Bytes to_bytes( void ) const;
             
+            bool has_header( const std::string& name ) const;
+            
             //Getters
             Bytes get_body( void ) const;
             
@@ -58,9 +62,31 @@ namespace restbed
             
             std::string get_status_message( void ) const;
             
-            std::multimap< std::string, std::string > get_headers( void ) const;
-
             const std::shared_ptr< const Request > get_request( void ) const;
+            
+            void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
+            
+            void get_header( const std::string& name, int& value, const int default_value = 0 ) const;
+            
+            void get_header( const std::string& name, long& value, const long default_value = 0 ) const;
+            
+            void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
+            
+            void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
+            
+            void get_header( const std::string& name, long long& value, const long long default_value = 0 ) const;
+            
+            void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
+            
+            void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
+            
+            void get_header( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+            
+            std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+            
+            std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
+            
+            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             //Setters
             void set_body( const Bytes& value );

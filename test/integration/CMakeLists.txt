@@ -35,11 +35,11 @@ add_executable( response_integration_test_suite ${SOURCE_DIR}/response_suite.cpp
 target_link_libraries( response_integration_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( response_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/response_integration_test_suite )
 
-add_executable( ssl_settings_integration_test_suite ${SOURCE_DIR}/ssl_settings_suite.cpp )
-target_link_libraries( ssl_settings_integration_test_suite ${CMAKE_PROJECT_NAME} )
-add_test( ssl_settings_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/ssl_settings_integration_test_suite )
-
 if ( BUILD_SSL )
+    add_executable( ssl_settings_integration_test_suite ${SOURCE_DIR}/ssl_settings_suite.cpp )
+    target_link_libraries( ssl_settings_integration_test_suite ${CMAKE_PROJECT_NAME} )
+    add_test( ssl_settings_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/ssl_settings_integration_test_suite )
+
     add_executable( settings_integration_test_suite ${SOURCE_DIR}/settings_suite.cpp )
     target_link_libraries( settings_integration_test_suite ${CMAKE_PROJECT_NAME} )
     add_test( settings_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/settings_integration_test_suite )

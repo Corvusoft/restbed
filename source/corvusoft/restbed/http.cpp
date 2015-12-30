@@ -50,7 +50,11 @@ using asio::ip::tcp;
 
 namespace restbed
 {
+#ifdef BUILD_SSL
     shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request, const shared_ptr< const SSLSettings >& ssl_settings )
+#else
+    shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request )
+#endif
     {
         asio::error_code error;
         
@@ -61,6 +65,8 @@ namespace restbed
         
         if ( request->m_pimpl->m_socket == nullptr )
         {
+#ifdef BUILD_SSL
+        
             if ( ssl_settings not_eq nullptr )
             {
                 asio::ssl::context context( asio::ssl::context::sslv23 );
@@ -82,9 +88,13 @@ namespace restbed
             }
             else
             {
+#endif
                 auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_service );
                 request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
+#ifdef BUILD_SSL
             }
+            
+#endif
         }
         
         if ( request->m_pimpl->m_socket->is_closed( ) )

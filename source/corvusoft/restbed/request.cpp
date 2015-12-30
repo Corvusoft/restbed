@@ -42,35 +42,35 @@ namespace restbed
     {
         delete m_pimpl;
     }
-
+    
     Bytes Request::to_bytes( void ) const
     {
         string path = m_pimpl->m_path;
-
+        
         if ( not m_pimpl->m_query_parameters.empty( ) )
         {
             string query = String::empty;
-
+            
             for ( const auto parameter : m_pimpl->m_query_parameters )
             {
-               query += Uri::encode_parameter( parameter.first ) + "=" + Uri::encode_parameter( parameter.second ) + "&";
+                query += Uri::encode_parameter( parameter.first ) + "=" + Uri::encode_parameter( parameter.second ) + "&";
             }
-
+            
             path += "?" + query.substr( 0, query.length( ) - 1 );
         }
-
+        
         auto data = String::format( "%s %s %s/%.1f\r\n",
                                     m_pimpl->m_method.data( ),
                                     path.data( ),
                                     m_pimpl->m_protocol.data( ),
                                     m_pimpl->m_version );
-
+                                    
         if ( not m_pimpl->m_headers.empty( ) )
         {
             const auto headers = String::join( m_pimpl->m_headers, ": ", "\r\n" );
             data += headers + "\r\n";
         }
-
+        
         data += "\r\n";
         
         Bytes bytes = String::to_bytes( data );
@@ -141,7 +141,7 @@ namespace restbed
     {
         return m_pimpl->m_body;
     }
-
+    
     const shared_ptr< const Response > Request::get_response( void ) const
     {
         return m_pimpl->m_response;
@@ -612,7 +612,7 @@ namespace restbed
     {
         m_pimpl->m_body = value;
     }
-
+    
     void Request::set_body( const string& value )
     {
         m_pimpl->m_body = String::to_bytes( value );
@@ -648,9 +648,19 @@ namespace restbed
         m_pimpl->m_protocol = value;
     }
     
+    void Request::set_header( const string& name, const string& value )
+    {
+        m_pimpl->m_headers.insert( make_pair( name, value ) );
+    }
+    
     void Request::set_headers( const multimap< string, string >& values )
     {
         m_pimpl->m_headers = values;
+    }
+    
+    void Request::set_query_parameter( const string& name, const string& value )
+    {
+        m_pimpl->m_query_parameters.insert( make_pair( name, value ) );
     }
     
     void Request::set_query_parameters( const multimap< string, string >& values )
