@@ -20,6 +20,7 @@ CMakeLists.txt text
 *.bat eol=crlf
 
 # Denote all files that are truly binary and should not be modified.
+*.pem binary
 *.a binary
 *.so binary
 *.dll binary

@@ -35,6 +35,8 @@ namespace restbed
             //Friends
             
             //Definitions
+            static const bool Relative = true;
+            static const bool Absolute = false;
             
             //Constructors
             explicit Uri( const std::string& value, bool relative = false );

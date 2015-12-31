@@ -103,12 +103,20 @@ if ( BUILD_SSL )
 
     add_executable( https_client_verify_none https_client/source/verify_none.cpp )
     target_link_libraries( https_client_verify_none ${CMAKE_PROJECT_NAME} )
+
+    add_executable( https_client_verify_peer https_client/source/verify_peer.cpp )
+    target_link_libraries( https_client_verify_peer ${CMAKE_PROJECT_NAME} )
 endif ( )
 
 #
 # Install
 #
 install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION ${CMAKE_INSTALL_PREFIX} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+
+install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/https_client/resource/certificates" DESTINATION "${CMAKE_INSTALL_PREFIX}/resource" FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+
 install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION "resource" )
 install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION "resource" )
 install( FILES "${CMAKE_SOURCE_DIR}/example/transfer_encoding_request/resource/request.txt" DESTINATION "resource" )
+
+
