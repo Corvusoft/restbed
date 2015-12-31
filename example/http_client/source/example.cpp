@@ -1,8 +1,8 @@
 /*
- * Example illustrating HTTP client.
+ * Example illustrating a HTTP client.
  *
- * Server Usage:
- *    sudo ./distribution/example/http_client
+ * Usage:
+ *    ./distribution/example/http_client
  */
 
 #include <memory>

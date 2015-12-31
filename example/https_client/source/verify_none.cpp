@@ -1,8 +1,8 @@
 /*
- * Example illustrating HTTPS client with no peer verification.
+ * Example illustrating a HTTPS client with no peer verification.
  *
- * Server Usage:
- *    sudo ./distribution/example/https_client_verify_none
+ * Usage:
+ *    ./distribution/example/https_client_verify_none
  */
 
 #include <memory>
