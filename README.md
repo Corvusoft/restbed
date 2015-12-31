@@ -7,6 +7,8 @@ Restbed is a comprehensive and consistent programming model for building applica
 > It's akin to embedding NGINX into your companies own product line.
 >                                                       -- Solutions Architect, Bellrock Technology
 
+We love hearing about the creative ways you guys and girls use Restbed.  Why not spare a few minutes and share your [passion](https://github.com/Corvusoft/restbed/wiki).
+
 ## Features
 
 |                                                              Feature                                                                |                                           Description                                           |

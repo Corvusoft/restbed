@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <cstdint>
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
@@ -62,11 +63,11 @@ namespace restbed
             static std::string encode( const Bytes& value );
             
             static std::string encode( const std::string& value );
-
+            
             static std::string encode_parameter( const std::string& value );
             
             //Getters
-            int get_port( void ) const;
+            uint16_t get_port( void ) const;
             
             std::string get_path( void ) const;
             

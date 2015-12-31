@@ -26,6 +26,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Uri;
     class Http;
     class Session;
     class Response;
@@ -46,6 +47,8 @@ namespace restbed
             
             //Constructors
             Request( void );
+            
+            Request( const Uri& uri );
             
             virtual ~Request( void );
             

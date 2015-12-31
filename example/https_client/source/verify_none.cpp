@@ -1,8 +1,8 @@
 /*
- * Example illustrating HTTP client.
+ * Example illustrating HTTPS client with no peer verification.
  *
  * Server Usage:
- *    sudo ./distribution/example/http_client
+ *    sudo ./distribution/example/https_client_verify_none
  */
 
 #include <memory>
@@ -15,9 +15,10 @@ using namespace restbed;
 
 int main( const int, const char** )
 {
-    auto request = make_shared< Request >( Uri( "http://www.corvusoft.co.uk:80/?query=search%20term" ) );
+    auto request = make_shared< Request >( Uri( "https://www.google.co.nz/" ) );
     request->set_header( "Accept", "*/*" );
-    request->set_header( "Host", "www.corvusoft.co.uk" );
+    request->set_header( "Host", "www.google.co.nz" );
+    request->set_query_parameter( "query", "search term" );
     
     auto response = Http::sync( request );
     
@@ -32,12 +33,19 @@ int main( const int, const char** )
         fprintf( stderr, "Header '%s' > '%s'\n", header.first.data( ), header.second.data( ) );
     }
     
-    auto length = 0;
-    response->get_header( "Content-Length", length );
+    if ( response->has_header( "Transfer-Encoding" ) )
+    {
+        Http::fetch( "\r\n", response );
+    }
+    else
+    {
+        auto length = 0;
+        response->get_header( "Content-Length", length );
+        
+        Http::fetch( length, response );
+    }
     
-    Http::fetch( length, response );
-    
-    fprintf( stderr, "Body:           %.*s...\n", 25, response->get_body( ).data( ) );
+    fprintf( stderr, "Body:           %.*s...\n", 3, response->get_body( ).data( ) );
     
     return EXIT_SUCCESS;
 }

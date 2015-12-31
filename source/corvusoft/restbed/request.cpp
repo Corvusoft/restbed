@@ -24,6 +24,7 @@ using std::string;
 using std::function;
 using std::multimap;
 using std::shared_ptr;
+using std::make_shared;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -36,6 +37,22 @@ namespace restbed
     Request::Request( void ) : m_pimpl( new detail::RequestImpl )
     {
         return;
+    }
+    
+    Request::Request( const Uri& uri ) : m_pimpl( new detail::RequestImpl )
+    {
+        m_pimpl->m_uri = make_shared< Uri >( uri );
+        m_pimpl->m_port = uri.get_port( );
+        m_pimpl->m_path = uri.get_path( );
+        m_pimpl->m_host = uri.get_authority( );
+        m_pimpl->m_query_parameters = uri.get_query_parameters( );
+        
+        m_pimpl->m_is_https = ( String::lowercase( uri.get_scheme( ) ) == "https" );
+        
+        if ( m_pimpl->m_port == 0 )
+        {
+            m_pimpl->m_port = ( m_pimpl->m_is_https ) ? 443 : 80;
+        }
     }
     
     Request::~Request( void )
@@ -57,6 +74,11 @@ namespace restbed
             }
             
             path += "?" + query.substr( 0, query.length( ) - 1 );
+        }
+        
+        if ( m_pimpl->m_uri not_eq nullptr and not m_pimpl->m_uri->get_fragment( ).empty( ) )
+        {
+            path += "#" + m_pimpl->m_uri->get_fragment( );
         }
         
         auto data = String::format( "%s %s %s/%.1f\r\n",

@@ -14,6 +14,7 @@
 #include <algorithm>
 
 //Project Includes
+#include "corvusoft/restbed/uri.hpp"
 #include "corvusoft/restbed/http.hpp"
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
@@ -67,23 +68,35 @@ namespace restbed
         {
 #ifdef BUILD_SSL
         
-            if ( ssl_settings not_eq nullptr )
+            if ( ssl_settings not_eq nullptr or request->m_pimpl->m_is_https )
             {
                 asio::ssl::context context( asio::ssl::context::sslv23 );
-                context.add_verify_path( ssl_settings->get_certificate_authority_pool( ) );
+                shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > socket = nullptr;
                 
-                auto socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
-                socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
-                socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
-                request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
-            }
-            else if ( String::uppercase( request->get_protocol( ) ) == "HTTPS" )
-            {
-                asio::ssl::context context( asio::ssl::context::sslv23 );
+                if ( ssl_settings not_eq nullptr )
+                {
+                    const auto pool = ssl_settings->get_certificate_authority_pool( );
+                    
+                    if ( pool.empty( ) )
+                    {
+                        context.set_default_verify_paths( );
+                    }
+                    else
+                    {
+                        context.add_verify_path( ssl_settings->get_certificate_authority_pool( ) );
+                    }
+                    
+                    socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                    socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
+                }
+                else
+                {
+                    socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                    socket->set_verify_mode( asio::ssl::verify_none );
+                }
                 
-                auto socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
-                socket->set_verify_mode( asio::ssl::verify_none );
                 socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
+                
                 request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
             }
             else

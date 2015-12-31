@@ -100,6 +100,9 @@ endif ( )
 if ( BUILD_SSL )
     add_executable( https_service https_service/source/example.cpp )
     target_link_libraries( https_service ${CMAKE_PROJECT_NAME} )
+
+    add_executable( https_client_verify_none https_client/source/verify_none.cpp )
+    target_link_libraries( https_client_verify_none ${CMAKE_PROJECT_NAME} )
 endif ( )
 
 #

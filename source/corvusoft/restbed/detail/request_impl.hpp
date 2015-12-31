@@ -26,6 +26,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Uri;
     class Response;
     
     namespace detail
@@ -41,6 +42,8 @@ namespace restbed
             
             double m_version = 1.1;
             
+            bool m_is_https = false;
+            
             std::string m_host = "";
             
             std::string m_path = "/";
@@ -48,6 +51,8 @@ namespace restbed
             std::string m_method = "GET";
             
             std::string m_protocol = "HTTP";
+            
+            std::shared_ptr< Uri > m_uri = nullptr;
             
             std::shared_ptr< const Response > m_response = nullptr;
             
