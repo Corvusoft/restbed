@@ -110,7 +110,7 @@ make test
 
 You will now find all required components installed in the distribution folder.
 
-Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/) tagged #restbed.
+Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
 
 For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
 
