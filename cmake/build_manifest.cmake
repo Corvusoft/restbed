@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014, 2015 Corvusoft
+# Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
 if ( BUILD_SSL )
     set( BUILD_MANIFEST

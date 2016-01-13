@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014, 2015 Corvusoft
+# Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
 project( "restbed" )
 
@@ -17,7 +17,7 @@ option( BUILD_TESTS    "Build all available test suites."   OFF )
 #
 include( "${CMAKE_SOURCE_DIR}/cmake/build_configuration.cmake" )
 
-message( "   ${Blue}Copyright (c) 2013, 2014, 2015 Corvusoft${Reset}" )
+message( "   ${Blue}Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.${Reset}" )
 
 #
 # Dependencies

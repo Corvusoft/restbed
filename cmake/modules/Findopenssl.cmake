@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014, 2015 Corvusoft
+# Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
 find_library( ssl_LIBRARY ssl ssleay32 HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl/out32dll" "${CMAKE_SOURCE_DIR}/dependency/openssl" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
 find_library( crypto_LIBRARY crypto libeay32 HINTS "${CMAKE_SOURCE_DIR}/dependency/openssl/out32dll" "${CMAKE_SOURCE_DIR}/dependency/openssl" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )

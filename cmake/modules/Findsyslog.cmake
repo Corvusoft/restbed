@@ -1,4 +1,4 @@
-# Copyright (c) 2013, 2014, 2015 Corvusoft
+# Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
 find_path( syslog_INCLUDE syslog.h HINTS "/usr/include" "/usr/local/include" "/opt/local/include" )
 
