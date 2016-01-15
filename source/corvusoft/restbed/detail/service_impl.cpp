@@ -401,6 +401,11 @@ namespace restbed
         
         void ServiceImpl::router( const shared_ptr< Session > session ) const
         {
+            log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
+                    session->get_request( )->get_method( ).data( ),
+                    session->get_origin( ).data( ),
+                    session->get_request( )->get_path( ).data( ) ) );
+                    
             if ( session->is_closed( ) )
             {
                 return;
@@ -563,11 +568,6 @@ namespace restbed
         
         bool ServiceImpl::resource_router( const shared_ptr< Session > session, const pair< string, shared_ptr< const Resource > >& route ) const
         {
-            log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
-                    session->get_request( )->get_method( ).data( ),
-                    session->get_origin( ).data( ),
-                    session->get_request( )->get_path( ).data( ) ) );
-                    
             const auto request = session->get_request( );
             const auto path_folders = String::split( request->get_path( ), '/' );
             const auto route_folders = String::split( m_settings->get_root( ) + "/" + route.first, '/' );
