@@ -54,7 +54,7 @@ namespace restbed
             
             std::shared_ptr< Uri > m_uri = nullptr;
             
-            std::shared_ptr< const Response > m_response = nullptr;
+            std::shared_ptr< Response > m_response = nullptr;
             
             std::multimap< std::string, std::string > m_headers { };
             

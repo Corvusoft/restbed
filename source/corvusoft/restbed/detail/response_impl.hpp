@@ -42,8 +42,8 @@ namespace restbed
             std::string m_protocol = "HTTP";
             
             std::string m_status_message = "";
-
-            std::shared_ptr< const Request > m_request = nullptr;
+            
+            std::shared_ptr< Request > m_request = nullptr;
             
             std::multimap< std::string, std::string > m_headers { };
         };

@@ -39,6 +39,7 @@ using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
+using std::invalid_argument;
 
 //Project Namespaces
 using restbed::detail::SocketImpl;
@@ -51,10 +52,40 @@ using asio::ip::tcp;
 
 namespace restbed
 {
+    void Http::close( const shared_ptr< Request >& request )
+    {
+        request->m_pimpl->m_socket->close( );
+    }
+    
+    void Http::close( const shared_ptr< Response >& response )
+    {
+        response->m_pimpl->m_request->m_pimpl->m_socket->close( );
+    }
+    
+    bool Http::is_open( const shared_ptr< Request >& request )
+    {
+        return request->m_pimpl->m_socket->is_open( );
+    }
+    
+    bool Http::is_open( const shared_ptr< Response >& response )
+    {
+        return response->m_pimpl->m_request->m_pimpl->m_socket->is_open( );
+    }
+    
+    bool Http::is_closed( const shared_ptr< Request >& request )
+    {
+        return request->m_pimpl->m_socket->is_closed( );
+    }
+    
+    bool Http::is_closed( const shared_ptr< Response >& response )
+    {
+        return response->m_pimpl->m_request->m_pimpl->m_socket->is_closed( );
+    }
+    
 #ifdef BUILD_SSL
-    shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request, const shared_ptr< const SSLSettings >& ssl_settings )
+    shared_ptr< Response > Http::sync( const shared_ptr< Request >& request, const shared_ptr< const SSLSettings >& ssl_settings )
 #else
-    shared_ptr< const Response > Http::sync( const shared_ptr< const Request >& request )
+    shared_ptr< Response > Http::sync( const shared_ptr< Request >& request )
 #endif
     {
         asio::error_code error;
@@ -110,13 +141,26 @@ namespace restbed
 #endif
         }
         
+        auto response = make_shared< Response >( );
+        response->m_pimpl->m_request = request;
+        request->m_pimpl->m_response = response;
+        
         if ( request->m_pimpl->m_socket->is_closed( ) )
         {
             request->m_pimpl->m_socket->connect( request->get_host( ), request->get_port( ), error );
             
             if ( error )
             {
-                throw runtime_error( String::format( "Socket connect failed: %s\n", error.message( ).data( ) ) );
+                response->set_protocol( request->get_protocol( ) );
+                response->set_version( request->get_version( ) );
+                response->set_status_code( 0 );
+                response->set_status_message( "Error" );
+                
+                const auto body = String::format( "Socket connect failed: %s\n", error.message( ).data( ) );
+                response->set_header( "Content-Type", "text/plain; utf-8" );
+                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+                response->set_body( body );
+                return response;
             }
         }
         
@@ -124,7 +168,16 @@ namespace restbed
         
         if ( error )
         {
-            throw runtime_error( String::format( "Socket write failed: %s\n", error.message( ).data( ) ) );
+            response->set_protocol( request->get_protocol( ) );
+            response->set_version( request->get_version( ) );
+            response->set_status_code( 0 );
+            response->set_status_message( "Error" );
+            
+            const auto body = String::format( "Socket write failed: %s\n", error.message( ).data( ) );
+            response->set_header( "Content-Type", "text/plain; utf-8" );
+            response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+            response->set_body( body );
+            return response;
         }
         
         request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
@@ -133,7 +186,16 @@ namespace restbed
         
         if ( error )
         {
-            throw runtime_error( String::format( "Socket receive failed: %s\n", error.message( ).data( ) ) );
+            response->set_protocol( request->get_protocol( ) );
+            response->set_version( request->get_version( ) );
+            response->set_status_code( 0 );
+            response->set_status_message( "Error" );
+            
+            const auto body = String::format( "Socket receive failed: %s\n", error.message( ).data( ) );
+            response->set_header( "Content-Type", "text/plain; utf-8" );
+            response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+            response->set_body( body );
+            return response;
         }
         
         string status_line = String::empty;
@@ -144,12 +206,18 @@ namespace restbed
         
         if ( not regex_match( status_line, matches, status_line_pattern ) or matches.size( ) not_eq 5 )
         {
-            throw runtime_error( String::format( "HTTP response status line malformed: '%s'\n", status_line.data( ) ) );
+            response->set_protocol( request->get_protocol( ) );
+            response->set_version( request->get_version( ) );
+            response->set_status_code( 0 );
+            response->set_status_message( "Error" );
+            
+            const auto body = String::format( "HTTP response status line malformed: '%s'\n", status_line.data( ) );
+            response->set_header( "Content-Type", "text/plain; utf-8" );
+            response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+            response->set_body( body );
+            return response;
         }
         
-        auto response = make_shared< Response >( );
-        response->m_pimpl->m_request = request;
-        request->m_pimpl->m_response = response;
         response->set_protocol( matches[ 1 ].str( ) );
         response->set_version( stod( matches[ 2 ].str( ) ) );
         response->set_status_code( stoi( matches[ 3 ].str( ) ) );
@@ -164,7 +232,16 @@ namespace restbed
         
         if ( error )
         {
-            throw runtime_error( String::format( "Socket receive failed: '%s'\n", error.message( ).data( ) ) );
+            response->set_protocol( request->get_protocol( ) );
+            response->set_version( request->get_version( ) );
+            response->set_status_code( 0 );
+            response->set_status_message( "Error" );
+            
+            const auto body = String::format( "Socket receive failed: '%s'\n", error.message( ).data( ) );
+            response->set_header( "Content-Type", "text/plain; utf-8" );
+            response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+            response->set_body( body );
+            return response;
         }
         
         string header = String::empty;
@@ -176,7 +253,16 @@ namespace restbed
             
             if ( not regex_match( header, matches, header_pattern ) or matches.size( ) not_eq 3 )
             {
-                throw runtime_error( String::format( "HTTP header malformed: '%s'\n", header.data( ) ) );
+                response->set_protocol( request->get_protocol( ) );
+                response->set_version( request->get_version( ) );
+                response->set_status_code( 0 );
+                response->set_status_message( "Error" );
+                
+                const auto body = String::format( "Malformed HTTP header: '%s'\n", header.data( ) );
+                response->set_header( "Content-Type", "text/plain; utf-8" );
+                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+                response->set_body( body );
+                return response;
             }
             
             headers.insert( make_pair( matches[ 1 ], matches[ 2 ] ) );
@@ -187,10 +273,21 @@ namespace restbed
         return response;
     }
     
-    Bytes Http::fetch( const size_t length, const shared_ptr< const Response >& response )
+    Bytes Http::fetch( const size_t length, const shared_ptr< Response >& response )
     {
-        Bytes data = { };
+        if ( response == nullptr )
+        {
+            throw invalid_argument( String::empty );
+        }
+        
         auto request = response->get_request( );
+        
+        if ( request == nullptr or request->m_pimpl->m_buffer == nullptr or request->m_pimpl->m_socket == nullptr )
+        {
+            throw invalid_argument( String::empty );
+        }
+        
+        Bytes data = { };
         
         if ( length > request->m_pimpl->m_buffer->size( ) )
         {
@@ -229,10 +326,21 @@ namespace restbed
         return data;
     }
     
-    Bytes Http::fetch( const string& delimiter, const shared_ptr< const Response >& response )
+    Bytes Http::fetch( const string& delimiter, const shared_ptr< Response >& response )
     {
+        if ( response == nullptr )
+        {
+            throw invalid_argument( String::empty );
+        }
+        
+        auto request = response->get_request( );
+        
+        if ( request == nullptr or request->m_pimpl->m_buffer == nullptr or request->m_pimpl->m_socket == nullptr )
+        {
+            throw invalid_argument( String::empty );
+        }
+        
         asio::error_code error;
-        auto request = response->m_pimpl->m_request;
         const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, delimiter, error );
         
         if ( error )
