@@ -54,32 +54,58 @@ namespace restbed
 {
     void Http::close( const shared_ptr< Request >& request )
     {
-        request->m_pimpl->m_socket->close( );
+        if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
+        {
+            request->m_pimpl->m_socket->close( );
+        }
     }
     
     void Http::close( const shared_ptr< Response >& response )
     {
-        response->m_pimpl->m_request->m_pimpl->m_socket->close( );
+        if ( response not_eq nullptr )
+        {
+            close( response->m_pimpl->m_request );
+        }
     }
     
     bool Http::is_open( const shared_ptr< Request >& request )
     {
-        return request->m_pimpl->m_socket->is_open( );
+        if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
+        {
+            return request->m_pimpl->m_socket->is_open( );
+        }
+        
+        return false;
     }
     
     bool Http::is_open( const shared_ptr< Response >& response )
     {
-        return response->m_pimpl->m_request->m_pimpl->m_socket->is_open( );
+        if ( response not_eq nullptr )
+        {
+            return is_open( response->m_pimpl->m_request );
+        }
+        
+        return false;
     }
     
     bool Http::is_closed( const shared_ptr< Request >& request )
     {
-        return request->m_pimpl->m_socket->is_closed( );
+        if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
+        {
+            return request->m_pimpl->m_socket->is_closed( );
+        }
+        
+        return true;
     }
     
     bool Http::is_closed( const shared_ptr< Response >& response )
     {
-        return response->m_pimpl->m_request->m_pimpl->m_socket->is_closed( );
+        if ( response not_eq nullptr )
+        {
+            return is_closed( response->m_pimpl->m_request );
+        }
+        
+        return true;
     }
     
 #ifdef BUILD_SSL

@@ -31,7 +31,7 @@ using namespace restbed;
 
 //External Namespaces
 
-void connect_handler( const shared_ptr< Session > session )
+void get_handler( const shared_ptr< Session > session )
 {
     session->close( 200, "Hello, World!", { { "Content-Length", "13" }, { "Connection", "close" } } );
 }
@@ -40,7 +40,7 @@ SCENARIO( "Establish connection to reachable server", "[client]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
-    resource->set_method_handler( "GET", connect_handler );
+    resource->set_method_handler( "GET", get_handler );
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
