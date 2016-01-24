@@ -113,6 +113,13 @@ namespace restbed
         
 #ifdef BUILD_SSL
         m_pimpl->m_ssl_settings = m_pimpl->m_settings->get_ssl_settings( );
+#else
+        
+        if ( m_pimpl->m_settings->get_ssl_settings( ) not_eq nullptr )
+        {
+            throw runtime_error( "Not Implemented! Rebuild Restbed with SSL funcationality enabled." );
+        }
+        
 #endif
         
         if ( m_pimpl->m_session_manager == nullptr )

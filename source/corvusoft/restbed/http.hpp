@@ -50,11 +50,8 @@ namespace restbed
             
             static bool is_closed( const std::shared_ptr< Response >& response );
             
-#ifdef BUILD_SSL
             static std::shared_ptr< Response > sync( const std::shared_ptr< Request >& request, const std::shared_ptr< const SSLSettings >& ssl_settings = nullptr );
-#else
-            static std::shared_ptr< Response > sync( const std::shared_ptr< Request >& request );
-#endif
+            
             static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
             
             static Bytes fetch( const std::string& delimiter, const std::shared_ptr< Response >& response );

@@ -108,12 +108,16 @@ namespace restbed
         return true;
     }
     
-#ifdef BUILD_SSL
     shared_ptr< Response > Http::sync( const shared_ptr< Request >& request, const shared_ptr< const SSLSettings >& ssl_settings )
-#else
-    shared_ptr< Response > Http::sync( const shared_ptr< Request >& request )
-#endif
     {
+#ifndef BUILD_SSL
+    
+        if ( ssl_settings not_eq nullptr )
+        {
+            throw runtime_error( "Not Implemented! Rebuild Restbed with SSL funcationality enabled." );
+        }
+        
+#endif
         asio::error_code error;
         
         if ( request->m_pimpl->m_io_service == nullptr )
