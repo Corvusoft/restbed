@@ -41,7 +41,7 @@ void get_handler( const shared_ptr< Session > session )
     } );
 }
 
-SCENARIO( "Close active request", "[client]" )
+SCENARIO( "close active request", "[client]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
@@ -90,7 +90,7 @@ SCENARIO( "Close active request", "[client]" )
     worker->join( );
 }
 
-SCENARIO( "Close active response", "[client]" )
+SCENARIO( "close active response", "[client]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
@@ -139,7 +139,7 @@ SCENARIO( "Close active response", "[client]" )
     worker->join( );
 }
 
-SCENARIO( "Close inactive request", "[client]" )
+SCENARIO( "close inactive request", "[client]" )
 {
     GIVEN( "I have not started a service and not perform a HTTP 'GET' request" )
     {
@@ -162,7 +162,7 @@ SCENARIO( "Close inactive request", "[client]" )
     }
 }
 
-SCENARIO( "Close inactive response", "[client]" )
+SCENARIO( "close inactive response", "[client]" )
 {
     GIVEN( "I have a blank response" )
     {
@@ -181,7 +181,7 @@ SCENARIO( "Close inactive response", "[client]" )
     }
 }
 
-SCENARIO( "Close null request", "[client]" )
+SCENARIO( "close null request", "[client]" )
 {
     GIVEN( "I have a null request" )
     {
@@ -200,7 +200,7 @@ SCENARIO( "Close null request", "[client]" )
     }
 }
 
-SCENARIO( "Close null response", "[client]" )
+SCENARIO( "close null response", "[client]" )
 {
     GIVEN( "I have a null response" )
     {

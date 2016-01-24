@@ -79,9 +79,10 @@ SCENARIO( "custom service error handler", "[service]" )
                     
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '0' (Custom Error) status code" )
+                    THEN( "I should see a '0' (No Appropriate Status Message Found) status code" )
                     {
                         REQUIRE( 22 == response->get_status_code( ) );
+                        REQUIRE( "No Appropriate Status Message Found" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'I see nothing!'" )
@@ -90,9 +91,9 @@ SCENARIO( "custom service error handler", "[service]" )
                         Bytes expectation { 'o', 'v', 'e', 'r', 'r', 'i', 'd', 'd', 'e', 'n', ' ', 's', 'e', 'r', 'v', 'i', 'c', 'e', ' ', 'h', 'a', 'n', 'd', 'l', 'e', 'r', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     multimap< string, string > headers = response->get_headers( );
-
+                    
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
                     {
                         auto header = headers.find( "Connection" );

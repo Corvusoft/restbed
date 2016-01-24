@@ -251,3 +251,8 @@ add_test( http_client_fetch_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http
 add_executable( http_client_close_acceptance_test_suite ${SOURCE_DIR}/http_client/close.cpp )
 target_link_libraries( http_client_close_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( http_client_close_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_client_close_acceptance_test_suite )
+
+add_executable( custom_status_message_acceptance_test_suite ${SOURCE_DIR}/custom_status_message/feature.cpp )
+target_link_libraries( custom_status_message_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( custom_status_message_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_status_message_acceptance_test_suite )
+

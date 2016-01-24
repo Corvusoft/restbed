@@ -69,7 +69,7 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources/1" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
                     request->set_headers( headers );
@@ -79,6 +79,7 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response->get_status_code( ) );
+                        REQUIRE( "OK" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Hello, World!'" )
@@ -87,7 +88,7 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                         Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -118,18 +119,19 @@ SCENARIO( "custom resource failed filter validation handler", "[resource]" )
                     
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '-949' (Failed Filter Validation) status code" )
+                    THEN( "I should see a '-949' (No Appropriate Status Message Found) status code" )
                     {
                         REQUIRE( -949 == response->get_status_code( ) );
+                        REQUIRE( "No Appropriate Status Message Found" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Yikes! Filters Mismatched.'" )
                     {
-                        auto actual = Http::fetch( 26, response );                        
+                        auto actual = Http::fetch( 26, response );
                         Bytes expectation { 'Y', 'i', 'k', 'e', 's', '!', ' ', 'F', 'i', 'l', 't', 'e', 'r', 's', ' ', 'M', 'i', 's', 'm', 'a', 't', 'c', 'h', 'e', 'd', '.' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

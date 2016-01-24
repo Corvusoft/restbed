@@ -75,9 +75,10 @@ SCENARIO( "resource method filters", "[resource]" )
                     
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '1' (XML) status code" )
+                    THEN( "I should see a '1' (No Appropriate Status Message Found) status code" )
                     {
                         REQUIRE( 1 == response->get_status_code( ) );
+                        REQUIRE( "No Appropriate Status Message Found" == response->get_status_message( ) );
                     }
                 }
                 
@@ -91,12 +92,13 @@ SCENARIO( "resource method filters", "[resource]" )
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/json" ) );
                     request->set_headers( headers );
-
+                    
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '2' (JSON) status code" )
+                    THEN( "I should see a '2' (No Appropriate Status Message Found) status code" )
                     {
                         REQUIRE( 2 == response->get_status_code( ) );
+                        REQUIRE( "No Appropriate Status Message Found" == response->get_status_message( ) );
                     }
                 }
                 

@@ -67,13 +67,14 @@ SCENARIO( "publishing single path resources", "[resource]" )
                     THEN( "I should see a '501' (Not Implemented) status code" )
                     {
                         REQUIRE( 501 == response->get_status_code( ) );
+                        REQUIRE( "Not Implemented" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }
-
+                    
                     multimap< string, string > headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

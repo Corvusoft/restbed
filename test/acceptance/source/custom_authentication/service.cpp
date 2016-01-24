@@ -78,16 +78,17 @@ SCENARIO( "custom service authentication", "[service]" )
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources/1" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Authorization", "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" ) );
                     request->set_headers( headers );
-
+                    
                     auto response = Http::sync( request );
                     
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response->get_status_code( ) );
+                        REQUIRE( "OK" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Password Protected Hello, World!'" )
@@ -96,7 +97,7 @@ SCENARIO( "custom service authentication", "[service]" )
                         Bytes expectation { 'P', 'a', 's', 's', 'w', 'o', 'r', 'd', ' ', 'P', 'r', 'o', 't', 'e', 'c', 't', 'e', 'd', ' ', 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -120,23 +121,24 @@ SCENARIO( "custom service authentication", "[service]" )
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources/1" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Authorization", "Basic Q29ydndsYXNnb3c=" ) );
                     request->set_headers( headers );
-
+                    
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '401' (Unauthorization) status code" )
+                    THEN( "I should see a '401' (Unauthorized) status code" )
                     {
                         REQUIRE( 401 == response->get_status_code( ) );
+                        REQUIRE( "Unauthorized" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see an empty response body" )
                     {
                         REQUIRE( response->get_body( ).empty( ) );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

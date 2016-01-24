@@ -70,7 +70,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     request->set_host( "localhost" );
                     request->set_path( "/resources" );
                     request->set_method( "POST" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Length", "0" ) );
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
@@ -81,6 +81,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response->get_status_code( ) );
+                        REQUIRE( "OK" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Hello, World!'" )
@@ -89,7 +90,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                         Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -108,13 +109,13 @@ SCENARIO( "resource rules engine", "[resource]" )
                 }
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/json, Content-Length: 0'" )
-                {                    
+                {
                     auto request = make_shared< Request >( );
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources" );
                     request->set_method( "POST" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Length", "0" ) );
                     headers.insert( make_pair( "Content-Type", "application/json" ) );
@@ -125,6 +126,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     THEN( "I should see a '415' (Unsupported Media Type) status code" )
                     {
                         REQUIRE( 415 == response->get_status_code( ) );
+                        REQUIRE( "Unsupported Media Type" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Unsupported Media Type, must be 'application/csv'.'" )
@@ -133,7 +135,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                         string body( actual.begin( ), actual.end( ) );
                         REQUIRE( body == "Unsupported Media Type, must be 'application/csv'." );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -159,14 +161,14 @@ SCENARIO( "resource rules engine", "[resource]" )
                 }
                 
                 WHEN( "I perform an HTTP 'POST' request to '/resources' with headers 'Content-Type: application/csv, Content-Length: 4' and body 'data'" )
-                {   
+                {
                     auto request = make_shared< Request >( );
                     request->set_port( 1984 );
                     request->set_host( "localhost" );
                     request->set_path( "/resources" );
                     request->set_body( Bytes( { 'd', 'a', 't', 'a' } ) );
                     request->set_method( "POST" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Length", "4" ) );
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
@@ -177,6 +179,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response->get_status_code( ) );
+                        REQUIRE( "OK" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Hello, World!'" )
@@ -185,7 +188,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                         Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -211,7 +214,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     request->set_path( "/resources" );
                     request->set_body( Bytes( { 'd', 'a', 't', 'a' } ) );
                     request->set_method( "POST" );
-
+                    
                     multimap< string, string > headers;
                     headers.insert( make_pair( "Content-Type", "application/csv" ) );
                     request->set_headers( headers );
@@ -221,6 +224,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                     THEN( "I should see a '411' (Length Required) status code" )
                     {
                         REQUIRE( 411 == response->get_status_code( ) );
+                        REQUIRE( "Length Required" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Length Required.'" )
@@ -229,7 +233,7 @@ SCENARIO( "resource rules engine", "[resource]" )
                         Bytes expectation { 'L', 'e', 'n', 'g', 't', 'h', ' ', 'R', 'e', 'q', 'u', 'i', 'r', 'e', 'd', '.' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

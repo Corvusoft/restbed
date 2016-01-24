@@ -36,7 +36,7 @@ void get_handler( const shared_ptr< Session > session )
     session->close( 200, "Hello, World!", { { "Content-Length", "13" }, { "Connection", "close" } } );
 }
 
-SCENARIO( "Fetch response body", "[client]" )
+SCENARIO( "fetch response body", "[client]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
@@ -103,7 +103,7 @@ SCENARIO( "Fetch response body", "[client]" )
     worker->join( );
 }
 
-SCENARIO( "Invoke fetch on default response", "[client]" )
+SCENARIO( "invoke fetch on default response", "[client]" )
 {
     GIVEN( "I create a default response instance" )
     {
@@ -119,7 +119,7 @@ SCENARIO( "Invoke fetch on default response", "[client]" )
     }
 }
 
-SCENARIO( "Invoke fetch on null response", "[client]" )
+SCENARIO( "invoke fetch on null response", "[client]" )
 {
     GIVEN( "I create a null response instance" )
     {

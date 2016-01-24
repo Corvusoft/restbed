@@ -74,6 +74,7 @@ SCENARIO( "request query parameters", "[resource]" )
                     THEN( "I should see a '204' (No Content) status code" )
                     {
                         REQUIRE( 204 == response->get_status_code( ) );
+                        REQUIRE( "No Content" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see an empty response body" )

@@ -73,6 +73,7 @@ SCENARIO( "case sensitive service", "[service]" )
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response->get_status_code( ) );
+                        REQUIRE( "OK" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Hello, World!'" )
@@ -81,7 +82,7 @@ SCENARIO( "case sensitive service", "[service]" )
                         Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     auto headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )
@@ -111,6 +112,7 @@ SCENARIO( "case sensitive service", "[service]" )
                     THEN( "I should see a '200' (OK) status code" )
                     {
                         REQUIRE( 200 == response->get_status_code( ) );
+                        REQUIRE( "OK" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Hello, World!'" )
@@ -119,7 +121,7 @@ SCENARIO( "case sensitive service", "[service]" )
                         Bytes expectation { 'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     auto headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

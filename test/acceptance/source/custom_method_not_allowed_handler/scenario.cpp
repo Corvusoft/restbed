@@ -78,9 +78,10 @@ SCENARIO( "custom resource method not allowed handler", "[resource]" )
                     
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '-400' (Banned Method) status code" )
+                    THEN( "I should see a '-400' (No Appropriate Status Message Found) status code" )
                     {
                         REQUIRE( -400 == response->get_status_code( ) );
+                        REQUIRE( "No Appropriate Status Message Found" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'Banned Method'" )
@@ -89,7 +90,7 @@ SCENARIO( "custom resource method not allowed handler", "[resource]" )
                         Bytes expectation { 'B', 'a', 'n', 'n', 'e', 'd', ' ', 'M', 'e', 't', 'h', 'o', 'd' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     multimap< string, string > headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

@@ -63,9 +63,10 @@ SCENARIO( "custom resource not found handler", "[resource]" )
                     
                     auto response = Http::sync( request );
                     
-                    THEN( "I should see a '0' (Saw Nothing) status code" )
+                    THEN( "I should see a '0' (No Appropriate Status Message Found) status code" )
                     {
                         REQUIRE( 0 == response->get_status_code( ) );
+                        REQUIRE( "No Appropriate Status Message Found" == response->get_status_message( ) );
                     }
                     
                     AND_THEN( "I should see a response body of 'I see nothing!'" )
@@ -74,7 +75,7 @@ SCENARIO( "custom resource not found handler", "[resource]" )
                         Bytes expectation { 'I', ' ', 's', 'e', 'e', ' ', 'n', 'o', 't', 'h', 'i', 'n', 'g', '!' };
                         REQUIRE( actual == expectation );
                     }
-
+                    
                     multimap< string, string > headers = response->get_headers( );
                     
                     AND_THEN( "I should see a 'Connection' header value of 'close'" )

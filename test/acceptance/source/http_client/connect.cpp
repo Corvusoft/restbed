@@ -36,7 +36,7 @@ void get_handler( const shared_ptr< Session > session )
     session->close( 200, "Hello, World!", { { "Content-Length", "13" }, { "Connection", "close" } } );
 }
 
-SCENARIO( "Establish connection to reachable server", "[client]" )
+SCENARIO( "establish connection to reachable server", "[client]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
@@ -103,7 +103,7 @@ SCENARIO( "Establish connection to reachable server", "[client]" )
     worker->join( );
 }
 
-SCENARIO( "Establish connection to unreachable server", "[client]" )
+SCENARIO( "establish connection to unreachable server", "[client]" )
 {
     GIVEN( "I have not started a service" )
     {
