@@ -48,18 +48,24 @@ namespace restbed
     
     void Resource::add_rule( const shared_ptr< Rule >& rule )
     {
-        m_pimpl->m_rules.push_back( rule );
-        
-        stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
+        if ( rule not_eq nullptr )
         {
-            return lhs->get_priority( ) < rhs->get_priority( );
-        } );
+            m_pimpl->m_rules.push_back( rule );
+            
+            stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
+            {
+                return lhs->get_priority( ) < rhs->get_priority( );
+            } );
+        }
     }
     
     void Resource::add_rule( const shared_ptr< Rule >& rule, const int priority )
     {
-        rule->set_priority( priority );
-        add_rule( rule );
+        if ( rule not_eq nullptr )
+        {
+            rule->set_priority( priority );
+            add_rule( rule );
+        }
     }
     
     void Resource::set_path( const string& value )
@@ -110,7 +116,10 @@ namespace restbed
             throw invalid_argument( "Attempt to set resource handler to an empty protocol method." );
         }
         
-        m_pimpl->m_methods.insert( method );
-        m_pimpl->m_method_handlers.insert( make_pair( method, make_pair( filters, callback ) ) );
+        if ( callback not_eq nullptr )
+        {
+            m_pimpl->m_methods.insert( method );
+            m_pimpl->m_method_handlers.insert( make_pair( method, make_pair( filters, callback ) ) );
+        }
     }
 }
