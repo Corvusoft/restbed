@@ -67,7 +67,7 @@ namespace restbed
         }
         catch ( ... )
         {
-            m_pimpl->log( Logger::Level::WARNING, "Service failed graceful teardown." );
+            m_pimpl->log( Logger::WARNING, "Service failed graceful teardown." );
         }
         
         delete m_pimpl;
@@ -94,7 +94,7 @@ namespace restbed
         
         m_pimpl->m_workers.clear( );
         
-        m_pimpl->log( Logger::Level::INFO, String::format( "Service halted." ) );
+        m_pimpl->log( Logger::INFO, String::format( "Service halted." ) );
         
         if ( m_pimpl->m_logger not_eq nullptr )
         {
@@ -149,7 +149,7 @@ namespace restbed
             auto path = String::format( "/%s/%s", m_pimpl->m_settings->get_root( ).data( ), route.second.data( ) );
             path = String::replace( "//", "/", path );
             
-            m_pimpl->log( Logger::Level::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
+            m_pimpl->log( Logger::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
         }
         
         if ( m_pimpl->m_ready_handler not_eq nullptr )
@@ -187,7 +187,7 @@ namespace restbed
         }
         catch ( ... )
         {
-            m_pimpl->log( Logger::Level::WARNING, "Service failed graceful teardown." );
+            m_pimpl->log( Logger::WARNING, "Service failed graceful teardown." );
         }
         
         start( settings );
@@ -200,7 +200,10 @@ namespace restbed
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->m_rules.push_back( rule );
+        if ( rule not_eq nullptr )
+        {
+            m_pimpl->m_rules.push_back( rule );
+        }
     }
     
     void Service::add_rule( const shared_ptr< Rule >& rule, const int priority )
@@ -210,8 +213,11 @@ namespace restbed
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        rule->set_priority( priority );
-        m_pimpl->m_rules.push_back( rule );
+        if ( rule not_eq nullptr )
+        {
+            rule->set_priority( priority );
+            m_pimpl->m_rules.push_back( rule );
+        }
     }
     
     void Service::publish( const shared_ptr< const Resource >& resource )
@@ -261,17 +267,22 @@ namespace restbed
         {
             if ( m_pimpl->m_resource_routes.erase( path ) )
             {
-                m_pimpl->log( Logger::Level::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
+                m_pimpl->log( Logger::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
             }
             else
             {
-                m_pimpl->log( Logger::Level::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
+                m_pimpl->log( Logger::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
             }
         }
     }
     
     void Service::schedule( const function< void ( void ) >& task, const milliseconds& interval )
     {
+        if ( task == nullptr )
+        {
+            return;
+        }
+        
         if ( interval == milliseconds::zero( ) )
         {
             m_pimpl->m_io_service->post( task );
@@ -314,7 +325,23 @@ namespace restbed
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
         
-        m_pimpl->m_ready_handler = bind( value, std::ref( *this ) );
+        if ( value not_eq nullptr )
+        {
+            m_pimpl->m_ready_handler = bind( value, std::ref( *this ) );
+        }
+    }
+    
+    void Service::set_signal_handler( const int signal, const function< void ( const int ) >& value )
+    {
+        if ( m_pimpl->m_is_running )
+        {
+            throw runtime_error( "Runtime modifications of the service are prohibited." );
+        }
+        
+        if ( value not_eq nullptr )
+        {
+            m_pimpl->m_signal_handlers[ signal ] = value;
+        }
     }
     
     void Service::set_not_found_handler( const function< void ( const shared_ptr< Session > ) >& value )
