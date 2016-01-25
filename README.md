@@ -138,6 +138,7 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |               Resource Caching                  |     pending     |
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |             Runtime Modifications               |     pending     |
 |     [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)       |               HTTP 2 compliance                 |     pending     |
+|     [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)       |            Refactor, Reduce, Reuse              |     pending     |
 
 ## Contact
 
