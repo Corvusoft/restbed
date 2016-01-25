@@ -45,6 +45,7 @@ using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
 using std::placeholders::_1;
+using std::placeholders::_2;
 using std::regex_constants::icase;
 
 //Project Namespaces
@@ -52,6 +53,7 @@ using std::regex_constants::icase;
 //External Namespaces
 using asio::ip::tcp;
 using asio::io_service;
+using asio::signal_set;
 using asio::error_code;
 using asio::ip::address;
 using asio::socket_base;
@@ -66,6 +68,7 @@ namespace restbed
             m_supported_methods( ),
             m_settings( nullptr ),
             m_io_service( new ::io_service ),
+            m_signal_set( nullptr ),
             m_session_manager( nullptr ),
             m_rules( ),
             m_workers( ),
@@ -78,6 +81,7 @@ namespace restbed
             m_resource_paths( ),
             m_resource_routes( ),
             m_ready_handler( nullptr ),
+            m_signal_handlers( ),
             m_not_found_handler( nullptr ),
             m_method_not_allowed_handler( nullptr ),
             m_method_not_implemented_handler( nullptr ),
@@ -120,7 +124,7 @@ namespace restbed
                 auto address = endpoint.address( );
                 auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
                 location += ::to_string( endpoint.port( ) );
-                log( Logger::Level::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+                log( Logger::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
 #ifdef BUILD_SSL
             }
             
@@ -131,6 +135,34 @@ namespace restbed
         {
             auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
+        }
+        
+        void ServiceImpl::setup_signal_handler( void )
+        {
+            m_signal_set = make_shared< signal_set >( *m_io_service );
+            
+            for ( const auto signal_handler : m_signal_handlers )
+            {
+                m_signal_set->add( signal_handler.first );
+            }
+            
+            m_signal_set->async_wait( bind( &ServiceImpl::signal_handler, this, _1, _2 ) );
+        }
+        
+        void ServiceImpl::signal_handler( const error_code& error, const int signal_number ) const
+        {
+            if ( error )
+            {
+                log( Logger::WARNING, String::format( "Failed to process signal '%i', '%s'.", signal_number, error.message( ).data( ) ) );
+                return;
+            }
+            
+            if ( m_signal_handlers.count( signal_number ) )
+            {
+                m_signal_handlers.at( signal_number )( signal_number );
+            }
+            
+            m_signal_set->async_wait( bind( &ServiceImpl::signal_handler, this, _1, _2 ) );
         }
         
 #ifdef BUILD_SSL
@@ -219,7 +251,7 @@ namespace restbed
                 auto address = endpoint.address( );
                 auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
                 location += ::to_string( endpoint.port( ) );
-                log( Logger::Level::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
+                log( Logger::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
             }
         }
         
@@ -237,7 +269,7 @@ namespace restbed
                 {
                     if ( error )
                     {
-                        log( Logger::Level::SECURITY, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
+                        log( Logger::SECURITY, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
                         return;
                     }
                     
@@ -264,7 +296,7 @@ namespace restbed
                     socket->lowest_layer( ).close( );
                 }
                 
-                log( Logger::Level::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+                log( Logger::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
             }
             
             https_listen( );
@@ -309,10 +341,10 @@ namespace restbed
         
         void ServiceImpl::not_found( const shared_ptr< Session > session ) const
         {
-            log( Logger::Level::INFO, String::format( "'%s' resource route not found '%s'.",
-                    session->get_origin( ).data( ),
-                    session->get_request( )->get_path( ).data( ) ) );
-                    
+            log( Logger::INFO, String::format( "'%s' resource route not found '%s'.",
+                                               session->get_origin( ).data( ),
+                                               session->get_request( )->get_path( ).data( ) ) );
+                                               
             if ( m_not_found_handler not_eq nullptr )
             {
                 m_not_found_handler( session );
@@ -351,11 +383,11 @@ namespace restbed
         
         void ServiceImpl::method_not_allowed( const shared_ptr< Session > session ) const
         {
-            log( Logger::Level::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
-                    session->get_origin( ).data( ),
-                    session->get_request( )->get_method( ).data( ),
-                    session->get_request( )->get_path( ).data( ) ) );
-                    
+            log( Logger::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
+                                               session->get_origin( ).data( ),
+                                               session->get_request( )->get_method( ).data( ),
+                                               session->get_request( )->get_path( ).data( ) ) );
+                                               
             if ( m_method_not_allowed_handler not_eq nullptr )
             {
                 m_method_not_allowed_handler( session );
@@ -368,11 +400,11 @@ namespace restbed
         
         void ServiceImpl::method_not_implemented( const shared_ptr< Session > session ) const
         {
-            log( Logger::Level::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
-                    session->get_origin( ).data( ),
-                    session->get_request( )->get_method( ).data( ),
-                    session->get_request( )->get_path( ).data( ) ) );
-                    
+            log( Logger::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
+                                               session->get_origin( ).data( ),
+                                               session->get_request( )->get_method( ).data( ),
+                                               session->get_request( )->get_path( ).data( ) ) );
+                                               
             if ( m_method_not_implemented_handler not_eq nullptr )
             {
                 m_method_not_implemented_handler( session );
@@ -385,10 +417,10 @@ namespace restbed
         
         void ServiceImpl::failed_filter_validation( const shared_ptr< Session > session ) const
         {
-            log( Logger::Level::INFO, String::format( "'%s' failed filter validation '%s'.",
-                    session->get_origin( ).data( ),
-                    session->get_request( )->get_path( ).data( ) ) );
-                    
+            log( Logger::INFO, String::format( "'%s' failed filter validation '%s'.",
+                                               session->get_origin( ).data( ),
+                                               session->get_request( )->get_path( ).data( ) ) );
+                                               
             if ( m_failed_filter_validation_handler not_eq nullptr )
             {
                 m_failed_filter_validation_handler( session );
@@ -401,11 +433,11 @@ namespace restbed
         
         void ServiceImpl::router( const shared_ptr< Session > session ) const
         {
-            log( Logger::Level::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
-                    session->get_request( )->get_method( ).data( ),
-                    session->get_origin( ).data( ),
-                    session->get_request( )->get_path( ).data( ) ) );
-                    
+            log( Logger::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
+                                               session->get_request( )->get_method( ).data( ),
+                                               session->get_origin( ).data( ),
+                                               session->get_request( )->get_path( ).data( ) ) );
+                                               
             if ( session->is_closed( ) )
             {
                 return;
@@ -490,7 +522,7 @@ namespace restbed
                     socket->close( );
                 }
                 
-                log( Logger::Level::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+                log( Logger::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
             }
             
             http_listen( );

@@ -337,14 +337,14 @@ namespace restbed
             
             if ( status == -1 and m_logger not_eq nullptr )
             {
-                m_logger->log( Logger::Level::WARNING, "Failed to set socket option, send timeout." );
+                m_logger->log( Logger::WARNING, "Failed to set socket option, send timeout." );
             }
             
             status = setsockopt( native_socket, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast< char* >( &timeout ), sizeof( timeout ) );
             
             if ( status == -1 and m_logger not_eq nullptr )
             {
-                m_logger->log( Logger::Level::WARNING, "Failed to set socket option, receive timeout." );
+                m_logger->log( Logger::WARNING, "Failed to set socket option, receive timeout." );
             }
         }
     }

@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include <chrono>
+#include <csignal>
 #include <stdexcept>
 #include <functional>
 
@@ -32,6 +33,11 @@ using namespace restbed;
 //External Namespaces
 
 void ready_handler( Service& )
+{
+    return;
+}
+
+void signal_handler( const int )
 {
     return;
 }
@@ -78,6 +84,7 @@ SCENARIO( "runtime service modifications", "[service]" )
                         REQUIRE_THROWS_AS( service.set_not_found_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_error_handler( error_handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_ready_handler( ready_handler ), runtime_error );
+                        REQUIRE_THROWS_AS( service.set_signal_handler( SIGINT, signal_handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_method_not_allowed_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_method_not_implemented_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_failed_filter_validation_handler( handler ), runtime_error );

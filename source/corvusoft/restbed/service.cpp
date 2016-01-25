@@ -104,6 +104,8 @@ namespace restbed
     
     void Service::start( const shared_ptr< const Settings >& settings )
     {
+        m_pimpl->setup_signal_handler( );
+        
         m_pimpl->m_settings = settings;
         
         if ( m_pimpl->m_settings == nullptr )

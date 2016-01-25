@@ -66,6 +66,10 @@ namespace restbed
                 
                 void https_listen( void ) const;
                 
+                void setup_signal_handler( );
+                
+                void signal_handler( const asio::error_code& error, const int signal_number ) const;
+                
                 void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
 #endif
                 std::string sanitise_path( const std::string& path ) const;
@@ -111,6 +115,8 @@ namespace restbed
                 
                 std::shared_ptr< asio::io_service > m_io_service;
                 
+                std::shared_ptr< asio::signal_set > m_signal_set;
+                
                 std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::vector< std::shared_ptr< Rule > > m_rules;
@@ -130,6 +136,8 @@ namespace restbed
                 std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
                 
                 std::function< void ( void ) > m_ready_handler;
+                
+                std::map< int, std::function< void ( const int ) > > m_signal_handlers;
                 
                 std::function< void ( const std::shared_ptr< Session > ) > m_not_found_handler;
                 

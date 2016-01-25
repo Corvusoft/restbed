@@ -256,3 +256,6 @@ add_executable( custom_status_message_acceptance_test_suite ${SOURCE_DIR}/custom
 target_link_libraries( custom_status_message_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( custom_status_message_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_status_message_acceptance_test_suite )
 
+add_executable( signal_handling_acceptance_test_suite ${SOURCE_DIR}/signal_handling/feature.cpp )
+target_link_libraries( signal_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( signal_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/signal_handling_acceptance_test_suite )

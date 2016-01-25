@@ -125,7 +125,7 @@ namespace restbed
             }
             else
             {
-                log( Logger::Level::ERROR, String::format( "Error %i, %s", status, error.what( ) ) );
+                log( Logger::ERROR, String::format( "Error %i, %s", status, error.what( ) ) );
                 
                 if ( session not_eq nullptr and session->is_open( ) )
                 {

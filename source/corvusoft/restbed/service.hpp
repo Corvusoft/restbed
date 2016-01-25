@@ -76,6 +76,8 @@ namespace restbed
             
             void set_ready_handler( const std::function< void ( Service& ) >& value );
             
+            void set_signal_handler( const int signal, const std::function< void ( const int ) >& value );
+            
             void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
             
             void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
