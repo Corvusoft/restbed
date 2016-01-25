@@ -12,6 +12,7 @@
 #include <memory>
 #include <cstdlib>
 #include <restbed>
+#include <csignal>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -28,6 +29,11 @@ void sigterm_handler( const int signal_number )
     fprintf( stderr, "Received SIGTERM signal number '%i'.\n", signal_number );
 }
 
+void default_handler( const int signal_number )
+{
+    fprintf( stderr, "Received signal number '%i'.\n", signal_number );
+}
+
 void ready_handler( Service& )
 {
     fprintf( stderr, "Service PID is '%i'.\n", getpid( ) );
@@ -40,6 +46,7 @@ int main( const int, const char** )
     
     Service service;
     service.set_ready_handler( ready_handler );
+    service.set_signal_handler( default_handler );
     service.set_signal_handler( SIGHUP, sighup_handler );
     service.set_signal_handler( SIGTERM, sigterm_handler );
     service.start( settings );
