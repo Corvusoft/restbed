@@ -13,6 +13,8 @@
 #include <cstdlib>
 #include <restbed>
 #include <csignal>
+#include <sys/types.h>
+#include <unistd.h>
 
 using namespace std;
 using namespace restbed;
