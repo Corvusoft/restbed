@@ -26,6 +26,8 @@ using namespace restbed;
 
 //External Namespaces
 using asio::ip::tcp;
+using asio::connect;
+using asio::io_service;
 using asio::system_error;
 
 bool exception_was_thrown = false;
@@ -65,10 +67,10 @@ TEST_CASE( "peer closes connection without sending data", "[service]" )
     
     wait_for_service_initialisation( );
     
-    asio::io_service io_service;
+    io_service io_service;
     tcp::socket socket( io_service );
     tcp::resolver resolver( io_service );
-    asio::connect( socket, resolver.resolve( { "localhost", "1984" } ) );
+    connect( socket, resolver.resolve( { "localhost", "1984" } ) );
     
     socket.close( );
     
