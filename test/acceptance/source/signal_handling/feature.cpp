@@ -12,8 +12,6 @@
 #include <csignal>
 #include <stdexcept>
 #include <functional>
-#include <sys/types.h>
-#include <unistd.h>
 
 //Project Includes
 #include <restbed>
@@ -22,6 +20,7 @@
 #include <catch.hpp>
 
 //System Namespaces
+using std::raise;
 using std::thread;
 using std::string;
 using std::multimap;
@@ -41,7 +40,7 @@ void signal_handler( const int signal_number )
     signal_number_actual = signal_number;
 }
 
-SCENARIO( "publishing single path resources", "[resource]" )
+SCENARIO( "Handle specific signal", "[service]" )
 {
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
@@ -60,9 +59,10 @@ SCENARIO( "publishing single path resources", "[resource]" )
                 {
                     THEN( "I should see a 'SIGHUP' signal number" )
                     {
+                        signal_number_actual = 0;
                         REQUIRE( signal_number_actual == 0 );
                         
-                        kill( getpid( ), SIGHUP );
+                        raise( SIGHUP );
                         
                         std::this_thread::sleep_for( seconds( 1 ) );
                         

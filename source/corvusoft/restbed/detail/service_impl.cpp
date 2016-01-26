@@ -139,6 +139,11 @@ namespace restbed
         
         void ServiceImpl::setup_signal_handler( void )
         {
+            if ( m_signal_handlers.empty( ) )
+            {
+                return;
+            }
+            
             m_signal_set = make_shared< signal_set >( *m_io_service );
             
             for ( const auto signal_handler : m_signal_handlers )

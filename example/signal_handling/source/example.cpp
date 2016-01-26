@@ -5,7 +5,7 @@
  *    ./distribution/example/signal_handling
  *
  * Client Usage:
- *    kill -s SIGHUP <PID>
+ *    kill -s SIGHUP  <PID>
  *    kill -s SIGTERM <PID>
  */
 
@@ -13,8 +13,6 @@
 #include <cstdlib>
 #include <restbed>
 #include <csignal>
-#include <sys/types.h>
-#include <unistd.h>
 
 using namespace std;
 using namespace restbed;
