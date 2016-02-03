@@ -66,12 +66,12 @@ namespace restbed
                 
                 void https_listen( void ) const;
                 
+                void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
+#endif
                 void setup_signal_handler( );
                 
                 void signal_handler( const asio::error_code& error, const int signal_number ) const;
                 
-                void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
-#endif
                 std::string sanitise_path( const std::string& path ) const;
                 
                 void not_found( const std::shared_ptr< Session > session ) const;

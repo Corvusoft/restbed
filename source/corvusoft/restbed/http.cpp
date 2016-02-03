@@ -157,7 +157,6 @@ namespace restbed
                 }
                 
                 socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
-                
                 request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
             }
             else
@@ -322,9 +321,9 @@ namespace restbed
         if ( length > request->m_pimpl->m_buffer->size( ) )
         {
             asio::error_code error;
-            const size_t adjusted_length = length - request->m_pimpl->m_buffer->size( );
+            const size_t size = length - request->m_pimpl->m_buffer->size( );
             
-            const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, adjusted_length, error );
+            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, size, error );
             
             if ( error and error not_eq asio::error::eof )
             {
@@ -332,8 +331,8 @@ namespace restbed
             }
             
             const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
-            data = Bytes( data_ptr, data_ptr + size );
-            request->m_pimpl->m_buffer->consume( size );
+            data = Bytes( data_ptr, data_ptr + length );
+            request->m_pimpl->m_buffer->consume( length );
         }
         else
         {
