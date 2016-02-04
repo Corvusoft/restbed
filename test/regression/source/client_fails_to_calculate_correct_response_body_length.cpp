@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <map>
 #include <thread>
 #include <memory>
 #include <chrono>
@@ -17,6 +18,7 @@
 //System Namespaces
 using std::thread;
 using std::string;
+using std::multimap;
 using std::shared_ptr;
 using std::make_shared;
 using std::chrono::seconds;
@@ -66,8 +68,8 @@ TEST_CASE( "large response bodies being garbled", "[response]" )
             
             string expectation( 65535, 'x' );
             
-            //REQUIRE( actual == expectation );
             REQUIRE( actual.length( ) == expectation.length( ) );
+            REQUIRE( actual == expectation );
             
             service.stop( );
         } );
