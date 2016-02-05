@@ -448,20 +448,20 @@ namespace restbed
                 return;
             }
             
-            const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
-            
-            if ( resource_route == m_resource_routes.end( ) )
-            {
-                return not_found( session );
-            }
-            
-            const auto path = resource_route->first;
-            session->m_pimpl->m_resource = resource_route->second;
-            const auto request = session->get_request( );
-            extract_path_parameters( path, request );
-            
             rule_engine( session, m_rules, [ this ]( const shared_ptr< Session > session )
             {
+                const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
+                
+                if ( resource_route == m_resource_routes.end( ) )
+                {
+                    return not_found( session );
+                }
+                
+                const auto path = resource_route->first;
+                session->m_pimpl->m_resource = resource_route->second;
+                const auto request = session->get_request( );
+                extract_path_parameters( path, request );
+            
                 const auto callback = [ this ]( const shared_ptr< Session > session )
                 {
                     rule_engine( session, session->m_pimpl->m_resource->m_pimpl->m_rules, [ this ]( const shared_ptr< Session > session )

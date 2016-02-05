@@ -34,7 +34,7 @@ We love hearing about the creative ways you guys and girls use Restbed.  Why not
 | [Address Binding](https://github.com/Corvusoft/restbed/blob/master/example/bind_service_address/source/example.cpp)                 | Bind HTTP and/or HTTPS services to separate IP addresses.                                       |
 | [Signal Handling](https://github.com/Corvusoft/restbed/blob/master/example/signal_handling/source/example.cpp)                      | Capture OS generated process signals.                                                           |
 | Compliance                                                                                                                          | Flexibility to address HTTP 1.0/1.1+ compliance.                                                |
-| Mature                                                                                                                              | Secure, Stable, and extensively tested over 3+ years.                                           |
+| Mature                                                                                                                              | Secure, Stable, and extensively tested since 2013.                                              |
 | Community                                                                                                                           | Active, vibrant and energetic open source community.                                            |
 | Support                                                                                                                             | Commercial support is available from [Corvusoft](http://www.corvusoft.co.uk).                                                |
 
