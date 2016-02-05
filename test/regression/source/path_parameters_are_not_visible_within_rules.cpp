@@ -60,6 +60,7 @@ void get_handler( const shared_ptr< Session > session )
 TEST_CASE( "path parameters are not visible within rules", "[request]" )
 {
     auto resource = make_shared< Resource >( );
+    resource->add_rule( make_shared< TestRule >( ) );
     resource->set_path( "/queues/{key: ^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}$}" );
     resource->set_method_handler( "GET", get_handler );
     
@@ -70,7 +71,6 @@ TEST_CASE( "path parameters are not visible within rules", "[request]" )
     
     Service service;
     service.publish( resource );
-    service.add_rule( make_shared< TestRule >( ) );
     service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
@@ -79,7 +79,7 @@ TEST_CASE( "path parameters are not visible within rules", "[request]" )
             request->set_port( 1984 );
             request->set_host( "localhost" );
             request->set_path( "/queues/1a230096-928d-4958-90d1-a681bfff22b4" );
-
+            
             auto response = Http::sync( request );
             
             REQUIRE( 200 == response->get_status_code( ) );
