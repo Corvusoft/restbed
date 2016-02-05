@@ -42,7 +42,7 @@ include_directories( ${INCLUDE_DIR} )
 add_library( ${PROJECT_NAME} ${BUILD_MANIFEST} )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
+    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
     target_link_libraries( ${PROJECT_NAME} )
 endif ( )
