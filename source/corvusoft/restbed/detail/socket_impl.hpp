@@ -123,6 +123,8 @@ namespace restbed
                 //Properties
                 bool m_is_open;
                 
+                std::shared_ptr< Bytes > m_buffer;
+                
                 std::shared_ptr< Logger > m_logger;
                 
                 std::shared_ptr< asio::steady_timer > m_timer;

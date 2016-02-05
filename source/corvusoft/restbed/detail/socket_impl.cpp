@@ -39,6 +39,7 @@ namespace restbed
     namespace detail
     {
         SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->is_open( ) ),
+            m_buffer( nullptr ),
             m_logger( logger ),
             m_timer( nullptr ),
             m_socket( socket )
@@ -50,6 +51,7 @@ namespace restbed
         }
 #ifdef BUILD_SSL
         SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->lowest_layer( ).is_open( ) ),
+            m_buffer( nullptr ),
             m_logger( logger ),
             m_timer( nullptr ),
             m_socket( nullptr ),
@@ -176,17 +178,26 @@ namespace restbed
         
         void SocketImpl::write( const Bytes& data, const function< void ( const asio::error_code&, size_t ) >& callback )
         {
+            m_buffer = make_shared< Bytes >( data );
 #ifdef BUILD_SSL
-        
+            
             if ( m_socket not_eq nullptr )
             {
 #endif
-                asio::async_write( *m_socket, asio::buffer( data.data( ), data.size( ) ), callback );
+                asio::async_write( *m_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const asio::error_code & error, size_t length )
+                {
+                    m_buffer.reset( );
+                    callback( error, length );
+                } );
 #ifdef BUILD_SSL
             }
             else
             {
-                asio::async_write( *m_ssl_socket, asio::buffer( data.data( ), data.size( ) ), callback );
+                asio::async_write( *m_ssl_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const asio::error_code & error, size_t length )
+                {
+                    m_buffer.reset( );
+                    callback( error, length );
+                } );
             }
             
 #endif

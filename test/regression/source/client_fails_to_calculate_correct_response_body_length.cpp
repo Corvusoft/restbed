@@ -68,8 +68,8 @@ TEST_CASE( "client fails to calculate correct response body length", "[http]" )
             
             string expectation( 65535, 'x' );
             
+            REQUIRE( actual.compare( expectation ) == 0 );
             REQUIRE( actual.length( ) == expectation.length( ) );
-            //REQUIRE( actual == expectation );
             
             service.stop( );
         } );
