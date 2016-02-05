@@ -37,6 +37,11 @@ using namespace restbed;
 class CustomLogger : public Logger
 {
     public:
+        CustomLogger( void ) : actual( )
+        {
+            return;
+        }
+        
         void stop( void )
         {
             return;
