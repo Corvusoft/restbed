@@ -40,6 +40,7 @@ using restbed::SSLSettings;
 TEST_CASE( "validate runtime_error is not thrown when SSLSettings passed into sync", "[client]" )
 {
     const auto settings = make_shared< Settings >( );
+    settings->set_ssl_settings( make_shared< SSLSettings >( ) );
     
     auto request = make_shared< Request >( );
     
