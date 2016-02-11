@@ -77,11 +77,21 @@ namespace restbed
         {
             m_is_open = false;
             
-            m_timer->cancel( );
-            m_socket.reset( );
+            if ( m_timer not_eq nullptr )
+            {
+                m_timer->cancel( );
+            }
+
+            if ( m_socket not_eq nullptr )
+            {
+                m_socket->close( );
+            }
             
 #ifdef BUILD_SSL
-            m_ssl_socket.reset( );
+            if ( m_ssl_socket not_eq nullptr )
+            {
+                m_ssl_socket->lowest_layer( ).close( );
+            }
 #endif
         }
         
@@ -116,6 +126,10 @@ namespace restbed
 #endif
                     asio::async_connect( socket, endpoint_iterator, [ this, callback ]( const asio::error_code & error, tcp::resolver::iterator )
                     {
+                        if ( error )
+                        {
+                            throw error;
+                        }
 #ifdef BUILD_SSL
                     
                         if ( m_ssl_socket not_eq nullptr )
@@ -153,14 +167,19 @@ namespace restbed
 #endif
                 asio::async_write( *m_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const asio::error_code & error, size_t length )
                 {
+                    m_timer->cancel( );
+
                     if ( error )
                     {
                         m_is_open = false;
                     }
                     
-                    m_timer->cancel( );
                     m_buffer.reset( );
-                    callback( error, length );
+
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
                 } );
 #ifdef BUILD_SSL
             }
@@ -168,14 +187,19 @@ namespace restbed
             {
                 asio::async_write( *m_ssl_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const asio::error_code & error, size_t length )
                 {
+                    m_timer->cancel( );
+
                     if ( error )
                     {
                         m_is_open = false;
                     }
-                    
-                    m_timer->cancel( );
+
                     m_buffer.reset( );
-                    callback( error, length );
+
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
                 } );
             }
             
@@ -226,13 +250,17 @@ namespace restbed
 #endif
                 asio::async_read( *m_socket, *data, asio::transfer_at_least( length ), [ this, callback ]( const asio::error_code & error, size_t length )
                 {
+                    m_timer->cancel( );
+
                     if ( error )
                     {
                         m_is_open = false;
                     }
-                    
-                    m_timer->cancel( );
-                    callback( error, length );
+
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
                 } );
 #ifdef BUILD_SSL
             }
@@ -240,13 +268,17 @@ namespace restbed
             {
                 asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ), [ this, callback ]( const asio::error_code & error, size_t length )
                 {
+                    m_timer->cancel( );
+
                     if ( error )
                     {
                         m_is_open = false;
                     }
-                    
-                    m_timer->cancel( );
-                    callback( error, length );
+
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
                 } );
             }
             
@@ -298,13 +330,17 @@ namespace restbed
 #endif
                 asio::async_read_until( *m_socket, *data, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
                 {
+                    m_timer->cancel( );
+
                     if ( error )
                     {
                         m_is_open = false;
                     }
-                    
-                    m_timer->cancel( );
-                    callback( error, length );
+
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
                 } );
 #ifdef BUILD_SSL
             }
@@ -312,13 +348,17 @@ namespace restbed
             {
                 asio::async_read_until( *m_ssl_socket, *data, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
                 {
+                    m_timer->cancel( );
+
                     if ( error )
                     {
                         m_is_open = false;
                     }
-                    
-                    m_timer->cancel( );
-                    callback( error, length );
+
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
                 } );
             }
             
