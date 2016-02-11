@@ -134,7 +134,7 @@ namespace restbed
     
     void Settings::set_connection_timeout( const seconds& value )
     {
-        set_connection_timeout( duration_cast< milliseconds >( value ) );
+        m_pimpl->m_connection_timeout = duration_cast< milliseconds >( value );
     }
     
     void Settings::set_connection_timeout( const milliseconds& value )

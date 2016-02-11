@@ -37,7 +37,7 @@ namespace restbed
             
             double m_version = 1.1;
             
-            int m_status_code = 200;
+            int m_status_code = 0;
             
             std::string m_protocol = "HTTP";
             

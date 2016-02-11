@@ -461,7 +461,7 @@ namespace restbed
                 session->m_pimpl->m_resource = resource_route->second;
                 const auto request = session->get_request( );
                 extract_path_parameters( path, request );
-            
+                
                 const auto callback = [ this ]( const shared_ptr< Session > session )
                 {
                     rule_engine( session, session->m_pimpl->m_resource->m_pimpl->m_rules, [ this ]( const shared_ptr< Session > session )

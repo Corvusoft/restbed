@@ -58,11 +58,9 @@ namespace restbed
                 
                 bool is_closed( void ) const;
                 
-                void connect(  const std::string& hostname, const uint16_t port, asio::error_code& error );
+                void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const asio::error_code& ) >& callback );
                 
                 void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const asio::error_code& ) >& callback );
-                
-                size_t write( const Bytes& data, asio::error_code& error );
                 
                 void write( const Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
                 
@@ -75,9 +73,9 @@ namespace restbed
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
                 
                 //Getters
-                std::string get_local_endpoint( void ) const;
+                std::string get_local_endpoint( void );
                 
-                std::string get_remote_endpoint( void ) const;
+                std::string get_remote_endpoint( void );
                 
                 //Setters
                 void set_timeout( const std::chrono::milliseconds& value );
@@ -112,6 +110,7 @@ namespace restbed
                 SocketImpl( const SocketImpl& original ) = delete;
                 
                 //Functionality
+                void connection_timeout_handler( const asio::error_code& error );
                 
                 //Getters
                 
@@ -127,7 +126,11 @@ namespace restbed
                 
                 std::shared_ptr< Logger > m_logger;
                 
+                std::chrono::milliseconds m_timeout;
+                
                 std::shared_ptr< asio::steady_timer > m_timer;
+                
+                std::shared_ptr< asio::ip::tcp::resolver > m_resolver;
                 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
 #ifdef BUILD_SSL

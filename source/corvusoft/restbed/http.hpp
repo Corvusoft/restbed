@@ -8,7 +8,9 @@
 //System Includes
 #include <string>
 #include <memory>
+#include <future>
 #include <cstddef>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
@@ -26,7 +28,7 @@ namespace restbed
     //Forward Declarations
     class Request;
     class Response;
-    class SSLSettings;
+    class Settings;
     
     class Http
     {
@@ -38,6 +40,10 @@ namespace restbed
             //Constructors
             
             //Functionality
+            static Bytes to_bytes( const std::shared_ptr< Request >& value );
+            
+            static Bytes to_bytes( const std::shared_ptr< Response >& value );
+            
             static void close( const std::shared_ptr< Request >& request );
             
             static void close( const std::shared_ptr< Response >& response );
@@ -50,7 +56,9 @@ namespace restbed
             
             static bool is_closed( const std::shared_ptr< Response >& response );
             
-            static std::shared_ptr< Response > sync( const std::shared_ptr< Request >& request, const std::shared_ptr< const SSLSettings >& ssl_settings = nullptr );
+            static const std::shared_ptr< Response > sync( const std::shared_ptr< Request >& request, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
+            
+            static std::future< const std::shared_ptr< Response > > async( const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
             
             static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
             

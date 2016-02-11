@@ -47,8 +47,6 @@ namespace restbed
             virtual ~Response( void );
             
             //Functionality
-            Bytes to_bytes( void ) const;
-            
             bool has_header( const std::string& name ) const;
             
             //Getters

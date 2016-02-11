@@ -252,6 +252,10 @@ add_executable( http_client_close_acceptance_test_suite ${SOURCE_DIR}/http_clien
 target_link_libraries( http_client_close_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( http_client_close_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_client_close_acceptance_test_suite )
 
+add_executable( http_client_async_acceptance_test_suite ${SOURCE_DIR}/http_client/async.cpp )
+target_link_libraries( http_client_async_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( http_client_async_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_client_async_acceptance_test_suite )
+
 add_executable( custom_status_message_acceptance_test_suite ${SOURCE_DIR}/custom_status_message/feature.cpp )
 target_link_libraries( custom_status_message_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( custom_status_message_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_status_message_acceptance_test_suite )
@@ -259,3 +263,11 @@ add_test( custom_status_message_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/
 add_executable( signal_handling_acceptance_test_suite ${SOURCE_DIR}/signal_handling/feature.cpp )
 target_link_libraries( signal_handling_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( signal_handling_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/signal_handling_acceptance_test_suite )
+
+add_executable( service_connection_timeout_acceptance_test_suite ${SOURCE_DIR}/connection_timeout/server.cpp )
+target_link_libraries( service_connection_timeout_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( service_connection_timeout_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_connection_timeout_acceptance_test_suite )
+
+add_executable( client_connection_timeout_acceptance_test_suite ${SOURCE_DIR}/connection_timeout/client.cpp )
+target_link_libraries( client_connection_timeout_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( client_connection_timeout_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/client_connection_timeout_acceptance_test_suite )

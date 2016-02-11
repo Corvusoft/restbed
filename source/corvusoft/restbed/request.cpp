@@ -60,51 +60,6 @@ namespace restbed
         delete m_pimpl;
     }
     
-    Bytes Request::to_bytes( void ) const
-    {
-        string path = m_pimpl->m_path;
-        
-        if ( not m_pimpl->m_query_parameters.empty( ) )
-        {
-            string query = String::empty;
-            
-            for ( const auto parameter : m_pimpl->m_query_parameters )
-            {
-                query += Uri::encode_parameter( parameter.first ) + "=" + Uri::encode_parameter( parameter.second ) + "&";
-            }
-            
-            path += "?" + query.substr( 0, query.length( ) - 1 );
-        }
-        
-        if ( m_pimpl->m_uri not_eq nullptr and not m_pimpl->m_uri->get_fragment( ).empty( ) )
-        {
-            path += "#" + m_pimpl->m_uri->get_fragment( );
-        }
-        
-        auto data = String::format( "%s %s %s/%.1f\r\n",
-                                    m_pimpl->m_method.data( ),
-                                    path.data( ),
-                                    m_pimpl->m_protocol.data( ),
-                                    m_pimpl->m_version );
-                                    
-        if ( not m_pimpl->m_headers.empty( ) )
-        {
-            const auto headers = String::join( m_pimpl->m_headers, ": ", "\r\n" );
-            data += headers + "\r\n";
-        }
-        
-        data += "\r\n";
-        
-        Bytes bytes = String::to_bytes( data );
-        
-        if ( not m_pimpl->m_body.empty( ) )
-        {
-            bytes.insert( bytes.end( ), m_pimpl->m_body.begin( ), m_pimpl->m_body.end( ) );
-        }
-        
-        return bytes;
-    }
-    
     bool Request::has_header( const string& name ) const
     {
         const auto key = String::lowercase( name );

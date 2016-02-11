@@ -33,6 +33,7 @@ namespace restbed
     
     namespace detail
     {
+        class HttpImpl;
         class SessionImpl;
         class ServiceImpl;
         struct RequestImpl;
@@ -53,8 +54,6 @@ namespace restbed
             virtual ~Request( void );
             
             //Functionality
-            Bytes to_bytes( void ) const;
-            
             bool has_header( const std::string& name ) const;
             
             bool has_path_parameter( const std::string& name, const bool ignore_case = true ) const;
@@ -200,6 +199,7 @@ namespace restbed
             //Friends
             friend Http;
             friend Session;
+            friend detail::HttpImpl;
             friend detail::SessionImpl;
             friend detail::ServiceImpl;
             

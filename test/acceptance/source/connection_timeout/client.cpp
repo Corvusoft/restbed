@@ -3,11 +3,11 @@
  */
 
 //System Includes
-#include <map>
 #include <chrono>
 #include <thread>
 #include <string>
 #include <memory>
+#include <vector>
 #include <ciso646>
 #include <stdexcept>
 #include <functional>
@@ -22,7 +22,7 @@
 //System Namespaces
 using std::thread;
 using std::string;
-using std::multimap;
+using std::vector;
 using std::shared_ptr;
 using std::make_shared;
 using std::chrono::seconds;
@@ -34,21 +34,28 @@ using namespace restbed;
 using asio::ip::tcp;
 using asio::connect;
 using asio::io_service;
+using asio::socket_base;
 
 void get_handler( const shared_ptr< Session > session )
 {
-    session->close( 200 );
+    session->sleep_for( seconds( 4 ), [ ]( const shared_ptr< Session > session )
+    {
+        if ( session->is_open( ) )
+        {
+            session->close( 200 );
+        }
+    } );
 }
 
-SCENARIO( "validate connection timeout", "[service]" )
+SCENARIO( "validate connection timeout", "[socket]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
     resource->set_method_handler( "GET", get_handler );
     
     auto settings = make_shared< Settings >( );
+    settings->set_connection_timeout( seconds( 30 ) );
     settings->set_port( 1984 );
-    settings->set_connection_timeout( seconds( 5 ) );
     
     shared_ptr< thread > worker = nullptr;
     
@@ -58,20 +65,23 @@ SCENARIO( "validate connection timeout", "[service]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            GIVEN( "I create a service with a socket connection timeout of '5' seconds" )
+            GIVEN( "I create a service with a delayed 'GET' handler" )
             {
-                WHEN( "I perform establish a network connection and wait '5' seconds" )
+                WHEN( "I perform a request with a connection timeout of '2' seconds" )
                 {
-                    io_service io_service;
-                    tcp::socket socket( io_service );
-                    tcp::resolver resolver( io_service );
-                    connect( socket, resolver.resolve( { "localhost", "1984" } ) );
+                    auto configuration = make_shared< Settings >( );
+                    configuration->set_connection_timeout( seconds( 2 ) );
                     
-                    std::this_thread::sleep_for( seconds( 60 ) );
+                    auto request = make_shared< Request >( );
+                    request->set_port( 1984 );
+                    request->set_host( "localhost" );
+                    request->set_path( "/resource" );
                     
-                    THEN( "I should see the socket closed by the peer" )
+                    auto response = Http::sync( request, configuration );
+                    
+                    THEN( "I should see the service has closed the socket" )
                     {
-                        REQUIRE( false == socket.is_open( ) );
+                        REQUIRE( response->get_status_code( ) == 0 );
                     }
                 }
                 

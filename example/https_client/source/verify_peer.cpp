@@ -29,8 +29,11 @@ int main( const int, const char** )
     request->set_header( "Host", "www.google.com" );
     request->set_query_parameter( "query", "search term" );
     
-    auto settings = make_shared< SSLSettings >( );
-    settings->set_certificate_authority_pool( Uri( "file://distribution/resource/certificates", Uri::Relative ) );
+    auto ssl_settings = make_shared< SSLSettings >( );
+    ssl_settings->set_certificate_authority_pool( Uri( "file://distribution/resource/certificates", Uri::Relative ) );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_ssl_settings( ssl_settings );
     
     auto response = Http::sync( request, settings );
     

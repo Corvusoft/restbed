@@ -10,6 +10,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
+#include "corvusoft/restbed/http.hpp"
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/request.hpp"
@@ -150,20 +151,20 @@ namespace restbed
             auto response_headers = response.get_headers( );
             hdrs.insert( response_headers.begin( ), response_headers.end( ) );
             
-            Response payload;
-            payload.set_headers( hdrs );
-            payload.set_body( response.get_body( ) );
-            payload.set_version( response.get_version( ) );
-            payload.set_protocol( response.get_protocol( ) );
-            payload.set_status_code( response.get_status_code( ) );
-            payload.set_status_message( response.get_status_message( ) );
+            auto payload = make_shared< Response >( );
+            payload->set_headers( hdrs );
+            payload->set_body( response.get_body( ) );
+            payload->set_version( response.get_version( ) );
+            payload->set_protocol( response.get_protocol( ) );
+            payload->set_status_code( response.get_status_code( ) );
+            payload->set_status_message( response.get_status_message( ) );
             
-            if ( payload.get_status_message( ).empty( ) )
+            if ( payload->get_status_message( ).empty( ) )
             {
-                payload.set_status_message( m_settings->get_status_message( payload.get_status_code( ) ) );
+                payload->set_status_message( m_settings->get_status_message( payload->get_status_code( ) ) );
             }
             
-            m_request->m_pimpl->m_socket->write( payload.to_bytes( ), callback );
+            m_request->m_pimpl->m_socket->write( Http::to_bytes( payload ), callback );
         }
         
         const map< string, string > SessionImpl::parse_request_line( istream& stream )

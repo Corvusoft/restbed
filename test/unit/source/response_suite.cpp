@@ -26,7 +26,7 @@ TEST_CASE( "validate default instance values", "[response]" )
     const Response response;
     
     REQUIRE( response.get_version( ) == 1.1 );
-    REQUIRE( response.get_status_code( ) == 200 );
+    REQUIRE( response.get_status_code( ) == 0 );
     REQUIRE( response.get_protocol( ) == "HTTP" );
     REQUIRE( response.get_headers( ).empty( ) );
     REQUIRE( response.get_status_message( ).empty( ) );

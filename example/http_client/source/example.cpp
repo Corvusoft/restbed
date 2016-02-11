@@ -6,6 +6,7 @@
  */
 
 #include <memory>
+#include <future>
 #include <cstdio>
 #include <cstdlib>
 #include <restbed>
@@ -13,14 +14,8 @@
 using namespace std;
 using namespace restbed;
 
-int main( const int, const char** )
+void print( const shared_ptr< Response >& response )
 {
-    auto request = make_shared< Request >( Uri( "http://www.corvusoft.co.uk:80/?query=search%20term" ) );
-    request->set_header( "Accept", "*/*" );
-    request->set_header( "Host", "www.corvusoft.co.uk" );
-    
-    auto response = Http::sync( request );
-    
     fprintf( stderr, "*** Response ***\n" );
     fprintf( stderr, "Status Code:    %i\n", response->get_status_code( ) );
     fprintf( stderr, "Status Message: %s\n", response->get_status_message( ).data( ) );
@@ -37,7 +32,25 @@ int main( const int, const char** )
     
     Http::fetch( length, response );
     
-    fprintf( stderr, "Body:           %.*s...\n", 25, response->get_body( ).data( ) );
+    fprintf( stderr, "Body:           %.*s...\n\n", 25, response->get_body( ).data( ) );
+}
+
+int main( const int, const char** )
+{
+    auto request = make_shared< Request >( Uri( "http://www.corvusoft.co.uk:80/?query=search%20term" ) );
+    request->set_header( "Accept", "*/*" );
+    request->set_header( "Host", "www.corvusoft.co.uk" );
+    
+    auto response = Http::sync( request );
+    print( response );
+    
+    auto future = Http::async( request, [ ]( const shared_ptr< Request >, const shared_ptr< Response > response )
+    {
+        fprintf( stderr, "Printing async response\n" );
+        print( response );
+    } );
+    
+    future.wait( );
     
     return EXIT_SUCCESS;
 }
