@@ -10,6 +10,11 @@
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 
 //External Includes
+#include <asio/read.hpp>
+#include <asio/write.hpp>
+#include <asio/connect.hpp>
+#include <asio/read_until.hpp>
+#include <asio/io_service.hpp>
 
 //System Namespaces
 using std::bind;
@@ -17,10 +22,12 @@ using std::size_t;
 using std::string;
 using std::function;
 using std::to_string;
+using std::error_code;
 using std::shared_ptr;
 using std::make_shared;
 using std::placeholders::_1;
 using std::chrono::milliseconds;
+using std::chrono::steady_clock;
 
 //Project Namespaces
 using restbed::detail::SocketImpl;
@@ -28,10 +35,7 @@ using restbed::detail::SocketImpl;
 //External Namespaces
 using asio::ip::tcp;
 using asio::io_service;
-using asio::error_code;
-using asio::io_service;
 using asio::steady_timer;
-using std::chrono::steady_clock;
 
 #ifdef BUILD_SSL
     using asio::ssl::stream;
@@ -107,7 +111,7 @@ namespace restbed
             return not m_is_open;
         }
         
-        void SocketImpl::connect( const string& hostname, const uint16_t port, const function< void ( const asio::error_code& ) >& callback )
+        void SocketImpl::connect( const string& hostname, const uint16_t port, const function< void ( const error_code& ) >& callback )
         {
 #ifdef BUILD_SSL
             auto& io_service = ( m_socket not_eq nullptr ) ? m_socket->get_io_service( ) : m_ssl_socket->lowest_layer( ).get_io_service( );
@@ -117,7 +121,7 @@ namespace restbed
             m_resolver = make_shared< tcp::resolver >( io_service );
             tcp::resolver::query query( hostname, ::to_string( port ) );
             
-            m_resolver->async_resolve( query, [ this, callback ]( const asio::error_code & error, tcp::resolver::iterator endpoint_iterator )
+            m_resolver->async_resolve( query, [ this, callback ]( const error_code & error, tcp::resolver::iterator endpoint_iterator )
             {
                 if ( not error )
                 {
@@ -126,7 +130,7 @@ namespace restbed
 #else
                     auto& socket = *m_socket;
 #endif
-                    asio::async_connect( socket, endpoint_iterator, [ this, callback ]( const asio::error_code & error, tcp::resolver::iterator )
+                    asio::async_connect( socket, endpoint_iterator, [ this, callback ]( const error_code & error, tcp::resolver::iterator )
                     {
 #ifdef BUILD_SSL
                     
@@ -150,7 +154,7 @@ namespace restbed
             m_timer->async_wait( callback );
         }
         
-        void SocketImpl::write( const Bytes& data, const function< void ( const asio::error_code&, size_t ) >& callback )
+        void SocketImpl::write( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_buffer = make_shared< Bytes >( data );
             
@@ -163,7 +167,7 @@ namespace restbed
             if ( m_socket not_eq nullptr )
             {
 #endif
-                asio::async_write( *m_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const asio::error_code & error, size_t length )
+                asio::async_write( *m_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -183,7 +187,7 @@ namespace restbed
             }
             else
             {
-                asio::async_write( *m_ssl_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const asio::error_code & error, size_t length )
+                asio::async_write( *m_ssl_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), [ this, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -204,7 +208,7 @@ namespace restbed
 #endif
         }
         
-        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, asio::error_code& error )
+        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
@@ -235,7 +239,7 @@ namespace restbed
             return size;
         }
         
-        void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const asio::error_code&, size_t ) >& callback )
+        void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
@@ -246,7 +250,7 @@ namespace restbed
             if ( m_socket not_eq nullptr )
             {
 #endif
-                asio::async_read( *m_socket, *data, asio::transfer_at_least( length ), [ this, callback ]( const asio::error_code & error, size_t length )
+                asio::async_read( *m_socket, *data, asio::transfer_at_least( length ), [ this, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -264,7 +268,7 @@ namespace restbed
             }
             else
             {
-                asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ), [ this, callback ]( const asio::error_code & error, size_t length )
+                asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ), [ this, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -283,7 +287,7 @@ namespace restbed
 #endif
         }
         
-        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, asio::error_code& error )
+        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error )
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
@@ -315,7 +319,7 @@ namespace restbed
             return length;
         }
         
-        void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const asio::error_code&, size_t ) >& callback )
+        void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
@@ -326,7 +330,7 @@ namespace restbed
             if ( m_socket not_eq nullptr )
             {
 #endif
-                asio::async_read_until( *m_socket, *data, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
+                asio::async_read_until( *m_socket, *data, delimiter, [ this, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -344,7 +348,7 @@ namespace restbed
             }
             else
             {
-                asio::async_read_until( *m_ssl_socket, *data, delimiter, [ this, callback ]( const asio::error_code & error, size_t length )
+                asio::async_read_until( *m_ssl_socket, *data, delimiter, [ this, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -365,7 +369,7 @@ namespace restbed
         
         string SocketImpl::get_local_endpoint( void )
         {
-            asio::error_code error;
+            error_code error;
             tcp::endpoint endpoint;
 #ifdef BUILD_SSL
             
@@ -396,7 +400,7 @@ namespace restbed
         
         string SocketImpl::get_remote_endpoint( void )
         {
-            asio::error_code error;
+            error_code error;
             tcp::endpoint endpoint;
 #ifdef BUILD_SSL
             

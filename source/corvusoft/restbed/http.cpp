@@ -8,6 +8,7 @@
 #include <ciso646>
 #include <cstdint>
 #include <stdexcept>
+#include <system_error>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
@@ -23,13 +24,15 @@
 #include "corvusoft/restbed/detail/response_impl.hpp"
 
 //External Includes
-#include <asio.hpp>
+#include <asio/error.hpp>
+#include <asio/buffer.hpp>
 
 //System Namespaces
 using std::bind;
 using std::string;
 using std::future;
 using std::function;
+using std::error_code;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
@@ -44,7 +47,6 @@ using restbed::detail::ResponseImpl;
 
 //External Namespaces
 using asio::buffer;
-using asio::ip::tcp;
 
 namespace restbed
 {
@@ -206,7 +208,7 @@ namespace restbed
         
         if ( length > request->m_pimpl->m_buffer->size( ) )
         {
-            asio::error_code error;
+            error_code error;
             const size_t size = length - request->m_pimpl->m_buffer->size( );
             
             request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, size, error );
@@ -255,7 +257,7 @@ namespace restbed
             throw invalid_argument( String::empty );
         }
         
-        asio::error_code error;
+        error_code error;
         const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, delimiter, error );
         
         if ( error )

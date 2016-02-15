@@ -11,12 +11,16 @@
 #include <memory>
 #include <cstdint>
 #include <functional>
+#include <system_error>
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
 
 //External Includes
-#include <asio.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/streambuf.hpp>
+#include <asio/steady_timer.hpp>
+
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
@@ -58,19 +62,19 @@ namespace restbed
                 
                 bool is_closed( void ) const;
                 
-                void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const asio::error_code& ) >& callback );
+                void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const std::error_code& ) >& callback );
                 
-                void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const asio::error_code& ) >& callback );
+                void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback );
                 
-                void write( const Bytes& data, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
+                void write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
-                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, asio::error_code& error );
+                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
                 
-                void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
+                void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
-                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, asio::error_code& error );
+                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
                 
-                void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const asio::error_code&, std::size_t ) >& callback );
+                void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
                 //Getters
                 std::string get_local_endpoint( void );
@@ -110,7 +114,7 @@ namespace restbed
                 SocketImpl( const SocketImpl& original ) = delete;
                 
                 //Functionality
-                void connection_timeout_handler( const asio::error_code& error );
+                void connection_timeout_handler( const std::error_code& error );
                 
                 //Getters
                 

@@ -25,7 +25,9 @@
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 
 //External Includes
-#include <asio.hpp>
+#include <asio/io_service.hpp>
+#include <asio/steady_timer.hpp>
+
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
@@ -40,6 +42,7 @@ using std::function;
 using std::exception;
 using std::to_string;
 using std::shared_ptr;
+using std::error_code;
 using std::make_shared;
 using std::stable_sort;
 using std::runtime_error;
@@ -51,6 +54,7 @@ using restbed::detail::ServiceImpl;
 
 //External Namespaces
 using asio::io_service;
+using asio::steady_timer;
 
 namespace restbed
 {
@@ -291,9 +295,9 @@ namespace restbed
             return;
         }
         
-        auto timer = make_shared< asio::steady_timer >( *m_pimpl->m_io_service );
+        auto timer = make_shared< steady_timer >( *m_pimpl->m_io_service );
         timer->expires_from_now( interval );
-        timer->async_wait( [ this, task, interval, timer ]( const asio::error_code& )
+        timer->async_wait( [ this, task, interval, timer ]( const error_code& )
         {
             task( );
             schedule( task, interval );

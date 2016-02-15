@@ -15,7 +15,8 @@
 #include <corvusoft/restbed/byte.hpp>
 
 //External Includes
-#include <asio.hpp>
+#include <asio/streambuf.hpp>
+#include <asio/io_service.hpp>
 
 //System Namespaces
 

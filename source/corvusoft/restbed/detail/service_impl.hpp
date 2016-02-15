@@ -14,11 +14,15 @@
 #include <vector>
 #include <stdexcept>
 #include <functional>
+#include <system_error>
 
 //Project Includes
 
 //External Includes
-#include <asio.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/signal_set.hpp>
+#include <asio/io_service.hpp>
+
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
@@ -66,11 +70,11 @@ namespace restbed
                 
                 void https_listen( void ) const;
                 
-                void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const asio::error_code& error ) const;
+                void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::error_code& error ) const;
 #endif
                 void setup_signal_handler( );
                 
-                void signal_handler( const asio::error_code& error, const int signal_number ) const;
+                void signal_handler( const std::error_code& error, const int signal_number ) const;
                 
                 std::string sanitise_path( const std::string& path ) const;
                 
@@ -88,7 +92,7 @@ namespace restbed
                 
                 void router( const std::shared_ptr< Session > session ) const;
                 
-                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const asio::error_code& error ) const;
+                void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::error_code& error ) const;
                 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
                 

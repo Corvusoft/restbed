@@ -7,6 +7,7 @@
 #include <utility>
 #include <ciso646>
 #include <stdexcept>
+#include <system_error>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
@@ -41,6 +42,7 @@ using std::exception;
 using std::to_string;
 using std::ssub_match;
 using std::shared_ptr;
+using std::error_code;
 using std::make_shared;
 using std::regex_match;
 using std::regex_error;
@@ -56,7 +58,6 @@ using restbed::detail::SessionImpl;
 //External Namespaces
 using asio::buffer;
 using asio::streambuf;
-using asio::error_code;
 
 namespace restbed
 {
@@ -136,7 +137,7 @@ namespace restbed
             }
         }
         
-        void SessionImpl::transmit( const Response& response, const function< void ( const asio::error_code&, size_t ) >& callback ) const
+        void SessionImpl::transmit( const Response& response, const function< void ( const error_code&, size_t ) >& callback ) const
         {
             auto hdrs = m_settings->get_default_headers( );
             
@@ -211,7 +212,7 @@ namespace restbed
             return headers;
         }
         
-        void SessionImpl::parse_request( const asio::error_code& error, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
+        void SessionImpl::parse_request( const error_code& error, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
         
         try
         {

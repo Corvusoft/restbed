@@ -42,6 +42,7 @@ using std::find_if;
 using std::function;
 using std::to_string;
 using std::shared_ptr;
+using std::error_code;
 using std::make_shared;
 using std::runtime_error;
 using std::placeholders::_1;
@@ -54,7 +55,6 @@ using std::regex_constants::icase;
 using asio::ip::tcp;
 using asio::io_service;
 using asio::signal_set;
-using asio::error_code;
 using asio::ip::address;
 using asio::socket_base;
 using asio::system_error;
@@ -270,7 +270,7 @@ namespace restbed
         {
             if ( not error )
             {
-                socket->async_handshake( asio::ssl::stream_base::server, [ this, socket ]( const asio::error_code & error )
+                socket->async_handshake( asio::ssl::stream_base::server, [ this, socket ]( const error_code & error )
                 {
                     if ( error )
                     {

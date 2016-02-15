@@ -20,6 +20,11 @@
 #include "corvusoft/restbed/detail/request_impl.hpp"
 
 //External Includes
+#include <asio/error.hpp>
+#include <asio/ip/tcp.hpp>
+#include <asio/buffer.hpp>
+#include <asio/streambuf.hpp>
+
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
@@ -35,6 +40,7 @@ using std::function;
 using std::multimap;
 using std::to_string;
 using std::shared_ptr;
+using std::error_code;
 using std::make_shared;
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -44,6 +50,8 @@ using std::placeholders::_2;
 //External Namespaces
 using asio::buffer;
 using asio::ip::tcp;
+using asio::streambuf;
+using asio::io_service;
 #ifdef BUILD_SSL
     using asio::ssl::stream;
 #endif
@@ -166,7 +174,7 @@ namespace restbed
             }
         }
 #endif
-        void HttpImpl::request_handler( const asio::error_code& error, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback   )
+        void HttpImpl::request_handler( const error_code& error, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback   )
         {
             if ( error )
             {
@@ -186,7 +194,7 @@ namespace restbed
             request->m_pimpl->m_socket->write( to_bytes( request ), bind( write_handler, _1, _2, request, callback ) );
         }
         
-        void HttpImpl::write_handler( const asio::error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
+        void HttpImpl::write_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
         {
             if ( error )
             {
@@ -207,7 +215,7 @@ namespace restbed
             request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
         }
         
-        void HttpImpl::read_status_handler( const asio::error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
+        void HttpImpl::read_status_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
         {
             if ( error )
             {
@@ -255,7 +263,7 @@ namespace restbed
             request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n\r\n", bind( read_headers_handler, _1, _2, request, callback ) );
         }
         
-        void HttpImpl::read_headers_handler( const asio::error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
+        void HttpImpl::read_headers_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
         {
             if ( error == asio::error::eof )
             {

@@ -11,13 +11,13 @@
 #include <memory>
 #include <istream>
 #include <functional>
+#include <system_error>
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
 #include "corvusoft/restbed/logger.hpp"
 
 //External Includes
-#include <asio.hpp>
 
 //System Namespaces
 
@@ -63,13 +63,13 @@ namespace restbed
                 
                 void failure( const std::shared_ptr< Session > session, const int, const std::exception& ) const;
                 
-                void transmit( const Response& response, const std::function< void ( const asio::error_code&, std::size_t ) >& callback ) const;
+                void transmit( const Response& response, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) const;
                 
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
                 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
                 
-                void parse_request( const asio::error_code& error, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+                void parse_request( const std::error_code& error, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
                 //Getters
                 
