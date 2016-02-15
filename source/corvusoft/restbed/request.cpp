@@ -12,6 +12,7 @@
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
+#include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/response_impl.hpp"
 
@@ -597,6 +598,11 @@ namespace restbed
     
     void Request::set_port( const uint16_t value )
     {
+        if ( m_pimpl->m_socket not_eq nullptr )
+        {
+            m_pimpl->m_socket->close( );
+        }
+        
         m_pimpl->m_port = value;
     }
     
@@ -612,6 +618,11 @@ namespace restbed
     
     void Request::set_host( const string& value )
     {
+        if ( m_pimpl->m_socket not_eq nullptr )
+        {
+            m_pimpl->m_socket->close( );
+        }
+        
         m_pimpl->m_host = value;
     }
     

@@ -50,6 +50,9 @@ namespace restbed
                 static void ssl_socket_setup( const std::shared_ptr< Request >& request, const std::shared_ptr< const SSLSettings >& settings );
 #endif
                 static void request_handler( const std::error_code& error, const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback );
+                
+                static void write_handler( const std::error_code& error, const std::size_t length, const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback );
+                
                 //Getters
                 
                 //Setters
@@ -88,8 +91,6 @@ namespace restbed
                 HttpImpl( const HttpImpl& original ) = delete;
                 
                 //Functionality
-                static void write_handler( const std::error_code& error, const std::size_t length, const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback );
-                
                 static void read_status_handler( const std::error_code& error, const std::size_t length, const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback );
                 
                 static void read_headers_handler( const std::error_code& error, const std::size_t length, const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback );

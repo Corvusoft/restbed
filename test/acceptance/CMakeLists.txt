@@ -256,6 +256,10 @@ add_executable( http_client_async_acceptance_test_suite ${SOURCE_DIR}/http_clien
 target_link_libraries( http_client_async_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( http_client_async_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_client_async_acceptance_test_suite )
 
+add_executable( http_client_keep_alive_acceptance_test_suite ${SOURCE_DIR}/http_client/keep_alive.cpp )
+target_link_libraries( http_client_keep_alive_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( http_client_keep_alive_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_client_keep_alive_acceptance_test_suite )
+
 add_executable( custom_status_message_acceptance_test_suite ${SOURCE_DIR}/custom_status_message/feature.cpp )
 target_link_libraries( custom_status_message_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( custom_status_message_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/custom_status_message_acceptance_test_suite )

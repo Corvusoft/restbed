@@ -38,6 +38,7 @@ using std::make_shared;
 using std::runtime_error;
 using std::invalid_argument;
 using std::placeholders::_1;
+using std::placeholders::_2;
 
 //Project Namespaces
 using restbed::detail::HttpImpl;
@@ -165,7 +166,14 @@ namespace restbed
         response->m_pimpl->m_request = request;
         request->m_pimpl->m_response = response;
         
-        request->m_pimpl->m_socket->connect( request->get_host( ), request->get_port( ), bind( HttpImpl::request_handler, _1, request, completion_handler ) );
+        if ( request->m_pimpl->m_socket not_eq nullptr and request->m_pimpl->m_socket->is_closed( ) )
+        {
+            request->m_pimpl->m_socket->connect( request->get_host( ), request->get_port( ), bind( HttpImpl::request_handler, _1, request, completion_handler ) );
+        }
+        else
+        {
+            request->m_pimpl->m_socket->write( HttpImpl::to_bytes( request ), bind( HttpImpl::write_handler, _1, _2, request, completion_handler ) );
+        }
         
         if ( finished )
         {
