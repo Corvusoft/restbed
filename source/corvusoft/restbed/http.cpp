@@ -138,7 +138,7 @@ namespace restbed
         return request->m_pimpl->m_response;
     }
     
-    future< const shared_ptr< Response > > Http::async( const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
+    future< shared_ptr< Response > > Http::async( const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
     {
 #ifndef BUILD_SSL
     
@@ -177,7 +177,7 @@ namespace restbed
         
         if ( finished )
         {
-            return std::async( std::launch::async, [ ]( const shared_ptr< Request > request ) -> const shared_ptr< Response >
+            return std::async( std::launch::async, [ ]( const shared_ptr< Request > request ) -> shared_ptr< Response >
             {
                 request->m_pimpl->m_io_service->run( );
                 return request->m_pimpl->m_response;
@@ -191,7 +191,7 @@ namespace restbed
             }
             while ( finished == false and not request->m_pimpl->m_io_service->stopped( ) );
             
-            std::promise< const shared_ptr< Response > > result;
+            std::promise< shared_ptr< Response > > result;
             result.set_value( request->m_pimpl->m_response );
             
             return result.get_future( );

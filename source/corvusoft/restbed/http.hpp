@@ -58,7 +58,7 @@ namespace restbed
             
             static const std::shared_ptr< Response > sync( const std::shared_ptr< Request >& request, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
             
-            static std::future< const std::shared_ptr< Response > > async( const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
+            static std::future< std::shared_ptr< Response > > async( const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
             
             static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
             

@@ -7,6 +7,7 @@
 #include <regex>
 #include <string>
 #include <sstream>
+#include <iso646.h>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
