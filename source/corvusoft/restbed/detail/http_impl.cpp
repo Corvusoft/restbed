@@ -5,7 +5,6 @@
 //System Includes
 #include <map>
 #include <regex>
-#include <string>
 #include <sstream>
 #include <iso646.h>
 
@@ -179,17 +178,8 @@ namespace restbed
         {
             if ( error )
             {
-                auto response = request->m_pimpl->m_response;
-                response->set_protocol( request->get_protocol( ) );
-                response->set_version( request->get_version( ) );
-                response->set_status_code( 0 );
-                response->set_status_message( "Error" );
-                
                 const auto body = String::format( "Socket connect failed: %s", error.message( ).data( ) );
-                response->set_header( "Content-Type", "text/plain; utf-8" );
-                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-                response->set_body( body );
-                return callback( request, response );
+                return callback( request, create_error_response( request, body ) );
             }
             
             request->m_pimpl->m_socket->write( to_bytes( request ), bind( write_handler, _1, _2, request, callback ) );
@@ -199,38 +189,36 @@ namespace restbed
         {
             if ( error )
             {
-                auto response = request->m_pimpl->m_response;
-                response->set_protocol( request->get_protocol( ) );
-                response->set_version( request->get_version( ) );
-                response->set_status_code( 0 );
-                response->set_status_message( "Error" );
-                
                 const auto body = String::format( "Socket write failed: %s", error.message( ).data( ) );
-                response->set_header( "Content-Type", "text/plain; utf-8" );
-                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-                response->set_body( body );
-                return callback( request, response );
+                return callback( request, create_error_response( request, body ) );
             }
             
             request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
             request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
         }
         
+        const shared_ptr< Response > HttpImpl::create_error_response( const shared_ptr< Request >& request, const string message )
+        {
+            auto response = request->m_pimpl->m_response;
+            response->set_protocol( request->get_protocol( ) );
+            response->set_version( request->get_version( ) );
+            response->set_status_code( 0 );
+            response->set_status_message( "Error" );
+            
+            const auto body = String::format( "Socket receive failed: %s", message.data( ) );
+            response->set_header( "Content-Type", "text/plain; utf-8" );
+            response->set_header( "Content-Length", ::to_string( body.length( ) ) );
+            response->set_body( body );
+            
+            return response;
+        }
+        
         void HttpImpl::read_status_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
         {
             if ( error )
             {
-                auto response = request->m_pimpl->m_response;
-                response->set_protocol( request->get_protocol( ) );
-                response->set_version( request->get_version( ) );
-                response->set_status_code( 0 );
-                response->set_status_message( "Error" );
-                
                 const auto body = String::format( "Socket receive failed: %s", error.message( ).data( ) );
-                response->set_header( "Content-Type", "text/plain; utf-8" );
-                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-                response->set_body( body );
-                return callback( request, response );
+                return callback( request, create_error_response( request, body ) );
             }
             
             istream response_stream( request->m_pimpl->m_buffer.get( ) );
@@ -242,17 +230,8 @@ namespace restbed
             
             if ( not regex_match( status_line, matches, status_line_pattern ) or matches.size( ) not_eq 5 )
             {
-                auto response = request->m_pimpl->m_response;
-                response->set_protocol( request->get_protocol( ) );
-                response->set_version( request->get_version( ) );
-                response->set_status_code( 0 );
-                response->set_status_message( "Error" );
-                
                 const auto body = String::format( "HTTP response status line malformed: '%s'", status_line.data( ) );
-                response->set_header( "Content-Type", "text/plain; utf-8" );
-                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-                response->set_body( body );
-                return callback( request, response );
+                return callback( request, create_error_response( request, body ) );
             }
             
             auto response = request->m_pimpl->m_response;
@@ -273,17 +252,8 @@ namespace restbed
             
             if ( error )
             {
-                auto response = request->m_pimpl->m_response;
-                response->set_protocol( request->get_protocol( ) );
-                response->set_version( request->get_version( ) );
-                response->set_status_code( 0 );
-                response->set_status_message( "Error" );
-                
                 const auto body = String::format( "Socket receive failed: '%s'", error.message( ).data( ) );
-                response->set_header( "Content-Type", "text/plain; utf-8" );
-                response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-                response->set_body( body );
-                return callback( request, response );
+                return callback( request, create_error_response( request, body ) );
             }
             
             string header = String::empty;
@@ -297,17 +267,8 @@ namespace restbed
                 
                 if ( not regex_match( header, matches, header_pattern ) or matches.size( ) not_eq 3 )
                 {
-                    auto response = request->m_pimpl->m_response;
-                    response->set_protocol( request->get_protocol( ) );
-                    response->set_version( request->get_version( ) );
-                    response->set_status_code( 0 );
-                    response->set_status_message( "Error" );
-                    
                     const auto body = String::format( "Malformed HTTP header: '%s'", header.data( ) );
-                    response->set_header( "Content-Type", "text/plain; utf-8" );
-                    response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-                    response->set_body( body );
-                    return callback( request, response );
+                    return callback( request, create_error_response( request, body ) );
                 }
                 
                 headers.insert( make_pair( matches[ 1 ], matches[ 2 ] ) );
