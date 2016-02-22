@@ -43,8 +43,6 @@ namespace restbed
             
             double m_version = 1.1;
             
-            bool m_is_https = false;
-            
             std::string m_host = "";
             
             std::string m_path = "/";

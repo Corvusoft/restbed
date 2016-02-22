@@ -121,7 +121,7 @@ namespace restbed
                 
 #ifdef BUILD_SSL
                 
-                if ( request->m_pimpl->m_is_https )
+                if ( String::uppercase( request->m_pimpl->m_protocol ) == "HTTPS" )
                 {
                     ssl_socket_setup( request, settings->get_ssl_settings( ) );
                 }
@@ -142,36 +142,33 @@ namespace restbed
 #ifdef BUILD_SSL
         void HttpImpl::ssl_socket_setup( const shared_ptr< Request >& request, const shared_ptr< const SSLSettings >& settings )
         {
-            if ( settings not_eq nullptr or request->m_pimpl->m_is_https )
+            asio::ssl::context context( asio::ssl::context::sslv23 );
+            shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > socket = nullptr;
+            
+            if ( settings not_eq nullptr )
             {
-                asio::ssl::context context( asio::ssl::context::sslv23 );
-                shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > socket = nullptr;
+                const auto pool = settings->get_certificate_authority_pool( );
                 
-                if ( settings not_eq nullptr )
+                if ( pool.empty( ) )
                 {
-                    const auto pool = settings->get_certificate_authority_pool( );
-                    
-                    if ( pool.empty( ) )
-                    {
-                        context.set_default_verify_paths( );
-                    }
-                    else
-                    {
-                        context.add_verify_path( settings->get_certificate_authority_pool( ) );
-                    }
-                    
-                    socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
-                    socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
+                    context.set_default_verify_paths( );
                 }
                 else
                 {
-                    socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
-                    socket->set_verify_mode( asio::ssl::verify_none );
+                    context.add_verify_path( settings->get_certificate_authority_pool( ) );
                 }
                 
-                socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
-                request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
+                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
             }
+            else
+            {
+                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                socket->set_verify_mode( asio::ssl::verify_none );
+            }
+            
+            socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
+            request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
         }
 #endif
         void HttpImpl::request_handler( const error_code& error, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback   )

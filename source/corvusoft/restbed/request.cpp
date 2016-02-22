@@ -47,12 +47,11 @@ namespace restbed
         m_pimpl->m_path = uri.get_path( );
         m_pimpl->m_host = uri.get_authority( );
         m_pimpl->m_query_parameters = uri.get_query_parameters( );
-        
-        m_pimpl->m_is_https = ( String::lowercase( uri.get_scheme( ) ) == "https" );
+        m_pimpl->m_protocol = String::uppercase( uri.get_scheme( ) );
         
         if ( m_pimpl->m_port == 0 )
         {
-            m_pimpl->m_port = ( m_pimpl->m_is_https ) ? 443 : 80;
+            m_pimpl->m_port = ( m_pimpl->m_protocol == "HTTPS" ) ? 443 : 80;
         }
     }
     
