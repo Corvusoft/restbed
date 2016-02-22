@@ -205,7 +205,7 @@ namespace restbed
             response->set_status_code( 0 );
             response->set_status_message( "Error" );
             
-            const auto body = String::format( "Socket receive failed: %s", message.data( ) );
+            const auto body = String::format( "%s", message.data( ) );
             response->set_header( "Content-Type", "text/plain; utf-8" );
             response->set_header( "Content-Length", ::to_string( body.length( ) ) );
             response->set_body( body );
