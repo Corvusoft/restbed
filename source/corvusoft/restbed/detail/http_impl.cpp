@@ -178,7 +178,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto body = String::format( "Socket connect failed: %s", error.message( ).data( ) );
+                const auto body = String::format( "Failed to locate HTTP endpoint: %s", error.message( ).data( ) );
                 return callback( request, create_error_response( request, body ) );
             }
             
@@ -215,7 +215,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto body = String::format( "Socket receive failed: %s", error.message( ).data( ) );
+                const auto body = String::format( "Failed to read status line: %s", error.message( ).data( ) );
                 return callback( request, create_error_response( request, body ) );
             }
             
@@ -250,7 +250,7 @@ namespace restbed
             
             if ( error )
             {
-                const auto body = String::format( "Socket receive failed: '%s'", error.message( ).data( ) );
+                const auto body = String::format( "Failed to read headers: '%s'", error.message( ).data( ) );
                 return callback( request, create_error_response( request, body ) );
             }
             
