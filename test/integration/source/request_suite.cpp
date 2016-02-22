@@ -96,7 +96,7 @@ TEST_CASE( "validate URI constructor with no path", "[request]" )
     
     REQUIRE( request.get_port( ) == 80 );
     REQUIRE( request.get_protocol( ) == "HTTP" );
-    REQUIRE( request.get_path( ) == "" );
+    REQUIRE( request.get_path( ) == "/" );
     REQUIRE( request.get_host( ) == "localhost" );
     
     multimap< string, string > parameters
