@@ -89,3 +89,21 @@ TEST_CASE( "validate HTTP URI constructor", "[request]" )
     
     REQUIRE( request.get_query_parameters( ) == parameters );
 }
+
+TEST_CASE( "validate URI constructor with no path", "[request]" )
+{
+    Request request( Uri( "http://localhost?abc=456&efg=123" ) );
+    
+    REQUIRE( request.get_port( ) == 80 );
+    REQUIRE( request.get_protocol( ) == "HTTP" );
+    REQUIRE( request.get_path( ) == "" );
+    REQUIRE( request.get_host( ) == "localhost" );
+    
+    multimap< string, string > parameters
+    {
+        { "abc", "456" },
+        { "efg", "123" }
+    };
+    
+    REQUIRE( request.get_query_parameters( ) == parameters );
+}

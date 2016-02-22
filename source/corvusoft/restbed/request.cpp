@@ -43,11 +43,16 @@ namespace restbed
     Request::Request( const Uri& uri ) : m_pimpl( new detail::RequestImpl )
     {
         m_pimpl->m_uri = make_shared< Uri >( uri );
-        m_pimpl->m_port = uri.get_port( );
         m_pimpl->m_path = uri.get_path( );
+        m_pimpl->m_port = uri.get_port( );
         m_pimpl->m_host = uri.get_authority( );
         m_pimpl->m_query_parameters = uri.get_query_parameters( );
         m_pimpl->m_protocol = String::uppercase( uri.get_scheme( ) );
+        
+        if ( m_pimpl->m_path.empty( ) )
+        {
+            m_pimpl->m_path = "/";
+        }
         
         if ( m_pimpl->m_port == 0 )
         {

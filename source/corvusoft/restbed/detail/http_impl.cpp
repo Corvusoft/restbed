@@ -63,6 +63,7 @@ namespace restbed
         Bytes HttpImpl::to_bytes( const shared_ptr< Request >& request )
         {
             auto path = request->get_path( );
+            
             auto parameters = request->get_query_parameters( );
             
             if ( not parameters.empty( ) )
