@@ -92,7 +92,7 @@ namespace restbed
                 HttpImpl( const HttpImpl& original ) = delete;
                 
                 //Functionality
-                static const std::shared_ptr< Response > create_error_response( const std::shared_ptr< Request >& request, const std::string message );
+                static const std::shared_ptr< Response > create_error_response( const std::shared_ptr< Request >& request, const std::string& message );
                 
                 static void read_status_handler( const std::error_code& error, const std::size_t length, const std::shared_ptr< Request >& request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback );
                 

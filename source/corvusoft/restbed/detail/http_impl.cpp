@@ -197,18 +197,16 @@ namespace restbed
             request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
         }
         
-        const shared_ptr< Response > HttpImpl::create_error_response( const shared_ptr< Request >& request, const string message )
+        const shared_ptr< Response > HttpImpl::create_error_response( const shared_ptr< Request >& request, const string& message )
         {
             auto response = request->m_pimpl->m_response;
             response->set_protocol( request->get_protocol( ) );
             response->set_version( request->get_version( ) );
             response->set_status_code( 0 );
             response->set_status_message( "Error" );
-            
-            const auto body = String::format( "%s", message.data( ) );
             response->set_header( "Content-Type", "text/plain; utf-8" );
-            response->set_header( "Content-Length", ::to_string( body.length( ) ) );
-            response->set_body( body );
+            response->set_header( "Content-Length", ::to_string( message.length( ) ) );
+            response->set_body( message );
             
             return response;
         }
