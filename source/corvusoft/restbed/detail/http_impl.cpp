@@ -215,7 +215,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto body = String::format( "Failed to read status line: %s", error.message( ).data( ) );
+                const auto body = String::format( "Failed to read HTTP response status line: %s", error.message( ).data( ) );
                 return callback( request, create_error_response( request, body ) );
             }
             
@@ -250,7 +250,7 @@ namespace restbed
             
             if ( error )
             {
-                const auto body = String::format( "Failed to read headers: '%s'", error.message( ).data( ) );
+                const auto body = String::format( "Failed to read HTTP response status headers: '%s'", error.message( ).data( ) );
                 return callback( request, create_error_response( request, body ) );
             }
             
@@ -265,7 +265,7 @@ namespace restbed
                 
                 if ( not regex_match( header, matches, header_pattern ) or matches.size( ) not_eq 3 )
                 {
-                    const auto body = String::format( "Malformed HTTP header: '%s'", header.data( ) );
+                    const auto body = String::format( "Malformed HTTP response header: '%s'", header.data( ) );
                     return callback( request, create_error_response( request, body ) );
                 }
                 
