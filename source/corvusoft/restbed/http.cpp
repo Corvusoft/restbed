@@ -89,6 +89,7 @@ namespace restbed
         if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
         {
             request->m_pimpl->m_socket->close( );
+            request->m_pimpl->m_response = nullptr;
         }
     }
     
