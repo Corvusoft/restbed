@@ -13,6 +13,7 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/uri.hpp"
 #include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/logger.hpp"
 #include "corvusoft/restbed/service.hpp"
@@ -71,7 +72,7 @@ namespace restbed
         }
         catch ( ... )
         {
-            m_pimpl->log( Logger::WARNING, "Service failed graceful teardown." );
+            m_pimpl->log( Logger::WARNING, "Service failed graceful wind down." );
         }
         
         delete m_pimpl;
@@ -98,10 +99,9 @@ namespace restbed
         
         m_pimpl->m_workers.clear( );
         
-        m_pimpl->log( Logger::INFO, String::format( "Service halted." ) );
-        
         if ( m_pimpl->m_logger not_eq nullptr )
         {
+            m_pimpl->log( Logger::INFO, "Service halted." );
             m_pimpl->m_logger->stop( );
         }
     }
@@ -128,17 +128,17 @@ namespace restbed
         
 #endif
         
+        if ( m_pimpl->m_logger not_eq nullptr )
+        {
+            m_pimpl->m_logger->start( m_pimpl->m_settings );
+        }
+        
         if ( m_pimpl->m_session_manager == nullptr )
         {
             m_pimpl->m_session_manager = make_shared< SessionManager >( );
         }
         
         m_pimpl->m_session_manager->start( m_pimpl->m_settings );
-        
-        if ( m_pimpl->m_logger not_eq nullptr )
-        {
-            m_pimpl->m_logger->start( m_pimpl->m_settings );
-        }
         
         stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
         {
@@ -193,7 +193,7 @@ namespace restbed
         }
         catch ( ... )
         {
-            m_pimpl->log( Logger::WARNING, "Service failed graceful teardown." );
+            m_pimpl->log( Logger::WARNING, "Service failed graceful reboot." );
         }
         
         start( settings );
@@ -302,6 +302,16 @@ namespace restbed
             task( );
             schedule( task, interval );
         } );
+    }
+    
+    const shared_ptr< const Uri > Service::get_http_uri( void ) const
+    {
+        return m_pimpl->get_http_uri( );
+    }
+    
+    const shared_ptr< const Uri > Service::get_https_uri( void ) const
+    {
+        return m_pimpl->get_https_uri( );
     }
     
     void Service::set_logger( const shared_ptr< Logger >& value )

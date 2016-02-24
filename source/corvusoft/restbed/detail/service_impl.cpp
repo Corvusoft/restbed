@@ -12,6 +12,7 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/uri.hpp"
 #include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/logger.hpp"
 #include "corvusoft/restbed/string.hpp"
@@ -120,10 +121,7 @@ namespace restbed
                 
                 http_listen( );
                 
-                auto endpoint = m_acceptor->local_endpoint( );
-                auto address = endpoint.address( );
-                auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-                location += ::to_string( endpoint.port( ) );
+                const auto location = get_http_uri( )->to_string( );
                 log( Logger::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
 #ifdef BUILD_SSL
             }
@@ -252,10 +250,7 @@ namespace restbed
                 
                 https_listen( );
                 
-                auto endpoint = m_ssl_acceptor->local_endpoint( );
-                auto address = endpoint.address( );
-                auto location = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-                location += ::to_string( endpoint.port( ) );
+                const auto location = get_https_uri( )->to_string( );
                 log( Logger::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
             }
         }
@@ -637,6 +632,57 @@ namespace restbed
             }
             
             return match;
+        }
+        
+        const shared_ptr< const Uri > ServiceImpl::get_http_uri( void ) const
+        {
+            if ( m_acceptor == nullptr )
+            {
+                return nullptr;
+            }
+            
+            auto endpoint = m_acceptor->local_endpoint( );
+            auto address = endpoint.address( );
+            auto uri = String::empty;
+            
+            if ( address.is_v6( ) )
+            {
+                uri = String::format( "http://[%s]:%u", address.to_string( ).data( ), endpoint.port( ) );
+            }
+            else
+            {
+                uri = String::format( "http://%s:%u", address.to_string( ).data( ), endpoint.port( ) );
+            }
+            
+            return make_shared< const Uri >( uri );
+        }
+        
+        const shared_ptr< const Uri > ServiceImpl::get_https_uri( void ) const
+        {
+#ifdef BUILD_SSL
+        
+            if ( m_ssl_acceptor == nullptr )
+            {
+                return nullptr;
+            }
+            
+            auto endpoint = m_ssl_acceptor->local_endpoint( );
+            auto address = endpoint.address( );
+            auto uri = String::empty;
+            
+            if ( address.is_v6( ) )
+            {
+                uri = String::format( "https://[%s]:%u", address.to_string( ).data( ), endpoint.port( ) );
+            }
+            else
+            {
+                uri = String::format( "https://%s:%u", address.to_string( ).data( ), endpoint.port( ) );
+            }
+            
+            return make_shared< const Uri >( uri );
+#else
+            throw runtime_error( "Not Implemented! Rebuild Restbed with SSL funcationality enabled." );
+#endif
         }
     }
 }

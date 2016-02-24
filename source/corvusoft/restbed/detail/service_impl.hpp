@@ -36,6 +36,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Uri;
     class Rule;
     class Logger;
     class Session;
@@ -103,6 +104,9 @@ namespace restbed
                 bool resource_router( const std::shared_ptr< Session > session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
                 //Getters
+                const std::shared_ptr< const Uri > get_http_uri( void ) const;
+                
+                const std::shared_ptr< const Uri > get_https_uri( void ) const;
                 
                 //Setters
                 

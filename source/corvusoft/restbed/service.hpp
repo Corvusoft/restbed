@@ -26,6 +26,7 @@
 namespace restbed
 {
     //Forward Declarations
+    class Uri;
     class Rule;
     class Logger;
     class Session;
@@ -68,6 +69,9 @@ namespace restbed
             void schedule( const std::function< void ( void ) >& task, const std::chrono::milliseconds& interval = std::chrono::milliseconds::zero( ) );
             
             //Getters
+            const std::shared_ptr< const Uri > get_http_uri( void ) const;
+            
+            const std::shared_ptr< const Uri > get_https_uri( void ) const;
             
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
