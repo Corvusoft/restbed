@@ -28,7 +28,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Logger;
     class Session;
     class Request;
     class Response;

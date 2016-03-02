@@ -11,8 +11,6 @@
 #include <cstddef>
 
 //Project Includes
-#include "corvusoft/restbed/rule.hpp"
-#include "corvusoft/restbed/session.hpp"
 
 //External Includes
 
@@ -24,8 +22,14 @@
 
 namespace restbed
 {
+    //Forward Declarations
+    class Rule;
+    class Session;
+    
     namespace detail
     {
+        //Forward Declarations
+        
         static void rule_engine( const std::shared_ptr< Session > session,
                                  const std::vector< std::shared_ptr< Rule > >& rules,
                                  const std::function< void ( const std::shared_ptr< Session > ) >& callback,

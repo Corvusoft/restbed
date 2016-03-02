@@ -40,7 +40,6 @@ namespace restbed
     class Rule;
     class Logger;
     class Session;
-    class Service;
     class Resource;
     class Settings;
     class SessionManager;

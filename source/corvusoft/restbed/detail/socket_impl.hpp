@@ -35,7 +35,6 @@ namespace restbed
 {
     //Forward Declarations
     class Logger;
-    class Session;
     
     namespace detail
     {

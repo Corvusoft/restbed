@@ -12,7 +12,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
-#include "corvusoft/restbed/request.hpp"
 
 //External Includes
 
