@@ -6,7 +6,7 @@
 #define _RESTBED_LOGGER_H 1
 
 #if defined(WIN32)
-#undef ERROR
+    #undef ERROR
 #endif
 
 //System Includes
