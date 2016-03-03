@@ -85,10 +85,17 @@ namespace restbed
                 path += "#" + uri->get_fragment( );
             }
             
+            auto protocol = request->get_protocol( );
+            
+            if ( String::uppercase( protocol ) == "HTTPS" )
+            {
+                protocol = "HTTP";
+            }
+            
             auto data = String::format( "%s %s %s/%.1f\r\n",
                                         request->get_method( ).data( ),
                                         path.data( ),
-                                        request->get_protocol( ).data( ),
+                                        protocol.data( ),
                                         request->get_version( ) );
                                         
             auto headers = request->get_headers( );
