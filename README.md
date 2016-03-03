@@ -7,8 +7,6 @@ Restbed is a comprehensive and consistent programming model for building applica
 > It's akin to embedding NGINX into your companies own product line.
 >                                                       -- Solutions Architect, Bellrock Technology
 
-We love hearing about the creative ways you guys and girls use Restbed.  Why not spare a few minutes and share your [passion](https://github.com/Corvusoft/restbed/wiki).
-
 ## Features
 
 |                                                              Feature                                                                |                                           Description                                           |
@@ -131,8 +129,8 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5)       |      Multi-Threaded service capability          |     complete    |
 |     [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5)       |       Bind Service to specific Address          |     complete    |
 |     [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5)       |             Session Management                  |     complete    |
-|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 HTTP Client                     |     testing     |
-|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Signal Handling                   |     testing     |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |                 HTTP Client                     |    complete     |
+|     [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)       |               Signal Handling                   |    complete     |
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |              API Documentation                  |   development   |
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |                 Web Sockets                     |     pending     |
 |     [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)       |         Client-side SSL certificates            |     pending     |
@@ -146,6 +144,5 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 |     Method   |                   Description                   |
 |:--------------|:-----------------------------------------------| 
 | [Twitter](http://www.twitter.com/corvusoft)                  | Tweet us your questions & feature requests.   |
-| [Google+](https://plus.google.com/+CorvusoftCoUkSolutions)   | Join the community social circle.             |
 | support@corvusoft.co.uk                                      | Support related queries.                      |
 | sales@corvusoft.co.uk                                        | Sale related queries.                         |
