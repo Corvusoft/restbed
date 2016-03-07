@@ -78,7 +78,7 @@ int main( const int, const char** )
 }
 ```
 
-More in-depth examples can be found [here](https://github.com/corvusoft/restbed/tree/master/example). To see Restbed used in anger, please see Corvusoft's [RestQ](https://github.com/corvusoft/restq) project.
+More in-depth examples can be found [here](https://github.com/corvusoft/restbed/tree/master/example). To see Restbed used in anger, please visit Corvusoft's [RestQ](https://github.com/corvusoft/restq) project.
 
 ## License
 
