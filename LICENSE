@@ -8,8 +8,8 @@
  This work is part of Corvusoft's Restbed Framework (the "Software").
 
  You may at your option receive a license to the Software under either 
- the terms of the GNU Affero General Public License (AGPL) or one of the
- Corvusoft Enterprise Options, as explained in the note below.
+ the terms of the GNU Affero General Public License (AGPL) or the
+ Corvusoft Permissive License (CPL), as explained in the note below.
 
  The Software may be used under the terms of the GNU Affero General Public
  License version 3 or (at your option) any later version as published by 
@@ -25,17 +25,9 @@
  Using the AGPL requires that your work based on the Software must be 
  licensed under the AGPL. If you wish to develop a work based on the
  Software but desire to license it under your own terms, e.g. a closed source
- license, you MUST purchase one of the Corvusoft Enterprise Options.
+ license, you MUST purchase a Corvusoft Permissive License.
 
- Purchasing one of the Corvusoft Enterprise Options,
- gives you -- under certain conditions -- the right to choose:
+ Purchasing the CPL, gives you -- under certain conditions -- the rights
+ appearing in the file LICENSE.CPL included in the packaging of the Software.
 
- a) GNU Lesser General Public License (LGPL) version 3 or (at your option) any
-    later version as published by the Free Software Foundation and appearing in
-    the file LICENSE.LGPL included in the packaging of the Software.
-
- b) Corvusoft Permissive License (CPL) appearing in the file LICENSE.CPL
-    included in the packaging of the Software.
-
- For full terms of the Corvusoft Enterprise Options, please contact
- sales@corvusoft.co.uk.
+ For full terms and conditions of the CPL, please contact sales@corvusoft.co.uk.
