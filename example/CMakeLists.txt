@@ -1,6 +1,6 @@
 # Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
-project( "examples" )
+project( "example" )
 
 cmake_minimum_required( VERSION 2.8.10 )
 
