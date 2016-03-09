@@ -108,6 +108,10 @@ Please submit all enhancements, proposals, and defects via the [issue](http://gi
 
 For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
 
+## Documentation
+
+This codebase is intented to be as self documenting as possible. We have supplied many [examples](https://github.com/corvusoft/restbed/tree/master/example) and [test suites](https://github.com/corvusoft/restbed/tree/master/test) to help aid developers.  We are currently working on textual API documentation [here](https://github.com/ben-crowhurst/restbed/blob/master/DOCUMENTATION.md), however they are subject to eratice and frequent alteration; be warned.
+
 ## Minimum Requirements
 
 |     Resource   |                   Requirement                   |
