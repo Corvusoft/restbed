@@ -68,7 +68,7 @@ namespace restbed
             m_logger( nullptr ),
             m_supported_methods( ),
             m_settings( nullptr ),
-            m_io_service( new ::io_service ),
+            m_io_service( make_shared< ::io_service >( ) ),
             m_signal_set( nullptr ),
             m_session_manager( nullptr ),
             m_rules( ),
