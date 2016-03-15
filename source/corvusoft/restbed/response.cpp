@@ -81,7 +81,7 @@ namespace restbed
     
     const shared_ptr< const Request > Response::get_request( void ) const
     {
-        return m_pimpl->m_request;
+        return m_pimpl->m_request.lock( );
     }
     
     void Response::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const

@@ -89,7 +89,6 @@ namespace restbed
         if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
         {
             request->m_pimpl->m_socket->close( );
-            request->m_pimpl->m_response = nullptr;
         }
     }
     
@@ -97,7 +96,7 @@ namespace restbed
     {
         if ( response not_eq nullptr )
         {
-            close( response->m_pimpl->m_request );
+            close( response->m_pimpl->m_request.lock( ) );
         }
     }
     
@@ -115,7 +114,7 @@ namespace restbed
     {
         if ( response not_eq nullptr )
         {
-            return is_open( response->m_pimpl->m_request );
+            return is_open( response->m_pimpl->m_request.lock( ) );
         }
         
         return false;
