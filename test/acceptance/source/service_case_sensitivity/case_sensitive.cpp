@@ -30,13 +30,12 @@ using namespace restbed;
 
 void get_method_handler( const shared_ptr< Session > session )
 {
-    const bool CASE_SENSITIVE = false;
     const auto request = session->get_request( );
     
-    REQUIRE( "1" == request->get_path_parameter( "id", CASE_SENSITIVE ) );
-    REQUIRE( "" == request->get_path_parameter( "ID", CASE_SENSITIVE ) );
-    REQUIRE( "abc" == request->get_query_parameter( "q", CASE_SENSITIVE ) );
-    REQUIRE( "" == request->get_query_parameter( "Q", CASE_SENSITIVE ) );
+    REQUIRE( "1" == request->get_path_parameter( "id", String::CASE_SENSITIVE ) );
+    REQUIRE( "" == request->get_path_parameter( "ID", String::CASE_SENSITIVE ) );
+    REQUIRE( "abc" == request->get_query_parameter( "q", String::CASE_SENSITIVE ) );
+    REQUIRE( "" == request->get_query_parameter( "Q", String::CASE_SENSITIVE ) );
     
     session->close( OK, "Hello, World!", { { "Content-Length", "13" } } );
 }

@@ -77,9 +77,9 @@ namespace restbed
         return iterator not_eq m_pimpl->m_headers.end( );
     }
     
-    bool Request::has_path_parameter( const string& name, const bool ignore_case ) const
+    bool Request::has_path_parameter( const string& name, const String::Option option ) const
     {
-        if ( not ignore_case )
+        if ( option == String::Option::CASE_SENSITIVE )
         {
             return m_pimpl->m_path_parameters.find( name ) not_eq m_pimpl->m_path_parameters.end( );
         }
@@ -93,9 +93,9 @@ namespace restbed
         return iterator not_eq m_pimpl->m_path_parameters.end( );
     }
     
-    bool Request::has_query_parameter( const string& name, const bool ignore_case ) const
+    bool Request::has_query_parameter( const string& name, const String::Option option ) const
     {
-        if ( not ignore_case )
+        if ( option == String::Option::CASE_SENSITIVE )
         {
             return m_pimpl->m_query_parameters.find( name ) not_eq m_pimpl->m_query_parameters.end( );
         }
@@ -384,14 +384,14 @@ namespace restbed
         }
     }
     
-    string Request::get_query_parameter( const string& name, const bool ignore_case ) const
+    string Request::get_query_parameter( const string& name, const String::Option option ) const
     {
-        return get_query_parameter( name, string( "" ), ignore_case );
+        return get_query_parameter( name, string( "" ), option );
     }
     
-    string Request::get_query_parameter( const string& name, const string& default_value, bool ignore_case ) const
+    string Request::get_query_parameter( const string& name, const string& default_value, const String::Option option ) const
     {
-        if ( not ignore_case )
+        if ( option == String::Option::CASE_SENSITIVE )
         {
             const auto iterator = m_pimpl->m_query_parameters.find( name );
             return ( iterator == m_pimpl->m_query_parameters.end( ) ) ? default_value : iterator->second;
@@ -406,20 +406,20 @@ namespace restbed
         return ( iterator == m_pimpl->m_query_parameters.end( ) ) ? default_value : iterator->second;
     }
     
-    string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
+    string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform, const String::Option option ) const
     {
-        const auto parameter = get_query_parameter( name, string( "" ), ignore_case );
+        const auto parameter = get_query_parameter( name, string( "" ), option );
         return ( transform == nullptr ) ? parameter : transform( parameter );
     }
     
-    multimap< string, string > Request::get_query_parameters( const string& name, const bool ignore_case ) const
+    multimap< string, string > Request::get_query_parameters( const string& name, const String::Option option ) const
     {
         if ( name.empty( ) )
         {
             return m_pimpl->m_query_parameters;
         }
         
-        if ( not ignore_case )
+        if ( option == String::Option::CASE_SENSITIVE )
         {
             const auto iterators = m_pimpl->m_query_parameters.equal_range( name );
             return decltype( m_pimpl->m_query_parameters )( iterators.first, iterators.second );
@@ -535,14 +535,14 @@ namespace restbed
         }
     }
     
-    string Request::get_path_parameter( const string& name, const bool ignore_case ) const
+    string Request::get_path_parameter( const string& name, const String::Option option ) const
     {
-        return get_path_parameter( name, string( "" ), ignore_case );
+        return get_path_parameter( name, string( "" ), option );
     }
     
-    string Request::get_path_parameter( const string& name, const string& default_value, bool ignore_case ) const
+    string Request::get_path_parameter( const string& name, const string& default_value, const String::Option option ) const
     {
-        if ( not ignore_case )
+        if ( option == String::Option::CASE_SENSITIVE )
         {
             const auto iterator = m_pimpl->m_path_parameters.find( name );
             return ( iterator == m_pimpl->m_path_parameters.end( ) ) ? default_value : iterator->second;
@@ -557,20 +557,20 @@ namespace restbed
         return ( iterator == m_pimpl->m_path_parameters.end( ) ) ? default_value : iterator->second;
     }
     
-    string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform, bool ignore_case ) const
+    string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform, const String::Option option ) const
     {
-        const auto parameter = get_path_parameter( name, string( "" ), ignore_case );
+        const auto parameter = get_path_parameter( name, string( "" ), option );
         return ( transform == nullptr ) ? parameter : transform( parameter );
     }
     
-    map< string, string > Request::get_path_parameters( const string& name, const bool ignore_case ) const
+    map< string, string > Request::get_path_parameters( const string& name, const String::Option option ) const
     {
         if ( name.empty( ) )
         {
             return m_pimpl->m_path_parameters;
         }
         
-        if ( not ignore_case )
+        if ( option == String::Option::CASE_SENSITIVE )
         {
             const auto iterators = m_pimpl->m_path_parameters.equal_range( name );
             return decltype( m_pimpl->m_path_parameters )( iterators.first, iterators.second );

@@ -9,6 +9,7 @@
 //Project Includes
 #include <corvusoft/restbed/uri.hpp>
 #include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/string.hpp>
 #include <corvusoft/restbed/request.hpp>
 
 //External Includes
@@ -21,6 +22,7 @@ using std::multimap;
 //Project Namespaces
 using restbed::Uri;
 using restbed::Bytes;
+using restbed::String;
 using restbed::Request;
 
 //External Namespaces
@@ -33,6 +35,8 @@ TEST_CASE( "validate setters modify default values", "[request]" )
     request.set_body( expectation );
     
     REQUIRE( request.get_body( ) == expectation );
+    REQUIRE( request.has_query_parameter( "q", String::CASE_SENSITIVE ) == false );
+    REQUIRE( request.has_path_parameter( "id", String::CASE_SENSITIVE ) == false );
 }
 
 TEST_CASE( "validate URI constructor", "[request]" )

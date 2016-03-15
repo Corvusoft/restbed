@@ -40,8 +40,6 @@ TEST_CASE( "validate default instance values", "[request]" )
     REQUIRE( request.has_query_parameter( "q" ) == false );
     REQUIRE( request.has_path_parameter( "id" ) == false );
     REQUIRE( request.has_header( "Content-Type" ) == false );
-    REQUIRE( request.has_query_parameter( "q", true ) == false );
-    REQUIRE( request.has_path_parameter( "id", true ) == false );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[request]" )
@@ -61,13 +59,13 @@ TEST_CASE( "validate setters modify default values", "[request]" )
     request.set_host( "www.google.co.uk" );
     request.set_method( "CONNECT" );
     request.set_protocol( "HTTPS" );
-
+    
     multimap< string, string > headers { { "X-CUST", "1223" } };
     request.set_headers( headers );
-
+    
     multimap< string, string > parameters { { "q", "search" } };
     request.set_query_parameters( parameters );
-
+    
     REQUIRE( request.get_port( ) == 1984 );
     REQUIRE( request.get_host( ) == "www.google.co.uk" );
     REQUIRE( request.get_version( ) == 1.0 );
