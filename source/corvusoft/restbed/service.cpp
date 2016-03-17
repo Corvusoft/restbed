@@ -400,11 +400,16 @@ namespace restbed
         m_pimpl->m_failed_filter_validation_handler = value;
     }
     
-    void Service::set_error_handler( function< void ( const int, const exception&, const shared_ptr< Session > ) > value )
+    void Service::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session > ) >& value )
     {
         if ( m_pimpl->m_is_running )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
+        }
+        
+        if ( value == nullptr )
+        {
+            m_pimpl->m_error_handler = ServiceImpl::default_error_handler;
         }
         
         m_pimpl->m_error_handler = value;

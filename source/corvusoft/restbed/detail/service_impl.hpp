@@ -102,6 +102,8 @@ namespace restbed
                 
                 bool resource_router( const std::shared_ptr< Session > session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
+                static void default_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session > session );
+                
                 //Getters
                 const std::shared_ptr< const Uri > get_http_uri( void ) const;
                 

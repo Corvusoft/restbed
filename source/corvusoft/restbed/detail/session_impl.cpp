@@ -64,7 +64,6 @@ namespace restbed
     namespace detail
     {
         SessionImpl::SessionImpl( void ) : m_id( String::empty ),
-            m_logger( nullptr ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
@@ -107,34 +106,6 @@ namespace restbed
             }
             
             callback( session, data );
-        }
-        
-        void SessionImpl::log( const Logger::Level level, const string& message ) const
-        {
-            if ( m_logger not_eq nullptr )
-            {
-                m_logger->log( level, "%s", message.data( ) );
-            }
-        }
-        
-        void SessionImpl::failure( const shared_ptr< Session > session, const int status, const exception& error ) const
-        {
-            const auto handler = ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
-            
-            if ( handler not_eq nullptr )
-            {
-                handler( status, error, session );
-            }
-            else
-            {
-                log( Logger::ERROR, String::format( "Error %i, %s", status, error.what( ) ) );
-                
-                if ( session not_eq nullptr and session->is_open( ) )
-                {
-                    string body = error.what( );
-                    session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
-                }
-            }
         }
         
         void SessionImpl::transmit( const Response& response, const function< void ( const error_code&, size_t ) >& callback ) const
@@ -235,20 +206,23 @@ namespace restbed
         }
         catch ( const int status_code )
         {
-            runtime_error re( m_settings->get_status_message( status_code ) );
-            failure( session, status_code, re );
+            const auto error_handler = get_error_handler( );
+            error_handler( status_code, runtime_error( m_settings->get_status_message( status_code ) ), session );
         }
         catch ( const regex_error& re )
         {
-            failure( session, 500, re );
+            const auto error_handler = get_error_handler( );
+            error_handler( 500, re, session );
         }
         catch ( const runtime_error& re )
         {
-            failure( session, 400, re );
+            const auto error_handler = get_error_handler( );
+            error_handler( 400, re, session );
         }
         catch ( const exception& ex )
         {
-            failure( session, 500, ex );
+            const auto error_handler = get_error_handler( );
+            error_handler( 500, ex, session );
         }
         catch ( ... )
         {
@@ -262,19 +236,25 @@ namespace restbed
                 }
                 catch ( const exception& ex )
                 {
-                    failure( session, 500, ex );
+                    const auto error_handler = get_error_handler( );
+                    error_handler( 500, ex, session );
                 }
                 catch ( ... )
                 {
-                    runtime_error re( "Internal Server Error" );
-                    failure( session, 500, re );
+                    const auto error_handler = get_error_handler( );
+                    error_handler( 500, runtime_error( "Internal Server Error" ), session );
                 }
             }
             else
             {
-                runtime_error re( "Internal Server Error" );
-                failure( session, 500, re );
+                const auto error_handler = get_error_handler( );
+                error_handler( 500, runtime_error( "Internal Server Error" ), session );
             }
         }
+    }
+    
+    const function< void ( const int, const exception&, const shared_ptr< Session > ) >& SessionImpl::get_error_handler( void ) const
+    {
+        return ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
     }
 }

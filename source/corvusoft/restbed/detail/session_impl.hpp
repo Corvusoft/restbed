@@ -15,7 +15,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
-#include "corvusoft/restbed/logger.hpp"
 
 //External Includes
 
@@ -58,10 +57,6 @@ namespace restbed
                 
                 void fetch_body( const std::size_t length, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback ) const;
                 
-                void log( const Logger::Level level, const std::string& message ) const;
-                
-                void failure( const std::shared_ptr< Session > session, const int, const std::exception& ) const;
-                
                 void transmit( const Response& response, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) const;
                 
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
@@ -71,6 +66,7 @@ namespace restbed
                 void parse_request( const std::error_code& error, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
                 //Getters
+                const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) >& get_error_handler( void ) const;
                 
                 //Setters
                 
@@ -79,8 +75,6 @@ namespace restbed
                 
                 //Properties
                 std::string m_id;
-                
-                std::shared_ptr< Logger > m_logger;
                 
                 std::shared_ptr< const Request > m_request;
                 

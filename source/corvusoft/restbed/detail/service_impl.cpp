@@ -42,12 +42,14 @@ using std::smatch;
 using std::find_if;
 using std::function;
 using std::to_string;
+using std::exception;
 using std::shared_ptr;
 using std::error_code;
 using std::make_shared;
 using std::runtime_error;
 using std::placeholders::_1;
 using std::placeholders::_2;
+using std::placeholders::_3;
 using std::regex_constants::icase;
 
 //Project Namespaces
@@ -87,7 +89,7 @@ namespace restbed
             m_method_not_allowed_handler( nullptr ),
             m_method_not_implemented_handler( nullptr ),
             m_failed_filter_validation_handler( nullptr ),
-            m_error_handler( nullptr ),
+            m_error_handler( ServiceImpl::default_error_handler ),
             m_authentication_handler( nullptr )
         {
             return;
@@ -278,7 +280,6 @@ namespace restbed
                     
                     m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                     {
-                        session->m_pimpl->m_logger = m_logger;
                         session->m_pimpl->m_settings = m_settings;
                         session->m_pimpl->m_manager = m_session_manager;
                         session->m_pimpl->m_error_handler = m_error_handler;
@@ -505,7 +506,6 @@ namespace restbed
                 
                 m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                 {
-                    session->m_pimpl->m_logger = m_logger;
                     session->m_pimpl->m_settings = m_settings;
                     session->m_pimpl->m_manager = m_session_manager;
                     session->m_pimpl->m_error_handler = m_error_handler;
@@ -632,6 +632,15 @@ namespace restbed
             }
             
             return match;
+        }
+        
+        void ServiceImpl::default_error_handler( const int status, const exception& error, const shared_ptr< Session > session )
+        {
+            if ( session not_eq nullptr and session->is_open( ) )
+            {
+                string body = error.what( );
+                session->close( status, body, { { "Content-Type", "text/plain" }, { "Content-Length", ::to_string( body.length( ) ) } } );
+            }
         }
         
         const shared_ptr< const Uri > ServiceImpl::get_http_uri( void ) const

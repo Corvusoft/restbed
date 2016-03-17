@@ -67,11 +67,11 @@ namespace restbed
     
     const set< string > Session::keys( void ) const
     {
-        std::set< std::string > keys;
+        std::set< string > keys;
         
         for ( const auto& value : m_pimpl->m_context )
         {
-            keys.insert( keys.end( ), value.first );
+            keys.insert( value.first );
         }
         
         return keys;
@@ -98,15 +98,14 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( session, 500, runtime_error( message ) );
+                const auto error_handler = m_pimpl->get_error_handler( );
+                return error_handler( 500, runtime_error( message ), session );
             }
-            else
+            
+            m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
             {
-                m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
-                {
-                    m_pimpl->m_request->m_pimpl->m_socket->close( );
-                } );
-            }
+                m_pimpl->m_request->m_pimpl->m_socket->close( );
+            } );
         } );
     }
     
@@ -119,7 +118,8 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( session, 500, runtime_error( message ) );
+                const auto error_handler = m_pimpl->get_error_handler( );
+                return error_handler( 500, runtime_error( message ), session );
             }
             
             m_pimpl->m_manager->save( session, [ this ]( const shared_ptr< Session > )
@@ -175,12 +175,11 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( session, 500, runtime_error( message ) );
+                const auto error_handler = m_pimpl->get_error_handler( );
+                return error_handler( 500, runtime_error( message ), session );
             }
-            else
-            {
-                callback( session );
-            }
+            
+            callback( session );
         } );
     }
     
@@ -198,19 +197,16 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( session, 500, runtime_error( message ) );
+                const auto error_handler = m_pimpl->get_error_handler( );
+                return error_handler( 500, runtime_error( message ), session );
             }
-            else
+            
+            if ( callback == nullptr )
             {
-                if ( callback == nullptr )
-                {
-                    m_pimpl->fetch( session, m_pimpl->m_router );
-                }
-                else
-                {
-                    callback( session );
-                }
+                return m_pimpl->fetch( session, m_pimpl->m_router );
             }
+            
+            callback( session );
         } );
     }
     
@@ -264,12 +260,11 @@ namespace restbed
                 if ( error )
                 {
                     const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                    m_pimpl->failure( session, 500, runtime_error( message ) );
+                    const auto error_handler = m_pimpl->get_error_handler( );
+                    return error_handler( 500, runtime_error( message ), session );
                 }
-                else
-                {
-                    m_pimpl->fetch_body( length, session, callback );
-                }
+                
+                m_pimpl->fetch_body( length, session, callback );
             } );
         }
         else
@@ -287,12 +282,11 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( session, 500, runtime_error( message ) );
+                const auto error_handler = m_pimpl->get_error_handler( );
+                return error_handler( 500, runtime_error( message ), session );
             }
-            else
-            {
-                m_pimpl->fetch_body( length, session, callback );
-            }
+            
+            m_pimpl->fetch_body( length, session, callback );
         } );
     }
     
@@ -305,14 +299,13 @@ namespace restbed
             if ( error )
             {
                 const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
-                m_pimpl->failure( session, 500, runtime_error( message ) );
+                const auto error_handler = m_pimpl->get_error_handler( );
+                return error_handler( 500, runtime_error( message ), session );
             }
-            else
+            
+            if ( callback not_eq nullptr )
             {
-                if ( callback not_eq nullptr )
-                {
-                    callback( session );
-                }
+                callback( session );
             }
         } );
     }

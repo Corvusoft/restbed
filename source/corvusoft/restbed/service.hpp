@@ -90,7 +90,7 @@ namespace restbed
             
             void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
             
-            void set_error_handler( std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > value );
+            void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) >& value );
             
             void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) >& value );
             
