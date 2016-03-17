@@ -56,6 +56,7 @@ using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
 using std::current_exception;
+using std::rethrow_exception;
 using std::regex_constants::icase;
 
 //Project Namespaces

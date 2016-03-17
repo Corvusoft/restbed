@@ -70,6 +70,7 @@ namespace restbed
             m_manager( nullptr ),
             m_headers( ),
             m_context( ),
+            m_keep_alive_callback( nullptr ),
             m_error_handler( nullptr )
         {
             return;
