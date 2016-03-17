@@ -9,4 +9,4 @@
 [submodule "dependency/openssl"]
 	path = dependency/openssl
 	url = https://github.com/corvusoft/openssl-dependency
-	branch = OpenSSL_1_0_2-stable
+	branch = OpenSSL_1_0_2g
