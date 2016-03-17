@@ -66,7 +66,7 @@ namespace restbed
                 void parse_request( const std::error_code& error, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
                 //Getters
-                const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) >& get_error_handler( void ) const;
+                const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > get_error_handler( void ) const;
                 
                 //Setters
                 

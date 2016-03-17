@@ -93,6 +93,12 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Close failed: session already closed." ), session );
+        }
+        
         m_pimpl->m_request->m_pimpl->m_socket->write( body, [ this, session ]( const error_code & error, size_t )
         {
             if ( error )
@@ -112,6 +118,12 @@ namespace restbed
     void Session::close( const Response& response )
     {
         auto session = shared_from_this( );
+        
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Close failed: session already closed." ), session );
+        }
         
         m_pimpl->transmit( response, [ this, session ]( const error_code & error, size_t )
         {
@@ -170,6 +182,12 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Yield failed: session already closed." ), session );
+        }
+        
         m_pimpl->m_request->m_pimpl->m_socket->write( body, [ this, session, callback ]( const error_code & error, size_t )
         {
             if ( error )
@@ -191,6 +209,12 @@ namespace restbed
     void Session::yield( const Response& response, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
+        
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Yield failed: session already closed." ), session );
+        }
         
         m_pimpl->transmit( response, [ this, session, callback ]( const error_code & error, size_t )
         {
@@ -244,12 +268,26 @@ namespace restbed
     
     void Session::fetch( const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        m_pimpl->fetch( shared_from_this( ), callback );
+        auto session = shared_from_this( );
+        
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Fetch failed: session already closed." ), session );
+        }
+        
+        m_pimpl->fetch( session, callback );
     }
     
     void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
         auto session = shared_from_this( );
+        
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Fetch failed: session already closed." ), session );
+        }
         
         if ( length > m_pimpl->m_request->m_pimpl->m_buffer->size( ) )
         {
@@ -277,6 +315,12 @@ namespace restbed
     {
         auto session = shared_from_this( );
         
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Fetch failed: session already closed." ), session );
+        }
+        
         m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const error_code & error, size_t length )
         {
             if ( error )
@@ -293,6 +337,12 @@ namespace restbed
     void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
+        
+        if ( is_closed( ) )
+        {
+            const auto error_handler = m_pimpl->get_error_handler( );
+            return error_handler( 500, runtime_error( "Sleep failed: session already closed." ), session );
+        }
         
         m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
         {

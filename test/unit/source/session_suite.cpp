@@ -5,6 +5,7 @@
 //System Includes
 #include <set>
 #include <map>
+#include <memory>
 #include <string>
 #include <stdexcept>
 
@@ -19,6 +20,8 @@ using std::set;
 using std::string;
 using std::bad_cast;
 using std::multimap;
+using std::shared_ptr;
+using std::make_shared;
 using std::out_of_range;
 using std::invalid_argument;
 
@@ -110,4 +113,49 @@ TEST_CASE( "validate session context functionality", "[session]" )
     REQUIRE( session.keys( ) == set< string >( ) );
     
     REQUIRE_THROWS_AS( session.get( "Connection" ), out_of_range );
+}
+
+TEST_CASE( "invoke close on uninitialised instance", "[session]" )
+{
+    auto session = make_shared< Session >( "" );
+    
+    REQUIRE( session->is_closed( ) == true );
+    REQUIRE_NOTHROW( session->close( ) );
+    REQUIRE( session->is_closed( ) == true );
+}
+
+TEST_CASE( "invoke fetch on uninitialised instance", "[session]" )
+{
+    auto session = make_shared< Session >( "" );
+    
+    REQUIRE( session->is_closed( ) == true );
+    
+    REQUIRE_NOTHROW( session->fetch( [ ]( const shared_ptr< Session > )
+    {
+        return;
+    } ) );
+}
+
+TEST_CASE( "invoke yield on uninitialised instance", "[session]" )
+{
+    auto session = make_shared< Session >( "" );
+    
+    REQUIRE( session->is_closed( ) == true );
+    
+    REQUIRE_NOTHROW( session->yield( "test data", [ ]( const shared_ptr< Session > )
+    {
+        return;
+    } ) );
+    REQUIRE_NOTHROW( session->yield( 200, "test data", [ ]( const shared_ptr< Session > )
+    {
+        return;
+    } ) );
+    REQUIRE_NOTHROW( session->yield( 200, "test data", { { "Content-Type", "text" } }, [ ]( const shared_ptr< Session > )
+    {
+        return;
+    } ) );
+    REQUIRE_NOTHROW( session->yield( 200, { { "Content-Type", "text" } }, [ ]( const shared_ptr< Session > )
+    {
+        return;
+    } ) );
 }

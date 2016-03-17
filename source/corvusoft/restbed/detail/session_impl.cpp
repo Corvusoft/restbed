@@ -253,8 +253,18 @@ namespace restbed
         }
     }
     
-    const function< void ( const int, const exception&, const shared_ptr< Session > ) >& SessionImpl::get_error_handler( void ) const
+    const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void ) const
     {
-        return ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
+        auto error_handler = ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
+        
+        if ( error_handler == nullptr )
+        {
+            return [ ]( const int, const exception&, const shared_ptr< Session > )
+            {
+                return;
+            };
+        }
+        
+        return error_handler;
     }
 }
