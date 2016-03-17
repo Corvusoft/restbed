@@ -95,8 +95,6 @@ namespace restbed
             
             void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void fetch( const std::function< void ( const std::shared_ptr< Session > ) >& callback );
-            
             void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
             
             void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );

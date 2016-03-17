@@ -104,10 +104,18 @@ namespace restbed
                 
                 static void default_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
+                static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
+                
+                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
+                
+                void parse_request( const std::error_code& error, std::size_t length, const std::shared_ptr< Session > session ) const;
+                
                 //Getters
                 const std::shared_ptr< const Uri > get_http_uri( void ) const;
                 
                 const std::shared_ptr< const Uri > get_https_uri( void ) const;
+                
+                const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > get_error_handler( const std::shared_ptr< Session >& session ) const;
                 
                 //Setters
                 

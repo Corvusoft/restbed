@@ -5,6 +5,7 @@
 //System Includes
 #include <regex>
 #include <cstdio>
+#include <sstream>
 #include <utility>
 #include <ciso646>
 #include <stdexcept>
@@ -34,22 +35,27 @@
 
 //System Namespaces
 using std::set;
+using std::map;
 using std::pair;
 using std::bind;
 using std::regex;
 using std::string;
 using std::smatch;
+using std::istream;
 using std::find_if;
 using std::function;
+using std::multimap;
 using std::to_string;
 using std::exception;
 using std::shared_ptr;
 using std::error_code;
+using std::regex_error;
 using std::make_shared;
 using std::runtime_error;
 using std::placeholders::_1;
 using std::placeholders::_2;
 using std::placeholders::_3;
+using std::current_exception;
 using std::regex_constants::icase;
 
 //Project Namespaces
@@ -285,8 +291,9 @@ namespace restbed
                         session->m_pimpl->m_error_handler = m_error_handler;
                         session->m_pimpl->m_request = make_shared< Request >( );
                         session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                        session->m_pimpl->m_router = bind( &ServiceImpl::authenticate, this, _1 );
-                        session->m_pimpl->fetch( session, session->m_pimpl->m_router );
+                        session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                        session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, session );
+                        session->m_pimpl->m_request->m_pimpl->m_socket->read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", session->m_pimpl->m_keep_alive_callback );
                     } );
                 } );
             }
@@ -511,8 +518,9 @@ namespace restbed
                     session->m_pimpl->m_error_handler = m_error_handler;
                     session->m_pimpl->m_request = make_shared< Request >( );
                     session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                    session->m_pimpl->m_router = bind( &ServiceImpl::authenticate, this, _1 );
-                    session->m_pimpl->fetch( session, session->m_pimpl->m_router );
+                    session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                    session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, session );
+                    session->m_pimpl->m_request->m_pimpl->m_socket->read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", session->m_pimpl->m_keep_alive_callback );
                 } );
             }
             else
@@ -643,6 +651,119 @@ namespace restbed
             }
         }
         
+        const map< string, string > ServiceImpl::parse_request_line( istream& stream )
+        {
+            smatch matches;
+            static const regex pattern( "^([0-9a-zA-Z]*) ([a-zA-Z0-9:@_~!,;=#%&'\\-\\.\\/\\?\\$\\(\\)\\*\\+]+) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
+            string data = "";
+            getline( stream, data );
+            
+            if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 4 )
+            {
+                throw runtime_error( "Your client has issued a malformed or illegal request status line. That’s all we know." );
+            }
+            
+            const string protocol = matches[ 3 ].str( );
+            const auto delimiter = protocol.find_first_of( "/" );
+            
+            return map< string, string >
+            {
+                { "path", matches[ 2 ].str( ) },
+                { "method", matches[ 1 ].str( ) },
+                { "version", protocol.substr( delimiter + 1 ) },
+                { "protocol", protocol.substr( 0, delimiter ) }
+            };
+        }
+        
+        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream )
+        {
+            smatch matches;
+            string data = "";
+            multimap< string, string > headers;
+            static const regex pattern( "^([^:.]*): *(.*)\\s*$" );
+            
+            while ( getline( stream, data ) and data not_eq "\r" )
+            {
+                if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 3 )
+                {
+                    throw runtime_error( "Your client has issued a malformed or illegal request header. That’s all we know." );
+                }
+                
+                headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
+            }
+            
+            return headers;
+        }
+        
+        void ServiceImpl::parse_request( const error_code& error, size_t, const shared_ptr< Session > session ) const
+        
+        try
+        {
+            if ( error )
+            {
+                throw runtime_error( error.message( ) );
+            }
+            
+            istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
+            const auto items = parse_request_line( stream );
+            const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
+            
+            session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
+            session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
+            session->m_pimpl->m_request->m_pimpl->m_version = stod( items.at( "version" ) );
+            session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
+            session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
+            
+            authenticate( session );
+        }
+        catch ( const int status_code )
+        {
+            const auto error_handler = get_error_handler( session );
+            error_handler( status_code, runtime_error( m_settings->get_status_message( status_code ) ), session );
+        }
+        catch ( const regex_error& re )
+        {
+            const auto error_handler = get_error_handler( session );
+            error_handler( 500, re, session );
+        }
+        catch ( const runtime_error& re )
+        {
+            const auto error_handler = get_error_handler( session );
+            error_handler( 400, re, session );
+        }
+        catch ( const exception& ex )
+        {
+            const auto error_handler = get_error_handler( session );
+            error_handler( 500, ex, session );
+        }
+        catch ( ... )
+        {
+            auto cex = current_exception( );
+            
+            if ( cex not_eq nullptr )
+            {
+                try
+                {
+                    rethrow_exception( cex );
+                }
+                catch ( const exception& ex )
+                {
+                    const auto error_handler = get_error_handler( session );
+                    error_handler( 500, ex, session );
+                }
+                catch ( ... )
+                {
+                    const auto error_handler = get_error_handler( session );
+                    error_handler( 500, runtime_error( "Internal Server Error" ), session );
+                }
+            }
+            else
+            {
+                const auto error_handler = get_error_handler( session );
+                error_handler( 500, runtime_error( "Internal Server Error" ), session );
+            }
+        }
+        
         const shared_ptr< const Uri > ServiceImpl::get_http_uri( void ) const
         {
             if ( m_acceptor == nullptr )
@@ -692,6 +813,11 @@ namespace restbed
 #else
             throw runtime_error( "Not Implemented! Rebuild Restbed with SSL funcationality enabled." );
 #endif
+        }
+        
+        const function< void ( const int, const exception&, const shared_ptr< Session > ) > ServiceImpl::get_error_handler( const shared_ptr< Session >& session ) const
+        {
+            return ( session->m_pimpl->m_resource not_eq nullptr and session->m_pimpl->m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? session->m_pimpl->m_resource->m_pimpl->m_error_handler : m_error_handler;
         }
     }
 }

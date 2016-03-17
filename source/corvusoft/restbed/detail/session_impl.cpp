@@ -70,7 +70,6 @@ namespace restbed
             m_manager( nullptr ),
             m_headers( ),
             m_context( ),
-            m_router( nullptr ),
             m_error_handler( nullptr )
         {
             return;
@@ -79,13 +78,6 @@ namespace restbed
         SessionImpl::~SessionImpl( void )
         {
             return;
-        }
-        
-        void SessionImpl::fetch( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
-        {
-            session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-            
-            m_request->m_pimpl->m_socket->read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &SessionImpl::parse_request, this, _1, session, callback ) );
         }
         
         void SessionImpl::fetch_body( const size_t length, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback ) const
@@ -139,132 +131,19 @@ namespace restbed
             m_request->m_pimpl->m_socket->write( Http::to_bytes( payload ), callback );
         }
         
-        const map< string, string > SessionImpl::parse_request_line( istream& stream )
+        const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void ) const
         {
-            smatch matches;
-            static const regex pattern( "^([0-9a-zA-Z]*) ([a-zA-Z0-9:@_~!,;=#%&'\\-\\.\\/\\?\\$\\(\\)\\*\\+]+) (HTTP\\/[0-9]\\.[0-9])\\s*$" );
-            string data = "";
-            getline( stream, data );
+            auto error_handler = ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
             
-            if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 4 )
+            if ( error_handler == nullptr )
             {
-                throw runtime_error( "Your client has issued a malformed or illegal request status line. That’s all we know." );
-            }
-            
-            const string protocol = matches[ 3 ].str( );
-            const auto delimiter = protocol.find_first_of( "/" );
-            
-            return map< string, string >
-            {
-                { "path", matches[ 2 ].str( ) },
-                { "method", matches[ 1 ].str( ) },
-                { "version", protocol.substr( delimiter + 1 ) },
-                { "protocol", protocol.substr( 0, delimiter ) }
-            };
-        }
-        
-        const multimap< string, string > SessionImpl::parse_request_headers( istream& stream )
-        {
-            smatch matches;
-            string data = "";
-            multimap< string, string > headers;
-            static const regex pattern( "^([^:.]*): *(.*)\\s*$" );
-            
-            while ( getline( stream, data ) and data not_eq "\r" )
-            {
-                if ( not regex_match( data, matches, pattern ) or matches.size( ) not_eq 3 )
+                return [ ]( const int, const exception&, const shared_ptr< Session > )
                 {
-                    throw runtime_error( "Your client has issued a malformed or illegal request header. That’s all we know." );
-                }
-                
-                headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
+                    return;
+                };
             }
             
-            return headers;
+            return error_handler;
         }
-        
-        void SessionImpl::parse_request( const error_code& error, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
-        
-        try
-        {
-            if ( error )
-            {
-                throw runtime_error( error.message( ) );
-            }
-            
-            istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
-            const auto items = parse_request_line( stream );
-            const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
-            
-            m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
-            m_request->m_pimpl->m_method = items.at( "method" );
-            m_request->m_pimpl->m_version = stod( items.at( "version" ) );
-            m_request->m_pimpl->m_headers = parse_request_headers( stream );
-            m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
-            
-            callback( session );
-        }
-        catch ( const int status_code )
-        {
-            const auto error_handler = get_error_handler( );
-            error_handler( status_code, runtime_error( m_settings->get_status_message( status_code ) ), session );
-        }
-        catch ( const regex_error& re )
-        {
-            const auto error_handler = get_error_handler( );
-            error_handler( 500, re, session );
-        }
-        catch ( const runtime_error& re )
-        {
-            const auto error_handler = get_error_handler( );
-            error_handler( 400, re, session );
-        }
-        catch ( const exception& ex )
-        {
-            const auto error_handler = get_error_handler( );
-            error_handler( 500, ex, session );
-        }
-        catch ( ... )
-        {
-            auto cex = current_exception( );
-            
-            if ( cex not_eq nullptr )
-            {
-                try
-                {
-                    rethrow_exception( cex );
-                }
-                catch ( const exception& ex )
-                {
-                    const auto error_handler = get_error_handler( );
-                    error_handler( 500, ex, session );
-                }
-                catch ( ... )
-                {
-                    const auto error_handler = get_error_handler( );
-                    error_handler( 500, runtime_error( "Internal Server Error" ), session );
-                }
-            }
-            else
-            {
-                const auto error_handler = get_error_handler( );
-                error_handler( 500, runtime_error( "Internal Server Error" ), session );
-            }
-        }
-    }
-    
-    const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void ) const
-    {
-        auto error_handler = ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
-        
-        if ( error_handler == nullptr )
-        {
-            return [ ]( const int, const exception&, const shared_ptr< Session > )
-            {
-                return;
-            };
-        }
-        
-        return error_handler;
     }
 }

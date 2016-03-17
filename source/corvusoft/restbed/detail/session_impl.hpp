@@ -53,17 +53,9 @@ namespace restbed
                 virtual ~SessionImpl( void );
                 
                 //Functionality
-                void fetch( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
-                
                 void fetch_body( const std::size_t length, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback ) const;
                 
                 void transmit( const Response& response, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) const;
-                
-                static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
-                
-                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
-                
-                void parse_request( const std::error_code& error, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
                 
                 //Getters
                 const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > get_error_handler( void ) const;
@@ -88,7 +80,7 @@ namespace restbed
                 
                 std::map< std::string, const ContextValue > m_context;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > m_router;
+                std::function< void (  const std::error_code& error, std::size_t length ) > m_keep_alive_callback;
                 
                 std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler;
                 

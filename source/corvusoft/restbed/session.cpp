@@ -26,7 +26,9 @@ using std::function;
 using std::multimap;
 using std::error_code;
 using std::shared_ptr;
+using std::make_shared;
 using std::runtime_error;
+using std::placeholders::_1;
 using std::invalid_argument;
 using std::chrono::milliseconds;
 
@@ -227,7 +229,9 @@ namespace restbed
             
             if ( callback == nullptr )
             {
-                return m_pimpl->fetch( session, m_pimpl->m_router );
+                m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", m_pimpl->m_keep_alive_callback );
+                return;
             }
             
             callback( session );
@@ -264,19 +268,6 @@ namespace restbed
         response.set_status_code( status );
         
         yield( response, callback );
-    }
-    
-    void Session::fetch( const function< void ( const shared_ptr< Session > ) >& callback )
-    {
-        auto session = shared_from_this( );
-        
-        if ( is_closed( ) )
-        {
-            const auto error_handler = m_pimpl->get_error_handler( );
-            return error_handler( 500, runtime_error( "Fetch failed: session already closed." ), session );
-        }
-        
-        m_pimpl->fetch( session, callback );
     }
     
     void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )

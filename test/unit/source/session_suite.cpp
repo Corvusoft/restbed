@@ -124,18 +124,6 @@ TEST_CASE( "invoke close on uninitialised instance", "[session]" )
     REQUIRE( session->is_closed( ) == true );
 }
 
-TEST_CASE( "invoke fetch on uninitialised instance", "[session]" )
-{
-    auto session = make_shared< Session >( "" );
-    
-    REQUIRE( session->is_closed( ) == true );
-    
-    REQUIRE_NOTHROW( session->fetch( [ ]( const shared_ptr< Session > )
-    {
-        return;
-    } ) );
-}
-
 TEST_CASE( "invoke yield on uninitialised instance", "[session]" )
 {
     auto session = make_shared< Session >( "" );
