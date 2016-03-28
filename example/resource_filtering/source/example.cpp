@@ -40,7 +40,7 @@ void get_json_method_handler( const shared_ptr< Session > session )
         { "Content-Type", "application/json" }
     };
     
-    session->close( 200, "{ \"Hello\": \", World!\" }" );
+    session->close( 200, "{ \"Hello\": \", World!\" }", headers );
 }
 
 void failed_filter_validation_handler( const shared_ptr< Session > session )
