@@ -45,17 +45,17 @@ namespace restbed
     {
         m_pimpl->m_id = id;
     }
-
+    
     Session::~Session( void )
     {
         delete m_pimpl;
     }
-
+    
     bool Session::has( const string& name ) const
     {
         return m_pimpl->m_context.find( name ) not_eq m_pimpl->m_context.end( );
     }
-
+    
     void Session::erase( const string& name )
     {
         if ( name.empty( ) )
@@ -67,41 +67,41 @@ namespace restbed
             m_pimpl->m_context.erase( name );
         }
     }
-
+    
     const set< string > Session::keys( void ) const
     {
         std::set< string > keys;
-
+        
         for ( const auto& value : m_pimpl->m_context )
         {
             keys.insert( value.first );
         }
-
+        
         return keys;
     }
-
+    
     bool Session::is_open( void ) const
     {
         return m_pimpl->m_request not_eq nullptr and
                m_pimpl->m_request->m_pimpl->m_socket not_eq nullptr and
                m_pimpl->m_request->m_pimpl->m_socket->is_open( );
     }
-
+    
     bool Session::is_closed( void ) const
     {
         return not is_open( );
     }
-
+    
     void Session::close( const Bytes& body )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Close failed: session already closed." ), session );
         }
-
+        
         m_pimpl->m_request->m_pimpl->m_socket->write( body, [ this, session ]( const error_code & error, size_t )
         {
             if ( error )
@@ -110,24 +110,24 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
             {
                 m_pimpl->m_request->m_pimpl->m_socket->close( );
             } );
         } );
     }
-
+    
     void Session::close( const Response& response )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Close failed: session already closed." ), session );
         }
-
+        
         m_pimpl->transmit( response, [ this, session ]( const error_code & error, size_t )
         {
             if ( error )
@@ -136,61 +136,61 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             m_pimpl->m_manager->save( session, [ this ]( const shared_ptr< Session > )
             {
                 m_pimpl->m_request->m_pimpl->m_socket->close( );
             } );
         } );
     }
-
+    
     void Session::close( const string& body )
     {
         close( String::to_bytes( body ) );
     }
-
+    
     void Session::close( const int status, const Bytes& body )
     {
         static multimap< string, string > empty;
         close( status, body, empty );
     }
-
+    
     void Session::close( const int status, const string& body )
     {
         static multimap< string, string > empty;
         close( status, body, empty );
     }
-
+    
     void Session::close( const int status, const multimap< string, string >& headers )
     {
         close( status, "", headers );
     }
-
+    
     void Session::close( const int status, const string& body, const multimap< string, string >& headers )
     {
         close( status, String::to_bytes( body ), headers );
     }
-
+    
     void Session::close( const int status, const Bytes& body, const multimap< string, string >& headers )
     {
         Response response;
         response.set_body( body );
         response.set_headers( headers );
         response.set_status_code( status );
-
+        
         close( response );
     }
-
+    
     void Session::yield( const Bytes& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Yield failed: session already closed." ), session );
         }
-
+        
         m_pimpl->m_request->m_pimpl->m_socket->write( body, [ this, session, callback ]( const error_code & error, size_t )
         {
             if ( error )
@@ -199,26 +199,26 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             callback( session );
         } );
     }
-
+    
     void Session::yield( const string& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         yield( String::to_bytes( body ), callback );
     }
-
+    
     void Session::yield( const Response& response, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Yield failed: session already closed." ), session );
         }
-
+        
         m_pimpl->transmit( response, [ this, session, callback ]( const error_code & error, size_t )
         {
             if ( error )
@@ -227,68 +227,68 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             if ( callback == nullptr )
             {
                 m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", [ this, session ]( const error_code& error, const size_t length )
+                m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", [ this, session ]( const error_code & error, const size_t length )
                 {
                     m_pimpl->m_keep_alive_callback( error, length, session );
                 } );
-
+                
                 return;
             }
-
+            
             callback( session );
         } );
     }
-
+    
     void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         static multimap< string, string > empty;
         yield( status, body, empty, callback );
     }
-
+    
     void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         static multimap< string, string > empty;
         yield( status, body, empty, callback );
     }
-
+    
     void Session::yield( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         yield( status, "", headers, callback );
     }
-
+    
     void Session::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         yield( status, String::to_bytes( body ), headers, callback );
     }
-
+    
     void Session::yield( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         Response response;
         response.set_body( body );
         response.set_headers( headers );
         response.set_status_code( status );
-
+        
         yield( response, callback );
     }
-
+    
     void Session::fetch( const size_t length, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Fetch failed: session already closed." ), session );
         }
-
+        
         if ( length > m_pimpl->m_request->m_pimpl->m_buffer->size( ) )
         {
             size_t size = length - m_pimpl->m_request->m_pimpl->m_buffer->size( );
-
+            
             m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, size, [ this, session, length, callback ]( const error_code & error, size_t )
             {
                 if ( error )
@@ -297,7 +297,7 @@ namespace restbed
                     const auto error_handler = m_pimpl->get_error_handler( );
                     return error_handler( 500, runtime_error( message ), session );
                 }
-
+                
                 m_pimpl->fetch_body( length, session, callback );
             } );
         }
@@ -306,17 +306,17 @@ namespace restbed
             m_pimpl->fetch_body( length, session, callback );
         }
     }
-
+    
     void Session::fetch( const string& delimiter, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Fetch failed: session already closed." ), session );
         }
-
+        
         m_pimpl->m_request->m_pimpl->m_socket->read( m_pimpl->m_request->m_pimpl->m_buffer, delimiter, [ this, session, callback ]( const error_code & error, size_t length )
         {
             if ( error )
@@ -325,21 +325,21 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             m_pimpl->fetch_body( length, session, callback );
         } );
     }
-
+    
     void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         auto session = shared_from_this( );
-
+        
         if ( is_closed( ) )
         {
             const auto error_handler = m_pimpl->get_error_handler( );
             return error_handler( 500, runtime_error( "Sleep failed: session already closed." ), session );
         }
-
+        
         m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
         {
             if ( error )
@@ -348,89 +348,89 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             if ( callback not_eq nullptr )
             {
                 callback( session );
             }
         } );
     }
-
+    
     const string& Session::get_id( void ) const
     {
         return m_pimpl->m_id;
     }
-
+    
     const string Session::get_origin( void ) const
     {
         if ( m_pimpl->m_request == nullptr or m_pimpl->m_request->m_pimpl->m_socket == nullptr )
         {
             return "";
         }
-
+        
         return m_pimpl->m_request->m_pimpl->m_socket->get_remote_endpoint( );
     }
-
+    
     const string Session::get_destination( void ) const
     {
         if ( m_pimpl->m_request == nullptr or m_pimpl->m_request->m_pimpl->m_socket == nullptr )
         {
             return "";
         }
-
+        
         return m_pimpl->m_request->m_pimpl->m_socket->get_local_endpoint( );
     }
-
+    
     const shared_ptr< const Request > Session::get_request(  void ) const
     {
         return m_pimpl->m_request;
     }
-
+    
     const shared_ptr< const Resource > Session::get_resource(  void ) const
     {
         return m_pimpl->m_resource;
     }
-
+    
     const multimap< string, string >& Session::get_headers( void ) const
     {
         return m_pimpl->m_headers;
     }
-
+    
     const ContextValue& Session::get( const string& name ) const
     {
         return m_pimpl->m_context.at( name );
     }
-
+    
     const ContextValue& Session::get( const string& name, const ContextValue& default_value ) const
     {
         if ( has( name ) )
         {
             return m_pimpl->m_context.at( name );
         }
-
+        
         return default_value;
     }
-
+    
     void Session::set_id( const string& value )
     {
         m_pimpl->m_id = value;
     }
-
+    
     void Session::set( const string& name, const ContextValue& value )
     {
         if ( has( name ) )
         {
             m_pimpl->m_context.erase( name );
         }
-
+        
         m_pimpl->m_context.insert( make_pair( name, value ) );
     }
-
+    
     void Session::set_header( const string& name, const string& value )
     {
         m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
-
+    
     void Session::set_headers( const multimap< string, string >& values )
     {
         m_pimpl->m_headers = values;
