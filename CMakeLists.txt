@@ -11,6 +11,7 @@ option( BUILD_SHARED   "Build shared library."              OFF )
 option( BUILD_EXAMPLES "Build examples applications."       OFF )
 option( BUILD_TESTS    "Build all available test suites."   OFF )
 option( BUILD_SSL      "Build secure socket layer support."  ON )
+option( ECDHE_SUPPORT  "Support for ECDHE-based cipher suites" OFF )
 
 #
 # Configuration
@@ -31,6 +32,10 @@ if ( BUILD_SSL )
     find_package( openssl REQUIRED )
     include_directories( SYSTEM ${ssl_INCLUDE} )
 endif ( )
+
+if ( ECDHE_SUPPORT )
+    add_definitions(-DECDHE_SUPPORT)
+endif ( ECDHE_SUPPORT )
 
 #
 # Build

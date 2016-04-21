@@ -59,6 +59,9 @@ namespace restbed
             bool has_enabled_default_workarounds( void ) const;
             
             bool has_enabled_single_diffie_hellman_use( void ) const;
+#ifdef ECDHE_SUPPORT
+            bool has_enabled_single_ecc_diffie_hellman_use( void ) const;
+#endif
             
             //Getters
             uint16_t get_port( void ) const;
@@ -115,6 +118,9 @@ namespace restbed
             void set_private_rsa_key( const Uri& value );
             
             void set_temporary_diffie_hellman( const Uri& value );
+#ifdef ECDHE_SUPPORT
+            void set_temporary_ecc_diffie_hellman( bool value );
+#endif
             
             //Operators
             

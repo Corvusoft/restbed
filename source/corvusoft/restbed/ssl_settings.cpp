@@ -76,6 +76,13 @@ namespace restbed
     {
         return m_pimpl->m_single_diffie_hellman_use_enabled;
     }
+
+#ifdef ECDHE_SUPPORT
+    bool SSLSettings::has_enabled_single_ecc_diffie_hellman_use( void ) const
+    {
+        return m_pimpl->m_single_ecc_diffie_hellman_use_enabled;
+    }
+#endif
     
     uint16_t SSLSettings::get_port( void ) const
     {
@@ -211,4 +218,11 @@ namespace restbed
     {
         m_pimpl->m_temporary_diffie_hellman = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
     }
+
+#ifdef ECDHE_SUPPORT
+    void SSLSettings::set_temporary_ecc_diffie_hellman( const bool value /* TODO: const string& curve */ )
+    {
+        m_pimpl->m_single_diffie_hellman_use_enabled = value;
+    }
+#endif
 }

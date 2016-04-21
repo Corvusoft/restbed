@@ -49,6 +49,10 @@ namespace restbed
             bool m_default_workarounds_enabled = true;
             
             bool m_single_diffie_hellman_use_enabled = true;
+
+#ifdef ECDHE_SUPPORT
+            bool m_single_ecc_diffie_hellman_use_enabled = true;
+#endif
             
             std::string m_bind_address = "";
             
@@ -65,6 +69,10 @@ namespace restbed
             std::string m_certificate_authority_pool = "";
             
             std::string m_temporary_diffie_hellman = "";
+
+#ifdef ECDHE_SUPPORT
+            std::string m_temporary_ecc_diffie_hellman = "";
+#endif
         };
     }
 }
