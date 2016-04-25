@@ -245,26 +245,9 @@ namespace restbed
                 m_ssl_context->set_options( options );
                 
 #ifdef ECDHE_SUPPORT
-                if ( m_ssl_settings->has_enabled_single_ecc_diffie_hellman_use() )
+                if ( m_ssl_settings->has_enabled_ecc_diffie_hellman_use() )
                 {
-                    int nid = OBJ_sn2nid("prime256v1"); // FIXME: Only supports secp256r1; make more generic
-                    if( nid == 0 )
-                    {
-                        log( Logger::ERROR, "failed to find nid for ECDHE curve prime256v1");
-                    }
-                    else
-                    {
-                        EC_KEY *ecdh = EC_KEY_new_by_curve_name(nid);
-                        if(!ecdh)
-                        {
-                            log( Logger::ERROR, "failed to allocated new ECDH key");
-                        }
-                        else
-                        {
-                            SSL_CTX_set_tmp_ecdh(m_ssl_context->native_handle(), ecdh);
-                            EC_KEY_free(ecdh);
-                        }
-                    }
+                    m_ssl_context->use_tmp_ecdh(m_ssl_settings->get_certificate());
                 }
 #endif
 

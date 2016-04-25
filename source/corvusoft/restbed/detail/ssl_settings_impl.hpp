@@ -51,7 +51,7 @@ namespace restbed
             bool m_single_diffie_hellman_use_enabled = true;
 
 #ifdef ECDHE_SUPPORT
-            bool m_single_ecc_diffie_hellman_use_enabled = true;
+            bool m_ecc_diffie_hellman_use_enabled = false;
 #endif
             
             std::string m_bind_address = "";
