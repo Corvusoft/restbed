@@ -392,7 +392,7 @@ namespace restbed
             }
             
             auto address = endpoint.address( );
-            auto local = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            auto local = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
             local += ::to_string( endpoint.port( ) );
             
             return local;
@@ -423,7 +423,7 @@ namespace restbed
             }
             
             auto address = endpoint.address( );
-            auto remote = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
+            auto remote = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
             remote += ::to_string( endpoint.port( ) );
             
             return remote;
