@@ -32,8 +32,8 @@ void deflate_method_handler( const shared_ptr< Session > session )
         if ( request->get_header( "Content-Encoding", String::lowercase ) == "deflate" )
         {
             mz_ulong length = compressBound( static_cast< mz_ulong >( body.size( ) ) );
-            std::unique_ptr<unsigned char[]> data (new unsigned char[length]);
-            const int status = uncompress( data.get(), &length, body.data( ), static_cast< mz_ulong >( body.size( ) ) );
+            unique_ptr< unsigned char[ ] > data( new unsigned char[ length ] );
+            const int status = uncompress( data.get( ), &length, body.data( ), static_cast< mz_ulong >( body.size( ) ) );
             
             if ( status not_eq MZ_OK )
             {
@@ -42,7 +42,7 @@ void deflate_method_handler( const shared_ptr< Session > session )
                 return;
             }
             
-            result = Bytes( data.get(), data.get() + length );
+            result = Bytes( data.get( ), data.get( ) + length );
         }
         
         session->close( 200, result, { { "Content-Length", ::to_string( result.size( ) ) }, { "Content-Type", "text/plain" } } );
