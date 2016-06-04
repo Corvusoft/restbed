@@ -48,25 +48,25 @@ SCENARIO( "Handle specific signal", "[service]" )
     shared_ptr< thread > worker = nullptr;
     
     Service service;
-    service.set_signal_handler( SIGHUP, signal_handler );
+    service.set_signal_handler( SIGINT, signal_handler );
     service.set_ready_handler( [ &worker ]( Service & service )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            GIVEN( "I start a service with a 'SIGHUP' signal handler" )
+            GIVEN( "I start a service with a 'SIGINT' signal handler" )
             {
-                WHEN( "I generate a 'SIGHUP' event" )
+                WHEN( "I generate a 'SIGINT' event" )
                 {
-                    THEN( "I should see a 'SIGHUP' signal number" )
+                    THEN( "I should see a 'SIGINT' signal number" )
                     {
                         signal_number_actual = 0;
                         REQUIRE( signal_number_actual == 0 );
                         
-                        raise( SIGHUP );
+                        raise( SIGINT );
                         
                         std::this_thread::sleep_for( seconds( 1 ) );
                         
-                        REQUIRE( signal_number_actual == SIGHUP );
+                        REQUIRE( signal_number_actual == SIGINT );
                     }
                 }
                 

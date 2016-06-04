@@ -5,7 +5,7 @@
  *    ./distribution/example/signal_handling
  *
  * Client Usage:
- *    kill -s SIGHUP  <PID>
+ *    kill -s SIGINT  <PID>
  *    kill -s SIGTERM <PID>
  */
 
@@ -14,14 +14,19 @@
 #include <restbed>
 #include <csignal>
 #include <sys/types.h>
-#include <unistd.h>
+
+#ifdef _WIN32
+    #include <process.h>
+#elif
+    #include <unistd.h>
+#endif
 
 using namespace std;
 using namespace restbed;
 
 void sighup_handler( const int signal_number )
 {
-    fprintf( stderr, "Received SIGHUP signal number '%i'.\n", signal_number );
+    fprintf( stderr, "Received SIGINT signal number '%i'.\n", signal_number );
 }
 
 void sigterm_handler( const int signal_number )
@@ -41,7 +46,7 @@ int main( const int, const char** )
     
     Service service;
     service.set_ready_handler( ready_handler );
-    service.set_signal_handler( SIGHUP, sighup_handler );
+    service.set_signal_handler( SIGINT, sighup_handler );
     service.set_signal_handler( SIGTERM, sigterm_handler );
     service.start( settings );
     
