@@ -158,17 +158,16 @@ namespace restbed
     
     string::size_type String::format( string& output, const string::size_type length, const char* format, va_list arguments )
     {
-        char* formatted = new char[ length + 1 ];
+		std::unique_ptr<char[]> formatted (new char[ length + 1 ]);
         
-        int required_length = vsnprintf( formatted, length + 1, format, arguments );
+        int required_length = vsnprintf( formatted.get(), length + 1, format, arguments );
         
         if ( required_length == -1 )
         {
             required_length = 0;
         }
         
-        output = formatted;
-        delete[ ] formatted;
+        output = formatted.get();
         
         return required_length;
     }
