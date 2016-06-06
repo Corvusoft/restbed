@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <memory>
 #include <ciso646>
 #include <algorithm>
 

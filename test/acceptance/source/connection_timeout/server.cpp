@@ -78,7 +78,7 @@ SCENARIO( "validate connection timeout after connect", "[socket]" )
                         asio::error_code error;
                         socket.receive( asio::buffer( &data, 1 ), socket_base::message_peek, error );
                         
-                        REQUIRE( error == asio::error::eof );
+                        REQUIRE( ( error == asio::error::eof or error == asio::error::connection_reset ) );
                     }
                     
                     socket.close( );
@@ -135,7 +135,7 @@ SCENARIO( "validate connection timeout after partial request", "[socket]" )
                             asio::error_code error;
                             socket.receive( asio::buffer( &data, 1 ), socket_base::message_peek, error );
                             
-                            REQUIRE( error == asio::error::eof );
+                            REQUIRE( ( error == asio::error::eof or error == asio::error::connection_reset ) );
                         }
                         
                         socket.close( );
