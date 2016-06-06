@@ -39,6 +39,7 @@ namespace restbed
     
     Response::~Response( void )
     {
+		m_pimpl->m_request = nullptr;
         delete m_pimpl;
     }
     
@@ -81,7 +82,7 @@ namespace restbed
     
     const shared_ptr< const Request > Response::get_request( void ) const
     {
-        return m_pimpl->m_request.lock( );
+        return m_pimpl->m_request;
     }
     
     void Response::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const

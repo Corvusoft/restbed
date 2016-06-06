@@ -44,7 +44,7 @@ namespace restbed
             
             std::multimap< std::string, std::string > m_headers { };
             
-            std::weak_ptr< Request > m_request = std::weak_ptr< Request >( );
+			std::shared_ptr< Request > m_request = nullptr;
         };
     }
 }
