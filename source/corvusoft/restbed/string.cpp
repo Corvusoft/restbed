@@ -19,6 +19,7 @@ using std::vector;
 using std::smatch;
 using std::multimap;
 using std::transform;
+using std::unique_ptr;
 using std::regex_match;
 using std::regex_replace;
 using std::regex_constants::icase;
@@ -30,12 +31,12 @@ using std::regex_constants::icase;
 namespace restbed
 {
     const string String::empty = "";
-
+    
     Bytes String::to_bytes( const string& value )
     {
         return Bytes( value.begin( ), value.end( ) );
     }
-
+    
     string String::to_string( const Bytes& value )
     {
         return string( value.begin( ), value.end( ) );
@@ -158,17 +159,16 @@ namespace restbed
     
     string::size_type String::format( string& output, const string::size_type length, const char* format, va_list arguments )
     {
-        char* formatted = new char[ length + 1 ];
+        unique_ptr< char[ ] > formatted( new char[ length + 1 ] );
         
-        int required_length = vsnprintf( formatted, length + 1, format, arguments );
+        int required_length = vsnprintf( formatted.get( ), length + 1, format, arguments );
         
         if ( required_length == -1 )
         {
             required_length = 0;
         }
         
-        output = formatted;
-        delete[ ] formatted;
+        output = formatted.get( );
         
         return required_length;
     }
