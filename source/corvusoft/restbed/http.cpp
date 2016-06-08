@@ -92,14 +92,6 @@ namespace restbed
         }
     }
     
-    void Http::close( const shared_ptr< Response >& response )
-    {
-        if ( response not_eq nullptr )
-        {
-            close( response->m_pimpl->m_request );
-        }
-    }
-    
     bool Http::is_open( const shared_ptr< Request >& request )
     {
         if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
@@ -110,24 +102,9 @@ namespace restbed
         return false;
     }
     
-    bool Http::is_open( const shared_ptr< Response >& response )
-    {
-        if ( response not_eq nullptr )
-        {
-            return is_open( response->m_pimpl->m_request );
-        }
-        
-        return false;
-    }
-    
     bool Http::is_closed( const shared_ptr< Request >& request )
     {
         return not is_open( request );
-    }
-    
-    bool Http::is_closed( const shared_ptr< Response >& response )
-    {
-        return not is_open( response );
     }
     
     const shared_ptr< Response > Http::sync( const shared_ptr< Request >& request, const shared_ptr< const Settings >& settings )
@@ -163,7 +140,7 @@ namespace restbed
         HttpImpl::socket_setup( request, settings );
         
         auto response = make_shared< Response >( );
-        response->m_pimpl->m_request = request;
+        response->m_pimpl->m_request = request.get( );
         request->m_pimpl->m_response = response;
         
         if ( request->m_pimpl->m_socket not_eq nullptr and request->m_pimpl->m_socket->is_closed( ) )
@@ -205,7 +182,7 @@ namespace restbed
             throw invalid_argument( String::empty );
         }
         
-        auto request = response->get_request( );
+        auto request = response->m_pimpl->m_request;
         
         if ( request == nullptr or request->m_pimpl->m_buffer == nullptr or request->m_pimpl->m_socket == nullptr )
         {
@@ -258,7 +235,7 @@ namespace restbed
             throw invalid_argument( String::empty );
         }
         
-        auto request = response->get_request( );
+        auto request = response->m_pimpl->m_request;
         
         if ( request == nullptr or request->m_pimpl->m_buffer == nullptr or request->m_pimpl->m_socket == nullptr )
         {

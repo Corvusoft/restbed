@@ -30,7 +30,6 @@ TEST_CASE( "validate default instance values", "[response]" )
     REQUIRE( response.get_protocol( ) == "HTTP" );
     REQUIRE( response.get_headers( ).empty( ) );
     REQUIRE( response.get_status_message( ).empty( ) );
-    REQUIRE( response.get_request( ) == nullptr );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[response]" )
@@ -61,7 +60,6 @@ TEST_CASE( "validate setters modify default values", "[response]" )
     REQUIRE( response.get_protocol( ) == "SPDY" );
     REQUIRE( response.get_headers( ) == headers );
     REQUIRE( response.get_status_message( ) == "corvusoft ltd" );
-    REQUIRE( response.get_request( ) == nullptr );
 }
 
 TEST_CASE( "validate getter default value", "[response]" )

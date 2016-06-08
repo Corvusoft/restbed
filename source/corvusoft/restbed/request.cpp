@@ -62,7 +62,6 @@ namespace restbed
     
     Request::~Request( void )
     {
-		m_pimpl->m_response = nullptr;
         delete m_pimpl;
     }
     
