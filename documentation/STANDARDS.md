@@ -21,7 +21,7 @@ Table of Contents
 9.	[Whitespace](#whitespace)
 10.	[Pointers/References](#pointersreferences)
 11.	[Exceptions](#exceptions)
-12.	[Namespaces](#namespace)
+12.	[Namespaces](#namespaces)
 13.	[Optimisations](#optimisations)
 
 ### Brackets
