@@ -27,7 +27,6 @@ namespace restbed
 {
     //Forward Declarations
     class Http;
-    class Request;
     
     namespace detail
     {
@@ -59,8 +58,6 @@ namespace restbed
             std::string get_protocol( void ) const;
             
             std::string get_status_message( void ) const;
-            
-            const std::shared_ptr< const Request > get_request( void ) const;
             
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             

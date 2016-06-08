@@ -38,13 +38,13 @@ namespace restbed
             
             int m_status_code = 0;
             
+            Request* m_request = nullptr;
+            
             std::string m_protocol = "HTTP";
             
             std::string m_status_message = "";
             
             std::multimap< std::string, std::string > m_headers { };
-            
-			std::shared_ptr< Request > m_request = nullptr;
         };
     }
 }
