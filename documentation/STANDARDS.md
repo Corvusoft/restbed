@@ -26,7 +26,7 @@ Table of Contents
 
 ### Brackets
 
-1.	Allman style broken braces, and avoid unbraced one line conditional statements.
+-	Allman style broken braces, and avoid unbraced one line conditional statements.
 
 ```C++
 if ( condition == true )
