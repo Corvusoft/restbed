@@ -31,16 +31,13 @@ void post_method_handler( const shared_ptr< Session > session )
 
 int main( const int, const char** )
 {
-    auto settings = make_shared< Settings >( );
-    settings->set_port( 1994 );
-    
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
     resource->set_method_handler( "POST", post_method_handler );
     
     Service service;
     service.publish( resource );
-    service.start( settings );
+    service.start( );
     
     return EXIT_SUCCESS;
 }
