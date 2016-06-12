@@ -200,7 +200,10 @@ namespace restbed
                 return error_handler( 500, runtime_error( message ), session );
             }
             
-            callback( session );
+            if ( callback not_eq nullptr )
+            {
+                callback( session );
+            }
         } );
     }
     
@@ -239,7 +242,10 @@ namespace restbed
                 return;
             }
             
-            callback( session );
+            if ( callback not_eq nullptr )
+            {
+                callback( session );
+            }
         } );
     }
     
