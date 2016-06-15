@@ -140,7 +140,7 @@ namespace restbed
             Response& operator =( const Response& value ) = delete;
             
             //Properties
-            detail::ResponseImpl* m_pimpl;
+            std::unique_ptr< detail::ResponseImpl > m_pimpl;
     };
 }
 

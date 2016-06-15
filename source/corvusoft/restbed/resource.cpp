@@ -26,6 +26,7 @@ using std::string;
 using std::multimap;
 using std::function;
 using std::exception;
+using std::unique_ptr;
 using std::shared_ptr;
 using std::invalid_argument;
 
@@ -43,7 +44,7 @@ namespace restbed
     
     Resource::~Resource( void )
     {
-        delete m_pimpl;
+        return;
     }
     
     void Resource::add_rule( const shared_ptr< Rule >& rule )

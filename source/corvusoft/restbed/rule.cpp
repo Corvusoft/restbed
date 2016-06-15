@@ -11,6 +11,7 @@
 //External Includes
 
 //System Namespaces
+using std::unique_ptr;
 using std::shared_ptr;
 
 //Project Namespaces
@@ -42,6 +43,6 @@ namespace restbed
     
     Rule::~Rule( void )
     {
-        delete m_pimpl;
+        return;
     }
 }

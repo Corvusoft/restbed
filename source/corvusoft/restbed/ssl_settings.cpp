@@ -14,6 +14,7 @@
 
 //System Namespaces
 using std::string;
+using std::unique_ptr;
 
 //Project Namespaces
 using restbed::detail::SSLSettingsImpl;
@@ -29,7 +30,7 @@ namespace restbed
     
     SSLSettings::~SSLSettings( void )
     {
-        delete m_pimpl;
+        return;
     }
     
     bool SSLSettings::has_disabled_http( void ) const

@@ -219,7 +219,7 @@ namespace restbed
             Request& operator =( const Request& value ) = delete;
             
             //Properties
-            detail::RequestImpl* m_pimpl;
+            std::unique_ptr< detail::RequestImpl > m_pimpl;
     };
 }
 

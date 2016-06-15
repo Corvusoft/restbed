@@ -143,7 +143,7 @@ namespace restbed
             Settings& operator =( const Settings& value ) = delete;
             
             //Properties
-            detail::SettingsImpl* m_pimpl;
+            std::unique_ptr< detail::SettingsImpl > m_pimpl;
     };
 }
 

@@ -15,6 +15,7 @@ using std::map;
 using std::string;
 using std::multimap;
 using std::make_pair;
+using std::unique_ptr;
 using std::shared_ptr;
 using std::chrono::seconds;
 using std::chrono::milliseconds;
@@ -34,7 +35,7 @@ namespace restbed
     
     Settings::~Settings( void )
     {
-        delete m_pimpl;
+        return;
     }
     
     uint16_t Settings::get_port( void ) const
