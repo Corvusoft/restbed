@@ -155,7 +155,7 @@ namespace restbed
             SSLSettings& operator =( const SSLSettings& value ) = delete;
             
             //Properties
-            detail::SSLSettingsImpl* m_pimpl;
+            std::unique_ptr< detail::SSLSettingsImpl > m_pimpl;
     };
 }
 

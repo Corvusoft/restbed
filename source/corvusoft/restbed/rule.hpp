@@ -91,7 +91,7 @@ namespace restbed
             Rule& operator =( const Rule& ) = delete;
             
             //Properties
-            detail::RuleImpl* m_pimpl;
+            std::unique_ptr< detail::RuleImpl > m_pimpl;
     };
 }
 

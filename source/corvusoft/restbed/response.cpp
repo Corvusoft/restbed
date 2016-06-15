@@ -21,6 +21,7 @@ using std::pair;
 using std::string;
 using std::function;
 using std::multimap;
+using std::unique_ptr;
 using std::shared_ptr;
 using std::invalid_argument;
 
@@ -39,7 +40,7 @@ namespace restbed
     
     Response::~Response( void )
     {
-        delete m_pimpl;
+        return;
     }
     
     bool Response::has_header( const string& name ) const

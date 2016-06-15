@@ -42,6 +42,7 @@ using std::vector;
 using std::function;
 using std::exception;
 using std::to_string;
+using std::unique_ptr;
 using std::shared_ptr;
 using std::error_code;
 using std::make_shared;
@@ -74,8 +75,6 @@ namespace restbed
         {
             m_pimpl->log( Logger::WARNING, "Service failed graceful wind down." );
         }
-        
-        delete m_pimpl;
     }
     
     void Service::stop( void )

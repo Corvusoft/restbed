@@ -34,6 +34,7 @@ using std::string;
 using std::multimap;
 using std::snprintf;
 using std::to_string;
+using std::unique_ptr;
 using std::runtime_error;
 using std::invalid_argument;
 
@@ -62,7 +63,7 @@ namespace restbed
     
     Uri::~Uri( void )
     {
-        delete m_pimpl;
+        return;
     }
     
     bool Uri::is_relative( void ) const

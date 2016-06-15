@@ -25,6 +25,7 @@ using std::string;
 using std::function;
 using std::multimap;
 using std::error_code;
+using std::unique_ptr;
 using std::shared_ptr;
 using std::make_shared;
 using std::runtime_error;
@@ -48,7 +49,7 @@ namespace restbed
     
     Session::~Session( void )
     {
-        delete m_pimpl;
+        return;
     }
     
     bool Session::has( const string& name ) const

@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <memory>
 #include <cstdint>
 
 //Project Includes
@@ -136,7 +137,7 @@ namespace restbed
             //Operators
             
             //Properties
-            detail::UriImpl* m_pimpl;
+            std::unique_ptr< detail::UriImpl > m_pimpl;
     };
 }
 

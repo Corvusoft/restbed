@@ -115,7 +115,7 @@ namespace restbed
             Resource& operator =( const Resource& value ) = delete;
             
             //Properties
-            detail::ResourceImpl* m_pimpl;
+            std::unique_ptr< detail::ResourceImpl > m_pimpl;
     };
 }
 
