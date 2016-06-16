@@ -61,11 +61,11 @@ namespace restbed
             
             std::multimap< std::string, std::string > m_query_parameters { };
             
+			std::shared_ptr< asio::io_service > m_io_service = nullptr;
+
             std::shared_ptr< SocketImpl > m_socket = nullptr;
             
             std::shared_ptr< asio::streambuf > m_buffer = nullptr;
-            
-            std::shared_ptr< asio::io_service > m_io_service = nullptr;
         };
     }
 }

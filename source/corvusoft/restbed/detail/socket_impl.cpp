@@ -113,12 +113,15 @@ namespace restbed
         
         void SocketImpl::connect( const string& hostname, const uint16_t port, const function< void ( const error_code& ) >& callback )
         {
-#ifdef BUILD_SSL
-            auto& io_service = ( m_socket not_eq nullptr ) ? m_socket->get_io_service( ) : m_ssl_socket->lowest_layer( ).get_io_service( );
-#else
-            auto& io_service = m_socket->get_io_service( );
-#endif
-            m_resolver = make_shared< tcp::resolver >( io_service );
+			if (m_socket not_eq nullptr)
+			{
+				m_resolver = make_shared< tcp::resolver >( m_socket->get_io_service( ) );
+			}
+			else
+			{
+				m_resolver = make_shared< tcp::resolver >(m_ssl_socket->lowest_layer( ).get_io_service( ) );
+			}
+
             tcp::resolver::query query( hostname, ::to_string( port ) );
             
             m_resolver->async_resolve( query, [ this, callback ]( const error_code & error, tcp::resolver::iterator endpoint_iterator )

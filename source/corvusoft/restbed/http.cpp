@@ -107,15 +107,15 @@ namespace restbed
         return not is_open( request );
     }
     
-    const shared_ptr< Response > Http::sync( const shared_ptr< Request >& request, const shared_ptr< const Settings >& settings )
+    const shared_ptr< Response > Http::sync( const shared_ptr< Request > request, const shared_ptr< const Settings >& settings )
     {
-        static const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) > ignored = nullptr;
-        Http::async( request, ignored, settings );
+		auto response = Http::async( request, nullptr, settings );
+		response.wait( );
         
-        return request->m_pimpl->m_response;
+		return response.get( );
     }
     
-    future< shared_ptr< Response > > Http::async( const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
+    future< shared_ptr< Response > > Http::async( const shared_ptr< Request > request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
     {
 #ifndef BUILD_SSL
     
@@ -139,9 +139,8 @@ namespace restbed
         
         HttpImpl::socket_setup( request, settings );
         
-        auto response = make_shared< Response >( );
-        response->m_pimpl->m_request = request.get( );
-        request->m_pimpl->m_response = response;
+		request->m_pimpl->m_response = make_shared< Response >( );
+		request->m_pimpl->m_response->m_pimpl->m_request = request.get( );
         
         if ( request->m_pimpl->m_socket not_eq nullptr and request->m_pimpl->m_socket->is_closed( ) )
         {
