@@ -219,7 +219,7 @@ namespace restbed
             return 0;
         }
         
-        return stoi( port );
+        return static_cast< uint16_t >( stoi( port ) );
     }
     
     string Uri::get_path( void ) const
