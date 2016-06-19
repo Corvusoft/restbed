@@ -1,4 +1,7 @@
-##Standards Overview
+Overview
+--------
+
+This document sets out the expected coding style from those who work on this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
 
 **most importantly:** "know when to be inconsistent -- sometimes the style guide just doesn't apply. When in doubt, use your best judgment. Look at other examples and decide what looks best. And don't hesitate to ask!" -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
 
@@ -10,19 +13,21 @@ The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 
 Table of Contents
 -----------------
 
-1.	[Brackets](#brackets)
-2.	[Indentation](#indentation)
-3.	[Comments](#comments)
-4.	[Properties/Variables](#propertiesvariables)
-5.	[Classes](#classes)
-6.	[Enumerations](#enumerations)
-7.	[Structures](#structures)
-8.	[Methods/Functions](#methodsfunctions)
-9.	[Whitespace](#whitespace)
-10.	[Pointers/References](#pointersreferences)
-11.	[Exceptions](#exceptions)
-12.	[Namespaces](#namespaces)
-13.	[Optimisations](#optimisations)
+1.	[Overview](#overview)
+2.	[Interpretation](#interpretation)
+3.	[Brackets](#brackets)
+4.	[Indentation](#indentation)
+5.	[Comments](#comments)
+6.	[Properties/Variables](#propertiesvariables)
+7.	[Classes](#classes)
+8.	[Enumerations](#enumerations)
+9.	[Structures](#structures)
+10.	[Methods/Functions](#methodsfunctions)
+11.	[Whitespace](#whitespace)
+12.	[Pointers/References](#pointersreferences)
+13.	[Exceptions](#exceptions)
+14.	[Namespaces](#namespaces)
+15.	[Optimisations](#optimisations)
 
 ### Brackets
 
