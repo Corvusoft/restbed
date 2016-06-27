@@ -30,7 +30,6 @@ void resource_error_handler( const int, const exception&, const shared_ptr< Sess
     }
     else
     {
-        session->close( );
         fprintf( stderr, "Custom Resource Internal Server Error\n" );
     }
 }
@@ -43,7 +42,6 @@ void service_error_handler( const int, const exception&, const shared_ptr< Sessi
     }
     else
     {
-        session->close( );
         fprintf( stderr, "Custom Service Internal Server Error\n" );
     }
 }
