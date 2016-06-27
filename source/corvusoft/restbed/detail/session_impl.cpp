@@ -75,20 +75,20 @@ namespace restbed
         {
             return;
         }
-
+        
         SessionImpl::~SessionImpl( void )
         {
             return;
         }
-
+        
         void SessionImpl::fetch_body( const size_t length, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback ) const
         {
             const auto data_ptr = asio::buffer_cast< const Byte* >( session->m_pimpl->m_request->m_pimpl->m_buffer->data( ) );
             const auto data = Bytes( data_ptr, data_ptr + length );
             session->m_pimpl->m_request->m_pimpl->m_buffer->consume( length );
-
+            
             auto& body = m_request->m_pimpl->m_body;
-
+            
             if ( body.empty( ) )
             {
                 body = data;
@@ -97,25 +97,25 @@ namespace restbed
             {
                 body.insert( body.end( ), data.begin( ), data.end( ) );
             }
-
+            
             callback( session, data );
         }
-
+        
         void SessionImpl::transmit( const Response& response, const function< void ( const error_code&, size_t ) >& callback ) const
         {
             auto hdrs = m_settings->get_default_headers( );
-
+            
             if ( m_resource not_eq nullptr )
             {
                 const auto m_resource_headers = m_resource->m_pimpl->m_default_headers;
                 hdrs.insert( m_resource_headers.begin( ), m_resource_headers.end( ) );
             }
-
+            
             hdrs.insert( m_headers.begin( ), m_headers.end( ) );
-
+            
             auto response_headers = response.get_headers( );
             hdrs.insert( response_headers.begin( ), response_headers.end( ) );
-
+            
             auto payload = make_shared< Response >( );
             payload->set_headers( hdrs );
             payload->set_body( response.get_body( ) );
@@ -123,27 +123,30 @@ namespace restbed
             payload->set_protocol( response.get_protocol( ) );
             payload->set_status_code( response.get_status_code( ) );
             payload->set_status_message( response.get_status_message( ) );
-
+            
             if ( payload->get_status_message( ).empty( ) )
             {
                 payload->set_status_message( m_settings->get_status_message( payload->get_status_code( ) ) );
             }
-
+            
             m_request->m_pimpl->m_socket->write( Http::to_bytes( payload ), callback );
         }
-
+        
         const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void ) const
         {
             auto error_handler = ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
-
+            
             if ( error_handler == nullptr )
             {
-                return [ ]( const int, const exception&, const shared_ptr< Session > )
+                return [ ]( const int, const exception&, const shared_ptr< Session > session )
                 {
-                    return;
+                    if ( session not_eq nullptr and session->is_open( ) )
+                    {
+                        session->close( );
+                    }
                 };
             }
-
+            
             return error_handler;
         }
     }
