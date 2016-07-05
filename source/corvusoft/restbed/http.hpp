@@ -44,11 +44,11 @@ namespace restbed
             
             static Bytes to_bytes( const std::shared_ptr< Response >& value );
             
-            static void close( const std::shared_ptr< Request >& request );
+            static void close( const std::shared_ptr< Request >& value );
             
-            static bool is_open( const std::shared_ptr< Request >& request );
+            static bool is_open( const std::shared_ptr< Request >& value );
             
-            static bool is_closed( const std::shared_ptr< Request >& request );
+            static bool is_closed( const std::shared_ptr< Request >& value );
             
             static const std::shared_ptr< Response > sync( const std::shared_ptr< Request > request, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
             

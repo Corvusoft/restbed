@@ -8,7 +8,6 @@ cmake_minimum_required( VERSION 2.8.10 )
 # Configuration
 #
 set( SOURCE_DIR "source" )
-set( HELPERS_DIR "${CMAKE_SOURCE_DIR}/test/helpers/source" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
 
 include_directories( SYSTEM ${catch_INCLUDE} ${asio_INCLUDE} )
@@ -99,3 +98,11 @@ add_test( client_fails_to_calculate_body_length_regression_test_suite ${EXECUTAB
 add_executable( yield_callback_leads_to_service_crash_regression_test_suite ${SOURCE_DIR}/yield_callback_leads_to_service_crash.cpp )
 target_link_libraries( yield_callback_leads_to_service_crash_regression_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( yield_callback_leads_to_service_crash_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/yield_callback_leads_to_service_crash_regression_test_suite )
+
+add_executable( service_error_handler_overflow_regression_test_suite ${SOURCE_DIR}/service_error_handler_overflow.cpp )
+target_link_libraries( service_error_handler_overflow_regression_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( service_error_handler_overflow_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_error_handler_overflow_regression_test_suite )
+
+add_executable( resource_error_handler_overflow_regression_test_suite ${SOURCE_DIR}/resource_error_handler_overflow.cpp )
+target_link_libraries( resource_error_handler_overflow_regression_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( resource_error_handler_overflow_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_error_handler_overflow_regression_test_suite )
