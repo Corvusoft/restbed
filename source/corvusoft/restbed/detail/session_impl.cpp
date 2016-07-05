@@ -71,7 +71,8 @@ namespace restbed
             m_headers( ),
             m_context( ),
             m_error_handler( nullptr ),
-            m_keep_alive_callback( nullptr )
+            m_keep_alive_callback( nullptr ),
+            m_error_handler_invoked( false )
         {
             return;
         }
@@ -132,8 +133,15 @@ namespace restbed
             m_request->m_pimpl->m_socket->write( Http::to_bytes( payload ), callback );
         }
         
-        const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void ) const
+        const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void )
         {
+            if ( m_error_handler_invoked )
+            {
+                return [ ]( const int, const exception&, const shared_ptr< Session > ) { };
+            }
+            
+            m_error_handler_invoked = true;
+            
             auto error_handler = ( m_resource not_eq nullptr and m_resource->m_pimpl->m_error_handler not_eq nullptr ) ? m_resource->m_pimpl->m_error_handler : m_error_handler;
             
             if ( error_handler == nullptr )

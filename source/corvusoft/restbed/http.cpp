@@ -51,20 +51,20 @@ using asio::buffer;
 
 namespace restbed
 {
-    Bytes Http::to_bytes( const shared_ptr< Request >& request )
+    Bytes Http::to_bytes( const shared_ptr< Request >& value )
     {
-        return HttpImpl::to_bytes( request );
+        return HttpImpl::to_bytes( value );
     }
     
-    Bytes Http::to_bytes( const shared_ptr< Response >& response )
+    Bytes Http::to_bytes( const shared_ptr< Response >& value )
     {
         auto data = String::format( "%s/%.1f %i %s\r\n",
-                                    response->get_protocol( ).data( ),
-                                    response->get_version( ),
-                                    response->get_status_code( ),
-                                    response->get_status_message( ).data( ) );
+                                    value->get_protocol( ).data( ),
+                                    value->get_version( ),
+                                    value->get_status_code( ),
+                                    value->get_status_message( ).data( ) );
                                     
-        auto headers = response->get_headers( );
+        auto headers = value->get_headers( );
         
         if ( not headers.empty( ) )
         {
@@ -74,7 +74,7 @@ namespace restbed
         data += "\r\n";
         
         auto bytes = String::to_bytes( data );
-        auto body = response->get_body( );
+        auto body = value->get_body( );
         
         if ( not body.empty( ) )
         {
@@ -84,35 +84,35 @@ namespace restbed
         return bytes;
     }
     
-    void Http::close( const shared_ptr< Request >& request )
+    void Http::close( const shared_ptr< Request >& value )
     {
-        if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
+        if ( value not_eq nullptr and value->m_pimpl->m_socket not_eq nullptr )
         {
-            request->m_pimpl->m_socket->close( );
+            value->m_pimpl->m_socket->close( );
         }
     }
     
-    bool Http::is_open( const shared_ptr< Request >& request )
+    bool Http::is_open( const shared_ptr< Request >& value )
     {
-        if ( request not_eq nullptr and request->m_pimpl->m_socket not_eq nullptr )
+        if ( value not_eq nullptr and value->m_pimpl->m_socket not_eq nullptr )
         {
-            return request->m_pimpl->m_socket->is_open( );
+            return value->m_pimpl->m_socket->is_open( );
         }
         
         return false;
     }
     
-    bool Http::is_closed( const shared_ptr< Request >& request )
+    bool Http::is_closed( const shared_ptr< Request >& value )
     {
-        return not is_open( request );
+        return not is_open( value );
     }
     
     const shared_ptr< Response > Http::sync( const shared_ptr< Request > request, const shared_ptr< const Settings >& settings )
     {
-		auto response = Http::async( request, nullptr, settings );
-		response.wait( );
+        auto response = Http::async( request, nullptr, settings );
+        response.wait( );
         
-		return response.get( );
+        return response.get( );
     }
     
     future< shared_ptr< Response > > Http::async( const shared_ptr< Request > request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
@@ -139,8 +139,8 @@ namespace restbed
         
         HttpImpl::socket_setup( request, settings );
         
-		request->m_pimpl->m_response = make_shared< Response >( );
-		request->m_pimpl->m_response->m_pimpl->m_request = request.get( );
+        request->m_pimpl->m_response = make_shared< Response >( );
+        request->m_pimpl->m_response->m_pimpl->m_request = request.get( );
         
         if ( request->m_pimpl->m_socket not_eq nullptr and request->m_pimpl->m_socket->is_closed( ) )
         {
