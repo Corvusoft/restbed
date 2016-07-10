@@ -10,11 +10,13 @@
 #include <string>
 #include <memory>
 #include <cstdint>
+#include <sstream>
+#include <stdexcept>
 #include <functional>
-
+#include <type_traits>
+#include <corvusoft/restbed/string.hpp> //move to pimpl
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
-#include <corvusoft/restbed/string.hpp>
 
 //External Includes
 
@@ -37,7 +39,7 @@ namespace restbed
         class HttpImpl;
         class SessionImpl;
         class ServiceImpl;
-        struct RequestImpl;
+        class RequestImpl;
     }
     
     class Request
@@ -50,16 +52,16 @@ namespace restbed
             //Constructors
             Request( void );
             
-            Request( const Uri& uri );
+            Request( const Uri& value );
             
             virtual ~Request( void );
             
             //Functionality
             bool has_header( const std::string& name ) const;
             
-            bool has_path_parameter( const std::string& name, const String::Option option = String::CASE_INSENSITIVE ) const;
+            bool has_path_parameter( const std::string& name ) const;
             
-            bool has_query_parameter( const std::string& name, const String::Option option = String::CASE_INSENSITIVE ) const;
+            bool has_query_parameter( const std::string& name ) const;
             
             //Getters
             uint16_t get_port( void ) const;
@@ -80,75 +82,41 @@ namespace restbed
             
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
-            void get_header( const std::string& name, int& value, const int default_value = 0 ) const;
+            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            Type get_header( const std::string& name, const Type default_value ) const
+            {
+                return parse_parameter( get_header( name ), default_value );
+            }
             
-            void get_header( const std::string& name, long& value, const long default_value = 0 ) const;
+            std::string get_header( const std::string& name, const char* default_value ) const;
             
-            void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
-            
-            void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
-            
-            void get_header( const std::string& name, long long& value, const long long default_value = 0 ) const;
-            
-            void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-            
-            void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-            
-            void get_header( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
-            std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
+            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            Type get_query_parameter( const std::string& name, const Type default_value ) const
+            {
+                return parse_parameter( get_query_parameter( name ), default_value );
+            }
             
-            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+            std::string get_query_parameter( const std::string& name, const char* default_value ) const;
             
-            void get_query_parameter( const std::string& name, int& value, const int default_value = 0 ) const;
+            std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            void get_query_parameter( const std::string& name, long& value, const long default_value = 0 ) const;
+            std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
             
-            void get_query_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
+            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            Type get_path_parameter( const std::string& name, const Type default_value ) const
+            {
+                return parse_parameter( get_path_parameter( name ), default_value );
+            }
             
-            void get_query_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
+            std::string get_path_parameter( const std::string& name, const char* default_value ) const;
             
-            void get_query_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
+            std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            void get_query_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-            
-            void get_query_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-            
-            void get_query_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
-            
-            std::string get_query_parameter( const std::string& name, const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            std::string get_query_parameter( const std::string& name, const std::string& default_value, const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform, const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "", const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            void get_path_parameter( const std::string& name, int& value, const int default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, long& value, const long default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-            
-            void get_path_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
-            
-            std::string get_path_parameter( const std::string& name, const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            std::string get_path_parameter( const std::string& name, const std::string& default_value, const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform, const String::Option option = String::CASE_INSENSITIVE ) const;
-            
-            std::map< std::string, std::string > get_path_parameters( const std::string& name = "", const String::Option option = String::CASE_INSENSITIVE ) const;
+            std::map< std::string, std::string > get_path_parameters( const std::string& name = "" ) const;
             
             //Setters
             void set_body( const Bytes& value );
@@ -210,6 +178,21 @@ namespace restbed
             Request( const Request& original ) = delete;
             
             //Functionality
+            template< typename Type >
+            Type parse_parameter( const std::string& value, const Type default_value ) const
+            {
+                std::istringstream stream( value );
+                
+                Type parameter;
+                stream >> parameter;
+                
+                if ( stream.fail( ) )
+                {
+                    return default_value;
+                }
+                
+                return parameter;
+            }
             
             //Getters
             

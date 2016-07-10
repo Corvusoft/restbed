@@ -33,8 +33,7 @@ void get_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
     
-    int id = 0;
-    request->get_query_parameter( "id", id );
+    int id = request->get_query_parameter( "id", 0 );
     REQUIRE( 100 == id );
     
     REQUIRE( "events" == request->get_query_parameter( "name" ) );

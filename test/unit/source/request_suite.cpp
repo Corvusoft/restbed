@@ -87,58 +87,50 @@ TEST_CASE( "validate getter default value", "[request]" )
     
     SECTION( "integer" )
     {
-        int value;
-        request.get_header( "Var", value, 12 );
+        int value = request.get_header( "Var", 12 );
         REQUIRE( value == 12 );
     }
     
     SECTION( "unsigned integer" )
     {
-        unsigned int value;
-        request.get_header( "Var", value, 6 );
+        unsigned int value = request.get_header( "Var", 6 );
         REQUIRE( value == 6 );
     }
     
     SECTION( "long" )
     {
-        long value;
-        request.get_header( "Var", value, 54 );
+        long value = request.get_header( "Var", 54 );
         REQUIRE( value == 54 );
     }
     
     SECTION( "long long" )
     {
-        long long value;
-        request.get_header( "Var", value, 66 );
+        long long value = request.get_header( "Var", 66 );
         REQUIRE( value == 66 );
     }
     
     SECTION( "unsigned long" )
     {
-        unsigned long value;
         unsigned long default_value = static_cast< unsigned long >( -33 );
-        request.get_header( "Var", value, default_value );
+        unsigned long value = request.get_header( "Var", default_value );
         REQUIRE( value == default_value );
     }
     
     SECTION( "unsigned long long" )
     {
-        long long value;
-        request.get_header( "Var", value, -6 );
+        long long value = request.get_header( "Var", -6 );
         REQUIRE( value == -6 );
     }
     
     SECTION( "float" )
     {
-        float value;
-        request.get_header( "Var", value, float( 3.6 ) );
+        float value = request.get_header( "Var", float( 3.6 ) );
         REQUIRE( value == 3.6f );
     }
     
     SECTION( "double" )
     {
-        double value;
-        request.get_header( "Var", value, 34443 );
+        double value = request.get_header( "Var", 34443 );
         REQUIRE( value == 34443 );
     }
     
