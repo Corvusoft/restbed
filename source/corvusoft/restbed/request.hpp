@@ -14,7 +14,7 @@
 #include <stdexcept>
 #include <functional>
 #include <type_traits>
-#include <corvusoft/restbed/string.hpp> //move to pimpl
+
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
 
