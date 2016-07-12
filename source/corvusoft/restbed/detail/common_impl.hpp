@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 #include <sstream>
+#include <algorithm>
 #include <type_traits>
 
 //Project Includes
