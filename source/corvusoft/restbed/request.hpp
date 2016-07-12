@@ -15,7 +15,7 @@
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
-#include <corvusoft/restbed/detail/common_impl.hpp>
+#include <corvusoft/restbed/common.hpp>
 
 //External Includes
 
@@ -84,7 +84,7 @@ namespace restbed
             template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
             Type get_header( const std::string& name, const Type default_value ) const
             {
-                return detail::CommonImpl::parse_parameter( get_header( name ), default_value );
+                return Common::parse_parameter( get_header( name ), default_value );
             }
             
             std::string get_header( const std::string& name, const char* default_value ) const;
@@ -96,7 +96,7 @@ namespace restbed
             template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
             Type get_query_parameter( const std::string& name, const Type default_value ) const
             {
-                return detail::CommonImpl::parse_parameter( get_query_parameter( name ), default_value );
+                return Common::parse_parameter( get_query_parameter( name ), default_value );
             }
             
             std::string get_query_parameter( const std::string& name, const char* default_value ) const;
@@ -108,7 +108,7 @@ namespace restbed
             template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
             Type get_path_parameter( const std::string& name, const Type default_value ) const
             {
-                return detail::CommonImpl::parse_parameter( get_path_parameter( name ), default_value );
+                return Common::parse_parameter( get_path_parameter( name ), default_value );
             }
             
             std::string get_path_parameter( const std::string& name, const char* default_value ) const;

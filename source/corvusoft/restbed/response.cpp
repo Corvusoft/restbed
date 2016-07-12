@@ -26,8 +26,8 @@ using std::shared_ptr;
 using std::invalid_argument;
 
 //Project Namespaces
+using restbed::Common;
 using restbed::Request;
-using restbed::detail::CommonImpl;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
@@ -46,7 +46,7 @@ namespace restbed
     
     bool Response::has_header( const string& name ) const
     {
-        return CommonImpl::has_parameter( name, m_pimpl->m_headers );
+        return Common::has_parameter( name, m_pimpl->m_headers );
     }
     
     Bytes Response::get_body( void ) const
@@ -91,15 +91,15 @@ namespace restbed
             return String::empty;
         }
         
-        const auto headers = CommonImpl::get_parameters( name, m_pimpl->m_headers );
+        const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
         const auto value = ( headers.empty( ) ) ? String::empty : headers.begin( )->second;
         
-        return CommonImpl::transform( value, transform );
+        return Common::transform( value, transform );
     }
     
     multimap< string, string > Response::get_headers( const string& name ) const
     {
-        return CommonImpl::get_parameters( name, m_pimpl->m_headers );
+        return Common::get_parameters( name, m_pimpl->m_headers );
     }
     
     void Response::set_body( const Bytes& value )

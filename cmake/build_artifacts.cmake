@@ -3,6 +3,7 @@
 set( BUILD_ARTIFACTS
     ${SOURCE_DIR}/http.hpp
     ${SOURCE_DIR}/rule.hpp
+    ${SOURCE_DIR}/common.hpp
     ${SOURCE_DIR}/settings.hpp
     ${SOURCE_DIR}/ssl_settings.hpp
     ${SOURCE_DIR}/status_code.hpp
