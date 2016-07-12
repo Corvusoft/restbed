@@ -14,6 +14,7 @@
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/detail/common_impl.hpp>
 
 //External Includes
 
@@ -61,27 +62,17 @@ namespace restbed
             
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
-            void get_header( const std::string& name, int& value, const int default_value = 0 ) const;
+            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            Type get_header( const std::string& name, const Type default_value ) const
+            {
+                return detail::CommonImpl::parse_parameter( get_header( name ), default_value );
+            }
             
-            void get_header( const std::string& name, long& value, const long default_value = 0 ) const;
+            std::string get_header( const std::string& name, const char* default_value ) const;
             
-            void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
-            
-            void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
-            
-            void get_header( const std::string& name, long long& value, const long long default_value = 0 ) const;
-            
-            void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
-            
-            void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
-            
-            void get_header( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
-            
-            std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
-            
-            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             //Setters
             void set_body( const Bytes& value );
