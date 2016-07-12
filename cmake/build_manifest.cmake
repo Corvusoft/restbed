@@ -15,7 +15,6 @@ set( BUILD_MANIFEST
     ${SOURCE_DIR}/session_manager.cpp
     ${SOURCE_DIR}/detail/http_impl.cpp
     ${SOURCE_DIR}/detail/socket_impl.cpp
-    ${SOURCE_DIR}/detail/request_impl.cpp
     ${SOURCE_DIR}/detail/service_impl.cpp
     ${SOURCE_DIR}/detail/session_impl.cpp
 )
