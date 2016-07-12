@@ -30,7 +30,7 @@ using std::shared_ptr;
 using std::make_shared;
 
 //Project Namespaces
-using restbed::detail::CommonImpl;
+using restbed::Common;
 using restbed::detail::RequestImpl;
 
 //External Namespaces
@@ -69,17 +69,17 @@ namespace restbed
     
     bool Request::has_header( const string& name ) const
     {
-        return CommonImpl::has_parameter( name, m_pimpl->m_headers );
+        return Common::has_parameter( name, m_pimpl->m_headers );
     }
     
     bool Request::has_path_parameter( const string& name ) const
     {
-        return CommonImpl::has_parameter( name, m_pimpl->m_path_parameters );
+        return Common::has_parameter( name, m_pimpl->m_path_parameters );
     }
     
     bool Request::has_query_parameter( const string& name ) const
     {
-        return CommonImpl::has_parameter( name, m_pimpl->m_query_parameters );
+        return Common::has_parameter( name, m_pimpl->m_query_parameters );
     }
     
     uint16_t Request::get_port( void ) const
@@ -104,22 +104,22 @@ namespace restbed
     
     string Request::get_host( const function< string ( const string& ) >& transform ) const
     {
-        return CommonImpl::transform( m_pimpl->m_host, transform );
+        return Common::transform( m_pimpl->m_host, transform );
     }
     
     string Request::get_path( const function< string ( const string& ) >& transform ) const
     {
-        return CommonImpl::transform( m_pimpl->m_path, transform );
+        return Common::transform( m_pimpl->m_path, transform );
     }
     
     string Request::get_method( const function< string ( const string& ) >& transform ) const
     {
-        return CommonImpl::transform( m_pimpl->m_method, transform );
+        return Common::transform( m_pimpl->m_method, transform );
     }
     
     string Request::get_protocol( const function< string ( const string& ) >& transform ) const
     {
-        return CommonImpl::transform( m_pimpl->m_protocol, transform );
+        return Common::transform( m_pimpl->m_protocol, transform );
     }
     
     void Request::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const
@@ -139,15 +139,15 @@ namespace restbed
             return String::empty;
         }
         
-        const auto headers = CommonImpl::get_parameters( name, m_pimpl->m_headers );
+        const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
         const auto value = ( headers.empty( ) ) ? String::empty : headers.begin( )->second;
         
-        return CommonImpl::transform( value, transform );
+        return Common::transform( value, transform );
     }
     
     multimap< string, string > Request::get_headers( const string& name ) const
     {
-        return CommonImpl::get_parameters( name, m_pimpl->m_headers );
+        return Common::get_parameters( name, m_pimpl->m_headers );
     }
     
     string Request::get_query_parameter( const string& name, const char* default_value ) const
@@ -162,15 +162,15 @@ namespace restbed
             return String::empty;
         }
         
-        const auto parameters = CommonImpl::get_parameters( name, m_pimpl->m_query_parameters );
+        const auto parameters = Common::get_parameters( name, m_pimpl->m_query_parameters );
         const auto value = ( parameters.empty( ) ) ? String::empty : parameters.begin( )->second;
         
-        return CommonImpl::transform( value, transform );
+        return Common::transform( value, transform );
     }
     
     multimap< string, string > Request::get_query_parameters( const string& name ) const
     {
-        return CommonImpl::get_parameters( name, m_pimpl->m_query_parameters );
+        return Common::get_parameters( name, m_pimpl->m_query_parameters );
     }
     
     string Request::get_path_parameter( const string& name, const char* default_value ) const
@@ -185,15 +185,15 @@ namespace restbed
             return String::empty;
         }
         
-        const auto parameters = CommonImpl::get_parameters( name, m_pimpl->m_path_parameters );
+        const auto parameters = Common::get_parameters( name, m_pimpl->m_path_parameters );
         const auto value = ( parameters.empty( ) ) ? String::empty : parameters.begin( )->second;
         
-        return CommonImpl::transform( value, transform );
+        return Common::transform( value, transform );
     }
     
     map< string, string > Request::get_path_parameters( const string& name ) const
     {
-        return CommonImpl::get_parameters( name, m_pimpl->m_path_parameters );
+        return Common::get_parameters( name, m_pimpl->m_path_parameters );
     }
     
     void Request::set_body( const Bytes& value )
