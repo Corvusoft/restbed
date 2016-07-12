@@ -10,13 +10,12 @@
 #include <string>
 #include <memory>
 #include <cstdint>
-#include <sstream>
 #include <stdexcept>
 #include <functional>
-#include <type_traits>
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/detail/common_impl.hpp>
 
 //External Includes
 
@@ -39,7 +38,7 @@ namespace restbed
         class HttpImpl;
         class SessionImpl;
         class ServiceImpl;
-        class RequestImpl;
+        struct RequestImpl;
     }
     
     class Request
@@ -85,7 +84,7 @@ namespace restbed
             template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
             Type get_header( const std::string& name, const Type default_value ) const
             {
-                return parse_parameter( get_header( name ), default_value );
+                return detail::CommonImpl::parse_parameter( get_header( name ), default_value );
             }
             
             std::string get_header( const std::string& name, const char* default_value ) const;
@@ -97,7 +96,7 @@ namespace restbed
             template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
             Type get_query_parameter( const std::string& name, const Type default_value ) const
             {
-                return parse_parameter( get_query_parameter( name ), default_value );
+                return detail::CommonImpl::parse_parameter( get_query_parameter( name ), default_value );
             }
             
             std::string get_query_parameter( const std::string& name, const char* default_value ) const;
@@ -109,7 +108,7 @@ namespace restbed
             template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
             Type get_path_parameter( const std::string& name, const Type default_value ) const
             {
-                return parse_parameter( get_path_parameter( name ), default_value );
+                return detail::CommonImpl::parse_parameter( get_path_parameter( name ), default_value );
             }
             
             std::string get_path_parameter( const std::string& name, const char* default_value ) const;
@@ -178,21 +177,6 @@ namespace restbed
             Request( const Request& original ) = delete;
             
             //Functionality
-            template< typename Type >
-            Type parse_parameter( const std::string& value, const Type default_value ) const
-            {
-                std::istringstream stream( value );
-                
-                Type parameter;
-                stream >> parameter;
-                
-                if ( stream.fail( ) )
-                {
-                    return default_value;
-                }
-                
-                return parameter;
-            }
             
             //Getters
             

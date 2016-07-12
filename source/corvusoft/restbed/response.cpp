@@ -27,6 +27,7 @@ using std::invalid_argument;
 
 //Project Namespaces
 using restbed::Request;
+using restbed::detail::CommonImpl;
 using restbed::detail::ResponseImpl;
 
 //External Namespaces
@@ -45,14 +46,7 @@ namespace restbed
     
     bool Response::has_header( const string& name ) const
     {
-        const auto key = String::lowercase( name );
-        
-        auto iterator = find_if( m_pimpl->m_headers.begin( ), m_pimpl->m_headers.end( ), [ &key ]( const pair< string, string >& value )
-        {
-            return ( key == String::lowercase( value.first ) );
-        } );
-        
-        return iterator not_eq m_pimpl->m_headers.end( );
+        return CommonImpl::has_parameter( name, m_pimpl->m_headers );
     }
     
     Bytes Response::get_body( void ) const
@@ -85,138 +79,27 @@ namespace restbed
         body = ( transform == nullptr ) ? string( m_pimpl->m_body.begin( ), m_pimpl->m_body.end( ) ) : transform( m_pimpl->m_body );
     }
     
-    void Response::get_header( const string& name, int& value, const int default_value ) const
+    string Response::get_header( const string& name, const char* default_value ) const
     {
-        try
-        {
-            value = stoi( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, long& value, const long default_value ) const
-    {
-        try
-        {
-            value = stol( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, float& value, const float default_value ) const
-    {
-        try
-        {
-            value = stof( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, double& value, const double default_value ) const
-    {
-        try
-        {
-            value = stod( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, long long& value, const long long default_value ) const
-    {
-        try
-        {
-            value = stoll( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, unsigned int& value, const unsigned int default_value ) const
-    {
-        try
-        {
-            value = stoul( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, unsigned long& value, const unsigned long default_value ) const
-    {
-        try
-        {
-            value = stoul( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    void Response::get_header( const string& name, unsigned long long& value, const unsigned long long default_value ) const
-    {
-        try
-        {
-            value = stoull( get_header( name ) );
-        }
-        catch ( const invalid_argument& )
-        {
-            value = default_value;
-        }
-    }
-    
-    multimap< string, string > Response::get_headers( const string& name ) const
-    {
-        if ( name.empty( ) )
-        {
-            return m_pimpl->m_headers;
-        }
-        
-        decltype( m_pimpl->m_headers ) headers;
-        const auto key = String::lowercase( name );
-        
-        for ( const auto& header : m_pimpl->m_headers )
-        {
-            if ( key == String::lowercase( header.first ) )
-            {
-                headers.insert( header );
-            }
-        }
-        
-        return headers;
-    }
-    
-    string Response::get_header( const string& name, const string& default_value ) const
-    {
-        const auto key = String::lowercase( name );
-        const auto iterator = find_if( m_pimpl->m_headers.begin( ), m_pimpl->m_headers.end( ), [ &key ]( const pair< string, string >& value )
-        {
-            return ( key == String::lowercase( value.first ) );
-        } );
-        
-        return ( iterator == m_pimpl->m_headers.end( ) ) ? default_value : iterator->second;
+        return get_header< string >( name, default_value );
     }
     
     string Response::get_header( const string& name, const function< string ( const string& ) >& transform ) const
     {
-        const string header = get_header( name );
-        return ( transform == nullptr ) ? header : transform( header );
+        if ( name.empty( ) )
+        {
+            return String::empty;
+        }
+        
+        const auto headers = CommonImpl::get_parameters( name, m_pimpl->m_headers );
+        const auto value = ( headers.empty( ) ) ? String::empty : headers.begin( )->second;
+        
+        return CommonImpl::transform( value, transform );
+    }
+    
+    multimap< string, string > Response::get_headers( const string& name ) const
+    {
+        return CommonImpl::get_parameters( name, m_pimpl->m_headers );
     }
     
     void Response::set_body( const Bytes& value )
