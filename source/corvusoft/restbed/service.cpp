@@ -48,8 +48,11 @@ using std::error_code;
 using std::make_shared;
 using std::stable_sort;
 using std::runtime_error;
+using std::chrono::seconds;
 using std::invalid_argument;
 using std::chrono::milliseconds;
+using std::chrono::steady_clock;
+using std::chrono::duration_cast;
 
 //Project Namespaces
 using restbed::detail::ServiceImpl;
@@ -77,9 +80,19 @@ namespace restbed
         }
     }
     
+    bool Service::is_up( void ) const
+    {
+        return m_pimpl->m_uptime not_eq steady_clock::time_point::min( );
+    }
+    
+    bool Service::is_down( void ) const
+    {
+        return not is_up( );
+    }
+    
     void Service::stop( void )
     {
-        m_pimpl->m_is_running = false;
+        m_pimpl->m_uptime = steady_clock::time_point::min( );
         
         if ( m_pimpl->m_io_service not_eq nullptr )
         {
@@ -162,7 +175,7 @@ namespace restbed
             m_pimpl->m_io_service->post( m_pimpl->m_ready_handler );
         }
         
-        m_pimpl->m_is_running = true;
+        m_pimpl->m_uptime = steady_clock::now( );
         unsigned int limit = m_pimpl->m_settings->get_worker_limit( );
         
         if ( limit > 0 )
@@ -200,7 +213,7 @@ namespace restbed
     
     void Service::add_rule( const shared_ptr< Rule >& rule )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -213,7 +226,7 @@ namespace restbed
     
     void Service::add_rule( const shared_ptr< Rule >& rule, const int priority )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -227,7 +240,7 @@ namespace restbed
     
     void Service::publish( const shared_ptr< const Resource >& resource )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -258,7 +271,7 @@ namespace restbed
     
     void Service::suppress( const shared_ptr< const Resource >& resource )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -303,6 +316,16 @@ namespace restbed
         } );
     }
     
+    const seconds Service::get_uptime( void ) const
+    {
+        if ( is_down( ) )
+        {
+            return seconds( 0 );
+        }
+        
+        return duration_cast< seconds >( steady_clock::now( ) - m_pimpl->m_uptime );
+    }
+    
     const shared_ptr< const Uri > Service::get_http_uri( void ) const
     {
         return m_pimpl->get_http_uri( );
@@ -315,7 +338,7 @@ namespace restbed
     
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -325,7 +348,7 @@ namespace restbed
     
     void Service::set_session_manager( const shared_ptr< SessionManager >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -335,7 +358,7 @@ namespace restbed
     
     void Service::set_ready_handler( const function< void ( Service& ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -348,7 +371,7 @@ namespace restbed
     
     void Service::set_signal_handler( const int signal, const function< void ( const int ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -361,7 +384,7 @@ namespace restbed
     
     void Service::set_not_found_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -371,7 +394,7 @@ namespace restbed
     
     void Service::set_method_not_allowed_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -381,7 +404,7 @@ namespace restbed
     
     void Service::set_method_not_implemented_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -391,7 +414,7 @@ namespace restbed
     
     void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -401,7 +424,7 @@ namespace restbed
     
     void Service::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session > ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }
@@ -416,7 +439,7 @@ namespace restbed
     
     void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >, const function< void ( const shared_ptr< Session > ) >& ) >& value )
     {
-        if ( m_pimpl->m_is_running )
+        if ( is_up( ) )
         {
             throw runtime_error( "Runtime modifications of the service are prohibited." );
         }

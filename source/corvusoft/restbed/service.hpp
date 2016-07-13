@@ -52,6 +52,10 @@ namespace restbed
             virtual ~Service( void );
             
             //Functionality
+            bool is_up( void ) const;
+            
+            bool is_down( void ) const;
+            
             void stop( void );
             
             void start( const std::shared_ptr< const Settings >& settings = nullptr );
@@ -69,6 +73,8 @@ namespace restbed
             void schedule( const std::function< void ( void ) >& task, const std::chrono::milliseconds& interval = std::chrono::milliseconds::zero( ) );
             
             //Getters
+            const std::chrono::seconds get_uptime( void ) const;
+            
             const std::shared_ptr< const Uri > get_http_uri( void ) const;
             
             const std::shared_ptr< const Uri > get_https_uri( void ) const;
