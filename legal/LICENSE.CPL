@@ -1,30 +1,52 @@
                     Corvusoft Permissive License
-                     Version 1.2, 10 March 2016
+                     Version 2.0, 14 July 2016
 
- Copyright (c) 2016 Corvusoft Ltd. Everyone is permitted to copy and
- distribute verbatim copies of this license document, but changing it
- is not allowed.
+By signing the below, the parties hereby agree to the following terms and
+conditions.  For the avoidance of doubt, any viewing of any terms and conditions
+via electronic media including, without limitation, the world wide web, clicking
+“accept” on a website, or using the Software after being advised that such use
+shall constitute acceptance of certain terms and conditions, shall have no
+effect whatsoever on the terms and conditions of this License.
 
 
- Permission is hereby granted, to any person, that incurs a fee,
- obtaining a copy of this software and associated documentation files
- (the "Software"), to deal in the Software with limited restriction,
- including without limitation the rights to use, copy, modify, and merge
- copies of the Software, subject to the following conditions:
+Permission is hereby granted, to any person, that incurs a fee, obtaining a copy
+of this software and associated documentation files (the "Software"), to deal in
+the Software with limited restriction, including without limitation the rights
+to use, copy, modify, and merge copies of the Software, subject to the following
+conditions:
 
-  a) You are not permitted to resell, relicense, and/or redistribute the
-     Software as-is, or with modification, in either binary or source form,
-     it must be incorporated within a larger body of work.
+A. You are not permitted to resell, relicense, and/or redistribute the Software
+as-is, or with modification, in either binary or source form, it must be
+incorporated within a larger body of work.
 
-  b) The above copyright notice and this permission notice shall be included
-     in all copies or substantial portions of the Software.
+B. The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
 
-  c) You MUST purchase a Corvusoft Permissive License.
+C. You MUST purchase a Corvusoft Permissive License.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- THE SOFTWARE.
+Corvusoft represents and warrants that the Software to be provided under this
+License, as well as any medium used to provide such Software will be free of
+viruses, worms, malware, Trojan horses, time bombs, back or trap doors or any
+other debilitating or disabling devices or malicious code.
+Corvusoft represents and warrants that the Software shall not cause any larger
+body of work incorporating such Software to be subject to any Open Source
+Licenses.  The term “Open Source License” means the GNU General Public License
+(GPL), the GNU Lesser General Public License (LGPL), the Affero General Public
+License (AGPL), Original SSLeay License, BSD-style Open Source licenses,
+Boost Software License, any “copyleft” license, or any other license or terms that
+require as a condition of use, modification or distribution of such software
+that such software or other software that is combined or distributed with it
+be: (a) disclosed or distributed in source code form; (b) licensed to any person
+for the purposes of making derivative works thereof; (c) redistributable at no
+charge; or (d) licensed subject to a patent non-assert or royalty-free patent
+license or covenant not to sue.
+
+EXCEPT AS OTHERWISE EXPLICITLY SET FORTH HEREIN, THE SOFTWARE IS PROVIDED
+"AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
