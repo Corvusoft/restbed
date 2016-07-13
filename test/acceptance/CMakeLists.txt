@@ -270,3 +270,7 @@ add_test( service_connection_timeout_acceptance_test_suite ${EXECUTABLE_OUTPUT_P
 add_executable( client_connection_timeout_acceptance_test_suite ${SOURCE_DIR}/connection_timeout/client.cpp )
 target_link_libraries( client_connection_timeout_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( client_connection_timeout_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/client_connection_timeout_acceptance_test_suite )
+
+add_executable( service_status_acceptance_test_suite ${SOURCE_DIR}/service_status/feature.cpp )
+target_link_libraries( service_status_acceptance_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( service_status_acceptance_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_status_acceptance_test_suite )

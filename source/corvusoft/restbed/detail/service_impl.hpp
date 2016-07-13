@@ -8,6 +8,7 @@
 //System Includes
 #include <set>
 #include <map>
+#include <chrono>
 #include <thread>
 #include <memory>
 #include <string>
@@ -122,7 +123,7 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                bool m_is_running;
+                std::chrono::steady_clock::time_point m_uptime;
                 
                 std::shared_ptr< Logger > m_logger;
                 
