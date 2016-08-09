@@ -1,7 +1,15 @@
 Overview
 --------
 
-This document sets out the expected coding style from those who work on this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
+This document sets out the expected coding style for those who wish to participate in this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
+
+To ensure the codebase meets this standard please install the supplied [GIT pre-commit](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) hook into your local copy. You're also required to install the [Artistic Style](http://astyle.sourceforge.net/) tool on your system for this hook to be successful.
+
+```
+cd restbed/
+cp tool/git/pre-commit .git/hooks
+chmod +x .git/hooks/pre-commit
+```
 
 **most importantly:** "know when to be inconsistent -- sometimes the style guide just doesn't apply. When in doubt, use your best judgment. Look at other examples and decide what looks best. And don't hesitate to ask!" -- Guido van Rossum, Barry Warsaw, Nick Coghlan.
 
@@ -98,7 +106,7 @@ string name = String::empty;
 -	Class getter/setter accessor methods **must not** return non-const pointers/references.
 -	There **must** be **no** using namespace declarations in class header files.
 -	Forward declarations are favoured over `#include` within class header files; with the exception of the standard template library.
--	Empty method bodies (when unavoidable) shall be marked with a single return.
+-	Empty method bodies (when unavoidable) *shall* be marked with a single return.
 -	Public classes **must** implement an [opaque pointer](http://en.wikipedia.org/wiki/Opaque_pointer).
 -	Class names **must** start each word boundary with an UPPERCASED letter.
 
@@ -169,7 +177,7 @@ struct HttpRequest
 -	Functions and Methods **must** use the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
 -	Functions and Methods **should** perform one mental operation which is reflected in their name.
 -	Function and Method declarations **should** avoid similar argument types.
--	It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the LOC exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2.
+-	It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the [LOC](https://en.wikipedia.org/wiki/Source_lines_of_code) exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2.
 
 ```C++
 int ping( Hostname hostname, Interface interface, int16_t port )
@@ -246,7 +254,7 @@ using std::mutex;
 using std::string;
 using std::thread;
 
-using namespace restq
+using namespace restbed
 {
   ...
 }

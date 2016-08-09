@@ -95,7 +95,7 @@ Optional notation indicating the range of entities within a relationship.
 
 ### Visibility
 
-It is encouraged to only show public methods, helping to reducing rework of the documentation during each software development cycle. The use of Private, Protected, Derived, and Package visibility should only be present when highlighting important core design decision. For example inheriting from a base class and altering parent method/property visibility.
+It is encouraged to only show public methods, helping to reduce rework of the documentation during each software development cycle. The use of Private, Protected, Derived, and Package visibility should only be present when highlighting important core design decision. For example inheriting from a base class and altering parent method/property visibility.
 
 | Symbol | Description |
 |:------:|-------------|
@@ -108,19 +108,22 @@ To specify the visibility of a class member (i.e. any attributes or methods), th
 
 #### Example
 
-The following diagram shows that a Session class is composed and in a one-to-one relationship with both the Request and Response classes.
+The following diagram shows that a Session class exposes two public accessor methods, and therefore is composed of a one-to-one relationship with both the Request and Response classes.
 
 ```
-             +---------------+
-             |   <<class>>   | 1
-     1 +----@+    Session    +@-----+
-       |     +---------------+      |
-       |                            |
-     1 |                            | 1
-+------+-------+             +------+-------+
-|   <<class>>  |             |   <<class>>  |
-|    Request   |             |   Response   |
-+--------------+             +--------------+
+             +----------------------------+
+             |          <<class>>         | 1
+     1 +----@+           Session          +@----+
+       |     |----------------------------|     |
+       |     | + get_request( ) Request   |     |
+       |     | + get_response( ) Response |     |
+       |     +----------------------------+     |
+       |                                        |
+     1 |                                        | 1
++------+-------+                         +------+-------+
+|   <<class>>  |                         |   <<class>>  |
+|    Request   |                         |   Response   |
++--------------+                         +--------------+
 ```
 
 ### Sequence Diagrams
