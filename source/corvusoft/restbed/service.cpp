@@ -24,6 +24,7 @@
 #include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/service_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
+#include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
 #include <asio/io_service.hpp>
@@ -56,6 +57,7 @@ using std::chrono::duration_cast;
 
 //Project Namespaces
 using restbed::detail::ServiceImpl;
+using restbed::detail::WebSocketManagerImpl;
 
 //External Namespaces
 using asio::io_service;
@@ -151,6 +153,8 @@ namespace restbed
         }
         
         m_pimpl->m_session_manager->start( m_pimpl->m_settings );
+        
+        m_pimpl->m_web_socket_manager = make_shared< WebSocketManagerImpl >( );
         
         stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
         {

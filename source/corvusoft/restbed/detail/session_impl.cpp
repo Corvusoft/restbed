@@ -68,6 +68,7 @@ namespace restbed
             m_resource( nullptr ),
             m_settings( nullptr ),
             m_manager( nullptr ),
+            m_web_socket_manager( nullptr ),
             m_headers( ),
             m_context( ),
             m_error_handler( nullptr ),

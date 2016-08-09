@@ -10,11 +10,14 @@
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
+#include "corvusoft/restbed/web_socket.hpp"
 #include "corvusoft/restbed/context_value.hpp"
 #include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
+#include "corvusoft/restbed/detail/web_socket_impl.hpp"
+#include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
 #include <asio/buffer.hpp>
@@ -335,6 +338,12 @@ namespace restbed
             
             m_pimpl->fetch_body( length, session, callback );
         } );
+    }
+    
+    void Session::upgrade( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    {
+        auto socket = m_pimpl->m_web_socket_manager->create( shared_from_this( ) );
+        yield( status, body, headers, bind( callback, socket ) );
     }
     
     void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session > ) >& callback )

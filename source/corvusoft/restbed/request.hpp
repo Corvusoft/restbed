@@ -39,6 +39,7 @@ namespace restbed
         class SessionImpl;
         class ServiceImpl;
         struct RequestImpl;
+        class WebSocketManagerImpl;
     }
     
     class Request
@@ -172,6 +173,7 @@ namespace restbed
             friend detail::HttpImpl;
             friend detail::SessionImpl;
             friend detail::ServiceImpl;
+            friend detail::WebSocketManagerImpl;
             
             //Definitions
             

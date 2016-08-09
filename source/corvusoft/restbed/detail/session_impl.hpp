@@ -37,6 +37,7 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
+        class WebSocketManagerImpl;
         
         class SessionImpl
         {
@@ -75,6 +76,8 @@ namespace restbed
                 std::shared_ptr< const Settings > m_settings;
                 
                 std::shared_ptr< SessionManager > m_manager;
+                
+                std::shared_ptr< WebSocketManagerImpl > m_web_socket_manager;
                 
                 std::multimap< std::string, std::string > m_headers;
                 

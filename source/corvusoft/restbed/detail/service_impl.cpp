@@ -30,6 +30,7 @@
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 #include "corvusoft/restbed/detail/rule_engine_impl.hpp"
+#include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
 
@@ -81,6 +82,7 @@ namespace restbed
             m_io_service( make_shared< ::io_service >( ) ),
             m_signal_set( nullptr ),
             m_session_manager( nullptr ),
+            m_web_socket_manager( nullptr ),
             m_rules( ),
             m_workers( ),
 #ifdef BUILD_SSL
@@ -290,6 +292,7 @@ namespace restbed
                     {
                         session->m_pimpl->m_settings = m_settings;
                         session->m_pimpl->m_manager = m_session_manager;
+                        session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
                         session->m_pimpl->m_error_handler = m_error_handler;
                         session->m_pimpl->m_request = make_shared< Request >( );
                         session->m_pimpl->m_request->m_pimpl->m_socket = connection;
@@ -524,6 +527,7 @@ namespace restbed
                 {
                     session->m_pimpl->m_settings = m_settings;
                     session->m_pimpl->m_manager = m_session_manager;
+                    session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
                     session->m_pimpl->m_error_handler = m_error_handler;
                     session->m_pimpl->m_request = make_shared< Request >( );
                     session->m_pimpl->m_request->m_pimpl->m_socket = connection;

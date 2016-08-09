@@ -33,11 +33,13 @@ namespace restbed
     class Session;
     class Response;
     class Resource;
+    class WebSocket;
     
     namespace detail
     {
         class SessionImpl;
         class ServiceImpl;
+        class WebSocketManagerImpl;
     }
     
     class Session : public std::enable_shared_from_this< Session >
@@ -99,6 +101,11 @@ namespace restbed
             
             void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
             
+            void upgrade( const int status,
+                          const std::string& body,
+                          const std::multimap< std::string, std::string >& headers,
+                          const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+                          
             void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
             //Getters
@@ -154,6 +161,7 @@ namespace restbed
             //Friends
             friend detail::ServiceImpl;
             friend detail::SessionImpl;
+            friend detail::WebSocketManagerImpl;
             
             //Definitions
             
