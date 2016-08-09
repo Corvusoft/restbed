@@ -163,7 +163,6 @@ namespace restbed
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) ) );
-            
 #ifdef BUILD_SSL
             
             if ( m_socket not_eq nullptr )
@@ -245,7 +244,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
             
 #ifdef BUILD_SSL
             
