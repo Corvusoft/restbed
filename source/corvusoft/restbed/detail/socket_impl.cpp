@@ -240,6 +240,58 @@ namespace restbed
             return size;
         }
         
+        void SocketImpl::read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
+        {
+            m_timer->cancel( );
+            m_timer->expires_from_now( m_timeout );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            
+#ifdef BUILD_SSL
+            
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                auto data = make_shared< asio::streambuf >( );
+                asio::async_read( *m_socket, *data, asio::transfer_exactly( length ), [ this, data, success, failure ]( const error_code code, const size_t length )
+                {
+                    m_timer->cancel( );
+                    
+                    if ( code )
+                    {
+                        m_is_open = false;
+                        failure( code );
+                    }
+                    else
+                    {
+                        const auto data_ptr = asio::buffer_cast< const Byte* >( data->data( ) );
+                        success( Bytes( data_ptr, data_ptr + length ) );
+                    }
+                } );
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                auto data = make_shared< asio::streambuf >( );
+                asio::async_read( *m_ssl_socket, *data, asio::transfer_exactly( length ), [ this, data, success, failure ]( const error_code code, const size_t length )
+                {
+                    m_timer->cancel( );
+                    
+                    if ( code )
+                    {
+                        m_is_open = false;
+                        failure( code );
+                    }
+                    else
+                    {
+                        const auto data_ptr = asio::buffer_cast< const Byte* >( data->data( ) );
+                        success( Bytes( data_ptr, data_ptr + length ) );
+                    }
+                } );
+            }
+            
+#endif
+        }
+        
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );

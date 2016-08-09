@@ -49,6 +49,7 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
+        class WebSocketManagerImpl;
         
         class ServiceImpl
         {
@@ -136,6 +137,8 @@ namespace restbed
                 std::shared_ptr< asio::signal_set > m_signal_set;
                 
                 std::shared_ptr< SessionManager > m_session_manager;
+                
+                std::shared_ptr< WebSocketManagerImpl > m_web_socket_manager;
                 
                 std::vector< std::shared_ptr< Rule > > m_rules;
                 
