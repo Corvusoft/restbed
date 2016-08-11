@@ -20,6 +20,9 @@
 #include <asio/ip/tcp.hpp>
 #include <asio/streambuf.hpp>
 #include <asio/steady_timer.hpp>
+#include <asio/io_service.hpp>
+#include <asio/io_service_strand.hpp>
+
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
@@ -114,7 +117,7 @@ namespace restbed
                 
                 //Functionality
                 void connection_timeout_handler( const std::error_code& error );
-                
+
                 //Getters
                 
                 //Setters
@@ -132,7 +135,9 @@ namespace restbed
                 std::chrono::milliseconds m_timeout;
                 
                 std::shared_ptr< asio::steady_timer > m_timer;
-                
+
+                std::shared_ptr< asio::io_service::strand > m_strand;
+
                 std::shared_ptr< asio::ip::tcp::resolver > m_resolver;
                 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
