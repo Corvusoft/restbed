@@ -122,7 +122,9 @@ namespace restbed
             void set_id( const std::string& value );
             
             void set( const std::string& name, const ContextValue& value );
-            
+
+            void add_header( const std::string& name, const std::string& value );
+
             void set_header( const std::string& name, const std::string& value );
             
             void set_headers( const std::multimap< std::string, std::string >& values );

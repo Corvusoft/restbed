@@ -433,11 +433,17 @@ namespace restbed
         m_pimpl->m_context.insert( make_pair( name, value ) );
     }
     
-    void Session::set_header( const string& name, const string& value )
+    void Session::add_header( const string& name, const string& value )
     {
         m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
-    
+
+    void Session::set_header( const string& name, const string& value )
+    {
+        m_pimpl->m_headers.erase( name );
+        m_pimpl->m_headers.insert( make_pair( name, value ) );
+    }
+
     void Session::set_headers( const multimap< string, string >& values )
     {
         m_pimpl->m_headers = values;

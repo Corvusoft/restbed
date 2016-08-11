@@ -133,7 +133,9 @@ namespace restbed
             void set_method( const std::string& value );
             
             void set_protocol( const std::string& value );
-            
+
+            void add_header( const std::string& name, const std::string& value );
+
             void set_header( const std::string& name, const std::string& value );
             
             void set_headers( const std::multimap< std::string, std::string >& values );
