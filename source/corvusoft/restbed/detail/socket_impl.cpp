@@ -449,17 +449,7 @@ namespace restbed
                 return;
             }
 
-            //try
-            //{
-                socket->close( );
-            //}
-            //catch ( const exception& ex )
-            //{
-            //    if ( m_logger not_eq nullptr )
-            //    {
-            //        logger->log( Logger::ERROR, "Connection timeout error: %s\n", ex.what( ) );
-            //    }
-            //}
+            socket->close( );
         }
     }
 }
