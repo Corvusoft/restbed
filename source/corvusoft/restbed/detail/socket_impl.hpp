@@ -40,7 +40,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class SocketImpl
+        class SocketImpl : public std::enable_shared_from_this< SocketImpl >
         {
             public:
                 //Friends
@@ -113,7 +113,7 @@ namespace restbed
                 SocketImpl( const SocketImpl& original ) = delete;
                 
                 //Functionality
-                void connection_timeout_handler( const std::error_code& error );
+                static void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
                 
                 //Getters
                 

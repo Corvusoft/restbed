@@ -163,7 +163,7 @@ namespace restbed
 
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
 
 #ifdef BUILD_SSL
 
@@ -215,7 +215,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
 
             size_t size = 0;
 #ifdef BUILD_SSL
@@ -246,7 +246,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
 
 #ifdef BUILD_SSL
 
@@ -294,7 +294,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
 
             size_t length = 0;
 
@@ -326,7 +326,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
 
 #ifdef BUILD_SSL
 
@@ -437,24 +437,29 @@ namespace restbed
             m_timeout = value;
         }
 
-        void SocketImpl::connection_timeout_handler( const error_code& error )
+        void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
         {
-            if ( error or m_timer->expires_at( ) > steady_clock::now( ) )
+            if ( socket == nullptr )
             {
                 return;
             }
 
-            try
+            if ( error or socket->m_timer->expires_at( ) > steady_clock::now( ) )
             {
-                close( );
+                return;
             }
-            catch ( const exception& ex )
-            {
-                if ( m_logger not_eq nullptr )
-                {
-                    m_logger->log( Logger::ERROR, "Connection timeout error: %s\n", ex.what( ) );
-                }
-            }
+
+            //try
+            //{
+                socket->close( );
+            //}
+            //catch ( const exception& ex )
+            //{
+            //    if ( m_logger not_eq nullptr )
+            //    {
+            //        logger->log( Logger::ERROR, "Connection timeout error: %s\n", ex.what( ) );
+            //    }
+            //}
         }
     }
 }
