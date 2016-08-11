@@ -86,7 +86,9 @@ namespace restbed
             void set_protocol( const std::string& protocol );
             
             void set_status_message( const std::string& value );
-            
+
+            void add_header( const std::string& name, const std::string& value );
+
             void set_header( const std::string& name, const std::string& value );
             
             void set_headers( const std::multimap< std::string, std::string >& values );

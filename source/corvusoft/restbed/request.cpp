@@ -245,9 +245,15 @@ namespace restbed
     {
         m_pimpl->m_protocol = value;
     }
-    
+
+    void Request::add_header( const string& name, const string& value )
+    {
+        m_pimpl->m_headers.insert( make_pair( name, value ) );
+    }
+
     void Request::set_header( const string& name, const string& value )
     {
+        m_pimpl->m_headers.erase( name );
         m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
     
