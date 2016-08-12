@@ -121,3 +121,42 @@ TEST_CASE( "validate getter default value", "[response]" )
         REQUIRE( header == "open" );
     }
 }
+
+TEST_CASE( "validate set_header overrides previous value", "[request]" )
+{
+    Response response;
+    response.set_header( "Content-Type", "application/json" );
+    REQUIRE( "application/json" == response.get_header( "Content-Type" ) );
+    
+    response.set_header( "Content-Type", "application/xml" );
+    REQUIRE( "application/xml" == response.get_header( "Content-Type" ) );
+    
+    const auto headers = response.get_headers( );
+    REQUIRE( headers.size( ) == 1 );
+    
+    const auto expectation = multimap< string, string >
+    {
+        { "Content-Type", "application/xml" }
+    };
+    REQUIRE( headers == expectation );
+}
+
+TEST_CASE( "validate add_header does not override a previous value", "[request]" )
+{
+    Response response;
+    response.add_header( "Content-Type", "application/json" );
+    REQUIRE( "application/json" == response.get_header( "Content-Type" ) );
+    
+    response.add_header( "Content-Type", "application/xml" );
+    REQUIRE( "application/json" == response.get_header( "Content-Type" ) );
+    
+    const auto headers = response.get_headers( );
+    REQUIRE( headers.size( ) == 2 );
+    
+    const auto expectation = multimap< string, string >
+    {
+        { "Content-Type", "application/json" },
+        { "Content-Type", "application/xml" }
+    };
+    REQUIRE( headers == expectation );
+}

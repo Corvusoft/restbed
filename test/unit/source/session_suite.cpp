@@ -147,3 +147,37 @@ TEST_CASE( "invoke yield on uninitialised instance", "[session]" )
         return;
     } ) );
 }
+
+TEST_CASE( "validate set_header overrides previous value", "[request]" )
+{
+    Session session( "" );
+    session.set_header( "Content-Type", "application/json" );
+    
+    session.set_header( "Content-Type", "application/xml" );
+    
+    const auto headers = session.get_headers( );
+    REQUIRE( headers.size( ) == 1 );
+    
+    const auto expectation = multimap< string, string >
+    {
+        { "Content-Type", "application/xml" }
+    };
+    REQUIRE( headers == expectation );
+}
+
+TEST_CASE( "validate add_header does not override a previous value", "[request]" )
+{
+    Session session( "" );
+    session.add_header( "Content-Type", "application/json" );
+    session.add_header( "Content-Type", "application/xml" );
+    
+    const auto headers = session.get_headers( );
+    REQUIRE( headers.size( ) == 2 );
+    
+    const auto expectation = multimap< string, string >
+    {
+        { "Content-Type", "application/json" },
+        { "Content-Type", "application/xml" }
+    };
+    REQUIRE( headers == expectation );
+}
