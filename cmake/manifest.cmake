@@ -1,6 +1,6 @@
 # Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
-set( BUILD_MANIFEST
+set( MANIFEST
     ${SOURCE_DIR}/uri.cpp
     ${SOURCE_DIR}/rule.cpp
     ${SOURCE_DIR}/http.cpp

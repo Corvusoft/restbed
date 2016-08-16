@@ -1,6 +1,6 @@
 # Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
 
-set( BUILD_ARTIFACTS
+set( ARTIFACTS
     ${SOURCE_DIR}/http.hpp
     ${SOURCE_DIR}/rule.hpp
     ${SOURCE_DIR}/common.hpp
