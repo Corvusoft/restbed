@@ -117,7 +117,7 @@ Documentation
 
 This codebase is intended to be as self documenting as possible. We have supplied many [examples](https://github.com/corvusoft/restbed/tree/master/example) and [test suites](https://github.com/corvusoft/restbed/tree/master/test) to help aid developers.
 
-We are currently working on textual API documentation [here](DOCUMENTATION.md), however it's subject to erratic and frequent alteration; you've been warned.
+We are currently working on textual API documentation [here](DOCUMENTATION), however it's subject to erratic and frequent alteration; you've been warned.
 
 Minimum Requirements
 --------------------
