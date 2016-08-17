@@ -50,3 +50,7 @@ add_test( resource_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_unit_test_
 add_executable( ssl_settings_unit_test_suite ${SOURCE_DIR}/ssl_settings_suite.cpp )
 target_link_libraries( ssl_settings_unit_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( ssl_settings_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/ssl_settings_unit_test_suite )
+
+add_executable( web_socket_message_unit_test_suite ${SOURCE_DIR}/web_socket_message_suite.cpp )
+target_link_libraries( web_socket_message_unit_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( web_socket_message_unit_test_suite ${EXECUTABLE_OUTPUT_PATH}/web_socket_message_unit_test_suite )

@@ -34,9 +34,9 @@ namespace restbed
             
             std::uint32_t m_mask = 0;
             
-            std::uint8_t m_payload_length = 0;
+            std::uint8_t m_length = 0;
             
-            std::uint64_t m_extended_payload_length = 0;
+            std::uint64_t m_extended_length = 0;
             
             bool m_mask_flag = false;
             

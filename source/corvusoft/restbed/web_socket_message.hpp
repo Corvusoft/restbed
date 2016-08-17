@@ -71,9 +71,9 @@ namespace restbed
             
             std::uint32_t get_mask( void ) const;
             
-            std::uint8_t get_payload_length( void ) const;
+            std::uint8_t get_length( void ) const;
             
-            std::uint64_t get_extended_payload_length( void ) const;
+            std::uint64_t get_extended_length( void ) const;
             
             bool get_mask_flag( void ) const;
             
@@ -90,9 +90,9 @@ namespace restbed
             
             void set_mask( const std::uint32_t value );
             
-            void set_payload_length( const std::uint8_t value );
+            void set_length( const std::uint8_t value );
             
-            void set_extended_payload_length( const std::uint64_t value );
+            void set_extended_length( const std::uint64_t value );
             
             void set_mask_flag( const bool value );
             

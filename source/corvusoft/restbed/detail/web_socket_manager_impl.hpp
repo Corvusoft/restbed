@@ -10,6 +10,7 @@
 #include <memory>
 
 //Project Includes
+#include "corvusoft/restbed/byte.hpp"
 
 //External Includes
 
@@ -25,12 +26,13 @@ namespace restbed
     class Logger;
     class Session;
     class WebSocket;
+    class WebSocketMessage;
     
     namespace detail
     {
         //Forward Declarations
         
-        class WebSocketManagerImpl
+        class WebSocketManagerImpl : public std::enable_shared_from_this< WebSocketManagerImpl >
         {
             public:
                 //Friends
@@ -43,9 +45,9 @@ namespace restbed
                 virtual ~WebSocketManagerImpl( void );
                 
                 //Functionality
-                std::shared_ptr< WebSocket > create( const std::shared_ptr< Session >& session );
+                Bytes to_bytes( const std::shared_ptr< WebSocketMessage >& message );
                 
-                //std::shared_ptr< WebSocketMessage > create( );
+                std::shared_ptr< WebSocket > create( const std::shared_ptr< Session >& session );
                 
                 //Getters
                 

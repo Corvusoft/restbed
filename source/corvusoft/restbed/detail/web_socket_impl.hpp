@@ -31,13 +31,15 @@ namespace restbed
         
         struct WebSocketImpl
         {
-            std::string m_id = "";
+            std::string m_key = "";
             
             bool m_error_handler_invoked = false;
             
             std::shared_ptr< Logger > m_logger = nullptr;
             
             std::shared_ptr< SocketImpl > m_socket = nullptr;
+            
+            std::shared_ptr< WebSocketManagerImpl > m_manager = nullptr;
             
             std::function< void ( const std::shared_ptr< WebSocket > ) > m_open_handler = nullptr;
             

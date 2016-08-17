@@ -11,6 +11,7 @@
 #include "corvusoft/restbed/web_socket_message.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_impl.hpp"
+#include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
 
@@ -65,7 +66,7 @@ namespace restbed
     
     void WebSocket::send( const shared_ptr< WebSocketMessage > message, const function< void ( const shared_ptr< WebSocket > ) > callback )
     {
-        const auto data = message->to_bytes( );
+        const auto data = m_pimpl->m_manager->to_bytes( message );
         
         m_pimpl->m_socket->write( data, [ this, callback ]( const error_code & code, size_t )
         {
@@ -111,7 +112,7 @@ namespace restbed
     {
         m_pimpl->m_message_handler = value;
         
-        //auto message = WebSocketManager::make_message( socket );
+        //auto message = WebSocketManager::parse_message( socket );
         
         auto socket = shared_from_this( );
         
@@ -132,9 +133,9 @@ namespace restbed
         
         byte = data[ 1 ];
         message->set_mask_flag( byte & 128 );
-        message->set_payload_length( byte & 127 );
+        message->set_length( byte & 127 );
         
-        auto length = message->get_payload_length( );
+        auto length = message->get_length( );
         
         if ( length == 126 )
         {
@@ -191,14 +192,14 @@ namespace restbed
     void WebSocket::parse_length_and_mask( const Bytes data, const shared_ptr< WebSocket > socket, const shared_ptr< WebSocketMessage > message )
     {
         size_t offset = 0;
-        uint64_t length = message->get_payload_length( );
+        uint64_t length = message->get_length( );
         
         if ( length == 126 )
         {
             length  = data[ offset++ ] << 8;
             length |= data[ offset++ ]     ;
             
-            message->set_extended_payload_length( length );
+            message->set_extended_length( length );
         }
         else if ( length == 127 )
         {
@@ -207,7 +208,7 @@ namespace restbed
             length |= data[ offset++ ] <<  8;
             length  = data[ offset++ ]      ;
             
-            message->set_extended_payload_length( length );
+            message->set_extended_length( length );
         }
         
         if ( message->get_mask_flag( ) == true )
