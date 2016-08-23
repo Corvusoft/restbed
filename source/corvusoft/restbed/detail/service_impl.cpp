@@ -550,14 +550,8 @@ namespace restbed
             smatch matches;
             static const regex pattern( "^\\{([a-zA-Z0-9]+): ?.*\\}$" );
             
-            auto folders = String::split( request->get_path( ), '/' );
-            
-            if ( m_settings->get_root( ) not_eq "/" )
-            {
-                folders.erase( folders.begin( ) );
-            }
-            
-            const auto declarations = String::split( m_resource_paths.at( sanitised_path ), '/' );
+            const auto folders = String::split( request->get_path( ), '/' );
+            const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
             
             for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
             {
