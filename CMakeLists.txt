@@ -1,8 +1,12 @@
 # Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
+cmake_minimum_required( VERSION 2.8.10 )
 
 project( "restbed" )
-
-cmake_minimum_required( VERSION 2.8.10 )
+set (restbed_VERSION_MAJOR 0)
+set (restbed_VERSION_MINOR 0.0)
+set (restbed_VERSION ${restbed_VERSION_MAJOR}.${restbed_VERSION_MINOR})
+set (PACKAGE_VERSION ${restbed_VERSION})
+set (VERSION "${restbed_VERSION}")
 
 #
 # Build Options
@@ -40,6 +44,10 @@ include( "${CMAKE_SOURCE_DIR}/cmake/manifest.cmake" )
 include_directories( ${INCLUDE_DIR} )
 
 add_library( ${PROJECT_NAME} ${MANIFEST} )
+
+if ( BUILD_SHARED )
+    set_target_properties (${PROJECT_NAME} PROPERTIES SOVERSION ${restbed_VERSION_MAJOR} VERSION ${restbed_VERSION})
+endif ( )
 
 if ( BUILD_SSL )
     target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
