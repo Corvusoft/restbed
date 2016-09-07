@@ -115,7 +115,9 @@ For Microsoft Visual Studio instructions please see feature [#17](https://github
 Documentation
 -------------
 
-This codebase is intended to be as self documenting as possible. We have supplied many [examples](https://github.com/corvusoft/restbed/tree/master/example) and [test suites](https://github.com/corvusoft/restbed/tree/master/test) to help aid developers. We are currently working on textual API documentation [here](https://github.com/ben-crowhurst/restbed/blob/master/DOCUMENTATION.md), however they are subject to erratic and frequent alteration; be warned.
+This codebase is intended to be as self documenting as possible. We have supplied many [examples](https://github.com/corvusoft/restbed/tree/master/example) and [test suites](https://github.com/corvusoft/restbed/tree/master/test) to help aid developers.
+
+We are currently working on textual API documentation, however it's subject to erratic and frequent alteration; you've been warned.
 
 Minimum Requirements
 --------------------

@@ -555,7 +555,7 @@ namespace restbed
             static const regex pattern( "^\\{([a-zA-Z0-9]+): ?.*\\}$" );
             
             const auto folders = String::split( request->get_path( ), '/' );
-            const auto declarations = String::split( m_resource_paths.at( sanitised_path ), '/' );
+            const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
             
             for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
             {

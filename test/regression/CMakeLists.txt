@@ -106,3 +106,7 @@ add_test( service_error_handler_overflow_regression_test_suite ${EXECUTABLE_OUTP
 add_executable( resource_error_handler_overflow_regression_test_suite ${SOURCE_DIR}/resource_error_handler_overflow.cpp )
 target_link_libraries( resource_error_handler_overflow_regression_test_suite ${CMAKE_PROJECT_NAME} )
 add_test( resource_error_handler_overflow_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/resource_error_handler_overflow_regression_test_suite )
+
+add_executable( path_parameters_off_by_one_regression_test_suite ${SOURCE_DIR}/path_parameters_off_by_one.cpp )
+target_link_libraries( path_parameters_off_by_one_regression_test_suite ${CMAKE_PROJECT_NAME} )
+add_test( path_parameters_off_by_one_regression_test_suite ${EXECUTABLE_OUTPUT_PATH}/path_parameters_off_by_one_regression_test_suite )
