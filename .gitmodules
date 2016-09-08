@@ -10,3 +10,6 @@
 	path = dependency/openssl
 	url = https://github.com/corvusoft/openssl-dependency
 	branch = OpenSSL_1_0_2-stable
+[submodule "dependency/kashmir"]
+	path = dependency/kashmir
+	url = https://github.com/corvusoft/kashmir-dependency

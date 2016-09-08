@@ -31,6 +31,9 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" 
 find_package( asio REQUIRED )
 include_directories( SYSTEM ${asio_INCLUDE} )
 
+find_package( kashmir REQUIRED )
+include_directories( SYSTEM ${kashmir_INCLUDE} )
+
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
     include_directories( SYSTEM ${ssl_INCLUDE} )
