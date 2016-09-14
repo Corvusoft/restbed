@@ -46,7 +46,7 @@ namespace restbed
 {
     namespace detail
     {
-        WebSocketManagerImpl::WebSocketManagerImpl( const shared_ptr< Logger >& logger ) : m_logger( logger ),
+        WebSocketManagerImpl::WebSocketManagerImpl( void ) : m_logger( nullptr ),
             m_sockets( )
         {
             return;
@@ -57,7 +57,89 @@ namespace restbed
             return;
         }
 
-        Bytes WebSocketManagerImpl::to_bytes( const shared_ptr< WebSocketMessage >& message )
+        shared_ptr< WebSocketMessage > WebSocketManagerImpl::parse( const Bytes& packet )
+        {
+            if ( packet.empty( ) )
+            {
+                return nullptr;
+            }
+
+            auto message = make_shared< WebSocketMessage >( );
+
+            Byte byte = packet[ 0 ];
+            message->set_final_frame_flag( byte & 128 );
+            message->set_reserved_flags( byte & 64, byte & 32, byte & 16 );
+            message->set_opcode( static_cast< WebSocketMessage::OpCode >( byte & 15 ) );
+
+            const auto packet_length = packet.size( );
+            if ( packet_length == 1 )
+            {
+                return message;
+            }
+
+            byte = packet[ 1 ];
+            message->set_mask_flag( byte & 128 );
+            message->set_length( byte & 127 );
+
+            if ( packet_length == 2 )
+            {
+                return message;
+            }
+
+            size_t offset = 3;
+            uint64_t length = message->get_length( );
+
+            if ( length == 126 )
+            {
+                length  = packet[ offset++ ] << 8;
+                length |= packet[ offset++ ]     ;
+
+                message->set_extended_length( length );
+            }
+            else if ( length == 127 )
+            {
+                length |= packet[ offset++ ] << 24;
+                length |= packet[ offset++ ] << 16;
+                length |= packet[ offset++ ] <<  8;
+                length  = packet[ offset++ ]      ;
+
+                message->set_extended_length( length );
+            }
+
+            if ( message->get_mask_flag( ) == true )
+            {
+                uint32_t mask  = packet[ offset++ ] << 24;
+                mask |= packet[ offset++ ] << 16;
+                mask |= packet[ offset++ ] <<  8;
+                mask |= packet[ offset   ]      ;
+
+                message->set_mask( mask );
+            }
+
+            Bytes payload = packet;
+
+            if ( message->get_mask_flag( ) == true )
+            {
+                auto masking_key = message->get_mask( );
+
+                Byte mask[ 4 ] = { };
+                mask[ 0 ] = ( masking_key >> 24 ) & 0xFF;
+                mask[ 1 ] = ( masking_key >> 16 ) & 0xFF;
+                mask[ 2 ] = ( masking_key >>  8 ) & 0xFF;
+                mask[ 3 ] =   masking_key         & 0xFF;
+
+                for ( size_t index = offset; index < payload.size( ); index++ )
+                {
+                    payload[ index ] ^= mask[ index % 4 ];
+                }
+            }
+
+            message->set_data( payload );
+
+            return message;
+        }
+
+        Bytes WebSocketManagerImpl::compose( const shared_ptr< WebSocketMessage >& message )
         {
             Byte byte = 0;
 
@@ -176,6 +258,17 @@ namespace restbed
             return socket;
         }
 
+        shared_ptr< WebSocket > WebSocketManagerImpl::read( const string& key )
+        {
+            auto socket = m_sockets.find( key );
+            return ( socket not_eq m_sockets.end( ) ) ? socket->second : nullptr;
+        }
+
+        shared_ptr< WebSocket > WebSocketManagerImpl::update( const shared_ptr< WebSocket >& socket )
+        {
+            return socket;
+        }
+
         void WebSocketManagerImpl::destroy( const shared_ptr< WebSocket >& socket )
         {
             if ( socket == nullptr )
@@ -186,136 +279,14 @@ namespace restbed
             m_sockets.erase( socket->get_key( ) );
         }
 
-        void WebSocketManagerImpl::listen( const shared_ptr< WebSocket >& socket )
+        shared_ptr< Logger > WebSocketManagerImpl::get_logger( void ) const
         {
-            auto raw_socket = socket->get_socket( );
-            raw_socket->read( 2, bind( WebSocketManagerImpl::parse_flags, _1, socket ), [ socket ]( const error_code code )
-            {
-                auto handler = socket->get_error_handler( );
-                if ( handler not_eq nullptr )
-                {
-                    handler( socket, code );
-                }
-            } );
+            return m_logger;
         }
 
-        void WebSocketManagerImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
+        void WebSocketManagerImpl::set_logger( const shared_ptr< Logger >& value )
         {
-            auto message = make_shared< WebSocketMessage >( );
-
-            Byte byte = data[ 0 ];
-            message->set_final_frame_flag( byte & 128 );
-            message->set_reserved_flags( byte & 64, byte & 32, byte & 16 );
-            message->set_opcode( static_cast< WebSocketMessage::OpCode >( byte & 15 ) );
-
-            byte = data[ 1 ];
-            message->set_mask_flag( byte & 128 );
-            message->set_length( byte & 127 );
-
-            auto length = message->get_length( );
-
-            if ( length == 126 )
-            {
-                length = 2;
-            }
-            else if ( length == 127 )
-            {
-                length = 4;
-            }
-            else
-            {
-                length = 0;
-            }
-
-            if ( message->get_mask_flag( ) == true )
-            {
-                length += 4;
-            }
-
-            auto raw_socket = socket->get_socket( );
-            raw_socket->read( length, bind( WebSocketManagerImpl::parse_length_and_mask, _1, socket, message ), [ socket ]( const error_code code )
-            {
-                //Place this logic on SocketImpl
-                //SocketImpl::set_close_handler
-                //SocketImpl::set_error_handler
-                auto handler = socket->get_error_handler( );
-                if ( handler not_eq nullptr )
-                {
-                    handler( socket, code );
-                }
-            } );
-        }
-
-        void WebSocketManagerImpl::parse_payload( const Bytes data, const shared_ptr< WebSocket > socket, const shared_ptr< WebSocketMessage > message )
-        {
-            Bytes payload = data;
-
-            if ( message->get_mask_flag( ) == true )
-            {
-                auto masking_key = message->get_mask( );
-
-                Byte mask[ 4 ] = { };
-                mask[ 0 ] = ( masking_key >> 24 ) & 0xFF;
-                mask[ 1 ] = ( masking_key >> 16 ) & 0xFF;
-                mask[ 2 ] = ( masking_key >>  8 ) & 0xFF;
-                mask[ 3 ] =   masking_key         & 0xFF;
-
-                for ( size_t index = 0; index < payload.size( ); index++ )
-                {
-                    payload[ index ] ^= mask[ index % 4 ];
-                }
-            }
-
-            message->set_data( payload );
-
-            auto handler = socket->get_message_handler( );
-            if ( handler not_eq nullptr )
-            {
-                handler( socket, message );
-            }
-        }
-
-        void WebSocketManagerImpl::parse_length_and_mask( const Bytes data, const shared_ptr< WebSocket > socket, const shared_ptr< WebSocketMessage > message )
-        {
-            size_t offset = 0;
-            uint64_t length = message->get_length( );
-
-            if ( length == 126 )
-            {
-                length  = data[ offset++ ] << 8;
-                length |= data[ offset++ ]     ;
-
-                message->set_extended_length( length );
-            }
-            else if ( length == 127 )
-            {
-                length |= data[ offset++ ] << 24;
-                length |= data[ offset++ ] << 16;
-                length |= data[ offset++ ] <<  8;
-                length  = data[ offset++ ]      ;
-
-                message->set_extended_length( length );
-            }
-
-            if ( message->get_mask_flag( ) == true )
-            {
-                uint32_t mask  = data[ offset++ ] << 24;
-                mask |= data[ offset++ ] << 16;
-                mask |= data[ offset++ ] <<  8;
-                mask |= data[ offset   ]      ;
-
-                message->set_mask( mask );
-            }
-
-            auto raw_socket = socket->get_socket( );
-            raw_socket->read( length, bind( WebSocketManagerImpl::parse_payload, _1, socket, message ), [ socket ]( const error_code code )
-            {
-                auto handler = socket->get_error_handler( );
-                if ( handler not_eq nullptr )
-                {
-                    handler( socket, code );
-                }
-            } );
+            m_logger = value;
         }
     }
 }

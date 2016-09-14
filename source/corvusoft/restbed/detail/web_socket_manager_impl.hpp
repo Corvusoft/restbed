@@ -42,26 +42,28 @@ namespace restbed
                 //Definitions
 
                 //Constructors
-                WebSocketManagerImpl( const std::shared_ptr< Logger >& logger = nullptr );
+                WebSocketManagerImpl( void );
 
                 virtual ~WebSocketManagerImpl( void );
 
                 //Functionality
-                Bytes to_bytes( const std::shared_ptr< WebSocketMessage >& message );
+                std::shared_ptr< WebSocketMessage > parse( const Bytes& packet );
+
+                Bytes compose( const std::shared_ptr< WebSocketMessage >& message );
 
                 std::shared_ptr< WebSocket > create( const std::shared_ptr< Session >& session );
 
-                //std::shared_ptr< WebSocket > read( const std::string& key );
+                std::shared_ptr< WebSocket > read( const std::string& key );
 
-                //std::shared_ptr< WebSocket > update( const std::shared_ptr< WebSocket >& socket );
+                std::shared_ptr< WebSocket > update( const std::shared_ptr< WebSocket >& socket );
 
                 void destroy( const std::shared_ptr< WebSocket >& socket );
 
-                void listen( const std::shared_ptr< WebSocket >& socket );
-
                 //Getters
+                std::shared_ptr< Logger > get_logger( void ) const;
 
                 //Setters
+                void set_logger( const std::shared_ptr< Logger >& value );
 
                 //Operators
 
@@ -93,11 +95,6 @@ namespace restbed
                 WebSocketManagerImpl( const WebSocketManagerImpl& original ) = delete;
 
                 //Functionality
-                static void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
-
-                static void parse_payload( const Bytes data, const std::shared_ptr< WebSocket > socket, const std::shared_ptr< WebSocketMessage > message );
-
-                static void parse_length_and_mask( const Bytes data, const std::shared_ptr< WebSocket > socket, const std::shared_ptr< WebSocketMessage > message );
 
                 //Getters
 
