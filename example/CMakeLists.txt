@@ -114,10 +114,10 @@ endif ( )
 #
 # Install
 #
-install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION ${CMAKE_INSTALL_PREFIX} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION "${CMAKE_INSTALL_LIBDIR}/restbed" FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
 
-install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/https_client/resource/certificates" DESTINATION "${CMAKE_INSTALL_PREFIX}/resource" FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/https_client/resource/certificates" DESTINATION "${CMAKE_INSTALL_LIBDIR}/restbed/${PROJECT_NAME}/resource" FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
 
-install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION "resource" )
-install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION "resource" )
-install( FILES "${CMAKE_SOURCE_DIR}/example/transfer_encoding_request/resource/request.txt" DESTINATION "resource" )
+install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION "${CMAKE_INSTALL_LIBDIR}/restbed/${PROJECT_NAME}/resource" )
+install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION "${CMAKE_INSTALL_LIBDIR}/restbed/${PROJECT_NAME}/resource" )
+install( FILES "${CMAKE_SOURCE_DIR}/example/transfer_encoding_request/resource/request.txt" DESTINATION "${CMAKE_INSTALL_LIBDIR}/restbed/${PROJECT_NAME}/resource" )
