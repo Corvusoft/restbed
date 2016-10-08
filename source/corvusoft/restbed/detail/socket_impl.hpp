@@ -17,12 +17,18 @@
 #include "corvusoft/restbed/byte.hpp"
 
 //External Includes
+
 #include <asio/ip/tcp.hpp>
 #include <asio/streambuf.hpp>
 #include <asio/steady_timer.hpp>
 #include <asio/io_service.hpp>
-#include <asio/io_service_strand.hpp>
 
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 106100
+#include <asio/strand.hpp>
+#else
+#include <asio/io_service_strand.hpp>
+#endif
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
