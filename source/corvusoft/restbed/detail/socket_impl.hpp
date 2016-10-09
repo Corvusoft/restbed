@@ -23,7 +23,7 @@
 #include <asio/steady_timer.hpp>
 #include <asio/io_service.hpp>
 
-#include <boost/version.hpp>
+#include <../version.hpp>
 #if BOOST_VERSION >= 106100
 #include <asio/strand.hpp>
 #else
