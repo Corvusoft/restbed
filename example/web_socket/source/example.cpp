@@ -6,8 +6,12 @@
  *
  * Client Usage:
  *    curl -w'\n' -v -X GET 'http://localhost:1984/socket'
+ *
+ * Further Reading:
+ *    
  */
 
+#include <map>
 #include <string>
 #include <cstring>
 #include <memory>
@@ -23,6 +27,8 @@
 
 using namespace std;
 using namespace restbed;
+
+map< string, shared_ptr< WebSocket > > sockets;
 
 string base64_encode( const unsigned char* input, int length )
 {
@@ -45,20 +51,37 @@ string base64_encode( const unsigned char* input, int length )
     return buff;
 }
 
-void close_handler( const shared_ptr< WebSocket > )
+void close_handler( const shared_ptr< WebSocket > socket )
 {
-    fprintf( stderr, "WebSocket Closed\n" );
+    const auto key = socket->get_key( );
+    sockets.erase( key );
+
+    fprintf( stderr, "Closed connection to %s.\n", key.data( ) );
 }
 
-void error_handler( const shared_ptr< WebSocket >, const error_code error )
+void error_handler( const shared_ptr< WebSocket > socket, const error_code error )
 {
-    fprintf( stderr, "WebSocket Errored: %s\n", error.message( ).data( ) );
+    const auto key = socket->get_key( );
+    fprintf( stderr, "WebSocket Errored '%s' for %s.\n", error.message( ).data( ), key.data( ) );
 }
 
-void message_handler( const shared_ptr< WebSocket > socket, const shared_ptr< WebSocketMessage > message )
+void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< WebSocketMessage > message )
 {
-    const auto data = String::format( "WebSocket Message: %.*s\n", message->get_data( ).size( ), message->get_data( ).data( ) );
+    const auto source_key = source->get_key( );
+    const auto data = String::format( "Received message '%.*s' from %s\n", message->get_data( ).size( ), message->get_data( ).data( ), source_key.data( ) );
+    fprintf( stderr, "%s", data.data( ) );
 
+    for ( auto socket : sockets )
+    {
+        auto destination_key = socket.first;
+        
+        if ( source_key not_eq destination_key )
+        {
+            auto destination = socket.second;
+            destination->send( message );
+        }
+    }
+    
     // auto flags = message->get_reserved_flags( );
     // fprintf( stderr, "Final Frame Flag: %d\n", message->get_final_frame_flag( ) );
     // fprintf( stderr, "Reserved Flags: %d %d %d\n", std::get<0>( flags ), std::get<1>( flags ), std::get<2>( flags ) );
@@ -66,8 +89,6 @@ void message_handler( const shared_ptr< WebSocket > socket, const shared_ptr< We
     // fprintf( stderr, "Mask Flag %d\n", message->get_mask_flag( ) );
     // fprintf( stderr, "Payload Length %d\n", message->get_payload_length( ) );
     // fprintf( stderr, "Masking Key %u\n", message->get_mask( ) );
-
-    fprintf( stderr, "%s", data.data( ) );
 }
 
 void get_method_handler( const shared_ptr< Session > session )
@@ -99,16 +120,19 @@ void get_method_handler( const shared_ptr< Session > session )
             socket->set_error_handler( error_handler );
             socket->set_message_handler( message_handler );
 
-            auto message = make_shared< WebSocketMessage >( WebSocketMessage::TEXT_FRAME, "Message from server" );
+            auto message = make_shared< WebSocketMessage >( WebSocketMessage::TEXT_FRAME, "Welcome to Corvusoft Chat!" );
 
-            socket->send( message, [ ]( const shared_ptr< WebSocket > )
+            socket->send( message, [ ]( const shared_ptr< WebSocket > socket )
             {
-                fprintf( stderr, "WebSocket sent welcome message.\n" );
+                const auto key = socket->get_key( );
+                sockets.insert( make_pair( key, socket ) );
+
+                fprintf( stderr, "Sent welcome message to %s.\n", key.data( ) );
             } );
         }
         else
         {
-            fprintf( stderr, "Client closed connection, WebSocket negotiation failed.\n" );
+            fprintf( stderr, "WebSocket Negotiation Failed: Client closed connection.\n" );
         }
     } );
 
@@ -122,7 +146,7 @@ void get_method_handler( const shared_ptr< Session > session )
 int main( const int, const char** )
 {
     auto resource = make_shared< Resource >( );
-    resource->set_path( "/socket" );
+    resource->set_path( "/socket" ); ///chat
     resource->set_method_handler( "GET", get_method_handler );
 
     auto settings = make_shared< Settings >( );
