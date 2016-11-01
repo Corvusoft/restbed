@@ -3,7 +3,7 @@ Overview
 
 This document sets out the expected coding style for those who wish to participate in this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
 
-To ensure the codebase meets this standard please install the supplied [GIT pre-commit](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) hook into your local copy. You're also required to install the [Artistic Style](http://astyle.sourceforge.net/) tool on your system for this hook to be successful.
+To ensure the codebase meets this standard please install the supplied [GIT pre-commit](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) hook into your local copy. You're also required to install the [Artistic Style](http://astyle.sourceforge.net/) tool on your system for this hook to be successful; you must have version 2.05 or greater installed.
 
 ```
 cd restbed/
