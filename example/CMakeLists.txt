@@ -117,10 +117,18 @@ endif ( )
 #
 # Install
 #
-install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION ${CMAKE_INSTALL_PREFIX} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+if ( NOT DEFINED CMAKE_INSTALL_LIBDIR )
+    set( EXAMPLE_INSTALL_DIR ${CMAKE_INSTALL_PREFIX})
+    set( RESOURCE_INSTALL_DIR "${EXAMPLE_INSTALL_DIR}/resource")
+else ( )
+    set( EXAMPLE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/restbed" )
+    set( RESOURCE_INSTALL_DIR "${EXAMPLE_INSTALL_DIR}/${PROJECT_NAME}/resource")
+endif ( )
 
-install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/https_client/resource/certificates" DESTINATION "${CMAKE_INSTALL_PREFIX}/resource" FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+install( DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/example" DESTINATION ${EXAMPLE_INSTALL_DIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
 
-install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION "resource" )
-install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION "resource" )
-install( FILES "${CMAKE_SOURCE_DIR}/example/transfer_encoding_request/resource/request.txt" DESTINATION "resource" )
+install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/https_client/resource/certificates" DESTINATION ${RESOURCE_INSTALL_DIR} FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE )
+
+install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION ${RESOURCE_INSTALL_DIR} )
+install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION ${RESOURCE_INSTALL_DIR} )
+install( FILES "${CMAKE_SOURCE_DIR}/example/transfer_encoding_request/resource/request.txt" DESTINATION ${RESOURCE_INSTALL_DIR} )
