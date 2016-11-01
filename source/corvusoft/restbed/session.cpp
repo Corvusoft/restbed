@@ -45,6 +45,9 @@ using asio::buffer;
 
 namespace restbed
 {
+    static Bytes empty_body = { };
+    static multimap< string, string > empty_headers = { };
+    
     Session::Session( const string& id ) : m_pimpl( new SessionImpl )
     {
         m_pimpl->m_id = id;
@@ -155,19 +158,17 @@ namespace restbed
     
     void Session::close( const int status, const Bytes& body )
     {
-        static multimap< string, string > empty;
-        close( status, body, empty );
+        close( status, body, empty_headers );
     }
     
     void Session::close( const int status, const string& body )
     {
-        static multimap< string, string > empty;
-        close( status, body, empty );
+        close( status, String::to_bytes( body ), empty_headers );
     }
     
     void Session::close( const int status, const multimap< string, string >& headers )
     {
-        close( status, "", headers );
+        close( status, empty_body, headers );
     }
     
     void Session::close( const int status, const string& body, const multimap< string, string >& headers )
@@ -255,19 +256,17 @@ namespace restbed
     
     void Session::yield( const int status, const Bytes& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        static multimap< string, string > empty;
-        yield( status, body, empty, callback );
+        yield( status, body, empty_headers, callback );
     }
     
     void Session::yield( const int status, const string& body, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        static multimap< string, string > empty;
-        yield( status, body, empty, callback );
+        yield( status, String::to_bytes( body ), empty_headers, callback );
     }
     
     void Session::yield( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        yield( status, "", headers, callback );
+        yield( status, empty_body, headers, callback );
     }
     
     void Session::yield( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< Session > ) >& callback )
@@ -340,10 +339,36 @@ namespace restbed
         } );
     }
     
-    void Session::upgrade( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    
+    void Session::upgrade( const int status, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    {
+        upgrade( status, empty_body, empty_headers, callback );
+    }
+    
+    void Session::upgrade( const int status, const Bytes& body, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    {
+        upgrade( status, body, empty_headers, callback );
+    }
+    
+    void Session::upgrade( const int status, const string& body, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    {
+        upgrade( status, String::to_bytes( body ), empty_headers, callback );
+    }
+    
+    void Session::upgrade( const int status, const multimap< string, string >& headers, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    {
+        upgrade( status, empty_body, headers, callback );
+    }
+    
+    void Session::upgrade( const int status, const Bytes& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< WebSocket > ) >& callback )
     {
         auto socket = m_pimpl->m_web_socket_manager->create( shared_from_this( ) );
         yield( status, body, headers, bind( callback, socket ) );
+    }
+    
+    void Session::upgrade( const int status, const string& body, const multimap< string, string >& headers, const function< void ( const shared_ptr< WebSocket > ) >& callback )
+    {
+        upgrade( status, String::to_bytes( body ), headers, callback );
     }
     
     void Session::sleep_for( const milliseconds& delay, const function< void ( const shared_ptr< Session > ) >& callback )
@@ -446,13 +471,13 @@ namespace restbed
     {
         m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
-
+    
     void Session::set_header( const string& name, const string& value )
     {
         m_pimpl->m_headers.erase( name );
         m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
-
+    
     void Session::set_headers( const multimap< string, string >& values )
     {
         m_pimpl->m_headers = values;

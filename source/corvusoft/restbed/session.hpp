@@ -101,11 +101,18 @@ namespace restbed
             
             void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
             
-            void upgrade( const int status,
-                          const std::string& body,
-                          const std::multimap< std::string, std::string >& headers,
-                          const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
-                          
+            void upgrade( const int status, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            
+            void upgrade( const int status, const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            
+            void upgrade( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            
+            void upgrade( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            
+            void upgrade( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            
+            void upgrade( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            
             void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
             //Getters
