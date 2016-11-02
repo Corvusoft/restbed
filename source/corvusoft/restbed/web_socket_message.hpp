@@ -51,7 +51,7 @@ namespace restbed
             //Constructors
             WebSocketMessage( void );
             
-            WebSocketMessage( const OpCode code, const Bytes& data );
+            WebSocketMessage( const OpCode code, const Bytes& data = { } );
             
             WebSocketMessage( const OpCode code, const std::string& data );
             
