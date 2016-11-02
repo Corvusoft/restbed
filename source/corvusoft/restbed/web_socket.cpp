@@ -62,8 +62,15 @@ namespace restbed
     
     void WebSocket::close( void )
     {
-        m_pimpl->m_manager->destroy( shared_from_this( ) );
-        m_pimpl->m_socket->close( ); //test status before invocation.
+        auto socket = shared_from_this( );
+        
+        if ( m_pimpl->m_close_handler not_eq nullptr )
+        {
+            m_pimpl->m_close_handler( socket );
+        }
+        
+        m_pimpl->m_manager->destroy( socket );
+        m_pimpl->m_socket->close( );
     }
     
     void WebSocket::send( const Bytes& body, const function< void ( const shared_ptr< WebSocket > ) > callback )
