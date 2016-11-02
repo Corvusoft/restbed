@@ -16,6 +16,7 @@
 //External Includes
 
 //System Namespaces
+using std::ref;
 using std::bind;
 using std::string;
 using std::function;
@@ -198,72 +199,7 @@ namespace restbed
     {
         m_pimpl->m_message_handler = value;
         
-        m_pimpl->m_socket->read( 2, bind( &WebSocket::parse_flags, this, _1 ), [ this ]( const error_code code )
-        {
-            if ( m_pimpl->m_error_handler not_eq nullptr )
-            {
-                m_pimpl->m_error_handler( shared_from_this( ), code );
-            }
-        } );
-    }
-    
-    void WebSocket::parse_flags( const Bytes data )
-    {
-        auto message = m_pimpl->m_manager->parse( data );
-        
-        auto length = message->get_length( );
-        
-        if ( length == 126 )
-        {
-            length = 2;
-        }
-        else if ( length == 127 )
-        {
-            length = 4;
-        }
-        else
-        {
-            length = 0;
-        }
-        
-        if ( message->get_mask_flag( ) == true )
-        {
-            length += 4;
-        }
-        
-        m_pimpl->m_socket->read( length, bind( &WebSocket::parse_length_and_mask, this, _1, data ), [ this ]( const error_code code )
-        {
-            if ( m_pimpl->m_error_handler not_eq nullptr )
-            {
-                m_pimpl->m_error_handler( shared_from_this( ), code );
-            }
-        } );
-    }
-    
-    void WebSocket::parse_payload( const Bytes data, Bytes packet )
-    {
-        packet.insert( packet.end( ), data.begin( ), data.end( ) );
-        auto message = m_pimpl->m_manager->parse( packet );
-        
-        if ( m_pimpl->m_message_handler not_eq nullptr )
-        {
-            m_pimpl->m_message_handler( shared_from_this( ), message );
-        }
-    }
-    
-    void WebSocket::parse_length_and_mask( const Bytes data, Bytes packet )
-    {
-        packet.insert( packet.end( ), data.begin( ), data.end( ) );
-        auto message = m_pimpl->m_manager->parse( packet );
-        
-        auto length = message->get_extended_length( );
-        
-        if ( length == 0 )
-        {
-            length = message->get_length( );
-        }
-        
-        m_pimpl->m_socket->read( length, bind( &WebSocket::parse_payload, this, _1, packet ), [ this ]( const error_code code )
+        m_pimpl->m_socket->read( 2, bind( &WebSocketImpl::parse_flags, ref( m_pimpl ), _1, shared_from_this( ) ), [ this ]( const error_code code )
         {
             if ( m_pimpl->m_error_handler not_eq nullptr )
             {

@@ -11,6 +11,7 @@
 #include <functional>
 
 //Project Includes
+#include "corvusoft/restbed/byte.hpp"
 
 //External Includes
 
@@ -23,31 +24,91 @@
 namespace restbed
 {
     //Forward Declarations
-    class WebSocketMessage;
+    class WebSocket;
     
     namespace detail
     {
         //Forward Declarations
         
-        struct WebSocketImpl
+        class WebSocketImpl
         {
-            std::string m_key = "";
-            
-            bool m_error_handler_invoked = false;
-            
-            std::shared_ptr< Logger > m_logger = nullptr;
-            
-            std::shared_ptr< SocketImpl > m_socket = nullptr;
-            
-            std::shared_ptr< WebSocketManagerImpl > m_manager = nullptr;
-            
-            std::function< void ( const std::shared_ptr< WebSocket > ) > m_open_handler = nullptr;
-            
-            std::function< void ( const std::shared_ptr< WebSocket > ) > m_close_handler = nullptr;
-            
-            std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) > m_error_handler = nullptr;
-            
-            std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) > m_message_handler = nullptr;
+            public:
+                //Friends
+                
+                //Definitions
+                
+                //Constructors
+                WebSocketImpl( void );
+                
+                virtual ~WebSocketImpl( void );
+                
+                //Functionality
+                void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
+                
+                void parse_payload( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );
+                
+                void parse_length_and_mask( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );
+                
+                //Getters
+                
+                //Setters
+                
+                //Operators
+                
+                //Properties
+                std::string m_key = "";
+                
+                bool m_error_handler_invoked = false;
+                
+                std::shared_ptr< Logger > m_logger = nullptr;
+                
+                std::shared_ptr< SocketImpl > m_socket = nullptr;
+                
+                std::shared_ptr< WebSocketManagerImpl > m_manager = nullptr;
+                
+                std::function< void ( const std::shared_ptr< WebSocket > ) > m_open_handler = nullptr;
+                
+                std::function< void ( const std::shared_ptr< WebSocket > ) > m_close_handler = nullptr;
+                
+                std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) > m_error_handler = nullptr;
+                
+                std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) > m_message_handler = nullptr;
+                
+            protected:
+                //Friends
+                
+                //Definitions
+                
+                //Constructors
+                
+                //Functionality
+                
+                //Getters
+                
+                //Setters
+                
+                //Operators
+                
+                //Properties
+                
+            private:
+                //Friends
+                
+                //Definitions
+                
+                //Constructors
+                WebSocketImpl( const WebSocketImpl& original ) = delete;
+                
+                //Functionality
+                
+                //Getters
+                
+                //Setters
+                
+                //Operators
+                WebSocketImpl& operator =( const WebSocketImpl& value ) = delete;
+                
+                //Properties
         };
     }
 }

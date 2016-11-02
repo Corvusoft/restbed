@@ -19,5 +19,6 @@ set( MANIFEST
     ${SOURCE_DIR}/detail/socket_impl.cpp
     ${SOURCE_DIR}/detail/service_impl.cpp
     ${SOURCE_DIR}/detail/session_impl.cpp
+    ${SOURCE_DIR}/detail/web_socket_impl.cpp
     ${SOURCE_DIR}/detail/web_socket_manager_impl.cpp
 )

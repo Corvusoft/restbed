@@ -31,7 +31,7 @@ namespace restbed
     namespace detail
     {
         class SocketImpl;
-        struct WebSocketImpl;
+        class WebSocketImpl;
         class WebSocketManagerImpl;
     }
     
@@ -127,11 +127,6 @@ namespace restbed
             WebSocket( const WebSocket& original ) = delete;
             
             //Functionality
-            void parse_flags( const Bytes data ); /*hide me and friends*/
-            
-            void parse_payload( const Bytes data, Bytes packet );
-            
-            void parse_length_and_mask( const Bytes data, Bytes packet );
             
             //Getters
             
