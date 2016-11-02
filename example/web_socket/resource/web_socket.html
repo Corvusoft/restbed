@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <script type="text/javascript">
+      function onReturnSubmit( evt )
+      {
+         if ( window.restbed.ws === null || window.restbed.ws.readyState !== window.restbed.ws.OPEN )
+         {
+            return;
+         }
+
+         if( evt && evt.keyCode == 13 )
+         {
+            var message = document.getElementById( "message" );
+            window.restbed.ws.send( message.value );
+            alert('sent ' + message.value );
+
+            message.value = "";
+         }
+      }
+
+      function add_message( message )
+      {
+         var li = document.createElement( "li" );
+         li.appendChild( document.createTextNode( message ) );
+
+         var ul = document.getElementById( "messages" );
+         ul.appendChild( li );
+
+         //ul.insertBefore( theKid, theParent.firstChild);
+      }
+
+      function open( )
+      {
+         if ( "WebSocket" in window )
+         {
+            var ws = new WebSocket( "ws://localhost:1984/chat" );
+
+            ws.onopen = function( )
+            {
+               add_message( "Established connection." );
+               ws.send( 'Hello, onopen. 1' );
+               ws.send( 'Hello, onopen. 2' );
+               ws.send( 'Hello, onopen. 3' );
+               ws.send( 'Hello, onopen. 4' );
+            };
+
+            ws.onmessage = function( evt )
+            {
+               add_message( evt.data );
+            };
+
+            ws.onclose = function()
+            {
+               add_message( "Connection is closed." );
+            };
+
+            window.restbed.ws = ws;
+         }
+         else
+         {
+            alert( "WebSockets NOT supported by your Browser!" );
+         }
+      }
+
+      function close( )
+      {
+         window.restbed.ws.close( );
+      }
+
+      ( function( )
+      {
+         window.restbed = { ws: null };
+      } )( );
+    </script>
+  </head>
+  <body>
+     <div>
+       <ul id="messages">
+         <li>
+           <input id="message" type="text" onKeyPress="return onReturnSubmit( event )"/>
+         </li>
+       </ul>
+       <a href="javascript:open( )">Open Chat</a>
+       <a href="javascript:close( )">Close Chat</a>
+     </div>
+  </body>
+</html>

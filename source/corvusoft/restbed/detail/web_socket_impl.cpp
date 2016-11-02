@@ -41,6 +41,17 @@ namespace restbed
             return;
         }
         
+        void WebSocketImpl::listen( const shared_ptr< WebSocket > socket )
+        {
+            m_socket->read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
+            {
+                if ( m_error_handler not_eq nullptr )
+                {
+                    m_error_handler( socket, code );
+                }
+            } );
+        }
+        
         void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
         {
             auto message = m_manager->parse( data );
@@ -83,6 +94,8 @@ namespace restbed
             {
                 m_message_handler( socket, message );
             }
+            
+            listen( socket );
         }
         
         void WebSocketImpl::parse_length_and_mask( const Bytes data, Bytes packet, const shared_ptr< WebSocket > socket )

@@ -43,6 +43,8 @@ namespace restbed
                 virtual ~WebSocketImpl( void );
                 
                 //Functionality
+                void listen( const std::shared_ptr< WebSocket > socket );
+                
                 void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
                 
                 void parse_payload( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );

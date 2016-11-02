@@ -51,49 +51,50 @@ namespace restbed
         {
             return;
         }
-
+        
         WebSocketManagerImpl::~WebSocketManagerImpl( void )
         {
             return;
         }
-
+        
         shared_ptr< WebSocketMessage > WebSocketManagerImpl::parse( const Bytes& packet )
         {
             if ( packet.empty( ) )
             {
                 return nullptr;
             }
-
+            
             auto message = make_shared< WebSocketMessage >( );
-
+            
             Byte byte = packet[ 0 ];
             message->set_final_frame_flag( byte & 128 );
             message->set_reserved_flags( byte & 64, byte & 32, byte & 16 );
             message->set_opcode( static_cast< WebSocketMessage::OpCode >( byte & 15 ) );
-
+            
             const auto packet_length = packet.size( );
+            
             if ( packet_length == 1 )
             {
                 return message;
             }
-
+            
             byte = packet[ 1 ];
             message->set_mask_flag( byte & 128 );
             message->set_length( byte & 127 );
-
+            
             if ( packet_length == 2 )
             {
                 return message;
             }
-
-            size_t offset = 3;
+            
+            size_t offset = 2;
             uint64_t length = message->get_length( );
-
+            
             if ( length == 126 )
             {
                 length  = packet[ offset++ ] << 8;
                 length |= packet[ offset++ ]     ;
-
+                
                 message->set_extended_length( length );
             }
             else if ( length == 127 )
@@ -102,77 +103,77 @@ namespace restbed
                 length |= packet[ offset++ ] << 16;
                 length |= packet[ offset++ ] <<  8;
                 length  = packet[ offset++ ]      ;
-
+                
                 message->set_extended_length( length );
             }
-
+            
             if ( message->get_mask_flag( ) == true )
             {
                 uint32_t mask  = packet[ offset++ ] << 24;
                 mask |= packet[ offset++ ] << 16;
                 mask |= packet[ offset++ ] <<  8;
-                mask |= packet[ offset   ]      ;
-
+                mask |= packet[ offset++ ]      ;
+                
                 message->set_mask( mask );
             }
-
-            Bytes payload = packet;
-
+            
+            Bytes payload( packet.begin( ) + offset, packet.end( ) );
+            
             if ( message->get_mask_flag( ) == true )
             {
                 auto masking_key = message->get_mask( );
-
+                
                 Byte mask[ 4 ] = { };
                 mask[ 0 ] = ( masking_key >> 24 ) & 0xFF;
                 mask[ 1 ] = ( masking_key >> 16 ) & 0xFF;
                 mask[ 2 ] = ( masking_key >>  8 ) & 0xFF;
                 mask[ 3 ] =   masking_key         & 0xFF;
-
-                for ( size_t index = offset; index < payload.size( ); index++ )
+                
+                for ( size_t index = 0; index < payload.size( ); index++ )
                 {
                     payload[ index ] ^= mask[ index % 4 ];
                 }
             }
-
+            
             message->set_data( payload );
-
+            
             return message;
         }
-
+        
         Bytes WebSocketManagerImpl::compose( const shared_ptr< WebSocketMessage >& message )
         {
             Byte byte = 0;
-
+            
             if ( message->get_final_frame_flag( ) )
             {
-                byte |= 10000000;
+                byte |= 0x80;
             }
-
+            
             auto reserved_flags = message->get_reserved_flags( );
-
+            
             if ( get< 0 >( reserved_flags ) )
             {
-                byte |= 01000000;
+                byte |= 0x40;
             }
-
+            
             if ( get< 1 >( reserved_flags ) )
             {
-                byte |= 00100000;
+                byte |= 0x20;
             }
-
+            
             if ( get< 2 >( reserved_flags ) )
             {
-                byte |= 00010000;
+                byte |= 0x10;
             }
-
+            
             byte |= ( message->get_opcode( ) & 15 );
-
+            
             Bytes frame = { };
             frame.push_back( byte );
-
+            
             auto length = message->get_length( );
             auto mask_flag = message->get_mask_flag( );
-
+            
             if ( length == 126 )
             {
                 auto extended_length = message->get_extended_length( );
@@ -197,25 +198,25 @@ namespace restbed
             {
                 frame.push_back( length );
             }
-
+            
             if ( mask_flag )
             {
                 auto masking_key = message->get_mask( );
                 frame.push_back( masking_key );
-
+                
                 uint8_t mask[ 4 ] = { };
                 mask[ 0 ] =   masking_key         & 0xFF;
                 mask[ 1 ] = ( masking_key >>  8 ) & 0xFF;
                 mask[ 2 ] = ( masking_key >> 16 ) & 0xFF;
                 mask[ 3 ] = ( masking_key >> 24 ) & 0xFF;
-
+                
                 frame.push_back( mask[ 3 ] );
                 frame.push_back( mask[ 2 ] );
                 frame.push_back( mask[ 1 ] );
                 frame.push_back( mask[ 0 ] );
-
+                
                 auto data = message->get_data( );
-
+                
                 for ( size_t index = 0; index < data.size( ); index++ )
                 {
                     auto datum = data.at( index );
@@ -228,62 +229,61 @@ namespace restbed
                 auto data = message->get_data( );
                 frame.insert( frame.end( ), data.begin( ), data.end( ) );
             }
-
+            
             return frame;
         }
-
+        
         shared_ptr< WebSocket > WebSocketManagerImpl::create( const std::shared_ptr< Session >& session )
         {
             if ( session == nullptr )
             {
                 return nullptr;
             }
-
+            
             kashmir::uuid_t uuid;
             kashmir::system::DevRand random;
             random >> uuid;
             stringstream stream;
             stream << uuid;
             const auto key = stream.str( );
-
+            
             auto socket = make_shared< WebSocket >( );
             socket->set_key( key );
-            socket->set_logger( m_logger ); //session->get_logger( );
+            socket->set_logger( m_logger );
             socket->set_manager( shared_from_this( ) );
-            //session->get_socket( );
             socket->set_socket( session->m_pimpl->m_request->m_pimpl->m_socket );
-
+            
             m_sockets.insert( make_pair( key, socket ) );
-
+            
             return socket;
         }
-
+        
         shared_ptr< WebSocket > WebSocketManagerImpl::read( const string& key )
         {
             auto socket = m_sockets.find( key );
             return ( socket not_eq m_sockets.end( ) ) ? socket->second : nullptr;
         }
-
+        
         shared_ptr< WebSocket > WebSocketManagerImpl::update( const shared_ptr< WebSocket >& socket )
         {
             return socket;
         }
-
+        
         void WebSocketManagerImpl::destroy( const shared_ptr< WebSocket >& socket )
         {
             if ( socket == nullptr )
             {
                 return;
             }
-
+            
             m_sockets.erase( socket->get_key( ) );
         }
-
+        
         shared_ptr< Logger > WebSocketManagerImpl::get_logger( void ) const
         {
             return m_logger;
         }
-
+        
         void WebSocketManagerImpl::set_logger( const shared_ptr< Logger >& value )
         {
             m_logger = value;

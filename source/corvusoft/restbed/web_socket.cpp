@@ -179,6 +179,11 @@ namespace restbed
     
     void WebSocket::set_close_handler( const function< void ( const shared_ptr< WebSocket > ) >& value )
     {
+        if ( value == nullptr )
+        {
+            return;
+        }
+        
         //we need to delete the socket from the manager!
         //wrap the close handler.
         m_pimpl->m_close_handler = bind( value, shared_from_this( ) );
@@ -186,6 +191,11 @@ namespace restbed
     
     void WebSocket::set_error_handler( const function< void ( const shared_ptr< WebSocket >, const error_code ) >& value )
     {
+        if ( value == nullptr )
+        {
+            return;
+        }
+        
         m_pimpl->m_error_handler = [ value, this ]( const shared_ptr< WebSocket > socket, const error_code code )
         {
             if ( m_pimpl->m_error_handler_invoked == false )
@@ -197,14 +207,12 @@ namespace restbed
     
     void WebSocket::set_message_handler( const function< void ( const shared_ptr< WebSocket >, const shared_ptr< WebSocketMessage > ) >& value )
     {
-        m_pimpl->m_message_handler = value;
-        
-        m_pimpl->m_socket->read( 2, bind( &WebSocketImpl::parse_flags, ref( m_pimpl ), _1, shared_from_this( ) ), [ this ]( const error_code code )
+        if ( value == nullptr )
         {
-            if ( m_pimpl->m_error_handler not_eq nullptr )
-            {
-                m_pimpl->m_error_handler( shared_from_this( ), code );
-            }
-        } );
+            return;
+        }
+        
+        m_pimpl->m_message_handler = value;
+        m_pimpl->listen( shared_from_this( ) );
     }
 }
