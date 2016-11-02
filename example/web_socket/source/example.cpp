@@ -92,8 +92,6 @@ void ping_handler( void )
             socket->close( );
         }
     }
-    
-    service->schedule( ping_handler, milliseconds( 5000 ) );
 }
 
 void close_handler( const shared_ptr< WebSocket > socket )
@@ -211,7 +209,7 @@ int main( const int, const char** )
     
     service = make_shared< Service >( );
     service->publish( resource );
-    service->schedule( ping_handler, seconds( 5000 ) );
+    service->schedule( ping_handler, milliseconds( 5000 ) );
     service->start( settings );
     
     return EXIT_SUCCESS;
