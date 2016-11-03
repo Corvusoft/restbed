@@ -12,6 +12,7 @@
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
+#include "corvusoft/restbed/logger.hpp"
 
 //External Includes
 
@@ -43,6 +44,8 @@ namespace restbed
                 virtual ~WebSocketImpl( void );
                 
                 //Functionality
+                void log( const Logger::Level level, const std::string& message ) const;
+                
                 void listen( const std::shared_ptr< WebSocket > socket );
                 
                 void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );

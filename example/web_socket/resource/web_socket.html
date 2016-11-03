@@ -1,8 +1,44 @@
 <!DOCTYPE HTML>
 <html>
   <head>
+    <style>
+      html, body {
+        margin: 0;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      li {
+         text-align: left;
+      }
+
+      input {
+        width: 40%;
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 10px;
+      }
+
+      a {
+        margin: 10px;
+      }
+
+      .disabled {
+        color: #000;
+        pointer-events: none;
+      }
+
+      #controls {
+        width: 100%;
+        bottom: 10%;
+        position: absolute;
+        text-align: center;
+      }
+    </style>
     <script type="text/javascript">
-      function onReturnSubmit( evt )
+      function on_return_submit( evt )
       {
          if ( window.restbed.ws === null || window.restbed.ws.readyState !== window.restbed.ws.OPEN )
          {
@@ -13,21 +49,30 @@
          {
             var message = document.getElementById( "message" );
             window.restbed.ws.send( message.value );
-            alert('sent ' + message.value );
 
             message.value = "";
          }
       }
 
+      function toggle_control_access( )
+      {
+         var open = document.getElementById( "open" );
+         open.disabled = !open.disabled;
+
+         var message = document.getElementById( "message" );
+         message.disabled = !message.disabled;
+
+         var close = document.getElementById( "close" );
+         close.className = ( close.className === "disabled" ) ? "" : "disabled";
+      }
+
       function add_message( message )
       {
          var li = document.createElement( "li" );
-         li.appendChild( document.createTextNode( message ) );
+         li.appendChild( document.createTextNode( "> " + message ) );
 
          var ul = document.getElementById( "messages" );
          ul.appendChild( li );
-
-         //ul.insertBefore( theKid, theParent.firstChild);
       }
 
       function open( )
@@ -39,10 +84,8 @@
             ws.onopen = function( )
             {
                add_message( "Established connection." );
-               ws.send( 'Hello, onopen. 1' );
-               ws.send( 'Hello, onopen. 2' );
-               ws.send( 'Hello, onopen. 3' );
-               ws.send( 'Hello, onopen. 4' );
+
+               toggle_control_access( );
             };
 
             ws.onmessage = function( evt )
@@ -50,9 +93,16 @@
                add_message( evt.data );
             };
 
-            ws.onclose = function()
+            ws.onclose = function( evt )
             {
-               add_message( "Connection is closed." );
+               add_message( "Connection closed with RFC6455 code " + evt.code + "." );
+
+               toggle_control_access( );
+            };
+
+            ws.onerror = function( evt )
+            {
+               add_message( "Error: socket connection interrupted." );
             };
 
             window.restbed.ws = ws;
@@ -76,13 +126,14 @@
   </head>
   <body>
      <div>
-       <ul id="messages">
-         <li>
-           <input id="message" type="text" onKeyPress="return onReturnSubmit( event )"/>
-         </li>
-       </ul>
-       <a href="javascript:open( )">Open Chat</a>
-       <a href="javascript:close( )">Close Chat</a>
+       <ul id="messages"></ul>
+       <div id="controls">
+         <input id="message" type="text" onKeyPress="return on_return_submit( event )" disabled/>
+         <div>
+           <a id="open" href="javascript:open( )">Open Chat</a>
+           <a id="close" href="javascript:close( )" class="disabled">Close Chat</a>
+         <div>
+       </div>
      </div>
   </body>
 </html>

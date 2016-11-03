@@ -111,7 +111,6 @@ void error_handler( const shared_ptr< WebSocket > socket, const error_code error
 void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< WebSocketMessage > message )
 {
     const auto opcode = message->get_opcode( );
-    fprintf( stderr, "OpCode: %d\n", opcode );
     
     if ( opcode == WebSocketMessage::PING_FRAME )
     {
@@ -127,6 +126,7 @@ void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< We
         //On each occasion the underlying TCP socket sees any packet data transfer, whether
         //a PING, PONG, TEXT, or BINARY... frame. It will automatically reset the timeout counter
         //leaving the connection active; see also Settings::set_connection_timeout.
+        return;
     }
     else if ( opcode == WebSocketMessage::CONNECTION_CLOSE_FRAME )
     {
@@ -134,30 +134,16 @@ void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< We
     }
     else
     {
-        const auto source_key = source->get_key( );
-        
         for ( auto socket : sockets )
         {
-            auto destination_key = socket.first;
-            
-            if ( source_key not_eq destination_key )
-            {
-                auto destination = socket.second;
-                destination->send( message );
-            }
+            auto destination = socket.second;
+            destination->send( message );
         }
         
-        const auto data = String::format( "Received message '%.*s' from %s\n", message->get_data( ).size( ), message->get_data( ).data( ), source_key.data( ) );
+        const auto key = source->get_key( );
+        const auto data = String::format( "Received message '%.*s' from %s\n", message->get_data( ).size( ), message->get_data( ).data( ), key.data( ) );
         fprintf( stderr, "%s", data.data( ) );
     }
-    
-    // auto flags = message->get_reserved_flags( );
-    // fprintf( stderr, "Final Frame Flag: %d\n", message->get_final_frame_flag( ) );
-    // fprintf( stderr, "Reserved Flags: %d %d %d\n", std::get<0>( flags ), std::get<1>( flags ), std::get<2>( flags ) );
-    // fprintf( stderr, "OpCode: %d\n", message->get_opcode( ) );
-    // fprintf( stderr, "Mask Flag %d\n", message->get_mask_flag( ) );
-    // fprintf( stderr, "Payload Length %d\n", message->get_payload_length( ) );
-    // fprintf( stderr, "Masking Key %u\n", message->get_mask( ) );
 }
 
 void get_method_handler( const shared_ptr< Session > session )

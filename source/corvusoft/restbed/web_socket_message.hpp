@@ -45,7 +45,7 @@ namespace restbed
                 BINARY_FRAME           = 0x02,
                 CONNECTION_CLOSE_FRAME = 0x08,
                 PING_FRAME             = 0x09,
-                PONG_FRAME             = 0x10
+                PONG_FRAME             = 0x0A
             };
             
             //Constructors

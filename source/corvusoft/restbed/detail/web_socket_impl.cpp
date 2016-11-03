@@ -16,6 +16,7 @@
 
 //System Namespaces
 using std::bind;
+using std::string;
 using std::shared_ptr;
 using std::error_code;
 using std::placeholders::_1;
@@ -39,6 +40,21 @@ namespace restbed
         WebSocketImpl::~WebSocketImpl( void )
         {
             return;
+        }
+        
+        void WebSocketImpl::log( const Logger::Level level, const string& message ) const
+        {
+            if ( m_logger not_eq nullptr )
+            {
+                try
+                {
+                    m_logger->log( level, "%s", message.data( ) );
+                }
+                catch ( ... )
+                {
+                    fprintf( stderr, "Failed to create log entry: %s", message.data( ) );
+                }
+            }
         }
         
         void WebSocketImpl::listen( const shared_ptr< WebSocket > socket )

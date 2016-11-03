@@ -47,7 +47,7 @@ namespace restbed
         }
         catch ( ... )
         {
-            //m_logger->log( failure );
+            m_pimpl->log( Logger::WARNING, "Service failed graceful wind down." );
         }
     }
     
