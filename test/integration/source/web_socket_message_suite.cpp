@@ -52,7 +52,7 @@ TEST_CASE( "validate default instance values", "[web_socket_message]" )
     REQUIRE( opcode_and_byte_and_mask.get_mask( ) == 5655432 );
     REQUIRE( opcode_and_byte_and_mask.get_length( ) == 1 );
     REQUIRE( opcode_and_byte_and_mask.get_extended_length( ) == 0 );
-    REQUIRE( opcode_and_byte_and_mask.get_mask_flag( ) == false );
+    REQUIRE( opcode_and_byte_and_mask.get_mask_flag( ) == true );
     REQUIRE( opcode_and_byte_and_mask.get_final_frame_flag( ) == true );
     REQUIRE( opcode_and_byte_and_mask.get_data( ) == String::to_bytes( "C" ) );
     REQUIRE( opcode_and_byte_and_mask.get_reserved_flags( ) == make_tuple( false, false, false ) );
@@ -62,11 +62,18 @@ TEST_CASE( "validate default instance values", "[web_socket_message]" )
     REQUIRE( opcode_and_string_and_mask.get_mask( ) == 123456789 );
     REQUIRE( opcode_and_string_and_mask.get_length( ) == 9 );
     REQUIRE( opcode_and_string_and_mask.get_extended_length( ) == 0 );
-    REQUIRE( opcode_and_string_and_mask.get_mask_flag( ) == false );
+    REQUIRE( opcode_and_string_and_mask.get_mask_flag( ) == true );
     REQUIRE( opcode_and_string_and_mask.get_final_frame_flag( ) == true );
     REQUIRE( opcode_and_string_and_mask.get_data( ) == String::to_bytes( "Corvusoft" ) );
     REQUIRE( opcode_and_string_and_mask.get_reserved_flags( ) == make_tuple( false, false, false ) );
     REQUIRE( opcode_and_string_and_mask.get_opcode( ) == WebSocketMessage::OpCode::PONG_FRAME );
+}
+
+TEST_CASE( "validate copy constructor", "[web_socket_message]" )
+{
+    const WebSocketMessage message( WebSocketMessage::OpCode::TEXT_FRAME );
+    
+    REQUIRE( message.get_opcode( ) == WebSocketMessage::OpCode::TEXT_FRAME );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[web_socket_message]" )

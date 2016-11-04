@@ -69,8 +69,6 @@ namespace restbed
             
             std::shared_ptr< detail::SocketImpl > get_socket( void ) const;
             
-            std::shared_ptr< detail::WebSocketManagerImpl > get_manager( void ) const;
-            
             std::function< void ( const std::shared_ptr< WebSocket > ) > get_open_handler( void ) const;
             
             std::function< void ( const std::shared_ptr< WebSocket > ) > get_close_handler( void ) const;
@@ -85,8 +83,6 @@ namespace restbed
             void set_logger( const std::shared_ptr< Logger >& value );
             
             void set_socket( const std::shared_ptr< detail::SocketImpl >& value );
-            
-            void set_manager( const std::shared_ptr< detail::WebSocketManagerImpl >& value );
             
             void set_open_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
             
@@ -120,6 +116,7 @@ namespace restbed
         private:
             //Friends
             friend Session;
+            friend detail::WebSocketManagerImpl;
             
             //Definitions
             

@@ -30,6 +30,8 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
+        class SocketImpl;
+        class WebSocketManagerImpl;
         
         class WebSocketImpl
         {

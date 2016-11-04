@@ -51,6 +51,8 @@ namespace restbed
             //Constructors
             WebSocketMessage( void );
             
+            WebSocketMessage( const WebSocketMessage& original );
+            
             WebSocketMessage( const OpCode code, const Bytes& data = { } );
             
             WebSocketMessage( const OpCode code, const std::string& data );
@@ -127,7 +129,6 @@ namespace restbed
             //Definitions
             
             //Constructors
-            WebSocketMessage( const WebSocketMessage& original ) = delete;
             
             //Functionality
             

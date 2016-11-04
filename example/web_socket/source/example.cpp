@@ -96,6 +96,12 @@ void ping_handler( void )
 
 void close_handler( const shared_ptr< WebSocket > socket )
 {
+    if ( socket->is_open( ) )
+    {
+        auto response = make_shared< WebSocketMessage >( WebSocketMessage::CONNECTION_CLOSE_FRAME, Bytes( { 10, 00 } ) );
+        socket->send( response );
+    }
+    
     const auto key = socket->get_key( );
     sockets.erase( key );
     
@@ -114,7 +120,8 @@ void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< We
     
     if ( opcode == WebSocketMessage::PING_FRAME )
     {
-        source->send( WebSocketMessage::PONG_FRAME );
+        auto response = make_shared< WebSocketMessage >( WebSocketMessage::PONG_FRAME, message->get_data( ) );
+        source->send( response );
     }
     else if ( opcode == WebSocketMessage::PONG_FRAME )
     {
@@ -132,12 +139,21 @@ void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< We
     {
         source->close( );
     }
-    else
+    else if ( opcode == WebSocketMessage::BINARY_FRAME )
     {
+        //We don't support binary data.
+        auto response = make_shared< WebSocketMessage >( WebSocketMessage::CONNECTION_CLOSE_FRAME, Bytes( { 10, 03 } ) );
+        source->send( response );
+    }
+    else if ( opcode == WebSocketMessage::TEXT_FRAME )
+    {
+        auto response = make_shared< WebSocketMessage >( *message );
+        response->set_mask( 0 );
+        
         for ( auto socket : sockets )
         {
             auto destination = socket.second;
-            destination->send( message );
+            destination->send( response );
         }
         
         const auto key = source->get_key( );

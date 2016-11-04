@@ -8,7 +8,6 @@
 //Project Includes
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/web_socket.hpp"
-#include "corvusoft/restbed/web_socket_message.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
@@ -127,11 +126,6 @@ namespace restbed
         return m_pimpl->m_socket;
     }
     
-    shared_ptr< WebSocketManagerImpl > WebSocket::get_manager( void ) const
-    {
-        return m_pimpl->m_manager;
-    }
-    
     function< void ( const shared_ptr< WebSocket > ) > WebSocket::get_open_handler( void ) const
     {
         return m_pimpl->m_open_handler;
@@ -167,11 +161,6 @@ namespace restbed
         m_pimpl->m_socket = value;
     }
     
-    void WebSocket::set_manager( const shared_ptr< WebSocketManagerImpl >& value )
-    {
-        m_pimpl->m_manager = value;
-    }
-    
     void WebSocket::set_open_handler( const function< void ( const shared_ptr< WebSocket > ) >& value )
     {
         m_pimpl->m_open_handler = value;
@@ -184,9 +173,11 @@ namespace restbed
             return;
         }
         
-        //we need to delete the socket from the manager!
-        //wrap the close handler.
-        m_pimpl->m_close_handler = bind( value, shared_from_this( ) );
+        m_pimpl->m_close_handler = [ value, this ]( const shared_ptr< WebSocket >& socket  )
+        {
+            value( socket );
+            m_pimpl->m_manager->destroy( socket );
+        };
     }
     
     void WebSocket::set_error_handler( const function< void ( const shared_ptr< WebSocket >, const error_code ) >& value )

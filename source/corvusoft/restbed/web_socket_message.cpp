@@ -32,6 +32,11 @@ namespace restbed
         return;
     }
     
+    WebSocketMessage::WebSocketMessage( const WebSocketMessage& original ) : m_pimpl( new WebSocketMessageImpl )
+    {
+        *m_pimpl = *original.m_pimpl;
+    }
+    
     WebSocketMessage::WebSocketMessage( const WebSocketMessage::OpCode code, const Bytes& data ) : WebSocketMessage( code, data, 0 )
     {
         return;
@@ -47,6 +52,7 @@ namespace restbed
         m_pimpl->m_data = data;
         m_pimpl->m_mask = mask;
         m_pimpl->m_opcode = code;
+        m_pimpl->m_mask_flag = ( mask == 0 ) ? false : true;
         
         const auto length = data.size( );
         
@@ -129,6 +135,7 @@ namespace restbed
     void WebSocketMessage::set_mask( const uint32_t value )
     {
         m_pimpl->m_mask = value;
+        m_pimpl->m_mask_flag = ( value == 0 ) ? false : true;
     }
     
     void WebSocketMessage::set_length( const uint8_t value )

@@ -64,12 +64,12 @@ namespace restbed
                 return nullptr;
             }
             
-            auto message = make_shared< WebSocketMessage >( );
-            
             Byte byte = packet[ 0 ];
-            message->set_final_frame_flag( byte & 128 );
-            message->set_reserved_flags( byte & 64, byte & 32, byte & 16 );
-            message->set_opcode( static_cast< WebSocketMessage::OpCode >( byte & 15 ) );
+            
+            auto message = make_shared< WebSocketMessage >( );
+            message->set_final_frame_flag( byte & 0x80 );
+            message->set_reserved_flags( byte & 0x40, byte & 0x20, byte & 0x10 );
+            message->set_opcode( static_cast< WebSocketMessage::OpCode >( byte & 0x0F ) );
             
             const auto packet_length = packet.size( );
             
@@ -79,8 +79,8 @@ namespace restbed
             }
             
             byte = packet[ 1 ];
-            message->set_mask_flag( byte & 128 );
-            message->set_length( byte & 127 );
+            message->set_mask_flag( byte & 0x80 );
+            message->set_length( byte & 0x7F );
             
             if ( packet_length == 2 )
             {
@@ -92,6 +92,11 @@ namespace restbed
             
             if ( length == 126 )
             {
+                if ( ( packet_length - ( offset + 1 ) ) <= 0 )
+                {
+                    return nullptr;
+                }
+                
                 length  = packet[ offset++ ] << 8;
                 length |= packet[ offset++ ]     ;
                 
@@ -99,6 +104,11 @@ namespace restbed
             }
             else if ( length == 127 )
             {
+                if ( ( packet_length - ( offset + 3 ) ) <= 0 )
+                {
+                    return nullptr;
+                }
+                
                 length |= packet[ offset++ ] << 24;
                 length |= packet[ offset++ ] << 16;
                 length |= packet[ offset++ ] <<  8;
@@ -109,10 +119,15 @@ namespace restbed
             
             if ( message->get_mask_flag( ) == true )
             {
-                uint32_t mask  = packet[ offset++ ] << 24;
-                mask |= packet[ offset++ ] << 16;
-                mask |= packet[ offset++ ] <<  8;
-                mask |= packet[ offset++ ]      ;
+                if ( ( packet_length - ( offset + 3 ) ) <= 0 )
+                {
+                    return nullptr;
+                }
+                
+                uint32_t mask = packet[ offset++ ] << 24;
+                mask |= packet[ offset++ ]         << 16;
+                mask |= packet[ offset++ ]         <<  8;
+                mask |= packet[ offset++ ]              ;
                 
                 message->set_mask( mask );
             }
@@ -142,11 +157,11 @@ namespace restbed
         
         Bytes WebSocketManagerImpl::compose( const shared_ptr< WebSocketMessage >& message )
         {
-            Byte byte = 0;
+            Byte byte = 0x80;
             
-            if ( message->get_final_frame_flag( ) )
+            if ( message->get_final_frame_flag( ) == false )
             {
-                byte |= 0x80;
+                byte = 0x00;
             }
             
             auto reserved_flags = message->get_reserved_flags( );
@@ -166,10 +181,9 @@ namespace restbed
                 byte |= 0x10;
             }
             
-            byte |= ( message->get_opcode( ) & 15 );
+            byte |= ( message->get_opcode( ) & 0x0F );
             
-            Bytes frame = { };
-            frame.push_back( byte );
+            Bytes frame = { byte };
             
             auto length = message->get_length( );
             auto mask_flag = message->get_mask_flag( );
@@ -196,13 +210,21 @@ namespace restbed
             }
             else
             {
+                if ( mask_flag )
+                {
+                    length |= 0x80;
+                }
+                else
+                {
+                    length &= ~0x80;
+                }
+                
                 frame.push_back( length );
             }
             
             if ( mask_flag )
             {
                 auto masking_key = message->get_mask( );
-                frame.push_back( masking_key );
                 
                 uint8_t mask[ 4 ] = { };
                 mask[ 0 ] =   masking_key         & 0xFF;
@@ -250,8 +272,8 @@ namespace restbed
             auto socket = make_shared< WebSocket >( );
             socket->set_key( key );
             socket->set_logger( m_logger );
-            socket->set_manager( shared_from_this( ) );
             socket->set_socket( session->m_pimpl->m_request->m_pimpl->m_socket );
+            socket->m_pimpl->m_manager = shared_from_this( );
             
             m_sockets.insert( make_pair( key, socket ) );
             
