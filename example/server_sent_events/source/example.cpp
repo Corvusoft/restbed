@@ -25,7 +25,7 @@ using namespace std;
 using namespace restbed;
 using namespace std::chrono;
 
-vector< const shared_ptr< Session > > sessions;
+vector< shared_ptr< Session > > sessions;
 
 void register_event_source_handler( const shared_ptr< Session > session )
 {
