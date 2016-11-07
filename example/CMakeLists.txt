@@ -90,6 +90,10 @@ target_link_libraries( http_client ${CMAKE_PROJECT_NAME} )
 add_executable( signal_handling signal_handling/source/example.cpp )
 target_link_libraries( signal_handling ${CMAKE_PROJECT_NAME} )
 
+add_executable( server_sent_events server_sent_events/source/example.cpp )
+target_link_libraries( server_sent_events ${CMAKE_PROJECT_NAME} )
+
+
 if ( PAM_FOUND )
     add_executable( pam_authentication pam_authentication/source/example.cpp )
     target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )
@@ -132,4 +136,5 @@ install( DIRECTORY "${CMAKE_SOURCE_DIR}/example/https_client/resource/certificat
 install( FILES "${CMAKE_SOURCE_DIR}/example/compression/resource/data.zlib" DESTINATION ${RESOURCE_INSTALL_DIR} )
 install( FILES "${CMAKE_SOURCE_DIR}/example/serving_html/resource/index.html" DESTINATION ${RESOURCE_INSTALL_DIR} )
 install( FILES "${CMAKE_SOURCE_DIR}/example/web_socket/resource/web_socket.html" DESTINATION ${RESOURCE_INSTALL_DIR} )
+install( FILES "${CMAKE_SOURCE_DIR}/example/server_sent_events/resource/server_sent_events.html" DESTINATION ${RESOURCE_INSTALL_DIR} )
 install( FILES "${CMAKE_SOURCE_DIR}/example/transfer_encoding_request/resource/request.txt" DESTINATION ${RESOURCE_INSTALL_DIR} )
