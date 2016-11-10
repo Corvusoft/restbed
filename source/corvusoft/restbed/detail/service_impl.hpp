@@ -16,6 +16,9 @@
 #include <stdexcept>
 #include <functional>
 #include <system_error>
+#include <condition_variable>
+#include <atomic>
+#include <mutex>
 
 //Project Includes
 
@@ -118,12 +121,37 @@ namespace restbed
                 const std::shared_ptr< const Uri > get_https_uri( void ) const;
                 
                 const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > get_error_handler( const std::shared_ptr< Session >& session ) const;
-                
+
                 //Setters
                 
                 //Operators
                 
                 //Properties
+
+                typedef struct _lock {
+                    static std::mutex m_lock;
+
+                    static std::condition_variable m_writing_status;
+
+                    static std::condition_variable m_reading_status;
+
+                    static std::atomic<bool> m_writing;
+
+                    static std::atomic<int> m_reader_count;
+
+                    typedef struct _read {
+                        _read();
+                        ~_read();
+                    }read;
+
+                    typedef struct _write {
+                        std::unique_lock<std::mutex> lock;
+                        _write();
+                        ~_write();
+                    }write;
+
+                }lock;
+
                 std::chrono::steady_clock::time_point m_uptime;
                 
                 std::shared_ptr< Logger > m_logger;

@@ -71,10 +71,53 @@ using asio::ip::address;
 using asio::socket_base;
 using asio::system_error;
 
+using std::mutex;
+using std::condition_variable;
+using std::atomic;
+using std::unique_lock;
+using std::lock_guard;
+
 namespace restbed
 {
     namespace detail
     {
+
+        mutex ServiceImpl::_lock::m_lock;
+        condition_variable ServiceImpl::_lock::m_writing_status;
+        atomic<bool> ServiceImpl::_lock::m_writing(false);
+        atomic<int> ServiceImpl::_lock::m_reader_count(0);
+        condition_variable ServiceImpl::_lock::m_reading_status;
+
+        ServiceImpl::_lock::_read::_read() {
+            unique_lock<mutex> lock(ServiceImpl::_lock::m_lock);
+            m_writing_status.wait(lock, [=] {
+                return !ServiceImpl::_lock::m_writing;
+            });
+            ServiceImpl::_lock::m_reader_count++;
+        }
+
+        ServiceImpl::_lock::_read::~_read() {
+            ServiceImpl::_lock::m_reader_count--;
+            if (ServiceImpl::_lock::m_reader_count == 0) {
+                ServiceImpl::_lock::m_reading_status.notify_all();
+            }
+        }
+
+        ServiceImpl::_lock::_write::_write() : lock(ServiceImpl::_lock::m_lock)
+        {
+            ServiceImpl::_lock::m_writing = true;
+            ServiceImpl::_lock::m_reading_status.wait(lock,
+                [=] {
+                    return ServiceImpl::_lock::m_reader_count == 0;
+                });
+        }
+
+        ServiceImpl::_lock::_write::~_write()
+        {
+            ServiceImpl::_lock::m_writing = false;
+            ServiceImpl::_lock::m_writing_status.notify_all();
+        }
+
         ServiceImpl::ServiceImpl( void ) : m_uptime( steady_clock::time_point::min( ) ),
             m_logger( nullptr ),
             m_supported_methods( ),
@@ -479,6 +522,9 @@ namespace restbed
                 
                 const auto callback = [ this ]( const shared_ptr< Session > session )
                 {
+
+                    ServiceImpl::lock::read read_lock;
+
                     rule_engine( session, session->m_pimpl->m_resource->m_pimpl->m_rules, [ this ]( const shared_ptr< Session > session )
                     {
                         if ( session->is_closed( ) )
