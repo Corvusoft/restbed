@@ -78,7 +78,6 @@ SCENARIO( "runtime service modifications", "[service]" )
                     
                     THEN( "I should see an runtime error of 'Runtime modifications of the service are prohibited.'" )
                     {
-                        REQUIRE_THROWS_AS( service.publish( resource ), runtime_error );
                         REQUIRE_THROWS_AS( service.suppress( resource ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_logger( nullptr ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_not_found_handler( handler ), runtime_error );
@@ -89,6 +88,11 @@ SCENARIO( "runtime service modifications", "[service]" )
                         REQUIRE_THROWS_AS( service.set_method_not_implemented_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_failed_filter_validation_handler( handler ), runtime_error );
                         REQUIRE_THROWS_AS( service.set_authentication_handler( authentication_handler ), runtime_error );
+                    }
+
+                    AND_THEN( "I should not see any runtime error of 'Runtime modifications of the service are prohibited.'" )
+                    {
+                        REQUIRE_NOTHROW( service.publish( resource ) );
                     }
                 }
                 
