@@ -93,6 +93,8 @@ target_link_libraries( signal_handling ${CMAKE_PROJECT_NAME} )
 add_executable( server_sent_events server_sent_events/source/example.cpp )
 target_link_libraries( server_sent_events ${CMAKE_PROJECT_NAME} )
 
+add_executable( http_pipelining http_pipelining/source/example.cpp )
+target_link_libraries( http_pipelining ${CMAKE_PROJECT_NAME} )
 
 if ( PAM_FOUND )
     add_executable( pam_authentication pam_authentication/source/example.cpp )
