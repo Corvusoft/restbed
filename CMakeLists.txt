@@ -2,11 +2,11 @@
 cmake_minimum_required( VERSION 2.8.10 )
 
 project( "restbed" )
-set (restbed_VERSION_MAJOR 1)
-set (restbed_VERSION_MINOR 0.0)
-set (restbed_VERSION ${restbed_VERSION_MAJOR}.${restbed_VERSION_MINOR})
-set (PACKAGE_VERSION ${restbed_VERSION})
-set (VERSION "${restbed_VERSION}")
+set( restbed_VERSION_MAJOR 4 )
+set( restbed_VERSION_MINOR 5.0 )
+set( restbed_VERSION ${restbed_VERSION_MAJOR}.${restbed_VERSION_MINOR} )
+set( PACKAGE_VERSION ${restbed_VERSION} )
+set( VERSION "${restbed_VERSION}" )
 
 #
 # Build Options
@@ -49,7 +49,7 @@ include_directories( ${INCLUDE_DIR} )
 add_library( ${PROJECT_NAME} ${MANIFEST} )
 
 if ( BUILD_SHARED )
-    set_target_properties (${PROJECT_NAME} PROPERTIES SOVERSION ${restbed_VERSION_MAJOR} VERSION ${restbed_VERSION})
+    set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${restbed_VERSION_MAJOR} VERSION ${restbed_VERSION} )
 endif ( )
 
 if ( BUILD_SSL )
