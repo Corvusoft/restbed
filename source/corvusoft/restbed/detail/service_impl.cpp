@@ -664,6 +664,19 @@ namespace restbed
             }
         }
         
+        void ServiceImpl::discard_request( istream& stream )
+        {
+            string line = String::empty;
+            
+            while ( getline( stream, line ) )
+            {
+                if ( line == "\r" )
+                {
+                    break;
+                }
+            }
+        }
+        
         const map< string, string > ServiceImpl::parse_request_line( istream& stream )
         {
             smatch matches;
@@ -709,71 +722,80 @@ namespace restbed
         }
         
         void ServiceImpl::parse_request( const error_code& error, size_t, const shared_ptr< Session > session ) const
-        
-        try
         {
+            istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
+            
             if ( error )
             {
-                throw runtime_error( error.message( ) );
+                discard_request( stream );
+                const auto error_handler = get_error_handler( session );
+                return error_handler( 400, runtime_error( error.message( ) ), session );
             }
             
-            istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
-            const auto items = parse_request_line( stream );
-            const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
-            
-            session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
-            session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
-            session->m_pimpl->m_request->m_pimpl->m_version = stod( items.at( "version" ) );
-            session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
-            session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
-            
-            authenticate( session );
-        }
-        catch ( const int status_code )
-        {
-            const auto error_handler = get_error_handler( session );
-            error_handler( status_code, runtime_error( m_settings->get_status_message( status_code ) ), session );
-        }
-        catch ( const regex_error& re )
-        {
-            const auto error_handler = get_error_handler( session );
-            error_handler( 500, re, session );
-        }
-        catch ( const runtime_error& re )
-        {
-            const auto error_handler = get_error_handler( session );
-            error_handler( 400, re, session );
-        }
-        catch ( const exception& ex )
-        {
-            const auto error_handler = get_error_handler( session );
-            error_handler( 500, ex, session );
-        }
-        catch ( ... )
-        {
-            auto cex = current_exception( );
-            
-            if ( cex not_eq nullptr )
+            try
             {
-                try
+                const auto items = parse_request_line( stream );
+                const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
+                
+                session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
+                session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
+                session->m_pimpl->m_request->m_pimpl->m_version = stod( items.at( "version" ) );
+                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
+                session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
+                
+                authenticate( session );
+            }
+            catch ( const int status_code )
+            {
+                discard_request( stream );
+                const auto error_handler = get_error_handler( session );
+                error_handler( status_code, runtime_error( m_settings->get_status_message( status_code ) ), session );
+            }
+            catch ( const regex_error& re )
+            {
+                discard_request( stream );
+                const auto error_handler = get_error_handler( session );
+                error_handler( 500, re, session );
+            }
+            catch ( const runtime_error& re )
+            {
+                discard_request( stream );
+                const auto error_handler = get_error_handler( session );
+                error_handler( 400, re, session );
+            }
+            catch ( const exception& ex )
+            {
+                discard_request( stream );
+                const auto error_handler = get_error_handler( session );
+                error_handler( 500, ex, session );
+            }
+            catch ( ... )
+            {
+                discard_request( stream );
+                auto cex = current_exception( );
+                
+                if ( cex not_eq nullptr )
                 {
-                    rethrow_exception( cex );
+                    try
+                    {
+                        rethrow_exception( cex );
+                    }
+                    catch ( const exception& ex )
+                    {
+                        const auto error_handler = get_error_handler( session );
+                        error_handler( 500, ex, session );
+                    }
+                    catch ( ... )
+                    {
+                        const auto error_handler = get_error_handler( session );
+                        error_handler( 500, runtime_error( "Internal Server Error" ), session );
+                    }
                 }
-                catch ( const exception& ex )
-                {
-                    const auto error_handler = get_error_handler( session );
-                    error_handler( 500, ex, session );
-                }
-                catch ( ... )
+                else
                 {
                     const auto error_handler = get_error_handler( session );
                     error_handler( 500, runtime_error( "Internal Server Error" ), session );
                 }
-            }
-            else
-            {
-                const auto error_handler = get_error_handler( session );
-                error_handler( 500, runtime_error( "Internal Server Error" ), session );
             }
         }
         

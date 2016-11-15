@@ -106,6 +106,8 @@ namespace restbed
                 
                 static void default_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session > session );
                 
+                static void discard_request( std::istream& stream );
+                
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
                 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
