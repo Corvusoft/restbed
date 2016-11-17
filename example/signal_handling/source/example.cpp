@@ -36,7 +36,11 @@ void sigterm_handler( const int signal_number )
 
 void ready_handler( Service& )
 {
+#ifdef _WIN32
+    fprintf( stderr, "Service PID is '%i'.\n", _getpid( ) );
+#else
     fprintf( stderr, "Service PID is '%i'.\n", getpid( ) );
+#endif
 }
 
 int main( const int, const char** )
