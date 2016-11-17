@@ -67,8 +67,10 @@ namespace restbed
             Byte byte = packet[ 0 ];
             
             auto message = make_shared< WebSocketMessage >( );
-            message->set_final_frame_flag( byte & 0x80 );
-            message->set_reserved_flags( byte & 0x40, byte & 0x20, byte & 0x10 );
+            message->set_final_frame_flag( ( byte & 0x80 ) ? true : false );
+            message->set_reserved_flags( ( byte & 0x40 ) ? true : false,
+                                         ( byte & 0x20 ) ? true : false,
+                                         ( byte & 0x10 ) ? true : false );
             message->set_opcode( static_cast< WebSocketMessage::OpCode >( byte & 0x0F ) );
             
             const auto packet_length = packet.size( );
@@ -79,7 +81,7 @@ namespace restbed
             }
             
             byte = packet[ 1 ];
-            message->set_mask_flag( byte & 0x80 );
+            message->set_mask_flag( ( byte & 0x80 ) ? true : false );
             message->set_length( byte & 0x7F );
             
             if ( packet_length == 2 )

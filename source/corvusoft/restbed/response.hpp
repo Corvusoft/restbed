@@ -8,6 +8,7 @@
 //System Includes
 #include <map>
 #include <string>
+#include <limits>
 #include <memory>
 #include <cstdint>
 #include <functional>
