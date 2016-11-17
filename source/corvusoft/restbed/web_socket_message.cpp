@@ -58,7 +58,7 @@ namespace restbed
         
         if ( length <= 125 )
         {
-            m_pimpl->m_length = length;
+            m_pimpl->m_length = static_cast< uint8_t >( length );
         }
         else
         {
