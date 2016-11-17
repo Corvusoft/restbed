@@ -82,37 +82,37 @@ namespace restbed
             
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
-            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_header( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_header( name ), default_value );
             }
             
-            std::string get_header( const std::string& name, const char* default_value ) const;
+            std::string get_header( const std::string& name, const std::string& default_value ) const;
             
             std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
-            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_query_parameter( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_query_parameter( name ), default_value );
             }
             
-            std::string get_query_parameter( const std::string& name, const char* default_value ) const;
+            std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
             
             std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
             
-            template< typename Type, typename = typename std::enable_if< std::is_arithmetic< Type >::value or std::is_same< std::string, Type >::value, Type >::type >
+            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_path_parameter( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_path_parameter( name ), default_value );
             }
             
-            std::string get_path_parameter( const std::string& name, const char* default_value ) const;
+            std::string get_path_parameter( const std::string& name, const std::string& default_value ) const;
             
             std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
