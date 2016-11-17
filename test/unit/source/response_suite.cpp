@@ -103,12 +103,6 @@ TEST_CASE( "validate getter default value", "[response]" )
         REQUIRE( value == -6 );
     }
     
-    SECTION( "float" )
-    {
-        float value = response.get_header( "Var", float( 3.6 ) );
-        REQUIRE( value == 3.6f );
-    }
-    
     SECTION( "double" )
     {
         double value = response.get_header( "Var", 34443 );
@@ -117,7 +111,7 @@ TEST_CASE( "validate getter default value", "[response]" )
     
     SECTION( "string" )
     {
-        string header = response.get_header( "Var", string( "open" ) );
+        string header = response.get_header( "Var", "open" );
         REQUIRE( header == "open" );
     }
 }

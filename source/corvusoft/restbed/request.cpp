@@ -127,9 +127,15 @@ namespace restbed
         body = ( transform == nullptr ) ? String::to_string( m_pimpl->m_body ) : transform( m_pimpl->m_body );
     }
     
-    string Request::get_header( const string& name, const char* default_value ) const
+    string Request::get_header( const string& name, const string& default_value ) const
     {
-        return get_header< string >( name, default_value );
+        if ( name.empty( ) )
+        {
+            return default_value;
+        }
+        
+        const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
+        return ( headers.empty( ) ) ? default_value : headers.begin( )->second;
     }
     
     string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
@@ -150,9 +156,15 @@ namespace restbed
         return Common::get_parameters( name, m_pimpl->m_headers );
     }
     
-    string Request::get_query_parameter( const string& name, const char* default_value ) const
+    string Request::get_query_parameter( const string& name, const string& default_value ) const
     {
-        return get_query_parameter< string >( name, default_value );
+        if ( name.empty( ) )
+        {
+            return default_value;
+        }
+        
+        const auto parameters = Common::get_parameters( name, m_pimpl->m_query_parameters );
+        return ( parameters.empty( ) ) ? default_value : parameters.begin( )->second;
     }
     
     string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform ) const
@@ -173,9 +185,15 @@ namespace restbed
         return Common::get_parameters( name, m_pimpl->m_query_parameters );
     }
     
-    string Request::get_path_parameter( const string& name, const char* default_value ) const
+    string Request::get_path_parameter( const string& name, const string& default_value ) const
     {
-        return get_path_parameter< string >( name, default_value );
+        if ( name.empty( ) )
+        {
+            return default_value;
+        }
+        
+        const auto parameters = Common::get_parameters( name, m_pimpl->m_path_parameters );
+        return ( parameters.empty( ) ) ? default_value : parameters.begin( )->second;
     }
     
     string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform ) const

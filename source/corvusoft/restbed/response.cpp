@@ -79,9 +79,15 @@ namespace restbed
         body = ( transform == nullptr ) ? string( m_pimpl->m_body.begin( ), m_pimpl->m_body.end( ) ) : transform( m_pimpl->m_body );
     }
     
-    string Response::get_header( const string& name, const char* default_value ) const
+    string Response::get_header( const string& name, const string& default_value ) const
     {
-        return get_header< string >( name, default_value );
+        if ( name.empty( ) )
+        {
+            return default_value;
+        }
+        
+        const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
+        return ( headers.empty( ) ) ? default_value : headers.begin( )->second;
     }
     
     string Response::get_header( const string& name, const function< string ( const string& ) >& transform ) const
