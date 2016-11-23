@@ -31,18 +31,9 @@ Terminology
 
 | Term         | Definition                                                                                                                  |
 |--------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Consumer     | An actor that devours messages.                                                                                             |
-| Producer     | An actor that creates messages.                                                                                             |
-| Subscription | A contract with the exchange describing which messages should be delivered to a consumer, including the method of delivery. |
-| Queue        | A sequence of messages awaiting their turn to be delivered.                                                                 |
-| Message      | A recorded communication sent to or left for a recipient who cannot be contacted directly.                                  |
 | Resource     | A network addressable entity i.e Queue.                                                                                     |
-| Exchange     | A service responsible for routing messages.                                                                                 |
-| Dispatch     | A component tasked with the transmission of messages to consumers.                                                          |
-| Repository   | A storage mechanism for the long-term persistence of Resources.                                                             |
+| Servicee     | A server responsible for request routing and processing.                                                                    |
 | Logger       | A component making a systematic recording of events, observations, or measurements.                                         |
-| Encoder      | A component for the conversion of low-level data representations i.e GZIP.                                                  |
-| Formatter    | A component for the handling of document structures i.e JSON.                                                               |
 | Charset      | A CHARacter SET is used to represent a repertoire of symbols i.e UTF-8.                                                     |
 | URI          | Uniform Resource Identifier.                                                                                                |
 | UUID         | Universally Unique IDentifier.                                                                                              |
@@ -771,7 +762,7 @@ Entity Interactions
 
 Dependency Tree
 ---------------
-
+```
                 +----------------------------+
                 |          Restbed           |
                 +----------------------------+
@@ -785,6 +776,7 @@ Dependency Tree
  +--------------------+  +---------+  +----------------------+
  | Asynchronous I/O . |  |  UUID.  |  | Secure Socket Layer. |
  +--------------------+  +---------+  +----------------------+
+```
 
 Event Loop
 ----------
