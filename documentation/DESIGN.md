@@ -32,12 +32,13 @@ Terminology
 | Term         | Definition                                                                                                                  |
 |--------------|-----------------------------------------------------------------------------------------------------------------------------|
 | Resource     | A network addressable entity i.e Queue.                                                                                     |
-| Servicee     | A server responsible for request routing and processing.                                                                    |
+| Service      | A server responsible for request routing and processing.                                                                    |
+| Client       | A remote endpoint responsible for generating requests.                                                                      |
 | Logger       | A component making a systematic recording of events, observations, or measurements.                                         |
 | Charset      | A CHARacter SET is used to represent a repertoire of symbols i.e UTF-8.                                                     |
 | URI          | Uniform Resource Identifier.                                                                                                |
 | UUID         | Universally Unique IDentifier.                                                                                              |
-| Key          | String identifier uniquely addressing a resource.                                                                           |
+| Path         | String identifier uniquely addressing a resource.                                                                           |
 
 System Entities
 ---------------
