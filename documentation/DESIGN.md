@@ -787,7 +787,7 @@ The asynchronous nature of the framework is achieved by employing an [event-reac
 Thread allocation
 -----------------
 
-By default the framework will only allocate a single thread to process all incoming requests and scheduled work loads. This can be increased by altering the `Settings::set_worker_limit` attribute. It recommended that you should not exceed the available hardware limit, see below for a suggested implementation.
+By default the framework will only allocate a single thread to process all incoming requests and scheduled work loads. This can be increased by altering the `Settings::set_worker_limit` attribute. It is recommended that you should not exceed the available hardware limit, see below for a suggested implementation.
 
 ``` C++
 #include <thread>
@@ -816,7 +816,7 @@ int main( const int, const char** )
 Future Direction
 ----------------
 
- It is the aim of the core development team to remove ASIO as a dependency due to it tight coupling of IO and EventLoop principles. This setup leads to cross contamination of concerns and forces design decisions on dependees. The team will present an EventLoop offering superior handling and management of event-reaction task processing in the first quarter of 2017, and integration within Restbed before close of the same year.
+ It is the aim of the core development team to remove ASIO as a dependency due to the tight coupling of IO and Event Loop principles. This setup leads to cross contamination of concerns and forces design decisions on dependees. The team will present an event-loop offering superior handling and management of event-reaction task processing in the first quarter of 2017, and integration within Restbed before close of the same year.
 
  The ContextValue which provides boost::any functionality for Session state shall be replaced by std::any within the C++17 standard in future releases. If std::any is not supported a replacement drop-in shall be provided during compile time.
 
@@ -826,7 +826,7 @@ Future Direction
 
  Network Layer (TCP, UDP, RS232, etc...) shall be exposed for customisation by third-party developers.
 
- Client functionality will be extracted from the Restbed framework, this decision has been made due to conflicting concepts for similar objects on the client/server side i.e A HTTP Session has differing properties depending on the which side of the communication channel you find yourself. Additionally this will aid in simplifying required APIs on each end, leading to a more self documenting codebase. To follow the latest progress please review the [Restless project](https://github.com/corvusoft/restless).
+ Client functionality will be extracted from the Restbed framework, this decision has been made due to conflicting concepts on the client/server side i.e A HTTP Session has differing properties depending on the which side of the communication channel you find yourself. Additionally this will aid in simplifying required APIs on each end, leading to a more self documenting codebase. To follow the latest progress please review the [Restless project](https://github.com/corvusoft/restless).
 
 Further Reading
 ---------------
