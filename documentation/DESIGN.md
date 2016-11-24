@@ -826,6 +826,8 @@ Future Direction
 
  Network Layer (TCP, UDP, RS232, etc...) shall be exposed for customisation by third-party developers.
 
+ The secure socket logic layer will be exposed to allow alternative implementations OpenSSL, GnuTLS, PolarSSL, MatrixSSL, etc...
+
  Client functionality will be extracted from the Restbed framework, this decision has been made due to conflicting concepts on the client/server side i.e A HTTP Session has differing properties depending on the which side of the communication channel you find yourself. Additionally this will aid in simplifying required APIs on each end, leading to a more self documenting codebase. To follow the latest progress please review the [Restless project](https://github.com/corvusoft/restless).
 
 Further Reading
