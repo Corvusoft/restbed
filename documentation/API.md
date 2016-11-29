@@ -1613,13 +1613,13 @@ void add_rule( const std::shared_ptr< Rule >& rule );
 void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
 ```
 
-Add incoming request processing rule; see also [rule](#rule).
+Add incoming request processing rule; see also [Rule](#rule).
 
 ##### Parameters
 
 | name       | type                                                  | default value | direction |
 |:----------:|-------------------------------------------------------|:-------------:|:---------:|
-| rule       | [rule](#rule)                                         |      n/a      |   input   |
+| rule       | [Rule](#rule)                                         |      n/a      |   input   |
 | priority   | [int](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
 
 ##### Return Value
@@ -1900,6 +1900,532 @@ Alter rule's processing priority.
 | name       | type                                                           | default value | direction |
 |:----------:|----------------------------------------------------------------|:-------------:|:---------:|
 | value      | [int](http://en.cppreference.com/w/cpp/language/types)         |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+### Service
+
+The service is responsible for managing the publicly available RESTful resources, HTTP compliance, scheduling of the socket data and insuring incoming requests are processed in a timely fashion.
+
+#### Methods
+
+-	[constructor](#serviceconstructor)
+-	[destructor](#servicedestructor)
+-	[is_up](#serviceis_up)
+-	[is_down](#serviceis_down)
+-	[stop](#servicestop)
+-	[start](#servicestart)
+-	[restart](#servicerestart)
+-	[add_rule](#serviceadd_rule)
+-	[publish](#servicepublish)
+-	[suppress](#servicesuppress)
+-	[schedule](#serviceschedule)
+-	[get_uptime](#serviceget_uptime)
+-	[get_http_uri](#serviceget_http_uri)
+-	[get_https_uri](#serviceget_https_uri)
+-	[set_logger](#serviceset_logger)
+-	[set_session_manager](#serviceset_session_manager)
+-	[set_ready_handler](#serviceset_ready_handler)
+-	[set_signal_handler](#serviceset_signal_handler)
+-	[set_not_found_handler](#serviceset_not_found_handler)
+-	[set_method_not_allowed_handler](#serviceset_method_not_allowed_handler)
+-	[set_method_not_implemented_handler](#serviceset_method_not_implemented_handler)
+-	[set_failed_filter_validation_handler](#serviceset_failed_filter_validation_handler)
+-	[set_error_handler](#serviceset_error_handler)
+-	[set_authentication_handler](#serviceset_authentication_handler)
+
+#### Service::constructor
+
+```C++
+Resource( void );
+```
+
+Initialises a new class instance; see also [destructor](#servicedestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::destructor
+
+```C++
+virtual ~Service( void );
+```
+
+Clean-up class instance; see also [constructor](#serviceconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### Service::is_up
+
+```C++
+bool is_up( void ) const;
+```
+
+Return boolean value indicating if the service is currently online and serving incoming requests.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if the service is online, else false.
+
+##### Exceptions
+
+n/a
+
+#### Service::is_up
+
+```C++
+bool is_down( void ) const;
+```
+
+Return boolean value indicating if the service is currently offline and serving incoming requests.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if the service is offline, else false.
+
+##### Exceptions
+
+n/a
+
+#### Service::stop
+
+```C++
+void stop( void ) const;
+```
+
+Shut the service down, closing open sessions and terminating threads that may be running.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if the service is offline, else false.
+
+##### Exceptions
+
+n/a
+
+#### Service::start
+
+```C++
+void start( const std::shared_ptr< const Settings >& settings = nullptr );
+```
+
+Start the service with the supplied settings, otherwise default values will be set.
+
+##### Parameters
+
+| name       | type                                                                  | default value | direction |
+|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
+| settings   | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::restart
+
+```C++
+void restart( const std::shared_ptr< const Settings >& settings = nullptr );
+```
+
+Restart the service with the supplied settings, otherwise default values will be set.
+
+##### Parameters
+
+| name       | type                                                                  | default value | direction |
+|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
+| settings   | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::add_rule
+
+```C++
+void add_rule( const std::shared_ptr< Rule >& rule );
+
+void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
+```
+
+Add incoming request processing rule; see also [Rule](#rule).
+
+##### Parameters
+
+| name       | type                                                  | default value | direction |
+|:----------:|-------------------------------------------------------|:-------------:|:---------:|
+| rule       | [Rule](#rule)                                         |      n/a      |   input   |
+| priority   | [int](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::publish
+
+```C++
+void publish( const std::shared_ptr< const Resource >& resource );
+```
+
+Publish a RESTful resource for public consumption; see also [Resource](#resource).
+
+##### Parameters
+
+| name       | type                                                                  | default value | direction |
+|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
+| resource   | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::suppress
+
+```C++
+void suppress( const std::shared_ptr< const Resource >& resource );
+```
+
+Suppress an already published RESTful resource; see also [Resource](#resource).
+
+##### Parameters
+
+| name       | type                                                                  | default value | direction |
+|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
+| resource   | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::schedule
+
+```C++
+void schedule( const std::function< void ( void ) >& task, const std::chrono::milliseconds& interval = std::chrono::milliseconds::zero( ) );
+```
+
+Place a task on the services event loop for future processing. If an interval is supplied the task will be continual queued with the specified delay.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| task       | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| interval   | [std::chrono::milliseconds](http://en.cppreference.com/w/cpp/chrono/duration) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::get_uptime
+
+```C++
+const std::chrono::seconds get_uptime( void ) const;
+```
+
+Return the number of seconds that have passed since the service was brought online.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Number of seconds since calling [start](#servicestart).
+
+##### Exceptions
+
+n/a
+
+#### Service::get_http_uri
+
+```C++
+const std::shared_ptr< const Uri > get_http_uri( void ) const;
+```
+
+Return a URI representing the HTTP endpoint; see also [URI](#uri).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+URI representing HTTP endpoint.
+
+##### Exceptions
+
+n/a
+
+#### Service::get_https_uri
+
+```C++
+const std::shared_ptr< const Uri > get_https_uri( void ) const;
+```
+
+Return a URI representing the HTTPS endpoint; see also [URI](#uri).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+URI representing HTTPS endpoint.
+
+##### Exceptions
+
+n/a
+
+#### Service::set_logger
+
+```C++
+void set_logger( const std::shared_ptr< Logger >& value );
+```
+
+Set the logger instance to be used; see also [Logger](#logger).
+
+##### Parameters
+
+| name       | type                                                                  | default value | direction |
+|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_session_manager
+
+```C++
+void set_session_manager( const std::shared_ptr< SessionManager >& value );
+```
+
+Set the manager to use for the creation, loading, and purging of HTTP sessions; see also [Session Manager](#sessionmanager).
+
+##### Parameters
+
+| name       | type                                                                  | default value | direction |
+|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_signal_handler
+
+```C++
+void set_signal_handler( const int signal, const std::function< void ( const int ) >& value );
+```
+
+Set a handler for the specified system signal number.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| signal     | [int](http://en.cppreference.com/w/cpp/types/integer)                         |      n/a      |   input   |
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_not_found_handler
+
+```C++
+void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
+```
+
+If an incoming HTTP request cannot be matched a known resource its session will be handed over to the resource not found handler.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_method_not_allowed_handler
+
+```C++
+void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
+```
+
+If an incoming HTTP request cannot be matched a known resource method handler its session will be routed over to the method not found handler.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_method_not_implemented_handler
+
+```C++
+void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
+```
+
+If none of the service resources have a handler for an incoming HTTP request method its session shall be routed to the method not implemented handler.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_failed_filter_validation_handler
+
+```C++
+void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
+```
+
+If a resource has filters applied to one or more of it's endpoints but has no specific failed filter validation handler, the global service handler will be invoked if set.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_error_handler
+
+```C++
+void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) >& value );
+```
+
+If an error occurs during processing and no resource specific error handler can be obtained, the global service error handler will be invoked if set.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Service::set_error_handler
+
+```C++
+void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) >& value );
+```
+
+Set a service wide authentication handler before invoking resource specific authentication handlers.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
