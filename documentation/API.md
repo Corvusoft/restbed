@@ -2000,7 +2000,7 @@ Boolean true if the service is online, else false.
 
 n/a
 
-#### Service::is_up
+#### Service::is_down
 
 ```C++
 bool is_down( void ) const;
@@ -3075,7 +3075,7 @@ n/a
 virtual ~SessionManager( void );
 ```
 
-Clean-up class instance; see also [constructor](#sessionconstructor).
+Clean-up class instance; see also [constructor](#sessionmanagerconstructor).
 
 ##### Parameters
 
@@ -3199,6 +3199,458 @@ n/a
 ##### Exceptions
 
 n/a
+
+### Settings
+### SSLSettings
+
+### StatusCode
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) of HTTP response status codes as outlined in [RFC 7231 sub-section 6.1](https://tools.ietf.org/html/rfc7231#section-6.1).
+
+### Uri
+
+Represents a Uniform Resource Identifier as specified in RFC 3986.
+
+#### Methods
+
+-	[constructor](#sessionmanagerconstructor)
+-	[destructor](#sessionmanagerdestructor)
+-	[is_relative](#sessionmanagerstop)
+-	[is_absolute](#sessionmanagerstart)
+-	[to_string](#sessionmanagercreate)
+-	[is_valid](#sessionmanagerload)
+-	[parse](#sessionmanagersave)
+-	[decode](#sessionmanagersave)
+-	[decode_parameter](#sessionmanagersave)
+-	[encode](#sessionmanagersave)
+-	[encode_parameter](#sessionmanagersave)
+-	[get_port](#sessionmanagersave)
+-	[get_path](#sessionmanagersave)
+-	[get_query](#sessionmanagersave)
+-	[get_scheme](#sessionmanagersave)
+-	[get_fragment](#sessionmanagersave)
+-	[get_username](#sessionmanagersave)
+-	[get_password](#sessionmanagersave)
+-	[get_authority](#sessionmanagersave)
+-	[get_query_parameters](#sessionmanagersave)
+
+#### Uri::constructor
+
+```C++
+explicit Uri( const std::string& value, bool relative = false );
+
+Uri( const Uri& original );
+```
+
+Initialises a new class instance; see also [destructor](#uridestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Uri::destructor
+
+```C++
+virtual ~Uri( void );
+```
+
+Clean-up class instance; see also [constructor](#uriconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+#### Uri::is_relative
+
+```C++
+bool is_relative( void ) const;
+```
+
+Determines if the Uri is a relative path.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if relative, else false.
+
+##### Exceptions
+
+n/a
+
+#### Uri::is_absolute
+
+```C++
+bool is_absolute( void ) const;
+```
+
+Determines if the Uri is an absolute path.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if relative, else false.
+
+##### Exceptions
+
+n/a
+
+#### Uri::to_string
+
+```C++
+std::string to_string( void ) const;
+```
+
+Convert the Uri instance to a string representation.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the Uri's contents.
+
+##### Exceptions
+
+n/a
+
+#### Uri::is_valid
+
+```C++
+static bool is_valid( const std::string& value );
+```
+
+Determines if the supplied string is a valid Uri.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if valid, else false.
+
+##### Exceptions
+
+n/a
+
+#### Uri::parse
+
+```C++
+static Uri parse( const std::string& value );
+```
+
+Parse string to Uri instance.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| session    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+Uri instance.
+
+##### Exceptions
+
+n/a
+
+#### Uri::decode
+
+```C++
+static std::string decode( const Bytes& value );
+
+static std::string decode( const std::string& value );
+```
+
+Percent decoding functionality.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+Decoded [std::string](http://en.cppreference.com/w/cpp/string/basic_string) value.
+
+##### Exceptions
+
+n/a
+
+#### Uri::decode_parameter
+
+```C++
+static std::string decode_parameter( const std::string& value );
+```
+
+Parameter percent decoding functionality.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+Decoded [std::string](http://en.cppreference.com/w/cpp/string/basic_string) value.
+
+##### Exceptions
+
+n/a
+
+#### Uri::encode
+
+```C++
+static std::string encode( const Bytes& value );
+
+static std::string encode( const std::string& value );
+```
+
+Percent encoding functionality.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+Encoded [std::string](http://en.cppreference.com/w/cpp/string/basic_string) value.
+
+##### Exceptions
+
+n/a
+
+#### Uri::encode_parameter
+
+```C++
+static std::string encode_parameter( const std::string& value );
+```
+
+Parameter percent encoding functionality.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+Encoded [std::string](http://en.cppreference.com/w/cpp/string/basic_string) value.
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_port
+
+```C++
+uint16_t get_port( void ) const;
+```
+
+Retrieves the network port number.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[uint16_t](http://en.cppreference.com/w/cpp/types/integer) representing the network port number.
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_path
+
+```C++
+std::string get_path( void ) const;
+```
+
+Retrieves the path segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Path segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_query
+
+```C++
+std::string get_query( void ) const;
+```
+
+Retrieves the query segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Query segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_scheme
+
+```C++
+std::string get_scheme( void ) const;
+```
+
+Retrieves the scheme segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Scheme segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_fragment
+
+```C++
+std::string get_fragment( void ) const;
+```
+
+Retrieves the fragment segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Scheme segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_username
+
+```C++
+std::string get_username( void ) const;
+```
+
+Retrieves the username segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Username segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_password
+
+```C++
+std::string get_password( void ) const;
+```
+
+Retrieves the password segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Password segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_authority
+
+```C++
+std::string get_authority( void ) const;
+```
+
+Retrieves the authority segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Authority segment as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Uri::get_query_parameters
+
+```C++
+std::multimap< std::string, std::string > get_query_parameters( void ) const;
+```
+
+Retrieves parsed query parameters.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) of decoded query parameters.
+
+##### Exceptions
+
+n/a
+
+
+### WebSocket
+### WebSocketMessage
 
 ### Further Reading
 
