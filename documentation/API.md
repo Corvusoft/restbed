@@ -2413,7 +2413,7 @@ n/a
 
 n/a
 
-#### Service::set_error_handler
+#### Service::set_authentication_handler
 
 ```C++
 void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) >& value );
@@ -2426,6 +2426,606 @@ Set a service wide authentication handler before invoking resource specific auth
 | name       | type                                                                          | default value | direction |
 |:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
 | value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+### Session
+
+Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the service event-loop for asynchronous data acquisition and/or sleep states.
+
+#### Methods
+
+-	[constructor](#sessionconstructor)
+-	[destructor](#sessiondestructor)
+-	[has](#sessionhas)
+-	[erase](#sessionerase)
+-	[keys](#sessionkeys)
+-	[is_open](#sessionis_open)
+-	[is_closed](#sessionis_closed)
+-	[close](#sessionclose)
+-	[yield](#sessionyield)
+-	[fetch](#sessionfetch)
+-	[upgrade](#sessionupgrade)
+-	[sleep_for](#sessionsleep_for)
+-	[get_id](#sessionget_id)
+-	[get_origin](#sessionget_origin)
+-	[get_destination](#sessionget_destination)
+-	[get_request](#sessionget_request)
+-	[get_resource](#sessionget_resource)
+-	[get_headers](#sessionget_headers)
+-	[get](#sessionget)
+-	[set_id](#sessionset_id)
+-	[set](#sessionset)
+-	[add_header](#sessionadd_header)
+-	[set_header](#sessionset_header)
+-	[set_headers](#sessionset_headers)
+
+#### Session::constructor
+
+```C++
+Session( const std::string& id );
+```
+
+Initialises a new class instance; see also [destructor](#sessiondestructor).
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::destructor
+
+```C++
+virtual ~Session( void );
+```
+
+Clean-up class instance; see also [constructor](#serviceconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### Session::has
+
+```C++
+bool has( const std::string& name ) const;
+```
+
+Test if a session has session-data under the supplied name.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+Boolean true if the data is available.
+
+##### Exceptions
+
+n/a
+
+#### Session::erase
+
+```C++
+void erase( const std::string& name = "" );
+```
+
+If session-data is available under the supplied name it is removed. If name is empty all data is erased.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::keys
+
+```C++
+const std::set< std::string > keys( void ) const;
+```
+
+Return a collection of session-data keys.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Collection of valid session-data keys.
+
+##### Exceptions
+
+n/a
+
+#### Session::is_open
+
+```C++
+bool is_open( void ) const;
+```
+
+Return the status of the underlying Session socket.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if the session is active.
+
+##### Exceptions
+
+n/a
+
+#### Session::is_closed
+
+```C++
+bool is_closed( void ) const;
+```
+
+Return the status of the underlying Session socket.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Boolean true if the session is inactive.
+
+##### Exceptions
+
+n/a
+
+#### Session::close
+
+```C++
+void close( const Bytes& body );
+
+void close( const Response& response );
+
+void close( const std::string& body = "" );
+
+void close( const int status, const Bytes& body );
+
+void close( const int status, const std::string& body = "" );
+
+void close( const int status, const std::multimap< std::string, std::string >& headers );
+
+void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
+
+void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
+```
+
+Close an active session returning a tailored HTTP response based on the supplied parameters.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| status     | [int](http://en.cppreference.com/w/cpp/types/integer)               |      n/a      |   input   |
+| body       | [Bytes](#bytebytes)                                                 |      n/a      |   input   |
+| body       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| headers    | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap)|      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::yield
+
+```C++
+void yield( const Bytes& data, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const std::string& data, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const Response& response, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const int status, const Bytes& body = { }, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+
+void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+```
+
+Return a tailored HTTP response based on the supplied parameters without closing the underlying socket connection; On completion invoke the callback.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| status     | [int](http://en.cppreference.com/w/cpp/types/integer)                         |      n/a      |   input   |
+| body       | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
+| body       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+| headers    | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap)          |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::fetch
+
+```C++
+void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
+            
+void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
+```
+
+1) Fetch length bytes from the underlying socket connection.
+
+2) Fetch bytes from the underlying socket connection until encountering the delimiter.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| length     | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t)                  |      n/a      |   input   |
+| delimiter  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::upgrade
+
+```C++
+void upgrade( const int status, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+
+void upgrade( const int status, const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+
+void upgrade( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+
+void upgrade( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+
+void upgrade( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+
+void upgrade( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+```
+
+Return a tailored HTTP response based on the supplied parameters and upgrade to the WebSocket protocol; On completion invoke the callback.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| status     | [int](http://en.cppreference.com/w/cpp/types/integer)                         |      n/a      |   input   |
+| body       | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
+| body       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+| headers    | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap)          |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::sleep_for
+
+```C++
+void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+```
+
+Place a task on the [Service](#service) event loop to be run in delay milliseconds.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| delay      | [std::chrono::milliseconds](http://en.cppreference.com/w/cpp/chrono/duration) |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::get_id
+
+```C++
+const std::string& get_id( void ) const;
+```
+
+Return a string uniquely identifying this session instance.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/utility/functional/function) representing a unique session identifier.
+
+##### Exceptions
+
+n/a
+
+#### Session::get_origin
+
+```C++
+const std::string get_origin( void ) const;
+```
+
+Return a string representing an Internet Protocol address and port number identifying the source of the current HTTP request.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/utility/functional/function) representing the source network endpoint.
+##### Exceptions
+
+n/a
+
+#### Session::get_destination
+
+```C++
+const std::string get_destination( void ) const;
+```
+
+Return a string representing an Internet Protocol address and port number identifying the original destination of the current HTTP request.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/utility/functional/function) representing a destination network endpoint.
+
+##### Exceptions
+
+n/a
+
+#### Session::get_request
+
+```C++
+const std::shared_ptr< const Request > get_request(  void ) const;
+```
+
+Return the currently active HTTP request.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) representing a HTTP request.
+
+##### Exceptions
+
+n/a
+
+#### Session::get_resource
+
+```C++
+const std::shared_ptr< const Resource > get_resource( void ) const;
+```
+
+Return the currently active RESTful resource.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) representing a HTTP request.
+
+##### Exceptions
+
+n/a
+
+#### Session::get_headers
+
+```C++
+const std::multimap< std::string, std::string >& get_headers( void ) const;
+```
+
+Return the default session header that must be present on each HTTP response.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing a collection of HTTP headers.
+
+##### Exceptions
+
+n/a
+
+#### Session::get
+
+```C++
+const ContextValue& get( const std::string& name ) const;
+
+const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
+```
+
+Return the session data identified by name.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+| value      | [std::any](http://en.cppreference.com/w/cpp/utility/any)                      |      n/a      |   input   |
+
+##### Return Value
+
+[std::any](http://en.cppreference.com/w/cpp/utility/any) session data item.
+
+##### Exceptions
+
+n/a
+
+#### Session::set_id
+
+```C++
+void set_id( const std::string& value );
+```
+
+Set a unique session identifier.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+[std::any](http://en.cppreference.com/w/cpp/utility/any) session data item.
+
+##### Exceptions
+
+n/a
+
+#### Session::set
+
+```C++
+void set( const std::string& name, const ContextValue& value );
+```
+
+Set a unique session identifier.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+| value      | [std::any](http://en.cppreference.com/w/cpp/utility/any)                      |      n/a      |   input   |
+
+##### Return Value
+
+[std::any](http://en.cppreference.com/w/cpp/utility/any) session data item.
+
+##### Exceptions
+
+n/a
+
+#### Session::add_header
+
+```C++
+void add_header( const std::string& name, const std::string& value );
+```
+
+Add a default HTTP header to the session, existing headers that share the same name will not be altered.
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::set_header
+
+```C++
+void set_header( const std::string& name, const std::string& value );
+```
+
+Set a default HTTP header for the session, existing headers that share the same name will be erased.
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Session::set_headers
+
+```C++
+void set_headers( const std::multimap< std::string, std::string >& values );
+```
+
+Set default HTTP headers for the session, existing headers will be erased; see also [get_headers](#sessionget_headers).
+
+##### Parameters
+
+| name   | type                                                                 | default value | direction |
+|:------:|----------------------------------------------------------------------|:-------------:|:---------:|
+| values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
 
 ##### Return Value
 
