@@ -24,14 +24,17 @@ Table of Contents
 9.	[Resource](#resource)
 10.	[Rule](#rule)
 11.	[Service](#service)
-12.	[SessionManager](#sessionmanager)
-13.	[Session](#session)
+12.	[Session](#session)
+13.	[SessionManager](#sessionmanager)
 14.	[Settings](#settings)
 15.	[SSLSettings](#sslsettings)
 16.	[StatusCode](#statuscode)
 17.	[String](#string)
-18.	[URI](#uri)
-19.	[Further Reading](#further-reading)
+18.	[String::Option](#stringoption)
+19.	[URI](#uri)
+20.	[WebSocket](#websocket)
+21.	[WebSocketMessage](#websocketmessage)
+22.	[Further Reading](#further-reading)
 
 ### Byte/Bytes
 
@@ -47,7 +50,7 @@ See [std::uint8_t](http://en.cppreference.com/w/cpp/types/integer) and [std::vec
 
 ### Http
 
-The static HTTP class offers client capabilities for consuming RESTful services.
+The static HTTP class offers limited client capabilities for consuming RESTful services. This will be removed in future version and replaced with the Restless client framework.
 
 #### Methods
 
@@ -203,7 +206,7 @@ The second callback parameter will be invoked when the service has finished resp
 
 No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
 
-#### Http::async
+#### Http::fetch
 
 ```C++
 static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
@@ -323,7 +326,7 @@ Any exceptions raised will result in the service ignoring the fault and printing
 virtual void log_if( bool expression, const Level level, const char* format, ... ) = 0;
 ```
 
-Commit the message specified under the control of a format string, with the specified level of severity into the log, under the condition that expression is equal to boolean true; see also [log](#loggerlog).
+Commit the message specified under the control of a format string, with the specified level of severity into the log, under the condition that the expression is equal to boolean true; see also [log](#loggerlog).
 
 ##### Parameters
 
@@ -393,6 +396,7 @@ Represents a HTTP request with additional helper methods for manipulating data, 
 -	[set_host](#requestset_host)
 -	[set_method](#requestset_method)
 -	[set_protocol](#requestset_protocol)
+-	[add_header](#requestadd_header)
 -	[set_header](#requestset_header)
 -	[set_headers](#requestset_headers)
 -	[set_query_parameter](#requestset_query_parameter)
@@ -513,7 +517,7 @@ No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp
 uint16_t get_port( void ) const;
 ```
 
-Retrieves the port number of the endpoint; see also [set_port](#requestset_port).
+Retrieves the network port number of the server endpoint; see also [set_port](#requestset_port).
 
 ##### Parameters
 
@@ -521,7 +525,7 @@ n/a
 
 ##### Return Value
 
-[uint16_t](http://en.cppreference.com/w/cpp/types/integer) representing the port number.
+[uint16_t](http://en.cppreference.com/w/cpp/types/integer) representing the network port number.
 
 ##### Exceptions
 
@@ -555,7 +559,7 @@ Bytes get_body( void ) const;
 void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
 ```
 
-1) Retrieves the contents of the request body; see also [set_body](#requestset_body).
+1) Retrieves the contents of the request body as [Bytes](#bytebytes); see also [set_body](#requestset_body).
 
 2) Alters the request body with the transform operation and returns the result as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string); see also [set_body](#requestset_body).
 
@@ -574,115 +578,1336 @@ void get_body( std::string& body, const std::function< std::string ( const Bytes
 
 n/a
 
+#### Request::get_response
+
+```C++
 const std::shared_ptr< const Response > get_response( void ) const;
+```
 
+Retrieves the associated HTTP [response](#response) for this request, if any.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) representing the response, else nullptr.
+
+##### Exceptions
+
+n/a
+
+#### Request::get_host
+
+```C++
 std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
 
+Retrieves the a host for this request, optionally applying a text transformation.
+
+##### Parameters
+
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the host.
+
+##### Exceptions
+
+n/a
+
+#### Request::get_path
+
+```C++
 std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
 
+Retrieves the path for this request, optionally applying a text transformation.
+
+##### Parameters
+
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the path.
+
+##### Exceptions
+
+n/a
+
+#### Request::get_method
+
+```C++
 std::string get_method( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
 
+Retrieves the [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) for this request, optionally applying a text transformation.
+
+##### Parameters
+
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html).
+
+##### Exceptions
+
+n/a
+
+#### Request::get_protocol
+
+```C++
 std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
 
-void get_header( const std::string& name, int& value, const int default_value = 0 ) const;
+Retrieves the protocol for this request, optionally applying a text transformation.
 
-void get_header( const std::string& name, long& value, const long default_value = 0 ) const;
+##### Parameters
 
-void get_header( const std::string& name, float& value, const float default_value = 0 ) const;
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
-void get_header( const std::string& name, double& value, const double default_value = 0 ) const;
+##### Return Value
 
-void get_header( const std::string& name, long long& value, const long long default_value = 0 ) const;
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the protocol.
 
-void get_header( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
+##### Exceptions
 
-void get_header( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
+n/a
 
-void get_header( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+#### Request::get_header
 
+```C++
+template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+Type get_header( const std::string& name, const Type default_value ) const
+
+std::string get_header( const std::string& name, const std::string& default_value ) const;
+
+std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
+
+1) Retrieve the first header with a matching name parsing to a an arithmetic value. if not found return default_value.
+
+2) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
+
+3) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
+
+##### Parameters
+
+| name          | type                                                                              | default value | direction |
+|:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
+| default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic value representing the header.
+
+##### Exceptions
+
+n/a
+
+#### Request::get_headers
+
+```C++
 std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+```
 
-std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
+Retrieves all headers as a [std::multimap](http://en.cppreference.com/w/cpp/container/multimap). if a name is supplied only matching headers will be returned.
 
-std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+##### Parameters
 
-void get_query_parameter( const std::string& name, int& value, const int default_value = 0 ) const;
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
-void get_query_parameter( const std::string& name, long& value, const long default_value = 0 ) const;
+##### Return Value
 
-void get_query_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing a collection of headers.
 
-void get_query_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
+##### Exceptions
 
-void get_query_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
+n/a
 
-void get_query_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
+#### Request::get_query_parameter
 
-void get_query_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
+```C++
+template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+Type get_query_parameter( const std::string& name, const Type default_value ) const
 
-void get_query_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
 
-std::string get_query_parameter( const std::string& name, const String::Option option = String::CASE_INSENSITIVE ) const;
+std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
 
-std::string get_query_parameter( const std::string& name, const std::string& default_value, const String::Option option = String::CASE_INSENSITIVE ) const;
+1) Retrieve the first query parameter with a matching name parsing to a an arithmetic value. if not found return default_value.
 
-std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform, const String::Option option = String::CASE_INSENSITIVE ) const;
+2) Retrieve the first query parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
 
+3) Retrieve the first query parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
+
+##### Parameters
+
+| name          | type                                                                              | default value | direction |
+|:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
+| default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic value representing the query parameter.
+
+##### Exceptions
+
+n/a
+
+#### Request::get_query_parameters
+
+```C++
 std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "", const String::Option option = String::CASE_INSENSITIVE ) const;
+```
 
-void get_path_parameter( const std::string& name, int& value, const int default_value = 0 ) const;
+Retrieves all query parameters as a [std::multimap](http://en.cppreference.com/w/cpp/container/multimap). if a name is supplied only matching parameters will be returned.
 
-void get_path_parameter( const std::string& name, long& value, const long default_value = 0 ) const;
+##### Parameters
 
-void get_path_parameter( const std::string& name, float& value, const float default_value = 0 ) const;
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| option    | [String::Option](#stringoption)                                               |      n/a      |   input   |
 
-void get_path_parameter( const std::string& name, double& value, const double default_value = 0 ) const;
+##### Return Value
 
-void get_path_parameter( const std::string& name, long long& value, const long long default_value = 0 ) const;
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing a collection of parameters.
 
-void get_path_parameter( const std::string& name, unsigned int& value, const unsigned int default_value = 0 ) const;
+##### Exceptions
 
-void get_path_parameter( const std::string& name, unsigned long& value, const unsigned long default_value = 0 ) const;
+n/a
 
-void get_path_parameter( const std::string& name, unsigned long long& value, const unsigned long long default_value = 0 ) const;
+#### Request::get_path_parameter
 
-std::string get_path_parameter( const std::string& name, const String::Option option = String::CASE_INSENSITIVE ) const;
+```C++
+template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+Type get_path_parameter( const std::string& name, const Type default_value ) const
 
-std::string get_path_parameter( const std::string& name, const std::string& default_value, const String::Option option = String::CASE_INSENSITIVE ) const;
+std::string get_path_parameter( const std::string& name, const std::string& default_value ) const;
 
-std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform, const String::Option option = String::CASE_INSENSITIVE ) const;
+std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
 
+1) Retrieve the first parameter with a matching name parsing to a an arithmetic value. if not found return default_value.
+
+2) Retrieve the first parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
+
+3) Retrieve the first parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
+
+##### Parameters
+
+| name          | type                                                                              | default value | direction |
+|:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
+| default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic value representing the path parameter.
+
+##### Exceptions
+
+n/a
+
+#### Request::get_path_parameters
+
+```C++
 std::map< std::string, std::string > get_path_parameters( const std::string& name = "", const String::Option option = String::CASE_INSENSITIVE ) const;
+```
 
+Retrieves all query parameters as a [std::multimap](http://en.cppreference.com/w/cpp/container/multimap). if a name is supplied only matching parameters will be returned.
+
+##### Parameters
+
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| option    | [String::Option](#stringoption)                                               |      n/a      |   input   |
+
+##### Return Value
+
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing a collection of parameters.
+
+##### Exceptions
+
+n/a
+
+#### Request::set_body
+
+```C++
 void set_body( const Bytes& value );
 
 void set_body( const std::string& value );
+```
 
+Replace request body; see also [get_body](#requestget_body).
+
+##### Parameters
+
+| name  | type                                                                                       | default value | direction |
+|:-----:|--------------------------------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or [Bytes](#bytebytes) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_port
+
+```C++
 void set_port( const uint16_t value );
+```
 
+Replace request network port; see also [get_port](#requestget_port).
+
+##### Parameters
+
+| name  | type                                                            | default value | direction |
+|:-----:|-----------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::uint16_t](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_version
+
+```C++
 void set_version( const double value );
+```
 
+Replace request version; see also [get_version](#requestget_version).
+
+##### Parameters
+
+| name  | type                                                                              | default value | direction |
+|:-----:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
+| value | [double](hhttp://en.cppreference.com/w/cpp/language/types%23Floating_point_types) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_path
+
+```C++
 void set_path( const std::string& value );
+```
 
+Replace request path; see also [get_path](#requestget_path).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_host
+
+```C++
 void set_host( const std::string& value );
+```
 
+Replace request host; see also [get_host](#requestget_host).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_method
+
+```C++
 void set_method( const std::string& value );
+```
 
+Replace request method; see also [get_method](#requestget_method).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_protocol
+
+```C++
 void set_protocol( const std::string& value );
+```
 
+Replace request protocol; see also [get_protocol](#requestget_protocol).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::add_header
+
+```C++
+void add_header( const std::string& name, const std::string& value );
+```
+
+Add a HTTP header to the request, existing headers that share the same name will not be altered.
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_header
+
+```C++
 void set_header( const std::string& name, const std::string& value );
+```
 
-void set_headers( const std::multimap< std::string, std::string >& values );
+Set a HTTP header, existing headers that share the same name will be erased.
 
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_headers
+
+```C++
+void set_header( const std::string& name, const std::string& value );
+```
+
+Set HTTP headers, existing headers will be erased.
+
+##### Parameters
+
+| name   | type                                                                 | default value | direction |
+|:------:|----------------------------------------------------------------------|:-------------:|:---------:|
+| values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_query_parameter
+
+```C++
 void set_query_parameter( const std::string& name, const std::string& value );
+```
 
+Set a HTTP query parameter, existing parameters that share the same name will be erased.
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Request::set_query_parameters
+
+```C++
 void set_query_parameters( const std::multimap< std::string, std::string >& values );
+```
+
+Set HTTP query parameters, existing parameters will be erased.
+
+##### Parameters
+
+| name   | type                                                                 | default value | direction |
+|:------:|----------------------------------------------------------------------|:-------------:|:---------:|
+| values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
 
 ### Response
 
 Represents a HTTP response with additional helper methods for manipulating data, and improving code readability.
 
-See [restbed::Response](https://github.com/corvusoft/restbed/documentation/API.md#response) for further details.
+#### Methods
+
+-	[constructor](#responseconstructor)
+-	[destructor](#responsedestructor)
+-	[has_header](#responsehas_header)
+-	[get_body](#responseget_body)
+-	[get_version](#responseget_host)
+-	[get_status_code](#responseget_path)
+-	[get_protocol](#responseget_method)
+-	[get_status_message](#responseget_protocol)
+-	[get_header](#responseget_header)
+-	[get_headers](#responseget_headers)
+-	[set_body](#responseset_body)
+-	[set_version](#responseset_version)
+-	[set_status_code](#responseset_path)
+-	[set_protocol](#responseset_host)
+-	[set_status_message](#responseset_method)
+-	[add_header](#responseadd_header)
+-	[set_header](#responseset_header)
+-	[set_headers](#responseset_headers)
+
+#### Response::constructor
+
+```C++
+Response( void );
+```
+
+Initialises a new class instance; see also [destructor](#responsedestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::destructor
+
+```C++
+virtual ~Response( void );
+```
+
+Clean-up class instance; see also [constructor](#responseconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### Response::has_header
+
+```C++
+bool has_header( const std::string& name ) const;
+```
+
+Case insensitive check to confirm if the [response](#response) contains a header with the supplied name.
+
+##### Parameters
+
+| name | type                                                                | default value | direction |
+|:----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+Boolean true if the [response](#response) holds a header with a matching name, else false.
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### Response::get_body
+
+```C++
+Bytes get_body( void ) const;
+
+void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
+```
+
+1) Retrieves the contents of the response body as [Bytes](#bytebytes); see also [set_body](#responseset_body).
+
+2) Alters the response body with the transform operation and returns the result as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string); see also [set_body](#responseset_body).
+
+##### Parameters
+
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+|   body    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |  output   |
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+[Bytes](#bytebytes) representing the response body.
+
+##### Exceptions
+
+n/a
+
+#### Response::get_version
+
+```C++
+double get_version( void ) const;
+```
+
+Retrieves the [HTTP version](https://tools.ietf.org/html/rfc2145) number; see also [set_version](#responseset_version).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[double](http://en.cppreference.com/w/cpp/language/types%23Floating_point_types) representing the [HTTP version](https://tools.ietf.org/html/rfc2145).
+
+##### Exceptions
+
+n/a
+
+#### Response::get_status_code
+
+```C++
+int get_status_code( void ) const;
+```
+
+Retrieves the [HTTP status code](https://tools.ietf.org/html/rfc7231#section-6.1); see also [set_status_code](#responseset_status_code).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+Integer representing the [HTTP status code](https://tools.ietf.org/html/rfc7231#section-6.1).
+
+##### Exceptions
+
+n/a
+
+#### Response::get_protocol
+
+```C++
+std::string get_protocol( void ) const;
+```
+
+Retrieve the protocol.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the protocol.
+
+##### Exceptions
+
+n/a
+
+#### Response::get_status_message
+
+```C++
+std::string get_status_message( void ) const;
+```
+
+Retrieves the [HTTP status message](https://tools.ietf.org/html/rfc7231#section-6.1); see also [set_status_message](#responseset_status_message).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) representing the [HTTP status message](https://tools.ietf.org/html/rfc7231#section-6.1).
+
+##### Exceptions
+
+n/a
+
+#### Response::get_header
+
+```C++
+template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+Type get_header( const std::string& name, const Type default_value ) const
+
+std::string get_header( const std::string& name, const std::string& default_value ) const;
+
+std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+```
+
+1) Retrieve the first header with a matching name parsing to a an arithmetic value. if not found return default_value.
+
+2) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
+
+3) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
+
+##### Parameters
+
+| name          | type                                                                              | default value | direction |
+|:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
+| default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic value representing the header.
+
+##### Exceptions
+
+n/a
+
+#### Response::get_headers
+
+```C++
+std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+```
+
+Retrieves all headers as a [std::multimap](http://en.cppreference.com/w/cpp/container/multimap). if a name is supplied only matching headers will be returned.
+
+##### Parameters
+
+| name      | type                                                                          | default value | direction |
+|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) representing a collection of headers.
+
+##### Exceptions
+
+n/a
+
+#### Response::set_body
+
+```C++
+void set_body( const Bytes& value );
+
+void set_body( const std::string& value );
+```
+
+Replace response body; see also [get_body](#responseget_body).
+
+##### Parameters
+
+| name  | type                                                                                       | default value | direction |
+|:-----:|--------------------------------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or [Bytes](#bytebytes) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::set_version
+
+```C++
+void set_version( const double value );
+```
+
+Replace response version; see also [get_version](#responseget_version).
+
+##### Parameters
+
+| name  | type                                                                              | default value | direction |
+|:-----:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
+| value | [double](hhttp://en.cppreference.com/w/cpp/language/types%23Floating_point_types) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::set_status_code
+
+```C++
+void set_status_code( const int value );
+```
+
+Replace response status code; see also [get_status_code](#responseget_status_code).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|----------------------------------------------------------------------|:-------------:|:---------:|
+| value | [int](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::set_protocol
+
+```C++
+void set_protocol( const std::string& value );
+```
+
+Replace response protocol; see also [get_protocol](#responseget_protocol).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::set_status_message
+
+```C++
+void set_status_message( const std::string& value );
+```
+
+Replace response status message; see also [get_status_message](#responseget_status_message).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::add_header
+
+```C++
+void add_header( const std::string& name, const std::string& value );
+```
+
+Add a HTTP header to the response, existing headers that share the same name will not be altered.
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::set_header
+
+```C++
+void set_header( const std::string& name, const std::string& value );
+```
+
+Set a HTTP header, existing headers that share the same name will be erased; see also [get_header](#responseget_header).
+
+##### Parameters
+
+| name  | type                                                                | default value | direction |
+|:-----:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Response::set_headers
+
+```C++
+void set_headers( const std::multimap< std::string, std::string >& values );
+```
+
+Set HTTP headers, existing headers will be erased; see also [get_headers](#responseget_headers).
+
+##### Parameters
+
+| name   | type                                                                 | default value | direction |
+|:------:|----------------------------------------------------------------------|:-------------:|:---------:|
+| values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+### Resource
+
+Resource represents an network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource specific filteration, request processing rules, and authentication must be placed on this entity.
+
+#### Methods
+
+-	[constructor](#resourceconstructor)
+-	[destructor](#resourcedestructor)
+-	[add_rule](#resourceadd_rule)
+-	[set_path](#resourceset_path)
+-	[set_paths](#resourceset_paths)
+-	[set_default_header](#resourceset_default_header)
+-	[set_default_headers](#resourceset_default_headers)
+-	[set_failed_filter_validation_handler](#resourceset_failed_filter_validation_handler)
+-	[set_error_handler](#resourceset_error_handler)
+-	[set_authentication_handler](#resourceset_authentication_handler)
+-	[set_method_handler](#resourceset_method_handler)
+
+#### Resource::constructor
+
+```C++
+Resource( void );
+```
+
+Initialises a new class instance; see also [destructor](#resourcedestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::destructor
+
+```C++
+virtual ~Resource( void );
+```
+
+Clean-up class instance; see also [constructor](#resourceconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### Resource::add_rule
+
+```C++
+void add_rule( const std::shared_ptr< Rule >& rule );
+
+void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
+```
+
+Add incoming request processing rule; see also [rule](#rule).
+
+##### Parameters
+
+| name       | type                                                  | default value | direction |
+|:----------:|-------------------------------------------------------|:-------------:|:---------:|
+| rule       | [rule](#rule)                                         |      n/a      |   input   |
+| priority   | [int](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_path
+
+```C++
+void set_path( const std::string& value );
+```
+
+Set the path with which this resource should be accessible. [Settings::set_root](settingsset_root) will be perpended to this value.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_paths
+
+```C++
+void set_paths( const std::set< std::string >& values );
+```
+
+Set the paths with which this resource should be accessible. [Settings::set_root](settingsset_root) will be perpended to all values.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| values     | [std::set](http://en.cppreference.com/w/cpp/container/set)          |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_default_header
+
+```C++
+void set_default_header( const std::string& name, const std::string& value );
+```
+
+Set a default header that should be sent on every HTTP response, overriding any existing value with the same name.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_default_headers
+
+```C++
+void set_default_headers( const std::multimap< std::string, std::string >& values );
+```
+
+Set default headers that should be sent on every HTTP response, overriding any existing values.
+
+##### Parameters
+
+| name       | type                                                                 | default value | direction |
+|:----------:|----------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_failed_filter_validation_handler
+
+```C++
+void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
+```
+
+Set failed filter validation handler. If an incoming request fails to match the resources filters this method will be invoked offering an opportunity to return a custom HTTP response.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_error_handler
+
+```C++
+void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) >& value );
+```
+
+Set error handler. If during processing a failure occurs this method will be invoked for reporting and HTTP response handling.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_authentication_handler
+
+```C++
+void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) >& value );
+```
+
+Set authentication handler, this method will be invoked after the service authentication handler.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Resource::set_method_handler
+
+```C++
+void set_method_handler( const std::string& method, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+
+void set_method_handler( const std::string& method, const std::multimap< std::string, std::string >& filters, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+```
+
+Set method handler with optional header filters.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| method     | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+| filters    | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap)          |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+### Rule
+
+Interface representing an incoming processing rule.
+
+#### Methods
+
+-	[condition](#rulecondition)
+-	[action](#ruleaction)
+-	[get_priority](#ruleget_priority)
+-	[set_priority](#ruleset_priority)
+
+#### Rule::condition
+
+```C++
+virtual bool condition( const std::shared_ptr< Session > session );
+```
+
+The condition that decides if this rules action should be invoked; see also [action](#ruleaction).
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
+
+##### Return Value
+
+True if the condition has been satisfied.
+
+##### Exceptions
+
+n/a
+
+#### Rule::action
+
+```C++
+virtual void action( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback ) = 0;
+```
+
+The action to be invoked if the rules condition returns true; see also [condition](#rulecondition).
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Rule::get_priority
+
+```C++
+int get_priority( void ) const;
+```
+
+Retrieve rule processing priority.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[int](http://en.cppreference.com/w/cpp/language/types) representing rule processing priority.
+
+##### Exceptions
+
+n/a
+
+#### Rule::set_priority
+
+```C++
+void set_priority( const int value );
+```
+
+Alter rule's processing priority.
+
+##### Parameters
+
+| name       | type                                                           | default value | direction |
+|:----------:|----------------------------------------------------------------|:-------------:|:---------:|
+| value      | [int](http://en.cppreference.com/w/cpp/language/types)         |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
 
 ### Further Reading
 
