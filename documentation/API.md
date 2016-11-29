@@ -2494,7 +2494,7 @@ n/a
 virtual ~Session( void );
 ```
 
-Clean-up class instance; see also [constructor](#serviceconstructor).
+Clean-up class instance; see also [constructor](#sessionconstructor).
 
 ##### Parameters
 
@@ -3026,6 +3026,171 @@ Set default HTTP headers for the session, existing headers will be erased; see a
 | name   | type                                                                 | default value | direction |
 |:------:|----------------------------------------------------------------------|:-------------:|:---------:|
 | values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+### SessionManager
+
+Abstract Class detailing the required contract for SessionManager extensions. No default implementation is supplied with the codebase and it is the responsibility of third-party developers to implement desired characteristics.
+
+#### Methods
+
+-	[constructor](#sessionmanagerconstructor)
+-	[destructor](#sessionmanagerdestructor)
+-	[stop](#sessionmanagerstop)
+-	[start](#sessionmanagerstart)
+-	[create](#sessionmanagercreate)
+-	[load](#sessionmanagerload)
+-	[save](#sessionmanagersave)
+
+#### SessionManager::constructor
+
+```C++
+SessionManager( void );
+```
+
+Initialises a new class instance; see also [destructor](#sessionmanagerdestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SessionManager::destructor
+
+```C++
+virtual ~SessionManager( void );
+```
+
+Clean-up class instance; see also [constructor](#sessionconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### SessionManager::stop
+
+```C++
+virtual void stop( void );
+```
+
+Shutdown an active SessionManager.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SessionManager::start
+
+```C++
+virtual void start( const std::shared_ptr< const Settings >& settings );
+```
+
+Start the Session Manager, the settings supplied are identical to those given to [Service::start](servicestart).
+
+##### Parameters
+
+| name   | type                                                                    | default value | direction |
+|:------:|-------------------------------------------------------------------------|:-------------:|:---------:|
+| settings | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+
+#### SessionManager::create
+
+```C++
+virtual void create( const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+```
+
+Create a new [Session](#session) instance passing it into callback.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SessionManager::load
+
+```C++
+virtual void load( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+```
+
+Load previous session data into the supplied session before passing it to callback.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SessionManager::save
+
+```C++
+virtual void save( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+```
+
+Save session for later retrieval.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
+| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
