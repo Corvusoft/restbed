@@ -34,7 +34,8 @@ Table of Contents
 19.	[URI](#uri)
 20.	[WebSocket](#websocket)
 21.	[WebSocketMessage](#websocketmessage)
-22.	[Further Reading](#further-reading)
+22. [WebSocketMessage::OpCode](#websocketmessageopcode)
+23.	[Further Reading](#further-reading)
 
 ### Byte/Bytes
 
@@ -5144,7 +5145,864 @@ n/a
 
 
 ### WebSocket
+
+Represents a WebSocket.
+
+#### Methods
+
+-	[constructor](#websocketconstructor)
+-	[destructor](#websocketdestructor)
+-	[is_open](#websocketis_open)
+-	[is_closed](#websocketis_closed)
+-	[close](#websocketclose)
+-	[send](#websocketsend)
+-	[get_key](#websocketget_key)
+-	[get_logger](#websocketget_logger)
+-	[get_socket](#websocketget_socket)
+-	[get_open_handler](#websocketget_open_handler)
+-	[get_close_handler](#websocketget_close_handler)
+-	[get_error_handler](#websocketget_error_handler)
+-	[get_message_handler](#websocketget_message_handler)
+-	[set_key](#websocketset_key)
+-	[set_logger](#websocketset_logger)
+-	[set_open_handler](#websocketset_open_handler)
+-	[set_close_handler](#websocketset_close_handler)
+-	[set_error_handler](#websocketset_error_handler)
+-	[set_message_handler](#websocketset_message_handler)
+
+#### WebSocket::constructor
+
+```C++
+WebSocket( void );
+```
+
+Initialises a new class instance; see also [destructor](#websocketdestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::destructor
+
+```C++
+virtual ~WebSocket( void );
+```
+
+Clean-up class instance; see also [constructor](#websocketconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### WebSocket::is_open
+
+```C++
+bool is_open( void ) const;
+```
+
+Determine if the underlying socket is active.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) value indicating socket is active.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::is_open
+
+```C++
+bool is_closed( void ) const;
+```
+
+Determine if the underlying socket is inactive.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) value indicating socket is inactive.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::close
+
+```C++
+void close( void );
+```
+
+Close socket.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a         
+
+#### WebSocket::send
+
+```C++
+void send( const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+
+void send( const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+
+void send( const WebSocketMessage::OpCode opcode, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+
+void send( const std::shared_ptr< WebSocketMessage > message, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+```
+
+Transmit a WebSocket message.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a  
+
+#### WebSocket::get_key
+
+```C++
+std::string get_key( void ) const;
+```
+
+Retrieve unique key identifying this instance.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) unique identifier.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::get_logger
+
+```C++
+std::shared_ptr< Logger > get_logger( void ) const;
+```
+
+Retrieve the logging instance used by this WebSocket.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) referencing [Logger](#logger) used.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::get_open_handler
+
+```C++
+std::function< void ( const std::shared_ptr< WebSocket > ) > get_open_handler( void ) const;
+```
+
+Retrieve socket open handler.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::function](http://en.cppreference.com/w/cpp/utility/functional/function) holding socket open handler.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::get_close_handler
+
+```C++
+std::function< void ( const std::shared_ptr< WebSocket > ) > get_close_handler( void ) const;
+```
+
+Retrieve socket closed handler.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::function](http://en.cppreference.com/w/cpp/utility/functional/function) holding socket close handler.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::get_error_handler
+
+```C++
+std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) > get_error_handler( void ) const;
+```
+
+Retrieve socket error handler.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::function](http://en.cppreference.com/w/cpp/utility/functional/function) holding socket error handler.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::get_message_handler
+
+```C++
+std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) > get_message_handler( void ) const;
+```
+
+Retrieve socket message handler.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::function](http://en.cppreference.com/w/cpp/utility/functional/function) holding socket message handler.
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::set_key
+
+```C++
+void set_key( const std::string& value );
+```
+
+Set WebSocket unique key.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::set_logger
+
+```C++
+void set_logger( const std::shared_ptr< Logger >& value );
+```
+
+Set [Logger](#logger) instance to use internally by the instance.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::set_open_handler
+
+```C++
+void set_open_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
+```
+
+Set a callback to be invoked once the socket connection has been established to a remote endpoint.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::set_close_handler
+
+```C++
+void set_close_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
+```
+
+Set a callback to be invoked once the socket connection has been terminated.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::set_error_handler
+
+```C++
+void set_error_handler( const std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) >& value );
+```
+
+Set a callback to be invoked if the socket encounters an error.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocket::set_message_handler
+
+```C++
+void set_message_handler( const std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) >& value );
+```
+
+Set a callback to be invoked when a message is received.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
 ### WebSocketMessage
+
+Class to abstract the over engineered WebSocket packet format.
+
+#### Methods
+
+-	[constructor](#websocketmessageconstructor)
+-	[destructor](#websocketmessagedestructor)
+-	[to_bytes](#websocketmessageto_bytes)
+-	[get_data](#websocketmessageget_data)
+-	[get_opcode](#websocketmessageget_opcode)
+-	[get_mask](#websocketmessageget_mask)
+-	[get_length](#websocketmessageget_length)
+-	[get_extended_length](#websocketmessageget_extended_length)
+-	[get_mask_flag](#websocketmessageget_mask_flag)
+-	[get_final_frame_flag](#websocketmessageget_final_frame_flag)
+-	[get_reserved_flags](#websocketmessageget_resserved_flags)
+-	[set_data](#websocketmessageset_data)
+-	[set_opcode](#websocketmessageset_opcode)
+-	[set_mask](#websocketmessageset_mask)
+-	[set_length](#websocketmessageset_length)
+-	[set_extended_length](#websocketmessageset_extended_length)
+-	[set_mask_flag](#websocketmessageset_mask_flag)
+-	[set_final_frame_flag](#websocketmessageset_final_frame_flag)
+-	[set_reserved_flags](#websocketmessageset_reserved_flags)
+
+#### WebSocketMessage::constructor
+
+```C++
+WebSocketMessage( void );
+
+WebSocketMessage( const WebSocketMessage& original );
+
+WebSocketMessage( const OpCode code, const Bytes& data = { } );
+
+WebSocketMessage( const OpCode code, const std::string& data );
+
+WebSocketMessage( const OpCode code, const Bytes& data, const std::uint32_t mask );
+
+WebSocketMessage( const OpCode code, const std::string& data, const std::uint32_t mask );
+```
+
+Initialises a new class instance; see also [destructor](#websocketmessagedestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::destructor
+
+```C++
+virtual ~WebSocketMessage( void );
+```
+
+Clean-up class instance; see also [constructor](#websocketmessageconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### WebSocketMessage::to_bytes
+
+```C++
+Bytes to_bytes( void ) const;
+```
+
+Convert instance to a collection of [Bytes](#bytebytes)
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Bytes](#bytebytes) containing a representation of the current WebSocketMessage state.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_data
+
+```C++
+Bytes get_data( void ) const;
+```
+
+Get data segment.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Bytes](#bytebytes) containing message data.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_opcode
+
+```C++
+OpCode get_opcode( void ) const;
+```
+
+Get operation code.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[WebSocketMessage::OpCode](#websocketmessageopcode) detailing operation code in use.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_mask
+
+```C++
+std::uint32_t get_mask( void ) const;
+```
+
+Get message mask.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::uint32_t](http://en.cppreference.com/w/cpp/types/integer) detailing message length.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_length
+
+```C++
+std::uint8_t get_length( void ) const;
+```
+
+Get message data length.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::uint8_t](http://en.cppreference.com/w/cpp/types/integer) detailing mask to use on message data.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_extended_length
+
+```C++
+std::uint64_t get_extended_length( void ) const;
+```
+
+Get message data extended length.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::uint64_t](http://en.cppreference.com/w/cpp/types/integer) detailing message extended length.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_mask_flag
+
+```C++
+bool get_mask_flag( void ) const;
+```
+
+Get flag indicating if a mask is in use.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating a mask is in use.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_mask_flag
+
+```C++
+bool get_final_frame_flag( void ) const;
+```
+
+Get flag indicating if this message is the final frame.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating a final frame.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::get_reserved_flags
+
+```C++
+std::tuple< bool, bool, bool > get_reserved_flags( void ) const;
+```
+
+Get reserved flags
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::tuple](http://en.cppreference.com/w/cpp/utility/tuple) of reserved flags.
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_data
+
+```C++
+void set_data( const Bytes& value );
+
+void set_data( const std::string& value );
+```
+
+Set a callback to be invoked when a message is received.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_opcode
+
+```C++
+void set_opcode( const OpCode value );
+```
+
+Set message operation code.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [WebSocketMessage::OpCode](#websocketmessageopcode)                           |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_mask
+
+```C++
+void set_mask( const std::uint32_t value );
+```
+
+Set message mask, this will also set the mask flag equal to true.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::uint32_t](http://en.cppreference.com/w/cpp/types/integer)               |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_length
+
+```C++
+void set_length( const std::uint8_t value );
+```
+
+Set message length.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::uint8_t](http://en.cppreference.com/w/cpp/types/integer)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_extended_length
+
+```C++
+void set_extended_length( const std::uint64_t value );
+```
+
+Set message extended length.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::uint64_t](http://en.cppreference.com/w/cpp/types/integer)               |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_extended_length
+
+```C++
+void set_mask_flag( const bool value );
+```
+
+Setting true indicates a message mask is in place.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [Boolean](http://en.cppreference.com/w/c/types/boolean)                       |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_final_frame_flag
+
+```C++
+void set_final_frame_flag( const bool value );
+```
+
+Setting true indicates this is the final frame in a sequence of messages.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [Boolean](http://en.cppreference.com/w/c/types/boolean)                       |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::set_reserved_flags
+
+```C++
+void set_reserved_flags( const bool rsv1, const bool rsv2, const bool rsv3 );
+```
+
+Set reserved flags.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| rsv1       | [Boolean](http://en.cppreference.com/w/c/types/boolean)                       |      n/a      |   input   |
+| rsv2       | [Boolean](http://en.cppreference.com/w/c/types/boolean)                       |      n/a      |   input   |
+| rsv3       | [Boolean](http://en.cppreference.com/w/c/types/boolean)                       |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### WebSocketMessage::OpCode
+
+```C++
+class WebSocketMessage
+{
+    enum OpCode : uint8_t
+    {
+        CONTINUATION_FRAME     = 0x00,
+        TEXT_FRAME             = 0x01,
+        BINARY_FRAME           = 0x02,
+        CONNECTION_CLOSE_FRAME = 0x08,
+        PING_FRAME             = 0x09,
+        PONG_FRAME             = 0x0A
+    };
+}
+```
+
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) detailing WebSocket message operation codes.
 
 ### Further Reading
 
