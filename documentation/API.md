@@ -3201,7 +3201,1497 @@ n/a
 n/a
 
 ### Settings
+
+Represents service configuration.
+
+#### Methods
+
+-	[constructor](#settingsconstructor)
+-	[destructor](#settingsdestructor)
+-	[get_port](#settingsget_port)
+-	[get_root](#settingsget_root)
+-	[get_worker_limit](#settingsget_worker_limit)
+-	[get_connection_limit](#settingsget_connection_limit)
+-	[get_bind_address](#settingsget_bind_address)
+-	[get_case_insensitive_uris](#settingsget_case_insensitive_uris)
+-	[get_connection_timeout](#settingsget_connection_timeout)
+-	[get_status_message](#settingsget_status_message)
+-	[get_status_messages](#settingsget_status_messages)
+-	[get_property](#settingsget_property)
+-	[get_properties](#settingsget_properties)
+-	[get_ssl_settings](#settingsget_ssl_settings)
+-	[get_default_headers](#settingsget_default_headers)
+-	[set_port](#settingsset_port)
+-	[set_root](#settingsset_root)
+-	[set_worker_limit](#settingsset_worker_limit)
+-	[set_connection_limit](#settingsset_connection_limit)
+-	[set_bind_address](#settingsset_bind_address)
+-	[set_case_insensitive_uris](#settingsset_case_insensitive_uris)
+-	[set_connection_timeout](#settingsset_connection_timeout)
+-	[set_status_message](#settingsset_status_message)
+-	[set_status_messages](#settingsset_status_messages)
+-	[set_property](#settingsset_property)
+-	[set_properties](#settingsset_properties)
+-	[set_ssl_settings](#settingsset_ssl_settings)
+-	[set_default_header](#settingsset_default_header)
+-	[set_default_headers](#settingsset_default_headers)
+
+#### Settings::constructor
+
+```C++
+Settings( void );
+```
+
+Initialises a new class instance; see also [destructor](#settingsdestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::destructor
+
+```C++
+virtual ~Settings( void );
+```
+
+Clean-up class instance; see also [constructor](#settingsconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### Settings::get_port
+
+```C++
+uint16_t get_port( void ) const;
+```
+
+Retrieves the network port number which the service will listen on.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[uint16_t](http://en.cppreference.com/w/cpp/types/integer) representing the network port number.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_root
+
+```C++
+std::string get_root( void ) const;
+```
+
+Retrieves the base path for all resource paths.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[uint16_t](http://en.cppreference.com/w/cpp/types/integer) representing the base resource path.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_worker_limit
+
+```C++
+unsigned int get_worker_limit( void ) const;
+```
+
+Retrieves the number to workers (threads) used for processing incoming requests.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[unsigned integer](http://en.cppreference.com/w/cpp/language/types) detailing the number of service workers.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_connection_limit
+
+```C++
+unsigned int get_connection_limit( void ) const;
+```
+
+Retrieves the number of allowed pending socket connections.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[unsigned integer](http://en.cppreference.com/w/cpp/language/types) detailing the number of allowed pending socket connections.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_bind_address
+
+```C++
+std::string get_bind_address( void ) const;
+```
+
+Retrieves the local network interface card address to attach the service.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) detailing the service bind address.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_case_insensitive_uris
+
+```C++
+bool get_case_insensitive_uris( void ) const;
+```
+
+Retrieves a boolean value indicating if the service should use case insensitive Uris.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating case insensitive Uri processing.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_connection_timeout
+
+```C++
+std::chrono::milliseconds get_connection_timeout( void ) const;
+```
+
+Retrieves the number of milliseconds before an inactive socket is forcefully closed.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Milliseconds](http://en.cppreference.com/w/cpp/chrono/duration) detailing when to close an inactive socket.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_status_message
+
+```C++
+std::string get_status_message( const int code ) const;
+```
+
+Retrieves the HTTP status message associated with the supplied status code.
+
+##### Parameters
+
+| name       | type                                                   | default value | direction |
+|:----------:|--------------------------------------------------------|:-------------:|:---------:|
+| code       | [int](http://en.cppreference.com/w/cpp/language/types) |      n/a      |   input   |
+
+##### Return Value
+
+HTTP status message as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string).
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_status_messages
+
+```C++
+std::map< int, std::string > get_status_messages( void ) const;
+```
+
+Retrieves the HTTP status messages.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::map](http://en.cppreference.com/w/cpp/container/map) containing the known HTTP status messages.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_property
+
+```C++
+std::string get_property( const std::string& name ) const;
+```
+
+Retrieves a string property with the supplied name if it exists, otherwise an empty string will be returned.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) property value.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_properties
+
+```C++
+std::map< std::string, std::string > get_properties( void ) const;
+```
+
+Retrieves all setting properties.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::map](http://en.cppreference.com/w/cpp/container/map) containing the known settings.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_ssl_settings
+
+```C++
+std::shared_ptr< const SSLSettings > get_ssl_settings( void ) const;
+```
+
+Retrieves Secure Socket Layer settings.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[SSLSettings](#sslsettings) detailing SSL configuration.
+
+##### Exceptions
+
+n/a
+
+#### Settings::get_default_headers
+
+```C++
+std::multimap< std::string, std::string > get_default_headers( void ) const;
+```
+
+Retrieves all known default response headers.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::multimap](http://en.cppreference.com/w/cpp/container/multimap) containing all known default response headers.
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_port
+
+```C++
+void set_port( const uint16_t value );
+```
+
+Set the network port which the service should listen for incoming HTTP requests.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [uint16_t](http://en.cppreference.com/w/cpp/types/integer)          |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_root
+
+```C++
+void set_root( const std::string& value );
+```
+
+Set the base resource path, this value is prepended to all resource paths.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_worker_limit
+
+```C++
+void set_worker_limit( const unsigned int value );
+```
+
+Set the number of threads available for incoming HTTP request processing.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [unsigned integer](http://en.cppreference.com/w/cpp/language/types) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_connection_limit
+
+```C++
+void set_connection_limit( const unsigned int value );
+```
+
+Set the number of allowed pending connections.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [unsigned integer](http://en.cppreference.com/w/cpp/language/types) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_bind_address
+
+```C++
+void set_bind_address( const std::string& value );
+```
+
+Set network interface card address with which the service should attach itself.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_case_insensitive_uris
+
+```C++
+void set_case_insensitive_uris( const bool value );
+```
+
+Set true for case insensitive Uri handling.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_connection_timeout
+
+```C++
+void set_connection_timeout( const std::chrono::seconds& value );
+
+void set_connection_timeout( const std::chrono::milliseconds& value );
+```
+
+Set the duration before forcefully closing inactive socket connections.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [seconds](http://en.cppreference.com/w/cpp/chrono/duration)         |      n/a      |   input   |
+| value      | [milliseconds](http://en.cppreference.com/w/cpp/chrono/duration)    |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_status_message
+
+```C++
+void set_status_message( const int code, const std::string& message );
+```
+
+Associate a HTTP status message with a HTTP status code.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| code       | [integer](http://en.cppreference.com/w/cpp/language/types)          |      n/a      |   input   |
+| message    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_status_messages
+
+```C++
+void set_status_messages( const std::map< int, std::string >& values );
+```
+
+Set HTTP status message/status code mappings.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| values     | [std::map](http://en.cppreference.com/w/cpp/container/map)          |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_property
+
+```C++
+void set_property( const std::string& name, const std::string& value );
+```
+
+Set a string property value with the associated name.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_properties
+
+```C++
+void set_properties( const std::map< std::string, std::string >& values );
+```
+
+Set multiple property values.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| values     | [std::map](http://en.cppreference.com/w/cpp/container/map)          |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_ssl_settings
+
+```C++
+void set_ssl_settings( const std::shared_ptr< const SSLSettings >& value );
+```
+
+Set Secure Socket Layer configuration.
+
+##### Parameters
+
+| name       | type                                 | default value | direction |
+|:----------:|--------------------------------------|:-------------:|:---------:|
+| value      | [SSLSettings](#sslsettings)          |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_default_header
+
+```C++
+void set_default_header( const std::string& name, const std::string& value );
+```
+
+Set a default header value that must be returned for each HTTP request response.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### Settings::set_default_headers
+
+```C++
+void set_default_headers( const std::multimap< std::string, std::string >& values );
+```
+
+Set multiple default header values that must be returned for each HTTP request response.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| name       | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap)|      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
 ### SSLSettings
+
+Represents Secure Socket Layer configuration.
+
+#### Methods
+
+-	[constructor](#sslsettingsconstructor)
+-	[destructor](#sslsettingsdestructor)
+-	[has_disabled_http](#sslsettingshas_disabled_http)
+-	[has_enabled_sslv2](#sslsettingshas_enabled_sslv2)
+-	[has_enabled_sslv3](#sslsettingshas_enabled_sslv3)
+-	[has_enabled_tlsv1](#sslsettingshas_enabled_tlsv1)
+-	[has_enabled_tlsv11](#sslsettingshas_enabled_tlsv11)
+-	[has_enabled_tlsv12](#sslsettingshas_enabled_tlsv12)
+-	[has_enabled_compression](#sslsettingshas_enabled_compression)
+-	[has_enabled_default_workarounds](#sslsettingshas_enabled_default_workarounds)
+-	[has_enabled_single_diffie_hellman_use](#sslsettingshas_enabled_single_diffie_hellman_use)
+-	[get_port](#sslsettingsget_port)
+-	[get_bind_address](#sslsettingsget_bind_address)
+-	[get_certificate](#sslsettingsget_certificate)
+-	[get_passphrase](#sslsettingsget_passphrase)
+-	[get_private_key](#sslsettingsget_private_key)
+-	[get_private_rsa_key](#sslsettingsget_private_rsa_key)
+-	[get_certificate_chain](#sslsettingsget_certificate_chain)
+-	[get_temporary_diffie_hellman](#sslsettingsget_temporary_diffie_hellman)
+-	[get_certificate_authority_pool](#sslsettingsget_certificate_authority_pool)
+-	[set_port](#sslsettingsset_port)
+-	[set_bind_address](#sslsettingsset_bind_address)
+-	[set_http_disabled](#sslsettingsset_http_disabled)
+-	[set_sslv2_enabled](#sslsettingsset_sslv2_enabled)
+-	[set_sslv3_enabled](#sslsettingsset_sslv3_enabled)
+-	[set_tlsv1_enabled](#sslsettingsset_tlsv1_enabled)
+-	[set_tlsv11_enabled](#sslsettingsset_tlsv11_enabled)
+-	[set_tlsv12_enabled](#sslsettingsset_tlsv12_enabled)
+-	[set_compression_enabled](#sslsettingsset_compression_enabled)
+-	[set_default_workarounds_enabled](#sslsettingsset_default_workarounds_enabled)
+-	[set_certificate](#sslsettingsset_certificate)
+-	[set_certificate_authority_pool](#sslsettingsset_certificate_authority_pool)
+-	[set_passphrase](#sslsettingsset_passphrase)
+-	[set_private_key](#sslsettingsset_private_key)
+-	[set_private_rsa_key](#sslsettingsset_private_rsa_key)
+-	[set_temporary_diffie_hellman](#sslsettingsset_temporary_diffie_hellman)
+
+#### SSLSettings::constructor
+
+```C++
+SSLSettings( void );
+```
+
+Initialises a new class instance; see also [destructor](#sslsettingsdestructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::destructor
+
+```C++
+virtual ~SSLSettings( void );
+```
+
+Clean-up class instance; see also [constructor](#sslsettingsconstructor).
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
+
+#### SSLSettings::has_disabled_http
+
+```C++
+bool has_disabled_http( void ) const;
+```
+
+Determine if HTTP has been disabled and that the service should only listen for incoming HTTPS requests.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating that HTTP has been disabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_sslv2
+
+```C++
+bool has_enabled_sslv2( void ) const;
+```
+
+Determine if SSLv2 has been enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating SSLv2 is enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_sslv3
+
+```C++
+bool has_enabled_sslv3( void ) const;
+```
+
+Determine if SSLv3 has been enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating SSLv3 is enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_tlsv1
+
+```C++
+bool has_enabled_tlsv1( void ) const;
+```
+
+Determine if TLSv1 has been enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating TLSv1 is enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_tlsv11
+
+```C++
+bool has_enabled_tlsv11( void ) const;
+```
+
+Determine if TLSv1.1 has been enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating TLSv1.1 is enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_tlsv12
+
+```C++
+bool has_enabled_tlsv12( void ) const;
+```
+
+Determine if TLSv1.2 has been enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating TLSv1.2 is enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_compression
+
+```C++
+bool has_enabled_compression( void ) const;
+```
+
+Determine if compression has been enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating compression is enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_default_workarounds
+
+```C++
+bool has_enabled_default_workarounds( void ) const;
+```
+
+Determine if default workarounds is enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating default workaround enabled.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::has_enabled_single_diffie_hellman_use
+
+```C++
+bool has_enabled_single_diffie_hellman_use( void ) const;
+```
+
+Determine if single diffie hellman use is enabled.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[Boolean](http://en.cppreference.com/w/c/types/boolean) indicating single diffie hellman use.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_port
+
+```C++
+uint16_t get_port( void ) const;
+```
+
+Retrieves the network port number which the service will listen on.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[uint16_t](http://en.cppreference.com/w/cpp/types/integer) representing the network port number.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_bind_address
+
+```C++
+std::string get_bind_address( void ) const;
+```
+
+Retrieves the local network interface card address to attach the service.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) detailing the service bind address.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_certificate
+
+```C++
+std::string get_certificate( void ) const;
+```
+
+Retrieves filename of SSL certificate.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) certificate filename.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_passphrase
+
+```C++
+std::string get_passphrase( void ) const;
+```
+
+Retrieves SSL certificate passphrase.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) certificate passphrase.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_private_key
+
+```C++
+std::string get_private_key( void ) const;
+```
+
+Retrieves filename to private key.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) private key filename.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_private_rsa_key
+
+```C++
+std::string get_private_rsa_key( void ) const;
+```
+
+Retrieves filename to RSA private key.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) certificate filename.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_certificate_chain
+
+```C++
+std::string get_certificate_chain( void ) const;
+```
+
+Retrieves filename to certificate chain.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) certificate chain filename.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_temporary_diffie_hellman
+
+```C++
+std::string get_temporary_diffie_hellman( void ) const;
+```
+
+Retrieves filename to temporary diffie hellman.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) diffie hellman filename.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::get_certificate_authority_pool
+
+```C++
+std::string get_certificate_authority_pool( void ) const;
+```
+
+Retrieves filename to certificate authority pool.
+
+##### Parameters
+
+n/a
+
+##### Return Value
+
+[std::string](http://en.cppreference.com/w/cpp/string/basic_string) diffie hellman filename.
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_port
+
+```C++
+void set_port( const uint16_t value );
+```
+
+Set the network port which the service should listen for incoming HTTPS requests.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [uint16_t](http://en.cppreference.com/w/cpp/types/integer)          |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_bind_address
+
+```C++
+void set_bind_address( const std::string& value );
+```
+
+Set network interface card address with which the service should attach itself.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_http_disabled
+
+```C++
+void set_http_disabled( const bool value );
+```
+
+Set true to disable unencrypted HTTP service access.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_sslv2_enabled
+
+```C++
+void set_sslv2_enabled( const bool value );
+```
+
+Set true to enabled SSLv2.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_sslv3_enabled
+
+```C++
+void set_sslv3_enabled( const bool value );
+```
+
+Set true to enabled SSLv3.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_tlsv1_enabled
+
+```C++
+void set_tlsv1_enabled( const bool value );
+```
+
+Set true to enabled TLSv1.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_tlsv11_enabled
+
+```C++
+void set_tlsv11_enabled( const bool value );
+```
+
+Set true to enabled TLSv1.1.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_tlsv12_enabled
+
+```C++
+void set_tlsv12_enabled( const bool value );
+```
+
+Set true to enabled TLSv1.2.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_compression_enabled
+
+```C++
+void set_compression_enabled( const bool value );
+```
+
+Set true to enabled compression.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_default_workarounds_enabled
+
+```C++
+void set_default_workarounds_enabled( const bool value );
+```
+
+Set true to enabled default workarounds.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_single_diffie_hellman_use_enabled
+
+```C++
+void set_single_diffie_hellman_use_enabled( const bool value );
+```
+
+Set true to enabled single diffie hellman use.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [bool](http://en.cppreference.com/w/c/types/boolean)                |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_certificate
+
+```C++
+void set_certificate( const Uri& value );
+```
+
+Set filename to SSL certificate.
+
+##### Parameters
+
+| name       | type        | default value | direction |
+|:----------:|-------------|:-------------:|:---------:|
+| value      | [Uri](#uri) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_certificate_chain
+
+```C++
+void set_certificate_chain( const Uri& value );
+```
+
+Set filename to SSL certificate chain.
+
+##### Parameters
+
+| name       | type        | default value | direction |
+|:----------:|-------------|:-------------:|:---------:|
+| value      | [Uri](#uri) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_certificate_authority_pool
+
+```C++
+void set_certificate_authority_pool( const Uri& value );
+```
+
+Set filename to SSL certificate authority pool.
+
+##### Parameters
+
+| name       | type        | default value | direction |
+|:----------:|-------------|:-------------:|:---------:|
+| value      | [Uri](#uri) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_passphrase
+
+```C++
+void set_passphrase( const std::string& value );
+```
+
+Set filename to SSL certificate passphrase.
+
+##### Parameters
+
+| name       | type                                                                | default value | direction |
+|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_private_key
+
+```C++
+void set_private_key( const Uri& value );
+```
+
+Set filename to SSL private key.
+
+##### Parameters
+
+| name       | type        | default value | direction |
+|:----------:|-------------|:-------------:|:---------:|
+| value      | [Uri](#uri) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_private_rsa_key
+
+```C++
+void set_private_rsa_key( const Uri& value );
+```
+
+Set filename to SSL private RSA key.
+
+##### Parameters
+
+| name       | type        | default value | direction |
+|:----------:|-------------|:-------------:|:---------:|
+| value      | [Uri](#uri) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
+#### SSLSettings::set_temporary_diffie_hellman
+
+```C++
+void set_temporary_diffie_hellman( const Uri& value );
+```
+
+Set filename to temporary diffie hellman.
+
+##### Parameters
+
+| name       | type        | default value | direction |
+|:----------:|-------------|:-------------:|:---------:|
+| value      | [Uri](#uri) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
 
 ### StatusCode
 
@@ -3271,6 +4761,10 @@ n/a
 ##### Return Value
 
 n/a
+
+##### Exceptions
+
+No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
 
 #### Uri::is_relative
 
