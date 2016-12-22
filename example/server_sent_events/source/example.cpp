@@ -47,6 +47,13 @@ void event_stream_handler( void )
 	static size_t counter = 0;
 	const auto message = "data: event " + to_string( counter ) + "\n\n";
 
+	sessions.erase(
+		  std::remove_if(sessions.begin(), sessions.end(),
+                                [](const shared_ptr<Session> &a) {
+                                  return a->is_closed();
+                                }),
+		  sessions.end());
+
 	for ( auto session : sessions )
 	{
 		session->yield( message );
