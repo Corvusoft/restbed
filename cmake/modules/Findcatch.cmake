@@ -1,4 +1,4 @@
-# Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
+# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
 
 find_path( catch_INCLUDE catch.hpp HINTS "${CMAKE_SOURCE_DIR}/dependency/catch/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 

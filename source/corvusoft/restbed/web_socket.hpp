@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
 #ifndef _RESTBED_WEB_SOCKET_H

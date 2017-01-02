@@ -56,8 +56,7 @@ void post_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
 
-    int content_length = 0;
-    request->get_header( "Content-Length", content_length );
+    int content_length = request->get_header( "Content-Length", 0 );
 
     session->fetch( content_length, [ ]( const shared_ptr< Session > session, const Bytes & body )
     {
@@ -89,7 +88,7 @@ More in-depth examples can be found [here](https://github.com/corvusoft/restbed/
 License
 -------
 
-&copy; 2013-2016 Corvusoft Limited, United Kingdom. All rights reserved.
+&copy; 2013-2017 Corvusoft Limited, United Kingdom. All rights reserved.
 
 The Restbed framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
@@ -148,12 +147,12 @@ Road Map
 | [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5) |           Session Management            |  complete   |
 |             [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)              |               HTTP Client               |  complete   |
 |             [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)              |             Signal Handling             |  complete   |
-|             [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)              |            API Documentation            | development |
+|             [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)              |            API Documentation            |  complete   |
 |             [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)              |               Web Sockets               |  complete   |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |      Client-side SSL certificates       |   pending   |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            Resource Caching             |   pending   |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |          Runtime Modifications          |   pending   |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            HTTP 2 compliance            |   pending   |
+|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |      Client-side SSL certificates       | development |
+|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            Resource Caching             | development |
+|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |          Runtime Modifications          | development |
+|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            HTTP 2 compliance            | development |
 |             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |         Refactor, Reduce, Reuse         |   pending   |
 
 Contact
