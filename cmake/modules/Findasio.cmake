@@ -1,4 +1,4 @@
-# Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
+# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
 
 find_path( asio_INCLUDE asio.hpp HINTS "${CMAKE_SOURCE_DIR}/dependency/asio/asio/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
 
