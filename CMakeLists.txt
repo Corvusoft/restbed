@@ -21,7 +21,7 @@ option( BUILD_SSL      "Build secure socket layer support."  ON )
 #
 include( "${CMAKE_SOURCE_DIR}/cmake/configuration.cmake" )
 
-message( "   ${Blue}Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.${Reset}" )
+message( "   ${Blue}Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.${Reset}" )
 
 #
 # Dependencies
