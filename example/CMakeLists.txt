@@ -117,7 +117,7 @@ if ( BUILD_SSL )
     target_link_libraries( https_client_verify_peer ${CMAKE_PROJECT_NAME} )
 
     add_executable( web_socket web_socket/source/example.cpp )
-    target_link_libraries( web_socket ${CMAKE_PROJECT_NAME} )
+    target_link_libraries( web_socket ${CMAKE_PROJECT_NAME} ${ssl_LIBRARY} ${crypto_LIBRARY} )
 endif ( )
 
 #
