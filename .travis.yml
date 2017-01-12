@@ -1,25 +1,38 @@
+dist: trusty
+
+sudo: false
+
 language: cpp
 
-addons:
-    apt:
-        sources:
-            - ubuntu-toolchain-r-test
-            - kubuntu-backports
-        packages:
-            - cmake
-            - g++-5
-            - gcc-5
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-5
+      env:
+      - COMPILERXX="g++-5"
+      - COMPILERC="gcc-5"
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-5             #libstdc++5 required
+      env:
+      - COMPILERXX="clang++"
+      - COMPILERC="clang"
 
-compiler:
-  - gcc
-
-install:
-    - if [ "$CXX" = "g++"     ]; then export CXX="g++-5" CC="gcc-5"; fi
-
-before_script:  
-    - mkdir build
-    - cd build
-    - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
+before_script:
+  - CXX=$COMPILERXX
+  - CC=$COMPILERC 
+  - mkdir build
+  - cd build
+  - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
 
 script: make -j5 && make test 
 
