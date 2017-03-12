@@ -19,14 +19,14 @@ option( BUILD_SSL      "Build secure socket layer support."  ON )
 #
 # Configuration
 #
-include( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/configuration.cmake" )
+include( "${PROJECT_SOURCE_DIR}/cmake/configuration.cmake" )
 
 message( "   ${Blue}Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.${Reset}" )
 
 #
 # Dependencies
 #
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules" )
 
 find_package( asio REQUIRED )
 include_directories( SYSTEM ${asio_INCLUDE} )
@@ -42,7 +42,7 @@ endif ( )
 #
 # Build
 #
-include( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/manifest.cmake" )
+include( "${PROJECT_SOURCE_DIR}/cmake/manifest.cmake" )
 
 include_directories( ${INCLUDE_DIR} )
 
@@ -61,23 +61,23 @@ endif ( )
 if ( BUILD_EXAMPLES )
     find_package( pam )
     find_package( syslog )
-    add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/example" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/example" )
 endif ( )
 
 if ( BUILD_TESTS )
     find_package( catch REQUIRED )
 
     enable_testing( )
-    add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/test/unit" )
-    add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/test/acceptance" )
-    add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/test/regression" )
-    add_subdirectory( "${CMAKE_CURRENT_SOURCE_DIR}/test/integration" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/acceptance" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/regression" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/integration" )
 endif ( )
 
 #
 # Install
 #
-include( "${CMAKE_CURRENT_SOURCE_DIR}/cmake/artifacts.cmake" )
+include( "${PROJECT_SOURCE_DIR}/cmake/artifacts.cmake" )
 
 if ( NOT DEFINED CMAKE_INSTALL_LIBDIR )
     set( CMAKE_INSTALL_LIBDIR library )
