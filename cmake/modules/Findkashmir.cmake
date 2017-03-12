@@ -1,6 +1,6 @@
 # Copyright 2014-2016, Corvusoft Ltd, All Rights Reserved.
 
-find_path( kashmir_INCLUDE kashmir HINTS "${CMAKE_SOURCE_DIR}/dependency/kashmir" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_path( kashmir_INCLUDE kashmir HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependency/kashmir" "/usr/include" "/usr/local/include" "/opt/local/include" )
 
 if ( kashmir_INCLUDE )
     set( KASHMIR_FOUND TRUE )
