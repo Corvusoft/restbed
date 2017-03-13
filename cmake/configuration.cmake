@@ -14,11 +14,11 @@ if ( BUILD_SHARED )
     set( BUILD_SHARED_LIBS ON )
 endif ( )
 
-set( INCLUDE_DIR "${CMAKE_SOURCE_DIR}/source" )
+set( INCLUDE_DIR "${PROJECT_SOURCE_DIR}/source" )
 set( SOURCE_DIR "${INCLUDE_DIR}/corvusoft/${PROJECT_NAME}" )
 
 if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
-    set( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/distribution" CACHE PATH "Install path prefix" FORCE )
+    set( CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/distribution" CACHE PATH "Install path prefix" FORCE )
 endif ( )
 
 if ( ${CMAKE_CXX_COMPILER_ID} STREQUAL GNU )
