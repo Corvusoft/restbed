@@ -19,10 +19,8 @@ matrix:
     - compiler: clang
       addons:
         apt:
-          sources:
-          - ubuntu-toolchain-r-test
           packages:
-          - g++-5             #libstdc++5 required
+          - libstdc++5
       env:
       - COMPILERXX="clang++"
       - COMPILERC="clang"
