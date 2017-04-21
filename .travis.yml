@@ -36,8 +36,8 @@ before_script:
   - mkdir build
   - cd build
   - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
-
-script: make -j5 && make test 
+  
+script: make -j3 && make test
 
 notifications:
   recipients:
