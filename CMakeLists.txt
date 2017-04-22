@@ -1,7 +1,7 @@
 # Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
 cmake_minimum_required( VERSION 2.8.10 )
 
-project( restbed CXX )
+project( "restbed" )
 set( restbed_VERSION_MAJOR 4 )
 set( restbed_VERSION_MINOR 5.0 )
 set( restbed_VERSION ${restbed_VERSION_MAJOR}.${restbed_VERSION_MINOR} )
@@ -35,9 +35,8 @@ find_package( kashmir REQUIRED )
 include_directories( SYSTEM ${kashmir_INCLUDE} )
 
 if ( BUILD_SSL )
-    set( OPENSSL_ROOT_DIR "${PROJECT_SOURCE_DIR}/dependency/openssl" ) #try to use first built in dependency
-    find_package( OpenSSL REQUIRED )
-    include_directories( SYSTEM ${OPENSSL_INCLUDE_DIR} )
+    find_package( openssl REQUIRED )
+    include_directories( SYSTEM ${ssl_INCLUDE} )
 endif ( )
 
 #
@@ -54,7 +53,7 @@ if ( BUILD_SHARED )
 endif ( )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${OPENSSL_LIBRARIES} )
+    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
 else ( )
     target_link_libraries( ${PROJECT_NAME} )
 endif ( )

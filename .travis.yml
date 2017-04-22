@@ -6,8 +6,7 @@ language: cpp
 
 matrix:
   include:
-    - os: linux
-      compiler: gcc
+    - compiler: gcc
       addons:
         apt:
           sources:
@@ -15,29 +14,27 @@ matrix:
           packages:
           - g++-5
       env:
-      - COMPILERCXX="g++-5"
+      - COMPILERXX="g++-5"
       - COMPILERC="gcc-5"
-    - os: linux
-      compiler: clang
+    - compiler: clang
       addons:
         apt:
           sources:
           - ubuntu-toolchain-r-test
           packages:
           - g++-5             #libstdc++5 required
-    - os: osx
-      compiler: gcc
-    - os: osx
-      compiler: clang
+      env:
+      - COMPILERXX="clang++"
+      - COMPILERC="clang"
+
 before_script:
-  - if [ -n "$COMPILERC" ]; then export CC=$COMPILERC; fi
-  - if [ -n "$COMPILERCXX" ]; then export CXX=$COMPILERCXX; fi 
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export OPENSSL_ROOT_DIR=/usr/local/opt/openssl; fi
+  - CXX=$COMPILERXX
+  - CC=$COMPILERC 
   - mkdir build
   - cd build
   - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
-  
-script: make -j3 && make test
+
+script: make -j5 && make test 
 
 notifications:
   recipients:
