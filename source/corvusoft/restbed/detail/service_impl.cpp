@@ -325,7 +325,7 @@ namespace restbed
             
             smatch matches;
             string sanitised_path = "";
-            static const regex pattern( "^\\{[a-zA-Z0-9]+: ?(.*)\\}$" );
+            static const regex pattern( "^\\{[a-zA-Z0-9_\\-]+: ?(.*)\\}$" );
             
             for ( auto folder : String::split( path, '/' ) )
             {
@@ -552,7 +552,7 @@ namespace restbed
         void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
         {
             smatch matches;
-            static const regex pattern( "^\\{([a-zA-Z0-9]+): ?.*\\}$" );
+            static const regex pattern( "^\\{([a-zA-Z0-9_\\-]+): ?.*\\}$" );
             
             const auto folders = String::split( request->get_path( ), '/' );
             const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
