@@ -32,11 +32,10 @@ matrix:
 before_script:
   - if [ -n "$COMPILERC" ]; then export CC=$COMPILERC; fi
   - if [ -n "$COMPILERCXX" ]; then export CXX=$COMPILERCXX; fi 
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export OPENSSL_ROOT_DIR=/usr/local/opt/openssl; fi
   - mkdir build
   - cd build
   - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
-  
+
 script: make -j3 && make test
 
 notifications:
