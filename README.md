@@ -1,4 +1,5 @@
-Restbed [![Build Status](https://travis-ci.org/Corvusoft/restbed.svg?branch=master)](https://travis-ci.org/Corvusoft/restbed)
+Restbed [![Unix Build Status](https://travis-ci.org/Corvusoft/restbed.svg?branch=master)](https://travis-ci.org/Corvusoft/restbed)
+[![Windows Build Status](https://ci.appveyor.com/api/projects/status/75wqogaks13xp817/branch/master?svg=true)](https://ci.appveyor.com/project/corvusoft/restbed/branch/master)
 =============================================================================================================================
 
 ---
