@@ -159,6 +159,7 @@ namespace restbed
         void SocketImpl::write( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_buffer = make_shared< Bytes >( data );
+            if (m_is_open) {
             
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
@@ -207,15 +208,17 @@ namespace restbed
             }
             
 #endif
+            }
         }
         
         size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
         {
+            size_t size = 0;
+            if (m_is_open) {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) );
             
-            size_t size = 0;
 #ifdef BUILD_SSL
             
             if ( m_socket not_eq nullptr )
@@ -231,7 +234,7 @@ namespace restbed
             
 #endif
             m_timer->cancel( );
-            
+            }
             if ( error )
             {
                 m_is_open = false;
@@ -242,6 +245,7 @@ namespace restbed
         
         void SocketImpl::read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
         {
+            if (m_is_open) {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
@@ -290,10 +294,13 @@ namespace restbed
             }
             
 #endif
+            }
         }
         
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback )
         {
+
+            if (m_is_open) {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) ) );
@@ -338,15 +345,18 @@ namespace restbed
             }
             
 #endif
+            }
         }
         
         size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error )
         {
+            size_t length = 0;
+            if (m_is_open) {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) );
             
-            size_t length = 0;
+           
             
 #ifdef BUILD_SSL
             
@@ -363,7 +373,7 @@ namespace restbed
             
 #endif
             m_timer->cancel( );
-            
+            }
             if ( error )
             {
                 m_is_open = false;
@@ -374,6 +384,8 @@ namespace restbed
         
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback )
         {
+
+            if (m_is_open) {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) ) );
@@ -418,6 +430,7 @@ namespace restbed
             }
             
 #endif
+            }
         }
         
         string SocketImpl::get_local_endpoint( void )
