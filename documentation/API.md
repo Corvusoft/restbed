@@ -2281,6 +2281,28 @@ n/a
 
 n/a
 
+#### Service::set_ready_handler
+
+```C++
+void set_ready_handler( const std::function< void ( Service& ) >& value );
+```
+
+Set a handler to be invoked once the service is up and ready to serve incoming HTTP requests.
+
+##### Parameters
+
+| name       | type                                                                          | default value | direction |
+|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+
+##### Return Value
+
+n/a
+
+##### Exceptions
+
+n/a
+
 #### Service::set_signal_handler
 
 ```C++
