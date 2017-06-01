@@ -83,17 +83,29 @@ namespace restbed
             
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
+            float get_header( const std::string& name, const float default_value ) const;
+            
+            double get_header( const std::string& name, const double default_value ) const;
+            
+            std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
+            
+            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+            
             template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_header( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_header( name ), default_value );
             }
             
-            std::string get_header( const std::string& name, const std::string& default_value ) const;
-            
-            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-            
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+            
+            float get_query_parameter( const std::string& name, const float default_value ) const;
+            
+            double get_query_parameter( const std::string& name, const double default_value ) const;
+            
+            std::string get_query_parameter( const std::string& name, const std::string& default_value = "" ) const;
+            
+            std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_query_parameter( const std::string& name, const Type default_value ) const
@@ -101,21 +113,21 @@ namespace restbed
                 return Common::parse_parameter( get_query_parameter( name ), default_value );
             }
             
-            std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
-            
-            std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-            
             std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
+            
+            float get_path_parameter( const std::string& name, const float default_value ) const;
+            
+            double get_path_parameter( const std::string& name, const double default_value ) const;
+            
+            std::string get_path_parameter( const std::string& name, const std::string& default_value = "" ) const;
+            
+            std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_path_parameter( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_path_parameter( name ), default_value );
             }
-            
-            std::string get_path_parameter( const std::string& name, const std::string& default_value ) const;
-            
-            std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
             std::map< std::string, std::string > get_path_parameters( const std::string& name = "" ) const;
             
@@ -135,9 +147,9 @@ namespace restbed
             void set_method( const std::string& value );
             
             void set_protocol( const std::string& value );
-
+            
             void add_header( const std::string& name, const std::string& value );
-
+            
             void set_header( const std::string& name, const std::string& value );
             
             void set_headers( const std::multimap< std::string, std::string >& values );

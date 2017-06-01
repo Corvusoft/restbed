@@ -1,0 +1,24 @@
+version: 1.0.{build}
+image: Visual Studio 2015
+configuration: Release
+platform: x64
+clone_folder: C:\projects\restbed
+init:
+- cmd: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
+install:
+- cmd: git submodule update --init --recursive
+build_script:
+- cmd: >-
+    mkdir c:\projects\restbed\build
+
+    cd c:\projects\restbed\build
+
+    cmake -G "Visual Studio 14 2015" -DBUILD_SSL=NO -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DOPENSSL_ROOT_DIR=C:\OpenSSL-Win64 ..
+
+    cmake --build . --target ALL_BUILD --config Release
+test_script:
+- cmd: >-
+    cd c:\projects\restbed\build
+
+    ctest
+deploy: off
