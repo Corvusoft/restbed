@@ -145,6 +145,8 @@ namespace restbed
                         m_is_open = true;
                         callback( error );
                     } );
+                } else {
+                    callback( error );
                 }
             } );
         }
