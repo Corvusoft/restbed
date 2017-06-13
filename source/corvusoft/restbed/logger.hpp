@@ -5,7 +5,7 @@
 #ifndef _RESTBED_LOGGER_H
 #define _RESTBED_LOGGER_H 1
 
-#if defined(WIN32)
+#if defined(_WIN32)
     #undef ERROR
 #endif
 
