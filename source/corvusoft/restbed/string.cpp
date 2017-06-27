@@ -7,6 +7,7 @@
 #include <memory>
 #include <ciso646>
 #include <algorithm>
+#include <cstdlib>
 
 //Project Includes
 #include "corvusoft/restbed/string.hpp"
@@ -162,8 +163,14 @@ namespace restbed
     {
         unique_ptr< char[ ] > formatted( new char[ length + 1 ] );
         
+        char* saved_locale = strdup(setlocale(LC_NUMERIC, NULL));
+        setlocale(LC_NUMERIC, "C");
+
         int required_length = vsnprintf( formatted.get( ), length + 1, format, arguments );
         
+        setlocale(LC_NUMERIC, saved_locale);
+        free(saved_locale);
+
         if ( required_length == -1 )
         {
             required_length = 0;
