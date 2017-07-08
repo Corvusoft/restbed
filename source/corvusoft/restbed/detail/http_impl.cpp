@@ -6,7 +6,9 @@
 #include <map>
 #include <regex>
 #include <sstream>
-#include <iso646.h>
+#include <cstdlib>
+#include <clocale>
+#include <ciso646>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
@@ -30,6 +32,7 @@
 #endif
 
 //System Namespaces
+using std::free;
 using std::bind;
 using std::stod;
 using std::regex;
@@ -38,6 +41,7 @@ using std::string;
 using std::istream;
 using std::function;
 using std::multimap;
+using std::setlocale;
 using std::to_string;
 using std::shared_ptr;
 using std::error_code;
@@ -92,12 +96,18 @@ namespace restbed
                 protocol = "HTTP";
             }
             
+            char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
+            setlocale( LC_NUMERIC, "C" );
+            
             auto data = String::format( "%s %s %s/%.1f\r\n",
                                         request->get_method( ).data( ),
                                         path.data( ),
                                         protocol.data( ),
                                         request->get_version( ) );
                                         
+            setlocale( LC_NUMERIC, locale );
+            free( locale );
+            
             auto headers = request->get_headers( );
             
             if ( not headers.empty( ) )

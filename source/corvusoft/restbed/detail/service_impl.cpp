@@ -8,6 +8,8 @@
 #include <sstream>
 #include <utility>
 #include <ciso646>
+#include <cstdlib>
+#include <clocale>
 #include <stdexcept>
 #include <algorithm>
 #include <functional>
@@ -37,6 +39,7 @@
 //System Namespaces
 using std::set;
 using std::map;
+using std::free;
 using std::pair;
 using std::bind;
 using std::regex;
@@ -45,6 +48,7 @@ using std::smatch;
 using std::istream;
 using std::find_if;
 using std::function;
+using std::setlocale;
 using std::multimap;
 using std::to_string;
 using std::exception;
@@ -739,9 +743,14 @@ namespace restbed
                 
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
-                session->m_pimpl->m_request->m_pimpl->m_version = stod( items.at( "version" ) );
                 session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
                 session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
+                
+                char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
+                setlocale( LC_NUMERIC, "C" );
+                session->m_pimpl->m_request->m_pimpl->m_version = stod( items.at( "version" ) );
+                setlocale( LC_NUMERIC, locale );
+                free( locale );
                 
                 authenticate( session );
             }
