@@ -150,10 +150,6 @@ namespace restbed
                 {
                     callback( error );
                 }
-                else
-                {
-                    callback( error );
-                }
             } );
         }
         
