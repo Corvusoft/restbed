@@ -145,7 +145,13 @@ namespace restbed
                         m_is_open = true;
                         callback( error );
                     } );
-                } else {
+                }
+                else
+                {
+                    callback( error );
+                }
+                else
+                {
                     callback( error );
                 }
             } );
