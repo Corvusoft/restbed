@@ -93,7 +93,7 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                std::function< void ( const int, const std::exception& ) > m_error_handler;
+                std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler;
                 
             protected:
                 //Friends
