@@ -496,22 +496,17 @@ namespace restbed
         
         void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
         {
-            if ( error )
+            if ( error or socket == nullptr or socket->m_timer->expires_at( ) > steady_clock::now( ) )
             {
                 return;
-            }
-            
-            if ( socket == nullptr or socket->m_timer->expires_at( ) > steady_clock::now( ) )
-            {
-                return;
-            }
-            
-            if ( m_error_handler not_eq nullptr )
-            {
-                //m_error_handler( 408, runtime_error( "The socket timed out waiting for the request." ) );
             }
             
             socket->close( );
+            
+            if ( m_error_handler not_eq nullptr )
+            {
+                m_error_handler( 408, runtime_error( "The socket timed out waiting for the request." ), nullptr );
+            }
         }
     }
 }
