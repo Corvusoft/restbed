@@ -239,7 +239,7 @@ namespace restbed
             getline( response_stream, status_line );
             
             smatch matches;
-            static const regex status_line_pattern( "^([a-zA-Z]+)\\/(\\d*\\.?\\d*) (-?\\d+) (.+)\\r$" );
+            static const regex status_line_pattern( "^([a-zA-Z]+)\\/(\\d*\\.?\\d*) (-?\\d+) (.*)\\r$" );
             
             if ( not regex_match( status_line, matches, status_line_pattern ) or matches.size( ) not_eq 5 )
             {
