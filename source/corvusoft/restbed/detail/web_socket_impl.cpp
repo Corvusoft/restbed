@@ -59,6 +59,7 @@ namespace restbed
         
         void WebSocketImpl::listen( const shared_ptr< WebSocket > socket )
         {
+        	if (m_socket->is_open()) {
             m_socket->read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
@@ -66,6 +67,7 @@ namespace restbed
                     m_error_handler( socket, code );
                 }
             } );
+        	}
         }
         
         void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
