@@ -96,17 +96,23 @@ namespace restbed
                 protocol = "HTTP";
             }
             
-            char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
-            setlocale( LC_NUMERIC, "C" );
+            char* locale = nullptr;
+            if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+            {
+                locale = strdup(current_locale);
+                setlocale( LC_NUMERIC, "C" );
+            }
             
             auto data = String::format( "%s %s %s/%.1f\r\n",
                                         request->get_method( ).data( ),
                                         path.data( ),
                                         protocol.data( ),
                                         request->get_version( ) );
-                                        
-            setlocale( LC_NUMERIC, locale );
-            free( locale );
+            
+            if (locale) {
+                setlocale( LC_NUMERIC, locale );
+                free( locale );
+            }
             
             auto headers = request->get_headers( );
             
