@@ -62,17 +62,23 @@ namespace restbed
     
     Bytes Http::to_bytes( const shared_ptr< Response >& value )
     {
-        char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
-        setlocale( LC_NUMERIC, "C" );
+        char* locale = nullptr;
+        if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+        {
+            locale = strdup(current_locale);
+            setlocale( LC_NUMERIC, "C" );
+        }
         
         auto data = String::format( "%s/%.1f %i %s\r\n",
                                     value->get_protocol( ).data( ),
                                     value->get_version( ),
                                     value->get_status_code( ),
                                     value->get_status_message( ).data( ) );
-                                    
-        setlocale( LC_NUMERIC, locale );
-        free( locale );
+        
+        if (locale) {
+            setlocale( LC_NUMERIC, locale );
+            free( locale );
+        }
         
         auto headers = value->get_headers( );
         
