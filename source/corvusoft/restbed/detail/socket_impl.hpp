@@ -133,8 +133,6 @@ namespace restbed
                 //Properties
                 bool m_is_open;
                 
-                std::shared_ptr< Bytes > m_buffer;
-                
                 std::shared_ptr< Logger > m_logger;
                 
                 std::chrono::milliseconds m_timeout;
