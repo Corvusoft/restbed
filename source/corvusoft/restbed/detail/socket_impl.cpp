@@ -48,7 +48,6 @@ namespace restbed
     {
         SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->is_open( ) ),
-            m_buffer( nullptr ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_timer( make_shared< asio::steady_timer >( socket->get_io_service( ) ) ),
@@ -64,7 +63,6 @@ namespace restbed
 #ifdef BUILD_SSL
         SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->lowest_layer( ).is_open( ) ),
-            m_buffer( nullptr ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_timer( make_shared< asio::steady_timer >( socket->lowest_layer( ).get_io_service( ) ) ),
@@ -165,7 +163,7 @@ namespace restbed
         
         void SocketImpl::write( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
         {
-            m_buffer = make_shared< Bytes >( data );
+            const auto buffer = make_shared< Bytes >( data );
             
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
@@ -175,7 +173,7 @@ namespace restbed
             if ( m_socket not_eq nullptr )
             {
 #endif
-                asio::async_write( *m_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), m_strand->wrap( [ this, callback ]( const error_code & error, size_t length )
+                asio::async_write( *m_socket, asio::buffer( buffer->data( ), buffer->size( ) ), m_strand->wrap( [ this, callback, buffer ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -183,8 +181,6 @@ namespace restbed
                     {
                         m_is_open = false;
                     }
-                    
-                    m_buffer.reset( );
                     
                     if ( error not_eq asio::error::operation_aborted )
                     {
@@ -195,7 +191,7 @@ namespace restbed
             }
             else
             {
-                asio::async_write( *m_ssl_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), m_strand->wrap( [ this, callback ]( const error_code & error, size_t length )
+                asio::async_write( *m_ssl_socket, asio::buffer( buffer->data( ), buffer->size( ) ), m_strand->wrap( [ this, callback, buffer ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
                     
@@ -203,8 +199,6 @@ namespace restbed
                     {
                         m_is_open = false;
                     }
-                    
-                    m_buffer.reset( );
                     
                     if ( error not_eq asio::error::operation_aborted )
                     {

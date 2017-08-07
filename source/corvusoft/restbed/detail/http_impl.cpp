@@ -96,17 +96,23 @@ namespace restbed
                 protocol = "HTTP";
             }
             
-            char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
-            setlocale( LC_NUMERIC, "C" );
+            char* locale = nullptr;
+            if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+            {
+                locale = strdup(current_locale);
+                setlocale( LC_NUMERIC, "C" );
+            }
             
             auto data = String::format( "%s %s %s/%.1f\r\n",
                                         request->get_method( ).data( ),
                                         path.data( ),
                                         protocol.data( ),
                                         request->get_version( ) );
-                                        
-            setlocale( LC_NUMERIC, locale );
-            free( locale );
+            
+            if (locale) {
+                setlocale( LC_NUMERIC, locale );
+                free( locale );
+            }
             
             auto headers = request->get_headers( );
             
@@ -239,7 +245,7 @@ namespace restbed
             getline( response_stream, status_line );
             
             smatch matches;
-            static const regex status_line_pattern( "^([a-zA-Z]+)\\/(\\d*\\.?\\d*) (-?\\d+) (.+)\\r$" );
+            static const regex status_line_pattern( "^([a-zA-Z]+)\\/(\\d*\\.?\\d*) (-?\\d+) (.*)\\r$" );
             
             if ( not regex_match( status_line, matches, status_line_pattern ) or matches.size( ) not_eq 5 )
             {
