@@ -124,7 +124,7 @@ TEST_CASE( "validate getter default value", "[request]" )
     
     SECTION( "float" )
     {
-        float value = request.get_header( "Var", 3.14 );
+        float value = request.get_header( "Var", 3.14f );
         REQUIRE( value == 3.14f );
     }
     
