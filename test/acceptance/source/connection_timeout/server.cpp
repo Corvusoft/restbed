@@ -11,6 +11,7 @@
 #include <ciso646>
 #include <stdexcept>
 #include <functional>
+#include <system_error>
 
 //Project Includes
 #include <restbed>
@@ -23,6 +24,7 @@
 using std::thread;
 using std::string;
 using std::vector;
+using std::error_code;
 using std::shared_ptr;
 using std::make_shared;
 using std::chrono::seconds;
@@ -66,7 +68,9 @@ SCENARIO( "validate connection timeout after connect", "[socket]" )
                     io_service io_service;
                     asio::ip::tcp::socket socket( io_service );
                     asio::ip::tcp::endpoint endpoint( asio::ip::address::from_string( "127.0.0.1" ), 1984 );
-                    socket.connect( endpoint );
+
+                    error_code error;
+                    socket.connect( endpoint, error );
                     
                     REQUIRE( true == socket.is_open( ) );
                     
@@ -118,12 +122,14 @@ SCENARIO( "validate connection timeout after partial request", "[socket]" )
                     io_service io_service;
                     asio::ip::tcp::socket socket( io_service );
                     asio::ip::tcp::endpoint endpoint( asio::ip::address::from_string( "127.0.0.1" ), 1984 );
-                    socket.connect( endpoint );
+
+                    error_code error;
+                    socket.connect( endpoint, error );
                     
                     REQUIRE( true == socket.is_open( ) );
                     
                     string request = "GET /resource HTTP/1.1\r\n";
-                    socket.send( asio::buffer( request, request.length( ) ) );
+                    socket.send( asio::buffer( request, request.length( ) ), 0, error );
                     
                     WHEN( "I wait '4' seconds" )
                     {
