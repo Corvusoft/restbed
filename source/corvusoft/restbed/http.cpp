@@ -164,7 +164,7 @@ namespace restbed
         }
         else
         {
-            request->m_pimpl->m_socket->write( Http::to_bytes( request ), bind( HttpImpl::write_handler, _1, _2, request, completion_handler ) );
+            request->m_pimpl->m_socket->start_write( Http::to_bytes( request ), bind( HttpImpl::write_handler, _1, _2, request, completion_handler ) );
         }
         
         if ( finished )
@@ -210,8 +210,8 @@ namespace restbed
         {
             error_code error;
             const size_t size = length - request->m_pimpl->m_buffer->size( );
-            
-            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, size, error );
+
+            request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, size, error );
             
             if ( error and error not_eq asio::error::eof )
             {
@@ -258,7 +258,7 @@ namespace restbed
         }
         
         error_code error;
-        const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, delimiter, error );
+        const size_t size = request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, delimiter, error );
         
         if ( error )
         {

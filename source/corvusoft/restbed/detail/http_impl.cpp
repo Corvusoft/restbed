@@ -203,7 +203,7 @@ namespace restbed
                 return callback( request, create_error_response( request, body ) );
             }
             
-            request->m_pimpl->m_socket->write( to_bytes( request ), bind( write_handler, _1, _2, request, callback ) );
+            request->m_pimpl->m_socket->start_write( to_bytes( request ), bind( write_handler, _1, _2, request, callback ) );
         }
         
         void HttpImpl::write_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
@@ -215,7 +215,7 @@ namespace restbed
             }
             
             request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
+            request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
         }
         
         const shared_ptr< Response > HttpImpl::create_error_response( const shared_ptr< Request >& request, const string& message )
@@ -259,7 +259,7 @@ namespace restbed
             response->set_status_code( stoi( matches[ 3 ].str( ) ) );
             response->set_status_message( matches[ 4 ].str( ) );
             
-            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n\r\n", bind( read_headers_handler, _1, _2, request, callback ) );
+            request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, "\r\n\r\n", bind( read_headers_handler, _1, _2, request, callback ) );
         }
         
         void HttpImpl::read_headers_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )

@@ -59,7 +59,7 @@ namespace restbed
         
         void WebSocketImpl::listen( const shared_ptr< WebSocket > socket )
         {
-            m_socket->read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
+            m_socket->start_read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
                 {
@@ -92,7 +92,7 @@ namespace restbed
                 length += 4;
             }
             
-            m_socket->read( length, bind( &WebSocketImpl::parse_length_and_mask, this, _1, data, socket ), [ this, socket ]( const error_code code )
+            m_socket->start_read( length, bind( &WebSocketImpl::parse_length_and_mask, this, _1, data, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
                 {
@@ -126,7 +126,7 @@ namespace restbed
                 length = message->get_length( );
             }
             
-            m_socket->read( length, bind( &WebSocketImpl::parse_payload, this, _1, packet, socket ), [ this, socket ]( const error_code code )
+            m_socket->start_read( length, bind( &WebSocketImpl::parse_payload, this, _1, packet, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
                 {

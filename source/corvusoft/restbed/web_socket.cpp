@@ -92,7 +92,7 @@ namespace restbed
     {
         const auto data = m_pimpl->m_manager->compose( message );
         
-        m_pimpl->m_socket->write( data, [ this, callback ]( const error_code & code, size_t )
+        m_pimpl->m_socket->start_write( data, [ this, callback ]( const error_code & code, size_t )
         {
             if ( code )
             {

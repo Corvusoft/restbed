@@ -131,7 +131,7 @@ namespace restbed
                 payload->set_status_message( m_settings->get_status_message( payload->get_status_code( ) ) );
             }
             
-            m_request->m_pimpl->m_socket->write( Http::to_bytes( payload ), callback );
+            m_request->m_pimpl->m_socket->start_write( Http::to_bytes( payload ), callback );
         }
         
         const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void )

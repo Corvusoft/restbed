@@ -6,6 +6,8 @@
 #define _RESTBED_DETAIL_SOCKET_IMPL_H 1
 
 //System Includes
+#include <queue>
+#include <tuple>
 #include <chrono>
 #include <string>
 #include <memory>
@@ -23,7 +25,6 @@
 #include <asio/steady_timer.hpp>
 #include <asio/io_service.hpp>
 #include <asio/io_service_strand.hpp>
-
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
@@ -70,18 +71,18 @@ namespace restbed
                 
                 void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback );
                 
-                void write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+				void start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback);
+				
+				size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
+				
+				size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
                 
-                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
+				void start_read(const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
                 
-                void read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
+				void start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
-                void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
-                
-                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
-                
-                void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
-                
+				void start_read(const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+
                 //Getters
                 std::string get_local_endpoint( void );
                 
@@ -122,7 +123,23 @@ namespace restbed
                 
                 //Functionality
                 void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
+
+                void write( void );
                 
+                void write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+                
+				void write_helper( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+
+                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
+                
+                void read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
+                
+                void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+                
+                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
+                
+                void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+ 
                 //Getters
                 
                 //Setters
@@ -132,7 +149,11 @@ namespace restbed
                 
                 //Properties
                 bool m_is_open;
+
+				const uint8_t MAX_WRITE_RETRIES = 5;
                 
+				std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
+
                 std::shared_ptr< Logger > m_logger;
                 
                 std::chrono::milliseconds m_timeout;
