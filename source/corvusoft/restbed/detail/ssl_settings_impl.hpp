@@ -50,6 +50,10 @@ namespace restbed
             
             bool m_single_diffie_hellman_use_enabled = true;
             
+            bool m_client_authentication_enabled = false;
+            
+            bool m_server_authentication_enabled = true;
+            
             std::string m_bind_address = "";
             
             std::string m_passphrase = "";
@@ -65,6 +69,8 @@ namespace restbed
             std::string m_certificate_authority_pool = "";
             
             std::string m_temporary_diffie_hellman = "";
+
+	    std::string m_cipher_suites = "";
         };
     }
 }

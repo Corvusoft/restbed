@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2016, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <clocale>
 #include <ciso646>
+#include <openssl/ssl.h>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
@@ -171,27 +172,71 @@ namespace restbed
             
             if ( settings not_eq nullptr )
             {
-                const auto pool = settings->get_certificate_authority_pool( );
-                
-                if ( pool.empty( ) )
+                if ( settings->has_enabled_client_authentication( ) ) 
                 {
-                    context.set_default_verify_paths( );
+                    auto filename = settings->get_certificate_chain( );
+                    
+                    if ( not filename.empty( ) )
+                    {
+                        context.use_certificate_chain_file( filename );
+                    }
+                    
+                    filename = settings->get_certificate( );
+                    
+                    if ( not filename.empty( ) )
+                    {
+                        context.use_certificate_file( filename, asio::ssl::context::pem );
+                    }
+                    
+                    filename = settings->get_private_key( );
+                    
+                    if ( not filename.empty( ) )
+                    {
+                        context.use_private_key_file( filename, asio::ssl::context::pem );
+                    }
+                    
+                    filename = settings->get_private_rsa_key( );
+                    
+                    if ( not filename.empty( ) )
+                    {
+                        context.use_rsa_private_key_file( filename, asio::ssl::context::pem );
+                    }       
+                }
+
+                if ( settings->has_enabled_server_authentication( ) )
+                {
+                    const auto pool = settings->get_certificate_authority_pool( );
+
+                    if ( pool.empty( ) )
+                    {
+                        context.set_default_verify_paths( );
+                    }
+                    else
+                    {
+                        context.add_verify_path( pool );
+                    }
+                    socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                    socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
                 }
                 else
                 {
-                    context.add_verify_path( settings->get_certificate_authority_pool( ) );
+                    socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                    socket->set_verify_mode( asio::ssl::verify_none );
                 }
-                
-                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
-                socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
             }
             else
             {
                 socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
                 socket->set_verify_mode( asio::ssl::verify_none );
             }
-            
+            SSL_set_renegotiate_mode( socket->native_handle(), ssl_renegotiate_once );
+
+            if( ! settings->get_cipher_suites().empty() )
+            {
+                SSL_set_cipher_list( socket->native_handle(), settings->get_cipher_suites().c_str() );
+            }
             socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
+            // TODO implement ssl pinning
             request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
         }
 #endif

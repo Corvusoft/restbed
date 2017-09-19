@@ -60,6 +60,10 @@ namespace restbed
             bool has_enabled_default_workarounds( void ) const;
             
             bool has_enabled_single_diffie_hellman_use( void ) const;
+
+            bool has_enabled_client_authentication( void ) const;
+	    
+            bool has_enabled_server_authentication( void ) const;
             
             //Getters
             uint16_t get_port( void ) const;
@@ -79,6 +83,8 @@ namespace restbed
             std::string get_temporary_diffie_hellman( void ) const;
             
             std::string get_certificate_authority_pool( void ) const;
+
+	    std::string get_cipher_suites( void ) const;
             
             //Setters
             void set_port( const uint16_t value );
@@ -108,6 +114,10 @@ namespace restbed
             void set_certificate_chain( const Uri& value );
             
             void set_certificate_authority_pool( const Uri& value );
+
+            void set_client_authentication_enabled( const bool value );
+
+            void set_server_authentication_enabled( const bool value );
             
             void set_passphrase( const std::string& value );
             
@@ -116,6 +126,8 @@ namespace restbed
             void set_private_rsa_key( const Uri& value );
             
             void set_temporary_diffie_hellman( const Uri& value );
+	    
+	    void set_cipher_suites( const std::string ciphersuites );
             
             //Operators
             
