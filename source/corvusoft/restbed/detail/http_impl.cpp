@@ -9,7 +9,6 @@
 #include <cstdlib>
 #include <clocale>
 #include <ciso646>
-#include <openssl/ssl.h>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
@@ -30,6 +29,7 @@
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
+    #include <openssl/ssl.h>
 #endif
 
 //System Namespaces
@@ -229,14 +229,15 @@ namespace restbed
                 socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
                 socket->set_verify_mode( asio::ssl::verify_none );
             }
-            SSL_set_renegotiate_mode( socket->native_handle(), ssl_renegotiate_once );
-
+#ifdef OPENSSL_IS_BORINGSSL
+            SSL_set_renegotiate_mode( socket->native_handle(), ssl_renegotiate_once ); // In BoringSSL, renegotiation is disabled by default. With this line we enable it for one time to allow client side authentication
+#endif
             if( ! settings->get_cipher_suites().empty() )
             {
                 SSL_set_cipher_list( socket->native_handle(), settings->get_cipher_suites().c_str() );
             }
             socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
-            // TODO implement ssl pinning
+
             request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
         }
 #endif
