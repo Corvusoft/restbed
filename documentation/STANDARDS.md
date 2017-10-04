@@ -254,7 +254,7 @@ using std::mutex;
 using std::string;
 using std::thread;
 
-using namespace restbed
+namespace restbed
 {
   ...
 }
