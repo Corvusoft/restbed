@@ -44,9 +44,9 @@ endif ( )
 #
 include( "${PROJECT_SOURCE_DIR}/cmake/manifest.cmake" )
 
-include_directories( ${INCLUDE_DIR} )
-
 add_library( ${PROJECT_NAME} ${MANIFEST} )
+
+target_include_directories( ${PROJECT_NAME} PUBLIC ${INCLUDE_DIR} )
 
 if ( BUILD_SHARED )
     set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${restbed_VERSION_MAJOR} VERSION ${restbed_VERSION} )
