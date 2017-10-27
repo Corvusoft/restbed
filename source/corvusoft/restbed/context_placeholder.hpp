@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_CONTEXT_PLACEHOLDER_H
-#define _RESTBED_CONTEXT_PLACEHOLDER_H 1
+#pragma once
 
 //System Includes
 #include <typeinfo>
@@ -101,5 +100,3 @@ namespace restbed
             const Type m_value;
     };
 }
-
-#endif  /* _RESTBED_CONTEXT_PLACEHOLDER_H */

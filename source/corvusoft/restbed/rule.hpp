@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_RULE_H
-#define _RESTBED_RULE_H 1
+#pragma once
 
 //System Includes
 #include <memory>
@@ -94,5 +93,3 @@ namespace restbed
             std::unique_ptr< detail::RuleImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_RULE_H */

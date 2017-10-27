@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_DETAIL_WEB_SOCKET_IMPL_H
-#define _RESTBED_DETAIL_WEB_SOCKET_IMPL_H 1
+#pragma once
 
 //System Includes
 #include <memory>
@@ -119,5 +118,3 @@ namespace restbed
         };
     }
 }
-
-#endif  /* _RESTBED_DETAIL_WEB_SOCKET_IMPL_H */
