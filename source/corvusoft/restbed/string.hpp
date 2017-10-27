@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_STRING_H
-#define _RESTBED_STRING_H 1
+#pragma once
 
 //System Includes
 #include <map>
@@ -110,5 +109,3 @@ namespace restbed
             //Properties
     };
 }
-
-#endif  /* _RESTBED_STRING_H */

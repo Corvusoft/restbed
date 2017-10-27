@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_WEB_SOCKET_MESSAGE_H
-#define _RESTBED_WEB_SOCKET_MESSAGE_H 1
+#pragma once
 
 //System Includes
 #include <tuple>
@@ -143,5 +142,3 @@ namespace restbed
             std::unique_ptr< detail::WebSocketMessageImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_WEB_SOCKET_MESSAGE_H */
