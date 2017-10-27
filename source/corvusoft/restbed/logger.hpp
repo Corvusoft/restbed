@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_LOGGER_H
-#define _RESTBED_LOGGER_H 1
+#pragma once
 
 #if defined(_WIN32)
     #undef ERROR
@@ -104,5 +103,3 @@ namespace restbed
             //Properties
     };
 }
-
-#endif  /* _RESTBED_LOGGER_H */

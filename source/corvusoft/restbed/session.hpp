@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_SESSION_H
-#define _RESTBED_SESSION_H 1
+#pragma once
 
 //System Includes
 #include <map>
@@ -190,5 +189,3 @@ namespace restbed
             std::unique_ptr< detail::SessionImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_SESSION_H */

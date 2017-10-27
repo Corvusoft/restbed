@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_CONTEXT_VALUE_H
-#define _RESTBED_CONTEXT_VALUE_H 1
+#pragma once
 
 //System Includes
 #include <memory>
@@ -109,5 +108,3 @@ namespace restbed
             const std::shared_ptr< ContextPlaceholderBase > m_placeholder;
     };
 }
-
-#endif  /* _RESTBED_CONTEXT_VALUE_H */

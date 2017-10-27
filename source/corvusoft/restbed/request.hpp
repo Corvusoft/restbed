@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_REQUEST_H
-#define _RESTBED_REQUEST_H 1
+#pragma once
 
 //System Includes
 #include <map>
@@ -206,5 +205,3 @@ namespace restbed
             std::unique_ptr< detail::RequestImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_REQUEST_H */

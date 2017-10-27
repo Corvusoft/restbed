@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_WEB_SOCKET_H
-#define _RESTBED_WEB_SOCKET_H 1
+#pragma once
 
 //System Includes
 #include <string>
@@ -136,5 +135,3 @@ namespace restbed
             std::unique_ptr< detail::WebSocketImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_WEB_SOCKET_H */

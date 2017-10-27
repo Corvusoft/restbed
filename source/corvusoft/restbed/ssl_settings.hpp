@@ -2,8 +2,7 @@
  * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_SSL_SETTINGS_H
-#define _RESTBED_SSL_SETTINGS_H 1
+#pragma once
 
 //System Includes
 #include <string>
@@ -159,5 +158,3 @@ namespace restbed
             std::unique_ptr< detail::SSLSettingsImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_SSL_SETTINGS_H */
