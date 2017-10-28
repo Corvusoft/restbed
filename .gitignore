@@ -1,5 +1,6 @@
 # Project Files
 build/
+/cmake-build-*/
 distribution/
 
 # Compiled source
