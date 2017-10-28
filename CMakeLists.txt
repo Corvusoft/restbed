@@ -1,5 +1,5 @@
 # Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-cmake_minimum_required( VERSION 2.8.10 )
+cmake_minimum_required( VERSION 3.0.2 )
 
 project( restbed CXX )
 set( restbed_VERSION_MAJOR 4 )
@@ -24,22 +24,6 @@ include( "${PROJECT_SOURCE_DIR}/cmake/configuration.cmake" )
 message( "   ${Blue}Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.${Reset}" )
 
 #
-# Dependencies
-#
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules" )
-
-find_package( asio REQUIRED )
-include_directories( SYSTEM ${asio_INCLUDE} )
-
-find_package( kashmir REQUIRED )
-include_directories( SYSTEM ${kashmir_INCLUDE} )
-
-if ( BUILD_SSL )
-    find_package( openssl REQUIRED )
-    include_directories( SYSTEM ${ssl_INCLUDE} )
-endif ( )
-
-#
 # Build
 #
 include( "${PROJECT_SOURCE_DIR}/cmake/manifest.cmake" )
@@ -48,14 +32,25 @@ add_library( ${PROJECT_NAME} ${MANIFEST} )
 
 target_include_directories( ${PROJECT_NAME} PUBLIC ${INCLUDE_DIR} )
 
+#
+# Dependencies
+#
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules" )
+
+find_package( asio REQUIRED )
+target_include_directories( ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${asio_INCLUDE}> )
+
+find_package( kashmir REQUIRED )
+target_include_directories( ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${kashmir_INCLUDE}> )
+
 if ( BUILD_SHARED )
     set_target_properties( ${PROJECT_NAME} PROPERTIES SOVERSION ${restbed_VERSION_MAJOR} VERSION ${restbed_VERSION} )
 endif ( )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${PROJECT_NAME} LINK_PRIVATE ${ssl_LIBRARY} ${crypto_LIBRARY} )
-else ( )
-    target_link_libraries( ${PROJECT_NAME} )
+    find_package( openssl REQUIRED )
+    target_include_directories( ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${ssl_INCLUDE}> )
+    target_link_libraries( ${PROJECT_NAME} PUBLIC ${ssl_LIBRARY} ${crypto_LIBRARY} )
 endif ( )
 
 if ( BUILD_EXAMPLES )
