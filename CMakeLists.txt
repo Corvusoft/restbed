@@ -30,7 +30,12 @@ include( "${PROJECT_SOURCE_DIR}/cmake/manifest.cmake" )
 
 add_library( ${PROJECT_NAME} ${MANIFEST} )
 
-target_include_directories( ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${INCLUDE_DIR}> )
+include(GNUInstallDirs)
+
+target_include_directories( ${PROJECT_NAME}
+    PRIVATE $<BUILD_INTERFACE:${INCLUDE_DIR}>
+    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    )
 
 #
 # Dependencies
@@ -73,8 +78,6 @@ endif ( )
 # Install
 #
 include( "${PROJECT_SOURCE_DIR}/cmake/artifacts.cmake" )
-
-include(GNUInstallDirs)
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
