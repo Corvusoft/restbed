@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+include(${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@.cmake)
+
+check_required_components(@PROJECT_NAME@)
+
+message(STATUS "@PROJECT_NAME@ found.")

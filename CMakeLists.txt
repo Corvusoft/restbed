@@ -30,7 +30,7 @@ include( "${PROJECT_SOURCE_DIR}/cmake/manifest.cmake" )
 
 add_library( ${PROJECT_NAME} ${MANIFEST} )
 
-target_include_directories( ${PROJECT_NAME} PUBLIC ${INCLUDE_DIR} )
+target_include_directories( ${PROJECT_NAME} PRIVATE $<BUILD_INTERFACE:${INCLUDE_DIR}> )
 
 #
 # Dependencies
@@ -78,6 +78,21 @@ include(GNUInstallDirs)
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
-install( TARGETS ${PROJECT_NAME}
+install( TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}Targets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
+
+include(CMakePackageConfigHelpers)
+export(EXPORT ${PROJECT_NAME}Targets FILE "${CMAKE_BINARY_DIR}/CMakePackage/${PROJECT_NAME}.cmake")
+configure_package_config_file(${CMAKE_SOURCE_DIR}/cmake/Config.cmake.in
+    "${CMAKE_BINARY_DIR}/CMakePackage/${PROJECT_NAME}Config.cmake"
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
+    )
+install(EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}.cmake
+    DESTINATION lib/cmake/${PROJECT_NAME}
+    )
+install(FILES "${CMAKE_BINARY_DIR}/CMakePackage/${PROJECT_NAME}Config.cmake"
+    DESTINATION lib/cmake/${PROJECT_NAME}
+    COMPONENT Devel
+    )
