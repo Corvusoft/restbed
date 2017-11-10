@@ -99,8 +99,58 @@ namespace restbed
             {
                 body.insert( body.end( ), data.begin( ), data.end( ) );
             }
-            
-            callback( session, data );
+
+            try
+            {
+                callback(session, data);
+            }
+            catch ( const int status_code )
+            {
+                const auto error_handler = session->m_pimpl->get_error_handler();
+                error_handler( status_code, runtime_error( m_settings->get_status_message( status_code ) ), session );
+            }
+            catch ( const regex_error& re )
+            {
+                const auto error_handler = session->m_pimpl->get_error_handler();
+                error_handler( 500, re, session );
+            }
+            catch ( const runtime_error& re )
+            {
+                const auto error_handler = session->m_pimpl->get_error_handler();
+                error_handler( 400, re, session );
+            }
+            catch ( const exception& ex )
+            {
+                const auto error_handler = session->m_pimpl->get_error_handler();
+                error_handler( 500, ex, session );
+            }
+            catch ( ... )
+            {
+                auto cex = current_exception( );
+
+                if ( cex not_eq nullptr )
+                {
+                    try
+                    {
+                        rethrow_exception( cex );
+                    }
+                    catch ( const exception& ex )
+                    {
+                        const auto error_handler = session->m_pimpl->get_error_handler();
+                        error_handler( 500, ex, session );
+                    }
+                    catch ( ... )
+                    {
+                        const auto error_handler = session->m_pimpl->get_error_handler();
+                        error_handler( 500, runtime_error( "Internal Server Error" ), session );
+                    }
+                }
+                else
+                {
+                    const auto error_handler = session->m_pimpl->get_error_handler();
+                    error_handler( 500, runtime_error( "Internal Server Error" ), session );
+                }
+            }
         }
         
         void SessionImpl::transmit( const Response& response, const function< void ( const error_code&, size_t ) >& callback ) const
