@@ -244,10 +244,8 @@ namespace restbed
     
     void Service::publish( const shared_ptr< const Resource >& resource )
     {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
+
+        ServiceImpl::lock::write write_lock;
         
         if ( resource == nullptr )
         {
