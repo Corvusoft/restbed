@@ -416,29 +416,47 @@ namespace restbed
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
-            
+
             size_t size = 0;
+            auto finished = std::make_shared<bool>(false);
+            auto sharedError = std::make_shared<error_code>();
+            auto sharedSize = std::make_shared<size_t>(0);
+
 #ifdef BUILD_SSL
-            
+
             if ( m_socket not_eq nullptr )
             {
 #endif
-                size = asio::read( *m_socket, *data, asio::transfer_at_least( length ), error );
+                asio::async_read( *m_socket, *data, asio::transfer_at_least( length ),
+                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                        *sharedError = error;
+                        *sharedSize = size;
+                        *finished = true;
+                });
 #ifdef BUILD_SSL
             }
             else
             {
-                size = asio::read( *m_ssl_socket, *data, asio::transfer_at_least( length ), error );
+                asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ),
+                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                        *sharedError = error;
+                        *sharedSize = size;
+                        *finished = true;
+                });
             }
-            
 #endif
+            auto& io_service = m_socket->get_io_service( );
+            while (!*finished)
+                io_service.run_one();
+            error = *sharedError;
+            size = *sharedSize;
             m_timer->cancel( );
-            
+
             if ( error )
             {
                 m_is_open = false;
             }
-            
+
             return size;
         }
         
@@ -547,30 +565,47 @@ namespace restbed
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
             m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
-            
+
             size_t length = 0;
-            
+            auto finished = std::make_shared<bool>(false);
+            auto sharedError = std::make_shared<error_code>();
+            auto sharedLength = std::make_shared<size_t>(0);
+
 #ifdef BUILD_SSL
-            
+
             if ( m_socket not_eq nullptr )
             {
 #endif
-                length = asio::read_until( *m_socket, *data, delimiter, error );
+                asio::async_read_until( *m_socket, *data, delimiter,
+                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                        *sharedError = error;
+                        *sharedLength = length;
+                        *finished = true;
+                });
 #ifdef BUILD_SSL
             }
             else
             {
-                length = asio::read_until( *m_ssl_socket, *data, delimiter, error );
+                asio::async_read_until( *m_ssl_socket, *data, delimiter,
+                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                        *sharedError = error;
+                        *sharedLength = length;
+                        *finished = true;
+                });
             }
-            
 #endif
+            auto& io_service = m_socket->get_io_service( );
+            while (!*finished)
+                io_service.run_one();
+            error = *sharedError;
+            length = *sharedLength;
             m_timer->cancel( );
-            
+
             if ( error )
             {
                 m_is_open = false;
             }
-            
+
             return length;
         }
         
