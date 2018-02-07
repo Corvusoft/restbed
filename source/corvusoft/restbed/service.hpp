@@ -15,6 +15,7 @@
 //Project Includes
 
 //External Includes
+#include <asio/io_service.hpp>
 
 //System Namespaces
 
@@ -81,6 +82,8 @@ namespace restbed
             //Setters
             void set_logger( const std::shared_ptr< Logger >& value );
             
+            void set_external_io_service( std::shared_ptr< asio::io_service >& value );
+
             void set_session_manager( const std::shared_ptr< SessionManager >& value );
             
             void set_ready_handler( const std::function< void ( Service& ) >& value );
