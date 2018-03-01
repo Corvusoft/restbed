@@ -84,7 +84,6 @@ namespace restbed
             m_supported_methods( ),
             m_settings( nullptr ),
             m_io_service( make_shared< ::io_service >( ) ),
-            m_external_io_service( nullptr ),
             m_signal_set( nullptr ),
             m_session_manager( nullptr ),
             m_web_socket_manager( nullptr ),
@@ -126,11 +125,11 @@ namespace restbed
                 if ( not m_settings->get_bind_address( ).empty( ) )
                 {
                     const auto address = address::from_string( m_settings->get_bind_address( ) );
-                    m_acceptor = make_shared< tcp::acceptor >( *get_io_service(), tcp::endpoint( address, m_settings->get_port( ) ) );
+                    m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( address, m_settings->get_port( ) ) );
                 }
                 else
                 {
-                    m_acceptor = make_shared< tcp::acceptor >( *get_io_service(), tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
+                    m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
                 }
                 
                 m_acceptor->set_option( socket_base::reuse_address( true ) );
@@ -159,7 +158,7 @@ namespace restbed
                 return;
             }
             
-            m_signal_set = make_shared< signal_set >( *get_io_service() );
+            m_signal_set = make_shared< signal_set >( *m_io_service );
             
             for ( const auto signal_handler : m_signal_handlers )
             {
@@ -255,11 +254,11 @@ namespace restbed
                 if ( not m_ssl_settings->get_bind_address( ).empty( ) )
                 {
                     const auto address = address::from_string( m_ssl_settings->get_bind_address( ) );
-                    m_ssl_acceptor = make_shared< tcp::acceptor >( *get_io_service(), tcp::endpoint( address, m_ssl_settings->get_port( ) ) );
+                    m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( address, m_ssl_settings->get_port( ) ) );
                 }
                 else
                 {
-                    m_ssl_acceptor = make_shared< tcp::acceptor >( *get_io_service(), tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
+                    m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
                 }
                 
                 m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
@@ -811,16 +810,6 @@ namespace restbed
             }
         }
         
-        std::shared_ptr< asio::io_service > ServiceImpl::get_io_service( void )
-        {
-            if ( m_external_io_service != nullptr )
-            {
-                return m_external_io_service;
-            }
-
-            return m_io_service;
-        }
-
         const shared_ptr< const Uri > ServiceImpl::get_http_uri( void ) const
         {
             if ( m_acceptor == nullptr )
