@@ -114,8 +114,6 @@ namespace restbed
                 void parse_request( const std::error_code& error, std::size_t length, const std::shared_ptr< Session > session ) const;
                 
                 //Getters
-                std::shared_ptr< asio::io_service > get_io_service( void );
-
                 const std::shared_ptr< const Uri > get_http_uri( void ) const;
                 
                 const std::shared_ptr< const Uri > get_https_uri( void ) const;
@@ -137,8 +135,6 @@ namespace restbed
                 
                 std::shared_ptr< asio::io_service > m_io_service;
                 
-                std::shared_ptr< asio::io_service > m_external_io_service;
-
                 std::shared_ptr< asio::signal_set > m_signal_set;
                 
                 std::shared_ptr< SessionManager > m_session_manager;

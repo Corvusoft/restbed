@@ -96,7 +96,7 @@ namespace restbed
     {
         m_pimpl->m_uptime = steady_clock::time_point::min( );
         
-        if ( m_pimpl->m_external_io_service == nullptr and m_pimpl->m_io_service not_eq nullptr )
+        if ( m_pimpl->m_io_service not_eq nullptr )
         {
             m_pimpl->m_io_service->stop( );
         }
@@ -176,32 +176,29 @@ namespace restbed
         
         if ( m_pimpl->m_ready_handler not_eq nullptr )
         {
-            m_pimpl->get_io_service()->post( m_pimpl->m_ready_handler );
+            m_pimpl->m_io_service->post( m_pimpl->m_ready_handler );
         }
         
         m_pimpl->m_uptime = steady_clock::now( );
         unsigned int limit = m_pimpl->m_settings->get_worker_limit( );
         
-        if ( m_pimpl->m_external_io_service == nullptr )
+        if ( limit > 0 )
         {
-            if ( limit > 0 )
+            const auto this_thread = 1;
+            limit = limit - this_thread;
+            
+            for ( unsigned int count = 0;  count < limit; count++ )
             {
-                const auto this_thread = 1;
-                limit = limit - this_thread;
-
-                for ( unsigned int count = 0;  count < limit; count++ )
+                auto worker = make_shared< thread >( [ this ]( )
                 {
-                    auto worker = make_shared< thread >( [ this ]( )
-                    {
-                        m_pimpl->m_io_service->run( );
-                    } );
-
-                    m_pimpl->m_workers.push_back( worker );
-                }
+                    m_pimpl->m_io_service->run( );
+                } );
+                
+                m_pimpl->m_workers.push_back( worker );
             }
-
-            m_pimpl->m_io_service->run( );
         }
+        
+        m_pimpl->m_io_service->run( );
     }
     
     void Service::restart( const shared_ptr< const Settings >& settings )
@@ -310,11 +307,11 @@ namespace restbed
         
         if ( interval == milliseconds::zero( ) )
         {
-            m_pimpl->get_io_service()->post( task );
+            m_pimpl->m_io_service->post( task );
             return;
         }
         
-        auto timer = make_shared< steady_timer >( *m_pimpl->get_io_service() );
+        auto timer = make_shared< steady_timer >( *m_pimpl->m_io_service );
         timer->expires_from_now( interval );
         timer->async_wait( [ this, task, interval, timer ]( const error_code& )
         {
@@ -353,16 +350,6 @@ namespace restbed
         m_pimpl->m_logger = value;
     }
     
-    void Service::set_external_io_service( std::shared_ptr< asio::io_service >& value )
-    {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
-
-        m_pimpl->m_external_io_service = value;
-    }
-
     void Service::set_session_manager( const shared_ptr< SessionManager >& value )
     {
         if ( is_up( ) )
