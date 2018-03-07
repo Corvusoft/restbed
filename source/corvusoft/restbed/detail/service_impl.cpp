@@ -251,6 +251,13 @@ namespace restbed
                 options = ( m_ssl_settings->has_enabled_single_diffie_hellman_use( ) ) ? options | asio::ssl::context::single_dh_use : options;
                 m_ssl_context->set_options( options );
                 
+#ifdef ECDHE_SUPPORT
+                if ( m_ssl_settings->has_enabled_ecc_diffie_hellman_use() )
+                {
+                    m_ssl_context->use_tmp_ecdh(m_ssl_settings->get_certificate());
+                }
+#endif
+
                 if ( not m_ssl_settings->get_bind_address( ).empty( ) )
                 {
                     const auto address = address::from_string( m_ssl_settings->get_bind_address( ) );
