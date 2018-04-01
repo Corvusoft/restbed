@@ -10,6 +10,8 @@
 #include <sstream>
 #include <algorithm>
 #include <type_traits>
+#include <regex>
+#include <functional>
 
 //Project Includes
 #include <corvusoft/restbed/string.hpp>
@@ -67,6 +69,36 @@ namespace restbed
             static std::string transform( const std::string& value, const std::function< std::string ( const std::string& ) >& transform )
             {
                 return ( transform == nullptr ) ? value : transform( value );
+            }
+
+            static bool is_an_ipv6_address(const std::string& address) {
+                std::string ipv6 =
+                    "(?:"
+                    // For the first 6 fields, match addresses with no jump (::)...
+                    "  (?:                                              (?:[0-9a-f]{1,4}:){6}"
+                    // ...or a jump.
+                    "  |                                             :: (?:[0-9a-f]{1,4}:){5}"
+                    "  | (?:                         [0-9a-f]{1,4})? :: (?:[0-9a-f]{1,4}:){4}"
+                    "  | (?: (?:[0-9a-f]{1,4}:){0,1} [0-9a-f]{1,4})? :: (?:[0-9a-f]{1,4}:){3}"
+                    "  | (?: (?:[0-9a-f]{1,4}:){0,2} [0-9a-f]{1,4})? :: (?:[0-9a-f]{1,4}:){2}"
+                    "  | (?: (?:[0-9a-f]{1,4}:){0,3} [0-9a-f]{1,4})? :: (?:[0-9a-f]{1,4}:)   "
+                    "  | (?: (?:[0-9a-f]{1,4}:){0,4} [0-9a-f]{1,4})? ::                      "
+                    "  )                                                                     "
+                    // Match the base10/16 addresses with no jump (suffix of above).
+                    "  (?: [0-9a-f]{1,4} : [0-9a-f]{1,4}                                     "
+                    "      | (?: (?: 25[0-5] | 2[0-4][0-9] | [01]?[0-9]?[0-9])\\.){3}        "
+                    "        (?: (?: 25[0-5] | 2[0-4][0-9] | [01]?[0-9]?[0-9]))              "
+                    "  )                                                                     "
+                    // Not any above. Check to see if jump is between last 2 fields of addr.
+                    "  | (?: (?:[0-9a-f]{1,4}:){0,5} [0-9a-f]{1,4})? :: [0-9a-f]{1,4}        "
+                    "  | (?: (?:[0-9a-f]{1,4}:){0,6} [0-9a-f]{1,4})? ::                      "
+                    ")";
+                    // End of ipv6 string pattern.
+
+                // Convert readable pattern above into the applicable regex pattern.
+                ipv6.erase( remove_if ( ipv6.begin(), ipv6.end(), ::isspace ) , ipv6.end() );
+                std::regex ipv6_pattern( ipv6 );
+                return regex_search( address, ipv6_pattern );
             }
             
             //Getters

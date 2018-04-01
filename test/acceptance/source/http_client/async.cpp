@@ -133,3 +133,46 @@ SCENARIO( "establish connection to reachable server", "[client]" )
     service.start( settings );
     worker->join( );
 }
+
+SCENARIO( "establish connection to full ipv6 address", "[client]" )
+{
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resource" );
+    resource->set_method_handler( "GET", get_handler );
+
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+
+    shared_ptr< thread > worker = nullptr;
+
+    Service service;
+    service.publish( resource );
+    service.set_ready_handler( [ &worker ]( Service & service )
+    {
+        worker = make_shared< thread >( [ &service ] ( )
+        {
+            GIVEN( "I have started a service" )
+            {
+                WHEN( "I perform a HTTP 'GET' request" )
+                {
+                    restbed::Uri uri("http://[::1]:1984/resource");
+                    auto request = std::make_shared<restbed::Request>(uri);
+
+                    auto future = Http::async( request, [ &service ]( const shared_ptr< Request >, const shared_ptr< Response > response )
+                    {
+                        THEN( "I should see a '200' (OK) status code" )
+                        {
+                            REQUIRE( 200 == response->get_status_code( ) );
+                        }
+                    } );
+
+                    auto response = future.get( );
+                    service.stop( );
+                }
+            }
+        } );
+    } );
+
+    service.start( settings );
+    worker->join( );
+}

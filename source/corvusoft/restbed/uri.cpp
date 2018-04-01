@@ -19,6 +19,7 @@
 #endif
 
 //Project Includes
+#include "corvusoft/restbed/common.hpp"
 #include "corvusoft/restbed/uri.hpp"
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/detail/uri_impl.hpp"
@@ -313,7 +314,15 @@ namespace restbed
         
         if ( regex_search( m_pimpl->m_uri, match, pattern ) )
         {
-            return match[ 5 ];
+            std::string authority = match[ 5 ];
+            if ( Common::is_an_ipv6_address(authority) && authority[ 0 ] == '[' )
+            {
+                return authority.substr(1, authority.length() - 2);
+            }
+            else
+            {
+                return authority;
+            }
         }
         
         return String::empty;
