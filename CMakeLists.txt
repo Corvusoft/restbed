@@ -13,7 +13,6 @@ set( VERSION "${restbed_VERSION}" )
 #
 option( BUILD_SHARED   "Build shared library."              OFF )
 option( BUILD_EXAMPLES "Build examples applications."       OFF )
-option( BUILD_TESTS    "Build all available test suites."   OFF )
 option( BUILD_SSL      "Build secure socket layer support."  ON )
 
 #
@@ -37,6 +36,13 @@ include_directories( SYSTEM ${kashmir_INCLUDE} )
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
     include_directories( SYSTEM ${ssl_INCLUDE} )
+endif ( )
+
+find_package( catch )
+if ( CATCH_FOUND )
+    option( BUILD_TESTS    "Build all available test suites."   ON)
+else ( )
+    option( BUILD_TESTS    "Build all available test suites."  OFF)
 endif ( )
 
 #
