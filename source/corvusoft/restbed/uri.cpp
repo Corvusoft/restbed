@@ -303,20 +303,16 @@ namespace restbed
     
     string Uri::get_authority( void ) const
     {
-        if ( is_relative( ) )
-        {
-            return String::empty;
-        }
+        string authority = String::empty;
+        if ( is_relative( ) ) return authority;
         
         smatch match;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])" );
-        
-        if ( regex_search( m_pimpl->m_uri, match, pattern ) )
-        {
-            return match[ 5 ];
-        }
-        
-        return String::empty;
+        if ( regex_search( m_pimpl->m_uri, match, pattern ) ) authority = match[ 5 ];
+
+        if ( authority.front( ) == '[' ) authority.erase( 0, 1 );
+        if ( authority.back( ) == ']' ) authority.erase( authority.length( ) - 1, 1 );
+        return authority;
     }
     
     multimap< string, string > Uri::get_query_parameters( void ) const

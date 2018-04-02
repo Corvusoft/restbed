@@ -41,7 +41,15 @@ TEST_CASE( "default constructor", "[uri]" )
 TEST_CASE( "ipv4 constructor", "[uri]" )
 {
     Uri uri( "http://username:password@127.1.1.1:80/resources/index.html?q=bear&b=cubs#frag1" );
-    
+    REQUIRE( uri.get_port( ) == 80 );
+    REQUIRE( uri.get_path( ) == "/resources/index.html" );
+    REQUIRE( uri.get_query( ) == "q=bear&b=cubs" );
+    REQUIRE( uri.get_scheme( ) == "http" );
+    REQUIRE( uri.get_fragment( ) == "frag1" );
+    REQUIRE( uri.get_username( ) == "username" );
+    REQUIRE( uri.get_password( ) == "password" );
+    REQUIRE( uri.get_authority( ) == "127.1.1.1" );
+
     const string value = uri.to_string( );
     REQUIRE( value == "http://username:password@127.1.1.1:80/resources/index.html?q=bear&b=cubs#frag1" );
 }
@@ -49,7 +57,15 @@ TEST_CASE( "ipv4 constructor", "[uri]" )
 TEST_CASE( "ipv6 constructor", "[uri]" )
 {
     Uri uri( "http://username:password@[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:80/resources/index.html?q=bear&b=cubs#frag1" );
-    
+    REQUIRE( uri.get_port( ) == 80 );
+    REQUIRE( uri.get_path( ) == "/resources/index.html" );
+    REQUIRE( uri.get_query( ) == "q=bear&b=cubs" );
+    REQUIRE( uri.get_scheme( ) == "http" );
+    REQUIRE( uri.get_fragment( ) == "frag1" );
+    REQUIRE( uri.get_username( ) == "username" );
+    REQUIRE( uri.get_password( ) == "password" );
+    REQUIRE( uri.get_authority( ) == "2001:0db8:85a3:0000:0000:8a2e:0370:7334" );
+
     const string value = uri.to_string( );
     REQUIRE( value == "http://username:password@[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:80/resources/index.html?q=bear&b=cubs#frag1" );
 }
