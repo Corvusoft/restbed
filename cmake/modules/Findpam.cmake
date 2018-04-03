@@ -1,5 +1,3 @@
-# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-
 find_library( pam_LIBRARY pam HINTS "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
 find_path( pam_INCLUDE security/pam_appl.h HINTS "/usr/include" "/usr/local/include" "/opt/local/include" )
 

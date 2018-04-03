@@ -1,7 +1,3 @@
-/*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
- */
-
 #include "corvusoft/restbed/uri.hpp"
 #include "corvusoft/restbed/http.hpp"
 #include "corvusoft/restbed/rule.hpp"

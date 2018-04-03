@@ -1,5 +1,3 @@
-# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-
 project( "example" )
 
 cmake_minimum_required( VERSION 2.8.10 )

@@ -1,5 +1,3 @@
-# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-
 set( MANIFEST
     ${SOURCE_DIR}/uri.cpp
     ${SOURCE_DIR}/rule.cpp

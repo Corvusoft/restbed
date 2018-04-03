@@ -1,5 +1,3 @@
-# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-
 if( NOT WIN32 )
     string( ASCII 27 Esc )
 

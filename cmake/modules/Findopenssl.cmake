@@ -1,5 +1,3 @@
-# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-
 find_library( ssl_LIBRARY ssl ssleay32 HINTS "${PROJECT_SOURCE_DIR}/dependency/openssl/out32dll" "${PROJECT_SOURCE_DIR}/dependency/openssl" "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
 find_library( crypto_LIBRARY crypto libeay32 HINTS "${PROJECT_SOURCE_DIR}/dependency/openssl/out32dll" "${PROJECT_SOURCE_DIR}/dependency/openssl" "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
 find_path( ssl_INCLUDE openssl/ssl.h HINTS "${PROJECT_SOURCE_DIR}/dependency/openssl/inc32" "${PROJECT_SOURCE_DIR}/dependency/openssl/include" "/usr/local/opt/openssl/include" "/usr/include" "/usr/local/include" "/opt/local/include" )

@@ -1,5 +1,3 @@
-# Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
-
 set( ARTIFACTS
     ${SOURCE_DIR}/uri.hpp
     ${SOURCE_DIR}/byte.hpp
