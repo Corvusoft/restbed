@@ -77,6 +77,16 @@ namespace restbed
     {
         return m_pimpl->m_single_diffie_hellman_use_enabled;
     }
+
+    bool SSLSettings::has_enabled_server_authentication ( void ) const
+    {
+        return m_pimpl->m_server_authentication_enabled;
+    }
+
+    bool SSLSettings::has_enabled_client_authentication( void ) const
+    {
+        return m_pimpl->m_client_authentication_enabled;
+    }
     
     uint16_t SSLSettings::get_port( void ) const
     {
@@ -121,6 +131,11 @@ namespace restbed
     string SSLSettings::get_certificate_authority_pool( void ) const
     {
         return m_pimpl->m_certificate_authority_pool;
+    }
+    
+    string SSLSettings::get_cipher_suites( void ) const
+    {
+        return m_pimpl->m_cipher_suites;
     }
     
     void SSLSettings::set_port( const uint16_t value )
@@ -192,6 +207,16 @@ namespace restbed
     {
         m_pimpl->m_certificate_authority_pool = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
     }
+
+    void SSLSettings::set_client_authentication_enabled( const bool value )
+    {
+        m_pimpl->m_client_authentication_enabled = value;
+    }
+    
+    void SSLSettings::set_server_authentication_enabled( const bool value )
+    {
+        m_pimpl->m_server_authentication_enabled = value;
+    }
     
     void SSLSettings::set_passphrase( const string& value )
     {
@@ -211,5 +236,10 @@ namespace restbed
     void SSLSettings::set_temporary_diffie_hellman( const Uri& value )
     {
         m_pimpl->m_temporary_diffie_hellman = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+    }
+    
+    void SSLSettings::set_cipher_suites( const std::string ciphersuites )
+    {
+        m_pimpl->m_cipher_suites = ciphersuites;
     }
 }

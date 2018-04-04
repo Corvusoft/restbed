@@ -239,6 +239,11 @@ namespace restbed
                 {
                     m_ssl_context->use_rsa_private_key_file( filename, asio::ssl::context::pem );
                 }
+
+                if ( m_ssl_settings->has_enabled_client_authentication( ) ) 
+                {
+                    m_ssl_context->set_verify_mode ( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
+                }
                 
                 asio::ssl::context::options options = 0;
                 options = ( m_ssl_settings->has_enabled_tlsv1( ) ) ? options : options | asio::ssl::context::no_tlsv1;
