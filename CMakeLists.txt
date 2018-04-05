@@ -41,7 +41,7 @@ endif ( )
 #
 # Build
 #
-include( "${PROJECT_SOURCE_DIR}/cmake/manifest.cmake" )
+file( GLOB_RECURSE MANIFEST "${SOURCE_DIR}/*.cpp" )
 
 add_library( ${PROJECT_NAME} ${MANIFEST} )
 
@@ -76,7 +76,7 @@ endif ( )
 #
 # Install
 #
-include( "${PROJECT_SOURCE_DIR}/cmake/artifacts.cmake" )
+file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
 
 if ( NOT DEFINED CMAKE_INSTALL_LIBDIR )
     set( CMAKE_INSTALL_LIBDIR library )
