@@ -1,13 +1,3 @@
-if( NOT WIN32 )
-    string( ASCII 27 Esc )
-
-    set( Reset   "${Esc}[m"   )
-    set( Red     "${Esc}[31m" )
-    set( Blue    "${Esc}[34m" )
-    set( Green   "${Esc}[32m" )
-    set( Yellow  "${Esc}[33m" )
-endif( )
-
 if ( BUILD_SHARED )
     set( BUILD_SHARED_LIBS ON )
 endif ( )

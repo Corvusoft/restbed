@@ -3,7 +3,7 @@ find_path( catch_INCLUDE catch.hpp HINTS "${PROJECT_SOURCE_DIR}/dependency/catch
 if ( catch_INCLUDE )
     set( CATCH_FOUND TRUE )
 
-    message( STATUS "${Green}Found Catch include at: ${catch_INCLUDE}${Reset}" )
+    message( STATUS "Found Catch include at: ${catch_INCLUDE}" )
 else ( )
-    message( FATAL_ERROR "${Red}Failed to locate Catch dependency.${Reset}" )
+    message( FATAL_ERROR "Failed to locate Catch dependency." )
 endif ( )
