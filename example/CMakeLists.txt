@@ -94,11 +94,6 @@ target_link_libraries( server_sent_events ${CMAKE_PROJECT_NAME} )
 add_executable( http_pipelining http_pipelining/source/example.cpp )
 target_link_libraries( http_pipelining ${CMAKE_PROJECT_NAME} )
 
-if ( SYSLOG_FOUND )
-    add_executable( syslog_logging syslog_logging/source/example.cpp )
-    target_link_libraries( syslog_logging ${CMAKE_PROJECT_NAME} )
-endif ( )
-
 if ( BUILD_SSL )
     add_executable( https_service https_service/source/example.cpp )
     target_link_libraries( https_service ${CMAKE_PROJECT_NAME} )

@@ -116,14 +116,14 @@ int main( const int, const char** )
 }
 ```
 
-Execution
----------
-
-> $ ./distribution/example/pam_authentication
->
-> $ curl -w'\n' -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'
-
 Build
 -----
 
 > $ clang++ -o example example.cpp -l restbed -l pam
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'
