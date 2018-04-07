@@ -1,4 +1,4 @@
-find_path( catch_INCLUDE catch.hpp HINTS "${PROJECT_SOURCE_DIR}/dependency/catch/include" "/usr/include" "/usr/include/catch" "/usr/include/catch2" "/usr/local/include" "/usr/local/include/catch" "/usr/local/include/catch2" "/opt/local/include" "/opt/local/include/catch" "/opt/local/include/catch2" )
+find_path( catch_INCLUDE catch.hpp HINTS "${PROJECT_SOURCE_DIR}/dependency/catch/single_include" "/usr/include/catch2/single_include" "/usr/local/include/catch2/single_include" "/opt/local/include/catch2/single_include" )
 
 if ( catch_INCLUDE )
     set( CATCH_FOUND TRUE )
