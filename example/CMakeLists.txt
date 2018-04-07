@@ -94,11 +94,6 @@ target_link_libraries( server_sent_events ${CMAKE_PROJECT_NAME} )
 add_executable( http_pipelining http_pipelining/source/example.cpp )
 target_link_libraries( http_pipelining ${CMAKE_PROJECT_NAME} )
 
-if ( PAM_FOUND )
-    add_executable( pam_authentication pam_authentication/source/example.cpp )
-    target_link_libraries( pam_authentication ${CMAKE_PROJECT_NAME} pam )
-endif ( )
-
 if ( SYSLOG_FOUND )
     add_executable( syslog_logging syslog_logging/source/example.cpp )
     target_link_libraries( syslog_logging ${CMAKE_PROJECT_NAME} )

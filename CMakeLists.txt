@@ -58,7 +58,6 @@ else ( )
 endif ( )
 
 if ( BUILD_EXAMPLES )
-    find_package( pam )
     find_package( syslog )
     add_subdirectory( "${PROJECT_SOURCE_DIR}/example" )
 endif ( )
