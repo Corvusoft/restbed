@@ -40,7 +40,7 @@ if ( APPLE )
     set( CMAKE_MACOSX_RPATH ON )
 endif ( )
 
-set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules" )
+set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
 
 find_package( asio REQUIRED )
 find_package( catch REQUIRED )
