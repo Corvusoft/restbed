@@ -13,9 +13,6 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 add_executable( basic_authentication basic_authentication/source/example.cpp )
 target_link_libraries( basic_authentication ${STATIC_LIBRARY_NAME} )
 
-add_executable( authentication authentication/source/example.cpp )
-target_link_libraries( authentication ${STATIC_LIBRARY_NAME} )
-
 add_executable( custom_status_codes custom_status_codes/source/example.cpp )
 target_link_libraries( custom_status_codes ${STATIC_LIBRARY_NAME} )
 

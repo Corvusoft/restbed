@@ -1,14 +1,12 @@
-/*
- * Example illustrating service and resource authentication.
- *
- * Server Usage:
- *    ./distribution/example/authentication
- *
- * Client Usage:
- *    curl -w'\n' -v -XGET 'http://ben:1234@localhost:1984/ben'
- *    curl -w'\n' -v -XGET 'http://laura:4321@localhost:1984/laura'
- */
+Overview
+--------
 
+"HTTP Basic authentication (BA) implementation is the simplest technique for enforcing access controls to web resources because it does not require cookies, session identifiers, or login pages; rather, HTTP Basic authentication uses standard fields in the HTTP header, removing the need for handshakes." -- [Wikipedia](https://en.wikipedia.org/wiki/Basic_access_authentication)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <ciso646>
@@ -95,3 +93,17 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -XGET 'http://ben:1234@localhost:1984/ben'
+> $ curl -w'\n' -v -XGET 'http://laura:4321@localhost:1984/laura'
