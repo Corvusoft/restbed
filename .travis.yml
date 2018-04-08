@@ -5,6 +5,7 @@ sudo: false
 language: cpp
 
 matrix:
+  env: OPENSSL_VERSION=openssl-1.1.0
   include:
     - os: linux
       compiler: gcc
