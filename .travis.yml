@@ -5,7 +5,6 @@ sudo: false
 language: cpp
 
 matrix:
-  env: OPENSSL_VERSION=openssl-1.1.0
   include:
     - os: linux
       compiler: gcc
@@ -18,6 +17,7 @@ matrix:
       env:
       - COMPILERCXX="g++-5"
       - COMPILERC="gcc-5"
+      - OPENSSL_VERSION=openssl-1.1.0
     - os: linux
       compiler: clang
       addons:
