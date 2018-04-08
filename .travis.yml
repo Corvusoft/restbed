@@ -34,7 +34,7 @@ before_script:
   - if [ -n "$COMPILERCXX" ]; then export CXX=$COMPILERCXX; fi 
   - mkdir build
   - cd build
-  - cmake -DBUILD_EXAMPLES=YES -DBUILD_TESTS=YES -DBUILD_SSL=YES ..
+  - cmake -DBUILD_EXAMPLES=YES -DBUILD_SSL=YES ..
 
 script: make -j3 && make test
 
