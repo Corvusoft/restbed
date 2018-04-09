@@ -28,9 +28,6 @@ target_link_libraries( path_parameters ${STATIC_LIBRARY_NAME} )
 add_executable( publishing_resources publishing_resources/source/example.cpp )
 target_link_libraries( publishing_resources ${STATIC_LIBRARY_NAME} )
 
-add_executable( custom_methods custom_methods/source/example.cpp )
-target_link_libraries( custom_methods ${STATIC_LIBRARY_NAME} )
-
 add_executable( publishing_multipath_resources publishing_multipath_resources/source/example.cpp )
 target_link_libraries( publishing_multipath_resources ${STATIC_LIBRARY_NAME} )
 
