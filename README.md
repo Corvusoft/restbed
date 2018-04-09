@@ -129,7 +129,7 @@ Minimum Requirements
 | Resource | Requirement                                     |
 |:--------:|:-----------------------------------------------:|
 | Compiler |            C++11 compliant or above             |
-|    OS    | BSD, Linux, Mac OSX, Windows, Raspbian |
+|    OS    | BSD, Linux, Mac OSX, Windows, Raspbian          |
 
 Road Map
 --------
