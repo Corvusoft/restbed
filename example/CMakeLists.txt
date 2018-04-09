@@ -70,9 +70,6 @@ target_link_libraries( multithreaded_service ${STATIC_LIBRARY_NAME} )
 add_executable( schedule_work_on_service_runloop schedule_work_on_service_runloop/source/example.cpp )
 target_link_libraries( schedule_work_on_service_runloop ${STATIC_LIBRARY_NAME} )
 
-add_executable( bind_service_address bind_service_address/source/example.cpp )
-target_link_libraries( bind_service_address ${STATIC_LIBRARY_NAME} )
-
 add_executable( session_manager session_manager/source/example.cpp )
 target_link_libraries( session_manager ${STATIC_LIBRARY_NAME} )
 
