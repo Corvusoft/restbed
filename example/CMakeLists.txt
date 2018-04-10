@@ -10,9 +10,6 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 #
 # Build
 #
-add_executable( digest_authentication digest_authentication/source/example.cpp )
-target_link_libraries( digest_authentication ${STATIC_LIBRARY_NAME} )
-
 add_executable( error_handling error_handling/source/example.cpp )
 target_link_libraries( error_handling ${STATIC_LIBRARY_NAME} )
 

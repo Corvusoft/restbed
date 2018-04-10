@@ -1,13 +1,12 @@
-/*
- * Example illustrating HTTP Digest service authentication.
- *
- * Server Usage:
- *    ./distribution/example/digest_authentication
- *
- * Client Usage:
- *    curl -w'\n' -v --digest -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
- */
+Overview
+--------
 
+"Digest access authentication is one of the agreed-upon methods a web server can use to negotiate credentials, such as username or password, with a user's web browser. This can be used to confirm the identity of a user before sending sensitive information, such as online banking transaction history. It applies a hash function to the username and password before sending them over the network. In contrast, basic access authentication uses the easily reversible Base64 encoding instead of encryption, making it non-secure unless used in conjunction with TLS." -- [Wikipedia](https://en.wikipedia.org/wiki/Digest_access_authentication)
+
+Example
+-------
+
+```C++
 #include <regex>
 #include <memory>
 #include <string>
@@ -70,3 +69,16 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v --digest -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
