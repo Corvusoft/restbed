@@ -13,9 +13,6 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 add_executable( error_handling error_handling/source/example.cpp )
 target_link_libraries( error_handling ${STATIC_LIBRARY_NAME} )
 
-add_executable( path_parameters path_parameters/source/example.cpp )
-target_link_libraries( path_parameters ${STATIC_LIBRARY_NAME} )
-
 add_executable( publishing_resources publishing_resources/source/example.cpp )
 target_link_libraries( publishing_resources ${STATIC_LIBRARY_NAME} )
 
