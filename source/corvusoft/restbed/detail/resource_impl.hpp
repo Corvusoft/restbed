@@ -33,9 +33,9 @@ namespace restbed
         
         struct ResourceImpl
         {
-            std::set< std::string > m_paths { };
+            Common::VectorSet< std::string > m_paths { };
             
-            std::set< std::string > m_methods { };
+            Common::VectorSet< std::string > m_methods { };
             
             std::vector< std::shared_ptr< Rule > > m_rules { };
             
