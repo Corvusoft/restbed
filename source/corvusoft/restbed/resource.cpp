@@ -21,7 +21,6 @@
 //External Includes
 
 //System Namespaces
-using std::set;
 using std::string;
 using std::multimap;
 using std::function;
