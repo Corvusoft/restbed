@@ -5,7 +5,6 @@
 #pragma once
 
 //System Includes
-#include <set>
 #include <map>
 #include <chrono>
 #include <thread>
@@ -81,7 +80,7 @@ namespace restbed
                 
                 void not_found( const std::shared_ptr< Session > session ) const;
                 
-                bool has_unique_paths( const std::set< std::string >& paths ) const;
+                bool has_unique_paths( const Common::VectorSet< std::string >& paths ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 
