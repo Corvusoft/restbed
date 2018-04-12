@@ -265,6 +265,7 @@ namespace restbed
         {
             const string sanitised_path = m_pimpl->sanitise_path( path );
             
+            m_pimpl->m_route_order[ sanitised_path ] = ++m_pimpl->m_last_route_pos;
             m_pimpl->m_resource_paths[ sanitised_path ] = path;
             m_pimpl->m_resource_routes[ sanitised_path ] = resource;
         }
