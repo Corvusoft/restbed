@@ -67,9 +67,6 @@ target_link_libraries( signal_handling ${STATIC_LIBRARY_NAME} )
 add_executable( server_sent_events server_sent_events/source/example.cpp )
 target_link_libraries( server_sent_events ${STATIC_LIBRARY_NAME} )
 
-add_executable( http_pipelining http_pipelining/source/example.cpp )
-target_link_libraries( http_pipelining ${STATIC_LIBRARY_NAME} )
-
 if ( BUILD_SSL )
     add_executable( https_service https_service/source/example.cpp )
     target_link_libraries( https_service ${STATIC_LIBRARY_NAME} )

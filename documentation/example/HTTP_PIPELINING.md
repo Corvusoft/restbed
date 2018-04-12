@@ -1,17 +1,13 @@
-/*
- * Example illustrating HTTP piplining.
- *
- * Server Usage:
- *    ./distribution/example/http_pipelining
- *
- * Client Usage:
- *    flawless request:  (echo -e "GET /resource/1 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\nGET /resource/2 HTTP/1.1\r\nConnection: keep-alive\r\nHost: localhost\r\n\r\nGET /resource/3 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"; sleep 5) | netcat localhost 1984
- *    malformed request: (echo -e "GET &&%$£% /resource/1 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\nGET /resource/2 HTTP/1.1\r\nConnection: keep-alive\r\nHost: localhost\r\n\r\nGET /resource/3 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"; sleep 5) | netcat localhost 1984
- *
- * Futher Reading:
- *    https://en.wikipedia.org/wiki/HTTP_pipelining
- */
+Overview
+--------
 
+"HTTP pipelining is a technique in which multiple HTTP requests are sent on a single TCP connection without waiting for the corresponding responses.
+As of 2017, HTTP pipelining is not enabled by default in modern browsers, due to several issues including buggy proxy servers and HOL blocking." -- [Wikipedia](https://en.wikipedia.org/wiki/HTTP_pipelining)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <restbed>
@@ -102,3 +98,18 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ (echo -e "GET /resource/1 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\nGET /resource/2 HTTP/1.1\r\nConnection: keep-alive\r\nHost: localhost\r\n\r\nGET /resource/3 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"; sleep 5) | netcat localhost 1984
+>
+> $ (echo -e "GET &&%$£% /resource/1 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\nGET /resource/2 HTTP/1.1\r\nConnection: keep-alive\r\nHost: localhost\r\n\r\nGET /resource/3 HTTP/1.1\r\nHost: localhost\r\nConnection: keep-alive\r\n\r\n"; sleep 5) | netcat localhost 1984
