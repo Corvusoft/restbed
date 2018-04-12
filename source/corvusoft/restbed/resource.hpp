@@ -6,7 +6,6 @@
 
 //System Includes
 #include <map>
-#include <set>
 #include <string>
 #include <functional>
 
@@ -57,7 +56,7 @@ namespace restbed
             //Setters
             void set_path( const std::string& value );
             
-            void set_paths( const std::set< std::string >& values );
+            void set_paths( const Common::VectorSet< std::string >& values );
             
             void set_default_header( const std::string& name, const std::string& value );
             
