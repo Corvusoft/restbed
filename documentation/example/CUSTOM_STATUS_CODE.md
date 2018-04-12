@@ -1,13 +1,12 @@
-/*
- * Example illustrating custom HTTP status codes.
- *
- * Server Usage:
- *    ./distribution/example/custom_status_codes
- *
- * Client Usage:
- *    curl -w'\n' -v -X GET 'http://localhost:1984/resource'
- */
+Overview
+--------
 
+"The whole of the Internet is built on conventions. We call them RFCs. While nobody will come and arrest you if you violate an RFC, you do run the risk that your service will not interoperate with the rest of the world." -- [StackExchange](https://softwareengineering.stackexchange.com/questions/218080/should-i-make-up-my-own-http-status-codes-a-la-twitter-420-enhance-your-calm)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <restbed>
@@ -37,3 +36,16 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -X GET 'http://localhost:1984/resource'

@@ -1,3 +1,14 @@
+Overview
+--------
+
+"In computing, syslog is a standard for message logging. It allows separation of the software that generates messages, the system that stores them, and the software that reports and analyzes them. Each message is labeled with a facility code, indicating the software type generating the message, and assigned a severity label.
+
+Computer system designers may use syslog for system management and security auditing as well as general informational, analysis, and debugging messages. A wide variety of devices, such as printers, routers, and message receivers across many platforms use the syslog standard. This permits the consolidation of logging data from different types of systems in a central repository. Implementations of syslog exist for many operating systems." -- [Wikipedia](https://en.wikipedia.org/wiki/Syslog)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdarg>
 #include <cstdlib>
@@ -79,3 +90,40 @@ class SyslogLogger : public Logger
             }
         }
 };
+
+void get_method_handler( const shared_ptr< Session > session )
+{
+    session->close( OK, "Hello, World!", { { "Content-Length", "13" } } );
+}
+
+int main( const int, const char** )
+{
+    auto resource = make_shared< Resource >( );
+    resource->set_path( "/resource" );
+    resource->set_method_handler( "GET", get_method_handler );
+    
+    auto settings = make_shared< Settings >( );
+    settings->set_port( 1984 );
+    settings->set_default_header( "Connection", "close" );
+    
+    Service service;
+    service.publish( resource );
+    service.set_logger( make_shared< SyslogLogger >( ) );
+    
+    service.start( settings );
+    
+    return EXIT_SUCCESS;
+}
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource'

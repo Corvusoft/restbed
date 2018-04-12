@@ -1,46 +1,29 @@
-/*
- * Example illustrating PAM (Portable Authentication Module) authentication.
- *
- * Server Usage:
- *    ./distribution/example/pam_authentication
- *
- * Client Usage:
- *    curl -w'\n' -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'
- */
+Overview
+--------
 
-#include <string>
+"HTTP Basic authentication (BA) implementation is the simplest technique for enforcing access controls to web resources because it does not require cookies, session identifiers, or login pages; rather, HTTP Basic authentication uses standard fields in the HTTP header, removing the need for handshakes." -- [Wikipedia](https://en.wikipedia.org/wiki/Basic_access_authentication)
+
+Example
+-------
+
+```C++
 #include <memory>
-#include <utility>
 #include <cstdlib>
+#include <ciso646>
+#include <functional>
 #include <restbed>
-
-#include "pam.h"
-#include "base64.h"
 
 using namespace std;
 using namespace restbed;
 
-pair< string, string > decode_header( const string& value )
-{
-    auto data = base64_decode( value.substr( 6 ) );
-    auto delimiter = data.find_first_of( ':' );
-    auto username = data.substr( 0, delimiter );
-    auto password = data.substr( delimiter + 1 );
-    
-    return make_pair( username, password );
-}
-
 void authentication_handler( const shared_ptr< Session > session,
                              const function< void ( const shared_ptr< Session > ) >& callback )
 {
-    const auto request = session->get_request( );
-    const auto credentials = decode_header( request->get_header( "Authorization" ) );
+    auto authorisation = session->get_request( )->get_header( "Authorization" );
     
-    bool authorised = pam_authorisation( credentials.first, credentials.second );
-    
-    if ( not authorised )
+    if ( authorisation not_eq "Basic Q29ydnVzb2Z0OkdsYXNnb3c=" )
     {
-        session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"Restbed\"" } } );
+        session->close( UNAUTHORIZED, { { "WWW-Authenticate", "Basic realm=\"restbed\"" } } );
     }
     else
     {
@@ -71,3 +54,16 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -XGET 'http://Corvusoft:Glasgow@localhost:1984/resource'
