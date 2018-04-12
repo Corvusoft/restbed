@@ -6,6 +6,7 @@
 
 //System Includes
 #include <string>
+#include <set>
 #include <utility>
 #include <sstream>
 #include <algorithm>
@@ -36,6 +37,38 @@ namespace restbed
             //Constructors
             
             //Functionality
+            template <class T>
+            class VectorSet
+            {
+                private:
+                  std::vector<T> theVector;
+                  std::set<T>    theSet;
+                public:
+                  using iterator                     = typename std::vector<T>::iterator;
+                  using const_iterator               = typename std::vector<T>::const_iterator;
+                  iterator begin()                   { return theVector.begin(); }
+                  iterator end()                     { return theVector.end(); }
+                  const_iterator begin() const       { return theVector.begin(); }
+                  const_iterator end() const         { return theVector.end(); }
+                  const T& front() const             { return theVector.front(); }
+                  const T& back() const              { return theVector.back(); }
+                  void insert(const T& item)         { if (theSet.insert(item).second) theVector.push_back(item); }
+                  size_t count(const T& item) const  { return theSet.count(item); }
+                  bool empty() const                 { return theSet.empty(); }
+                  size_t size() const                { return theSet.size(); }
+                  VectorSet<T> operator=(const VectorSet<T>& rho) {
+                    if (this == &rho) return *this;
+                    theSet = rho.theSet;
+                    theVector = rho.theVector;
+                    return *this;
+                  }
+                  VectorSet<T> operator=(std::initializer_list<T> rho) {
+                    theSet.insert(rho.begin(), rho.end());
+                    theVector.assign(rho.begin(), rho.end());
+                    return *this;
+                  }
+            };
+
             template< typename Type >
             static Type parse_parameter( const std::string& value, const Type default_value )
             {
