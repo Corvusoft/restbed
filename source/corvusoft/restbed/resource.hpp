@@ -11,6 +11,7 @@
 #include <functional>
 
 //Project Includes
+#include <restbed/common.hpp>
 
 //External Includes
 
