@@ -1,13 +1,12 @@
-/*
- * Example illustrating persistent connections.
- *
- * Server Usage:
- *    ./distribution/example/persistent_connection
- *
- * Client Usage:
- *    curl -w'\n' -v 'http://localhost:1984/resources/persistent' 'http://localhost:1984/resources/intermittent'
- */
+Overview
+--------
 
+"HTTP persistent connection, also called HTTP keep-alive, or HTTP connection reuse, is the idea of using a single TCP connection to send and receive multiple HTTP requests/responses, as opposed to opening a new connection for every single request/response pair. The newer HTTP/2 protocol uses the same idea and takes it further to allow multiple concurrent requests/responses to be multiplexed over a single connection." -- [Wikipedia](https://en.wikipedia.org/wiki/HTTP_persistent_connection)
+
+Example
+-------
+
+```C++
 #include <string>
 #include <memory>
 #include <cstdlib>
@@ -47,3 +46,16 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v 'http://localhost:1984/resources/persistent' 'http://localhost:1984/resources/intermittent'

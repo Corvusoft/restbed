@@ -25,9 +25,6 @@ target_link_libraries( transfer_encoding_request ${STATIC_LIBRARY_NAME} )
 add_executable( transfer_encoding_response transfer_encoding_response/source/example.cpp )
 target_link_libraries( transfer_encoding_response ${STATIC_LIBRARY_NAME} )
 
-add_executable( persistent_connection persistent_connection/source/example.cpp )
-target_link_libraries( persistent_connection ${STATIC_LIBRARY_NAME} )
-
 add_executable( compression compression/source/example.cpp )
 target_link_libraries( compression ${STATIC_LIBRARY_NAME} )
 
