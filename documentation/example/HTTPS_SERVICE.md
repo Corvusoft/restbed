@@ -45,7 +45,7 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed
+> $ clang++ -o example example.cpp -l restbed -l ssl -l crypt
 
 Execution
 ---------

@@ -1,21 +1,12 @@
-/*
- * Example illustrating web socket server.
- *
- * Server Usage:
- *    ./distribution/example/web_socket
- *
- * Client Usage:
- *    open browser at 'restbed/distribution/resource/web_socket.html'
- *
- * Further Reading:
- *    https://tools.ietf.org/html/rfc6455
- *    http://lucumr.pocoo.org/2012/9/24/websockets-101
- *
- * Note:
- *    If you seek secure web sockets please
- *    set the appropriate SSL server settings.
- */
+Overview
+--------
 
+"WebSocket is a computer communications protocol, providing full-duplex communication channels over a single TCP connection. The WebSocket protocol was standardized by the IETF as RFC 6455 in 2011, and the WebSocket API in Web IDL is being standardized by the W3C. WebSocket is a different TCP protocol from HTTP." -- [Wikipedia](https://en.wikipedia.org/wiki/WebSocket)
+
+Example
+-------
+
+```C++
 #include <map>
 #include <chrono>
 #include <string>
@@ -218,3 +209,158 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed -l ssl -l crypt
+
+Execution
+---------
+
+> $ ./example
+
+Client
+------
+```HTML
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      html, body {
+        margin: 0;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      li {
+         text-align: left;
+      }
+
+      input {
+        width: 40%;
+        height: 40px;
+        line-height: 40px;
+        margin-bottom: 10px;
+      }
+
+      a {
+        margin: 10px;
+      }
+
+      .disabled {
+        color: #000;
+        pointer-events: none;
+      }
+
+      #controls {
+        width: 100%;
+        bottom: 10%;
+        position: absolute;
+        text-align: center;
+      }
+    </style>
+    <script type="text/javascript">
+      function on_return_submit( evt )
+      {
+         if ( window.restbed.ws === null || window.restbed.ws.readyState !== window.restbed.ws.OPEN )
+         {
+            return;
+         }
+
+         if( evt && evt.keyCode == 13 )
+         {
+            var message = document.getElementById( "message" );
+            window.restbed.ws.send( message.value );
+
+            message.value = "";
+         }
+      }
+
+      function toggle_control_access( )
+      {
+         var open = document.getElementById( "open" );
+         open.disabled = !open.disabled;
+
+         var message = document.getElementById( "message" );
+         message.disabled = !message.disabled;
+
+         var close = document.getElementById( "close" );
+         close.className = ( close.className === "disabled" ) ? "" : "disabled";
+      }
+
+      function add_message( message )
+      {
+         var li = document.createElement( "li" );
+         li.appendChild( document.createTextNode( "> " + message ) );
+
+         var ul = document.getElementById( "messages" );
+         ul.appendChild( li );
+      }
+
+      function open( )
+      {
+         if ( "WebSocket" in window )
+         {
+            var ws = new WebSocket( "ws://localhost:1984/chat" );
+
+            ws.onopen = function( )
+            {
+               add_message( "Established connection." );
+
+               toggle_control_access( );
+            };
+
+            ws.onmessage = function( evt )
+            {
+               add_message( evt.data );
+            };
+
+            ws.onclose = function( evt )
+            {
+               add_message( "Connection closed with RFC6455 code " + evt.code + "." );
+
+               toggle_control_access( );
+            };
+
+            ws.onerror = function( evt )
+            {
+               add_message( "Error: socket connection interrupted." );
+            };
+
+            window.restbed.ws = ws;
+         }
+         else
+         {
+            alert( "WebSockets NOT supported by your Browser!" );
+         }
+      }
+
+      function close( )
+      {
+         window.restbed.ws.close( );
+      }
+
+      ( function( )
+      {
+         window.restbed = { ws: null };
+      } )( );
+    </script>
+  </head>
+  <body>
+     <div>
+       <ul id="messages"></ul>
+       <div id="controls">
+         <input id="message" type="text" onKeyPress="return on_return_submit( event )" disabled/>
+         <div>
+           <a id="open" href="javascript:open( )">Open Chat</a>
+           <a id="close" href="javascript:close( )" class="disabled">Close Chat</a>
+         <div>
+       </div>
+     </div>
+  </body>
+</html>
+```

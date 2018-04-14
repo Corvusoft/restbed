@@ -1,7 +1,7 @@
 Overview
 --------
 
-"The HTTP client functionality is DEPRECATED and will be removed from future releases.  See [Restless](https://github.com/Corvusoft/restless) for an alternative implementation."
+The HTTP client functionality is DEPRECATED and will be removed from future releases.  See [Restless](https://github.com/Corvusoft/restless) for an alternative implementation.
 
 Example
 -------
