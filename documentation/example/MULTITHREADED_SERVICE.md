@@ -1,13 +1,12 @@
-/*
- * Example illustrating multithreaded services.
- *
- * Server Usage:
- *    ./distribution/example/multithreaded_service
- *
- * Client Usage:
- *    curl -w'\n' -v -X GET 'http://localhost:1984/resource'
- */
+Overview
+--------
 
+"In computer architecture, multithreading is the ability of a central processing unit (CPU) or a single core in a multi-core processor to execute multiple processes or threads concurrently, appropriately supported by the operating system." -- [Wikipedia](https://en.wikipedia.org/wiki/Multithreading_(computer_architecture))
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <thread>
 #include <cstdlib>
@@ -43,3 +42,16 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -X GET 'http://localhost:1984/resource'

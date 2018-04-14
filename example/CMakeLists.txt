@@ -34,9 +34,6 @@ target_link_libraries( compression ${STATIC_LIBRARY_NAME} )
 add_executable( rules_engine rules_engine/source/example.cpp )
 target_link_libraries( rules_engine ${STATIC_LIBRARY_NAME} )
 
-add_executable( multithreaded_service multithreaded_service/source/example.cpp )
-target_link_libraries( multithreaded_service ${STATIC_LIBRARY_NAME} )
-
 add_executable( schedule_work_on_service_runloop schedule_work_on_service_runloop/source/example.cpp )
 target_link_libraries( schedule_work_on_service_runloop ${STATIC_LIBRARY_NAME} )
 
