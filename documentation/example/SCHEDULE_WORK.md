@@ -1,13 +1,12 @@
-/*
- * Example illustrating how to schedule work on the service runloop.
- *
- * Server Usage:
- *    ./distribution/example/schedule_work_on_service_runloop
- *
- * Client Usage:
- *    Watch service console output to ensure tasks run.
- */
+Overview
+--------
 
+"Run loops are part of the fundamental infrastructure associated with threads. A run loop is an event processing loop that you use to schedule work and coordinate the receipt of incoming events. The purpose of a run loop is to keep your thread busy when there is work to do and put your thread to sleep when there is none." -- [Apple](https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html)
+
+Example
+-------
+
+```C++
 #include <chrono>
 #include <memory>
 #include <string>
@@ -50,3 +49,14 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
