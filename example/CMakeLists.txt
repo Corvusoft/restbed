@@ -10,9 +10,6 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 #
 # Build
 #
-add_executable( publishing_resources publishing_resources/source/example.cpp )
-target_link_libraries( publishing_resources ${STATIC_LIBRARY_NAME} )
-
 add_executable( publishing_multipath_resources publishing_multipath_resources/source/example.cpp )
 target_link_libraries( publishing_multipath_resources ${STATIC_LIBRARY_NAME} )
 
