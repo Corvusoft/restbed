@@ -37,9 +37,6 @@ target_link_libraries( compression ${STATIC_LIBRARY_NAME} )
 add_executable( http_service http_service/source/example.cpp )
 target_link_libraries( http_service ${STATIC_LIBRARY_NAME} )
 
-add_executable( service_ready_handler service_ready_handler/source/example.cpp )
-target_link_libraries( service_ready_handler ${STATIC_LIBRARY_NAME} )
-
 add_executable( rules_engine rules_engine/source/example.cpp )
 target_link_libraries( rules_engine ${STATIC_LIBRARY_NAME} )
 
