@@ -16,9 +16,6 @@ target_link_libraries( serving_html ${STATIC_LIBRARY_NAME} )
 add_executable( transfer_encoding_request transfer_encoding_request/source/example.cpp )
 target_link_libraries( transfer_encoding_request ${STATIC_LIBRARY_NAME} )
 
-add_executable( transfer_encoding_response transfer_encoding_response/source/example.cpp )
-target_link_libraries( transfer_encoding_response ${STATIC_LIBRARY_NAME} )
-
 add_executable( compression compression/source/example.cpp )
 target_link_libraries( compression ${STATIC_LIBRARY_NAME} )
 
