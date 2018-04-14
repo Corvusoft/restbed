@@ -1,13 +1,12 @@
-/*
- * Example illustrating HTTP service.
- *
- * Server Usage:
- *    sudo ./distribution/example/http_service
- *
- * Client Usage:
- *    curl -w'\n' -v -X POST --data 'Hello, Restbed' 'http://localhost/resource'
- */
+Overview
+--------
 
+"A web service is a service offered by an electronic device to another electronic device, communicating with each other via the World Wide Web. In a web service, the Web technology such as HTTP—originally designed for human-to-machine communication—is utilized for machine-to-machine communication, more specifically for transferring machine-readable file formats such as XML and JSON." -- [Wikipedia](https://en.wikipedia.org/wiki/Web_service)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <restbed>
@@ -40,3 +39,16 @@ int main( const int, const char** )
 
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -X POST --data 'Hello, Restbed' 'http://localhost/resource'
