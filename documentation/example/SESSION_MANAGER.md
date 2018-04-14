@@ -1,14 +1,12 @@
-/*
- * Example illustrating session management.
- *
- * Server Usage:
- *    ./distribution/example/session_manager
- *
- * Client Usage:
- *    curl -w'\n' -v -X GET 'http://localhost:1984/resource?location=UK'
- *    curl -w'\n' -v -X GET 'http://localhost:1984/resource' -H"SessionID: <Previously returned SessionID header value>"
- */
+Overview
+--------
 
+"Sessions are a simple way to store data for individual users against a unique session ID. This can be used to persist state information between requests. Session IDs are normally sent to the browser via session cookies and the ID is used to retrieve existing session data. The absence of an ID or session cookie lets PHP know to create a new session, and generate a new session ID." -- [PHP Group](http://php.net/manual/en/session.examples.basic.php)
+
+Example
+-------
+
+```C++
 #include <map>
 #include <mutex>
 #include <chrono>
@@ -140,3 +138,18 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -X GET 'http://localhost:1984/resource?location=UK'
+>
+> $ curl -w'\n' -v -X GET 'http://localhost:1984/resource' -H"SessionID: <Previously returned SessionID header value>"

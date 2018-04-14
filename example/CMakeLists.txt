@@ -40,9 +40,6 @@ target_link_libraries( http_service ${STATIC_LIBRARY_NAME} )
 add_executable( service_ready_handler service_ready_handler/source/example.cpp )
 target_link_libraries( service_ready_handler ${STATIC_LIBRARY_NAME} )
 
-add_executable( session_data session_data/source/example.cpp )
-target_link_libraries( session_data ${STATIC_LIBRARY_NAME} )
-
 add_executable( rules_engine rules_engine/source/example.cpp )
 target_link_libraries( rules_engine ${STATIC_LIBRARY_NAME} )
 
@@ -51,9 +48,6 @@ target_link_libraries( multithreaded_service ${STATIC_LIBRARY_NAME} )
 
 add_executable( schedule_work_on_service_runloop schedule_work_on_service_runloop/source/example.cpp )
 target_link_libraries( schedule_work_on_service_runloop ${STATIC_LIBRARY_NAME} )
-
-add_executable( session_manager session_manager/source/example.cpp )
-target_link_libraries( session_manager ${STATIC_LIBRARY_NAME} )
 
 add_executable( http_client http_client/source/example.cpp )
 target_link_libraries( http_client ${STATIC_LIBRARY_NAME} )
