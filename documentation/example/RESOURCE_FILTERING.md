@@ -1,18 +1,12 @@
-/*
- * Example illustrating resource request filteration.
- *
- * Server Usage:
- *    ./distribution/example/resource_filtering
- *
- * Client Usage:
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json'
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml'
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json' -H'Content-Type: application/json'
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml' -H'Content-Type: application/xml'
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json' -H'Content-Type: application/xml'
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml' -H'Content-Type: application/json'
- */
+Overview
+--------
 
+"The resource filtering is designed to filter rest resources. By applying filters you can restrict or allow access to a specific resource determined by a path, method and/or headers."
+
+Example
+-------
+
+```C++
 #include <string>
 #include <memory>
 #include <cstdlib>
@@ -66,3 +60,26 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json'
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml'
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json' -H'Content-Type: application/json'
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml' -H'Content-Type: application/xml'
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/json' -H'Content-Type: application/xml'
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resource' -H'Accept: application/xml' -H'Content-Type: application/json'
