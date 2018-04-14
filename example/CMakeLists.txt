@@ -49,9 +49,6 @@ target_link_libraries( schedule_work_on_service_runloop ${STATIC_LIBRARY_NAME} )
 add_executable( http_client http_client/source/example.cpp )
 target_link_libraries( http_client ${STATIC_LIBRARY_NAME} )
 
-add_executable( signal_handling signal_handling/source/example.cpp )
-target_link_libraries( signal_handling ${STATIC_LIBRARY_NAME} )
-
 add_executable( server_sent_events server_sent_events/source/example.cpp )
 target_link_libraries( server_sent_events ${STATIC_LIBRARY_NAME} )
 

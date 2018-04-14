@@ -1,14 +1,12 @@
-/*
- * Example illustrating signal handling.
- *
- * Server Usage:
- *    ./distribution/example/signal_handling
- *
- * Client Usage:
- *    kill -s SIGINT  <PID>
- *    kill -s SIGTERM <PID>
- */
+Overview
+--------
 
+"A signal is a software interrupt delivered to a process. The operating system uses signals to report exceptional situations to an executing program. Some signals report errors such as references to invalid memory addresses; others report asynchronous events, such as disconnection of a phone line." -- [GNU](http://www.gnu.org/software/libc/manual/html_node/Signal-Handling.html)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <restbed>
@@ -56,3 +54,18 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ kill -s SIGINT <PID>
+>
+> $ kill -s SIGTERM <PID>
