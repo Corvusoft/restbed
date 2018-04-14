@@ -50,15 +50,15 @@ Build
 Execution
 ---------
 
-> $    cd /tmp
+> $ cd /tmp
 >
-> $    openssl genrsa -out server.key 1024
+> $ openssl genrsa -out server.key 1024
 >
-> $    openssl req -new -key server.key -out server.csr
+> $ openssl req -new -key server.key -out server.csr
 >
-> $    openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+> $ openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
 >
-> $    openssl dhparam -out dh768.pem 768
+> $ openssl dhparam -out dh768.pem 768
 > 
 > $ sudo ./example
 >
