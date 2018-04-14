@@ -19,9 +19,6 @@ target_link_libraries( transfer_encoding_request ${STATIC_LIBRARY_NAME} )
 add_executable( compression compression/source/example.cpp )
 target_link_libraries( compression ${STATIC_LIBRARY_NAME} )
 
-add_executable( rules_engine rules_engine/source/example.cpp )
-target_link_libraries( rules_engine ${STATIC_LIBRARY_NAME} )
-
 add_executable( http_client http_client/source/example.cpp )
 target_link_libraries( http_client ${STATIC_LIBRARY_NAME} )
 
