@@ -1,14 +1,12 @@
-/*
- * Example illustrating custom service and resource error hanlding.
- *
- * Server Usage:
- *    ./distribution/example/error_handling
- *
- * Client Usage:
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resources/1'
- *    curl -w'\n' -v -XGET 'http://localhost:1984/resources/2'
- */
+Overview
+--------
 
+"Error handling refers to the anticipation, detection, and resolution of programming, application, and communications errors. Specialized programs, called error handlers, are available for some applications. The best programs of this type forestall errors if possible, recover from them when they occur without terminating the application, or (if all else fails) gracefully terminate an affected application and save the error information to a log file." -- [TechTarget](https://searchsoftwarequality.techtarget.com/definition/error-handling)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <stdexcept>
@@ -25,25 +23,17 @@ void faulty_method_handler( const shared_ptr< Session > )
 void resource_error_handler( const int, const exception&, const shared_ptr< Session > session )
 {
     if ( session->is_open( ) )
-    {
         session->close( 6000, "Custom Resource Internal Server Error", { { "Content-Length", "37" } } );
-    }
     else
-    {
         fprintf( stderr, "Custom Resource Internal Server Error\n" );
-    }
 }
 
 void service_error_handler( const int, const exception&, const shared_ptr< Session > session )
 {
     if ( session->is_open( ) )
-    {
         session->close( 5000, "Custom Service Internal Server Error", { { "Content-Length", "36" } } );
-    }
     else
-    {
         fprintf( stderr, "Custom Service Internal Server Error\n" );
-    }
 }
 
 int main( const int, const char** )
@@ -70,3 +60,18 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resources/1'
+>
+> $ curl -w'\n' -v -XGET 'http://localhost:1984/resources/2'
