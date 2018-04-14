@@ -1,19 +1,23 @@
-/*
- * Example illustrating the use of deflate compression (RFC 1950-1952).
- *
- * Server Usage:
- *    ./distribution/example/compression
- *
- * Client Usage:
- *    curl -w'\n' -v -H"Content-Encoding: deflate" -X POST --data-binary @'distribution/resource/data.zlib' 'http://localhost:1984/api/deflate'
- */
+Overview
+--------
 
+"HTTP compression is a capability that can be built into web servers and web clients to improve transfer speed and bandwidth utilization.
+HTTP data is compressed before it is sent from the server: compliant browsers will announce what methods are supported to the server before downloading the correct format; browsers that do not support compliant compression method will download uncompressed data. The most common compression schemes include gzip and Deflate; however, a full list of available schemes is maintained by the IANA." -- [Wikipedia](https://en.wikipedia.org/wiki/HTTP_compression)
+
+Example
+-------
+
+```C++
 #include <map>
 #include <memory>
 #include <cstdlib>
 #include <ciso646>
 #include <restbed>
-#include "miniz_wrapper.h"
+
+#pragma GCC system_header
+#pragma warning (disable: 4334)
+#include "miniz.h" //https://github.com/richgel999/miniz
+#pragma warning (default: 4334)
 
 using namespace std;
 using namespace restbed;
@@ -64,3 +68,16 @@ int main( const int, const char** )
 
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
+>
+> $ curl -w'\n' -v -H"Content-Encoding: deflate" -X POST --data-binary @<PATH TO ZLIB'ed FILE> 'http://localhost:1984/api/deflate'

@@ -13,12 +13,6 @@ set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}/example" )
 add_executable( serving_html serving_html/source/example.cpp )
 target_link_libraries( serving_html ${STATIC_LIBRARY_NAME} )
 
-add_executable( transfer_encoding_request transfer_encoding_request/source/example.cpp )
-target_link_libraries( transfer_encoding_request ${STATIC_LIBRARY_NAME} )
-
-add_executable( compression compression/source/example.cpp )
-target_link_libraries( compression ${STATIC_LIBRARY_NAME} )
-
 add_executable( http_client http_client/source/example.cpp )
 target_link_libraries( http_client ${STATIC_LIBRARY_NAME} )
 
