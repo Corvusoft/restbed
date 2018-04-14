@@ -6,7 +6,6 @@ message( "Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved." )
 #
 # Build Options
 #
-option( BUILD_EXAMPLES "Build examples applications."       OFF )
 option( BUILD_SSL      "Build secure socket layer support."  ON )
 
 #
@@ -76,10 +75,6 @@ if ( BUILD_SSL )
     target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_SHARED} ${crypto_LIBRARY_SHARED} )
 else ( )
     target_link_libraries( ${SHARED_LIBRARY_NAME} )
-endif ( )
-
-if ( BUILD_EXAMPLES )
-    add_subdirectory( "${PROJECT_SOURCE_DIR}/example" )
 endif ( )
 
 enable_testing( )
