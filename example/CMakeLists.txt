@@ -50,9 +50,6 @@ add_executable( server_sent_events server_sent_events/source/example.cpp )
 target_link_libraries( server_sent_events ${STATIC_LIBRARY_NAME} )
 
 if ( BUILD_SSL )
-    add_executable( https_service https_service/source/example.cpp )
-    target_link_libraries( https_service ${STATIC_LIBRARY_NAME} )
-
     add_executable( https_client_verify_none https_client/source/verify_none.cpp )
     target_link_libraries( https_client_verify_none ${STATIC_LIBRARY_NAME} )
 

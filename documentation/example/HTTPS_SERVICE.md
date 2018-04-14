@@ -1,20 +1,12 @@
-/*
- * Example illustrating HTTPS service.
- *
- * Create Certificate
- *    cd /tmp
- *    openssl genrsa -out server.key 1024
- *    openssl req -new -key server.key -out server.csr
- *    openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
- *    openssl dhparam -out dh768.pem 768
- *
- * Server Usage:
- *    sudo ./distribution/example/https_service
- *
- * Client Usage:
- *    curl -k -v -w'\n' -X GET 'https://localhost/resource'
- */
+Overview
+--------
 
+"HTTPS (HTTP Secure) is an extension of the Hypertext Transfer Protocol (HTTP) for secure communication over a computer network, and is widely used on the Internet. In HTTPS, the communication protocol is encrypted by Transport Layer Security (TLS), or formerly, its predecessor, Secure Sockets Layer (SSL). The protocol is therefore also often referred to as HTTP over TLS, or HTTP over SSL." -- [Wikipedia](https://en.wikipedia.org/wiki/HTTPS)
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <cstdlib>
 #include <restbed>
@@ -48,3 +40,26 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $    cd /tmp
+>
+> $    openssl genrsa -out server.key 1024
+>
+> $    openssl req -new -key server.key -out server.csr
+>
+> $    openssl x509 -req -days 3650 -in server.csr -signkey server.key -out server.crt
+>
+> $    openssl dhparam -out dh768.pem 768
+> 
+> $ sudo ./example
+>
+> $ curl -k -v -w'\n' -X GET 'https://localhost/resource'
