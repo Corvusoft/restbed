@@ -1,13 +1,14 @@
-/*
- * Example illustrating the display of HTML webpages.
- *
- * Server Usage:
- *    ./distribution/example/serving_html
- *
- * Client Usage:
- *    curl -w'\n' -v -X GET 'http://localhost:1984/static/index.html'
- */
+Overview
+--------
 
+"
+The inside and front of a Dell PowerEdge web server, a computer designed for rack mounting
+Web server refers to server software, or hardware dedicated to running said software, that can serve contents to the World Wide Web. A web server processes incoming network requests over the HTTP protocol (and several other related protocols)." -- [Wikipedia](https://en.wikipedia.org/wiki/Web_server)
+
+Example
+-------
+
+```C++
 #include <string>
 #include <memory>
 #include <cstdlib>
@@ -23,7 +24,7 @@ void get_method_handler( const shared_ptr< Session > session )
     const auto request = session->get_request( );
     const string filename = request->get_path_parameter( "filename" );
     
-    ifstream stream( "./distribution/resource/" + filename, ifstream::in );
+    ifstream stream( "./" + filename, ifstream::in );
     
     if ( stream.is_open( ) )
     {
@@ -59,3 +60,18 @@ int main( const int, const char** )
     
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ touch index.html
+>
+> $ ./example
+>
+> $ curl -w'\n' -v -X GET 'http://localhost:1984/static/index.html'
