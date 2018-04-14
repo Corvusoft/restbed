@@ -1,9 +1,7 @@
 Overview
 --------
 
-"
-The inside and front of a Dell PowerEdge web server, a computer designed for rack mounting
-Web server refers to server software, or hardware dedicated to running said software, that can serve contents to the World Wide Web. A web server processes incoming network requests over the HTTP protocol (and several other related protocols)." -- [Wikipedia](https://en.wikipedia.org/wiki/Web_server)
+"Web server refers to server software, or hardware dedicated to running said software, that can serve contents to the World Wide Web. A web server processes incoming network requests over the HTTP protocol (and several other related protocols)." -- [Wikipedia](https://en.wikipedia.org/wiki/Web_server)
 
 Example
 -------

@@ -1,10 +1,12 @@
-/*
- * Example illustrating a HTTP client.
- *
- * Usage:
- *    ./distribution/example/http_client
- */
+Overview
+--------
 
+"The HTTP client functionality is DEPRECATED and will be removed from future releases.  See [Restless](https://github.com/Corvusoft/restless) for an alternative implementation."
+
+Example
+-------
+
+```C++
 #include <memory>
 #include <future>
 #include <cstdio>
@@ -53,3 +55,14 @@ int main( const int, const char** )
 
     return EXIT_SUCCESS;
 }
+```
+
+Build
+-----
+
+> $ clang++ -o example example.cpp -l restbed
+
+Execution
+---------
+
+> $ ./example
