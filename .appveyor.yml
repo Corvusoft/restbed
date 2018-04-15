@@ -13,7 +13,7 @@ build_script:
 
     cd c:\projects\restbed\build
 
-    cmake -G "Visual Studio 14 2015" -DBUILD_SSL=NO -DBUILD_EXAMPLES=YES -DOPENSSL_ROOT_DIR=C:\OpenSSL-Win64 ..
+    cmake -G "Visual Studio 14 2015" -DBUILD_SSL=NO -DOPENSSL_ROOT_DIR=C:\OpenSSL-Win64 ..
 
     cmake --build . --target ALL_BUILD --config Release
 test_script:

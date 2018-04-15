@@ -105,8 +105,8 @@ Build
 git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
-cmake [-DBUILD_EXAMPLES=YES] [-DBUILD_SSL=NO] ..
-make [-j CPU_CORES+1] install
+cmake [-DBUILD_SSL=NO] ..
+make install
 make test
 ```
 

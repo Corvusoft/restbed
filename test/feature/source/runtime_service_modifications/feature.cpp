@@ -70,7 +70,7 @@ SCENARIO( "runtime service modifications", "[service]" )
                 WHEN( "I attempt to modify service settings" )
                 {
                     auto resource = make_shared< Resource >( );
-                    resource->set_path( "/acceptance-tests/runtime service modifications" );
+                    resource->set_path( "/feature-tests/runtime service modifications" );
                     
                     THEN( "I should see an runtime error of 'Runtime modifications of the service are prohibited.'" )
                     {

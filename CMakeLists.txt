@@ -79,7 +79,7 @@ endif ( )
 
 enable_testing( )
 add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
-add_subdirectory( "${PROJECT_SOURCE_DIR}/test/acceptance" )
+add_subdirectory( "${PROJECT_SOURCE_DIR}/test/feature" )
 add_subdirectory( "${PROJECT_SOURCE_DIR}/test/regression" )
 add_subdirectory( "${PROJECT_SOURCE_DIR}/test/integration" )
 
