@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -15,24 +15,24 @@
 #include <functional>
 
 //Project Includes
-#include "corvusoft/restbed/uri.hpp"
-#include "corvusoft/restbed/rule.hpp"
-#include "corvusoft/restbed/logger.hpp"
-#include "corvusoft/restbed/string.hpp"
-#include "corvusoft/restbed/request.hpp"
-#include "corvusoft/restbed/session.hpp"
-#include "corvusoft/restbed/resource.hpp"
-#include "corvusoft/restbed/settings.hpp"
-#include "corvusoft/restbed/status_code.hpp"
-#include "corvusoft/restbed/ssl_settings.hpp"
-#include "corvusoft/restbed/session_manager.hpp"
-#include "corvusoft/restbed/detail/socket_impl.hpp"
-#include "corvusoft/restbed/detail/request_impl.hpp"
-#include "corvusoft/restbed/detail/service_impl.hpp"
-#include "corvusoft/restbed/detail/session_impl.hpp"
-#include "corvusoft/restbed/detail/resource_impl.hpp"
-#include "corvusoft/restbed/detail/rule_engine_impl.hpp"
-#include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
+#include "restbed/uri.hpp"
+#include "restbed/rule.hpp"
+#include "restbed/logger.hpp"
+#include "restbed/string.hpp"
+#include "restbed/request.hpp"
+#include "restbed/session.hpp"
+#include "restbed/resource.hpp"
+#include "restbed/settings.hpp"
+#include "restbed/status_code.hpp"
+#include "restbed/ssl_settings.hpp"
+#include "restbed/session_manager.hpp"
+#include "restbed/detail/socket_impl.hpp"
+#include "restbed/detail/request_impl.hpp"
+#include "restbed/detail/service_impl.hpp"
+#include "restbed/detail/session_impl.hpp"
+#include "restbed/detail/resource_impl.hpp"
+#include "restbed/detail/rule_engine_impl.hpp"
+#include "restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
 
@@ -79,6 +79,7 @@ namespace restbed
 {
     namespace detail
     {
+        std::map<std::string, int> ServiceImpl::m_route_order = { };
         ServiceImpl::ServiceImpl( void ) : m_uptime( steady_clock::time_point::min( ) ),
             m_logger( nullptr ),
             m_supported_methods( ),
@@ -95,7 +96,6 @@ namespace restbed
             m_ssl_acceptor( nullptr ),
 #endif
             m_acceptor( nullptr ),
-            m_resource_paths( ),
             m_resource_routes( ),
             m_ready_handler( nullptr ),
             m_signal_handlers( ),
@@ -372,8 +372,8 @@ namespace restbed
                 session->close( NOT_FOUND );
             }
         }
-        
-        bool ServiceImpl::has_unique_paths( const set< string >& paths ) const
+
+        bool ServiceImpl::has_unique_paths( const Common::VectorSet< string >& paths ) const
         {
             if ( paths.empty( ) )
             {
@@ -641,23 +641,41 @@ namespace restbed
             const auto path_folders = String::split( request->get_path( ), '/' );
             const auto route_folders = String::split( m_settings->get_root( ) + "/" + route.first, '/' );
             
-            if ( path_folders.empty( ) and route_folders.empty( ) )
+            if ( path_folders == route_folders )
             {
                 return true;
             }
             
             bool match = false;
-            
+
             bool to_end = route_folders.back( ).find( "TO_END" ) not_eq std::string::npos;
 
             if ( to_end or path_folders.size( ) == route_folders.size( ) )
             {
                 for ( size_t index = 0; index < route_folders.size( ); index++ )
                 {
-                    if( to_end and ( index == route_folders.size( ) -1 ) ){
-                        return true;
+                    if( to_end ){
+                        if(
+                            route_folders[ index ] == "TO_END"
+                            and
+                            (
+                                ( index == 0 and route_folders.size() == 1 ) //if needs full path
+                                or
+                                (
+                                    ( route_folders.size() > 1 and path_folders.size() > 1 )
+                                    and
+                                    regex_match( path_folders[ index-1 ], regex( route_folders[ index-1 ] ) )
+                                )
+                            )
+                        ){
+                            return true;
+                        }
+                        else if( route_folders.size() < 2 or path_folders.size() < 2 ){
+                            return false;
+                        }
                     }
-                    else if ( m_settings->get_case_insensitive_uris( ) )
+
+                    if ( m_settings->get_case_insensitive_uris( ) )
                     {
                         match = regex_match( path_folders[ index ], regex( route_folders[ index ], icase ) );
                     }
@@ -722,7 +740,7 @@ namespace restbed
             };
         }
         
-        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream )
+        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream, const shared_ptr< Session > session )
         {
             smatch matches;
             string data = "";
@@ -760,7 +778,7 @@ namespace restbed
                 
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
-                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
+                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream, session );
                 session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
                 
                 char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
