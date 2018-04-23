@@ -740,7 +740,7 @@ namespace restbed
             };
         }
         
-        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream, const shared_ptr< Session > session )
+        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream)
         {
             smatch matches;
             string data = "";
@@ -778,7 +778,7 @@ namespace restbed
                 
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
-                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream, session );
+                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
                 session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
                 
                 char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
