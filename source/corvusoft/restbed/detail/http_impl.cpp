@@ -179,7 +179,11 @@ namespace restbed
                 }
                 else
                 {
+#ifdef _WIN32
+                    context.load_verify_file(settings->get_certificate_authority_pool());
+#else
                     context.add_verify_path( settings->get_certificate_authority_pool( ) );
+#endif
                 }
                 
                 socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
