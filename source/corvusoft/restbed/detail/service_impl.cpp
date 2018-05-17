@@ -79,6 +79,7 @@ namespace restbed
 {
     namespace detail
     {
+        std::map<std::string, int> ServiceImpl::m_route_order = { };
         ServiceImpl::ServiceImpl( void ) : m_uptime( steady_clock::time_point::min( ) ),
             m_logger( nullptr ),
             m_supported_methods( ),
@@ -95,7 +96,6 @@ namespace restbed
             m_ssl_acceptor( nullptr ),
 #endif
             m_acceptor( nullptr ),
-            m_resource_paths( ),
             m_resource_routes( ),
             m_ready_handler( nullptr ),
             m_signal_handlers( ),
@@ -372,8 +372,8 @@ namespace restbed
                 session->close( NOT_FOUND );
             }
         }
-        
-        bool ServiceImpl::has_unique_paths( const set< string >& paths ) const
+
+        bool ServiceImpl::has_unique_paths( const Common::VectorSet< string >& paths ) const
         {
             if ( paths.empty( ) )
             {
@@ -558,7 +558,7 @@ namespace restbed
         void ServiceImpl::extract_path_parameters( const string& sanitised_path, const shared_ptr< const Request >& request ) const
         {
             smatch matches;
-            static const regex pattern( "^\\{([a-zA-Z0-9_\\-]+): ?.*\\}$" );
+            static const regex pattern( "^\\{([a-zA-Z0-9_\\-]+): ?(.*)\\}$" );
             
             const auto folders = String::split( request->get_path( ), '/' );
             const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
@@ -570,7 +570,17 @@ namespace restbed
                 if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
                 {
                     regex_match( declaration, matches, pattern );
-                    request->m_pimpl->m_path_parameters.insert( make_pair( matches[ 1 ].str( ), folders[ index ] ) );
+                    if ( matches[ 2 ].str( ) == "TO_END" ) {
+                        std::ostringstream oss;
+                        std::copy( folders.begin()+index, folders.end()-1, std::ostream_iterator<std::string>( oss, "/" ) );
+                        oss << folders.back( );
+                        request->m_pimpl->m_path_parameters.insert( make_pair( matches[ 1 ].str( ), oss.str() ) );
+                        break;
+                    }
+                    else
+                    {
+                        request->m_pimpl->m_path_parameters.insert( make_pair( matches[ 1 ].str( ), folders[ index ] ) );
+                    }
                 }
             }
         }
@@ -631,17 +641,40 @@ namespace restbed
             const auto path_folders = String::split( request->get_path( ), '/' );
             const auto route_folders = String::split( m_settings->get_root( ) + "/" + route.first, '/' );
             
-            if ( path_folders.empty( ) and route_folders.empty( ) )
+            if ( path_folders == route_folders )
             {
                 return true;
             }
             
             bool match = false;
-            
-            if ( path_folders.size( ) == route_folders.size( ) )
+
+            bool to_end = route_folders.back( ).find( "TO_END" ) not_eq std::string::npos;
+
+            if ( to_end or path_folders.size( ) == route_folders.size( ) )
             {
-                for ( size_t index = 0; index < path_folders.size( ); index++ )
+                for ( size_t index = 0; index < route_folders.size( ); index++ )
                 {
+                    if( to_end ){
+                        if(
+                            route_folders[ index ] == "TO_END"
+                            and
+                            (
+                                ( index == 0 and route_folders.size() == 1 ) //if needs full path
+                                or
+                                (
+                                    ( route_folders.size() > 1 and path_folders.size() > 1 )
+                                    and
+                                    regex_match( path_folders[ index-1 ], regex( route_folders[ index-1 ] ) )
+                                )
+                            )
+                        ){
+                            return true;
+                        }
+                        else if( route_folders.size() < 2 or path_folders.size() < 2 ){
+                            return false;
+                        }
+                    }
+
                     if ( m_settings->get_case_insensitive_uris( ) )
                     {
                         match = regex_match( path_folders[ index ], regex( route_folders[ index ], icase ) );
@@ -707,7 +740,7 @@ namespace restbed
             };
         }
         
-        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream )
+        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream)
         {
             smatch matches;
             string data = "";
