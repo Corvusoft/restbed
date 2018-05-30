@@ -374,7 +374,7 @@ namespace restbed
             }
         }
         
-        bool ServiceImpl::has_unique_paths( const set< string >& paths ) const
+        bool ServiceImpl::has_unique_paths( const vector< string >& paths ) const
         {
             if ( paths.empty( ) )
             {
