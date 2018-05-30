@@ -288,15 +288,15 @@ namespace restbed
         
         auto paths = resource->m_pimpl->m_paths;
         
-        for ( auto i = paths.begin(); i != paths.end(); i++ ) {
+        for ( auto& path : paths )
         {
-            if ( m_pimpl->m_resource_routes.erase( i ) )
+            if ( m_pimpl->m_resource_routes.erase( path ) )
             {
-                m_pimpl->log( Logger::INFO, String::format( "Suppressed resource route '%s'.", (*i).data( ) ) );
+                m_pimpl->log( Logger::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
             }
             else
             {
-                m_pimpl->log( Logger::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", (*i).data( ) ) );
+                m_pimpl->log( Logger::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
             }
         }
     }
