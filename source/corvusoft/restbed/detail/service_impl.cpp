@@ -570,7 +570,17 @@ namespace restbed
                 if ( declaration.front( ) == '{' and declaration.back( ) == '}' )
                 {
                     regex_match( declaration, matches, pattern );
-                    request->m_pimpl->m_path_parameters.insert( make_pair( matches[ 1 ].str( ), folders[ index ] ) );
+                    if ( matches[ 2 ].str( ) == "TO_END" ) {
+                        std::ostringstream oss;
+                        std::copy( folders.begin()+index, folders.end()-1, std::ostream_iterator<std::string>( oss, "/" ) );
+                        oss << folders.back( );
+                        request->m_pimpl->m_path_parameters.insert( make_pair( matches[ 1 ].str( ), oss.str() ) );
+                        break;
+                    }
+                    else
+                    {
+                        request->m_pimpl->m_path_parameters.insert( make_pair( matches[ 1 ].str( ), folders[ index ] ) );
+                    }
                 }
             }
         }
@@ -631,30 +641,54 @@ namespace restbed
             const auto path_folders = String::split( request->get_path( ), '/' );
             const auto route_folders = String::split( m_settings->get_root( ) + "/" + route.first, '/' );
             
-            if ( path_folders.empty( ) and route_folders.empty( ) )
+            if ( path_folders == route_folders )
             {
                 return true;
             }
             
-            bool match = false;
-            
-            if ( path_folders.size( ) == route_folders.size( ) )
+            if ( route_folders.empty() and !path_folders.empty() )
             {
-                for ( size_t index = 0; index < path_folders.size( ); index++ )
+                return false;
+            }
+            
+            bool match = false;
+
+            bool to_end = route_folders.back( ).find( "TO_END" ) not_eq std::string::npos;
+            
+            for ( size_t index = 0; index < route_folders.size( ); index++ )
+            {
+                if( 
+                    to_end and route_folders[ index ] == "TO_END"
+                    and
+                    (
+                        index == 0 //if needs full path
+                        or
+                        (
+                            ( route_folders.size() > 1 and path_folders.size() > 1 )
+                            and
+                            regex_match( path_folders[ index-1 ], regex( route_folders[ index-1 ] ) )
+                        )
+                    )
+                ){
+                    return true;
+                }
+                
+                if( path_folders.empty() or path_folders.size() != route_folders.size() ){
+                    break;
+                }
+
+                if ( m_settings->get_case_insensitive_uris( ) )
                 {
-                    if ( m_settings->get_case_insensitive_uris( ) )
-                    {
-                        match = regex_match( path_folders[ index ], regex( route_folders[ index ], icase ) );
-                    }
-                    else
-                    {
-                        match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
-                    }
-                    
-                    if ( not match )
-                    {
-                        break;
-                    }
+                    match = regex_match( path_folders[ index ], regex( route_folders[ index ], icase ) );
+                }
+                else
+                {
+                    match = regex_match( path_folders[ index ], regex( route_folders[ index ] ) );
+                }
+                
+                if ( not match )
+                {
+                    break;
                 }
             }
             
