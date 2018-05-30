@@ -79,6 +79,7 @@ namespace restbed
 {
     namespace detail
     {
+        std::map<std::string, int> ServiceImpl::m_route_order = { };
         ServiceImpl::ServiceImpl( void ) : m_uptime( steady_clock::time_point::min( ) ),
             m_logger( nullptr ),
             m_supported_methods( ),
