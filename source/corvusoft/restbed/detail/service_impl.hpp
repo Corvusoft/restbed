@@ -118,7 +118,7 @@ namespace restbed
                 
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
                 
-                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
+                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream, const std::shared_ptr< Session > session );
                 
                 void parse_request( const std::error_code& error, std::size_t length, const std::shared_ptr< Session > session ) const;
                 
