@@ -757,6 +757,30 @@ namespace restbed
                 }
                 
                 headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
+
+                if(matches[1].str() == "Cookie" || matches[1].str() == "Set-Cookie"){
+                    std::string cookie_header = matches[2].str();
+                    smatch cookiev_matches;
+                    static const regex cookiev_pattern( "([\\s]*<?([^;\\s>]+)>?[\\s]*=[\\s]*<?([^;>]+)>?[\\s]*;?)|[\\s]*<?([^;\\s>]+)>?[\\s]*;?" );
+                    string::const_iterator searchStart( cookie_header.cbegin() );
+                    
+                    regex_match( cookie_header, cookiev_matches, cookiev_pattern );
+
+                    while ( regex_search( searchStart, cookie_header.cend(), cookiev_matches, cookiev_pattern ) )
+                    {
+                        if(cookiev_matches[4].str().empty()){
+                            session->m_pimpl->m_request->m_pimpl->m_cookie_parameters.insert(
+                                make_pair( cookiev_matches[2].str(), cookiev_matches[3].str() )
+                            );
+                        }
+                        else{
+                            session->m_pimpl->m_request->m_pimpl->m_cookie_parameters.insert(
+                                make_pair( cookiev_matches[4].str(), "yes" )
+                            );
+                        }
+                        searchStart += cookiev_matches.position() + cookiev_matches.length();
+                    }
+                }
             }
             
             return headers;
