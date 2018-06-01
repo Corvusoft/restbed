@@ -56,6 +56,8 @@ namespace restbed
             
             std::multimap< std::string, std::string > m_headers { };
             
+            std::map< std::string, std::string > m_cookie_parameters { };
+            
             std::map< std::string, std::string > m_path_parameters { };
             
             std::multimap< std::string, std::string > m_query_parameters { };
