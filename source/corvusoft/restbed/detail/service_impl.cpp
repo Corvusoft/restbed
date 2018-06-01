@@ -742,7 +742,7 @@ namespace restbed
             };
         }
         
-        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream )
+        const multimap< string, string > ServiceImpl::parse_request_headers( istream& stream, const shared_ptr< Session > session )
         {
             smatch matches;
             string data = "";
@@ -758,7 +758,7 @@ namespace restbed
                 
                 headers.insert( make_pair( matches[ 1 ].str( ), matches[ 2 ].str( ) ) );
 
-                if(matches[1].str() == "Cookie" || matches[1].str() == "Set-Cookie"){
+                if ( matches[1].str() == "Cookie" || matches[1].str() == "Set-Cookie" ) {
                     std::string cookie_header = matches[2].str();
                     smatch cookiev_matches;
                     static const regex cookiev_pattern( "([\\s]*<?([^;\\s>]+)>?[\\s]*=[\\s]*<?([^;>]+)>?[\\s]*;?)|[\\s]*<?([^;\\s>]+)>?[\\s]*;?" );
@@ -768,17 +768,20 @@ namespace restbed
 
                     while ( regex_search( searchStart, cookie_header.cend(), cookiev_matches, cookiev_pattern ) )
                     {
-                        if(cookiev_matches[4].str().empty()){
+                        if ( cookiev_matches[4].str().empty() ){
                             session->m_pimpl->m_request->m_pimpl->m_cookie_parameters.insert(
                                 make_pair( cookiev_matches[2].str(), cookiev_matches[3].str() )
                             );
                         }
-                        else{
+                        else {
                             session->m_pimpl->m_request->m_pimpl->m_cookie_parameters.insert(
                                 make_pair( cookiev_matches[4].str(), "yes" )
                             );
                         }
                         searchStart += cookiev_matches.position() + cookiev_matches.length();
+                    }
+                    if ( session->m_pimpl->m_request->m_pimpl->m_cookie_parameters.empty() ){
+                        throw runtime_error( "Your client has issued a malformed cookie header. That’s all we know." );
                     }
                 }
             }
@@ -804,7 +807,7 @@ namespace restbed
                 
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
-                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
+                session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream, session );
                 session->m_pimpl->m_request->m_pimpl->m_query_parameters = uri.get_query_parameters( );
                 
                 char* locale = strdup( setlocale( LC_NUMERIC, nullptr ) );
