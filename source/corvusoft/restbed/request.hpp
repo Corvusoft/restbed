@@ -97,6 +97,23 @@ namespace restbed
             }
             
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+        
+            float get_cookie_parameter( const std::string& name, const float default_value ) const;
+            
+            double get_cookie_parameter( const std::string& name, const double default_value ) const;
+            
+            std::string get_cookie_parameter( const std::string& name, const std::string& default_value = "" ) const;
+            
+            std::string get_cookie_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+            
+            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+            Type get_cookie_parameter( const std::string& name, const Type default_value ) const
+            {
+                return Common::parse_parameter( get_cookie_parameter( name ), default_value );
+            }
+            
+            std::map< std::string, std::string > get_cookie_parameters( const std::string& name = "" ) const;
+
             
             float get_query_parameter( const std::string& name, const float default_value ) const;
             
