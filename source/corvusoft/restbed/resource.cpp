@@ -21,7 +21,6 @@
 //External Includes
 
 //System Namespaces
-using std::set;
 using std::string;
 using std::multimap;
 using std::function;
@@ -74,7 +73,7 @@ namespace restbed
         m_pimpl->m_paths = { value };
     }
     
-    void Resource::set_paths( const set< string >& values )
+    void Resource::set_paths( const Common::VectorSet< string >& values )
     {
         m_pimpl->m_paths = values;
     }
