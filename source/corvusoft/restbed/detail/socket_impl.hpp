@@ -156,7 +156,9 @@ namespace restbed
                 std::shared_ptr< Logger > m_logger;
                 
                 std::chrono::milliseconds m_timeout;
-                
+
+                asio::io_context &m_io_service;
+
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
                 std::shared_ptr< asio::io_service::strand > m_strand;
@@ -164,7 +166,7 @@ namespace restbed
                 std::shared_ptr< asio::ip::tcp::resolver > m_resolver;
                 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
-                
+
 #ifdef BUILD_SSL
                 std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;
 #endif
