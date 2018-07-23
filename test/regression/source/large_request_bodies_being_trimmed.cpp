@@ -1,7 +1,3 @@
-/*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
- */
-
 //System Includes
 #include <map>
 #include <thread>

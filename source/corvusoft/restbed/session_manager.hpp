@@ -1,9 +1,8 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_SESSION_MANAGER_H
-#define _RESTBED_SESSION_MANAGER_H 1
+#pragma once
 
 //System Includes
 #include <memory>
@@ -98,5 +97,3 @@ namespace restbed
             //Properties
     };
 }
-
-#endif  /* _RESTBED_SESSION_MANAGER_H */

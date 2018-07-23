@@ -1,11 +1,11 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
 #include <tuple>
 #include <string>
-#include <sstream>
+#include <random>
 #include <ciso646>
 #include <system_error>
 
@@ -22,20 +22,20 @@
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
-#include <kashmir/uuid_gen.h>
-#include <kashmir/system/devrand.h>
 
 //System Namespaces
 using std::get;
 using std::tuple;
 using std::string;
+using std::mt19937;
 using std::function;
 using std::to_string;
 using std::shared_ptr;
 using std::error_code;
 using std::make_shared;
-using std::stringstream;
+using std::random_device;
 using std::placeholders::_1;
+using std::uniform_int_distribution;
 
 //Project Namespaces
 using restbed::detail::WebSocketManagerImpl;
@@ -264,13 +264,15 @@ namespace restbed
                 return nullptr;
             }
             
-            kashmir::uuid_t uuid;
-            kashmir::system::DevRand random;
-            random >> uuid;
-            stringstream stream;
-            stream << uuid;
-            const auto key = stream.str( );
-            
+            static auto& charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            thread_local static mt19937 generator{ random_device{ }( ) };
+            thread_local static uniform_int_distribution< string::size_type > pick( 0, sizeof( charset ) - 2 );
+
+            string key;
+            auto length = 16;
+            key.reserve( length );
+            while( length-- ) key += charset[ pick( generator ) ];
+
             auto socket = make_shared< WebSocket >( );
             socket->set_key( key );
             socket->set_logger( m_logger );

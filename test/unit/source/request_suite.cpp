@@ -1,7 +1,3 @@
-/*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
- */
-
 //System Includes
 #include <map>
 #include <string>
@@ -122,10 +118,16 @@ TEST_CASE( "validate getter default value", "[request]" )
         REQUIRE( value == -6 );
     }
     
+    SECTION( "float" )
+    {
+        float value = request.get_header( "Var", 3.14f );
+        REQUIRE( value == 3.14f );
+    }
+    
     SECTION( "double" )
     {
-        double value = request.get_header( "Var", 34443 );
-        REQUIRE( value == 34443 );
+        double value = request.get_header( "Var", 34.999443 );
+        REQUIRE( value == 34.999443 );
     }
     
     SECTION( "string" )

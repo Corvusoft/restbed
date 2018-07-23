@@ -1,12 +1,14 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
 #include <map>
 #include <regex>
 #include <sstream>
-#include <iso646.h>
+#include <cstdlib>
+#include <clocale>
+#include <ciso646>
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
@@ -30,6 +32,7 @@
 #endif
 
 //System Namespaces
+using std::free;
 using std::bind;
 using std::stod;
 using std::regex;
@@ -38,6 +41,7 @@ using std::string;
 using std::istream;
 using std::function;
 using std::multimap;
+using std::setlocale;
 using std::to_string;
 using std::shared_ptr;
 using std::error_code;
@@ -92,12 +96,24 @@ namespace restbed
                 protocol = "HTTP";
             }
             
+            char* locale = nullptr;
+            if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+            {
+                locale = strdup(current_locale);
+                setlocale( LC_NUMERIC, "C" );
+            }
+            
             auto data = String::format( "%s %s %s/%.1f\r\n",
                                         request->get_method( ).data( ),
                                         path.data( ),
                                         protocol.data( ),
                                         request->get_version( ) );
-                                        
+            
+            if (locale) {
+                setlocale( LC_NUMERIC, locale );
+                free( locale );
+            }
+            
             auto headers = request->get_headers( );
             
             if ( not headers.empty( ) )
@@ -163,7 +179,11 @@ namespace restbed
                 }
                 else
                 {
+#ifdef _WIN32
+                    context.load_verify_file(settings->get_certificate_authority_pool());
+#else
                     context.add_verify_path( settings->get_certificate_authority_pool( ) );
+#endif
                 }
                 
                 socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
@@ -187,7 +207,7 @@ namespace restbed
                 return callback( request, create_error_response( request, body ) );
             }
             
-            request->m_pimpl->m_socket->write( to_bytes( request ), bind( write_handler, _1, _2, request, callback ) );
+            request->m_pimpl->m_socket->start_write( to_bytes( request ), bind( write_handler, _1, _2, request, callback ) );
         }
         
         void HttpImpl::write_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )
@@ -199,7 +219,7 @@ namespace restbed
             }
             
             request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
+            request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, "\r\n", bind( read_status_handler, _1, _2, request, callback ) );
         }
         
         const shared_ptr< Response > HttpImpl::create_error_response( const shared_ptr< Request >& request, const string& message )
@@ -229,7 +249,7 @@ namespace restbed
             getline( response_stream, status_line );
             
             smatch matches;
-            static const regex status_line_pattern( "^([a-zA-Z]+)\\/(\\d*\\.?\\d*) (-?\\d+) (.+)\\r$" );
+            static const regex status_line_pattern( "^([a-zA-Z]+)\\/(\\d*\\.?\\d*) (-?\\d+) (.*)\\r$" );
             
             if ( not regex_match( status_line, matches, status_line_pattern ) or matches.size( ) not_eq 5 )
             {
@@ -243,7 +263,7 @@ namespace restbed
             response->set_status_code( stoi( matches[ 3 ].str( ) ) );
             response->set_status_message( matches[ 4 ].str( ) );
             
-            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, "\r\n\r\n", bind( read_headers_handler, _1, _2, request, callback ) );
+            request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, "\r\n\r\n", bind( read_headers_handler, _1, _2, request, callback ) );
         }
         
         void HttpImpl::read_headers_handler( const error_code& error, const size_t, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback )

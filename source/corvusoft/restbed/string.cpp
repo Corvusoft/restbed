@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -46,14 +46,14 @@ namespace restbed
     string String::lowercase( const string& value )
     {
         string result = "";
-        transform( value.begin( ), value.end( ), back_inserter( result ), ( int ( * )( int ) )tolower );
+        transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value ) { return static_cast< char >( tolower( value ) ); } );
         return result;
     }
     
     string String::uppercase( const string& value )
     {
         string result = "";
-        transform( value.begin( ), value.end( ), back_inserter( result ), ( int ( * )( int ) )toupper );
+        transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value ) { return static_cast< char >( toupper( value ) ); } );
         return result;
     }
     

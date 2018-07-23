@@ -1,9 +1,8 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_HTTP_H
-#define _RESTBED_HTTP_H 1
+#pragma once
 
 //System Includes
 #include <string>
@@ -107,5 +106,3 @@ namespace restbed
             //Properties
     };
 }
-
-#endif  /* _RESTBED_HTTP_H */

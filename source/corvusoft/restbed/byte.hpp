@@ -1,9 +1,8 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_BYTE_H
-#define _RESTBED_BYTE_H 1
+#pragma once
 
 //System Includes
 #include <vector>
@@ -25,5 +24,3 @@ namespace restbed
     
     typedef std::vector< Byte > Bytes;
 }
-
-#endif  /* _RESTBED_BYTE_H */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -7,6 +7,8 @@
 #include <string>
 #include <ciso646>
 #include <cstdint>
+#include <cstdlib>
+#include <clocale>
 #include <stdexcept>
 #include <system_error>
 
@@ -28,10 +30,12 @@
 #include <asio/buffer.hpp>
 
 //System Namespaces
+using std::free;
 using std::bind;
 using std::string;
 using std::future;
 using std::function;
+using std::setlocale;
 using std::error_code;
 using std::shared_ptr;
 using std::make_shared;
@@ -58,12 +62,24 @@ namespace restbed
     
     Bytes Http::to_bytes( const shared_ptr< Response >& value )
     {
+        char* locale = nullptr;
+        if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+        {
+            locale = strdup(current_locale);
+            setlocale( LC_NUMERIC, "C" );
+        }
+        
         auto data = String::format( "%s/%.1f %i %s\r\n",
                                     value->get_protocol( ).data( ),
                                     value->get_version( ),
                                     value->get_status_code( ),
                                     value->get_status_message( ).data( ) );
-                                    
+        
+        if (locale) {
+            setlocale( LC_NUMERIC, locale );
+            free( locale );
+        }
+        
         auto headers = value->get_headers( );
         
         if ( not headers.empty( ) )
@@ -148,7 +164,7 @@ namespace restbed
         }
         else
         {
-            request->m_pimpl->m_socket->write( HttpImpl::to_bytes( request ), bind( HttpImpl::write_handler, _1, _2, request, completion_handler ) );
+            request->m_pimpl->m_socket->start_write( Http::to_bytes( request ), bind( HttpImpl::write_handler, _1, _2, request, completion_handler ) );
         }
         
         if ( finished )
@@ -194,8 +210,8 @@ namespace restbed
         {
             error_code error;
             const size_t size = length - request->m_pimpl->m_buffer->size( );
-            
-            request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, size, error );
+
+            request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, size, error );
             
             if ( error and error not_eq asio::error::eof )
             {
@@ -242,7 +258,7 @@ namespace restbed
         }
         
         error_code error;
-        const size_t size = request->m_pimpl->m_socket->read( request->m_pimpl->m_buffer, delimiter, error );
+        const size_t size = request->m_pimpl->m_socket->start_read( request->m_pimpl->m_buffer, delimiter, error );
         
         if ( error )
         {

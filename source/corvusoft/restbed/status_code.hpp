@@ -1,9 +1,8 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_STATUS_CODE_H
-#define _RESTBED_STATUS_CODE_H 1
+#pragma once
 
 //System Includes
 
@@ -83,5 +82,3 @@ namespace restbed
         NETWORK_AUTHENTICATION_REQUIRED = 511
     };
 }
-
-#endif  /* _RESTBED_STATUS_CODE_H */

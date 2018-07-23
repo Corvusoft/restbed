@@ -1,9 +1,8 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
-#ifndef _RESTBED_RESOURCE_H
-#define _RESTBED_RESOURCE_H 1
+#pragma once
 
 //System Includes
 #include <map>
@@ -118,5 +117,3 @@ namespace restbed
             std::unique_ptr< detail::ResourceImpl > m_pimpl;
     };
 }
-
-#endif  /* _RESTBED_RESOURCE_H */

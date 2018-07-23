@@ -1,8 +1,9 @@
 /*
- * Copyright 2013-2017, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
+#include <future>
 #include <ciso646>
 
 //Project Includes
@@ -17,14 +18,17 @@
 
 
 //System Namespaces
+using std::get;
 using std::bind;
 using std::size_t;
 using std::string;
+using std::promise;
 using std::function;
 using std::to_string;
 using std::error_code;
 using std::shared_ptr;
 using std::make_shared;
+using std::runtime_error;
 using std::placeholders::_1;
 using std::chrono::milliseconds;
 using std::chrono::steady_clock;
@@ -45,8 +49,8 @@ namespace restbed
 {
     namespace detail
     {
-        SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->is_open( ) ),
-            m_buffer( nullptr ),
+        SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
+            m_is_open( socket->is_open( ) ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_timer( make_shared< asio::steady_timer >( socket->get_io_service( ) ) ),
@@ -60,8 +64,8 @@ namespace restbed
             return;
         }
 #ifdef BUILD_SSL
-        SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_is_open( socket->lowest_layer( ).is_open( ) ),
-            m_buffer( nullptr ),
+        SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
+            m_is_open( socket->lowest_layer( ).is_open( ) ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_timer( make_shared< asio::steady_timer >( socket->lowest_layer( ).get_io_service( ) ) ),
@@ -146,6 +150,10 @@ namespace restbed
                         callback( error );
                     } );
                 }
+                else
+                {
+                    callback( error );
+                }
             } );
         }
         
@@ -155,88 +163,300 @@ namespace restbed
             m_timer->expires_from_now( delay );
             m_timer->async_wait( callback );
         }
-        
-        void SocketImpl::write( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
-        {
-            m_buffer = make_shared< Bytes >( data );
-            
-            m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) ) );
-#ifdef BUILD_SSL
-            
-            if ( m_socket not_eq nullptr )
-            {
-#endif
-                asio::async_write( *m_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), m_strand->wrap( [ this, callback ]( const error_code & error, size_t length )
-                {
-                    m_timer->cancel( );
-                    
-                    if ( error )
-                    {
-                        m_is_open = false;
-                    }
-                    
-                    m_buffer.reset( );
-                    
-                    if ( error not_eq asio::error::operation_aborted )
-                    {
-                        callback( error, length );
-                    }
-                } ) );
-#ifdef BUILD_SSL
-            }
-            else
-            {
-                asio::async_write( *m_ssl_socket, asio::buffer( m_buffer->data( ), m_buffer->size( ) ), m_strand->wrap( [ this, callback ]( const error_code & error, size_t length )
-                {
-                    m_timer->cancel( );
-                    
-                    if ( error )
-                    {
-                        m_is_open = false;
-                    }
-                    
-                    m_buffer.reset( );
-                    
-                    if ( error not_eq asio::error::operation_aborted )
-                    {
-                        callback( error, length );
-                    }
-                } ) );
-            }
-            
-#endif
+
+		void SocketImpl::start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback)
+		{
+			m_strand->post([this, data, callback] { write_helper(data, callback); });
+        }
+
+		size_t SocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error)
+		{
+			return read( data, delimiter,error );
         }
         
-        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
+		size_t SocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error)
+		{
+			return read( data, length, error );
+		}
+
+        void SocketImpl::start_read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
+		{
+			m_strand->post([this, length, success, failure] {
+				read(length, success, failure);
+			});
+        }
+        
+		void SocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback)
+		{
+			m_strand->post([this, data, length, callback] 
+			{
+				read(data, length, callback);
+			});
+		}
+
+		void SocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback)
+		{
+			m_strand->post([this, data, delimiter, callback] 
+			{
+				read(data, delimiter, callback);
+			});
+        }
+
+        string SocketImpl::get_local_endpoint( void )
         {
-            m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) );
-            
-            size_t size = 0;
+            error_code error;
+            tcp::endpoint endpoint;
 #ifdef BUILD_SSL
             
             if ( m_socket not_eq nullptr )
             {
 #endif
-                size = asio::read( *m_socket, *data, asio::transfer_at_least( length ), error );
+                endpoint = m_socket->local_endpoint( error );
 #ifdef BUILD_SSL
             }
             else
             {
-                size = asio::read( *m_ssl_socket, *data, asio::transfer_at_least( length ), error );
+                endpoint = m_ssl_socket->lowest_layer( ).local_endpoint( error );
             }
             
 #endif
-            m_timer->cancel( );
             
             if ( error )
             {
                 m_is_open = false;
             }
             
+            auto address = endpoint.address( );
+            auto local = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
+            local += ::to_string( endpoint.port( ) );
+            
+            return local;
+        }
+        
+        string SocketImpl::get_remote_endpoint( void )
+        {
+            error_code error;
+            tcp::endpoint endpoint;
+#ifdef BUILD_SSL
+            
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                endpoint = m_socket->remote_endpoint( error );
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                endpoint = m_ssl_socket->lowest_layer( ).remote_endpoint( error );
+            }
+            
+#endif
+            
+            if ( error )
+            {
+                m_is_open = false;
+            }
+            
+            auto address = endpoint.address( );
+            auto remote = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
+            remote += ::to_string( endpoint.port( ) );
+            
+            return remote;
+        }
+        
+        void SocketImpl::set_timeout( const milliseconds& value )
+        {
+            m_timeout = value;
+        }
+        
+        void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
+        {
+            if ( error or socket == nullptr or socket->m_timer->expires_at( ) > steady_clock::now( ) )
+            {
+                return;
+            }
+            
+            socket->close( );
+            
+            if ( m_error_handler not_eq nullptr )
+            {
+                m_error_handler( 408, runtime_error( "The socket timed out waiting for the request." ), nullptr );
+            }
+        }
+
+        void SocketImpl::write( void )
+        {
+			if(m_is_open)
+			{
+				m_timer->cancel( );
+				m_timer->expires_from_now( m_timeout );
+				m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+#ifdef BUILD_SSL
+				if ( m_socket not_eq nullptr )
+				{
+#endif
+					asio::async_write( *m_socket, asio::buffer( get<0>(m_pending_writes.front()).data( ), get<0>(m_pending_writes.front()).size( ) ), m_strand->wrap( [ this ]( const error_code & error, size_t length )
+					{
+						m_timer->cancel( );
+						auto callback = get<2>(m_pending_writes.front());
+						auto & retries = get<1>(m_pending_writes.front());
+						auto & buffer = get<0>(m_pending_writes.front());
+						if(length < buffer.size() &&  retries < MAX_WRITE_RETRIES &&  error not_eq asio::error::operation_aborted)
+						{
+							++retries;
+							buffer.erase(buffer.begin(),buffer.begin() + length);
+						}
+						else
+						{
+							m_pending_writes.pop();
+						}
+						if ( error not_eq asio::error::operation_aborted )
+						{
+							callback( error, length );
+						}
+						if(!m_pending_writes.empty())
+						{
+							write();
+						}
+					} ) );
+					
+#ifdef BUILD_SSL
+				}
+				else
+				{
+					asio::async_write(*m_ssl_socket, asio::buffer( get<0>(m_pending_writes.front()).data( ), get<0>(m_pending_writes.front()).size( ) ), m_strand->wrap( [ this ]( const error_code & error, size_t length )
+					{
+						m_timer->cancel( );
+						auto callback = get<2>(m_pending_writes.front());
+						auto & retries = get<1>(m_pending_writes.front());
+						auto & buffer = get<0>(m_pending_writes.front());
+						if(length < buffer.size() &&  retries < MAX_WRITE_RETRIES &&  error not_eq asio::error::operation_aborted)
+						{
+							++retries;
+							buffer.erase(buffer.begin(),buffer.begin() + length);
+						}
+						else
+						{
+							m_pending_writes.pop();
+						}
+						if ( error not_eq asio::error::operation_aborted )
+						{
+							callback( error, length );
+						}
+						if(!m_pending_writes.empty())
+						{
+							write();
+						}
+					} ) );
+				}
+            
+#endif
+			}
+        }
+
+        void SocketImpl::write( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
+        {
+            const auto buffer = make_shared< Bytes >( data );
+            
+            m_timer->cancel( );
+            m_timer->expires_from_now( m_timeout );
+            m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+#ifdef BUILD_SSL
+            
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                asio::async_write( *m_socket, asio::buffer( buffer->data( ), buffer->size( ) ), m_strand->wrap( [ this, callback, buffer ]( const error_code & error, size_t length )
+                {
+                    m_timer->cancel( );
+                    
+                    if ( error )
+                    {
+                        m_is_open = false;
+                    }
+                    
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
+                } ) );
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                asio::async_write( *m_ssl_socket, asio::buffer( buffer->data( ), buffer->size( ) ), m_strand->wrap( [ this, callback, buffer ]( const error_code & error, size_t length )
+                {
+                    m_timer->cancel( );
+                    
+                    if ( error )
+                    {
+                        m_is_open = false;
+                    }
+                    
+                    if ( error not_eq asio::error::operation_aborted )
+                    {
+                        callback( error, length );
+                    }
+                } ) );
+            }  
+#endif
+        }
+
+		void SocketImpl::write_helper(const Bytes& data, const function< void ( const error_code&, size_t ) >& callback)
+		{
+			m_pending_writes.push(make_tuple(data, 0, callback));
+			if(m_pending_writes.size() == 1)
+			{
+				write();
+			}
+		}
+        
+        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
+        {
+            m_timer->cancel( );
+            m_timer->expires_from_now( m_timeout );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
+
+            size_t size = 0;
+            auto finished = std::make_shared<bool>(false);
+            auto sharedError = std::make_shared<error_code>();
+            auto sharedSize = std::make_shared<size_t>(0);
+
+#ifdef BUILD_SSL
+
+            if ( m_socket not_eq nullptr )
+            {
+#endif
+                asio::async_read( *m_socket, *data, asio::transfer_at_least( length ),
+                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                        *sharedError = error;
+                        *sharedSize = size;
+                        *finished = true;
+                });
+#ifdef BUILD_SSL
+            }
+            else
+            {
+                asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ),
+                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                        *sharedError = error;
+                        *sharedSize = size;
+                        *finished = true;
+                });
+            }
+#endif
+            auto& io_service = m_socket->get_io_service( );
+            while (!*finished)
+                io_service.run_one();
+            error = *sharedError;
+            size = *sharedSize;
+            m_timer->cancel( );
+
+            if ( error )
+            {
+                m_is_open = false;
+            }
+
             return size;
         }
         
@@ -244,7 +464,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler,  shared_from_this( ), _1 ) );
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
             
 #ifdef BUILD_SSL
             
@@ -296,7 +516,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) ) );
+            m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
             
 #ifdef BUILD_SSL
             
@@ -344,31 +564,48 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) );
-            
+            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
+
             size_t length = 0;
-            
+            auto finished = std::make_shared<bool>(false);
+            auto sharedError = std::make_shared<error_code>();
+            auto sharedLength = std::make_shared<size_t>(0);
+
 #ifdef BUILD_SSL
-            
+
             if ( m_socket not_eq nullptr )
             {
 #endif
-                length = asio::read_until( *m_socket, *data, delimiter, error );
+                asio::async_read_until( *m_socket, *data, delimiter,
+                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                        *sharedError = error;
+                        *sharedLength = length;
+                        *finished = true;
+                });
 #ifdef BUILD_SSL
             }
             else
             {
-                length = asio::read_until( *m_ssl_socket, *data, delimiter, error );
+                asio::async_read_until( *m_ssl_socket, *data, delimiter,
+                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                        *sharedError = error;
+                        *sharedLength = length;
+                        *finished = true;
+                });
             }
-            
 #endif
+            auto& io_service = m_socket->get_io_service( );
+            while (!*finished)
+                io_service.run_one();
+            error = *sharedError;
+            length = *sharedLength;
             m_timer->cancel( );
-            
+
             if ( error )
             {
                 m_is_open = false;
             }
-            
+
             return length;
         }
         
@@ -376,7 +613,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, shared_from_this( ), _1 ) ) );
+            m_timer->async_wait( m_strand->wrap( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
             
 #ifdef BUILD_SSL
             
@@ -418,88 +655,6 @@ namespace restbed
             }
             
 #endif
-        }
-        
-        string SocketImpl::get_local_endpoint( void )
-        {
-            error_code error;
-            tcp::endpoint endpoint;
-#ifdef BUILD_SSL
-            
-            if ( m_socket not_eq nullptr )
-            {
-#endif
-                endpoint = m_socket->local_endpoint( error );
-#ifdef BUILD_SSL
-            }
-            else
-            {
-                endpoint = m_ssl_socket->lowest_layer( ).local_endpoint( error );
-            }
-            
-#endif
-            
-            if ( error )
-            {
-                m_is_open = false;
-            }
-            
-            auto address = endpoint.address( );
-            auto local = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            local += ::to_string( endpoint.port( ) );
-            
-            return local;
-        }
-        
-        string SocketImpl::get_remote_endpoint( void )
-        {
-            error_code error;
-            tcp::endpoint endpoint;
-#ifdef BUILD_SSL
-            
-            if ( m_socket not_eq nullptr )
-            {
-#endif
-                endpoint = m_socket->remote_endpoint( error );
-#ifdef BUILD_SSL
-            }
-            else
-            {
-                endpoint = m_ssl_socket->lowest_layer( ).remote_endpoint( error );
-            }
-            
-#endif
-            
-            if ( error )
-            {
-                m_is_open = false;
-            }
-            
-            auto address = endpoint.address( );
-            auto remote = address.is_v4( ) ? address.to_string( ) : "[" + address.to_string( ) + "]:";
-            remote += ::to_string( endpoint.port( ) );
-            
-            return remote;
-        }
-        
-        void SocketImpl::set_timeout( const milliseconds& value )
-        {
-            m_timeout = value;
-        }
-        
-        void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
-        {
-            if ( error )
-            {
-                return;
-            }
-            
-            if ( socket == nullptr or socket->m_timer->expires_at( ) > steady_clock::now( ) )
-            {
-                return;
-            }
-            
-            socket->close( );
         }
     }
 }
