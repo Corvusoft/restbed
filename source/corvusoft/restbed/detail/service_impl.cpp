@@ -88,7 +88,7 @@ namespace restbed
             m_session_manager( nullptr ),
             m_web_socket_manager( nullptr ),
             m_rules( ),
-            m_workers( ),
+            m_workers_stopped( ),
 #ifdef BUILD_SSL
             m_ssl_settings( nullptr ),
             m_ssl_context( nullptr ),

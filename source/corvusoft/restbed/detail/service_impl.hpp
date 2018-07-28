@@ -8,7 +8,7 @@
 #include <set>
 #include <map>
 #include <chrono>
-#include <thread>
+#include <future>
 #include <memory>
 #include <string>
 #include <vector>
@@ -143,7 +143,7 @@ namespace restbed
                 
                 std::vector< std::shared_ptr< Rule > > m_rules;
                 
-                std::vector< std::shared_ptr< std::thread > > m_workers;
+                std::unique_ptr< std::future<void > > m_workers_stopped;
 #ifdef BUILD_SSL
                 std::shared_ptr< const SSLSettings > m_ssl_settings;
                 
