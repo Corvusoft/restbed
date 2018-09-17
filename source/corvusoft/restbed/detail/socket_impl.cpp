@@ -53,8 +53,9 @@ namespace restbed
             m_is_open( socket->is_open( ) ),
             m_logger( logger ),
             m_timeout( 0 ),
-            m_timer( make_shared< asio::steady_timer >( socket->get_io_service( ) ) ),
-            m_strand( make_shared< io_service::strand > ( socket->get_io_service( ) ) ),
+            m_io_service( socket->get_io_service( ) ),
+            m_timer( make_shared< asio::steady_timer >( m_io_service ) ),
+            m_strand( make_shared< io_service::strand > ( m_io_service ) ),
             m_resolver( nullptr ),
             m_socket( socket )
 #ifdef BUILD_SSL
@@ -68,8 +69,9 @@ namespace restbed
             m_is_open( socket->lowest_layer( ).is_open( ) ),
             m_logger( logger ),
             m_timeout( 0 ),
-            m_timer( make_shared< asio::steady_timer >( socket->lowest_layer( ).get_io_service( ) ) ),
-            m_strand( make_shared< io_service::strand > ( socket->get_io_service( ) ) ),
+            m_io_service( socket->get_io_service( ) ),
+            m_timer( make_shared< asio::steady_timer >( m_io_service ) ),
+            m_strand( make_shared< io_service::strand > ( m_io_service ) ),
             m_resolver( nullptr ),
             m_socket( nullptr ),
             m_ssl_socket( socket )
@@ -119,12 +121,7 @@ namespace restbed
         
         void SocketImpl::connect( const string& hostname, const uint16_t port, const function< void ( const error_code& ) >& callback )
         {
-#ifdef BUILD_SSL
-            auto& io_service = ( m_socket not_eq nullptr ) ? m_socket->get_io_service( ) : m_ssl_socket->lowest_layer( ).get_io_service( );
-#else
-            auto& io_service = m_socket->get_io_service( );
-#endif
-            m_resolver = make_shared< tcp::resolver >( io_service );
+            m_resolver = make_shared< tcp::resolver >( m_io_service );
             tcp::resolver::query query( hostname, ::to_string( port ) );
             
             m_resolver->async_resolve( query, [ this, callback ]( const error_code & error, tcp::resolver::iterator endpoint_iterator )
@@ -445,9 +442,9 @@ namespace restbed
                 });
             }
 #endif
-            auto& io_service = m_socket->get_io_service( );
+
             while (!*finished)
-                io_service.run_one();
+                m_io_service.run_one();
             error = *sharedError;
             size = *sharedSize;
             m_timer->cancel( );
@@ -594,9 +591,9 @@ namespace restbed
                 });
             }
 #endif
-            auto& io_service = m_socket->get_io_service( );
+
             while (!*finished)
-                io_service.run_one();
+                m_io_service.run_one();
             error = *sharedError;
             length = *sharedLength;
             m_timer->cancel( );
