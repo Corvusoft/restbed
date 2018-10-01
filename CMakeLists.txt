@@ -7,6 +7,7 @@ message( "Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved." )
 # Build Options
 #
 option( BUILD_SSL      "Build secure socket layer support."  ON )
+option( BUILD_TESTS    "Build unit tests."  OFF )
 
 #
 # Configuration
@@ -16,7 +17,7 @@ set( INCLUDE_DIR "${PROJECT_SOURCE_DIR}/source" )
 set( SOURCE_DIR  "${PROJECT_SOURCE_DIR}/source/corvusoft/${PROJECT_NAME}" )
 
 if ( NOT DEFINED CMAKE_INSTALL_LIBDIR )
-    set( CMAKE_INSTALL_LIBDIR library )
+    set( CMAKE_INSTALL_LIBDIR lib )
 endif ( )
 
 if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
@@ -42,7 +43,6 @@ endif ( )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
 
 find_package( asio REQUIRED )
-find_package( catch REQUIRED )
 if ( BUILD_SSL )
     find_package( openssl REQUIRED )
 endif ( )
@@ -77,11 +77,14 @@ else ( )
     target_link_libraries( ${SHARED_LIBRARY_NAME} )
 endif ( )
 
-enable_testing( )
-add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
-add_subdirectory( "${PROJECT_SOURCE_DIR}/test/feature" )
-add_subdirectory( "${PROJECT_SOURCE_DIR}/test/regression" )
-add_subdirectory( "${PROJECT_SOURCE_DIR}/test/integration" )
+if ( BUILD_TESTS )
+    find_package( catch REQUIRED )
+    enable_testing( )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/feature" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/regression" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/integration" )
+endif ( )
 
 #
 # Install
