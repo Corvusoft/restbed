@@ -89,6 +89,8 @@ namespace restbed
                 
                 //Setters
                 void set_timeout( const std::chrono::milliseconds& value );
+
+                void set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt);
                 
                 //Operators
                 

@@ -291,6 +291,11 @@ namespace restbed
                     
                     auto connection = make_shared< SocketImpl >( socket, m_logger );
                     connection->set_timeout( m_settings->get_connection_timeout( ) );
+                    if (m_settings->get_keep_alive()) {
+                        connection->set_keep_alive( m_settings->get_keep_alive_start(),
+                            m_settings->get_keep_alive_interval(),
+                            m_settings->get_keep_alive_cnt());
+                    }
                     
                     m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                     {
@@ -527,6 +532,11 @@ namespace restbed
             {
                 auto connection = make_shared< SocketImpl >( socket, m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
+                if (m_settings->get_keep_alive()) {
+                    connection->set_keep_alive( m_settings->get_keep_alive_start(),
+                        m_settings->get_keep_alive_interval(),
+                        m_settings->get_keep_alive_cnt());
+                }
                 
                 m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                 {
