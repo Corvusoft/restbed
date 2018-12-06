@@ -562,7 +562,10 @@ namespace restbed
             
             const auto folders = String::split( request->get_path( ), '/' );
             const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
-            
+
+            // Clear previous parameters in case of "keep-alive" request
+            request->m_pimpl->m_path_parameters.clear();
+
             for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
             {
                 const auto declaration = declarations[ index ];
