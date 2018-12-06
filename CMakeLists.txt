@@ -7,7 +7,7 @@ message( "Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved." )
 # Build Options
 #
 option( BUILD_SSL      "Build secure socket layer support."  ON )
-option( BUILD_TESTS    "Build unit tests."  OFF )
+option( BUILD_TESTS    "Build unit tests."  ON )
 option( BUILD_STATIC   "Build static library."  ON )
 option( BUILD_SHARED   "Build shared library."  OFF )
 
