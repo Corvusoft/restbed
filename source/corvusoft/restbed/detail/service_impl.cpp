@@ -715,7 +715,7 @@ namespace restbed
             smatch matches;
             string data = "";
             multimap< string, string > headers;
-            static const regex pattern( "^([^:.]*): *(.*)\\s*$" );
+            static const regex pattern( "^([^:]*): *(.*)\\s*$" );
             
             while ( getline( stream, data ) and data not_eq "\r" )
             {
