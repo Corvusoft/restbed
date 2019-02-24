@@ -57,3 +57,8 @@ Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 *.lnk
+
+# IDE Related
+
+.vscode/
+.idea/

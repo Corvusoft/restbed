@@ -16,7 +16,7 @@ using restbed::Resource;
 
 TEST_CASE( "confirm default constructor throws no exceptions", "[resource]" )
 {
-    REQUIRE_NOTHROW( new Resource );
+    REQUIRE_NOTHROW( std::unique_ptr<Resource> (new Resource) );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[resource]" )
