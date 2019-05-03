@@ -37,7 +37,11 @@
 //System Namespaces
 using std::map;
 using std::bind;
-using std::thread;
+using std::promise;
+using std::future;
+using std::future_status;
+using std::async;
+using std::launch;
 using std::string;
 using std::vector;
 using std::function;
@@ -106,13 +110,12 @@ namespace restbed
             m_pimpl->m_session_manager->stop( );
         }
         
-        for ( auto& worker : m_pimpl->m_workers )
+        if ( m_pimpl->m_workers_stopped )
         {
-            worker->join( );
+            m_pimpl->m_workers_stopped->get();
+            m_pimpl->m_workers_stopped.reset();
         }
-        
-        m_pimpl->m_workers.clear( );
-        
+
         if ( m_pimpl->m_logger not_eq nullptr )
         {
             m_pimpl->log( Logger::INFO, "Service halted." );
@@ -137,7 +140,7 @@ namespace restbed
         
         if ( m_pimpl->m_settings->get_ssl_settings( ) not_eq nullptr )
         {
-            throw runtime_error( "Not Implemented! Rebuild Restbed with SSL funcationality enabled." );
+            throw runtime_error( "Not Implemented! Rebuild Restbed with SSL functionality enabled." );
         }
         
 #endif
@@ -182,25 +185,46 @@ namespace restbed
         m_pimpl->m_uptime = steady_clock::now( );
         unsigned int limit = m_pimpl->m_settings->get_worker_limit( );
         
-        if ( limit > 0 )
+        if ( limit == 0 )
         {
-            const auto this_thread = 1;
-            limit = limit - this_thread;
-            
+            m_pimpl->m_io_service->run( );
+        }
+        else
+        {
+            promise<void> all_signalled;
+            m_pimpl->m_workers_stopped = unique_ptr<future<void> >(new future<void>(std::move(all_signalled.get_future())));
+            vector<future<void> > signals;
             for ( unsigned int count = 0;  count < limit; count++ )
             {
-                auto worker = make_shared< thread >( [ this ]( )
+                signals.push_back( async(launch::async, [ this ]( )
+                                         {
+                                             m_pimpl->m_io_service->run( );
+                                         } ) );
+            }
+            
+            try
+            {
+                while (!signals.empty())
                 {
-                    m_pimpl->m_io_service->run( );
-                } );
-                
-                m_pimpl->m_workers.push_back( worker );
+                    signals.erase(std::remove_if(signals.begin(), signals.end(),
+                                                 [](future<void>& signal) {
+                                                     return (signal.wait_for(milliseconds(5)) == future_status::ready) ?
+                                                     (signal.get(), true) : // this will throw if the worker thread ended with an exception
+                                                     false;
+                                                 }),
+                                  signals.end());
+                }
+                all_signalled.set_value();
+            }
+            catch(...)
+            {
+                m_pimpl->m_io_service->stop( );
+                all_signalled.set_value();
+                throw;
             }
         }
-        
-        m_pimpl->m_io_service->run( );
     }
-    
+
     void Service::restart( const shared_ptr< const Settings >& settings )
     {
         try

@@ -88,7 +88,7 @@ namespace restbed
             m_session_manager( nullptr ),
             m_web_socket_manager( nullptr ),
             m_rules( ),
-            m_workers( ),
+            m_workers_stopped( ),
 #ifdef BUILD_SSL
             m_ssl_settings( nullptr ),
             m_ssl_context( nullptr ),
@@ -562,7 +562,10 @@ namespace restbed
             
             const auto folders = String::split( request->get_path( ), '/' );
             const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
-            
+
+            // Clear previous parameters in case of "keep-alive" request
+            request->m_pimpl->m_path_parameters.clear();
+
             for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
             {
                 const auto declaration = declarations[ index ];
