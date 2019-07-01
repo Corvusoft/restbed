@@ -97,22 +97,18 @@ namespace restbed
     {
         string output = String::empty;
         string hex = "0123456789abcdef";
-        for(string::size_type i=0;i<input.size();++i) {
-            if((('a' <= input[i]) && (input[i] <= 'z')) || (('A' <= input[i]) && (input[i] <= 'Z')) || \
-                (('0' <= input[i]) && (input[i] <= '9')) || (input[i] == '-') || (input[i] == '_') || \
-                (input[i] == '.') || (input[i] == '~') || (input[i] == '/') || (input[i] == '*')) {
-                output.push_back(input[i]);
-
-            } else if (input[i] == ' ') {
-                output.push_back('+'); // Or is it "%20"?
-
-            } else {
+        for(string::size_type i=0;i<input.size();++i) 
+        {
+            if(input[i] == '%') 
+            {
                 output.push_back('%');
                 output.push_back(hex[input[i] >> 4]);
                 output.push_back(hex[input[i] & 0x0f]);
-
+            } 
+            else 
+            {
+                output.push_back(input[i]);
             }
-
         }
         return output; // Better free() this up after use.
 
