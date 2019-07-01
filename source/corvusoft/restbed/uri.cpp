@@ -126,8 +126,16 @@ namespace restbed
     string Uri::decode( const string& value )
     {
         string result = String::empty;
+        string valuedecode = String::empty;
         
-        string valuedecode = url_encode(value);
+        if((value.find("%") == string::npos) || (value.find(" ") == string::npos))
+        {
+            valuedecode = url_encode(value);
+        }
+        else
+        {
+            valuedecode = value;
+        }
         for ( string::size_type index = 0; index not_eq valuedecode.length( ); index++ )
         {
             if ( valuedecode[ index ] == '%' )
