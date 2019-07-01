@@ -93,27 +93,6 @@ namespace restbed
         return Uri( value );
     }
     
-    string Uri::url_encode(const string& input)
-    {
-        string output = String::empty;
-        string hex = "0123456789abcdef";
-        for(string::size_type i=0;i<input.size();++i) 
-        {
-            if(input[i] == '%') 
-            {
-                output.push_back('%');
-                output.push_back(hex[input[i] >> 4]);
-                output.push_back(hex[input[i] & 0x0f]);
-            } 
-            else 
-            {
-                output.push_back(input[i]);
-            }
-        }
-        return output; // Better free() this up after use.
-
-    }
-    
     string Uri::decode( const Bytes& value )
     {
         return decode( string( value.begin( ), value.end( ) ) );
@@ -122,30 +101,21 @@ namespace restbed
     string Uri::decode( const string& value )
     {
         string result = String::empty;
-        string valuedecode = String::empty;
-        
-        if((value.find("%") == string::npos) || (value.find(" ") == string::npos))
+      
+        for ( string::size_type index = 0; index not_eq value.length( ); index++ )
         {
-            valuedecode = url_encode(value);
-        }
-        else
-        {
-            valuedecode = value;
-        }
-        for ( string::size_type index = 0; index not_eq valuedecode.length( ); index++ )
-        {
-            if ( valuedecode[ index ] == '%' )
+            if ( value[ index ] == '%' && (isdigit(value[index +1]) != 0) && (isalnum(value[index +2]) != 0))
             {
                 char hexidecimal[ 3 ] = { 0 };
-                hexidecimal[ 0 ] = valuedecode[ ++index ];
-                hexidecimal[ 1 ] = valuedecode[ ++index ];
+                hexidecimal[ 0 ] = value[ ++index ];
+                hexidecimal[ 1 ] = value[ ++index ];
                 
                 char byte = static_cast< char >( strtol( hexidecimal, nullptr, 16 ) );
                 result.push_back( byte );
             }
             else
             {
-                result.push_back( valuedecode[ index ] );
+                result.push_back( value[ index ] );
             }
         }
         
