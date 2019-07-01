@@ -59,7 +59,9 @@ namespace restbed
             static std::string decode( const Bytes& value );
             
             static std::string decode( const std::string& value );
-            
+        
+            static std::string url_encode( const std::string& value );
+        
             static std::string decode_parameter( const std::string& value );
             
             static std::string encode( const Bytes& value );
