@@ -97,7 +97,7 @@ if ( BUILD_TESTS )
 endif ( )
 
 if ( BUILD_STATIC )
-    set(CMAKE_INSTALL_INCLUDEDIR "${CMAKE_INSTALL_PREFIX}/include")
+    set(CMAKE_INSTALL_INCLUDEDIR "include")
 
     target_include_directories(${STATIC_LIBRARY_NAME}
         PUBLIC
