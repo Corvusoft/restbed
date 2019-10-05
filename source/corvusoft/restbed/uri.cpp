@@ -101,10 +101,10 @@ namespace restbed
     string Uri::decode( const string& value )
     {
         string result = String::empty;
-        
+      
         for ( string::size_type index = 0; index not_eq value.length( ); index++ )
         {
-            if ( value[ index ] == '%' )
+            if ( value[ index ] == '%' && (isdigit(value[index +1]) != 0) && (isalnum(value[index +2]) != 0))
             {
                 char hexidecimal[ 3 ] = { 0 };
                 hexidecimal[ 0 ] = value[ ++index ];
