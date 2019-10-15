@@ -89,7 +89,7 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 License
 -------
 
-&copy; 2013-2018 Corvusoft Limited, United Kingdom. All rights reserved.
+&copy; 2013-2019 Corvusoft Limited, United Kingdom. All rights reserved.
 
 The Restbed framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
