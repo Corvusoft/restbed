@@ -200,6 +200,75 @@ namespace restbed
         return Common::get_parameters( name, m_pimpl->m_headers );
     }
     
+    float Request::get_cookie_parameter( const string& name, const float default_value ) const
+    {
+        float parameter = 0;
+        
+        try
+        {
+            parameter = stof( get_cookie_parameter( name ) );
+        }
+        catch ( const out_of_range )
+        {
+            parameter = default_value;
+        }
+        catch ( const invalid_argument )
+        {
+            parameter = default_value;
+        }
+        
+        return parameter;
+    }
+    
+    double Request::get_cookie_parameter( const string& name, const double default_value ) const
+    {
+        double parameter = 0;
+        
+        try
+        {
+            parameter = stod( get_cookie_parameter( name ) );
+        }
+        catch ( const out_of_range )
+        {
+            parameter = default_value;
+        }
+        catch ( const invalid_argument )
+        {
+            parameter = default_value;
+        }
+        
+        return parameter;
+    }
+    
+    string Request::get_cookie_parameter( const string& name, const string& default_value ) const
+    {
+        if ( name.empty( ) )
+        {
+            return default_value;
+        }
+        
+        const auto parameters = Common::get_parameters( name, m_pimpl->m_cookie_parameters );
+        return ( parameters.empty( ) ) ? default_value : parameters.begin( )->second;
+    }
+
+    string Request::get_cookie_parameter( const string& name, const function< string ( const string& ) >& transform ) const
+    {
+        if ( name.empty( ) )
+        {
+            return String::empty;
+        }
+        
+        const auto parameters = Common::get_parameters( name, m_pimpl->m_cookie_parameters );
+        const auto value = ( parameters.empty( ) ) ? String::empty : parameters.begin( )->second;
+        
+        return Common::transform( value, transform );
+    }
+
+    map< string, string > Request::get_cookie_parameters( const string& name ) const
+    {
+        return Common::get_parameters( name, m_pimpl->m_cookie_parameters );
+    }
+    
     float Request::get_query_parameter( const string& name, const float default_value ) const
     {
         float parameter = 0;

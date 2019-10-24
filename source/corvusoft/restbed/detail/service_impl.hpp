@@ -56,6 +56,15 @@ namespace restbed
                 //Friends
                 
                 //Definitions
+                int m_last_route_pos;
+
+                static std::map<std::string, int> m_route_order;
+
+                struct SortByInsertion {
+                    bool operator() (const std::string& lv, const std::string& rv) const {
+                        return m_route_order[lv] < m_route_order[rv] ? true : false;
+                    }
+                };
                 
                 //Constructors
                 ServiceImpl( void );
@@ -81,7 +90,7 @@ namespace restbed
                 
                 void not_found( const std::shared_ptr< Session > session ) const;
                 
-                bool has_unique_paths( const std::set< std::string >& paths ) const;
+                bool has_unique_paths( const std::vector< std::string >& paths ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 
@@ -109,7 +118,7 @@ namespace restbed
                 
                 static const std::map< std::string, std::string > parse_request_line( std::istream& stream );
                 
-                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
+                static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream, const std::shared_ptr< Session > session );
                 
                 void parse_request( const std::error_code& error, std::size_t length, const std::shared_ptr< Session > session ) const;
                 
@@ -153,9 +162,9 @@ namespace restbed
 #endif
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 
-                std::map< std::string, std::string > m_resource_paths;
+                std::map< std::string, std::string, SortByInsertion > m_resource_paths;
                 
-                std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
+                std::map< std::string, std::shared_ptr< const Resource >, SortByInsertion > m_resource_routes;
                 
                 std::function< void ( void ) > m_ready_handler;
                 
