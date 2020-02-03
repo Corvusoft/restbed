@@ -63,15 +63,17 @@ namespace restbed
         va_start( arguments, format );
         
         string formatted = "";
-        string::size_type length = 1024;
+        string::size_type length = FORMAT_BUFFER_INITIAL_LENGTH;
         string::size_type required_length = String::format( formatted, length, format, arguments );
+        
+        va_end( arguments );
         
         if ( required_length > length )
         {
+            va_start( arguments, format );
             String::format( formatted, required_length, format, arguments );
+            va_end( arguments );
         }
-        
-        va_end( arguments );
         
         return formatted;
     }
