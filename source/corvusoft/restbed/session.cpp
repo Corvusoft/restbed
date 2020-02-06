@@ -379,7 +379,7 @@ namespace restbed
             return error_handler( 500, runtime_error( "Sleep failed: session already closed." ), session );
         }
         
-        m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
+        m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ session, callback, this ]( const error_code & error )
         {
             if ( error )
             {

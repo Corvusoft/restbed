@@ -192,7 +192,7 @@ namespace restbed
         else
         {
             promise<void> all_signalled;
-            m_pimpl->m_workers_stopped = unique_ptr<future<void> >(new future<void>(std::move(all_signalled.get_future())));
+            m_pimpl->m_workers_stopped = unique_ptr<future<void> >(new future<void>(all_signalled.get_future()));
             vector<future<void> > signals;
             for ( unsigned int count = 0;  count < limit; count++ )
             {

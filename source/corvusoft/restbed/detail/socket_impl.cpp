@@ -425,7 +425,7 @@ namespace restbed
             {
 #endif
                 asio::async_read( *m_socket, *data, asio::transfer_at_least( length ),
-                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                    [ finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
                         *sharedError = error;
                         *sharedSize = size;
                         *finished = true;
@@ -435,7 +435,7 @@ namespace restbed
             else
             {
                 asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ),
-                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                    [ finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
                         *sharedError = error;
                         *sharedSize = size;
                         *finished = true;
@@ -574,7 +574,7 @@ namespace restbed
             {
 #endif
                 asio::async_read_until( *m_socket, *data, delimiter,
-                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                    [ finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
                         *sharedError = error;
                         *sharedLength = length;
                         *finished = true;
@@ -584,7 +584,7 @@ namespace restbed
             else
             {
                 asio::async_read_until( *m_ssl_socket, *data, delimiter,
-                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                    [ finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
                         *sharedError = error;
                         *sharedLength = length;
                         *finished = true;
