@@ -49,7 +49,7 @@ if ( BUILD_SSL )
     find_package( openssl REQUIRED )
 endif ( )
 
-include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${kashmir_INCLUDE} ${ssl_INCLUDE} )
+include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
 
 # Enable tests by default if Catch2 is found (can still be overriden)
 find_package( catch )
