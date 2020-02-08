@@ -57,7 +57,7 @@ namespace restbed
 #ifdef BUILD_SSL
                 SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
 #endif
-                virtual ~SocketImpl( void );
+                ~SocketImpl( void ) = default;
                 
                 //Functionality
                 void close( void );
@@ -149,9 +149,9 @@ namespace restbed
                 //Properties
                 bool m_is_open;
 
-				const uint8_t MAX_WRITE_RETRIES = 5;
+		const uint8_t MAX_WRITE_RETRIES = 5;
                 
-				std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
+	        std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
 
                 std::shared_ptr< Logger > m_logger;
                 

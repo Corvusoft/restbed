@@ -52,11 +52,6 @@ namespace restbed
             return;
         }
         
-        WebSocketManagerImpl::~WebSocketManagerImpl( void )
-        {
-            return;
-        }
-        
         shared_ptr< WebSocketMessage > WebSocketManagerImpl::parse( const Bytes& packet )
         {
             if ( packet.empty( ) )

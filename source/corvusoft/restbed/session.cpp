@@ -53,11 +53,6 @@ namespace restbed
         m_pimpl->m_id = id;
     }
     
-    Session::~Session( void )
-    {
-        return;
-    }
-    
     bool Session::has( const string& name ) const
     {
         return m_pimpl->m_context.find( name ) not_eq m_pimpl->m_context.end( );

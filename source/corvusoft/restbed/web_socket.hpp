@@ -44,7 +44,7 @@ namespace restbed
             //Constructors
             WebSocket( void );
             
-            virtual ~WebSocket( void );
+            ~WebSocket( void );
             
             //Functionality
             bool is_open( void ) const;

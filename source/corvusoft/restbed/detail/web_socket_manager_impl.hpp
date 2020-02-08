@@ -43,7 +43,7 @@ namespace restbed
                 //Constructors
                 WebSocketManagerImpl( void );
 
-                virtual ~WebSocketManagerImpl( void );
+                ~WebSocketManagerImpl( void ) = default;
 
                 //Functionality
                 std::shared_ptr< WebSocketMessage > parse( const Bytes& packet );

@@ -51,6 +51,7 @@ namespace restbed
     {
         SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->is_open( ) ),
+            m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_io_service( socket->get_io_service( ) ),
@@ -67,6 +68,7 @@ namespace restbed
 #ifdef BUILD_SSL
         SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->lowest_layer( ).is_open( ) ),
+            m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_io_service( socket->get_io_service( ) ),
@@ -79,11 +81,6 @@ namespace restbed
             return;
         }
 #endif
-        
-        SocketImpl::~SocketImpl( void )
-        {
-            return;
-        }
         
         void SocketImpl::close( void )
         {

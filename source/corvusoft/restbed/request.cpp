@@ -139,11 +139,11 @@ namespace restbed
         {
             header = stof( get_header( name ) );
         }
-        catch ( const out_of_range )
+        catch ( const out_of_range& )
         {
             header = default_value;
         }
-        catch ( const invalid_argument )
+        catch ( const invalid_argument& )
         {
             header = default_value;
         }
@@ -159,11 +159,11 @@ namespace restbed
         {
             header = stod( get_header( name ) );
         }
-        catch ( const out_of_range )
+        catch ( const out_of_range& )
         {
             header = default_value;
         }
-        catch ( const invalid_argument )
+        catch ( const invalid_argument& )
         {
             header = default_value;
         }
@@ -208,11 +208,11 @@ namespace restbed
         {
             parameter = stof( get_query_parameter( name ) );
         }
-        catch ( const out_of_range )
+        catch ( const out_of_range& )
         {
             parameter = default_value;
         }
-        catch ( const invalid_argument )
+        catch ( const invalid_argument& )
         {
             parameter = default_value;
         }
@@ -228,11 +228,11 @@ namespace restbed
         {
             parameter = stod( get_query_parameter( name ) );
         }
-        catch ( const out_of_range )
+        catch ( const out_of_range& )
         {
             parameter = default_value;
         }
-        catch ( const invalid_argument )
+        catch ( const invalid_argument& )
         {
             parameter = default_value;
         }
@@ -277,11 +277,11 @@ namespace restbed
         {
             parameter = stof( get_path_parameter( name ) );
         }
-        catch ( const out_of_range )
+        catch ( const out_of_range& )
         {
             parameter = default_value;
         }
-        catch ( const invalid_argument )
+        catch ( const invalid_argument& )
         {
             parameter = default_value;
         }
@@ -297,11 +297,11 @@ namespace restbed
         {
             parameter = stod( get_path_parameter( name ) );
         }
-        catch ( const out_of_range )
+        catch ( const out_of_range& )
         {
             parameter = default_value;
         }
-        catch ( const invalid_argument )
+        catch ( const invalid_argument& )
         {
             parameter = default_value;
         }
