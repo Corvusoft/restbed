@@ -230,15 +230,13 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-            
+
             if ( callback == nullptr )
             {
                 m_pimpl->m_request->m_pimpl->m_socket->start_read( m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", [ this, session ]( const error_code & error, const size_t length )
                 {
                     m_pimpl->m_keep_alive_callback( error, length, session );
                 } );
-                
-                return;
             }
             else
             {

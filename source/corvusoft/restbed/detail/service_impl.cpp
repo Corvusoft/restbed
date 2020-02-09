@@ -745,7 +745,8 @@ namespace restbed
             {
                 const auto items = parse_request_line( stream );
                 const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
-                
+
+                session->m_pimpl->m_request->m_pimpl->m_body.clear( );
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
                 session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
