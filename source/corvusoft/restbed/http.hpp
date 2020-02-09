@@ -29,7 +29,7 @@ namespace restbed
     class Response;
     class Settings;
     
-    class Http
+    class [[deprecated("HTTP client is deprecated; we will release a complimentary client framework at a future date.")]] Http
     {
         public:
             //Friends
