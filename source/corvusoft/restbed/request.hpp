@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <stdexcept>
 #include <functional>
+#include <type_traits>
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
@@ -82,15 +83,11 @@ namespace restbed
             
             void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
-            float get_header( const std::string& name, const float default_value ) const;
-            
-            double get_header( const std::string& name, const double default_value ) const;
-            
             std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
             
             std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
-            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+            template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_header( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_header( name ), default_value );
@@ -98,15 +95,11 @@ namespace restbed
             
             std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
-            float get_query_parameter( const std::string& name, const float default_value ) const;
-            
-            double get_query_parameter( const std::string& name, const double default_value ) const;
-            
             std::string get_query_parameter( const std::string& name, const std::string& default_value = "" ) const;
             
             std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
-            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+            template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_query_parameter( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_query_parameter( name ), default_value );
@@ -114,15 +107,11 @@ namespace restbed
             
             std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
             
-            float get_path_parameter( const std::string& name, const float default_value ) const;
-            
-            double get_path_parameter( const std::string& name, const double default_value ) const;
-            
             std::string get_path_parameter( const std::string& name, const std::string& default_value = "" ) const;
             
             std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
-            template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
+            template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_path_parameter( const std::string& name, const Type default_value ) const
             {
                 return Common::parse_parameter( get_path_parameter( name ), default_value );
