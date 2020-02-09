@@ -6,10 +6,8 @@ message( "Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved." )
 #
 # Build Options
 #
+option( BUILD_TESTS    "Build unit tests."   ON )
 option( BUILD_SSL      "Build secure socket layer support."  ON )
-option( BUILD_STATIC   "Build static library."  ON )
-option( BUILD_SHARED   "Build shared library."  OFF )
-# See also BUILD_TESTS build option below.
 
 #
 # Configuration
@@ -31,7 +29,7 @@ if( ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC )
 endif ( )
 
 if( NOT WIN32 )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas -Wno-deprecated-declarations" )
 endif ( )
 
 if ( UNIX AND NOT APPLE )
@@ -45,54 +43,44 @@ endif ( )
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
 
 find_package( asio REQUIRED )
+
 if ( BUILD_SSL )
-    find_package( openssl REQUIRED )
+    set( OPENSSL_USE_STATIC_LIBS TRUE )
+    set( OPENSSL_ROOT_DIR "${PROJECT_SOURCE_DIR}/dependency/openssl"  )
+    find_package( OpenSSL REQUIRED )
 endif ( )
 
-include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
-
-# Enable tests by default if Catch2 is found (can still be overriden)
-find_package( catch )
-if ( CATCH_FOUND )
-    option( BUILD_TESTS    "Build unit tests."   ON)
-else ( )
-    option( BUILD_TESTS    "Build unit tests."   OFF)
-endif ( )
+include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${OPENSSL_INCLUDE_DIR} )
 
 #
 # Build
 #
 file( GLOB_RECURSE MANIFEST "${SOURCE_DIR}/*.cpp" )
 
-if ( BUILD_STATIC )
-    set( STATIC_LIBRARY_NAME "${PROJECT_NAME}-static" )
-    add_library( ${STATIC_LIBRARY_NAME} STATIC ${MANIFEST} )
-    set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
-    set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
-    set_target_properties( ${STATIC_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
-    if ( BUILD_SSL )
-        target_link_libraries( ${STATIC_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_STATIC} ${crypto_LIBRARY_STATIC} ${CMAKE_DL_LIBS})
-    else ( )
-        target_link_libraries( ${STATIC_LIBRARY_NAME} ${CMAKE_DL_LIBS})
-    endif ( )
-endif ( )
+set( STATIC_LIBRARY_NAME "${PROJECT_NAME}-static" )
+add_library( ${STATIC_LIBRARY_NAME} STATIC ${MANIFEST} )
+set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
+set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
+set_target_properties( ${STATIC_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
 
-if ( BUILD_SHARED )
-    set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
-    add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
-    set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
-    set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
-    set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
-    set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
-    if ( BUILD_SSL )
-        target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_SHARED} ${crypto_LIBRARY_SHARED} )
-    else ( )
-        target_link_libraries( ${SHARED_LIBRARY_NAME} )
-    endif ( )
+set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
+add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
+set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
+set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
+set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
+set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
+
+if ( BUILD_SSL )
+    target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY} )
+    target_link_libraries( ${STATIC_LIBRARY_NAME} LINK_PRIVATE ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} )
+else ( )
+    target_link_libraries( ${SHARED_LIBRARY_NAME} )
+    target_link_libraries( ${STATIC_LIBRARY_NAME} ${CMAKE_DL_LIBS} )
 endif ( )
 
 if ( BUILD_TESTS )
     find_package( catch REQUIRED )
+
     enable_testing( )
     add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
     add_subdirectory( "${PROJECT_SOURCE_DIR}/test/feature" )
@@ -107,9 +95,5 @@ file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
 install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
-if ( BUILD_STATIC )
-    install( TARGETS ${STATIC_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
-endif ( )
-if ( BUILD_SHARED )
-    install( TARGETS ${SHARED_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
-endif ( )
+install( TARGETS ${STATIC_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
+install( TARGETS ${SHARED_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )

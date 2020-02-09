@@ -100,52 +100,36 @@ Please contact sales@corvusoft.co.uk, for support and licensing options includin
 
 Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
 
-Build statically
-----------------
+Build 
+-----
 
 ```bash
 git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
-cmake [-DBUILD_SSL=NO] ..
+cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
 make install
 make test
 ```
 
-You will now find all required components installed in the distribution folder.
+You will now find all required components installed in the distribution sub-folder.
 
-Build with external libraries
------------------------------
+Building with external libraries
+--------------------------------
 
-If you build with external libraries (openssl, asio), you probably want to only use shared libraries:
+If you wish to build with external libraries (OpenSSL, ASIO).
 
 ```bash
 git clone https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
-cmake -DBUILD_STATIC=OFF -DBUILD_SHARED=ON ..
+cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
 make install
 make test
 ```
 
-Building unit tests
--------------------
-
-By default, the build system detects if [catch2](https://github.com/catchorg/Catch2/) is installed and enables tests in this case.
-
-You can also force building tests or not:
-
-```bash
-# Disable tests even if catch2 is found.
-cmake -DBUILD_TESTS=OFF ..
-
-# Try to enable tests even if catch2 is not found.
-# This is useful to make the build fail: this way, you know that something is wrong with catch2 detection.
-cmake -DBUILD_TESTS=ON ..
-```
-
-Other build instructions
-------------------------
+Windows Build Instructions
+--------------------------
 
 For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
 
