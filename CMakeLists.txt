@@ -1,7 +1,16 @@
 cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
 
 project( "restbed" VERSION 4.7.0 LANGUAGES CXX )
-message( "Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved." )
+message( "                                                              " )
+message( "##############################################################" )
+message( "#                                                            #" )
+message( "#  Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.  #" )
+message( "#  Restbed is dual-licensed requiring commerical entites to  #" )
+message( "#  acquire a Corvusoft Permissive License, Contact           #" )
+message( "#  sales@corvusoft.co.uk for details.                        #" )
+message( "#                                                            #" )
+message( "##############################################################" )
+message( "                                                              " )
 
 #
 # Build Options
