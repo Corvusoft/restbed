@@ -49,6 +49,8 @@ namespace restbed
             uint16_t get_port( void ) const;
             
             std::string get_root( void ) const;
+
+            bool get_reuse_address( void ) const;
             
             unsigned int get_worker_limit( void ) const;
             
@@ -76,6 +78,8 @@ namespace restbed
             void set_port( const uint16_t value );
             
             void set_root( const std::string& value );
+
+            void set_reuse_address( const bool value );
             
             void set_worker_limit( const unsigned int value );
             

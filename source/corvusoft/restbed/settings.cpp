@@ -47,6 +47,11 @@ namespace restbed
     {
         return m_pimpl->m_root;
     }
+
+    bool Settings::get_reuse_address( void ) const
+    {
+        return m_pimpl->m_reuse_address;
+    }
     
     unsigned int Settings::get_worker_limit( void ) const
     {
@@ -111,6 +116,11 @@ namespace restbed
     void Settings::set_root( const string& value )
     {
         m_pimpl->m_root = value;
+    }
+
+    void Settings::set_reuse_address( const bool value )
+    {
+        m_pimpl->m_reuse_address = value;
     }
     
     void Settings::set_worker_limit( const unsigned int value )

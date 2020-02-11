@@ -132,7 +132,7 @@ namespace restbed
                     m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
                 }
                 
-                m_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
                 m_acceptor->listen( m_settings->get_connection_limit( ) );
                 
                 http_listen( );
@@ -261,7 +261,7 @@ namespace restbed
                     m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
                 }
                 
-                m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_ssl_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
                 m_ssl_acceptor->listen( m_settings->get_connection_limit( ) );
                 
                 https_listen( );

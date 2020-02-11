@@ -35,6 +35,8 @@ namespace restbed
             uint16_t m_port = 80;
             
             std::string m_root = "/";
+
+            bool m_reuse_address = true;
             
             unsigned int m_worker_limit = 0;
             
