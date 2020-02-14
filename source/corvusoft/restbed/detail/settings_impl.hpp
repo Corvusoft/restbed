@@ -45,7 +45,15 @@ namespace restbed
             std::string m_bind_address = "";
             
             bool m_case_insensitive_uris = true;
-            
+
+            bool m_keep_alive = true;
+
+            uint32_t m_keep_alive_start = 900;
+
+            uint32_t m_keep_alive_interval = 900;
+
+            uint32_t m_keep_alive_cnt = 3;
+
             std::map< std::string, std::string > m_properties { };
             
             std::shared_ptr< const SSLSettings > m_ssl_settings = nullptr;
