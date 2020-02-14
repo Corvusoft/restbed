@@ -37,6 +37,8 @@ namespace restbed
                 CASE_INSENSITIVE = 1
             };
             
+            static const size_t FORMAT_BUFFER_INITIAL_LENGTH = 2048;
+            
             //Constructors
             
             //Functionality
