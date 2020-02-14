@@ -265,6 +265,9 @@ namespace restbed
 
         void SocketImpl::set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt)
         {
+            (void) cnt;
+            (void) start;
+            (void) interval;
 #ifdef _WIN32
             std::string val = "1";
             setsockopt(m_socket->native_handle(), SOL_SOCKET, SO_KEEPALIVE, val.c_str(), sizeof(val));

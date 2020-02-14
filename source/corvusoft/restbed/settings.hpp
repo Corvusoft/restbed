@@ -62,13 +62,13 @@ namespace restbed
             
             std::chrono::milliseconds get_connection_timeout( void ) const;
 
-            bool get_keep_alive ( void ) const;
+            bool get_keep_alive( void ) const;
 
-            uint32_t get_keep_alive_start ( void ) const;
+            uint32_t get_keep_alive_start( void ) const;
 
-            uint32_t get_keep_alive_interval ( void ) const;
+            uint32_t get_keep_alive_interval( void ) const;
 
-            uint32_t get_keep_alive_cnt ( void ) const;
+            uint32_t get_keep_alive_cnt( void ) const;
             
             std::string get_status_message( const int code ) const;
             
@@ -101,13 +101,13 @@ namespace restbed
             
             void set_connection_timeout( const std::chrono::milliseconds& value );
 
-            void set_keep_alive ( bool value );
+            void set_keep_alive( bool value );
 
-            void set_keep_alive_start ( const uint32_t value );
+            void set_keep_alive_start( const uint32_t value );
 
-            void set_keep_alive_interval ( const uint32_t value );
+            void set_keep_alive_interval( const uint32_t value );
 
-            void set_keep_alive_cnt ( const uint32_t value );
+            void set_keep_alive_cnt( const uint32_t value );
             
             void set_status_message( const int code, const std::string& message );
             

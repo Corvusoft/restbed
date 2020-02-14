@@ -78,22 +78,22 @@ namespace restbed
         return m_pimpl->m_connection_timeout;
     }
 
-    bool Settings::get_keep_alive ( void ) const
+    bool Settings::get_keep_alive( void ) const
     {
         return m_pimpl->m_keep_alive;
     }
 
-    uint32_t Settings::get_keep_alive_start ( void ) const
+    uint32_t Settings::get_keep_alive_start( void ) const
     {
         return m_pimpl->m_keep_alive_start;
     }
 
-    uint32_t Settings::get_keep_alive_interval ( void ) const
+    uint32_t Settings::get_keep_alive_interval( void ) const
     {
         return m_pimpl->m_keep_alive_interval;
     }
 
-    uint32_t Settings::get_keep_alive_cnt ( void ) const
+    uint32_t Settings::get_keep_alive_cnt( void ) const
     {
         return m_pimpl->m_keep_alive_cnt;
     }
