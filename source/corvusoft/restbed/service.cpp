@@ -112,8 +112,8 @@ namespace restbed
         
         if ( m_pimpl->m_workers_stopped )
         {
-            m_pimpl->m_workers_stopped->get();
-            m_pimpl->m_workers_stopped.reset();
+            m_pimpl->m_workers_stopped->wait_for( seconds( 1 ) );
+            m_pimpl->m_workers_stopped.reset( );
         }
 
         if ( m_pimpl->m_logger not_eq nullptr )
