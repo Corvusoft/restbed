@@ -55,12 +55,10 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
 find_package( asio REQUIRED )
 
 if ( BUILD_SSL )
-    set( OPENSSL_USE_STATIC_LIBS TRUE )
-    set( OPENSSL_ROOT_DIR "${PROJECT_SOURCE_DIR}/dependency/openssl"  )
-    find_package( OpenSSL REQUIRED )
+    find_package( openssl REQUIRED )
 endif ( )
 
-include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${OPENSSL_INCLUDE_DIR} )
+include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
 
 #
 # Build
@@ -81,8 +79,8 @@ set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_N
 set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
 
 if ( BUILD_SSL )
-    target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY} )
-    target_link_libraries( ${STATIC_LIBRARY_NAME} LINK_PRIVATE ${OPENSSL_SSL_LIBRARY} ${OPENSSL_CRYPTO_LIBRARY} ${CMAKE_DL_LIBS} )
+    target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_SHARED} ${crypto_LIBRARY_SHARED} )
+    target_link_libraries( ${STATIC_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_STATIC} ${crypto_LIBRARY_STATIC} ${CMAKE_DL_LIBS} )
 else ( )
     target_link_libraries( ${SHARED_LIBRARY_NAME} )
     target_link_libraries( ${STATIC_LIBRARY_NAME} ${CMAKE_DL_LIBS} )
