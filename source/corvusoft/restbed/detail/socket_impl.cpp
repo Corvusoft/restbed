@@ -292,10 +292,10 @@ namespace restbed
 #else
             uint32_t val = 1;
             setsockopt(m_socket->native_handle(), SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(uint32_t));
-
 #ifdef __APPLE__
-            // Apple devices only have one parameter
             setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &start, sizeof(uint32_t));
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) 
+            setsockopt(m_socket->native_handle(), IPPROTO_TCP, SO_KEEPALIVE, &start, sizeof(uint32_t));
 #else
             // Linux based systems
             setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPIDLE, &start, sizeof(uint32_t));
