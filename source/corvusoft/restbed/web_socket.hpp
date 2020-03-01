@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -44,7 +44,7 @@ namespace restbed
             //Constructors
             WebSocket( void );
             
-            virtual ~WebSocket( void );
+            ~WebSocket( void );
             
             //Functionality
             bool is_open( void ) const;

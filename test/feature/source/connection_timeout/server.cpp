@@ -75,7 +75,6 @@ SCENARIO( "validate connection timeout after connect", "[socket]" )
                     THEN( "I should see the peer close the socket" )
                     {
                         uint8_t data;
-                        asio::error_code error;
                         socket.receive( asio::buffer( &data, 1 ), socket_base::message_peek, error );
                         
                         REQUIRE( ( error == asio::error::eof or error == asio::error::connection_reset ) );
@@ -134,7 +133,6 @@ SCENARIO( "validate connection timeout after partial request", "[socket]" )
                         THEN( "I should see the peer close the socket" )
                         {
                             uint8_t data;
-                            asio::error_code error;
                             socket.receive( asio::buffer( &data, 1 ), socket_base::message_peek, error );
                             
                             REQUIRE( ( error == asio::error::eof or error == asio::error::connection_reset ) );

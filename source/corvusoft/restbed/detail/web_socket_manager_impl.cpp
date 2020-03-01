@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -48,11 +48,6 @@ namespace restbed
     {
         WebSocketManagerImpl::WebSocketManagerImpl( void ) : m_logger( nullptr ),
             m_sockets( )
-        {
-            return;
-        }
-        
-        WebSocketManagerImpl::~WebSocketManagerImpl( void )
         {
             return;
         }

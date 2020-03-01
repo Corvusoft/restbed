@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -51,11 +51,6 @@ namespace restbed
     Session::Session( const string& id ) : m_pimpl( new SessionImpl )
     {
         m_pimpl->m_id = id;
-    }
-    
-    Session::~Session( void )
-    {
-        return;
     }
     
     bool Session::has( const string& name ) const
@@ -235,15 +230,13 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-            
+
             if ( callback == nullptr )
             {
                 m_pimpl->m_request->m_pimpl->m_socket->start_read( m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", [ this, session ]( const error_code & error, const size_t length )
                 {
                     m_pimpl->m_keep_alive_callback( error, length, session );
                 } );
-                
-                return;
             }
             else
             {
@@ -379,7 +372,7 @@ namespace restbed
             return error_handler( 500, runtime_error( "Sleep failed: session already closed." ), session );
         }
         
-        m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ delay, session, callback, this ]( const error_code & error )
+        m_pimpl->m_request->m_pimpl->m_socket->sleep_for( delay, [ session, callback, this ]( const error_code & error )
         {
             if ( error )
             {

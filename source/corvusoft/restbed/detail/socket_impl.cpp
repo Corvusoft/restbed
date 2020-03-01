@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -51,6 +51,7 @@ namespace restbed
     {
         SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->is_open( ) ),
+            m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_io_service( socket->get_io_service( ) ),
@@ -67,6 +68,7 @@ namespace restbed
 #ifdef BUILD_SSL
         SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->lowest_layer( ).is_open( ) ),
+            m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
             m_io_service( socket->get_io_service( ) ),
@@ -79,11 +81,6 @@ namespace restbed
             return;
         }
 #endif
-        
-        SocketImpl::~SocketImpl( void )
-        {
-            return;
-        }
         
         void SocketImpl::close( void )
         {
@@ -265,6 +262,48 @@ namespace restbed
         {
             m_timeout = value;
         }
+
+        void SocketImpl::set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt)
+        {
+            (void) cnt;
+            (void) start;
+            (void) interval;
+#ifdef _WIN32
+            std::string val = "1";
+            setsockopt(m_socket->native_handle(), SOL_SOCKET, SO_KEEPALIVE, val.c_str(), sizeof(val));
+
+            // TCP_KEEPIDLE and TCP_KEEPINTVL are available since Win 10 version 1709
+            // TCP_KEEPCNT since Win 10 version 1703
+#ifdef TCP_KEEPIDLE 
+            std::string start_str = std::to_string(start);
+            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPIDLE,
+                       start_str.c_str(), sizeof(start_str));
+#endif
+#ifdef TCP_KEEPINTVL
+            std::string interval_str = std::to_string(interval);
+            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPINTVL,
+                       interval_str.c_str(), sizeof(interval_str));
+#endif
+#ifdef TCP_KEEPCNT
+            std::string cnt_str = std::to_string(cnt);
+            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPCNT,
+                       cnt_str.c_str(), sizeof(cnt_str));
+#endif
+#else
+            uint32_t val = 1;
+            setsockopt(m_socket->native_handle(), SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(uint32_t));
+#ifdef __APPLE__
+            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &start, sizeof(uint32_t));
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) 
+            setsockopt(m_socket->native_handle(), IPPROTO_TCP, SO_KEEPALIVE, &start, sizeof(uint32_t));
+#else
+            // Linux based systems
+            setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPIDLE, &start, sizeof(uint32_t));
+            setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(uint32_t));
+            setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPCNT, &cnt, sizeof(uint32_t));
+#endif
+#endif
+        }
         
         void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
         {
@@ -401,7 +440,8 @@ namespace restbed
 
 		void SocketImpl::write_helper(const Bytes& data, const function< void ( const error_code&, size_t ) >& callback)
 		{
-			m_pending_writes.push(make_tuple(data, 0, callback));
+            const uint8_t retries = 0;
+			m_pending_writes.push(make_tuple(data, retries, callback));
 			if(m_pending_writes.size() == 1)
 			{
 				write();
@@ -425,7 +465,7 @@ namespace restbed
             {
 #endif
                 asio::async_read( *m_socket, *data, asio::transfer_at_least( length ),
-                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                    [ finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
                         *sharedError = error;
                         *sharedSize = size;
                         *finished = true;
@@ -435,7 +475,7 @@ namespace restbed
             else
             {
                 asio::async_read( *m_ssl_socket, *data, asio::transfer_at_least( length ),
-                    [ this, finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
+                    [ finished, sharedSize, sharedError ]( const error_code & error, size_t size ) {
                         *sharedError = error;
                         *sharedSize = size;
                         *finished = true;
@@ -574,7 +614,7 @@ namespace restbed
             {
 #endif
                 asio::async_read_until( *m_socket, *data, delimiter,
-                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                    [ finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
                         *sharedError = error;
                         *sharedLength = length;
                         *finished = true;
@@ -584,7 +624,7 @@ namespace restbed
             else
             {
                 asio::async_read_until( *m_ssl_socket, *data, delimiter,
-                    [ this, finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
+                    [ finished, sharedLength, sharedError ]( const error_code & error, size_t length ) {
                         *sharedError = error;
                         *sharedLength = length;
                         *finished = true;

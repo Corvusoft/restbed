@@ -59,7 +59,7 @@ SCENARIO( "establish connection to reachable server", "[client]" )
                     request->set_method( "GET" );
                     request->set_path( "/resource" );
                     
-                    auto future = Http::async( request, [ &service ]( const shared_ptr< Request >, const shared_ptr< Response > response )
+                    auto future = Http::async( request, [ ]( const shared_ptr< Request >, const shared_ptr< Response > response )
                     {
                         THEN( "I should see a '200' (OK) status code" )
                         {

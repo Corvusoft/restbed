@@ -89,7 +89,7 @@ More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/
 License
 -------
 
-&copy; 2013-2019 Corvusoft Limited, United Kingdom. All rights reserved.
+&copy; 2013-2020 Corvusoft Limited, United Kingdom. All rights reserved.
 
 The Restbed framework is dual licensed; See [LICENSE](LICENSE) for full details.
 
@@ -98,21 +98,38 @@ Support
 
 Please contact sales@corvusoft.co.uk, for support and licensing options including bespoke software development, testing, design consultation, training, mentoring and code review.
 
-Build
+Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
+
+Build 
 -----
 
 ```bash
 git clone --recursive https://github.com/corvusoft/restbed.git
 mkdir restbed/build
 cd restbed/build
-cmake [-DBUILD_SSL=NO] ..
+cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
 make install
 make test
 ```
 
-You will now find all required components installed in the distribution folder.
+You will now find all required components installed in the distribution sub-folder.
 
-Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
+Building with external libraries
+--------------------------------
+
+If you wish to build with external libraries (OpenSSL, ASIO).
+
+```bash
+git clone https://github.com/corvusoft/restbed.git
+mkdir restbed/build
+cd restbed/build
+cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
+make install
+make test
+```
+
+Windows Build Instructions
+--------------------------
 
 For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
 
@@ -128,7 +145,7 @@ Minimum Requirements
 
 | Resource | Requirement                                     |
 |:--------:|:-----------------------------------------------:|
-| Compiler |            C++11 compliant or above             |
+| Compiler |            C++14 compliant or above             |
 |    OS    | BSD, Linux, Mac OSX, Windows, Raspbian          |
 
 Road Map

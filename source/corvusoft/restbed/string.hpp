@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -36,6 +36,8 @@ namespace restbed
                 CASE_SENSITIVE = 0,
                 CASE_INSENSITIVE = 1
             };
+            
+            static const size_t FORMAT_BUFFER_INITIAL_LENGTH = 2048;
             
             //Constructors
             

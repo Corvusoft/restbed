@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -49,6 +49,8 @@ namespace restbed
             uint16_t get_port( void ) const;
             
             std::string get_root( void ) const;
+
+            bool get_reuse_address( void ) const;
             
             unsigned int get_worker_limit( void ) const;
             
@@ -59,6 +61,14 @@ namespace restbed
             bool get_case_insensitive_uris( void ) const;
             
             std::chrono::milliseconds get_connection_timeout( void ) const;
+
+            bool get_keep_alive( void ) const;
+
+            uint32_t get_keep_alive_start( void ) const;
+
+            uint32_t get_keep_alive_interval( void ) const;
+
+            uint32_t get_keep_alive_cnt( void ) const;
             
             std::string get_status_message( const int code ) const;
             
@@ -76,6 +86,8 @@ namespace restbed
             void set_port( const uint16_t value );
             
             void set_root( const std::string& value );
+
+            void set_reuse_address( const bool value );
             
             void set_worker_limit( const unsigned int value );
             
@@ -88,6 +100,14 @@ namespace restbed
             void set_connection_timeout( const std::chrono::seconds& value );
             
             void set_connection_timeout( const std::chrono::milliseconds& value );
+
+            void set_keep_alive( bool value );
+
+            void set_keep_alive_start( const uint32_t value );
+
+            void set_keep_alive_interval( const uint32_t value );
+
+            void set_keep_alive_cnt( const uint32_t value );
             
             void set_status_message( const int code, const std::string& message );
             

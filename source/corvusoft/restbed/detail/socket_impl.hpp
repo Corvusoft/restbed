@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -57,7 +57,7 @@ namespace restbed
 #ifdef BUILD_SSL
                 SocketImpl( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
 #endif
-                virtual ~SocketImpl( void );
+                ~SocketImpl( void ) = default;
                 
                 //Functionality
                 void close( void );
@@ -89,6 +89,8 @@ namespace restbed
                 
                 //Setters
                 void set_timeout( const std::chrono::milliseconds& value );
+
+                void set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt);
                 
                 //Operators
                 
@@ -149,9 +151,9 @@ namespace restbed
                 //Properties
                 bool m_is_open;
 
-				const uint8_t MAX_WRITE_RETRIES = 5;
+		        const uint8_t MAX_WRITE_RETRIES = 5;
                 
-				std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
+	            std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
 
                 std::shared_ptr< Logger > m_logger;
                 
