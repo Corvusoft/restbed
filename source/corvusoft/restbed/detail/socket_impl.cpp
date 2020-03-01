@@ -440,7 +440,8 @@ namespace restbed
 
 		void SocketImpl::write_helper(const Bytes& data, const function< void ( const error_code&, size_t ) >& callback)
 		{
-			m_pending_writes.push(make_tuple(data, 0, callback));
+            const uint8_t retries = 0;
+			m_pending_writes.push(make_tuple(data, retries, callback));
 			if(m_pending_writes.size() == 1)
 			{
 				write();
