@@ -461,8 +461,10 @@ namespace restbed
         {
             m_pimpl->m_error_handler = ServiceImpl::default_error_handler;
         }
-        
-        m_pimpl->m_error_handler = value;
+        else
+        {
+            m_pimpl->m_error_handler = value;
+        }
     }
     
     void Service::set_authentication_handler( const function< void ( const shared_ptr< Session >, const function< void ( const shared_ptr< Session > ) >& ) >& value )

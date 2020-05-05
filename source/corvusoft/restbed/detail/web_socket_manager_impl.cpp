@@ -109,7 +109,7 @@ namespace restbed
                 length |= packet[ offset++ ] << 24;
                 length |= packet[ offset++ ] << 16;
                 length |= packet[ offset++ ] <<  8;
-                length  = packet[ offset++ ]      ;
+                length |= packet[ offset++ ]      ;
                 
                 message->set_extended_length( length );
             }
