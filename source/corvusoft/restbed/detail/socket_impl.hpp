@@ -123,7 +123,7 @@ namespace restbed
                 SocketImpl( const SocketImpl& original ) = delete;
                 
                 //Functionality
-                void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
+                void connection_timeout_handler( const std::shared_ptr< SocketImpl > &socket, const std::error_code& error );
 
                 void write( void );
                 

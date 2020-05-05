@@ -362,7 +362,7 @@ namespace restbed
             return sanitised_path;
         }
         
-        void ServiceImpl::not_found( const shared_ptr< Session > session ) const
+        void ServiceImpl::not_found( const shared_ptr< Session > &session ) const
         {
             log( Logger::INFO, String::format( "'%s' resource route not found '%s'.",
                                                session->get_origin( ).data( ),
@@ -411,7 +411,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::method_not_allowed( const shared_ptr< Session > session ) const
+        void ServiceImpl::method_not_allowed( const shared_ptr< Session > &session ) const
         {
             log( Logger::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
                                                session->get_origin( ).data( ),
@@ -428,7 +428,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::method_not_implemented( const shared_ptr< Session > session ) const
+        void ServiceImpl::method_not_implemented( const shared_ptr< Session > &session ) const
         {
             log( Logger::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
                                                session->get_origin( ).data( ),
@@ -445,7 +445,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::failed_filter_validation( const shared_ptr< Session > session ) const
+        void ServiceImpl::failed_filter_validation( const shared_ptr< Session > &session ) const
         {
             log( Logger::INFO, String::format( "'%s' failed filter validation '%s'.",
                                                session->get_origin( ).data( ),
@@ -461,7 +461,7 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::router( const shared_ptr< Session > session ) const
+        void ServiceImpl::router( const shared_ptr< Session > &session ) const
         {
             log( Logger::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
                                                session->get_request( )->get_method( ).data( ),
@@ -487,9 +487,9 @@ namespace restbed
                 const auto request = session->get_request( );
                 extract_path_parameters( path, request );
                 
-                const auto callback = [ this ]( const shared_ptr< Session > session )
+                const auto callback = [ this ]( const shared_ptr< Session > &session )
                 {
-                    rule_engine( session, session->m_pimpl->m_resource->m_pimpl->m_rules, [ this ]( const shared_ptr< Session > session )
+                    rule_engine( session, session->m_pimpl->m_resource->m_pimpl->m_rules, [ this ]( const shared_ptr< Session >& session )
                     {
                         if ( session->is_closed( ) )
                         {
@@ -588,7 +588,7 @@ namespace restbed
             }
         }
         
-        function< void ( const shared_ptr< Session > ) > ServiceImpl::find_method_handler( const shared_ptr< Session > session ) const
+        function< void ( const shared_ptr< Session > ) > ServiceImpl::find_method_handler( const shared_ptr< Session >& session ) const
         {
             const auto request = session->get_request( );
             const auto resource = session->get_resource( );
@@ -623,7 +623,7 @@ namespace restbed
             return method_handler;
         }
         
-        void ServiceImpl::authenticate( const shared_ptr< Session > session ) const
+        void ServiceImpl::authenticate( const shared_ptr< Session >& session ) const
         {
             if ( m_authentication_handler not_eq nullptr )
             {
@@ -638,7 +638,7 @@ namespace restbed
             }
         }
         
-        bool ServiceImpl::resource_router( const shared_ptr< Session > session, const pair< string, shared_ptr< const Resource > >& route ) const
+        bool ServiceImpl::resource_router( const shared_ptr< Session >& session, const pair< string, shared_ptr< const Resource > >& route ) const
         {
             const auto request = session->get_request( );
             const auto path_folders = String::split( request->get_path( ), '/' );
@@ -674,7 +674,7 @@ namespace restbed
             return match;
         }
         
-        void ServiceImpl::default_error_handler( const int status, const exception& error, const shared_ptr< Session > session )
+        void ServiceImpl::default_error_handler( const int status, const exception& error, const shared_ptr< Session > &session )
         {
             if ( session not_eq nullptr and session->is_open( ) )
             {
@@ -740,7 +740,7 @@ namespace restbed
             return headers;
         }
         
-        void ServiceImpl::parse_request( const error_code& error, size_t, const shared_ptr< Session > session ) const
+        void ServiceImpl::parse_request( const error_code& error, size_t, const shared_ptr< Session >& session ) const
         {
             istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
             

@@ -47,13 +47,13 @@ namespace restbed
                 //Functionality
                 void log( const Logger::Level level, const std::string& message ) const;
                 
-                void listen( const std::shared_ptr< WebSocket > socket );
+                void listen( const std::shared_ptr< WebSocket >& socket );
                 
-                void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
+                void parse_flags( const Bytes& data, const std::shared_ptr< WebSocket >& socket );
                 
-                void parse_payload( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );
+                void parse_payload( const Bytes& data, Bytes packet, const std::shared_ptr< WebSocket >& socket );
                 
-                void parse_length_and_mask( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );
+                void parse_length_and_mask( const Bytes& data, Bytes packet, const std::shared_ptr< WebSocket >& socket );
                 
                 //Getters
                 

@@ -53,7 +53,7 @@ namespace restbed
                 virtual ~SessionImpl( void );
                 
                 //Functionality
-                void fetch_body( const std::size_t length, const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback ) const;
+                void fetch_body( const std::size_t length, const std::shared_ptr< Session > &session, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback ) const;
                 
                 void transmit( const Response& response, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) const;
                 

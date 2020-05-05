@@ -29,7 +29,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        static void rule_engine( const std::shared_ptr< Session > session,
+        static void rule_engine( const std::shared_ptr< Session > &session,
                                  const std::vector< std::shared_ptr< Rule > >& rules,
                                  const std::function< void ( const std::shared_ptr< Session > ) >& callback,
                                  std::size_t index = 0 )

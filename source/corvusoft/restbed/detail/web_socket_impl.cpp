@@ -57,7 +57,7 @@ namespace restbed
             }
         }
         
-        void WebSocketImpl::listen( const shared_ptr< WebSocket > socket )
+        void WebSocketImpl::listen( const shared_ptr< WebSocket >& socket )
         {
             m_socket->start_read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
             {
@@ -68,7 +68,7 @@ namespace restbed
             } );
         }
         
-        void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
+        void WebSocketImpl::parse_flags( const Bytes& data, const shared_ptr< WebSocket >& socket )
         {
             auto message = m_manager->parse( data );
             
@@ -101,7 +101,7 @@ namespace restbed
             } );
         }
         
-        void WebSocketImpl::parse_payload( const Bytes data, Bytes packet, const shared_ptr< WebSocket > socket )
+        void WebSocketImpl::parse_payload( const Bytes& data, Bytes packet, const shared_ptr< WebSocket >& socket )
         {
             packet.insert( packet.end( ), data.begin( ), data.end( ) );
             auto message = m_manager->parse( packet );
@@ -114,7 +114,7 @@ namespace restbed
             listen( socket );
         }
         
-        void WebSocketImpl::parse_length_and_mask( const Bytes data, Bytes packet, const shared_ptr< WebSocket > socket )
+        void WebSocketImpl::parse_length_and_mask( const Bytes& data, Bytes packet, const shared_ptr< WebSocket >& socket )
         {
             packet.insert( packet.end( ), data.begin( ), data.end( ) );
             auto message = m_manager->parse( packet );

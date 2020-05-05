@@ -53,13 +53,13 @@ namespace restbed
             
             void close( void );
             
-            void send( const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            void send( const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > &callback = nullptr );
             
-            void send( const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            void send( const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > &callback = nullptr );
             
-            void send( const WebSocketMessage::OpCode opcode, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            void send( const WebSocketMessage::OpCode &opcode, const std::function< void ( const std::shared_ptr< WebSocket > ) > &callback = nullptr );
             
-            void send( const std::shared_ptr< WebSocketMessage > message, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            void send( const std::shared_ptr< WebSocketMessage > &message, const std::function< void ( const std::shared_ptr< WebSocket > ) > &callback = nullptr );
             
             //Getters
             std::string get_key( void ) const;

@@ -305,7 +305,7 @@ namespace restbed
 #endif
         }
         
-        void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
+        void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl >& socket, const error_code& error )
         {
             if ( error or socket == nullptr or socket->m_timer->expires_at( ) > steady_clock::now( ) )
             {

@@ -123,7 +123,7 @@ namespace restbed
         return not is_open( value );
     }
     
-    const shared_ptr< Response > Http::sync( const shared_ptr< Request > request, const shared_ptr< const Settings >& settings )
+    const shared_ptr< Response > Http::sync( const shared_ptr< Request > &request, const shared_ptr< const Settings >& settings )
     {
         auto response = Http::async( request, nullptr, settings );
         response.wait( );
@@ -131,7 +131,7 @@ namespace restbed
         return response.get( );
     }
     
-    future< shared_ptr< Response > > Http::async( const shared_ptr< Request > request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
+    future< shared_ptr< Response > > Http::async( const shared_ptr< Request > &request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback, const shared_ptr< const Settings >& settings )
     {
 #ifndef BUILD_SSL
     

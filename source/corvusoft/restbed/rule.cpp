@@ -21,7 +21,7 @@ using restbed::detail::RuleImpl;
 
 namespace restbed
 {
-    bool Rule::condition( const shared_ptr< Session > )
+    bool Rule::condition( const shared_ptr< Session >& )
     {
         return true;
     }

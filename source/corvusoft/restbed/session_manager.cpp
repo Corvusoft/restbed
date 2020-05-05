@@ -51,12 +51,12 @@ namespace restbed
         callback( make_shared< Session >( String::empty ) );
     }
     
-    void SessionManager::load( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
+    void SessionManager::load( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         callback( session );
     }
     
-    void SessionManager::save( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )
+    void SessionManager::save( const shared_ptr< Session >& session, const function< void ( const shared_ptr< Session > ) >& callback )
     {
         callback( session );
     }

@@ -73,22 +73,22 @@ namespace restbed
         m_pimpl->m_socket->close( );
     }
     
-    void WebSocket::send( const Bytes& body, const function< void ( const shared_ptr< WebSocket > ) > callback )
+    void WebSocket::send( const Bytes& body, const function< void ( const shared_ptr< WebSocket > ) > &callback )
     {
         send( make_shared< WebSocketMessage >( WebSocketMessage::BINARY_FRAME, body ), callback );
     }
     
-    void WebSocket::send( const string& body, const function< void ( const shared_ptr< WebSocket > ) > callback )
+    void WebSocket::send( const string& body, const function< void ( const shared_ptr< WebSocket > ) > &callback )
     {
         send( make_shared< WebSocketMessage >( WebSocketMessage::TEXT_FRAME, body ), callback );
     }
     
-    void WebSocket::send( const WebSocketMessage::OpCode opcode, const function< void ( const shared_ptr< WebSocket > ) > callback )
+    void WebSocket::send( const WebSocketMessage::OpCode &opcode, const function< void ( const shared_ptr< WebSocket > ) > &callback )
     {
         send( make_shared< WebSocketMessage >( opcode ), callback );
     }
     
-    void WebSocket::send( const shared_ptr< WebSocketMessage > message, const function< void ( const shared_ptr< WebSocket > ) > callback )
+    void WebSocket::send( const shared_ptr< WebSocketMessage >& message, const function< void ( const shared_ptr< WebSocket > ) >& callback )
     {
         const auto data = m_pimpl->m_manager->compose( message );
         

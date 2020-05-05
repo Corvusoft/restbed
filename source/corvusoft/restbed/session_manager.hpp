@@ -48,9 +48,9 @@ namespace restbed
             
             virtual void create( const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
-            virtual void load( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+            virtual void load( const std::shared_ptr< Session > &session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
-            virtual void save( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+            virtual void save( const std::shared_ptr< Session > &session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
             //Getters
             

@@ -79,31 +79,31 @@ namespace restbed
                 
                 std::string sanitise_path( const std::string& path ) const;
                 
-                void not_found( const std::shared_ptr< Session > session ) const;
+                void not_found( const std::shared_ptr< Session >& session ) const;
                 
                 bool has_unique_paths( const std::set< std::string >& paths ) const;
                 
                 void log( const Logger::Level level, const std::string& message ) const;
                 
-                void method_not_allowed( const std::shared_ptr< Session > session ) const;
+                void method_not_allowed( const std::shared_ptr< Session >& session ) const;
                 
-                void method_not_implemented( const std::shared_ptr< Session > session ) const;
+                void method_not_implemented( const std::shared_ptr< Session >& session ) const;
                 
-                void failed_filter_validation( const std::shared_ptr< Session > session ) const;
+                void failed_filter_validation( const std::shared_ptr< Session >& session ) const;
                 
-                void router( const std::shared_ptr< Session > session ) const;
+                void router( const std::shared_ptr< Session >& session ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::error_code& error ) const;
                 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
                 
-                std::function< void ( const std::shared_ptr< Session > ) > find_method_handler( const std::shared_ptr< Session > session ) const;
+                std::function< void ( const std::shared_ptr< Session > ) > find_method_handler( const std::shared_ptr< Session >& session ) const;
                 
-                void authenticate( const std::shared_ptr< Session > session ) const;
+                void authenticate( const std::shared_ptr< Session >& session ) const;
                 
-                bool resource_router( const std::shared_ptr< Session > session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
+                bool resource_router( const std::shared_ptr< Session >& session, const std::pair< std::string, std::shared_ptr< const Resource > >& route ) const;
                 
-                static void default_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session > session );
+                static void default_error_handler( const int status, const std::exception& error, const std::shared_ptr< Session >& session );
                 
                 static void discard_request( std::istream& stream );
                 
@@ -111,7 +111,7 @@ namespace restbed
                 
                 static const std::multimap< std::string, std::string > parse_request_headers( std::istream& stream );
                 
-                void parse_request( const std::error_code& error, std::size_t length, const std::shared_ptr< Session > session ) const;
+                void parse_request( const std::error_code& error, std::size_t length, const std::shared_ptr< Session >& session ) const;
                 
                 //Getters
                 const std::shared_ptr< const Uri > get_http_uri( void ) const;
