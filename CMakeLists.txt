@@ -81,6 +81,8 @@ set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VER
 if ( BUILD_SSL )
     target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_SHARED} ${crypto_LIBRARY_SHARED} )
     target_link_libraries( ${STATIC_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_STATIC} ${crypto_LIBRARY_STATIC} ${CMAKE_DL_LIBS} )
+    target_compile_definitions( ${SHARED_LIBRARY_NAME} PRIVATE BUILD_SSL)
+    target_compile_definitions( ${STATIC_LIBRARY_NAME} PRIVATE BUILD_SSL)
 else ( )
     target_link_libraries( ${SHARED_LIBRARY_NAME} )
     target_link_libraries( ${STATIC_LIBRARY_NAME} ${CMAKE_DL_LIBS} )
