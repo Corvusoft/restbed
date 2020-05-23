@@ -60,6 +60,11 @@ endif ( )
 
 include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
 
+if ( WIN32 )
+	add_definitions( -DWIN_DLL_EXPORT )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
+endif ( )
+
 #
 # Build
 #

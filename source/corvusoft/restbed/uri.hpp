@@ -15,6 +15,17 @@
 
 //External Includes
 
+//Windows DLL Exports
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
+	#ifdef WIN_DLL_EXPORT
+		#define URI_EXPORT __declspec(dllexport)
+	#else
+		#define URI_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define URI_EXPORT
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -26,10 +37,10 @@ namespace restbed
     //Forward Declarations
     namespace detail
     {
-        struct UriImpl;
+		struct UriImpl;
     }
     
-    class Uri
+    class URI_EXPORT Uri
     {
         public:
             //Friends
