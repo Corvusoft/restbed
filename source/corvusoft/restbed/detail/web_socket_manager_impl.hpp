@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -43,7 +43,7 @@ namespace restbed
                 //Constructors
                 WebSocketManagerImpl( void );
 
-                virtual ~WebSocketManagerImpl( void );
+                ~WebSocketManagerImpl( void ) = default;
 
                 //Functionality
                 std::shared_ptr< WebSocketMessage > parse( const Bytes& packet );

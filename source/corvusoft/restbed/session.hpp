@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -51,7 +51,7 @@ namespace restbed
             //Constructors
             explicit Session( const std::string& id );
             
-            virtual ~Session( void );
+            ~Session( void ) = default;
             
             //Functionality
             bool has( const std::string& name ) const;
@@ -186,6 +186,6 @@ namespace restbed
             Session& operator =( const Session& value ) = delete;
             
             //Properties
-            std::unique_ptr< detail::SessionImpl > m_pimpl;
+            std::shared_ptr< detail::SessionImpl > m_pimpl;
     };
 }

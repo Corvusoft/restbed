@@ -29,9 +29,14 @@ TEST_CASE( "validate default instance values", "[settings]" )
     REQUIRE( settings.get_worker_limit( ) == 0 );
     REQUIRE( settings.get_properties( ).empty( ) );
     REQUIRE( settings.get_bind_address( ).empty( ) );
+    REQUIRE( settings.get_reuse_address( ) == true );
     REQUIRE( settings.get_connection_limit( ) == 128 );
     REQUIRE( settings.get_default_headers( ).empty( ) );
     REQUIRE( settings.get_case_insensitive_uris( ) == true );
+    REQUIRE( settings.get_keep_alive( )  == true );
+    REQUIRE( settings.get_keep_alive_cnt( ) == 3 );
+    REQUIRE( settings.get_keep_alive_start( ) == 900 );
+    REQUIRE( settings.get_keep_alive_interval( ) == 900 );
     REQUIRE( settings.get_connection_timeout( ) == milliseconds( 5000 ) );
     
     map< int, string > expectation =
@@ -114,7 +119,12 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_root( "/resources" );
     settings.set_connection_limit( 1 );
     settings.set_bind_address( "::1" );
+    settings.set_reuse_address( false );
     settings.set_case_insensitive_uris( false );
+    settings.set_keep_alive( false );
+    settings.set_keep_alive_cnt( 45 );
+    settings.set_keep_alive_start( 501 );
+    settings.set_keep_alive_interval( 425 );
     settings.set_connection_timeout( milliseconds( 30 ) );
     settings.set_properties( { { "name", "value" } } );
     settings.set_default_headers( { { "Connection", "close" } } );
@@ -123,7 +133,12 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_root( ) == "/resources" );
     REQUIRE( settings.get_worker_limit( ) == 4 );
     REQUIRE( settings.get_bind_address( ) == "::1" );
+    REQUIRE( settings.get_reuse_address( ) == false );
     REQUIRE( settings.get_connection_limit( ) == 1 );
+    REQUIRE( settings.get_keep_alive( )  == false );
+    REQUIRE( settings.get_keep_alive_cnt( ) == 45 );
+    REQUIRE( settings.get_keep_alive_start( ) == 501 );
+    REQUIRE( settings.get_keep_alive_interval( ) == 425 );
     REQUIRE( settings.get_case_insensitive_uris( ) == false );
     REQUIRE( settings.get_connection_timeout( ) == milliseconds( 30 ) );
     

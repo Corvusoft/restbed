@@ -138,7 +138,7 @@ SCENARIO( "validate connection timeout with async and fetch", "[socket]" )
                     while (restbed::Http::is_open(req)) {
                         try {
                             Http::fetch("\n", reply);
-                        } catch (std::runtime_error& e) {
+                        } catch (const std::runtime_error&) {
                             // Ignore this, operation aborted
                         }
                     }

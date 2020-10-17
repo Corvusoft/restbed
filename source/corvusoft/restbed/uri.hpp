@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 #pragma once
@@ -59,7 +59,7 @@ namespace restbed
             static std::string decode( const Bytes& value );
             
             static std::string decode( const std::string& value );
-            
+        
             static std::string decode_parameter( const std::string& value );
             
             static std::string encode( const Bytes& value );

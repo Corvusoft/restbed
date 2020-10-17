@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -112,8 +112,8 @@ namespace restbed
         
         if ( m_pimpl->m_workers_stopped )
         {
-            m_pimpl->m_workers_stopped->get();
-            m_pimpl->m_workers_stopped.reset();
+            m_pimpl->m_workers_stopped->wait_for( seconds( 1 ) );
+            m_pimpl->m_workers_stopped.reset( );
         }
 
         if ( m_pimpl->m_logger not_eq nullptr )
@@ -192,7 +192,7 @@ namespace restbed
         else
         {
             promise<void> all_signalled;
-            m_pimpl->m_workers_stopped = unique_ptr<future<void> >(new future<void>(std::move(all_signalled.get_future())));
+            m_pimpl->m_workers_stopped = unique_ptr<future<void> >(new future<void>(all_signalled.get_future()));
             vector<future<void> > signals;
             for ( unsigned int count = 0;  count < limit; count++ )
             {

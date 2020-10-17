@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -101,10 +101,10 @@ namespace restbed
     string Uri::decode( const string& value )
     {
         string result = String::empty;
-        
+      
         for ( string::size_type index = 0; index not_eq value.length( ); index++ )
         {
-            if ( value[ index ] == '%' )
+            if ( value[ index ] == '%' && (isdigit(value[index +1]) != 0) && (isalnum(value[index +2]) != 0))
             {
                 char hexidecimal[ 3 ] = { 0 };
                 hexidecimal[ 0 ] = value[ ++index ];
@@ -309,6 +309,7 @@ namespace restbed
         smatch match;
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\])" );
         if ( regex_search( m_pimpl->m_uri, match, pattern ) ) authority = match[ 5 ];
+        else return authority;
 
         if ( authority.front( ) == '[' ) authority.erase( 0, 1 );
         if ( authority.back( ) == ']' ) authority.erase( authority.length( ) - 1, 1 );

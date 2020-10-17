@@ -74,6 +74,26 @@ TEST_CASE( "format with empty", "[string]" )
     REQUIRE( String::format( "" ) == "" );
 }
 
+TEST_CASE( "format with string length equal to initial buffer length", "[string]" )
+{
+    size_t length = String::FORMAT_BUFFER_INITIAL_LENGTH;
+    string str( length, ' ' );
+    for ( size_t i = 0; i < length; i++ ) {
+        str[ i ] = ( i % 95 ) + 32;
+    }
+    REQUIRE( String::format( "%s", str.c_str() ) == str );
+}
+
+TEST_CASE( "format with string length equal to initial buffer length + 1", "[string]" )
+{
+    size_t length = String::FORMAT_BUFFER_INITIAL_LENGTH + 1;
+    string str( length, ' ' );
+    for ( size_t i = 0; i < length; i++ ) {
+        str[ i ] = ( i % 95 ) + 32;
+    }
+    REQUIRE( String::format( "%s", str.c_str() ) == str );
+}
+
 TEST_CASE( "split", "[string]" )
 {
     REQUIRE( String::split( "Corvusoft Solutions", ' ' ) == vector< string >( { "Corvusoft", "Solutions" } ) );

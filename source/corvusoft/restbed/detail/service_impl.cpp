@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018, Corvusoft Ltd, All Rights Reserved.
+ * Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.
  */
 
 //System Includes
@@ -132,7 +132,7 @@ namespace restbed
                     m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
                 }
                 
-                m_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
                 m_acceptor->listen( m_settings->get_connection_limit( ) );
                 
                 http_listen( );
@@ -261,7 +261,7 @@ namespace restbed
                     m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
                 }
                 
-                m_ssl_acceptor->set_option( socket_base::reuse_address( true ) );
+                m_ssl_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
                 m_ssl_acceptor->listen( m_settings->get_connection_limit( ) );
                 
                 https_listen( );
@@ -291,6 +291,11 @@ namespace restbed
                     
                     auto connection = make_shared< SocketImpl >( socket, m_logger );
                     connection->set_timeout( m_settings->get_connection_timeout( ) );
+                    if (m_settings->get_keep_alive()) {
+                        connection->set_keep_alive( m_settings->get_keep_alive_start(),
+                            m_settings->get_keep_alive_interval(),
+                            m_settings->get_keep_alive_cnt());
+                    }
                     
                     m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                     {
@@ -527,6 +532,11 @@ namespace restbed
             {
                 auto connection = make_shared< SocketImpl >( socket, m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
+                if (m_settings->get_keep_alive()) {
+                    connection->set_keep_alive( m_settings->get_keep_alive_start(),
+                        m_settings->get_keep_alive_interval(),
+                        m_settings->get_keep_alive_cnt());
+                }
                 
                 m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
                 {
@@ -745,7 +755,8 @@ namespace restbed
             {
                 const auto items = parse_request_line( stream );
                 const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
-                
+
+                session->m_pimpl->m_request->m_pimpl->m_body.clear( );
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );
                 session->m_pimpl->m_request->m_pimpl->m_headers = parse_request_headers( stream );
