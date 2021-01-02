@@ -162,7 +162,7 @@ namespace restbed
         {
             request->m_pimpl->m_socket->connect( request->get_host( ), request->get_port( ), bind( HttpImpl::request_handler, _1, request, completion_handler ) );
         }
-        else
+        else if ( request->m_pimpl->m_socket not_eq nullptr )
         {
             request->m_pimpl->m_socket->start_write( Http::to_bytes( request ), bind( HttpImpl::write_handler, _1, _2, request, completion_handler ) );
         }
