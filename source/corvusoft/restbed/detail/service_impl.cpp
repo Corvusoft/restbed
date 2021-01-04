@@ -147,7 +147,7 @@ namespace restbed
         
         void ServiceImpl::http_listen( void ) const
         {
-            auto socket = make_shared< tcp::socket >( m_acceptor->get_io_service( ) );
+            auto socket = make_shared< tcp::socket >( *m_io_service );
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
         
@@ -273,7 +273,7 @@ namespace restbed
         
         void ServiceImpl::https_listen( void ) const
         {
-            auto socket = make_shared< asio::ssl::stream< tcp::socket > >( m_ssl_acceptor->get_io_service( ), *m_ssl_context );
+            auto socket = make_shared< asio::ssl::stream< tcp::socket > >( *m_io_service, *m_ssl_context );
             m_ssl_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
         }
         
@@ -289,7 +289,7 @@ namespace restbed
                         return;
                     }
                     
-                    auto connection = make_shared< SocketImpl >( socket, m_logger );
+                    auto connection = make_shared< SocketImpl >( *m_io_service, socket, m_logger );
                     connection->set_timeout( m_settings->get_connection_timeout( ) );
                     if (m_settings->get_keep_alive()) {
                         connection->set_keep_alive( m_settings->get_keep_alive_start(),
@@ -530,7 +530,7 @@ namespace restbed
         {
             if ( not error )
             {
-                auto connection = make_shared< SocketImpl >( socket, m_logger );
+                auto connection = make_shared< SocketImpl >( *m_io_service, socket, m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
                 if (m_settings->get_keep_alive()) {
                     connection->set_keep_alive( m_settings->get_keep_alive_start(),

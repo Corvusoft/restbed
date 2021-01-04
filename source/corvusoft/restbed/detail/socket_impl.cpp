@@ -49,12 +49,12 @@ namespace restbed
 {
     namespace detail
     {
-        SocketImpl::SocketImpl( const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
+        SocketImpl::SocketImpl( asio::io_context& context, const shared_ptr< tcp::socket >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->is_open( ) ),
             m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
-            m_io_service( socket->get_io_service( ) ),
+            m_io_service( context ),
             m_timer( make_shared< asio::steady_timer >( m_io_service ) ),
             m_strand( make_shared< io_service::strand > ( m_io_service ) ),
             m_resolver( nullptr ),
@@ -66,12 +66,12 @@ namespace restbed
             return;
         }
 #ifdef BUILD_SSL
-        SocketImpl::SocketImpl( const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
+        SocketImpl::SocketImpl( asio::io_context& context, const shared_ptr< asio::ssl::stream< tcp::socket > >& socket, const shared_ptr< Logger >& logger ) : m_error_handler( nullptr ),
             m_is_open( socket->lowest_layer( ).is_open( ) ),
             m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
-            m_io_service( socket->get_io_service( ) ),
+            m_io_service( context ),
             m_timer( make_shared< asio::steady_timer >( m_io_service ) ),
             m_strand( make_shared< io_service::strand > ( m_io_service ) ),
             m_resolver( nullptr ),

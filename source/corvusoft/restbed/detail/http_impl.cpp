@@ -153,7 +153,7 @@ namespace restbed
                 {
 #endif
                     auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_service );
-                    request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
+                    request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
 #ifdef BUILD_SSL
                 }
                 
@@ -196,7 +196,7 @@ namespace restbed
             }
             
             socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
-            request->m_pimpl->m_socket = make_shared< SocketImpl >( socket );
+            request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
         }
 #endif
         void HttpImpl::request_handler( const error_code& error, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback   )
