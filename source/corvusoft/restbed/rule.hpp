@@ -12,6 +12,17 @@
 
 //External Includes
 
+//Windows DLL Exports
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
+	#ifdef WIN_DLL_EXPORT
+		#define RULE_EXPORT __declspec(dllexport)
+	#else
+		#define RULE_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define RULE_EXPORT
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -28,7 +39,7 @@ namespace restbed
         struct RuleImpl;
     }
     
-    class Rule
+    class RULE_EXPORT Rule
     {
         public:
             //Friends

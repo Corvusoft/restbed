@@ -13,6 +13,17 @@
 
 //External Includes
 
+//Windows DLL Exports
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
+	#ifdef WIN_DLL_EXPORT
+		#define SSL_SETTINGS_EXPORT __declspec(dllexport)
+	#else
+		#define SSL_SETTINGS_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define SSL_SETTINGS_EXPORT
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -29,7 +40,7 @@ namespace restbed
         struct SSLSettingsImpl;
     }
     
-    class SSLSettings
+    class SSL_SETTINGS_EXPORT SSLSettings
     {
         public:
             //Friends

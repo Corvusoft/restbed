@@ -60,6 +60,11 @@ endif ( )
 
 include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
 
+if ( WIN32 )
+	add_definitions( -DWIN_DLL_EXPORT )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
+endif ( )
+
 #
 # Build
 #
@@ -70,12 +75,18 @@ add_library( ${STATIC_LIBRARY_NAME} STATIC ${MANIFEST} )
 set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
 set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
 set_target_properties( ${STATIC_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
-
+	
 set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
 add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
-set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
+if ( WIN32 )
+	# Workaround to avoid name clash of static lib and dynamic import lib under windows.
+	# Another (imho better) solution would be to use different output folders for shared and static libs ...
+	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-shared" )
+else ( )
+	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
+endif ( )	
 set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
 
 if ( BUILD_SSL )

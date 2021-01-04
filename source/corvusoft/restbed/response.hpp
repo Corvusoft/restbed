@@ -18,6 +18,17 @@
 
 //External Includes
 
+//Windows DLL Exports
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
+	#ifdef WIN_DLL_EXPORT
+		#define RESPONSE_EXPORT __declspec(dllexport)
+	#else
+		#define RESPONSE_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define RESPONSE_EXPORT
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -34,7 +45,7 @@ namespace restbed
         struct ResponseImpl;
     }
     
-    class Response
+    class RESPONSE_EXPORT Response
     {
         public:
             //Friends

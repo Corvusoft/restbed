@@ -16,6 +16,17 @@
 
 //External Includes
 
+//Windows DLL Exports
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
+	#ifdef WIN_DLL_EXPORT
+		#define HTTP_EXPORT __declspec(dllexport)
+	#else
+		#define HTTP_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define HTTP_EXPORT
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -29,7 +40,7 @@ namespace restbed
     class Response;
     class Settings;
     
-    class [[deprecated("HTTP client is deprecated; we will release a complimentary client framework at a future date.")]] Http
+    class [[deprecated("HTTP client is deprecated; we will release a complimentary client framework at a future date.")]] HTTP_EXPORT Http
     {
         public:
             //Friends
