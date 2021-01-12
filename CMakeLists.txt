@@ -107,16 +107,6 @@ if ( BUILD_TESTS )
     add_subdirectory( "${PROJECT_SOURCE_DIR}/test/integration" )
 endif ( )
 
-if ( BUILD_STATIC )
-    set(CMAKE_INSTALL_INCLUDEDIR "include")
-
-    target_include_directories(${STATIC_LIBRARY_NAME}
-        PUBLIC
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-        )
-endif()
-
-
 #
 # Install
 #
@@ -124,41 +114,5 @@ file( GLOB ARTIFACTS "${SOURCE_DIR}/*.hpp" )
 
 install( FILES "${INCLUDE_DIR}/${PROJECT_NAME}" DESTINATION "${CMAKE_INSTALL_PREFIX}/include" )
 install( FILES ${ARTIFACTS} DESTINATION "${CMAKE_INSTALL_PREFIX}/include/corvusoft/${PROJECT_NAME}" )
-
-install( TARGETS ${STATIC_LIBRARY_NAME} 
-         EXPORT restbedTargets 
-         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} 
-         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} 
-         COMPONENT library )
-
-set(INSTALL_CONFIGDIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
-
-install(EXPORT restbedTargets
-        FILE restbedTargets.cmake
-        NAMESPACE restbed::
-        DESTINATION ${INSTALL_CONFIGDIR}
-        )
-
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-        ${CMAKE_CURRENT_BINARY_DIR}/restbedConfigVersion.cmake
-        VERSION ${PROJECT_VERSION}
-        COMPATIBILITY AnyNewerVersion
-)
-
-configure_package_config_file(
-        ${CMAKE_CURRENT_LIST_DIR}/cmake/restbedConfig.cmake.in
-        ${CMAKE_CURRENT_BINARY_DIR}/restbedConfig.cmake
-        INSTALL_DESTINATION ${INSTALL_CONFIGDIR}
-)
-
-## Install all the helper files
-install(
-        FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/restbedConfig.cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/restbedConfigVersion.cmake
-        DESTINATION ${INSTALL_CONFIGDIR}
-)
-
 install( TARGETS ${STATIC_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
 install( TARGETS ${SHARED_LIBRARY_NAME} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT library )
