@@ -388,6 +388,13 @@ namespace restbed
             
 #endif
 			}
+			else
+			{
+				while(!m_pending_writes.empty())
+				{
+					m_pending_writes.pop();
+				}
+			}
         }
 
         void SocketImpl::write( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
