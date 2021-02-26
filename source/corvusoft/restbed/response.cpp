@@ -6,6 +6,7 @@
 #include <utility>
 #include <ciso646>
 #include <algorithm>
+#include <stdexcept>
 
 //Project Includes
 #include "corvusoft/restbed/string.hpp"
