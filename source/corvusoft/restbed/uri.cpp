@@ -124,7 +124,6 @@ namespace restbed
             /* F */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1
         };
 
-        //  At least 3 characters after encoding 
         if( value.size( ) < 3 ) {
             return value;
         }
@@ -132,15 +131,22 @@ namespace restbed
         string::size_type valuesize = value.size( );
         
         string result;
-        result.reserve( valuesize ); // Leave enough space for the string
+        result.reserve( valuesize );
+
+        char c1 = 0;
+        char c2 = 0;
+        unsigned char cindex = 0;
         
         string::size_type index = 0;
         for ( ; index < ( valuesize - 2 ); index++ )
         {
             if ( value[index] == '%' )
             {
-                char c1 = hex_to_dec[ value[ index + 1 ] ];
-                char c2 = hex_to_dec[ value[ index + 2 ] ];
+                cindex = value[ index + 1 ];
+                c1 = hex_to_dec[ cindex ];
+
+                cindex = value[ index + 2 ];
+                c2 = hex_to_dec[ cindex ];
                 if ( c1 != -1 && c2 != -1 )
                 {
                     result.push_back( ( c1 << 4 ) + c2 );
@@ -151,7 +157,6 @@ namespace restbed
             result.push_back( value[ index ] );
         }
 
-        //  The last 2 characters
         for ( ; index < valuesize; index++ )
         {
             result.push_back( value[ index ] );
@@ -190,7 +195,7 @@ namespace restbed
         static const char dec_to_hex[] = "0123456789ABCDEF";
 
         string encoded;
-        encoded.reserve( value.size() ); // Leave enough space for the string
+        encoded.reserve( value.size() );
 
         for ( Byte character : value )
         {
