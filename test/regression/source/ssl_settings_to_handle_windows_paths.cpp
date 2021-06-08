@@ -25,9 +25,9 @@ TEST_CASE( "ssl settings to handle windows paths", "[ssl]" )
         SSLSettings settings;
         settings.set_private_key(Uri( "file://C:/Program%20Files/RestServer/key.pem", true ));
 
-        REQUIRE( settings.get_private_key( ) == "C:/Program Files/RestServer/key.pem");
+        REQUIRE( settings.get_private_key( ) == "C:/Program Files/RestServer/key.pem" );
     }
-    catch ( invalid_argument ) {
+    catch ( const invalid_argument& ) {
         REQUIRE( false );
     }
 }
