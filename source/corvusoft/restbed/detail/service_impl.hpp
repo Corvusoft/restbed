@@ -27,6 +27,10 @@
     #include <asio/ssl.hpp>
 #endif
 
+#ifdef BUILD_IPC
+    #include <asio/local/stream_protocol.hpp>
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -73,7 +77,16 @@ namespace restbed
                 
                 void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::error_code& error ) const;
 #endif
-                void setup_signal_handler( );
+
+#ifdef BUILD_IPC
+                void ipc_start( void );
+
+                void ipc_listen( void ) const;
+
+                void create_ipc_session( const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::error_code& error ) const;
+#endif
+
+                void setup_signal_handler( void );
                 
                 void signal_handler( const std::error_code& error, const int signal_number ) const;
                 
@@ -150,6 +163,10 @@ namespace restbed
                 std::shared_ptr< asio::ssl::context > m_ssl_context;
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_ssl_acceptor;
+#endif
+
+#ifdef BUILD_IPC
+                std::shared_ptr< asio::local::stream_protocol::acceptor > m_ipc_acceptor;
 #endif
                 std::shared_ptr< asio::ip::tcp::acceptor > m_acceptor;
                 

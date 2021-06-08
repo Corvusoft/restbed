@@ -92,7 +92,7 @@ TEST_CASE( "convert request to bytes", "[http]" )
         const auto bytes = Http::to_bytes( request );
         const string data( bytes.data( ), bytes.data( ) + bytes.size( ) );
         
-        REQUIRE( data == "POST /index.html?page=1&query=search%20term SPDY/1.0\r\nConnection: keep-alive\r\n\r\nHello, World!" );
+        REQUIRE( data == "POST /index.html?page=1&query=search%20term HTTP/1.0\r\nConnection: keep-alive\r\n\r\nHello, World!" );
     }
 }
 

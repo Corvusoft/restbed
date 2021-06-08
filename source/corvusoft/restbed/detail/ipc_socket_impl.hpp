@@ -4,6 +4,8 @@
 
 #pragma once
 
+#ifdef BUILD_IPC
+
 //System Includes
 #include <queue>
 #include <tuple>
@@ -17,17 +19,14 @@
 
 //Project Includes
 #include "corvusoft/restbed/byte.hpp"
+#include "corvusoft/restbed/detail/socket_impl.hpp"
 
 //External Includes
-#include <asio/ip/tcp.hpp>
 #include <asio/streambuf.hpp>
 #include <asio/steady_timer.hpp>
 #include <asio/io_service.hpp>
 #include <asio/io_service_strand.hpp>
-
-#ifdef BUILD_SSL
-    #include <asio/ssl.hpp>
-#endif
+#include <asio/local/stream_protocol.hpp>
 
 //System Namespaces
 
@@ -45,7 +44,7 @@ namespace restbed
     {
         //Forward Declarations
         
-        class SocketImpl : public std::enable_shared_from_this<SocketImpl>
+        class IPCSocketImpl : virtual public SocketImpl
         {
             public:
                 //Friends
@@ -53,44 +52,42 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SocketImpl( asio::io_context& context, const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::shared_ptr< Logger >& logger = nullptr );
-#ifdef BUILD_SSL
-                SocketImpl( asio::io_context& context, const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
-#endif
-                ~SocketImpl( void ) = default;
+                IPCSocketImpl( asio::io_context& context, const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::shared_ptr< Logger >& logger = nullptr );
+
+                ~IPCSocketImpl( void ) = default;
                 
                 //Functionality
-                virtual void close( void );
+                void close( void ) override;
                 
-                virtual bool is_open( void ) const;
+                bool is_open( void ) const override;
                 
-                virtual bool is_closed( void ) const;
+                bool is_closed( void ) const override;
                 
-                virtual void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const std::error_code& ) >& callback );
+                void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const std::error_code& ) >& callback ) override;
                 
-                virtual void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback );
+                void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback ) override;
                 
-				virtual void start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback);
+				void start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback) override;
 				
-				virtual size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
+				size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error ) override;
 				
-				virtual size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
+				size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error ) override;
                 
-				virtual void start_read(const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
+				void start_read(const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure ) override;
                 
-				virtual void start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+				void start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
                 
-				virtual void start_read(const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+				void start_read(const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
 
                 //Getters
-                virtual std::string get_local_endpoint( void );
+                std::string get_local_endpoint( void ) override;
                 
-                virtual std::string get_remote_endpoint( void );
+                std::string get_remote_endpoint( void ) override;
                 
                 //Setters
-                virtual void set_timeout( const std::chrono::milliseconds& value );
+                void set_timeout( const std::chrono::milliseconds& value ) override;
 
-                virtual void set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt);
+                void set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt) override;
                 
                 //Operators
                 
@@ -103,7 +100,6 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SocketImpl( asio::io_context& context );
                 
                 //Functionality
                 
@@ -121,10 +117,12 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                SocketImpl( const SocketImpl& original ) = delete;
+                IPCSocketImpl( const IPCSocketImpl& original ) = delete;
                 
                 //Functionality
-                void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
+                std::shared_ptr< IPCSocketImpl > shared_from_this( void );
+
+                void connection_timeout_handler( const std::shared_ptr< IPCSocketImpl > socket, const std::error_code& error );
 
                 void write( void );
                 
@@ -147,7 +145,7 @@ namespace restbed
                 //Setters
                 
                 //Operators
-                SocketImpl& operator =( const SocketImpl& value ) = delete;
+                IPCSocketImpl& operator =( const IPCSocketImpl& value ) = delete;
                 
                 //Properties
                 bool m_is_open;
@@ -165,14 +163,10 @@ namespace restbed
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
                 std::shared_ptr< asio::io_service::strand > m_strand;
-                
-                std::shared_ptr< asio::ip::tcp::resolver > m_resolver;
-                
-                std::shared_ptr< asio::ip::tcp::socket > m_socket;
-
-#ifdef BUILD_SSL
-                std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;
-#endif
+                                
+                std::shared_ptr< asio::local::stream_protocol::socket > m_socket;
         };
     }
 }
+
+#endif

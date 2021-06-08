@@ -154,7 +154,7 @@ namespace restbed
         }
         
         HttpImpl::socket_setup( request, settings );
-        
+
         request->m_pimpl->m_response = make_shared< Response >( );
         request->m_pimpl->m_response->m_pimpl->m_request = request.get( );
         

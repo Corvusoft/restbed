@@ -16,8 +16,9 @@ message( "                                                              " )
 #
 # Build Options
 #
-option( BUILD_TESTS    "Build unit tests."   ON )
-option( BUILD_SSL      "Build secure socket layer support."  ON )
+option( BUILD_TESTS "Build unit tests." ON )
+option( BUILD_SSL "Build secure socket layer support." ON )
+option( BUILD_IPC "Build unix domain socket layer support." OFF )
 
 #
 # Configuration
@@ -35,11 +36,11 @@ if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
 endif ( )
 
 if( ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_WIN32_WINNT=0x0601 /W4 /wd4068 /wd4702 /wd4996" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_WIN32_WINNT=0x0601 /W4 /wd4068 /wd4702 /wd4996 /wd4265" )
 endif ( )
 
 if( NOT WIN32 )
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas -Wno-deprecated-declarations" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wno-unknown-pragmas -Wno-deprecated-declarations -Wno-non-virtual-dtor" )
 endif ( )
 
 if ( UNIX AND NOT APPLE )
@@ -55,14 +56,19 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
 find_package( asio REQUIRED )
 
 if ( BUILD_SSL )
+    add_definitions( "-DBUILD_SSL" )
     find_package( openssl REQUIRED )
 endif ( )
 
 include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
 
+if ( BUILD_IPC )
+    add_definitions( "-DBUILD_IPC" )
+endif ( )
+
 if ( WIN32 )
 	add_definitions( -DWIN_DLL_EXPORT )
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
+	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251" )
 endif ( )
 
 #
@@ -82,7 +88,6 @@ set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
 if ( WIN32 )
 	# Workaround to avoid name clash of static lib and dynamic import lib under windows.
-	# Another (imho better) solution would be to use different output folders for shared and static libs ...
 	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-shared" )
 else ( )
 	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )

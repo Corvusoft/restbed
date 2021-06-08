@@ -31,6 +31,7 @@
 #include "corvusoft/restbed/detail/service_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
+#include "corvusoft/restbed/detail/ipc_socket_impl.hpp"
 #include "corvusoft/restbed/detail/rule_engine_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
@@ -75,6 +76,10 @@ using asio::ip::address;
 using asio::socket_base;
 using asio::system_error;
 
+#if BUILD_IPC
+    using asio::local::stream_protocol;
+#endif
+
 namespace restbed
 {
     namespace detail
@@ -93,6 +98,9 @@ namespace restbed
             m_ssl_settings( nullptr ),
             m_ssl_context( nullptr ),
             m_ssl_acceptor( nullptr ),
+#endif
+#ifdef BUILD_IPC
+            m_ipc_acceptor( nullptr ),
 #endif
             m_acceptor( nullptr ),
             m_resource_paths( ),
@@ -325,7 +333,67 @@ namespace restbed
             https_listen( );
         }
 #endif
-        
+
+#ifdef BUILD_IPC
+        void ServiceImpl::ipc_start( void )
+        {
+            const string location = "/tmp/restbed.sock";
+            ::remove( location.data( ) );
+
+            m_ipc_acceptor = make_shared< stream_protocol::acceptor >( *m_io_service, stream_protocol::endpoint( location ) );
+            m_ipc_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
+            m_ipc_acceptor->listen( m_settings->get_connection_limit( ) );
+            ipc_listen( );
+                
+            log( Logger::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+        }
+
+        void ServiceImpl::ipc_listen( void ) const
+        {
+            auto socket = make_shared< stream_protocol::socket >( *m_io_service );
+            m_ipc_acceptor->async_accept( *socket, bind( &ServiceImpl::create_ipc_session, this, socket, _1 ) );
+        }
+
+        void ServiceImpl::create_ipc_session( const shared_ptr< stream_protocol::socket >& socket, const error_code& error ) const
+        {
+            if ( not error )
+            {
+                auto connection = make_shared< IPCSocketImpl >( *m_io_service, socket, m_logger );
+                connection->set_timeout( m_settings->get_connection_timeout( ) );
+                if (m_settings->get_keep_alive()) {
+                    connection->set_keep_alive( m_settings->get_keep_alive_start(),
+                        m_settings->get_keep_alive_interval(),
+                        m_settings->get_keep_alive_cnt());
+                }
+                
+                m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
+                {
+                    session->m_pimpl->m_settings = m_settings;
+                    session->m_pimpl->m_manager = m_session_manager;
+                    session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
+                    session->m_pimpl->m_error_handler = m_error_handler;
+                    session->m_pimpl->m_request = make_shared< Request >( );
+                    session->m_pimpl->m_request->m_pimpl->m_socket = connection;
+                    session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
+                    session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                    session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
+                    session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
+                } );
+            }
+            else
+            {
+                if ( socket not_eq nullptr and socket->is_open( ) )
+                {
+                    socket->close( );
+                }
+                
+                log( Logger::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+            }
+            
+            ipc_listen( );
+        }
+#endif
+
         string ServiceImpl::sanitise_path( const string& path ) const
         {
             if ( path == "/" )

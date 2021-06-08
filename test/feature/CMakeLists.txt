@@ -272,3 +272,9 @@ add_test( client_connection_timeout_feature_test_suite ${EXECUTABLE_OUTPUT_PATH}
 add_executable( service_status_feature_test_suite ${SOURCE_DIR}/service_status/feature.cpp )
 target_link_libraries( service_status_feature_test_suite ${STATIC_LIBRARY_NAME} )
 add_test( service_status_feature_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_status_feature_test_suite )
+
+if ( BUILD_IPC )
+    add_executable( ipc_service_feature_test_suite ${SOURCE_DIR}/ipc_service/feature.cpp )
+    target_link_libraries( ipc_service_feature_test_suite ${STATIC_LIBRARY_NAME} )
+    add_test( ipc_service_feature_test_suite ${EXECUTABLE_OUTPUT_PATH}/ipc_service_feature_test_suite )
+endif ( )

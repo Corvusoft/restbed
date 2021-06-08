@@ -304,6 +304,23 @@ namespace restbed
 #endif
 #endif
         }
+
+        SocketImpl::SocketImpl( asio::io_context& context ) : m_error_handler( nullptr ),
+            m_is_open( false ),
+            m_pending_writes( ),
+            m_logger( nullptr ),
+            m_timeout( 0 ),
+            m_io_service( context ),
+            m_timer( make_shared< asio::steady_timer >( m_io_service ) ),
+            m_strand( make_shared< io_service::strand > ( m_io_service ) ),
+            m_resolver( nullptr ),
+            m_socket( nullptr )
+#ifdef BUILD_SSL
+            , m_ssl_socket( nullptr )
+#endif
+        {
+            return;
+        }
         
         void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
         {

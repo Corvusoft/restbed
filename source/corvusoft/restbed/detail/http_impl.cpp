@@ -21,6 +21,10 @@
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 
+#ifdef BUILD_IPC
+    #include "corvusoft/restbed/detail/ipc_socket_impl.hpp"
+#endif
+
 //External Includes
 #include <asio/error.hpp>
 #include <asio/ip/tcp.hpp>
@@ -29,6 +33,10 @@
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
+#endif
+
+#ifdef BUILD_IPC
+    #include <asio/local/stream_protocol.hpp>
 #endif
 
 //System Namespaces
@@ -48,6 +56,10 @@ using std::error_code;
 using std::make_shared;
 using std::placeholders::_1;
 using std::placeholders::_2;
+
+#ifdef BUILD_IPC
+    using asio::local::stream_protocol;
+#endif
 
 //Project Namespaces
 
@@ -88,14 +100,7 @@ namespace restbed
             {
                 path += "#" + uri->get_fragment( );
             }
-            
-            auto protocol = request->get_protocol( );
-            
-            if ( String::uppercase( protocol ) == "HTTPS" )
-            {
-                protocol = "HTTP";
-            }
-            
+                        
             char* locale = nullptr;
             if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
             {
@@ -106,10 +111,11 @@ namespace restbed
             auto data = String::format( "%s %s %s/%.1f\r\n",
                                         request->get_method( ).data( ),
                                         path.data( ),
-                                        protocol.data( ),
+                                        "HTTP",
                                         request->get_version( ) );
             
-            if (locale) {
+            if (locale)
+            {
                 setlocale( LC_NUMERIC, locale );
                 free( locale );
             }
@@ -142,22 +148,31 @@ namespace restbed
                 {
                     request->m_pimpl->m_io_service = make_shared< asio::io_service >( );
                 }
-                
+
+                if ( String::uppercase( request->m_pimpl->m_protocol ) == "HTTP" )
+                {
+                    auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_service );
+                    request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
+                }
 #ifdef BUILD_SSL
-                
-                if ( String::uppercase( request->m_pimpl->m_protocol ) == "HTTPS" )
+                else if ( String::uppercase( request->m_pimpl->m_protocol ) == "HTTPS" )
                 {
                     ssl_socket_setup( request, settings->get_ssl_settings( ) );
                 }
+#endif
+
+#ifdef BUILD_IPC
+                else if ( String::uppercase( request->m_pimpl->m_protocol ) == "LOCAL" )
+                {
+                    auto socket = make_shared< stream_protocol::socket >( *request->m_pimpl->m_io_service );
+                    request->m_pimpl->m_socket = make_shared< IPCSocketImpl >( *request->m_pimpl->m_io_service, socket );
+                }
+#endif
                 else
                 {
-#endif
                     auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_service );
                     request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
-#ifdef BUILD_SSL
                 }
-                
-#endif
             }
             
             request->m_pimpl->m_socket->set_timeout( settings->get_connection_timeout( ) );

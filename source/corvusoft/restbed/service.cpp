@@ -163,12 +163,14 @@ namespace restbed
         {
             return lhs->get_priority( ) < rhs->get_priority( );
         } );
-        
+
+#ifdef BUILD_IPC
+        m_pimpl->ipc_start( );
+#endif
         m_pimpl->http_start( );
 #ifdef BUILD_SSL
         m_pimpl->https_start( );
 #endif
-        
         for ( const auto& route : m_pimpl->m_resource_paths )
         {
             auto path = String::format( "/%s/%s", m_pimpl->m_settings->get_root( ).data( ), route.second.data( ) );
