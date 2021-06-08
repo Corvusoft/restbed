@@ -2351,7 +2351,7 @@ n/a
 #### Service::set_method_not_allowed_handler
 
 ```C++
-void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
+void set_method_not_allowed_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
 ```
 
 If an incoming HTTP request cannot be matched a known resource method handler its session will be routed over to the method not found handler.
