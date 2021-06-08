@@ -180,17 +180,17 @@ namespace restbed
     
     void SSLSettings::set_certificate( const Uri& value )
     {
-        m_pimpl->m_certificate = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+        m_pimpl->m_certificate = Uri::decode( String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE ) );
     }
     
     void SSLSettings::set_certificate_chain( const Uri& value )
     {
-        m_pimpl->m_certificate_chain = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+        m_pimpl->m_certificate_chain = Uri::decode( String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE ) );
     }
     
     void SSLSettings::set_certificate_authority_pool( const Uri& value )
     {
-        m_pimpl->m_certificate_authority_pool = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+        m_pimpl->m_certificate_authority_pool = Uri::decode( String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE ) );
     }
     
     void SSLSettings::set_passphrase( const string& value )
@@ -200,16 +200,16 @@ namespace restbed
     
     void SSLSettings::set_private_key( const Uri& value )
     {
-        m_pimpl->m_private_key = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+        m_pimpl->m_private_key = Uri::decode( String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE ) );
     }
     
     void SSLSettings::set_private_rsa_key( const Uri& value )
     {
-        m_pimpl->m_private_rsa_key = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+        m_pimpl->m_private_rsa_key = Uri::decode( String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE ) );
     }
     
     void SSLSettings::set_temporary_diffie_hellman( const Uri& value )
     {
-        m_pimpl->m_temporary_diffie_hellman = String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE );
+        m_pimpl->m_temporary_diffie_hellman = Uri::decode( String::remove( "file://", value.to_string( ), String::CASE_INSENSITIVE ) );
     }
 }
