@@ -268,39 +268,46 @@ namespace restbed
             (void) cnt;
             (void) start;
             (void) interval;
+
+#ifdef BUILD_SSL
+            auto& socket = ( m_socket not_eq nullptr ) ? *m_socket : m_ssl_socket->lowest_layer( );
+#else
+            auto& socket = *m_socket;
+#endif
+
 #ifdef _WIN32
             std::string val = "1";
-            setsockopt(m_socket->native_handle(), SOL_SOCKET, SO_KEEPALIVE, val.c_str(), sizeof(val));
+            setsockopt(socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, val.c_str(), sizeof(val));
 
             // TCP_KEEPIDLE and TCP_KEEPINTVL are available since Win 10 version 1709
             // TCP_KEEPCNT since Win 10 version 1703
 #ifdef TCP_KEEPIDLE 
             std::string start_str = std::to_string(start);
-            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPIDLE,
+            setsockopt(socket.native_handle(), IPPROTO_TCP, TCP_KEEPIDLE,
                        start_str.c_str(), sizeof(start_str));
 #endif
 #ifdef TCP_KEEPINTVL
             std::string interval_str = std::to_string(interval);
-            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPINTVL,
+            setsockopt(socket.native_handle(), IPPROTO_TCP, TCP_KEEPINTVL,
                        interval_str.c_str(), sizeof(interval_str));
 #endif
 #ifdef TCP_KEEPCNT
             std::string cnt_str = std::to_string(cnt);
-            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPCNT,
+            setsockopt(socket.native_handle(), IPPROTO_TCP, TCP_KEEPCNT,
                        cnt_str.c_str(), sizeof(cnt_str));
 #endif
 #else
             uint32_t val = 1;
-            setsockopt(m_socket->native_handle(), SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(uint32_t));
+            setsockopt(socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(uint32_t));
 #ifdef __APPLE__
-            setsockopt(m_socket->native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &start, sizeof(uint32_t));
+            setsockopt(socket.native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &start, sizeof(uint32_t));
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) 
-            setsockopt(m_socket->native_handle(), IPPROTO_TCP, SO_KEEPALIVE, &start, sizeof(uint32_t));
+            setsockopt(socket.native_handle(), IPPROTO_TCP, SO_KEEPALIVE, &start, sizeof(uint32_t));
 #else
             // Linux based systems
-            setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPIDLE, &start, sizeof(uint32_t));
-            setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(uint32_t));
-            setsockopt(m_socket->native_handle(), SOL_TCP, TCP_KEEPCNT, &cnt, sizeof(uint32_t));
+            setsockopt(socket.native_handle(), SOL_TCP, TCP_KEEPIDLE, &start, sizeof(uint32_t));
+            setsockopt(socket.native_handle(), SOL_TCP, TCP_KEEPINTVL, &interval, sizeof(uint32_t));
+            setsockopt(socket.native_handle(), SOL_TCP, TCP_KEEPCNT, &cnt, sizeof(uint32_t));
 #endif
 #endif
         }
