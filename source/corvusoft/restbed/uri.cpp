@@ -361,7 +361,7 @@ namespace restbed
         {
             auto index = parameter.find_first_of( '=' );
             auto name = decode_parameter( parameter.substr( 0, index ) );
-            auto value = decode_parameter( parameter.substr( index + 1, parameter.length( ) ) );
+            auto value = (index not_eq string::npos) ? decode_parameter( parameter.substr( index + 1, parameter.length( ) ) ) : "";
             
             parameters.insert( make_pair( name, value ) );
         }
