@@ -100,7 +100,7 @@ namespace restbed
     
     string Uri::decode( const string& value )
     {
-        static const char hex_to_dec[256] = 
+        static const signed char hex_to_dec[256] =
         {
             /*       0  1  2  3   4  5  6  7   8  9  A  B   C  D  E  F */
             /* 0 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
@@ -133,8 +133,8 @@ namespace restbed
         string result;
         result.reserve( valuesize );
 
-        char c1 = 0;
-        char c2 = 0;
+        signed char c1 = 0;
+        signed char c2 = 0;
         unsigned char cindex = 0;
         
         string::size_type index = 0;
@@ -149,7 +149,7 @@ namespace restbed
                 c2 = hex_to_dec[ cindex ];
                 if ( c1 != -1 && c2 != -1 )
                 {
-                    result.push_back( ( c1 << 4 ) + c2 );
+                    result.push_back( (char)(( c1 << 4 ) + c2) );
                     index += 2;
                     continue;
                 }
