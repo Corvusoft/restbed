@@ -38,15 +38,16 @@ SCENARIO( "publishing single path resources", "[resource]" )
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
+    settings->set_ipc_path( "/tmp/restbed.test.sock");
     settings->set_default_header( "Connection", "close" );
     
     shared_ptr< thread > worker = nullptr;
     
     Service service;
     service.publish( resource );
-    service.set_ready_handler( [ &worker ]( Service & service )
+    service.set_ready_handler( [ &worker, &settings ]( Service & service )
     {
-        worker = make_shared< thread >( [ &service ] ( )
+        worker = make_shared< thread >( [ &service, &settings ] ( )
         {
             GIVEN( "I publish a resource at '/resources/ipc' with a HTTP 'GET' method handler" )
             {
@@ -56,7 +57,7 @@ SCENARIO( "publishing single path resources", "[resource]" )
                     request->set_method( "GET" );
                     request->set_protocol( "local" );
                     request->set_path( "/resources/ipc" );
-                    auto response = Http::sync( request );
+                    auto response = Http::sync( request, settings );
                     
                     THEN( "I should see a '200' (OK) status code" )
                     {

@@ -46,9 +46,10 @@ namespace restbed
 {
     namespace detail
     {
-        IPCSocketImpl::IPCSocketImpl( asio::io_context& context, const shared_ptr< stream_protocol::socket >& socket, const shared_ptr< Logger >& logger ) : SocketImpl( context ),
+        IPCSocketImpl::IPCSocketImpl( asio::io_context& context, const shared_ptr< stream_protocol::socket >& socket, const std::string& path, const shared_ptr< Logger >& logger ) : SocketImpl( context ),
             m_error_handler( nullptr ),
             m_is_open( socket->is_open( ) ),
+            m_path( path ),
             m_pending_writes( ),
             m_logger( logger ),
             m_timeout( 0 ),
@@ -87,7 +88,7 @@ namespace restbed
         
         void IPCSocketImpl::connect( const string&, const uint16_t, const function< void ( const error_code& ) >& callback )
         {          
-            m_socket->async_connect( stream_protocol::endpoint("/tmp/restbed.sock"), [ this, callback ]( const error_code & error )
+            m_socket->async_connect( stream_protocol::endpoint(m_path), [ this, callback ]( const error_code & error )
             {
                 m_is_open = true;
                 callback( error );
@@ -141,12 +142,12 @@ namespace restbed
 
         string IPCSocketImpl::get_local_endpoint( void )
         {                        
-            return "/tmp/restbed.sock";
+            return m_path;
         }
         
         string IPCSocketImpl::get_remote_endpoint( void )
         {
-            return "/tmp/restbed.sock";
+            return m_path;
         }
         
         void IPCSocketImpl::set_timeout( const milliseconds& value )

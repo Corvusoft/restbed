@@ -165,7 +165,7 @@ namespace restbed
                 else if ( String::uppercase( request->m_pimpl->m_protocol ) == "LOCAL" )
                 {
                     auto socket = make_shared< stream_protocol::socket >( *request->m_pimpl->m_io_service );
-                    request->m_pimpl->m_socket = make_shared< IPCSocketImpl >( *request->m_pimpl->m_io_service, socket );
+                    request->m_pimpl->m_socket = make_shared< IPCSocketImpl >( *request->m_pimpl->m_io_service, socket, settings->get_ipc_path( ) );
                 }
 #endif
                 else
