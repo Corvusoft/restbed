@@ -133,8 +133,8 @@ namespace restbed
         string result;
         result.reserve( valuesize );
 
-        char c1 = 0;
-        char c2 = 0;
+        signed char c1 = 0;
+        signed char c2 = 0;
         unsigned char cindex = 0;
         
         string::size_type index = 0;
@@ -149,7 +149,7 @@ namespace restbed
                 c2 = hex_to_dec[ cindex ];
                 if ( c1 != -1 && c2 != -1 )
                 {
-                    result.push_back( ( c1 << 4 ) + c2 );
+                    result.push_back( static_cast< char >( ( c1 << 4 ) + c2 ) );
                     index += 2;
                     continue;
                 }
