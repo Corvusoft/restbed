@@ -24,7 +24,7 @@
 		#define SERVICE_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define SERVICE_EXPORT
+	#define SERVICE_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces

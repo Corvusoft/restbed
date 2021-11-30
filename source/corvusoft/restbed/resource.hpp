@@ -22,7 +22,7 @@
 		#define RESOURCE_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define RESOURCE_EXPORT
+	#define RESOURCE_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces

@@ -24,7 +24,7 @@
 		#define HTTP_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define HTTP_EXPORT
+	#define HTTP_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces

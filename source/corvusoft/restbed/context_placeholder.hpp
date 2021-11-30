@@ -20,7 +20,7 @@
 		#define CONTEXT_PLACEHOLDER_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define CONTEXT_PLACEHOLDER_EXPORT
+	#define CONTEXT_PLACEHOLDER_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces

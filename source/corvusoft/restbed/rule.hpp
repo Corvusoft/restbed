@@ -20,7 +20,7 @@
 		#define RULE_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define RULE_EXPORT
+	#define RULE_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
