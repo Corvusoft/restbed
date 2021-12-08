@@ -5,6 +5,7 @@
 #pragma once
 
 //System Includes
+#include <atomic>
 #include <set>
 #include <map>
 #include <chrono>
@@ -138,7 +139,7 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                std::chrono::steady_clock::time_point m_uptime;
+                std::atomic<std::chrono::steady_clock::time_point> m_uptime;
                 
                 std::shared_ptr< Logger > m_logger;
                 
