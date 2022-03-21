@@ -50,6 +50,9 @@ bool pam_authorisation( const string& username, const string& password )
         response[ 0 ].resp = strncpy( pass, password.data( ), password.length( ) );
 
         status = pam_authenticate( handle, 0 );
+        
+        if ( status == PAM_SUCCESS )
+            status = pam_acct_mgmt( handle, 0 );
 
         pam_end( handle, PAM_SUCCESS );
     }
