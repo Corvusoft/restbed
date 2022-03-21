@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
 
-project( "restbed" VERSION 4.7.0 LANGUAGES CXX )
+project( "restbed" VERSION 4.8.0 LANGUAGES CXX )
 message( "                                                              " )
 message( "##############################################################" )
 message( "#                                                            #" )
