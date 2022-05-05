@@ -60,8 +60,6 @@ if ( BUILD_SSL )
     find_package( openssl REQUIRED )
 endif ( )
 
-include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
-
 if ( BUILD_IPC )
     add_definitions( "-DBUILD_IPC" )
 endif ( )
@@ -86,6 +84,10 @@ set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
 add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
+
+target_include_directories(${SHARED_LIBRARY_NAME} SYSTEM PUBLIC ${asio_INCLUDE} ${ssl_INCLUDE} ${INCLUDE_DIR})
+target_include_directories(${STATIC_LIBRARY_NAME} SYSTEM PUBLIC ${asio_INCLUDE} ${ssl_INCLUDE} ${INCLUDE_DIR})
+
 if ( WIN32 )
 	# Workaround to avoid name clash of static lib and dynamic import lib under windows.
 	set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-shared" )
