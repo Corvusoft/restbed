@@ -24,7 +24,7 @@
 		#define CONTEXT_VALUE_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define CONTEXT_VALUE_EXPORT __attribute__((visibility ("default")))
+	#define CONTEXT_VALUE_EXPORT
 #endif
 
 //System Namespaces

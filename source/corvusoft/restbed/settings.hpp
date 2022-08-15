@@ -23,7 +23,7 @@
 		#define SETTINGS_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define SETTINGS_EXPORT __attribute__((visibility ("default")))
+	#define SETTINGS_EXPORT
 #endif
 
 //System Namespaces

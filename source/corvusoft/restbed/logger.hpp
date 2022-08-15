@@ -24,7 +24,7 @@
 		#define LOGGER_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define LOGGER_EXPORT __attribute__((visibility ("default")))
+	#define LOGGER_EXPORT
 #endif
 
 //System Namespaces

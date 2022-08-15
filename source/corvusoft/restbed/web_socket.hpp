@@ -23,7 +23,7 @@
 		#define WEB_SOCKET_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define WEB_SOCKET_EXPORT __attribute__((visibility ("default")))
+	#define WEB_SOCKET_EXPORT
 #endif
 
 //System Namespaces

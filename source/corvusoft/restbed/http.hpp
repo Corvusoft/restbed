@@ -23,11 +23,8 @@
 	#else
 		#define HTTP_EXPORT __declspec(dllimport)
 	#endif
-	#define DEPRECATED(MSG) __declspec(deprecated(MSG))
 #else
-    // gcc11 and clang12 don't like mixing __attribute__ and [[deprecated(MSG)]]
-	#define HTTP_EXPORT __attribute__((visibility ("default")))
-	#define DEPRECATED(MSG) __attribute__((__deprecated__(MSG)))
+	#define HTTP_EXPORT
 #endif
 
 //System Namespaces
@@ -42,8 +39,8 @@ namespace restbed
     class Request;
     class Response;
     class Settings;
-
-    class DEPRECATED("HTTP client is deprecated; we will release a complimentary client framework at a future date.") HTTP_EXPORT Http
+    
+    class [[deprecated("HTTP client is deprecated; we will release a complimentary client framework at a future date.")]] HTTP_EXPORT Http
     {
         public:
             //Friends

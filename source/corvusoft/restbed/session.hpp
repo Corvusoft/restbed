@@ -27,7 +27,7 @@
 		#define SESSION_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define SESSION_EXPORT __attribute__((visibility ("default")))
+	#define SESSION_EXPORT
 #endif
 
 //System Namespaces

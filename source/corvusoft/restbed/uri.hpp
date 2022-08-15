@@ -23,7 +23,7 @@
 		#define URI_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define URI_EXPORT __attribute__((visibility ("default")))
+	#define URI_EXPORT
 #endif
 
 //System Namespaces

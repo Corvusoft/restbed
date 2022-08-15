@@ -23,7 +23,7 @@
 		#define STRING_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define STRING_EXPORT __attribute__((visibility ("default")))
+	#define STRING_EXPORT
 #endif
 
 //System Namespaces

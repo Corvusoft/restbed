@@ -26,7 +26,7 @@
 		#define RESPONSE_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define RESPONSE_EXPORT __attribute__((visibility ("default")))
+	#define RESPONSE_EXPORT
 #endif
 
 //System Namespaces

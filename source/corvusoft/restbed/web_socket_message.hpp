@@ -24,7 +24,7 @@
 		#define WEB_SOCKET_MESSAGE_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define WEB_SOCKET_MESSAGE_EXPORT __attribute__((visibility ("default")))
+	#define WEB_SOCKET_MESSAGE_EXPORT
 #endif
 
 //System Namespaces
