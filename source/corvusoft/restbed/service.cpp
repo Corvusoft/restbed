@@ -88,7 +88,8 @@ namespace restbed
     
     bool Service::is_up( void ) const
     {
-        return m_pimpl->m_uptime not_eq steady_clock::time_point::min( );
+        std::chrono::steady_clock::time_point value = m_pimpl->m_uptime;
+        return value not_eq steady_clock::time_point::min( );
     }
     
     bool Service::is_down( void ) const
@@ -353,7 +354,8 @@ namespace restbed
             return seconds( 0 );
         }
         
-        return duration_cast< seconds >( steady_clock::now( ) - m_pimpl->m_uptime );
+        std::chrono::steady_clock::time_point value = m_pimpl->m_uptime;
+        return duration_cast< seconds >( steady_clock::now( ) - value );
     }
     
     const shared_ptr< const Uri > Service::get_http_uri( void ) const
