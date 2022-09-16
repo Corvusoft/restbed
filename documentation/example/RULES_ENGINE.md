@@ -9,9 +9,7 @@ Example
 ```C++
 #include <string>
 #include <memory>
-#include <string>
 #include <cstdlib>
-#include <ciso646>
 #include <functional>
 #include <restbed>
 
