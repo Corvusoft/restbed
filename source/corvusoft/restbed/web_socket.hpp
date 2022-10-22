@@ -11,20 +11,10 @@
 #include <system_error>
 
 //Project Includes
+#include <corvusoft/restbed/export.hpp>
 #include <corvusoft/restbed/web_socket_message.hpp>
 
 //External Includes
-
-//Windows DLL Exports
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define WEB_SOCKET_EXPORT __declspec(dllexport)
-	#else
-		#define WEB_SOCKET_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define WEB_SOCKET_EXPORT __attribute__((visibility ("default")))
-#endif
 
 //System Namespaces
 
@@ -45,7 +35,7 @@ namespace restbed
         class WebSocketManagerImpl;
     }
     
-    class WEB_SOCKET_EXPORT WebSocket : public std::enable_shared_from_this< WebSocket >
+    class RESTBED_EXPORT WebSocket : public std::enable_shared_from_this< WebSocket >
     {
         public:
             //Friends

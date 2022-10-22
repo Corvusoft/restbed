@@ -65,7 +65,6 @@ if ( BUILD_IPC )
 endif ( )
 
 if ( WIN32 )
-	add_definitions( -DWIN_DLL_EXPORT )
 	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251" )
 endif ( )
 
@@ -84,9 +83,13 @@ set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
 add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
 set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
+set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_VISIBILITY_PRESET "hidden" )
+set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY DEFINE_SYMBOL "RESTBED_BUILDING_DLL" )
 
 target_include_directories(${SHARED_LIBRARY_NAME} SYSTEM PUBLIC ${asio_INCLUDE} ${ssl_INCLUDE} ${INCLUDE_DIR})
 target_include_directories(${STATIC_LIBRARY_NAME} SYSTEM PUBLIC ${asio_INCLUDE} ${ssl_INCLUDE} ${INCLUDE_DIR})
+
+target_compile_definitions(${STATIC_LIBRARY_NAME} PUBLIC RESTBED_STATIC )
 
 if ( WIN32 )
 	# Workaround to avoid name clash of static lib and dynamic import lib under windows.

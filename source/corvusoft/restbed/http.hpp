@@ -13,20 +13,15 @@
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/export.hpp>
 
 //External Includes
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define HTTP_EXPORT __declspec(dllexport)
-	#else
-		#define HTTP_EXPORT __declspec(dllimport)
-	#endif
 	#define DEPRECATED(MSG) __declspec(deprecated(MSG))
 #else
     // gcc11 and clang12 don't like mixing __attribute__ and [[deprecated(MSG)]]
-	#define HTTP_EXPORT __attribute__((visibility ("default")))
 	#define DEPRECATED(MSG) __attribute__((__deprecated__(MSG)))
 #endif
 
@@ -43,7 +38,7 @@ namespace restbed
     class Response;
     class Settings;
 
-    class DEPRECATED("HTTP client is deprecated; we will release a complimentary client framework at a future date.") HTTP_EXPORT Http
+    class DEPRECATED("HTTP client is deprecated; we will release a complimentary client framework at a future date.") RESTBED_EXPORT Http
     {
         public:
             //Friends

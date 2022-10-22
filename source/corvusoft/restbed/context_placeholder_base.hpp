@@ -8,19 +8,9 @@
 #include <typeinfo>
 
 //Project Includes
+#include <corvusoft/restbed/context_placeholder_base.hpp>
 
 //External Includes
-
-//Windows DLL Exports
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define CONTEXT_PLACEHOLDER_BASE_EXPORT __declspec(dllexport)
-	#else
-		#define CONTEXT_PLACEHOLDER_BASE_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define CONTEXT_PLACEHOLDER_BASE_EXPORT __attribute__((visibility ("default")))
-#endif
 
 //System Namespaces
 
@@ -32,7 +22,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    class CONTEXT_PLACEHOLDER_BASE_EXPORT ContextPlaceholderBase
+    class RESTBED_EXPORT ContextPlaceholderBase
     {
         public:
             //Friends

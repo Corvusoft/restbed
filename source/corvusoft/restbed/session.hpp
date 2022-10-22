@@ -14,21 +14,11 @@
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/export.hpp>
 #include <corvusoft/restbed/string.hpp>
 #include <corvusoft/restbed/context_value.hpp>
 
 //External Includes
-
-//Windows DLL Exports
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define SESSION_EXPORT __declspec(dllexport)
-	#else
-		#define SESSION_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define SESSION_EXPORT __attribute__((visibility ("default")))
-#endif
 
 //System Namespaces
 
@@ -52,7 +42,7 @@ namespace restbed
         class WebSocketManagerImpl;
     }
     
-    class SESSION_EXPORT Session : public std::enable_shared_from_this< Session >
+    class RESTBED_EXPORT Session : public std::enable_shared_from_this< Session >
     {
         public:
             //Friends

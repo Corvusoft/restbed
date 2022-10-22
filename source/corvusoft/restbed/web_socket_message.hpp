@@ -13,19 +13,9 @@
 
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
+#include <corvusoft/restbed/export.hpp>
 
 //External Includes
-
-//Windows DLL Exports
-#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define WEB_SOCKET_MESSAGE_EXPORT __declspec(dllexport)
-	#else
-		#define WEB_SOCKET_MESSAGE_EXPORT __declspec(dllimport)
-	#endif
-#else
-	#define WEB_SOCKET_MESSAGE_EXPORT __attribute__((visibility ("default")))
-#endif
 
 //System Namespaces
 
@@ -42,7 +32,7 @@ namespace restbed
         struct WebSocketMessageImpl;
     }
     
-    class WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage
+    class RESTBED_EXPORT WebSocketMessage
     {
         public:
             //Friends
