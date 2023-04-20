@@ -2,11 +2,12 @@
 	path = dependency/asio
 	url = https://github.com/corvusoft/asio-dependency
 	branch = master
-[submodule "dependency/catch"]
-	path = dependency/catch
-	url = https://github.com/corvusoft/catch-dependency
-	branch = master
-[submodule "dependency/openssl"]
-	path = dependency/openssl
-	url = https://github.com/corvusoft/openssl-dependency
-	branch = OpenSSL_1_0_2-stable
+# Commented out unused dependencies
+#[submodule "dependency/catch"]
+#	path = dependency/catch
+#	url = https://github.com/corvusoft/catch-dependency
+#	branch = master
+#[submodule "dependency/openssl"]
+#	path = dependency/openssl
+#	url = https://github.com/corvusoft/openssl-dependency
+#	branch = OpenSSL_1_0_2-stable
