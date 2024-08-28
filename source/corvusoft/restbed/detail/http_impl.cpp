@@ -86,7 +86,7 @@ namespace restbed
             {
                 string query = String::empty;
                 
-                for ( const auto parameter : parameters )
+                for ( const auto& parameter : parameters )
                 {
                     query += Uri::encode_parameter( parameter.first ) + "=" + Uri::encode_parameter( parameter.second ) + "&";
                 }

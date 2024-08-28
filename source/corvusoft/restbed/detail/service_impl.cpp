@@ -168,7 +168,7 @@ namespace restbed
             
             m_signal_set = make_shared< signal_set >( *m_io_service );
             
-            for ( const auto signal_handler : m_signal_handlers )
+            for ( const auto& signal_handler : m_signal_handlers )
             {
                 m_signal_set->add( signal_handler.first );
             }
