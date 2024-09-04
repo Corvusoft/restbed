@@ -1,10 +1,10 @@
-cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.22.0 FATAL_ERROR )
 
 project( "restbed" VERSION 4.8.0 LANGUAGES CXX )
 message( "                                                              " )
 message( "##############################################################" )
 message( "#                                                            #" )
-message( "#  Copyright 2013-2020, Corvusoft Ltd, All Rights Reserved.  #" )
+message( "#  Copyright 2013-2024, Corvusoft Ltd, All Rights Reserved.  #" )
 message( "#                                                            #" )
 message( "#  Restbed is dual-licensed requiring commerical entities    #" )
 message( "#  to acquire a Corvusoft Permissive License, Contact        #" )
@@ -84,6 +84,8 @@ if ( BUILD_STATIC_LIBRARY )
     set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
     set_target_properties( ${STATIC_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
 
+    target_include_directories(${STATIC_LIBRARY_NAME} SYSTEM PUBLIC ${asio_INCLUDE} ${ssl_INCLUDE} ${INCLUDE_DIR})
+
     if ( BUILD_SSL )
         target_link_libraries( ${STATIC_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_STATIC} ${crypto_LIBRARY_STATIC} ${CMAKE_DL_LIBS} )
     else ( )
@@ -103,6 +105,8 @@ if ( BUILD_SHARED_LIBRARY )
         set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
     endif ( )
     set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR} VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR} )
+
+    target_include_directories(${SHARED_LIBRARY_NAME} SYSTEM PUBLIC ${asio_INCLUDE} ${ssl_INCLUDE} ${INCLUDE_DIR})
 
     if ( BUILD_SSL )
         target_link_libraries( ${SHARED_LIBRARY_NAME} LINK_PRIVATE ${ssl_LIBRARY_SHARED} ${crypto_LIBRARY_SHARED} )
