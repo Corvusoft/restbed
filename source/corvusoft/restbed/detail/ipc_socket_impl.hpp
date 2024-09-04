@@ -52,7 +52,7 @@ namespace restbed
                 //Definitions
                 
                 //Constructors
-                IPCSocketImpl( asio::io_context& context, const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::shared_ptr< Logger >& logger = nullptr );
+                IPCSocketImpl( asio::io_context& context, const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::string& path, const std::shared_ptr< Logger >& logger = nullptr );
 
                 ~IPCSocketImpl( void ) = default;
                 
@@ -149,6 +149,8 @@ namespace restbed
                 
                 //Properties
                 bool m_is_open;
+
+                const std::string m_path;
 
 		        const uint8_t MAX_WRITE_RETRIES = 5;
                 

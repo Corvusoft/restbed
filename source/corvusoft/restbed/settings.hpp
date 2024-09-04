@@ -23,7 +23,7 @@
 		#define SETTINGS_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define SETTINGS_EXPORT
+	#define SETTINGS_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
@@ -60,7 +60,9 @@ namespace restbed
             uint16_t get_port( void ) const;
             
             std::string get_root( void ) const;
-
+#ifdef BUILD_IPC
+            std::string get_ipc_path( void ) const;
+#endif
             bool get_reuse_address( void ) const;
             
             unsigned int get_worker_limit( void ) const;
@@ -97,7 +99,9 @@ namespace restbed
             void set_port( const uint16_t value );
             
             void set_root( const std::string& value );
-
+#ifdef BUILD_IPC
+            void set_ipc_path( const std::string& value );
+#endif
             void set_reuse_address( const bool value );
             
             void set_worker_limit( const unsigned int value );

@@ -168,7 +168,7 @@ namespace restbed
             
             m_signal_set = make_shared< signal_set >( *m_io_service );
             
-            for ( const auto signal_handler : m_signal_handlers )
+            for ( const auto& signal_handler : m_signal_handlers )
             {
                 m_signal_set->add( signal_handler.first );
             }
@@ -337,7 +337,7 @@ namespace restbed
 #ifdef BUILD_IPC
         void ServiceImpl::ipc_start( void )
         {
-            const string location = "/tmp/restbed.sock";
+            const string location = m_settings->get_ipc_path( );
             ::remove( location.data( ) );
 
             m_ipc_acceptor = make_shared< stream_protocol::acceptor >( *m_io_service, stream_protocol::endpoint( location ) );
@@ -358,7 +358,7 @@ namespace restbed
         {
             if ( not error )
             {
-                auto connection = make_shared< IPCSocketImpl >( *m_io_service, socket, m_logger );
+                auto connection = make_shared< IPCSocketImpl >( *m_io_service, socket, m_settings->get_ipc_path( ), m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
                 if (m_settings->get_keep_alive()) {
                     connection->set_keep_alive( m_settings->get_keep_alive_start(),

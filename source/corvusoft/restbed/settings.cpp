@@ -47,7 +47,12 @@ namespace restbed
     {
         return m_pimpl->m_root;
     }
-
+#ifdef BUILD_IPC
+    std::string Settings::get_ipc_path( void ) const
+    {
+        return m_pimpl->m_ipc_path;
+    }
+#endif
     bool Settings::get_reuse_address( void ) const
     {
         return m_pimpl->m_reuse_address;
@@ -137,7 +142,12 @@ namespace restbed
     {
         m_pimpl->m_root = value;
     }
-
+#ifdef BUILD_IPC
+    void Settings::set_ipc_path( const string& value )
+    {
+        m_pimpl->m_ipc_path = value;
+    }
+#endif
     void Settings::set_reuse_address( const bool value )
     {
         m_pimpl->m_reuse_address = value;

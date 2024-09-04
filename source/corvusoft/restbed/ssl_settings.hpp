@@ -21,7 +21,7 @@
 		#define SSL_SETTINGS_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define SSL_SETTINGS_EXPORT
+	#define SSL_SETTINGS_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces

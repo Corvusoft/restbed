@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.1.0 FATAL_ERROR )
 
-project( "restbed" VERSION 4.7.0 LANGUAGES CXX )
+project( "restbed" VERSION 4.8.0 LANGUAGES CXX )
 message( "                                                              " )
 message( "##############################################################" )
 message( "#                                                            #" )
@@ -62,8 +62,6 @@ if ( BUILD_SSL )
     add_definitions( "-DBUILD_SSL" )
     find_package( openssl REQUIRED )
 endif ( )
-
-include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )
 
 if ( BUILD_IPC )
     add_definitions( "-DBUILD_IPC" )

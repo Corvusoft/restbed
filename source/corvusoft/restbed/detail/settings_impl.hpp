@@ -36,6 +36,8 @@ namespace restbed
             
             std::string m_root = "/";
 
+            std::string m_ipc_path = "/tmp/restbed.sock";
+
             bool m_reuse_address = true;
             
             unsigned int m_worker_limit = 0;

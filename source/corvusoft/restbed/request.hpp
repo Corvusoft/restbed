@@ -28,7 +28,7 @@
 		#define REQUEST_EXPORT __declspec(dllimport)
 	#endif
 #else
-	#define REQUEST_EXPORT
+	#define REQUEST_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
