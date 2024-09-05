@@ -71,7 +71,8 @@ namespace restbed
     
     void Resource::set_path( const string& value )
     {
-        m_pimpl->m_paths = { value };
+        m_pimpl->m_paths.clear();
+        m_pimpl->m_paths.emplace( value );
     }
     
     void Resource::set_paths( const set< string >& values )
