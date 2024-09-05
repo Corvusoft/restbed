@@ -753,7 +753,7 @@ namespace restbed
         
         void ServiceImpl::discard_request( istream& stream )
         {
-            string line = String::empty;
+            string line = "";
             
             while ( getline( stream, line ) )
             {
@@ -901,7 +901,7 @@ namespace restbed
             
             auto endpoint = m_acceptor->local_endpoint( );
             auto address = endpoint.address( );
-            auto uri = String::empty;
+            string uri = "";
             
             if ( address.is_v6( ) )
             {
@@ -926,7 +926,7 @@ namespace restbed
             
             auto endpoint = m_ssl_acceptor->local_endpoint( );
             auto address = endpoint.address( );
-            auto uri = String::empty;
+            string uri = "";
             
             if ( address.is_v6( ) )
             {

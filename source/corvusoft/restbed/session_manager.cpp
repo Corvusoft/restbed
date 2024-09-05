@@ -48,7 +48,7 @@ namespace restbed
     
     void SessionManager::create( const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        callback( make_shared< Session >( String::empty ) );
+        callback( make_shared< Session >( "" ) );
     }
     
     void SessionManager::load( const shared_ptr< Session > session, const function< void ( const shared_ptr< Session > ) >& callback )

@@ -84,7 +84,7 @@ namespace restbed
             
             if ( not parameters.empty( ) )
             {
-                string query = String::empty;
+                string query = "";
                 
                 for ( const auto& parameter : parameters )
                 {
@@ -260,7 +260,7 @@ namespace restbed
             }
             
             istream response_stream( request->m_pimpl->m_buffer.get( ) );
-            string status_line = String::empty;
+            string status_line = "";
             getline( response_stream, status_line );
             
             smatch matches;
@@ -294,7 +294,7 @@ namespace restbed
                 return callback( request, create_error_response( request, body ) );
             }
             
-            string header = String::empty;
+            string header = "";
             multimap< string, string > headers = { };
             istream response_stream( request->m_pimpl->m_buffer.get( ) );
             

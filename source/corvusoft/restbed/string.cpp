@@ -31,8 +31,6 @@ using std::regex_constants::icase;
 
 namespace restbed
 {
-    const string String::empty = "";
-    
     Bytes String::to_bytes( const string& value )
     {
         return Bytes( value.begin( ), value.end( ) );

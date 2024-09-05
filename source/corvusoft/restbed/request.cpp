@@ -146,11 +146,11 @@ namespace restbed
     {
         if ( name.empty( ) )
         {
-            return String::empty;
+            return "";
         }
         
         const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
-        const auto value = ( headers.empty( ) ) ? String::empty : headers.begin( )->second;
+        const string value = ( headers.empty( ) ) ? "" : headers.begin( )->second;
         
         return Common::transform( value, transform );
     }
@@ -175,11 +175,11 @@ namespace restbed
     {
         if ( name.empty( ) )
         {
-            return String::empty;
+            return "";
         }
         
         const auto parameters = Common::get_parameters( name, m_pimpl->m_query_parameters );
-        const auto value = ( parameters.empty( ) ) ? String::empty : parameters.begin( )->second;
+        const string value = ( parameters.empty( ) ) ? "" : parameters.begin( )->second;
         
         return Common::transform( value, transform );
     }
@@ -204,11 +204,11 @@ namespace restbed
     {
         if ( name.empty( ) )
         {
-            return String::empty;
+            return "";
         }
         
         const auto parameters = Common::get_parameters( name, m_pimpl->m_path_parameters );
-        const auto value = ( parameters.empty( ) ) ? String::empty : parameters.begin( )->second;
+        const string value = ( parameters.empty( ) ) ? "" : parameters.begin( )->second;
         
         return Common::transform( value, transform );
     }

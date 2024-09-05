@@ -194,14 +194,14 @@ namespace restbed
     {
         if ( response == nullptr )
         {
-            throw invalid_argument( String::empty );
+            throw invalid_argument( "" );
         }
         
         auto request = response->m_pimpl->m_request;
         
         if ( request == nullptr or request->m_pimpl->m_buffer == nullptr or request->m_pimpl->m_socket == nullptr )
         {
-            throw invalid_argument( String::empty );
+            throw invalid_argument( "" );
         }
         
         Bytes data = { };
@@ -247,14 +247,14 @@ namespace restbed
     {
         if ( response == nullptr )
         {
-            throw invalid_argument( String::empty );
+            throw invalid_argument( "" );
         }
         
         auto request = response->m_pimpl->m_request;
         
         if ( request == nullptr or request->m_pimpl->m_buffer == nullptr or request->m_pimpl->m_socket == nullptr )
         {
-            throw invalid_argument( String::empty );
+            throw invalid_argument( "" );
         }
         
         error_code error;

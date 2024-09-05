@@ -95,7 +95,7 @@ namespace transport
 ```C++
 int limit = 0;
 int person_age = 21;
-string name = String::empty;
+string name = "";
 ```
 
 ### Classes

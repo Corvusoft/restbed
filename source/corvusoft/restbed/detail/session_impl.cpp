@@ -63,7 +63,7 @@ namespace restbed
 {
     namespace detail
     {
-        SessionImpl::SessionImpl( void ) : m_id( String::empty ),
+        SessionImpl::SessionImpl( void ) : m_id( "" ),
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),

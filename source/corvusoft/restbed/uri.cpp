@@ -227,7 +227,7 @@ namespace restbed
     uint16_t Uri::get_port( void ) const
     {
         smatch match;
-        string port = String::empty;
+        string port = "";
         static const regex pattern( "^[a-zA-Z][a-zA-Z0-9+\\-.]*://(([a-zA-Z0-9\\-._~%!$&'()*+,;=]+)(:([a-zA-Z0-9\\-._~%!$&'()*+,;=]+))?@)?([a-zA-Z0-9\\-._~%]+|\\[[a-zA-Z0-9\\-._~%!$&'()*+,;=:]+\\]):([0-9]+)" );
         
         if ( regex_search( m_pimpl->m_uri, match, pattern ) )
@@ -268,7 +268,7 @@ namespace restbed
             return ( is_absolute( ) ) ? match[ 3 ] : string( match[ 2 ] ) + string( match[ 3 ] );
         }
         
-        return String::empty;
+        return "";
     }
     
     string Uri::get_query( void ) const
@@ -281,7 +281,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return String::empty;
+        return "";
     }
     
     string Uri::get_scheme( void ) const
@@ -294,7 +294,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return String::empty;
+        return "";
     }
     
     string Uri::get_fragment( void ) const
@@ -307,7 +307,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return String::empty;
+        return "";
     }
     
     string Uri::get_username( void ) const
@@ -320,7 +320,7 @@ namespace restbed
             return match[ 1 ];
         }
         
-        return String::empty;
+        return "";
     }
     
     string Uri::get_password( void ) const
@@ -333,12 +333,12 @@ namespace restbed
             return match[ 2 ];
         }
         
-        return String::empty;
+        return "";
     }
     
     string Uri::get_authority( void ) const
     {
-        string authority = String::empty;
+        string authority = "";
         if ( is_relative( ) ) return authority;
         
         smatch match;
@@ -361,7 +361,7 @@ namespace restbed
         {
             auto index = parameter.find_first_of( '=' );
             auto name = decode_parameter( parameter.substr( 0, index ) );
-            auto value = (index not_eq string::npos) ? decode_parameter( parameter.substr( index + 1, parameter.length( ) ) ) : "";
+            string value = (index not_eq string::npos) ? decode_parameter( parameter.substr( index + 1, parameter.length( ) ) ) : "";
             
             parameters.insert( make_pair( name, value ) );
         }

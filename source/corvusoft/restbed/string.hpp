@@ -78,7 +78,6 @@ namespace restbed
             //Operators
             
             //Properties
-            static const std::string empty;
             
         protected:
             //Friends
