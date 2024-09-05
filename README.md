@@ -1,5 +1,4 @@
-Restbed [![Unix Build Status](https://travis-ci.org/Corvusoft/restbed.svg?branch=master)](https://travis-ci.org/Corvusoft/restbed)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/75wqogaks13xp817/branch/master?svg=true)](https://ci.appveyor.com/project/corvusoft/restbed/branch/master)
+Restbed [![Windows Build Status](https://ci.appveyor.com/api/projects/status/75wqogaks13xp817/branch/master?svg=true)](https://ci.appveyor.com/project/corvusoft/restbed/branch/master)
 =============================================================================================================================
 
 ---
@@ -100,7 +99,7 @@ Please contact sales@corvusoft.co.uk, for support and licensing options includin
 
 Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
 
-Build 
+Build
 -----
 
 ```bash
@@ -114,35 +113,69 @@ make test
 
 You will now find all required components installed in the distribution sub-folder.
 
-Building with external libraries
---------------------------------
+Build Options
+-------------
 
-If you wish to build with external libraries (OpenSSL, ASIO).
-
-```bash
-git clone https://github.com/corvusoft/restbed.git
-mkdir restbed/build
-cd restbed/build
-cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
-make install
-make test
-```
+| Option               | Description                                | Default  |
+| :------------------- | :----------------------------------------- | :------: |
+| BUILD_SSL            | Enable SSL/TLS support.                    | Enabled  |
+| BUILD_IPC            | Enable Unix domain sockets.                | Disabled |
+| BUILD_TESTS          | Build project test suites.                 | Enabled  |
+| BUILD_DEVEL_PACKAGE  | Install headers into CMAKE_INSTALL_PREFIX. | Enabled  |
+| BUILD_SHARED_LIBRARY | Produce a shared build of restbed.         | Enabled  |
+| BUILD_STATIC_LIBRARY | Produce a static build of restbed.         | Enabled  |
 
 Windows Build Instructions
 --------------------------
 
-For Microsoft Visual Studio instructions please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
+Prerequisites: Visual Studio 2022, CMake, GIT, Perl.
 
-Building restbed - Using vcpkg
+Using the x64 Native Tools Command Prompt begin by, if required, building OpenSSL.
+```cmd
+git clone --recursive https://github.com/corvusoft/restbed.git
+
+cd restbed\dependency\openssl
+perl Configure [no-]shared
+nmake
+nmake test
+```
+
+If you selected to use the default OpenSSL build (shared), you'll need to include the installation path in your environment.
+
+```cmd
+set PATH=restbed\dependency\openssl;%PATH%
+```
+
+If you selected to use the static OpenSSL build (no-shared), you'll need to include additional dependencies when linking your application code; See [OpenSSL project](https://github.com/openssl/openssl/pull/1062/files) for futher details.
+
+```cmd
+target_link_libraries( my_microservice restbed-static.lib ws2_32.lib advapi32.lib crypt32.lib gdi32.lib user32.lib )
+```
+
+Now proceed with the following Restbed build instructions.
+
+```cmd
+mkdir restbed\build
+cd restbed\build
+cmake -G "Visual Studio 17 2022" [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
+cmake --build . --target ALL_BUILD --config Release
+ctest
+```
+
+For Microsoft Visual Studio 14 2015 instructions, and further details, please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
+
+Building Restbed - Using vcpkg
 ------------------------------
 
 You can download and install restbed using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
 
-    git clone https://github.com/Microsoft/vcpkg.git
-    cd vcpkg
-    ./bootstrap-vcpkg.sh
-    ./vcpkg integrate install
-    ./vcpkg install restbed
+``` shell
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+./bootstrap-vcpkg.sh
+./vcpkg integrate install
+./vcpkg install restbed
+```
 
 The restbed port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
 
@@ -185,7 +218,7 @@ Road Map
 |             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            Resource Caching             | development |
 |             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |          Runtime Modifications          | development |
 |             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            HTTP 2 compliance            | development |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |         Refactor, Reduce, Reuse         |   pending   |
+|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |         Refactor, Reduce, Reuse         |   active    |
 
 Contact
 -------
