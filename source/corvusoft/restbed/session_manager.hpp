@@ -40,7 +40,7 @@ namespace restbed
         struct SessionManagerImpl;
     }
     
-    class SESSION_MANAGER_EXPORT SessionManager
+    class SessionManager
     {
         public:
             //Friends
@@ -48,20 +48,20 @@ namespace restbed
             //Definitions
             
             //Constructors
-            SessionManager( void );
+            SESSION_MANAGER_EXPORT SessionManager( void );
             
-            virtual ~SessionManager( void );
+            SESSION_MANAGER_EXPORT virtual ~SessionManager( void );
             
             //Functionality
-            virtual void stop( void );
+            SESSION_MANAGER_EXPORT virtual void stop( void );
             
-            virtual void start( const std::shared_ptr< const Settings >& settings );
+            SESSION_MANAGER_EXPORT virtual void start( const std::shared_ptr< const Settings >& settings );
             
-            virtual void create( const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+            SESSION_MANAGER_EXPORT virtual void create( const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
-            virtual void load( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+            SESSION_MANAGER_EXPORT virtual void load( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
-            virtual void save( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+            SESSION_MANAGER_EXPORT virtual void save( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
             //Getters
             
@@ -77,7 +77,7 @@ namespace restbed
             //Definitions
             
             //Constructors
-            SessionManager( const SessionManager& original ) = delete;
+            SESSION_MANAGER_EXPORT SessionManager( const SessionManager& original ) = delete;
             
             //Functionality
             
@@ -86,7 +86,7 @@ namespace restbed
             //Setters
             
             //Operators
-            SessionManager& operator =( const SessionManager& value ) = delete;
+            SESSION_MANAGER_EXPORT SessionManager& operator =( const SessionManager& value ) = delete;
             
             //Properties
             

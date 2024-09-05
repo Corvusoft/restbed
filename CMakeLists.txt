@@ -69,7 +69,6 @@ endif ( )
 
 if ( WIN32 )
 	add_definitions( -DWIN_DLL_EXPORT )
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251" )
 endif ( )
 
 #

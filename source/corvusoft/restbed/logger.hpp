@@ -38,7 +38,7 @@ namespace restbed
     //Forward Declarations
     class Settings;
     
-    class LOGGER_EXPORT Logger
+    class Logger
     {
         public:
             //Friends
@@ -57,13 +57,13 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual void stop( void ) = 0;
+            LOGGER_EXPORT virtual void stop( void ) = 0;
             
-            virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
+            LOGGER_EXPORT virtual void start( const std::shared_ptr< const Settings >& settings ) = 0;
             
-            virtual void log( const Level level, const char* format, ... ) = 0;
+            LOGGER_EXPORT virtual void log( const Level level, const char* format, ... ) = 0;
             
-            virtual void log_if( bool expression, const Level level, const char* format, ... ) = 0;
+            LOGGER_EXPORT virtual void log_if( bool expression, const Level level, const char* format, ... ) = 0;
             
             //Getters
             
@@ -79,11 +79,11 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Logger( void ) = default;
+            LOGGER_EXPORT Logger( void ) = default;
             
-            explicit Logger( const Logger& original ) = default;
+            LOGGER_EXPORT explicit Logger( const Logger& original ) = default;
             
-            virtual ~Logger( void ) = default;
+            LOGGER_EXPORT virtual ~Logger( void ) = default;
             
             //Functionality
             
@@ -92,7 +92,7 @@ namespace restbed
             //Setters
             
             //Operators
-            Logger& operator =( const Logger& value ) = default;
+            LOGGER_EXPORT Logger& operator =( const Logger& value ) = default;
             
             //Properties
             

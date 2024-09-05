@@ -37,7 +37,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    class CONTEXT_VALUE_EXPORT ContextValue
+    class ContextValue
     {
         public:
             //Friends
@@ -51,12 +51,12 @@ namespace restbed
                 return;
             }
             
-            ContextValue( const ContextValue& original ) : m_placeholder( original.m_placeholder )
+            CONTEXT_VALUE_EXPORT ContextValue( const ContextValue& original ) : m_placeholder( original.m_placeholder )
             {
                 return;
             }
             
-            virtual ~ContextValue( void )
+            CONTEXT_VALUE_EXPORT virtual ~ContextValue( void )
             {
                 return;
             }

@@ -54,7 +54,7 @@ namespace restbed
         class WebSocketManagerImpl;
     }
     
-    class REQUEST_EXPORT Request
+    class Request
     {
         public:
             //Friends
@@ -62,41 +62,41 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Request( void );
+            REQUEST_EXPORT Request( void );
             
-            Request( const Uri& value );
+            REQUEST_EXPORT Request( const Uri& value );
             
-            virtual ~Request( void );
+            REQUEST_EXPORT virtual ~Request( void );
             
             //Functionality
-            bool has_header( const std::string& name ) const;
+            REQUEST_EXPORT bool has_header( const std::string& name ) const;
             
-            bool has_path_parameter( const std::string& name ) const;
+            REQUEST_EXPORT bool has_path_parameter( const std::string& name ) const;
             
-            bool has_query_parameter( const std::string& name ) const;
+            REQUEST_EXPORT bool has_query_parameter( const std::string& name ) const;
             
             //Getters
-            uint16_t get_port( void ) const;
+            REQUEST_EXPORT uint16_t get_port( void ) const;
             
-            double get_version( void ) const;
+            REQUEST_EXPORT double get_version( void ) const;
             
-            const Bytes& get_body( void ) const;
+            REQUEST_EXPORT const Bytes& get_body( void ) const;
             
-            const std::shared_ptr< const Response > get_response( void ) const;
+            REQUEST_EXPORT const std::shared_ptr< const Response > get_response( void ) const;
             
-            std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            std::string get_method( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_method( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
-            std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
+            REQUEST_EXPORT std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
             
-            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+            REQUEST_EXPORT std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_header( const std::string& name, const Type default_value ) const
@@ -104,11 +104,11 @@ namespace restbed
                 return Common::parse_parameter( get_header( name ), default_value );
             }
             
-            std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+            REQUEST_EXPORT std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
-            std::string get_query_parameter( const std::string& name, const std::string& default_value = "" ) const;
+            REQUEST_EXPORT std::string get_query_parameter( const std::string& name, const std::string& default_value = "" ) const;
             
-            std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+            REQUEST_EXPORT std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_query_parameter( const std::string& name, const Type default_value ) const
@@ -116,11 +116,11 @@ namespace restbed
                 return Common::parse_parameter( get_query_parameter( name ), default_value );
             }
             
-            std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
+            REQUEST_EXPORT std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
             
-            std::string get_path_parameter( const std::string& name, const std::string& default_value = "" ) const;
+            REQUEST_EXPORT std::string get_path_parameter( const std::string& name, const std::string& default_value = "" ) const;
             
-            std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
+            REQUEST_EXPORT std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_path_parameter( const std::string& name, const Type default_value ) const
@@ -128,34 +128,34 @@ namespace restbed
                 return Common::parse_parameter( get_path_parameter( name ), default_value );
             }
             
-            std::map< std::string, std::string > get_path_parameters( const std::string& name = "" ) const;
+            REQUEST_EXPORT std::map< std::string, std::string > get_path_parameters( const std::string& name = "" ) const;
             
             //Setters
-            void set_body( const Bytes& value );
+            REQUEST_EXPORT void set_body( const Bytes& value );
             
-            void set_body( const std::string& value );
+            REQUEST_EXPORT void set_body( const std::string& value );
             
-            void set_port( const uint16_t value );
+            REQUEST_EXPORT void set_port( const uint16_t value );
             
-            void set_version( const double value );
+            REQUEST_EXPORT void set_version( const double value );
             
-            void set_path( const std::string& value );
+            REQUEST_EXPORT void set_path( const std::string& value );
             
-            void set_host( const std::string& value );
+            REQUEST_EXPORT void set_host( const std::string& value );
             
-            void set_method( const std::string& value );
+            REQUEST_EXPORT void set_method( const std::string& value );
             
-            void set_protocol( const std::string& value );
+            REQUEST_EXPORT void set_protocol( const std::string& value );
             
-            void add_header( const std::string& name, const std::string& value );
+            REQUEST_EXPORT void add_header( const std::string& name, const std::string& value );
             
-            void set_header( const std::string& name, const std::string& value );
+            REQUEST_EXPORT void set_header( const std::string& name, const std::string& value );
             
-            void set_headers( const std::multimap< std::string, std::string >& values );
+            REQUEST_EXPORT void set_headers( const std::multimap< std::string, std::string >& values );
             
-            void set_query_parameter( const std::string& name, const std::string& value );
+            REQUEST_EXPORT void set_query_parameter( const std::string& name, const std::string& value );
             
-            void set_query_parameters( const std::multimap< std::string, std::string >& values );
+            REQUEST_EXPORT void set_query_parameters( const std::multimap< std::string, std::string >& values );
             
             //Operators
             

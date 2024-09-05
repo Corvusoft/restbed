@@ -43,7 +43,7 @@ namespace restbed
     class Response;
     class Settings;
 
-    class DEPRECATED("HTTP client is deprecated; we will release a complimentary client framework at a future date.") HTTP_EXPORT Http
+    class DEPRECATED("HTTP client is deprecated; we will release a complimentary client framework at a future date.") Http
     {
         public:
             //Friends
@@ -53,23 +53,23 @@ namespace restbed
             //Constructors
             
             //Functionality
-            static Bytes to_bytes( const std::shared_ptr< Request >& value );
+            HTTP_EXPORT static Bytes to_bytes( const std::shared_ptr< Request >& value );
             
-            static Bytes to_bytes( const std::shared_ptr< Response >& value );
+            HTTP_EXPORT static Bytes to_bytes( const std::shared_ptr< Response >& value );
             
-            static void close( const std::shared_ptr< Request >& value );
+            HTTP_EXPORT static void close( const std::shared_ptr< Request >& value );
             
-            static bool is_open( const std::shared_ptr< Request >& value );
+            HTTP_EXPORT static bool is_open( const std::shared_ptr< Request >& value );
             
-            static bool is_closed( const std::shared_ptr< Request >& value );
+            HTTP_EXPORT static bool is_closed( const std::shared_ptr< Request >& value );
             
-            static const std::shared_ptr< Response > sync( const std::shared_ptr< Request > request, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
+            HTTP_EXPORT static const std::shared_ptr< Response > sync( const std::shared_ptr< Request > request, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
             
-            static std::future< std::shared_ptr< Response > > async( const std::shared_ptr< Request > request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
+            HTTP_EXPORT static std::future< std::shared_ptr< Response > > async( const std::shared_ptr< Request > request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
             
-            static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
+            HTTP_EXPORT static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
             
-            static Bytes fetch( const std::string& delimiter, const std::shared_ptr< Response >& response );
+            HTTP_EXPORT static Bytes fetch( const std::string& delimiter, const std::shared_ptr< Response >& response );
             
             //Getters
             

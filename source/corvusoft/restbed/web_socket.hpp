@@ -45,7 +45,7 @@ namespace restbed
         class WebSocketManagerImpl;
     }
     
-    class WEB_SOCKET_EXPORT WebSocket : public std::enable_shared_from_this< WebSocket >
+    class WebSocket : public std::enable_shared_from_this< WebSocket >
     {
         public:
             //Friends
@@ -53,54 +53,54 @@ namespace restbed
             //Definitions
             
             //Constructors
-            WebSocket( void );
+            WEB_SOCKET_EXPORT WebSocket( void );
             
-            ~WebSocket( void );
+            WEB_SOCKET_EXPORT ~WebSocket( void );
             
             //Functionality
-            bool is_open( void ) const;
+            WEB_SOCKET_EXPORT bool is_open( void ) const;
             
-            bool is_closed( void ) const;
+            WEB_SOCKET_EXPORT bool is_closed( void ) const;
             
-            void close( void );
+            WEB_SOCKET_EXPORT void close( void );
             
-            void send( const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            WEB_SOCKET_EXPORT void send( const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
             
-            void send( const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            WEB_SOCKET_EXPORT void send( const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
             
-            void send( const WebSocketMessage::OpCode opcode, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            WEB_SOCKET_EXPORT void send( const WebSocketMessage::OpCode opcode, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
             
-            void send( const std::shared_ptr< WebSocketMessage > message, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
+            WEB_SOCKET_EXPORT void send( const std::shared_ptr< WebSocketMessage > message, const std::function< void ( const std::shared_ptr< WebSocket > ) > callback = nullptr );
             
             //Getters
-            std::string get_key( void ) const;
+            WEB_SOCKET_EXPORT std::string get_key( void ) const;
             
-            std::shared_ptr< Logger > get_logger( void ) const;
+            WEB_SOCKET_EXPORT std::shared_ptr< Logger > get_logger( void ) const;
             
-            std::shared_ptr< detail::SocketImpl > get_socket( void ) const;
+            WEB_SOCKET_EXPORT std::shared_ptr< detail::SocketImpl > get_socket( void ) const;
             
-            std::function< void ( const std::shared_ptr< WebSocket > ) > get_open_handler( void ) const;
+            WEB_SOCKET_EXPORT std::function< void ( const std::shared_ptr< WebSocket > ) > get_open_handler( void ) const;
             
-            std::function< void ( const std::shared_ptr< WebSocket > ) > get_close_handler( void ) const;
+            WEB_SOCKET_EXPORT std::function< void ( const std::shared_ptr< WebSocket > ) > get_close_handler( void ) const;
             
-            std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) > get_error_handler( void ) const;
+            WEB_SOCKET_EXPORT std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) > get_error_handler( void ) const;
             
-            std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) > get_message_handler( void ) const;
+            WEB_SOCKET_EXPORT std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) > get_message_handler( void ) const;
             
             //Setters
-            void set_key( const std::string& value );
+            WEB_SOCKET_EXPORT void set_key( const std::string& value );
             
-            void set_logger( const std::shared_ptr< Logger >& value );
+            WEB_SOCKET_EXPORT void set_logger( const std::shared_ptr< Logger >& value );
             
-            void set_socket( const std::shared_ptr< detail::SocketImpl >& value );
+            WEB_SOCKET_EXPORT void set_socket( const std::shared_ptr< detail::SocketImpl >& value );
             
-            void set_open_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
+            WEB_SOCKET_EXPORT void set_open_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
             
-            void set_close_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
+            WEB_SOCKET_EXPORT void set_close_handler( const std::function< void ( const std::shared_ptr< WebSocket > ) >& value );
             
-            void set_error_handler( const std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) >& value );
+            WEB_SOCKET_EXPORT void set_error_handler( const std::function< void ( const std::shared_ptr< WebSocket >, const std::error_code ) >& value );
             
-            void set_message_handler( const std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) >& value );
+            WEB_SOCKET_EXPORT void set_message_handler( const std::function< void ( const std::shared_ptr< WebSocket >, const std::shared_ptr< WebSocketMessage > ) >& value );
             
             //Operators
             

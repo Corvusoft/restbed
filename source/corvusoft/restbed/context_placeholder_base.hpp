@@ -32,7 +32,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    class CONTEXT_PLACEHOLDER_BASE_EXPORT ContextPlaceholderBase
+    class ContextPlaceholderBase
     {
         public:
             //Friends
@@ -44,7 +44,7 @@ namespace restbed
             //Functionality
             
             //Getters
-            virtual const std::type_info& type( void ) const = 0;
+            CONTEXT_PLACEHOLDER_BASE_EXPORT virtual const std::type_info& type( void ) const = 0;
             
             //Setters
             
@@ -58,9 +58,9 @@ namespace restbed
             //Definitions
             
             //Constructors
-            ContextPlaceholderBase( void ) = default;
+            CONTEXT_PLACEHOLDER_BASE_EXPORT ContextPlaceholderBase( void ) = default;
             
-            virtual ~ContextPlaceholderBase( void ) = default;
+            CONTEXT_PLACEHOLDER_BASE_EXPORT virtual ~ContextPlaceholderBase( void ) = default;
             
             //Functionality
             

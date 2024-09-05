@@ -36,7 +36,7 @@ namespace restbed
 {
     //Forward Declarations
     
-    class STRING_EXPORT String
+    class String
     {
         public:
             //Friends
@@ -48,28 +48,28 @@ namespace restbed
                 CASE_INSENSITIVE = 1
             };
             
-            static const size_t FORMAT_BUFFER_INITIAL_LENGTH = 2048;
+            STRING_EXPORT static const size_t FORMAT_BUFFER_INITIAL_LENGTH = 2048;
             
             //Constructors
             
             //Functionality
-            static Bytes to_bytes( const std::string& value );
+            STRING_EXPORT static Bytes to_bytes( const std::string& value );
             
-            static std::string to_string( const Bytes& value );
+            STRING_EXPORT static std::string to_string( const Bytes& value );
             
-            static std::string lowercase( const std::string& value );
+            STRING_EXPORT static std::string lowercase( const std::string& value );
             
-            static std::string uppercase( const std::string& value );
+            STRING_EXPORT static std::string uppercase( const std::string& value );
             
-            static std::string format( const char* format, ... );
+            STRING_EXPORT static std::string format( const char* format, ... );
             
-            static std::vector< std::string > split( const std::string& text, const char delimiter );
+            STRING_EXPORT static std::vector< std::string > split( const std::string& text, const char delimiter );
             
-            static std::string join( const std::multimap< std::string, std::string >& values, const std::string& pair_delimiter, const std::string& delimiter );
+            STRING_EXPORT static std::string join( const std::multimap< std::string, std::string >& values, const std::string& pair_delimiter, const std::string& delimiter );
             
-            static std::string remove( const std::string& needle, const std::string& haystack, const Option option = CASE_SENSITIVE );
+            STRING_EXPORT static std::string remove( const std::string& needle, const std::string& haystack, const Option option = CASE_SENSITIVE );
             
-            static std::string replace( const std::string& target, const std::string& substitute, const std::string& value, const Option option = CASE_SENSITIVE );
+            STRING_EXPORT static std::string replace( const std::string& target, const std::string& substitute, const std::string& value, const Option option = CASE_SENSITIVE );
             
             //Getters
             

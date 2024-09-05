@@ -39,7 +39,7 @@ namespace restbed
         struct RuleImpl;
     }
     
-    class RULE_EXPORT Rule
+    class Rule
     {
         public:
             //Friends
@@ -49,15 +49,15 @@ namespace restbed
             //Constructors
             
             //Functionality
-            virtual bool condition( const std::shared_ptr< Session > session );
+            RULE_EXPORT virtual bool condition( const std::shared_ptr< Session > session );
             
-            virtual void action( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback ) = 0;
+            RULE_EXPORT virtual void action( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback ) = 0;
             
             //Getters
-            int get_priority( void ) const;
+            RULE_EXPORT int get_priority( void ) const;
             
             //Setters
-            void set_priority( const int value );
+            RULE_EXPORT void set_priority( const int value );
             
             //Operators
             
@@ -69,9 +69,9 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Rule( void );
+            RULE_EXPORT Rule( void );
             
-            virtual ~Rule( void );
+            RULE_EXPORT virtual ~Rule( void );
             
             //Functionality
             

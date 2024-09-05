@@ -52,7 +52,7 @@ namespace restbed
         class WebSocketManagerImpl;
     }
     
-    class SESSION_EXPORT Session : public std::enable_shared_from_this< Session >
+    class Session : public std::enable_shared_from_this< Session >
     {
         public:
             //Friends
@@ -60,98 +60,98 @@ namespace restbed
             //Definitions
             
             //Constructors
-            explicit Session( const std::string& id );
+            SESSION_EXPORT explicit Session( const std::string& id );
             
-            ~Session( void ) = default;
+            SESSION_EXPORT ~Session( void ) = default;
             
             //Functionality
-            bool has( const std::string& name ) const;
+            SESSION_EXPORT bool has( const std::string& name ) const;
             
-            void erase( const std::string& name = "" );
+            SESSION_EXPORT void erase( const std::string& name = "" );
             
-            const std::set< std::string > keys( void ) const;
+            SESSION_EXPORT const std::set< std::string > keys( void ) const;
             
-            bool is_open( void ) const;
+            SESSION_EXPORT bool is_open( void ) const;
             
-            bool is_closed( void ) const;
+            SESSION_EXPORT bool is_closed( void ) const;
             
-            void close( const Bytes& body );
+            SESSION_EXPORT void close( const Bytes& body );
             
-            void close( const Response& response );
+            SESSION_EXPORT void close( const Response& response );
             
-            void close( const std::string& body = "" );
+            SESSION_EXPORT void close( const std::string& body = "" );
             
-            void close( const int status, const Bytes& body );
+            SESSION_EXPORT void close( const int status, const Bytes& body );
             
-            void close( const int status, const std::string& body = "" );
+            SESSION_EXPORT void close( const int status, const std::string& body = "" );
             
-            void close( const int status, const std::multimap< std::string, std::string >& headers );
+            SESSION_EXPORT void close( const int status, const std::multimap< std::string, std::string >& headers );
             
-            void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
+            SESSION_EXPORT void close( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers );
             
-            void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
+            SESSION_EXPORT void close( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers );
             
-            void yield( const Bytes& data, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const Bytes& data, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const std::string& data, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const std::string& data, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const Response& response, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const Response& response, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const int status, const Bytes& body = { }, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const int status, const Bytes& body = { }, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
+            SESSION_EXPORT void yield( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< Session > ) >& callback = nullptr );
             
-            void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
+            SESSION_EXPORT void fetch( const std::size_t length, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
             
-            void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
+            SESSION_EXPORT void fetch( const std::string& delimiter, const std::function< void ( const std::shared_ptr< Session >, const Bytes& ) >& callback );
             
-            void upgrade( const int status, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            SESSION_EXPORT void upgrade( const int status, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
             
-            void upgrade( const int status, const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            SESSION_EXPORT void upgrade( const int status, const Bytes& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
             
-            void upgrade( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            SESSION_EXPORT void upgrade( const int status, const std::string& body, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
             
-            void upgrade( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            SESSION_EXPORT void upgrade( const int status, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
             
-            void upgrade( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            SESSION_EXPORT void upgrade( const int status, const Bytes& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
             
-            void upgrade( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
+            SESSION_EXPORT void upgrade( const int status, const std::string& body, const std::multimap< std::string, std::string >& headers, const std::function< void ( const std::shared_ptr< WebSocket > ) >& callback );
             
-            void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
+            SESSION_EXPORT void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
             //Getters
-            const std::string& get_id( void ) const;
+            SESSION_EXPORT const std::string& get_id( void ) const;
             
-            const std::string get_origin( void ) const;
+            SESSION_EXPORT const std::string get_origin( void ) const;
             
-            const std::string get_destination( void ) const;
+            SESSION_EXPORT const std::string get_destination( void ) const;
             
-            const std::shared_ptr< const Request > get_request(  void ) const;
+            SESSION_EXPORT const std::shared_ptr< const Request > get_request(  void ) const;
             
-            const std::shared_ptr< const Resource > get_resource( void ) const;
+            SESSION_EXPORT const std::shared_ptr< const Resource > get_resource( void ) const;
             
-            const std::multimap< std::string, std::string >& get_headers( void ) const;
+            SESSION_EXPORT const std::multimap< std::string, std::string >& get_headers( void ) const;
             
-            const ContextValue& get( const std::string& name ) const;
+            SESSION_EXPORT const ContextValue& get( const std::string& name ) const;
             
-            const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
+            SESSION_EXPORT const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
             
             //Setters
-            void set_id( const std::string& value );
+            SESSION_EXPORT void set_id( const std::string& value );
             
-            void set( const std::string& name, const ContextValue& value );
+            SESSION_EXPORT void set( const std::string& name, const ContextValue& value );
             
-            void add_header( const std::string& name, const std::string& value );
+            SESSION_EXPORT void add_header( const std::string& name, const std::string& value );
             
-            void set_header( const std::string& name, const std::string& value );
+            SESSION_EXPORT void set_header( const std::string& name, const std::string& value );
             
-            void set_headers( const std::multimap< std::string, std::string >& values );
+            SESSION_EXPORT void set_headers( const std::multimap< std::string, std::string >& values );
             
             //Operators
             

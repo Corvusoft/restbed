@@ -34,7 +34,7 @@ namespace restbed
     //Forward Declarations
     
     template< typename Type  >
-    class CONTEXT_PLACEHOLDER_EXPORT ContextPlaceholder : public ContextPlaceholderBase
+    class ContextPlaceholder : public ContextPlaceholderBase
     {
         public:
             //Friends
@@ -42,13 +42,13 @@ namespace restbed
             //Definitions
             
             //Constructor
-            ContextPlaceholder( const Type& value ) : ContextPlaceholderBase( ),
+            CONTEXT_PLACEHOLDER_EXPORT ContextPlaceholder( const Type& value ) : ContextPlaceholderBase( ),
                 m_value( value )
             {
                 return;
             }
             
-            virtual ~ContextPlaceholder( void )
+            CONTEXT_PLACEHOLDER_EXPORT virtual ~ContextPlaceholder( void )
             {
                 return;
             }
@@ -56,7 +56,7 @@ namespace restbed
             //Functionality
             
             //Getters
-            const std::type_info& type( void ) const
+            CONTEXT_PLACEHOLDER_EXPORT const std::type_info& type( void ) const
             {
                 return typeid( Type );
             }
@@ -64,7 +64,7 @@ namespace restbed
             //Setters
             
             //Operators
-            operator Type( void )
+            CONTEXT_PLACEHOLDER_EXPORT operator Type( void )
             {
                 return m_value;
             }

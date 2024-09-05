@@ -45,7 +45,7 @@ namespace restbed
         struct ResponseImpl;
     }
     
-    class RESPONSE_EXPORT Response
+    class Response
     {
         public:
             //Friends
@@ -53,25 +53,25 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Response( void );
+            RESPONSE_EXPORT Response( void );
             
-            virtual ~Response( void );
+            RESPONSE_EXPORT virtual ~Response( void );
             
             //Functionality
-            bool has_header( const std::string& name ) const;
+            RESPONSE_EXPORT bool has_header( const std::string& name ) const;
             
             //Getters
-            Bytes get_body( void ) const;
+            RESPONSE_EXPORT Bytes get_body( void ) const;
             
-            double get_version( void ) const;
+            RESPONSE_EXPORT double get_version( void ) const;
             
-            int get_status_code( void ) const;
+            RESPONSE_EXPORT int get_status_code( void ) const;
             
-            std::string get_protocol( void ) const;
+            RESPONSE_EXPORT std::string get_protocol( void ) const;
             
-            std::string get_status_message( void ) const;
+            RESPONSE_EXPORT std::string get_status_message( void ) const;
             
-            void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
+            RESPONSE_EXPORT void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
             
             template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::value, Type >::type = 0 >
             Type get_header( const std::string& name, const Type default_value ) const
@@ -79,30 +79,30 @@ namespace restbed
                 return Common::parse_parameter( get_header( name ), default_value );
             }
             
-            std::string get_header( const std::string& name, const std::string& default_value ) const;
+            RESPONSE_EXPORT std::string get_header( const std::string& name, const std::string& default_value ) const;
             
-            std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            RESPONSE_EXPORT std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
             
-            std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
+            RESPONSE_EXPORT std::multimap< std::string, std::string > get_headers( const std::string& name = "" ) const;
             
             //Setters
-            void set_body( const Bytes& value );
+            RESPONSE_EXPORT void set_body( const Bytes& value );
             
-            void set_body( const std::string& value );
+            RESPONSE_EXPORT void set_body( const std::string& value );
             
-            void set_version( const double value );
+            RESPONSE_EXPORT void set_version( const double value );
             
-            void set_status_code( const int value );
+            RESPONSE_EXPORT void set_status_code( const int value );
             
-            void set_protocol( const std::string& protocol );
+            RESPONSE_EXPORT void set_protocol( const std::string& protocol );
             
-            void set_status_message( const std::string& value );
+            RESPONSE_EXPORT void set_status_message( const std::string& value );
 
-            void add_header( const std::string& name, const std::string& value );
+            RESPONSE_EXPORT void add_header( const std::string& name, const std::string& value );
 
-            void set_header( const std::string& name, const std::string& value );
+            RESPONSE_EXPORT void set_header( const std::string& name, const std::string& value );
             
-            void set_headers( const std::multimap< std::string, std::string >& values );
+            RESPONSE_EXPORT void set_headers( const std::multimap< std::string, std::string >& values );
             
             //Operators
             

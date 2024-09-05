@@ -42,7 +42,7 @@ namespace restbed
         struct WebSocketMessageImpl;
     }
     
-    class WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage
+    class WebSocketMessage
     {
         public:
             //Friends
@@ -59,58 +59,58 @@ namespace restbed
             };
             
             //Constructors
-            WebSocketMessage( void );
+            WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage( void );
             
-            WebSocketMessage( const WebSocketMessage& original );
+            WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage( const WebSocketMessage& original );
             
-            WebSocketMessage( const OpCode code, const Bytes& data = { } );
+            WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage( const OpCode code, const Bytes& data = { } );
             
-            WebSocketMessage( const OpCode code, const std::string& data );
+            WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage( const OpCode code, const std::string& data );
             
-            WebSocketMessage( const OpCode code, const Bytes& data, const std::uint32_t mask );
+            WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage( const OpCode code, const Bytes& data, const std::uint32_t mask );
             
-            WebSocketMessage( const OpCode code, const std::string& data, const std::uint32_t mask );
+            WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage( const OpCode code, const std::string& data, const std::uint32_t mask );
             
-            virtual ~WebSocketMessage( void );
+            WEB_SOCKET_MESSAGE_EXPORT virtual ~WebSocketMessage( void );
             
             //Functionality
-            Bytes to_bytes( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT Bytes to_bytes( void ) const;
             
             //Getters
-            Bytes get_data( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT Bytes get_data( void ) const;
             
-            OpCode get_opcode( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT OpCode get_opcode( void ) const;
             
-            std::uint32_t get_mask( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT std::uint32_t get_mask( void ) const;
             
-            std::uint8_t get_length( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT std::uint8_t get_length( void ) const;
             
-            std::uint64_t get_extended_length( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT std::uint64_t get_extended_length( void ) const;
             
-            bool get_mask_flag( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT bool get_mask_flag( void ) const;
             
-            bool get_final_frame_flag( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT bool get_final_frame_flag( void ) const;
             
-            std::tuple< bool, bool, bool > get_reserved_flags( void ) const;
+            WEB_SOCKET_MESSAGE_EXPORT std::tuple< bool, bool, bool > get_reserved_flags( void ) const;
             
             //Setters
-            void set_data( const Bytes& value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_data( const Bytes& value );
             
-            void set_data( const std::string& value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_data( const std::string& value );
             
-            void set_opcode( const OpCode value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_opcode( const OpCode value );
             
-            void set_mask( const std::uint32_t value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_mask( const std::uint32_t value );
             
-            void set_length( const std::uint8_t value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_length( const std::uint8_t value );
             
-            void set_extended_length( const std::uint64_t value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_extended_length( const std::uint64_t value );
             
-            void set_mask_flag( const bool value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_mask_flag( const bool value );
             
-            void set_final_frame_flag( const bool value );
+            WEB_SOCKET_MESSAGE_EXPORT void set_final_frame_flag( const bool value );
             
-            void set_reserved_flags( const bool rsv1, const bool rsv2, const bool rsv3 );
+            WEB_SOCKET_MESSAGE_EXPORT void set_reserved_flags( const bool rsv1, const bool rsv2, const bool rsv3 );
             
             //Operators
             

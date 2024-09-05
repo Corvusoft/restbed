@@ -10,6 +10,10 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_MAIN" )
 
 include_directories( SYSTEM ${catch_INCLUDE} ${asio_INCLUDE} )
 
+if( ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D_WIN32_WINNT=0x0A00 /W4 /wd4068 /wd4702 /wd4996 /wd4265" )
+endif ( )
+
 if ( WIN32 )
 	set( OPENSSL_DEPS ws2_32.lib advapi32.lib crypt32.lib gdi32.lib user32.lib )
 endif ( )
