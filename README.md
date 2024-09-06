@@ -1,4 +1,4 @@
-Restbed [![Windows Build Status](https://ci.appveyor.com/api/projects/status/75wqogaks13xp817/branch/master?svg=true)](https://ci.appveyor.com/project/corvusoft/restbed/branch/master)
+Restbed [![Build Status](https://ci.appveyor.com/api/projects/status/naho4wmrxd47vko8/branch/master?svg=true)](https://ci.appveyor.com/project/Corvusoft/restbed/branch/master)
 =============================================================================================================================
 
 ---
