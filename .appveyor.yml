@@ -1,24 +1,24 @@
-version: 1.0.{build}
-image: Visual Studio 2015
+version: 4.8.0:{branch}-{build}
+image:
+- Visual Studio 2022
+- Ubuntu
+- macOS
 configuration: Release
-platform: x64
-clone_folder: C:\projects\restbed
+platform: Any CPU
+
 init:
-- cmd: '"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"'
+- cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat"'
 install:
-- cmd: git submodule update --init --recursive
+- git submodule update --init --recursive
+- mkdir build
+- cd build
 build_script:
+- sh: >-
+    cmake ..
+    make
 - cmd: >-
-    mkdir c:\projects\restbed\build
-
-    cd c:\projects\restbed\build
-
-    cmake -G "Visual Studio 14 2015" -DBUILD_SSL=NO -DOPENSSL_ROOT_DIR=C:\OpenSSL-Win64 ..
-
+    cmake -G "Visual Studio 17 2022" -DBUILD_SSL=NO -DBUILD_TESTS=YES ..
     cmake --build . --target ALL_BUILD --config Release
 test_script:
-- cmd: >-
-    cd c:\projects\restbed\build
-
-    ctest
+- ctest
 deploy: off
