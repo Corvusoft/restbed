@@ -1,4 +1,4 @@
-version: 4.8.0:{branch}-{build}
+version: 4.8.0/{branch}-{build}
 image:
 - Visual Studio 2022
 - Ubuntu
