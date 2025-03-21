@@ -301,7 +301,7 @@ namespace restbed
             setsockopt(socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, &val, sizeof(uint32_t));
 #ifdef __APPLE__
             setsockopt(socket.native_handle(), IPPROTO_TCP, TCP_KEEPALIVE, &start, sizeof(uint32_t));
-#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) 
+#elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__QNX__)
             setsockopt(socket.native_handle(), IPPROTO_TCP, SO_KEEPALIVE, &start, sizeof(uint32_t));
 #else
             // Linux based systems
