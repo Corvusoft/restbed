@@ -1,12 +1,9 @@
 [submodule "dependency/asio"]
 	path = dependency/asio
-	url = https://github.com/corvusoft/asio-dependency
-	branch = master
+	url = https://github.com/chriskohlhoff/asio.git
 [submodule "dependency/catch"]
 	path = dependency/catch
-	url = https://github.com/corvusoft/catch-dependency
-	branch = master
+	url = https://github.com/catchorg/Catch2
 [submodule "dependency/openssl"]
 	path = dependency/openssl
-	url = https://github.com/corvusoft/openssl-dependency
-	branch = OpenSSL_1_0_2-stable
+	url = https://github.com/openssl/openssl.git
