@@ -98,13 +98,13 @@ namespace restbed
         void IPCSocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )
         {
             m_timer->cancel( );
-            m_timer->expires_from_now( delay );
+            m_timer->expires_after( delay );
             m_timer->async_wait( callback );
         }
 
         void IPCSocketImpl::start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback)
         {
-            m_strand->post([this, data, callback] { write_helper(data, callback); });
+            m_strand->post([this, data, callback] { write_helper(data, callback); }, asio::get_associated_allocator(m_strand));
         }
 
         size_t IPCSocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error)
@@ -121,7 +121,7 @@ namespace restbed
         {
             m_strand->post([this, length, success, failure] {
                 read(length, success, failure);
-            });
+            }, asio::get_associated_allocator(m_strand));
         }
         
         void IPCSocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback)
@@ -129,7 +129,7 @@ namespace restbed
             m_strand->post([this, data, length, callback] 
             {
                 read(data, length, callback);
-            });
+            }, asio::get_associated_allocator(m_strand));
         }
 
         void IPCSocketImpl::start_read(const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback)
@@ -137,7 +137,7 @@ namespace restbed
             m_strand->post([this, data, delimiter, callback] 
             {
                 read(data, delimiter, callback);
-            });
+            }, asio::get_associated_allocator(m_strand));
         }
 
         string IPCSocketImpl::get_local_endpoint( void )
@@ -186,10 +186,10 @@ namespace restbed
             if(m_is_open)
             {
                 m_timer->cancel( );
-                m_timer->expires_from_now( m_timeout );
-                m_timer->async_wait( m_strand->wrap( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+                m_timer->expires_after( m_timeout );
+                m_timer->async_wait( asio::bind_executor( *m_strand, bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
 
-                    asio::async_write( *m_socket, asio::buffer( get<0>(m_pending_writes.front()).data( ), get<0>(m_pending_writes.front()).size( ) ), m_strand->wrap( [ this ]( const error_code & error, size_t length )
+                    asio::async_write( *m_socket, asio::buffer( get<0>(m_pending_writes.front()).data( ), get<0>(m_pending_writes.front()).size( ) ), asio::bind_executor( *m_strand, [ this ]( const error_code & error, size_t length )
                     {
                         m_timer->cancel( );
                         auto callback = get<2>(m_pending_writes.front());
@@ -228,10 +228,10 @@ namespace restbed
             const auto buffer = make_shared< Bytes >( data );
             
             m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+            m_timer->expires_after( m_timeout );
+            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
 
-            asio::async_write( *m_socket, asio::buffer( buffer->data( ), buffer->size( ) ), m_strand->wrap( [ this, callback, buffer ]( const error_code & error, size_t length )
+            asio::async_write( *m_socket, asio::buffer( buffer->data( ), buffer->size( ) ), asio::bind_executor( *m_strand, [ this, callback, buffer ]( const error_code & error, size_t length )
             {
                 m_timer->cancel( );
                 
@@ -260,8 +260,8 @@ namespace restbed
         size_t IPCSocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
         {
             m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+            m_timer->expires_after( m_timeout );
+            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
 
             size_t size = 0;
             auto finished = std::make_shared<bool>(false);
@@ -292,8 +292,8 @@ namespace restbed
         void IPCSocketImpl::read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
         {
             m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+            m_timer->expires_after( m_timeout );
+            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
             
             auto data = make_shared< asio::streambuf >( );
             asio::async_read( *m_socket, *data, asio::transfer_exactly( length ), [ this, data, success, failure ]( const error_code code, const size_t length )
@@ -307,8 +307,9 @@ namespace restbed
                 }
                 else
                 {
-                    const auto data_ptr = asio::buffer_cast< const Byte* >( data->data( ) );
-                    success( Bytes( data_ptr, data_ptr + length ) );
+                    Bytes buf( length );
+                    asio::buffer_copy( asio::buffer( buf ), data->data( ) );
+                    success( buf );
                 }
             } );
         }
@@ -316,10 +317,10 @@ namespace restbed
         void IPCSocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+            m_timer->expires_after( m_timeout );
+            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
             
-            asio::async_read( *m_socket, *data, asio::transfer_at_least( length ), m_strand->wrap( [ this, callback ]( const error_code & error, size_t length )
+            asio::async_read( *m_socket, *data, asio::transfer_at_least( length ), asio::bind_executor( *m_strand, [ this, callback ]( const error_code & error, size_t length )
             {
                 m_timer->cancel( );
                 
@@ -338,7 +339,7 @@ namespace restbed
         size_t IPCSocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error )
         {
             m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
+            m_timer->expires_after( m_timeout );
             m_timer->async_wait( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
 
             size_t length = 0;
@@ -370,10 +371,10 @@ namespace restbed
         void IPCSocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );
-            m_timer->expires_from_now( m_timeout );
-            m_timer->async_wait( m_strand->wrap( bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
+            m_timer->expires_after( m_timeout );
+            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &IPCSocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
             
-            asio::async_read_until( *m_socket, *data, delimiter, m_strand->wrap( [ this, callback ]( const error_code & error, size_t length )
+            asio::async_read_until( *m_socket, *data, delimiter, asio::bind_executor( *m_strand, [ this, callback ]( const error_code & error, size_t length )
             {
                 m_timer->cancel( );
                 

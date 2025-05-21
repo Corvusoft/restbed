@@ -9,7 +9,7 @@
 
 //External Includes
 #include <asio.hpp>
-#include <catch.hpp>
+#include <catch2/catch_all.hpp>
 
 //System Namespaces
 using std::thread;
@@ -23,7 +23,7 @@ using namespace restbed;
 //External Namespaces
 using asio::ip::tcp;
 using asio::connect;
-using asio::io_service;
+using asio::io_context;
 using asio::system_error;
 
 bool exception_was_thrown = false;
@@ -63,10 +63,10 @@ TEST_CASE( "peer closes connection without sending data", "[service]" )
     
     wait_for_service_initialisation( );
     
-    io_service io_service;
-    tcp::socket socket( io_service );
-    tcp::resolver resolver( io_service );
-    connect( socket, resolver.resolve( { "localhost", "1984" } ) );
+    io_context io_context;
+    tcp::socket socket( io_context );
+    tcp::resolver resolver( io_context );
+    connect( socket, resolver.resolve("localhost", "1984" ) );
     
     socket.close( );
     

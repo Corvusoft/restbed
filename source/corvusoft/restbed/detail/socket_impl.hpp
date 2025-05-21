@@ -22,8 +22,8 @@
 #include <asio/ip/tcp.hpp>
 #include <asio/streambuf.hpp>
 #include <asio/steady_timer.hpp>
-#include <asio/io_service.hpp>
-#include <asio/io_service_strand.hpp>
+#include <asio/io_context.hpp>
+#include <asio/strand.hpp>
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
@@ -160,11 +160,11 @@ namespace restbed
                 
                 std::chrono::milliseconds m_timeout;
 
-                asio::io_context &m_io_service;
+                asio::io_context &m_io_context;
 
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
-                std::shared_ptr< asio::io_service::strand > m_strand;
+                std::shared_ptr< asio::strand< asio::io_context::executor_type > > m_strand;
                 
                 std::shared_ptr< asio::ip::tcp::resolver > m_resolver;
                 

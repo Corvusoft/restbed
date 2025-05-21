@@ -5,7 +5,7 @@
 #include <corvusoft/restbed/resource.hpp>
 
 //External Includes
-#include <catch.hpp>
+#include <catch2/catch_all.hpp>
 
 //System Namespaces
 

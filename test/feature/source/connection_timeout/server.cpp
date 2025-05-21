@@ -14,7 +14,7 @@
 
 //External Includes
 #include <asio.hpp>
-#include <catch.hpp>
+#include <catch2/catch_all.hpp>
 
 //System Namespaces
 using std::thread;
@@ -31,7 +31,7 @@ using namespace restbed;
 //External Namespaces
 using asio::ip::tcp;
 using asio::connect;
-using asio::io_service;
+using asio::io_context;
 using asio::socket_base;
 
 void get_handler( const shared_ptr< Session > session )
@@ -61,9 +61,9 @@ SCENARIO( "validate connection timeout after connect", "[socket]" )
             {
                 WHEN( "I establish a network connection and wait '4' seconds" )
                 {
-                    io_service io_service;
-                    asio::ip::tcp::socket socket( io_service );
-                    asio::ip::tcp::endpoint endpoint( asio::ip::address::from_string( "127.0.0.1" ), 1984 );
+                    io_context io_context;
+                    asio::ip::tcp::socket socket( io_context );
+                    asio::ip::tcp::endpoint endpoint( asio::ip::make_address( "127.0.0.1" ), 1984 );
 
                     error_code error;
                     socket.connect( endpoint, error );
@@ -114,9 +114,9 @@ SCENARIO( "validate connection timeout after partial request", "[socket]" )
             {
                 AND_THEN( "I perform a partial HTTP request" )
                 {
-                    io_service io_service;
-                    asio::ip::tcp::socket socket( io_service );
-                    asio::ip::tcp::endpoint endpoint( asio::ip::address::from_string( "127.0.0.1" ), 1984 );
+                    io_context io_context;
+                    asio::ip::tcp::socket socket( io_context );
+                    asio::ip::tcp::endpoint endpoint( asio::ip::make_address( "127.0.0.1" ), 1984 );
 
                     error_code error;
                     socket.connect( endpoint, error );

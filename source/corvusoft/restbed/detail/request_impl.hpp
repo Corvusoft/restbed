@@ -15,7 +15,7 @@
 
 //External Includes
 #include <asio/streambuf.hpp>
-#include <asio/io_service.hpp>
+#include <asio/io_context.hpp>
 
 //System Namespaces
 
@@ -60,7 +60,7 @@ namespace restbed
             
             std::multimap< std::string, std::string > m_query_parameters { };
             
-            std::shared_ptr< asio::io_service > m_io_service = nullptr;
+            std::shared_ptr< asio::io_context > m_io_context = nullptr;
             
             std::shared_ptr< SocketImpl > m_socket = nullptr;
             

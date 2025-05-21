@@ -1,9 +1,0 @@
-[submodule "dependency/asio"]
-	path = dependency/asio
-	url = https://github.com/chriskohlhoff/asio.git
-[submodule "dependency/catch"]
-	path = dependency/catch
-	url = https://github.com/catchorg/Catch2
-[submodule "dependency/openssl"]
-	path = dependency/openssl
-	url = https://github.com/openssl/openssl.git

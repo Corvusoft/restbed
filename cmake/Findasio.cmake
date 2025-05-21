@@ -1,4 +1,4 @@
-find_path( asio_INCLUDE asio.hpp HINTS "${PROJECT_SOURCE_DIR}/dependency/asio/asio/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_path( asio_INCLUDE asio.hpp HINTS "/usr/include" "/usr/local/include" "/opt/local/include" )
 
 if ( asio_INCLUDE )
     set( ASIO_FOUND TRUE )

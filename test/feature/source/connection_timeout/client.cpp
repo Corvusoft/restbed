@@ -12,8 +12,7 @@
 #include <restbed>
 
 //External Includes
-#include <asio.hpp>
-#include <catch.hpp>
+#include <catch2/catch_all.hpp>
 
 //System Namespaces
 using std::thread;
@@ -27,10 +26,6 @@ using std::chrono::seconds;
 using namespace restbed;
 
 //External Namespaces
-using asio::ip::tcp;
-using asio::connect;
-using asio::io_service;
-using asio::socket_base;
 
 void get_handler( const shared_ptr< Session > session )
 {

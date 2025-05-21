@@ -11,7 +11,7 @@
 
 //External Includes
 #include <asio.hpp>
-#include <catch.hpp>
+#include <catch2/catch_all.hpp>
 
 //System Namespaces
 using std::string;
@@ -27,7 +27,7 @@ using namespace restbed;
 //External Namespaces
 using asio::ip::tcp;
 using asio::connect;
-using asio::io_service;
+using asio::io_context;
 using asio::system_error;
 
 void error_handler( const int, const exception&, const std::shared_ptr< Session > session )
@@ -73,10 +73,10 @@ TEST_CASE( "service error handler overflow", "[service]" )
     {
         worker = make_shared< thread >( [ &service ] ( )
         {
-            io_service io_service;
-            tcp::socket socket( io_service );
-            tcp::resolver resolver( io_service );
-            connect( socket, resolver.resolve( { "localhost", "1984" } ) );
+            io_context io_context;
+            tcp::socket socket( io_context );
+            tcp::resolver resolver( io_context );
+            connect( socket, resolver.resolve( "localhost", "1984" ) );
             
             string request = "POST /test HTTP/1.1\r\nContent-Length: 1024\r\n\r\nABCDEFG";
             

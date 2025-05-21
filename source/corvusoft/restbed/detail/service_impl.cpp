@@ -70,9 +70,8 @@ using std::regex_constants::icase;
 
 //External Namespaces
 using asio::ip::tcp;
-using asio::io_service;
+using asio::io_context;
 using asio::signal_set;
-using asio::ip::address;
 using asio::socket_base;
 using asio::system_error;
 
@@ -88,7 +87,7 @@ namespace restbed
             m_logger( nullptr ),
             m_supported_methods( ),
             m_settings( nullptr ),
-            m_io_service( make_shared< ::io_service >( ) ),
+            m_io_context( make_shared< ::io_context >( ) ),
             m_signal_set( nullptr ),
             m_session_manager( nullptr ),
             m_web_socket_manager( nullptr ),
@@ -132,12 +131,12 @@ namespace restbed
             
                 if ( not m_settings->get_bind_address( ).empty( ) )
                 {
-                    const auto address = address::from_string( m_settings->get_bind_address( ) );
-                    m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( address, m_settings->get_port( ) ) );
+                    const auto address = asio::ip::make_address( m_settings->get_bind_address( ) );
+                    m_acceptor = make_shared< tcp::acceptor >( *m_io_context, tcp::endpoint( address, m_settings->get_port( ) ) );
                 }
                 else
                 {
-                    m_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
+                    m_acceptor = make_shared< tcp::acceptor >( *m_io_context, tcp::endpoint( tcp::v6( ), m_settings->get_port( ) ) );
                 }
                 
                 m_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
@@ -155,7 +154,7 @@ namespace restbed
         
         void ServiceImpl::http_listen( void ) const
         {
-            auto socket = make_shared< tcp::socket >( *m_io_service );
+            auto socket = make_shared< tcp::socket >( *m_io_context );
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
         }
         
@@ -166,7 +165,7 @@ namespace restbed
                 return;
             }
             
-            m_signal_set = make_shared< signal_set >( *m_io_service );
+            m_signal_set = make_shared< signal_set >( *m_io_context );
             
             for ( const auto& signal_handler : m_signal_handlers )
             {
@@ -261,12 +260,12 @@ namespace restbed
                 
                 if ( not m_ssl_settings->get_bind_address( ).empty( ) )
                 {
-                    const auto address = address::from_string( m_ssl_settings->get_bind_address( ) );
-                    m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( address, m_ssl_settings->get_port( ) ) );
+                    const auto address = asio::ip::make_address( m_ssl_settings->get_bind_address( ) );
+                    m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_context, tcp::endpoint( address, m_ssl_settings->get_port( ) ) );
                 }
                 else
                 {
-                    m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_service, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
+                    m_ssl_acceptor = make_shared< tcp::acceptor >( *m_io_context, tcp::endpoint( tcp::v6( ), m_ssl_settings->get_port( ) ) );
                 }
                 
                 m_ssl_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
@@ -281,7 +280,7 @@ namespace restbed
         
         void ServiceImpl::https_listen( void ) const
         {
-            auto socket = make_shared< asio::ssl::stream< tcp::socket > >( *m_io_service, *m_ssl_context );
+            auto socket = make_shared< asio::ssl::stream< tcp::socket > >( *m_io_context, *m_ssl_context );
             m_ssl_acceptor->async_accept( socket->lowest_layer( ), bind( &ServiceImpl::create_ssl_session, this, socket, _1 ) );
         }
         
@@ -297,7 +296,7 @@ namespace restbed
                         return;
                     }
                     
-                    auto connection = make_shared< SocketImpl >( *m_io_service, socket, m_logger );
+                    auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_logger );
                     connection->set_timeout( m_settings->get_connection_timeout( ) );
                     if (m_settings->get_keep_alive()) {
                         connection->set_keep_alive( m_settings->get_keep_alive_start(),
@@ -340,7 +339,7 @@ namespace restbed
             const string location = m_settings->get_ipc_path( );
             ::remove( location.data( ) );
 
-            m_ipc_acceptor = make_shared< stream_protocol::acceptor >( *m_io_service, stream_protocol::endpoint( location ) );
+            m_ipc_acceptor = make_shared< stream_protocol::acceptor >( *m_io_context, stream_protocol::endpoint( location ) );
             m_ipc_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
             m_ipc_acceptor->listen( m_settings->get_connection_limit( ) );
             ipc_listen( );
@@ -350,7 +349,7 @@ namespace restbed
 
         void ServiceImpl::ipc_listen( void ) const
         {
-            auto socket = make_shared< stream_protocol::socket >( *m_io_service );
+            auto socket = make_shared< stream_protocol::socket >( *m_io_context );
             m_ipc_acceptor->async_accept( *socket, bind( &ServiceImpl::create_ipc_session, this, socket, _1 ) );
         }
 
@@ -358,7 +357,7 @@ namespace restbed
         {
             if ( not error )
             {
-                auto connection = make_shared< IPCSocketImpl >( *m_io_service, socket, m_settings->get_ipc_path( ), m_logger );
+                auto connection = make_shared< IPCSocketImpl >( *m_io_context, socket, m_settings->get_ipc_path( ), m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
                 if (m_settings->get_keep_alive()) {
                     connection->set_keep_alive( m_settings->get_keep_alive_start(),
@@ -598,7 +597,7 @@ namespace restbed
         {
             if ( not error )
             {
-                auto connection = make_shared< SocketImpl >( *m_io_service, socket, m_logger );
+                auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
                 if (m_settings->get_keep_alive()) {
                     connection->set_keep_alive( m_settings->get_keep_alive_start(),

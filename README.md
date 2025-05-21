@@ -99,11 +99,42 @@ Please contact sales@corvusoft.co.uk, for support and licensing options includin
 
 Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
 
+Prerequisites
+-------------
+
+# [Catch2](https://github.com/catchorg/Catch2) is a modern, C++-native, test framework for unit-tests, TDD, BDD, and benchmarks.
+```
+git clone https://github.com/catchorg/Catch2.git --branch v3.8.1 --single-branch
+cd Catch2
+mkdir build
+cd build
+cmake ..
+make install
+```
+
+# [Asio](https://think-async.com/Asio/) is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
+```
+git clone https://github.com/chriskohlhoff/asio --branch asio-1-34-2 --single-branch
+cd asio/asio
+./autogen.sh
+./configure
+make install
+```
+
+# [OpenSSL](https://www.openssl.org/) is a robust, commercial-grade, full-featured Open Source Toolkit for the TLS (formerly SSL), DTLS and QUIC protocols.
+```
+git clone https://github.com/openssl/openssl.git --branch openssl-3.5.0 --single-branch
+cd openssl
+./config
+make install
+```
+
 Build
 -----
 
 ```bash
-git clone --recursive https://github.com/corvusoft/restbed.git
+git clone https://github.com/corvusoft/restbed.git --branch 4.8 --single-branch
+cd restbed
 mkdir restbed/build
 cd restbed/build
 cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
@@ -163,22 +194,6 @@ ctest
 ```
 
 For Microsoft Visual Studio 14 2015 instructions, and further details, please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
-
-Building Restbed - Using vcpkg
-------------------------------
-
-You can download and install restbed using the [vcpkg](https://github.com/Microsoft/vcpkg) dependency manager:
-
-``` shell
-git clone https://github.com/Microsoft/vcpkg.git
-cd vcpkg
-./bootstrap-vcpkg.sh
-./vcpkg integrate install
-./vcpkg install restbed
-```
-
-The restbed port in vcpkg is kept up to date by Microsoft team members and community contributors. If the version is out of date, please [create an issue or pull request](https://github.com/Microsoft/vcpkg) on the vcpkg repository.
-
 
 Documentation
 -------------

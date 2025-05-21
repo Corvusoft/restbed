@@ -171,7 +171,7 @@ namespace restbed
         {
             return std::async( std::launch::async, [ ]( const shared_ptr< Request > request ) -> shared_ptr< Response >
             {
-                request->m_pimpl->m_io_service->run( );
+                request->m_pimpl->m_io_context->run( );
                 return request->m_pimpl->m_response;
             }, request );
         }
@@ -179,9 +179,9 @@ namespace restbed
         {
             do
             {
-                request->m_pimpl->m_io_service->run_one( );
+                request->m_pimpl->m_io_context->run_one( );
             }
-            while ( finished == false and not request->m_pimpl->m_io_service->stopped( ) );
+            while ( finished == false and not request->m_pimpl->m_io_context->stopped( ) );
             
             std::promise< shared_ptr< Response > > result;
             result.set_value( request->m_pimpl->m_response );
@@ -217,15 +217,15 @@ namespace restbed
             {
                 throw runtime_error( String::format( "Socket receive failed: '%s'", error.message( ).data( ) ) );
             }
-            
-            const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
-            data = Bytes( data_ptr, data_ptr + length );
+
+            data = Bytes( length );
+            asio::buffer_copy( asio::buffer( data ), request->m_pimpl->m_buffer->data( ) );
             request->m_pimpl->m_buffer->consume( length );
         }
         else
         {
-            const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
-            data = Bytes( data_ptr, data_ptr + length );
+            data = Bytes( length );
+            asio::buffer_copy( asio::buffer( data ), request->m_pimpl->m_buffer->data( ) );
             request->m_pimpl->m_buffer->consume( length );
         }
         
@@ -264,9 +264,9 @@ namespace restbed
         {
             throw runtime_error( String::format( "Socket receive failed: '%s'", error.message( ).data( ) ) );
         }
-        
-        const auto data_ptr = asio::buffer_cast< const Byte* >( request->m_pimpl->m_buffer->data( ) );
-        const Bytes data( data_ptr, data_ptr + size );
+
+        Bytes data( size );
+        asio::buffer_copy( asio::buffer( data ), request->m_pimpl->m_buffer->data( ) );
         request->m_pimpl->m_buffer->consume( size );
         
         auto& body = response->m_pimpl->m_body;

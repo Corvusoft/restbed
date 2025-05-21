@@ -27,7 +27,7 @@
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
-#include <asio/io_service.hpp>
+#include <asio/io_context.hpp>
 #include <asio/steady_timer.hpp>
 
 #ifdef BUILD_SSL
@@ -64,7 +64,7 @@ using restbed::detail::ServiceImpl;
 using restbed::detail::WebSocketManagerImpl;
 
 //External Namespaces
-using asio::io_service;
+using asio::io_context;
 using asio::steady_timer;
 
 namespace restbed
@@ -101,9 +101,9 @@ namespace restbed
     {
         m_pimpl->m_uptime = steady_clock::time_point::min( );
         
-        if ( m_pimpl->m_io_service not_eq nullptr )
+        if ( m_pimpl->m_io_context not_eq nullptr )
         {
-            m_pimpl->m_io_service->stop( );
+            m_pimpl->m_io_context->stop( );
         }
         
         if ( m_pimpl->m_session_manager not_eq nullptr )
@@ -182,7 +182,7 @@ namespace restbed
         
         if ( m_pimpl->m_ready_handler not_eq nullptr )
         {
-            m_pimpl->m_io_service->post( m_pimpl->m_ready_handler );
+            asio::post( *m_pimpl->m_io_context, m_pimpl->m_ready_handler );
         }
         
         m_pimpl->m_uptime = steady_clock::now( );
@@ -190,7 +190,7 @@ namespace restbed
         
         if ( limit == 0 )
         {
-            m_pimpl->m_io_service->run( );
+            m_pimpl->m_io_context->run( );
         }
         else
         {
@@ -201,7 +201,7 @@ namespace restbed
             {
                 signals.push_back( async(launch::async, [ this ]( )
                                          {
-                                             m_pimpl->m_io_service->run( );
+                                             m_pimpl->m_io_context->run( );
                                          } ) );
             }
             
@@ -221,7 +221,7 @@ namespace restbed
             }
             catch(...)
             {
-                m_pimpl->m_io_service->stop( );
+                m_pimpl->m_io_context->stop( );
                 all_signalled.set_value();
                 throw;
             }
@@ -334,12 +334,12 @@ namespace restbed
         
         if ( interval == milliseconds::zero( ) )
         {
-            m_pimpl->m_io_service->post( task );
+            asio::post( *m_pimpl->m_io_context, task );
             return;
         }
         
-        auto timer = make_shared< steady_timer >( *m_pimpl->m_io_service );
-        timer->expires_from_now( interval );
+        auto timer = make_shared< steady_timer >( *m_pimpl->m_io_context );
+        timer->expires_after( interval );
         timer->async_wait( [ this, task, interval, timer ]( const error_code& )
         {
             task( );

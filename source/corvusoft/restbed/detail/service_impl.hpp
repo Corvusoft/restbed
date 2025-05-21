@@ -22,7 +22,7 @@
 //External Includes
 #include <asio/ip/tcp.hpp>
 #include <asio/signal_set.hpp>
-#include <asio/io_service.hpp>
+#include <asio/io_context.hpp>
 
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
@@ -147,7 +147,7 @@ namespace restbed
                 
                 std::shared_ptr< const Settings > m_settings;
                 
-                std::shared_ptr< asio::io_service > m_io_service;
+                std::shared_ptr< asio::io_context > m_io_context;
                 
                 std::shared_ptr< asio::signal_set > m_signal_set;
                 

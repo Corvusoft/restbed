@@ -67,7 +67,7 @@ using std::placeholders::_2;
 using asio::buffer;
 using asio::ip::tcp;
 using asio::streambuf;
-using asio::io_service;
+using asio::io_context;
 #ifdef BUILD_SSL
     using asio::ssl::stream;
 #endif
@@ -144,15 +144,15 @@ namespace restbed
         {
             if ( request->m_pimpl->m_socket == nullptr )
             {
-                if ( request->m_pimpl->m_io_service == nullptr )
+                if ( request->m_pimpl->m_io_context == nullptr )
                 {
-                    request->m_pimpl->m_io_service = make_shared< asio::io_service >( );
+                    request->m_pimpl->m_io_context = make_shared< asio::io_context >( );
                 }
 
                 if ( String::uppercase( request->m_pimpl->m_protocol ) == "HTTP" )
                 {
-                    auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_service );
-                    request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
+                    auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_context );
+                    request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_context, socket );
                 }
 #ifdef BUILD_SSL
                 else if ( String::uppercase( request->m_pimpl->m_protocol ) == "HTTPS" )
@@ -164,14 +164,14 @@ namespace restbed
 #ifdef BUILD_IPC
                 else if ( String::uppercase( request->m_pimpl->m_protocol ) == "LOCAL" )
                 {
-                    auto socket = make_shared< stream_protocol::socket >( *request->m_pimpl->m_io_service );
-                    request->m_pimpl->m_socket = make_shared< IPCSocketImpl >( *request->m_pimpl->m_io_service, socket, settings->get_ipc_path( ) );
+                    auto socket = make_shared< stream_protocol::socket >( *request->m_pimpl->m_io_context );
+                    request->m_pimpl->m_socket = make_shared< IPCSocketImpl >( *request->m_pimpl->m_io_context, socket, settings->get_ipc_path( ) );
                 }
 #endif
                 else
                 {
-                    auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_service );
-                    request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
+                    auto socket = make_shared< tcp::socket >( *request->m_pimpl->m_io_context );
+                    request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_context, socket );
                 }
             }
             
@@ -201,17 +201,17 @@ namespace restbed
 #endif
                 }
                 
-                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_context, context );
                 socket->set_verify_mode( asio::ssl::verify_peer | asio::ssl::verify_fail_if_no_peer_cert );
             }
             else
             {
-                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_service, context );
+                socket = make_shared< asio::ssl::stream< asio::ip::tcp::socket > >( *request->m_pimpl->m_io_context, context );
                 socket->set_verify_mode( asio::ssl::verify_none );
             }
             
-            socket->set_verify_callback( asio::ssl::rfc2818_verification( request->get_host( ) ) );
-            request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_service, socket );
+            socket->set_verify_callback( asio::ssl::host_name_verification( request->get_host( ) ) );
+            request->m_pimpl->m_socket = make_shared< SocketImpl >( *request->m_pimpl->m_io_context, socket );
         }
 #endif
         void HttpImpl::request_handler( const error_code& error, const shared_ptr< Request >& request, const function< void ( const shared_ptr< Request >, const shared_ptr< Response > ) >& callback   )

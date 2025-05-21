@@ -85,8 +85,10 @@ namespace restbed
         
         void SessionImpl::fetch_body( const size_t length, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback ) const
         {
-            const auto data_ptr = asio::buffer_cast< const Byte* >( session->m_pimpl->m_request->m_pimpl->m_buffer->data( ) );
-            const auto data = Bytes( data_ptr, data_ptr + length );
+            //const auto data_ptr = session->m_pimpl->m_request->m_pimpl->m_buffer->data( );
+            //const auto data = Bytes( data_ptr, data_ptr + length );
+            Bytes data( length );
+            asio::buffer_copy( asio::buffer( data ), session->m_pimpl->m_request->m_pimpl->m_buffer->data( ) );
             session->m_pimpl->m_request->m_pimpl->m_buffer->consume( length );
             
             auto& body = m_request->m_pimpl->m_body;

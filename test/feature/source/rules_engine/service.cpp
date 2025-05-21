@@ -14,7 +14,7 @@
 #include "content_length_rule.hpp"
 
 //External Includes
-#include <catch.hpp>
+#include <catch2/catch_all.hpp>
 
 //System Namespaces
 using std::thread;
