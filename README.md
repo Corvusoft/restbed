@@ -102,7 +102,7 @@ Please submit all enhancements, proposals, and defects via the [issue](http://gi
 Prerequisites
 -------------
 
-# [Catch2](https://github.com/catchorg/Catch2) is a modern, C++-native, test framework for unit-tests, TDD, BDD, and benchmarks.
+[Catch2](https://github.com/catchorg/Catch2) is a modern, C++-native, test framework for unit-tests, TDD, BDD, and benchmarks.
 ```
 git clone https://github.com/catchorg/Catch2.git --branch v3.8.1 --single-branch
 cd Catch2
@@ -112,7 +112,7 @@ cmake ..
 make install
 ```
 
-# [Asio](https://think-async.com/Asio/) is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
+[Asio](https://think-async.com/Asio/) is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
 ```
 git clone https://github.com/chriskohlhoff/asio --branch asio-1-34-2 --single-branch
 cd asio/asio
@@ -121,7 +121,7 @@ cd asio/asio
 make install
 ```
 
-# [OpenSSL](https://www.openssl.org/) is a robust, commercial-grade, full-featured Open Source Toolkit for the TLS (formerly SSL), DTLS and QUIC protocols.
+[OpenSSL](https://www.openssl.org/) is a robust, commercial-grade, full-featured Open Source Toolkit for the TLS (formerly SSL), DTLS and QUIC protocols.
 ```
 git clone https://github.com/openssl/openssl.git --branch openssl-3.5.0 --single-branch
 cd openssl
