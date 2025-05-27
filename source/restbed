@@ -11,8 +11,4 @@
 #include "corvusoft/restbed/web_socket.hpp"
 #include "corvusoft/restbed/status_code.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
-#include "corvusoft/restbed/context_value.hpp"
-#include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/web_socket_message.hpp"
-#include "corvusoft/restbed/context_placeholder.hpp"
-#include "corvusoft/restbed/context_placeholder_base.hpp"

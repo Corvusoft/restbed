@@ -20,7 +20,6 @@
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
-#include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/service_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
@@ -105,11 +104,6 @@ namespace restbed
             m_pimpl->m_io_context->stop( );
         }
         
-        if ( m_pimpl->m_session_manager not_eq nullptr )
-        {
-            m_pimpl->m_session_manager->stop( );
-        }
-        
         if ( m_pimpl->m_workers_stopped )
         {
             m_pimpl->m_workers_stopped->wait_for( seconds( 1 ) );
@@ -149,13 +143,6 @@ namespace restbed
         {
             m_pimpl->m_logger->start( m_pimpl->m_settings );
         }
-        
-        if ( m_pimpl->m_session_manager == nullptr )
-        {
-            m_pimpl->m_session_manager = make_shared< SessionManager >( );
-        }
-        
-        m_pimpl->m_session_manager->start( m_pimpl->m_settings );
         
         m_pimpl->m_web_socket_manager = make_shared< WebSocketManagerImpl >( );
 
@@ -343,16 +330,6 @@ namespace restbed
         }
         
         m_pimpl->m_logger = value;
-    }
-    
-    void Service::set_session_manager( const shared_ptr< SessionManager >& value )
-    {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
-        
-        m_pimpl->m_session_manager = value;
     }
     
     void Service::set_ready_handler( const function< void ( Service& ) >& value )

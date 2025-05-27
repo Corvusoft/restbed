@@ -53,7 +53,6 @@ System Entities
 -	[Request](#request)
 -	[Response](#response)
 -	[Session](#session)
--	[SessionManager](#sessionmanager)
 -	[SSLSettings](#sslsettings)
 -	[Settings](#settings)
 -	[WebSocket](#websocket)
@@ -310,9 +309,6 @@ Represents a conversation between a client and the service. Internally this clas
  |                                      <<class>>                                      |
  |                                       Session                                       |
  +-------------------------------------------------------------------------------------+
- | + has(string)                                               boolean                 |
- | + erase(string)                                             void                    |
- | + keys(void)                                                set<string>             |
  | + is_open(void)                                             boolean                 |
  | + is_closed(void)                                           boolean                 |
  | + close(Bytes)                                              void                    |
@@ -340,16 +336,11 @@ Represents a conversation between a client and the service. Internally this clas
  | + upgrade(integer,Bytes,multimap<string,string>,Callback)   void                    |
  | + upgrade(integer,string,multimap<string,string>,Callback)  void                    |
  | + sleep_for(milliseconds,Callback)                          void                    |
- | + get_id(void)                                              string                  |
  | + get_origin(void)                                          string                  |
  | + get_destination(void)                                     string                  |
  | + get_request(void)                                         Request                 |
  | + get_resource(void)                                        Resource                |
  | + get_headers(void)                                         multimap<string,string> |
- | + get(string)                                               ContextValue            |
- | + get(string,ContextValue)                                  ContextValue            |
- | + set_id(string)                                            void                    |
- | + set(string,ContextValue)                                  void                    |
  | + add_headerstring,string)                                  void                    |
  | + set_header(string,string)                                 void                    |
  | + set_headers(multimap<string,string>)                      void                    |
@@ -366,31 +357,6 @@ Represents a conversation between a client and the service. Internally this clas
     +-----------------------------------+  +------------------------------------+
     |      See Request for details.     |  |       See Resource for details.    |
     +-----------------------------------+  +------------------------------------+
-```
-
-### SessionManager
-
-Abstract Class detailing the required contract for SessionManager extensions. No default implementation is supplied with the codebase and it is the responsibility of third-party developers to implement desired characteristics.
-
-```
-  +---------------------------------+
-  |         <<abstract>>            |
-  |        SessionManager           |
-  +---------------------------------+         +---------------------------+
-  | + stop(void)               void |         |         <<class>>         |
-  | + start(Settings)          void | 1     1 |          Settings         |
-  | + create(Callback)         void @---------+---------------------------+
-  | + load(Session,Callback)   void |         | See Settings for details. |
-  | + save(Session,Callback)   void |         +---------------------------+
-  +----------------^----------------+
-                   |
-                   |
-     +-------------v------------+
-     |         <<class>>        |
-     |          Session         |
-     +--------------------------+
-     | See Session for details. |
-     +--------------------------+
 ```
 
 ### SSLSettings
@@ -453,7 +419,7 @@ Represents Secure Socket Layer service configuration.
 
 ### Settings
 
-Represents the primary point of Service, SessionManager, and Logger configuration.
+Represents the primary point of Service, and Logger configuration.
 
 ```
  +-------------------------------------------------------------------------+
@@ -663,7 +629,6 @@ The service is responsible for managing the publicly available RESTful resources
                                            | + get_http_uri( void )                            Uri     |
                                            | + get_https_uri( void )                           Uri     |
                                            | + set_logger(Logger)                              void    |
-                                           | + set_session_manager(SessionManager)             void    |
                                            | + set_ready_handler(Callback)                     void    |
                                            | + set_signal_handler(integer,Callback)            void    |
                                            | + set_not_found_handler(Callback)                 void    |
@@ -676,15 +641,15 @@ The service is responsible for managing the publicly available RESTful resources
                                                                          |
                                                                          |
                                          +-------------------------------+---------------------------------+
-                                         |                               |                                 |
-                                         |                               |                                 |
-                                         |                               |                                 |
-                          +--------------+------------+  +---------------+-----------------+  +------------+------------+
-                          |          <<class>>        |  |         <<interface>>           |  |      <<interface>>      |
-                          |          Settings         |  |         SessionManager          |  |         Logger          |
-                          +---------------------------+  +---------------------------------+  +-------------------------+
-                          | See Settings for details. |  | See SessionManager for details. |  | See Logger for details. |
-                          +---------------------------+  +---------------------------------+  +-------------------------+
+                                         |                                                                 |
+                                         |                                                                 |
+                                         |                                                                 |
+                          +--------------+------------+                                       +------------+------------+
+                          |          <<class>>        |                                       |      <<interface>>      |
+                          |          Settings         |                                       |         Logger          |
+                          +---------------------------+                                       +-------------------------+
+                          | See Settings for details. |                                       | See Logger for details. |
+                          +---------------------------+                                       +-------------------------+
 ```
 
 Entity Interactions
@@ -693,39 +658,36 @@ Entity Interactions
 ### Request Processing
 
 ```
-[client]                              [service]                         [session manager]                        [resource]
-    |             HTTP Request            |                                     |                                     |
-    |------------------------------------>|                                     |                                     |
-    |                                     |            Create Session           |                                     |
-    |                                     |------------------------------------>|                                     |
-    |                                     |                                     |                                     |
-    |                                     |<------------------------------------|                                     |
-    |                                 +---|                                     |                                     |
-    |            Parse Request        |   |                                     |                                     |
-    |                                 +-->|                                     |                                     |
-    |                                 +---|                                     |                                     |
-    |  Perform Service Authentication |   |                                     |                                     |
-    |                                 +-->|                                     |                                     |
-    |                                     |     Load Persistent Session Data    |                                     |
-    |                                     |------------------------------------>|                                     |
-    |                                     |                                     |                                     |
-    |                                     |<------------------------------------|                                     |
-    |                                     |                                     |                                     |
-    |                                     |                           Route Request to Resource                       |
-    |                                     |-------------------------------------------------------------------------->|
-    |                                     |                                     |                                 +---|
-    |                                     |                                     | Perform Resource Authentication |   |
-    |                                     |                                     |                                 +-->|
-    |                                     |                                     |                                     |
-    |                                     |                                     |                                 +---|
-    |                                     |                                     |       Process Method Filters    |   |
-    |                                     |                                     |                                 +-->|
-    |                                     |                                     |                                 +---|
-    |                                     |                                     |       Invoke Method Handler     |   |
-    |                                     |                                     |                                 +-->|
-    |                                     |                    HTTP Response    |                                     |
-    |<----------------------------------------------------------------------------------------------------------------|
-    |                                     |                                     |                                     |
+[client]                              [service]                            [resource]
+    |             HTTP Request            |                                     |
+    |------------------------------------>|                                     |
+    |                                     |                                     |
+    |                                     |                                     |
+    |                                     |                                     |
+    |                                     |                                     |
+    |                                 +---|                                     |
+    |            Parse Request        |   |                                     |
+    |                                 +-->|                                     |
+    |                                 +---|                                     |
+    |  Perform Service Authentication |   |                                     |
+    |                                 +-->|                                     |
+    |                                     |                                     |
+    |                                     |                                     |
+    |                                     |      Route Request to Resource      |
+    |                                     |------------------------------------>|
+    |                                     |                                 +---|
+    |                                     | Perform Resource Authentication |   |
+    |                                     |                                 +-->|
+    |                                     |                                     |
+    |                                     |                                 +---|
+    |                                     |       Process Method Filters    |   |
+    |                                     |                                 +-->|
+    |                                     |                                 +---|
+    |                                     |       Invoke Method Handler     |   |
+    |                                     |                                 +-->|
+    |           HTTP Response             |                                     |
+    |<--------------------------------------------------------------------------|
+    |                                     |                                     |
 ```
 
 Dependency Tree
@@ -785,8 +747,6 @@ Future Direction
 
  It is the aim of the core development team to remove ASIO as a dependency due to the tight coupling of IO and Event Loop principles. This setup leads to cross contamination of concerns and forces design decisions on dependees. The team will present an event-loop offering superior handling and management of event-reaction task processing in the first quarter of 2017, and integration within Restbed before close of the same year.
 
- The ContextValue which provides boost::any functionality for Session state shall be replaced by std::any within the C++17 standard in future releases. If std::any is not supported a replacement drop-in shall be provided during compile time.
-
  WebSocketManager and ResourceCache shall be exposed for customisation by third-party developers.
 
  Application Layer (HTTP, HTTP2, SPDY, etc...) will be exposed for customisation by third-party developers.
@@ -794,8 +754,6 @@ Future Direction
  Network Layer (TCP, UDP, RS232, etc...) shall be exposed for customisation by third-party developers.
 
  The secure socket logic layer will be exposed to allow alternative implementations OpenSSL, GnuTLS, PolarSSL, MatrixSSL, etc...
-
- Client functionality will be extracted from the Restbed framework, this decision has been made due to conflicting concepts on the client/server side i.e A HTTP Session has differing properties depending on the which side of the communication channel you find yourself. Additionally this will aid in simplifying required APIs on each end, leading to a more self documenting codebase. To follow the latest progress please review the [Restless project](https://github.com/corvusoft/restless).
 
 Further Reading
 ---------------

@@ -11,8 +11,6 @@
 #include "corvusoft/restbed/request.hpp"
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/web_socket.hpp"
-#include "corvusoft/restbed/context_value.hpp"
-#include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
@@ -48,39 +46,8 @@ namespace restbed
     static Bytes empty_body = { };
     static multimap< string, string > empty_headers = { };
     
-    Session::Session( const string& id ) : m_pimpl( new SessionImpl )
-    {
-        m_pimpl->m_id = id;
-    }
-    
-    bool Session::has( const string& name ) const
-    {
-        return m_pimpl->m_context.find( name ) not_eq m_pimpl->m_context.end( );
-    }
-    
-    void Session::erase( const string& name )
-    {
-        if ( name.empty( ) )
-        {
-            m_pimpl->m_context.clear( );
-        }
-        else
-        {
-            m_pimpl->m_context.erase( name );
-        }
-    }
-    
-    const set< string > Session::keys( void ) const
-    {
-        std::set< string > keys;
-        
-        for ( const auto& value : m_pimpl->m_context )
-        {
-            keys.insert( value.first );
-        }
-        
-        return keys;
-    }
+    Session::Session( void ) : m_pimpl( new SessionImpl )
+    { return; }
     
     bool Session::is_open( void ) const
     {
@@ -113,10 +80,7 @@ namespace restbed
                 return error_handler( 500, runtime_error( message ), session );
             }
             
-            m_pimpl->m_manager->save( session, [ this, session ]( const shared_ptr< Session > )
-            {
-                m_pimpl->m_request->m_pimpl->m_socket->close( );
-            } );
+            m_pimpl->m_request->m_pimpl->m_socket->close( );
         } );
     }
     
@@ -139,10 +103,7 @@ namespace restbed
                 return error_handler( 500, runtime_error( message ), session );
             }
             
-            m_pimpl->m_manager->save( session, [ this ]( const shared_ptr< Session > )
-            {
-                m_pimpl->m_request->m_pimpl->m_socket->close( );
-            } );
+            m_pimpl->m_request->m_pimpl->m_socket->close( );
         } );
     }
     
@@ -388,11 +349,6 @@ namespace restbed
         } );
     }
     
-    const string& Session::get_id( void ) const
-    {
-        return m_pimpl->m_id;
-    }
-    
     const string Session::get_origin( void ) const
     {
         if ( m_pimpl->m_request == nullptr or m_pimpl->m_request->m_pimpl->m_socket == nullptr )
@@ -426,36 +382,6 @@ namespace restbed
     const multimap< string, string >& Session::get_headers( void ) const
     {
         return m_pimpl->m_headers;
-    }
-    
-    const ContextValue& Session::get( const string& name ) const
-    {
-        return m_pimpl->m_context.at( name );
-    }
-    
-    const ContextValue& Session::get( const string& name, const ContextValue& default_value ) const
-    {
-        if ( has( name ) )
-        {
-            return m_pimpl->m_context.at( name );
-        }
-        
-        return default_value;
-    }
-    
-    void Session::set_id( const string& value )
-    {
-        m_pimpl->m_id = value;
-    }
-    
-    void Session::set( const string& name, const ContextValue& value )
-    {
-        if ( has( name ) )
-        {
-            m_pimpl->m_context.erase( name );
-        }
-        
-        m_pimpl->m_context.insert( make_pair( name, value ) );
     }
     
     void Session::add_header( const string& name, const string& value )

@@ -46,7 +46,6 @@ namespace restbed
     class Session;
     class Resource;
     class Settings;
-    class SessionManager;
     class SSLSettings;
     
     namespace detail
@@ -149,8 +148,6 @@ namespace restbed
                 std::shared_ptr< asio::io_context > m_io_context;
                 
                 std::shared_ptr< asio::signal_set > m_signal_set;
-                
-                std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::shared_ptr< WebSocketManagerImpl > m_web_socket_manager;
                 

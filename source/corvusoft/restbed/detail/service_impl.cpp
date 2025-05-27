@@ -24,7 +24,6 @@
 #include "corvusoft/restbed/settings.hpp"
 #include "corvusoft/restbed/status_code.hpp"
 #include "corvusoft/restbed/ssl_settings.hpp"
-#include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/service_impl.hpp"
@@ -87,7 +86,6 @@ namespace restbed
             m_settings( nullptr ),
             m_io_context( make_shared< ::io_context >( ) ),
             m_signal_set( nullptr ),
-            m_session_manager( nullptr ),
             m_web_socket_manager( nullptr ),
             m_workers_stopped( ),
 #ifdef BUILD_SSL
@@ -301,19 +299,16 @@ namespace restbed
                             m_settings->get_keep_alive_cnt());
                     }
                     
-                    m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
-                    {
-                        session->m_pimpl->m_settings = m_settings;
-                        session->m_pimpl->m_manager = m_session_manager;
-                        session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
-                        session->m_pimpl->m_error_handler = m_error_handler;
-                        session->m_pimpl->m_request = make_shared< Request >( );
-                        session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                        session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
-                        session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                        session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
-                        session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
-                    } );
+                    auto session = make_shared< Session >( );
+                    session->m_pimpl->m_settings = m_settings;
+                    session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
+                    session->m_pimpl->m_error_handler = m_error_handler;
+                    session->m_pimpl->m_request = make_shared< Request >( );
+                    session->m_pimpl->m_request->m_pimpl->m_socket = connection;
+                    session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
+                    session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                    session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
+                    session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
                 } );
             }
             else
@@ -362,19 +357,16 @@ namespace restbed
                         m_settings->get_keep_alive_cnt());
                 }
                 
-                m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
-                {
-                    session->m_pimpl->m_settings = m_settings;
-                    session->m_pimpl->m_manager = m_session_manager;
-                    session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
-                    session->m_pimpl->m_error_handler = m_error_handler;
-                    session->m_pimpl->m_request = make_shared< Request >( );
-                    session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                    session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
-                    session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                    session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
-                    session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
-                } );
+                auto session = make_shared< Session >( );
+                session->m_pimpl->m_settings = m_settings;
+                session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
+                session->m_pimpl->m_error_handler = m_error_handler;
+                session->m_pimpl->m_request = make_shared< Request >( );
+                session->m_pimpl->m_request->m_pimpl->m_socket = connection;
+                session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
+                session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
+                session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
             }
             else
             {
@@ -596,19 +588,16 @@ namespace restbed
                         m_settings->get_keep_alive_cnt());
                 }
                 
-                m_session_manager->create( [ this, connection ]( const shared_ptr< Session > session )
-                {
-                    session->m_pimpl->m_settings = m_settings;
-                    session->m_pimpl->m_manager = m_session_manager;
-                    session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
-                    session->m_pimpl->m_error_handler = m_error_handler;
-                    session->m_pimpl->m_request = make_shared< Request >( );
-                    session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                    session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
-                    session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                    session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
-                    session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
-                } );
+                auto session = make_shared< Session >( );
+                session->m_pimpl->m_settings = m_settings;
+                session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
+                session->m_pimpl->m_error_handler = m_error_handler;
+                session->m_pimpl->m_request = make_shared< Request >( );
+                session->m_pimpl->m_request->m_pimpl->m_socket = connection;
+                session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
+                session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+                session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
+                session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
             }
             else
             {
@@ -687,12 +676,12 @@ namespace restbed
             {
                 m_authentication_handler( session, [ this ]( const shared_ptr< Session > session )
                 {
-                    m_session_manager->load( session, bind( &ServiceImpl::router, this, _1 ) );
+                    this->router(session);
                 } );
             }
             else
             {
-                m_session_manager->load( session, bind( &ServiceImpl::router, this, _1 ) );
+                this->router(session);
             }
         }
         

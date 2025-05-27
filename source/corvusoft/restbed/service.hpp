@@ -41,7 +41,6 @@ namespace restbed
     class Session;
     class Resource;
     class Settings;
-    class SessionManager;
     
     namespace detail
     {
@@ -86,8 +85,6 @@ namespace restbed
             
             //Setters
             SERVICE_EXPORT void set_logger( const std::shared_ptr< Logger >& value );
-            
-            SERVICE_EXPORT void set_session_manager( const std::shared_ptr< SessionManager >& value );
             
             SERVICE_EXPORT void set_ready_handler( const std::function< void ( Service& ) >& value );
             

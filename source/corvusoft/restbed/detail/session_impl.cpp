@@ -17,8 +17,6 @@
 #include "corvusoft/restbed/response.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/settings.hpp"
-#include "corvusoft/restbed/context_value.hpp"
-#include "corvusoft/restbed/session_manager.hpp"
 #include "corvusoft/restbed/detail/socket_impl.hpp"
 #include "corvusoft/restbed/detail/request_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
@@ -66,10 +64,8 @@ namespace restbed
             m_request( nullptr ),
             m_resource( nullptr ),
             m_settings( nullptr ),
-            m_manager( nullptr ),
             m_web_socket_manager( nullptr ),
             m_headers( ),
-            m_context( ),
             m_error_handler( nullptr ),
             m_keep_alive_callback( nullptr ),
             m_error_handler_invoked( false )
@@ -84,8 +80,6 @@ namespace restbed
         
         void SessionImpl::fetch_body( const size_t length, const shared_ptr< Session > session, const function< void ( const shared_ptr< Session >, const Bytes& ) >& callback ) const
         {
-            //const auto data_ptr = session->m_pimpl->m_request->m_pimpl->m_buffer->data( );
-            //const auto data = Bytes( data_ptr, data_ptr + length );
             Bytes data( length );
             asio::buffer_copy( asio::buffer( data ), session->m_pimpl->m_request->m_pimpl->m_buffer->data( ) );
             session->m_pimpl->m_request->m_pimpl->m_buffer->consume( length );

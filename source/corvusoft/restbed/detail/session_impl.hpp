@@ -31,7 +31,6 @@ namespace restbed
     class Response;
     class Resource;
     class Settings;
-    class SessionManager;
     
     namespace detail
     {
@@ -74,13 +73,9 @@ namespace restbed
                 
                 std::shared_ptr< const Settings > m_settings;
                 
-                std::shared_ptr< SessionManager > m_manager;
-                
                 std::shared_ptr< WebSocketManagerImpl > m_web_socket_manager;
                 
                 std::multimap< std::string, std::string > m_headers;
-                
-                std::map< std::string, const ContextValue > m_context;
                 
                 std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler;
                 

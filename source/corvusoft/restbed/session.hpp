@@ -15,7 +15,6 @@
 //Project Includes
 #include <corvusoft/restbed/byte.hpp>
 #include <corvusoft/restbed/string.hpp>
-#include <corvusoft/restbed/context_value.hpp>
 
 //External Includes
 
@@ -60,17 +59,11 @@ namespace restbed
             //Definitions
             
             //Constructors
-            SESSION_EXPORT explicit Session( const std::string& id );
+            SESSION_EXPORT Session( void );
             
             SESSION_EXPORT ~Session( void ) = default;
             
             //Functionality
-            SESSION_EXPORT bool has( const std::string& name ) const;
-            
-            SESSION_EXPORT void erase( const std::string& name = "" );
-            
-            SESSION_EXPORT const std::set< std::string > keys( void ) const;
-            
             SESSION_EXPORT bool is_open( void ) const;
             
             SESSION_EXPORT bool is_closed( void ) const;
@@ -125,9 +118,7 @@ namespace restbed
             
             SESSION_EXPORT void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
-            //Getters
-            SESSION_EXPORT const std::string& get_id( void ) const;
-            
+            //Getters            
             SESSION_EXPORT const std::string get_origin( void ) const;
             
             SESSION_EXPORT const std::string get_destination( void ) const;
@@ -138,15 +129,7 @@ namespace restbed
             
             SESSION_EXPORT const std::multimap< std::string, std::string >& get_headers( void ) const;
             
-            SESSION_EXPORT const ContextValue& get( const std::string& name ) const;
-            
-            SESSION_EXPORT const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
-            
             //Setters
-            SESSION_EXPORT void set_id( const std::string& value );
-            
-            SESSION_EXPORT void set( const std::string& name, const ContextValue& value );
-            
             SESSION_EXPORT void add_header( const std::string& name, const std::string& value );
             
             SESSION_EXPORT void set_header( const std::string& name, const std::string& value );
@@ -183,8 +166,6 @@ namespace restbed
             //Definitions
             
             //Constructors
-            Session( void ) = delete;
-            
             Session( const Session& original ) = delete;
             
             //Functionality

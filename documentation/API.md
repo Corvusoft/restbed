@@ -23,17 +23,16 @@ Table of Contents
 8.	[Resource](#resource)
 9.	[Service](#service)
 10.	[Session](#session)
-11.	[SessionManager](#sessionmanager)
-12.	[Settings](#settings)
-13.	[SSLSettings](#sslsettings)
-14.	[StatusCode](#statuscode)
-15.	[String](#string)
-16.	[String::Option](#stringoption)
-17.	[URI](#uri)
-18.	[WebSocket](#websocket)
-19.	[WebSocketMessage](#websocketmessage)
-20. [WebSocketMessage::OpCode](#websocketmessageopcode)
-21.	[Further Reading](#further-reading)
+11.	[Settings](#settings)
+12.	[SSLSettings](#sslsettings)
+13.	[StatusCode](#statuscode)
+14.	[String](#string)
+15.	[String::Option](#stringoption)
+16.	[URI](#uri)
+17.	[WebSocket](#websocket)
+18.	[WebSocketMessage](#websocketmessage)
+19. [WebSocketMessage::OpCode](#websocketmessageopcode)
+20.	[Further Reading](#further-reading)
 
 ### Byte/Bytes
 
@@ -1620,7 +1619,6 @@ The service is responsible for managing the publicly available RESTful resources
 -	[get_http_uri](#serviceget_http_uri)
 -	[get_https_uri](#serviceget_https_uri)
 -	[set_logger](#serviceset_logger)
--	[set_session_manager](#serviceset_session_manager)
 -	[set_ready_handler](#serviceset_ready_handler)
 -	[set_signal_handler](#serviceset_signal_handler)
 -	[set_not_found_handler](#serviceset_not_found_handler)
@@ -1923,28 +1921,6 @@ n/a
 
 n/a
 
-#### Service::set_session_manager
-
-```C++
-void set_session_manager( const std::shared_ptr< SessionManager >& value );
-```
-
-Set the manager to use for the creation, loading, and purging of HTTP sessions; see also [Session Manager](#sessionmanager).
-
-##### Parameters
-
-| name       | type                                                                  | default value | direction |
-|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
 #### Service::set_ready_handler
 
 ```C++
@@ -2130,9 +2106,6 @@ Represents a conversation between a client and the service. Internally this clas
 
 -	[constructor](#sessionconstructor)
 -	[destructor](#sessiondestructor)
--	[has](#sessionhas)
--	[erase](#sessionerase)
--	[keys](#sessionkeys)
 -	[is_open](#sessionis_open)
 -	[is_closed](#sessionis_closed)
 -	[close](#sessionclose)
@@ -2140,15 +2113,11 @@ Represents a conversation between a client and the service. Internally this clas
 -	[fetch](#sessionfetch)
 -	[upgrade](#sessionupgrade)
 -	[sleep_for](#sessionsleep_for)
--	[get_id](#sessionget_id)
 -	[get_origin](#sessionget_origin)
 -	[get_destination](#sessionget_destination)
 -	[get_request](#sessionget_request)
 -	[get_resource](#sessionget_resource)
 -	[get_headers](#sessionget_headers)
--	[get](#sessionget)
--	[set_id](#sessionset_id)
--	[set](#sessionset)
 -	[add_header](#sessionadd_header)
 -	[set_header](#sessionset_header)
 -	[set_headers](#sessionset_headers)
@@ -2156,16 +2125,14 @@ Represents a conversation between a client and the service. Internally this clas
 #### Session::constructor
 
 ```C++
-Session( const std::string& id );
+Session( void );
 ```
 
 Initialises a new class instance; see also [destructor](#sessiondestructor).
 
 ##### Parameters
 
-| name       | type                                                                | default value | direction |
-|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
+n/a
 
 ##### Return Value
 
@@ -2194,70 +2161,6 @@ n/a
 ##### Exceptions
 
 No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Session::has
-
-```C++
-bool has( const std::string& name ) const;
-```
-
-Test if a session has session-data under the supplied name.
-
-##### Parameters
-
-| name       | type                                                                | default value | direction |
-|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
-| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
-
-##### Return Value
-
-Boolean true if the data is available.
-
-##### Exceptions
-
-n/a
-
-#### Session::erase
-
-```C++
-void erase( const std::string& name = "" );
-```
-
-If session-data is available under the supplied name it is removed. If name is empty all data is erased.
-
-##### Parameters
-
-| name       | type                                                                | default value | direction |
-|:----------:|---------------------------------------------------------------------|:-------------:|:---------:|
-| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### Session::keys
-
-```C++
-const std::set< std::string > keys( void ) const;
-```
-
-Return a collection of session-data keys.
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-Collection of valid session-data keys.
-
-##### Exceptions
-
-n/a
 
 #### Session::is_open
 
@@ -2465,26 +2368,6 @@ n/a
 
 n/a
 
-#### Session::get_id
-
-```C++
-const std::string& get_id( void ) const;
-```
-
-Return a string uniquely identifying this session instance.
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-[std::string](http://en.cppreference.com/w/cpp/utility/functional/function) representing a unique session identifier.
-
-##### Exceptions
-
-n/a
-
 #### Session::get_origin
 
 ```C++
@@ -2584,76 +2467,6 @@ n/a
 
 n/a
 
-#### Session::get
-
-```C++
-const ContextValue& get( const std::string& name ) const;
-
-const ContextValue& get( const std::string& name, const ContextValue& default_value ) const;
-```
-
-Return the session data identified by name.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
-| value      | [std::any](http://en.cppreference.com/w/cpp/utility/any)                      |      n/a      |   input   |
-
-##### Return Value
-
-[std::any](http://en.cppreference.com/w/cpp/utility/any) session data item.
-
-##### Exceptions
-
-n/a
-
-#### Session::set_id
-
-```C++
-void set_id( const std::string& value );
-```
-
-Set a unique session identifier.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
-
-##### Return Value
-
-[std::any](http://en.cppreference.com/w/cpp/utility/any) session data item.
-
-##### Exceptions
-
-n/a
-
-#### Session::set
-
-```C++
-void set( const std::string& name, const ContextValue& value );
-```
-
-Set a unique session identifier.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| name       | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
-| value      | [std::any](http://en.cppreference.com/w/cpp/utility/any)                      |      n/a      |   input   |
-
-##### Return Value
-
-[std::any](http://en.cppreference.com/w/cpp/utility/any) session data item.
-
-##### Exceptions
-
-n/a
-
 #### Session::add_header
 
 ```C++
@@ -2713,171 +2526,6 @@ Set default HTTP headers for the session, existing headers will be erased; see a
 | name   | type                                                                 | default value | direction |
 |:------:|----------------------------------------------------------------------|:-------------:|:---------:|
 | values | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-### SessionManager
-
-Abstract Class detailing the required contract for SessionManager extensions. No default implementation is supplied with the codebase and it is the responsibility of third-party developers to implement desired characteristics.
-
-#### Methods
-
--	[constructor](#sessionmanagerconstructor)
--	[destructor](#sessionmanagerdestructor)
--	[stop](#sessionmanagerstop)
--	[start](#sessionmanagerstart)
--	[create](#sessionmanagercreate)
--	[load](#sessionmanagerload)
--	[save](#sessionmanagersave)
-
-#### SessionManager::constructor
-
-```C++
-SessionManager( void );
-```
-
-Initialises a new class instance; see also [destructor](#sessionmanagerdestructor).
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### SessionManager::destructor
-
-```C++
-virtual ~SessionManager( void );
-```
-
-Clean-up class instance; see also [constructor](#sessionmanagerconstructor).
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### SessionManager::stop
-
-```C++
-virtual void stop( void );
-```
-
-Shutdown an active SessionManager.
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### SessionManager::start
-
-```C++
-virtual void start( const std::shared_ptr< const Settings >& settings );
-```
-
-Start the Session Manager, the settings supplied are identical to those given to [Service::start](servicestart).
-
-##### Parameters
-
-| name   | type                                                                    | default value | direction |
-|:------:|-------------------------------------------------------------------------|:-------------:|:---------:|
-| settings | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-
-#### SessionManager::create
-
-```C++
-virtual void create( const std::function< void ( const std::shared_ptr< Session > ) >& callback );
-```
-
-Create a new [Session](#session) instance passing it into callback.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### SessionManager::load
-
-```C++
-virtual void load( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
-```
-
-Load previous session data into the supplied session before passing it to callback.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
-| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### SessionManager::save
-
-```C++
-virtual void save( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
-```
-
-Save session for later retrieval.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
-| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
