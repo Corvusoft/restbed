@@ -66,8 +66,6 @@ namespace restbed
                 
                 virtual bool is_closed( void ) const;
                 
-                virtual void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const std::error_code& ) >& callback );
-                
                 virtual void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback );
                 
 				virtual void start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback);

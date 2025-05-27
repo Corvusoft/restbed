@@ -117,39 +117,6 @@ namespace restbed
             return not m_is_open;
         }
         
-        void SocketImpl::connect( const string& hostname, const uint16_t port, const function< void ( const error_code& ) >& callback )
-        {
-            m_resolver = make_shared< tcp::resolver >( m_io_context );
-            m_resolver->async_resolve( hostname, ::to_string( port ), [ this, callback ]( const error_code & error, tcp::resolver::results_type results )
-            {
-                if ( not error )
-                {
-#ifdef BUILD_SSL
-                    auto& socket = ( m_socket not_eq nullptr ) ? *m_socket : m_ssl_socket->lowest_layer( );
-#else
-                    auto& socket = *m_socket;
-#endif
-                    socket.async_connect( results.begin()->endpoint(), [ this, callback ]( const error_code & error )
-                    {
-#ifdef BUILD_SSL
-                    
-                        if ( m_ssl_socket not_eq nullptr )
-                        {
-                            m_ssl_socket->handshake( asio::ssl::stream_base::client );
-                        }
-                        
-#endif
-                        m_is_open = true;
-                        callback( error );
-                    } );
-                }
-                else
-                {
-                    callback( error );
-                }
-            } );
-        }
-        
         void SocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )
         {
             m_timer->cancel( );

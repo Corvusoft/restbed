@@ -11,7 +11,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
-#include "corvusoft/restbed/http.hpp"
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/request.hpp"
@@ -183,7 +182,7 @@ namespace restbed
                 payload->set_status_message( m_settings->get_status_message( payload->get_status_code( ) ) );
             }
             
-            m_request->m_pimpl->m_socket->start_write( Http::to_bytes( payload ), callback );
+            m_request->m_pimpl->m_socket->start_write( to_bytes( payload ), callback );
         }
         
         const function< void ( const int, const exception&, const shared_ptr< Session > ) > SessionImpl::get_error_handler( void )
@@ -209,6 +208,46 @@ namespace restbed
             }
             
             return error_handler;
+        }
+
+        Bytes SessionImpl::to_bytes( const shared_ptr< Response >& value )
+        {
+            char* locale = nullptr;
+            if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+            {
+                locale = strdup(current_locale);
+                setlocale( LC_NUMERIC, "C" );
+            }
+            
+            auto data = String::format( "%s/%.1f %i %s\r\n",
+                                        value->get_protocol( ).data( ),
+                                        value->get_version( ),
+                                        value->get_status_code( ),
+                                        value->get_status_message( ).data( ) );
+            
+            if (locale) {
+                setlocale( LC_NUMERIC, locale );
+                free( locale );
+            }
+            
+            auto headers = value->get_headers( );
+            
+            if ( not headers.empty( ) )
+            {
+                data += String::join( headers, ": ", "\r\n" ) + "\r\n";
+            }
+            
+            data += "\r\n";
+            
+            auto bytes = String::to_bytes( data );
+            auto body = value->get_body( );
+            
+            if ( not body.empty( ) )
+            {
+                bytes.insert( bytes.end( ), body.begin( ), body.end( ) );
+            }
+            
+            return bytes;
         }
     }
 }

@@ -53,10 +53,6 @@ add_executable( service_integration_test_suite ${SOURCE_DIR}/service_suite.cpp )
 target_link_libraries( service_integration_test_suite ${STATIC_LIBRARY_NAME} ${OPENSSL_DEPS}  ${catch_main_LIBRARY_STATIC} ${catch_LIBRARY_STATIC} )
 add_test( service_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/service_integration_test_suite )
 
-add_executable( http_integration_test_suite ${SOURCE_DIR}/http_suite.cpp )
-target_link_libraries( http_integration_test_suite ${STATIC_LIBRARY_NAME} ${OPENSSL_DEPS}  ${catch_main_LIBRARY_STATIC} ${catch_LIBRARY_STATIC} )
-add_test( http_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/http_integration_test_suite )
-
 add_executable( web_socket_message_integration_test_suite ${SOURCE_DIR}/web_socket_message_suite.cpp )
 target_link_libraries( web_socket_message_integration_test_suite ${STATIC_LIBRARY_NAME} ${OPENSSL_DEPS}  ${catch_main_LIBRARY_STATIC} ${catch_LIBRARY_STATIC} )
 add_test( web_socket_message_integration_test_suite ${EXECUTABLE_OUTPUT_PATH}/web_socket_message_integration_test_suite )

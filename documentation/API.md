@@ -16,26 +16,25 @@ Table of Contents
 1.	[Overview](#overview)
 2.	[Interpretation](#interpretation)
 3.	[Byte/Bytes](#bytebytes)
-4.	[HTTP](#http)
-5.	[Logger](#logger)
-6.	[Logger::Level](#loggerlevel)
-7.	[Request](#request)
-8.	[Response](#response)
-9.	[Resource](#resource)
-10.	[Rule](#rule)
-11.	[Service](#service)
-12.	[Session](#session)
-13.	[SessionManager](#sessionmanager)
-14.	[Settings](#settings)
-15.	[SSLSettings](#sslsettings)
-16.	[StatusCode](#statuscode)
-17.	[String](#string)
-18.	[String::Option](#stringoption)
-19.	[URI](#uri)
-20.	[WebSocket](#websocket)
-21.	[WebSocketMessage](#websocketmessage)
-22. [WebSocketMessage::OpCode](#websocketmessageopcode)
-23.	[Further Reading](#further-reading)
+4.	[Logger](#logger)
+5.	[Logger::Level](#loggerlevel)
+6.	[Request](#request)
+7.	[Response](#response)
+8.	[Resource](#resource)
+9.	[Rule](#rule)
+10.	[Service](#service)
+11.	[Session](#session)
+12.	[SessionManager](#sessionmanager)
+13.	[Settings](#settings)
+14.	[SSLSettings](#sslsettings)
+15.	[StatusCode](#statuscode)
+16.	[String](#string)
+17.	[String::Option](#stringoption)
+18.	[URI](#uri)
+19.	[WebSocket](#websocket)
+20.	[WebSocketMessage](#websocketmessage)
+21. [WebSocketMessage::OpCode](#websocketmessageopcode)
+22.	[Further Reading](#further-reading)
 
 ### Byte/Bytes
 
@@ -48,190 +47,6 @@ typedef std::vector< Byte > Bytes;
 Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
 
 See [std::uint8_t](http://en.cppreference.com/w/cpp/types/integer) and [std::vector](http://en.cppreference.com/w/cpp/container/vector) for further details.
-
-### Http
-
-The static HTTP class offers limited client capabilities for consuming RESTful services. This will be removed in future version and replaced with the Restless client framework.
-
-#### Methods
-
--	[to_bytes](#httpto_bytes)
--	[close](#httpclose)
--	[is_open](#httpis_open)
--	[is_closed](#httpis_closed)
--	[sync](#httpsync)
--	[async](#httpasync)
--	[fetch](#httpfetch)
-
-#### Http::to_bytes
-
-```C++
-static Bytes to_bytes( const std::shared_ptr< Request >& value );
-
-static Bytes to_bytes( const std::shared_ptr< Response >& value );
-```
-
-Convert a HTTP [request](#request)/[response](#response) object to a sequence of [bytes](#bytebytes).
-
-##### Parameters
-
-| parameter | type                           | default value | direction |
-|:---------:|--------------------------------|:-------------:|:---------:|
-|   value   | [restbed::Request](#request)   |      n/a      |   input   |
-|   value   | [restbed::Response](#response) |      n/a      |   input   |
-
-##### Return Value
-
-Collection of [bytes](#bytebytes) representing the raw request representation.
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Http::close
-
-```C++
-static void close( const std::shared_ptr< Request >& value );
-```
-
-Shutdown an active HTTP [request](#request) object, causing its underlying socket to be disconnected. Invoking this method on a inactive [request](#request) has no effect.
-
-##### Parameters
-
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restbed::Request](#request) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Http::is_open
-
-```C++
-static bool is_open( const std::shared_ptr< Request >& value );
-```
-
-Determine if the HTTP [request](#request) object is active, that is say, it has a connected socket to a remote endpoint. Invoking this method on a inactive [request](#request) has no effect.
-
-##### Parameters
-
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restbed::Request](#request) |      n/a      |   input   |
-
-##### Return Value
-
-Boolean true if the underlying socket is connected, else false.
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Http::is_closed
-
-```C++
-static bool is_closed( const std::shared_ptr< Request >& value );
-```
-
-Determine if the HTTP [request](#request) object is inactive, that is say, it has a disconnected socket. Invoking this method on a inactive [request](#request) has no effect.
-
-##### Parameters
-
-| parameter | type                         | default value | direction |
-|:---------:|------------------------------|:-------------:|:---------:|
-|   value   | [restbed::Request](#request) |      n/a      |   input   |
-
-##### Return Value
-
-Boolean true if the underlying socket is disconnected, else false.
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Http::sync
-
-```C++
-static const std::shared_ptr< Response > sync( const std::shared_ptr< Request > request, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
-```
-
-Perform a synchronous, read: wait for the result, HTTP [request](#request). If an error occurs the [response](#response) will contain details of the error, indicated by a status code of zero (0).
-
-[Settings](#settings) may be specified via the second parameter.
-
-##### Parameters
-
-| parameter | type                           | default value | direction |
-|:---------:|--------------------------------|:-------------:|:---------:|
-|  request  | [restbed::Request](#request)   |      n/a      |   input   |
-| settings  | [restbed::Settings](#settings) |      n/a      |   input   |
-
-##### Return Value
-
-The HTTP [response](#response) returned from the endpoint specified in the [request](#request) object, otherwise an error condition.
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Http::async
-
-```C++
-static std::future< std::shared_ptr< Response > > async( const std::shared_ptr< Request > request, const std::function< void ( const std::shared_ptr< Request >, const std::shared_ptr< Response > ) >& callback, const std::shared_ptr< const Settings >& settings = std::make_shared< Settings >( ) );
-```
-
-Perform an asynchronous, read: don't wait for the result, HTTP [request](#request). If an error occurs the [response](#response) will contain details of the error, indicated by a status code of zero (0).
-
-The second callback parameter will be invoked when the service has finished responding to the [request](#request).
-
-[Settings](#settings) may be specified via the third parameter.
-
-##### Parameters
-
-| parameter | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-|  request  | [restbed::Request](#request)                                                  |      n/a      |   input   |
-| callback  | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-| settings  | [restbed::Settings](#settings)                                                |      n/a      |   input   |
-
-##### Return Value
-
-[std::future](http://en.cppreference.com/w/cpp/thread/future) holding the pending [restbed::Response](#response).
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Http::fetch
-
-```C++
-static Bytes fetch( const std::size_t length, const std::shared_ptr< Response >& response );
-
-static Bytes fetch( const std::string& delimiter, const std::shared_ptr< Response >& response );
-```
-
-Fetch the contents of a response body by either length or delimiter value.
-
-##### Parameters
-
-| parameter | type                                                                | default value | direction |
-|:---------:|---------------------------------------------------------------------|:-------------:|:---------:|
-| response  | [restbed::Response](#response)                                      |      n/a      |   input   |
-|  length   | [std::size_t](http://en.cppreference.com/w/cpp/types/size_t)        |      n/a      |   input   |
-| delimiter | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) |      n/a      |   input   |
-
-##### Return Value
-
-Sequence of [restbed::Bytes](#bytebytes) representing a portion or a complete response body determined by length or delimiter parameter options.
-
-##### Exceptions
-
-No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
 
 ### Logger
 

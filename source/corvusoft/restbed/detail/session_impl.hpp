@@ -111,6 +111,7 @@ namespace restbed
                 //Constructors
                 
                 //Functionality
+                static Bytes to_bytes( const std::shared_ptr< Response >& value );
                 
                 //Getters
                 
