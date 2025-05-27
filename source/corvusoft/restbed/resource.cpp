@@ -13,7 +13,6 @@
 #include <algorithm>
 
 //Project Includes
-#include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/session.hpp"
 #include "corvusoft/restbed/resource.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
@@ -45,28 +44,6 @@ namespace restbed
     Resource::~Resource( void )
     {
         return;
-    }
-    
-    void Resource::add_rule( const shared_ptr< Rule >& rule )
-    {
-        if ( rule not_eq nullptr )
-        {
-            m_pimpl->m_rules.push_back( rule );
-            
-            stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
-            {
-                return lhs->get_priority( ) < rhs->get_priority( );
-            } );
-        }
-    }
-    
-    void Resource::add_rule( const shared_ptr< Rule >& rule, const int priority )
-    {
-        if ( rule not_eq nullptr )
-        {
-            rule->set_priority( priority );
-            add_rule( rule );
-        }
     }
     
     void Resource::set_path( const string& value )

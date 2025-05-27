@@ -42,7 +42,6 @@ namespace restbed
 {
     //Forward Declarations
     class Uri;
-    class Rule;
     class Logger;
     class Session;
     class Resource;
@@ -154,8 +153,6 @@ namespace restbed
                 std::shared_ptr< SessionManager > m_session_manager;
                 
                 std::shared_ptr< WebSocketManagerImpl > m_web_socket_manager;
-                
-                std::vector< std::shared_ptr< Rule > > m_rules;
                 
                 std::unique_ptr< std::future<void > > m_workers_stopped;
 #ifdef BUILD_SSL

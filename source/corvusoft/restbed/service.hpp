@@ -37,7 +37,6 @@ namespace restbed
 {
     //Forward Declarations
     class Uri;
-    class Rule;
     class Logger;
     class Session;
     class Resource;
@@ -71,10 +70,6 @@ namespace restbed
             SERVICE_EXPORT void start( const std::shared_ptr< const Settings >& settings = nullptr );
             
             SERVICE_EXPORT void restart( const std::shared_ptr< const Settings >& settings = nullptr );
-            
-            SERVICE_EXPORT void add_rule( const std::shared_ptr< Rule >& rule );
-            
-            SERVICE_EXPORT void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
             
             SERVICE_EXPORT void publish( const std::shared_ptr< const Resource >& resource );
             

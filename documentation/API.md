@@ -21,20 +21,19 @@ Table of Contents
 6.	[Request](#request)
 7.	[Response](#response)
 8.	[Resource](#resource)
-9.	[Rule](#rule)
-10.	[Service](#service)
-11.	[Session](#session)
-12.	[SessionManager](#sessionmanager)
-13.	[Settings](#settings)
-14.	[SSLSettings](#sslsettings)
-15.	[StatusCode](#statuscode)
-16.	[String](#string)
-17.	[String::Option](#stringoption)
-18.	[URI](#uri)
-19.	[WebSocket](#websocket)
-20.	[WebSocketMessage](#websocketmessage)
-21. [WebSocketMessage::OpCode](#websocketmessageopcode)
-22.	[Further Reading](#further-reading)
+9.	[Service](#service)
+10.	[Session](#session)
+11.	[SessionManager](#sessionmanager)
+12.	[Settings](#settings)
+13.	[SSLSettings](#sslsettings)
+14.	[StatusCode](#statuscode)
+15.	[String](#string)
+16.	[String::Option](#stringoption)
+17.	[URI](#uri)
+18.	[WebSocket](#websocket)
+19.	[WebSocketMessage](#websocketmessage)
+20. [WebSocketMessage::OpCode](#websocketmessageopcode)
+21.	[Further Reading](#further-reading)
 
 ### Byte/Bytes
 
@@ -1365,13 +1364,12 @@ n/a
 
 ### Resource
 
-Resource represents an network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource specific filteration, request processing rules, and authentication must be placed on this entity.
+Resource represents an network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource specific filteration, request processing, and authentication must be placed on this entity.
 
 #### Methods
 
 -	[constructor](#resourceconstructor)
 -	[destructor](#resourcedestructor)
--	[add_rule](#resourceadd_rule)
 -	[set_path](#resourceset_path)
 -	[set_paths](#resourceset_paths)
 -	[set_default_header](#resourceset_default_header)
@@ -1420,31 +1418,6 @@ n/a
 ##### Exceptions
 
 No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp/language/noexcept_spec).
-
-#### Resource::add_rule
-
-```C++
-void add_rule( const std::shared_ptr< Rule >& rule );
-
-void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
-```
-
-Add incoming request processing rule; see also [Rule](#rule).
-
-##### Parameters
-
-| name       | type                                                  | default value | direction |
-|:----------:|-------------------------------------------------------|:-------------:|:---------:|
-| rule       | [Rule](#rule)                                         |      n/a      |   input   |
-| priority   | [int](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
 
 #### Resource::set_path
 
@@ -1627,104 +1600,6 @@ n/a
 
 n/a
 
-### Rule
-
-Interface representing an incoming processing rule.
-
-#### Methods
-
--	[condition](#rulecondition)
--	[action](#ruleaction)
--	[get_priority](#ruleget_priority)
--	[set_priority](#ruleset_priority)
-
-#### Rule::condition
-
-```C++
-virtual bool condition( const std::shared_ptr< Session > session );
-```
-
-The condition that decides if this rules action should be invoked; see also [action](#ruleaction).
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
-
-##### Return Value
-
-True if the condition has been satisfied.
-
-##### Exceptions
-
-n/a
-
-#### Rule::action
-
-```C++
-virtual void action( const std::shared_ptr< Session > session, const std::function< void ( const std::shared_ptr< Session > ) >& callback ) = 0;
-```
-
-The action to be invoked if the rules condition returns true; see also [condition](#rulecondition).
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| session    | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr)         |      n/a      |   input   |
-| callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### Rule::get_priority
-
-```C++
-int get_priority( void ) const;
-```
-
-Retrieve rule processing priority.
-
-##### Parameters
-
-n/a
-
-##### Return Value
-
-[int](http://en.cppreference.com/w/cpp/language/types) representing rule processing priority.
-
-##### Exceptions
-
-n/a
-
-#### Rule::set_priority
-
-```C++
-void set_priority( const int value );
-```
-
-Alter rule's processing priority.
-
-##### Parameters
-
-| name       | type                                                           | default value | direction |
-|:----------:|----------------------------------------------------------------|:-------------:|:---------:|
-| value      | [int](http://en.cppreference.com/w/cpp/language/types)         |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
 ### Service
 
 The service is responsible for managing the publicly available RESTful resources, HTTP compliance, scheduling of the socket data and insuring incoming requests are processed in a timely fashion.
@@ -1738,7 +1613,6 @@ The service is responsible for managing the publicly available RESTful resources
 -	[stop](#servicestop)
 -	[start](#servicestart)
 -	[restart](#servicerestart)
--	[add_rule](#serviceadd_rule)
 -	[publish](#servicepublish)
 -	[suppress](#servicesuppress)
 -	[schedule](#serviceschedule)
@@ -1891,31 +1765,6 @@ Restart the service with the supplied settings, otherwise default values will be
 | name       | type                                                                  | default value | direction |
 |:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
 | settings   | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### Service::add_rule
-
-```C++
-void add_rule( const std::shared_ptr< Rule >& rule );
-
-void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
-```
-
-Add incoming request processing rule; see also [Rule](#rule).
-
-##### Parameters
-
-| name       | type                                                  | default value | direction |
-|:----------:|-------------------------------------------------------|:-------------:|:---------:|
-| rule       | [Rule](#rule)                                         |      n/a      |   input   |
-| priority   | [int](http://en.cppreference.com/w/cpp/types/integer) |      n/a      |   input   |
 
 ##### Return Value
 

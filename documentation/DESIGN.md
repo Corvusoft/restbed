@@ -54,7 +54,6 @@ System Entities
 -	[Response](#response)
 -	[Session](#session)
 -	[SessionManager](#sessionmanager)
--	[Rule](#rule)
 -	[SSLSettings](#sslsettings)
 -	[Settings](#settings)
 -	[WebSocket](#websocket)
@@ -88,15 +87,13 @@ Byte represents an unsigned 8-bit wide data-type, Bytes provides container funct
 
 ### Resource
 
-Resource represents an network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource specific filteration, request processing rules, and authentication must be placed on this entity.
+Resource represents an network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource specific filteration, request processing, and authentication must be placed on this entity.
 
 ```
 +------------------------------------------------------------------------+
 |                                <<class>>                               |
 |                                Resources                               |
 +------------------------------------------------------------------------+
-| + add_rule(Rule)                                                 void  |
-| + add_rule(Rule, integer)                                        void  |
 | + set_path(string)                                               void  |
 | + set_paths(set<string>)                                         void  |
 | + set_default_header(string,string)                              void  |
@@ -396,30 +393,6 @@ Abstract Class detailing the required contract for SessionManager extensions. No
      +--------------------------+
 ```
 
-### Rule
-
-Represents a reusable source of request validation and processing; see [Rules Engine](https://github.com/Corvusoft/restbed/tree/master/example/rules_engine/source) example for details.
-
-```
- +-------------------------------------+
- |             <<interface>>           |
- |                 Rule                |
- +-------------------------------------+
- | + condition(Session)        boolean |
- | + action(Session,Callback)  void    |
- | + get_priority(void)        integer |
- | + set_priority(integer)     void    |
- +-----------------^-------------------+
-                   |
-                   |
-     +-------------v------------+
-     |         <<class>>        |
-     |          Session         |
-     +--------------------------+
-     | See Session for details. |
-     +--------------------------+
-```
-
 ### SSLSettings
 
 Represents Secure Socket Layer service configuration.
@@ -683,8 +656,6 @@ The service is responsible for managing the publicly available RESTful resources
                                            | + stop(void)                                      void    |
                                            | + start(Settings)                                 void    |
                                            | + restart(Settings)                               void    |
-                                           | + add_rule(Rule)                                  void    |
-                                           | + add_rule(Rule,integer)                          void    |
                                            | + publish(Resource)                               void    |
                                            | + suppress(Resource)                              void    |
                                            | + schedule(Callback,milliseconds)                 void    |
@@ -704,16 +675,16 @@ The service is responsible for managing the publicly available RESTful resources
                                            +-----------------------------O-----------------------------+
                                                                          |
                                                                          |
-                          +-------------------------------+--------------+------------------+--------------------------+
-                          |                               |                                 |                          |
-                          |                               |                                 |                          |
-                          |                               |                                 |                          |
-           +--------------+------------+  +---------------+-----------------+  +------------+------------+  +----------+------------+
-           |          <<class>>        |  |         <<interface>>           |  |      <<interface>>      |  |    <<interface>>      |
-           |          Settings         |  |         SessionManager          |  |         Logger          |  |         Rule          |
-           +---------------------------+  +---------------------------------+  +-------------------------+  +-----------------------+
-           | See Settings for details. |  | See SessionManager for details. |  | See Logger for details. |  | See Rule for details. |
-           +---------------------------+  +---------------------------------+  +-------------------------+  +-----------------------+
+                                         +-------------------------------+---------------------------------+
+                                         |                               |                                 |
+                                         |                               |                                 |
+                                         |                               |                                 |
+                          +--------------+------------+  +---------------+-----------------+  +------------+------------+
+                          |          <<class>>        |  |         <<interface>>           |  |      <<interface>>      |
+                          |          Settings         |  |         SessionManager          |  |         Logger          |
+                          +---------------------------+  +---------------------------------+  +-------------------------+
+                          | See Settings for details. |  | See SessionManager for details. |  | See Logger for details. |
+                          +---------------------------+  +---------------------------------+  +-------------------------+
 ```
 
 Entity Interactions
@@ -739,17 +710,13 @@ Entity Interactions
     |                                     |------------------------------------>|                                     |
     |                                     |                                     |                                     |
     |                                     |<------------------------------------|                                     |
-    |                                 +---|                                     |                                     |
-    |       Process Service Ruleset   |   |                                     |                                     |
-    |                                 +-->|                                     |                                     |
+    |                                     |                                     |                                     |
     |                                     |                           Route Request to Resource                       |
     |                                     |-------------------------------------------------------------------------->|
     |                                     |                                     |                                 +---|
     |                                     |                                     | Perform Resource Authentication |   |
     |                                     |                                     |                                 +-->|
-    |                                     |                                     |                                 +---|
-    |                                     |                                     |      Process Resource Ruleset   |   |
-    |                                     |                                     |                                 +-->|
+    |                                     |                                     |                                     |
     |                                     |                                     |                                 +---|
     |                                     |                                     |       Process Method Filters    |   |
     |                                     |                                     |                                 +-->|

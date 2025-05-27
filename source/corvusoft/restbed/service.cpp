@@ -14,7 +14,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
-#include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/logger.hpp"
 #include "corvusoft/restbed/service.hpp"
 #include "corvusoft/restbed/session.hpp"
@@ -159,11 +158,6 @@ namespace restbed
         m_pimpl->m_session_manager->start( m_pimpl->m_settings );
         
         m_pimpl->m_web_socket_manager = make_shared< WebSocketManagerImpl >( );
-        
-        stable_sort( m_pimpl->m_rules.begin( ), m_pimpl->m_rules.end( ), [ ]( const shared_ptr< const Rule >& lhs, const shared_ptr< const Rule >& rhs )
-        {
-            return lhs->get_priority( ) < rhs->get_priority( );
-        } );
 
 #ifdef BUILD_IPC
         m_pimpl->ipc_start( );
@@ -240,33 +234,6 @@ namespace restbed
         }
         
         start( settings );
-    }
-    
-    void Service::add_rule( const shared_ptr< Rule >& rule )
-    {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
-        
-        if ( rule not_eq nullptr )
-        {
-            m_pimpl->m_rules.push_back( rule );
-        }
-    }
-    
-    void Service::add_rule( const shared_ptr< Rule >& rule, const int priority )
-    {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
-        
-        if ( rule not_eq nullptr )
-        {
-            rule->set_priority( priority );
-            m_pimpl->m_rules.push_back( rule );
-        }
     }
     
     void Service::publish( const shared_ptr< const Resource >& resource )

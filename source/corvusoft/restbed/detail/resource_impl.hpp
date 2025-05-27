@@ -24,7 +24,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Rule;
     class Session;
     
     namespace detail
@@ -36,8 +35,6 @@ namespace restbed
             std::set< std::string > m_paths { };
             
             std::set< std::string > m_methods { };
-            
-            std::vector< std::shared_ptr< Rule > > m_rules { };
             
             std::multimap< std::string, std::string > m_default_headers { };
             

@@ -16,7 +16,6 @@
 
 //Project Includes
 #include "corvusoft/restbed/uri.hpp"
-#include "corvusoft/restbed/rule.hpp"
 #include "corvusoft/restbed/logger.hpp"
 #include "corvusoft/restbed/string.hpp"
 #include "corvusoft/restbed/request.hpp"
@@ -32,7 +31,6 @@
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
 #include "corvusoft/restbed/detail/ipc_socket_impl.hpp"
-#include "corvusoft/restbed/detail/rule_engine_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
@@ -91,7 +89,6 @@ namespace restbed
             m_signal_set( nullptr ),
             m_session_manager( nullptr ),
             m_web_socket_manager( nullptr ),
-            m_rules( ),
             m_workers_stopped( ),
 #ifdef BUILD_SSL
             m_ssl_settings( nullptr ),
@@ -540,57 +537,51 @@ namespace restbed
                 return;
             }
             
-            rule_engine( session, m_rules, [ this ]( const shared_ptr< Session > session )
+            const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
+            
+            if ( resource_route == m_resource_routes.end( ) )
             {
-                const auto resource_route = find_if( m_resource_routes.begin( ), m_resource_routes.end( ), bind( &ServiceImpl::resource_router, this, session, _1 ) );
-                
-                if ( resource_route == m_resource_routes.end( ) )
+                return not_found( session );
+            }
+            
+            const auto path = resource_route->first;
+            session->m_pimpl->m_resource = resource_route->second;
+            const auto request = session->get_request( );
+            extract_path_parameters( path, request );
+            
+            const auto callback = [ this ]( const shared_ptr< Session > session )
+            {
+                if ( session->is_closed( ) )
                 {
-                    return not_found( session );
+                    return;
                 }
                 
-                const auto path = resource_route->first;
-                session->m_pimpl->m_resource = resource_route->second;
                 const auto request = session->get_request( );
-                extract_path_parameters( path, request );
+                auto method_handler = find_method_handler( session );
                 
-                const auto callback = [ this ]( const shared_ptr< Session > session )
+                if ( method_handler == nullptr )
                 {
-                    rule_engine( session, session->m_pimpl->m_resource->m_pimpl->m_rules, [ this ]( const shared_ptr< Session > session )
+                    if ( m_supported_methods.count( request->get_method( ) ) == 0 )
                     {
-                        if ( session->is_closed( ) )
-                        {
-                            return;
-                        }
-                        
-                        const auto request = session->get_request( );
-                        auto method_handler = find_method_handler( session );
-                        
-                        if ( method_handler == nullptr )
-                        {
-                            if ( m_supported_methods.count( request->get_method( ) ) == 0 )
-                            {
-                                method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
-                            }
-                            else
-                            {
-                                method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
-                            }
-                        }
-                        
-                        method_handler( session );
-                    } );
-                };
+                        method_handler = bind( &ServiceImpl::method_not_implemented, this, _1 );
+                    }
+                    else
+                    {
+                        method_handler = bind( &ServiceImpl::method_not_allowed, this, _1 );
+                    }
+                }
                 
-                if ( session->m_pimpl->m_resource->m_pimpl->m_authentication_handler not_eq nullptr )
-                {
-                    session->m_pimpl->m_resource->m_pimpl->m_authentication_handler( session, callback );
-                }
-                else
-                {
-                    callback( session );
-                }
-            } );
+                method_handler( session );
+            };
+            
+            if ( session->m_pimpl->m_resource->m_pimpl->m_authentication_handler not_eq nullptr )
+            {
+                session->m_pimpl->m_resource->m_pimpl->m_authentication_handler( session, callback );
+            }
+            else
+            {
+                callback( session );
+            }
         }
         
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const

@@ -34,7 +34,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Rule;
     class Session;
     class Service;
     
@@ -58,9 +57,6 @@ namespace restbed
             RESOURCE_EXPORT virtual ~Resource( void );
             
             //Functionality
-            RESOURCE_EXPORT void add_rule( const std::shared_ptr< Rule >& rule );
-            
-            RESOURCE_EXPORT void add_rule( const std::shared_ptr< Rule >& rule, const int priority );
             
             //Getters
             
