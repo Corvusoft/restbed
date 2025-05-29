@@ -388,16 +388,6 @@ namespace restbed
         m_pimpl->m_method_not_implemented_handler = value;
     }
     
-    void Service::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session > ) >& value )
-    {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
-        
-        m_pimpl->m_failed_filter_validation_handler = value;
-    }
-    
     void Service::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session > ) >& value )
     {
         if ( is_up( ) )

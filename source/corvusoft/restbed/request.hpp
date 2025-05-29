@@ -41,13 +41,11 @@ namespace restbed
 {
     //Forward Declarations
     class Uri;
-    class Http;
     class Session;
     class Response;
     
     namespace detail
     {
-        class HttpImpl;
         class SessionImpl;
         class ServiceImpl;
         struct RequestImpl;
@@ -180,9 +178,7 @@ namespace restbed
             
         private:
             //Friends
-            friend Http;
             friend Session;
-            friend detail::HttpImpl;
             friend detail::SessionImpl;
             friend detail::ServiceImpl;
             friend detail::WebSocketManagerImpl;

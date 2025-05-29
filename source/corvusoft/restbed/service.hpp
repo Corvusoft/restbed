@@ -96,8 +96,6 @@ namespace restbed
             
             SERVICE_EXPORT void set_method_not_implemented_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
             
-            SERVICE_EXPORT void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
-            
             SERVICE_EXPORT void set_error_handler( const std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) >& value );
             
             SERVICE_EXPORT void set_authentication_handler( const std::function< void ( const std::shared_ptr< Session >, const std::function< void ( const std::shared_ptr< Session > ) >& ) >& value );

@@ -67,11 +67,6 @@ namespace restbed
         m_pimpl->m_default_headers = values;
     }
     
-    void Resource::set_failed_filter_validation_handler( const function< void ( const shared_ptr< Session > ) >& value )
-    {
-        m_pimpl->m_failed_filter_validation_handler = value;
-    }
-    
     void Resource::set_error_handler( const function< void ( const int, const exception&, const shared_ptr< Session > ) >& value )
     {
         m_pimpl->m_error_handler = value;
@@ -84,12 +79,6 @@ namespace restbed
     
     void Resource::set_method_handler( const string& method, const function< void ( const shared_ptr< Session > ) >& callback )
     {
-        static const multimap< string, string > empty { };
-        set_method_handler( method, empty, callback );
-    }
-    
-    void Resource::set_method_handler( const string& method, const multimap< string, string >& filters, const function< void ( const shared_ptr< Session > ) >& callback )
-    {
         if ( method.empty( ) )
         {
             throw invalid_argument( "Attempt to set resource handler to an empty protocol method." );
@@ -98,7 +87,7 @@ namespace restbed
         if ( callback not_eq nullptr )
         {
             m_pimpl->m_methods.insert( method );
-            m_pimpl->m_method_handlers.insert( make_pair( method, make_pair( filters, callback ) ) );
+            m_pimpl->m_method_handlers.insert( make_pair( method, callback ) );
         }
     }
 }

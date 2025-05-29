@@ -1373,7 +1373,6 @@ Resource represents an network communication endpoint. This is the primary data-
 -	[set_paths](#resourceset_paths)
 -	[set_default_header](#resourceset_default_header)
 -	[set_default_headers](#resourceset_default_headers)
--	[set_failed_filter_validation_handler](#resourceset_failed_filter_validation_handler)
 -	[set_error_handler](#resourceset_error_handler)
 -	[set_authentication_handler](#resourceset_authentication_handler)
 -	[set_method_handler](#resourceset_method_handler)
@@ -1507,28 +1506,6 @@ n/a
 
 n/a
 
-#### Resource::set_failed_filter_validation_handler
-
-```C++
-void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
-```
-
-Set failed filter validation handler. If an incoming request fails to match the resources filters this method will be invoked offering an opportunity to return a custom HTTP response.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
 #### Resource::set_error_handler
 
 ```C++
@@ -1577,18 +1554,15 @@ n/a
 
 ```C++
 void set_method_handler( const std::string& method, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
-
-void set_method_handler( const std::string& method, const std::multimap< std::string, std::string >& filters, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
 ```
 
-Set method handler with optional header filters.
+Set method handler.
 
 ##### Parameters
 
 | name       | type                                                                          | default value | direction |
 |:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
 | method     | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
-| filters    | [std::multimap](http://en.cppreference.com/w/cpp/container/multimap)          |      n/a      |   input   |
 | callback   | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
@@ -1624,7 +1598,6 @@ The service is responsible for managing the publicly available RESTful resources
 -	[set_not_found_handler](#serviceset_not_found_handler)
 -	[set_method_not_allowed_handler](#serviceset_method_not_allowed_handler)
 -	[set_method_not_implemented_handler](#serviceset_method_not_implemented_handler)
--	[set_failed_filter_validation_handler](#serviceset_failed_filter_validation_handler)
 -	[set_error_handler](#serviceset_error_handler)
 -	[set_authentication_handler](#serviceset_authentication_handler)
 
@@ -2017,28 +1990,6 @@ void set_method_not_implemented_handler( const std::function< void ( const std::
 ```
 
 If none of the service resources have a handler for an incoming HTTP request method its session shall be routed to the method not implemented handler.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### Service::set_failed_filter_validation_handler
-
-```C++
-void set_failed_filter_validation_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
-```
-
-If a resource has filters applied to one or more of it's endpoints but has no specific failed filter validation handler, the global service handler will be invoked if set.
 
 ##### Parameters
 

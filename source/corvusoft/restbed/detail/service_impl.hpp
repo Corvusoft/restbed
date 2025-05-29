@@ -101,8 +101,6 @@ namespace restbed
                 
                 void method_not_implemented( const std::shared_ptr< Session > session ) const;
                 
-                void failed_filter_validation( const std::shared_ptr< Session > session ) const;
-                
                 void router( const std::shared_ptr< Session > session ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::error_code& error ) const;
@@ -178,8 +176,6 @@ namespace restbed
                 std::function< void ( const std::shared_ptr< Session > ) > m_method_not_allowed_handler;
                 
                 std::function< void ( const std::shared_ptr< Session > ) > m_method_not_implemented_handler;
-                
-                std::function< void ( const std::shared_ptr< Session > ) > m_failed_filter_validation_handler;
                 
                 std::function< void ( const int, const std::exception&, const std::shared_ptr< Session > ) > m_error_handler;
                 

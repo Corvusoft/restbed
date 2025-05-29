@@ -97,7 +97,6 @@ Resource represents an network communication endpoint. This is the primary data-
 | + set_paths(set<string>)                                         void  |
 | + set_default_header(string,string)                              void  |
 | + set_default_headers(multimap<string,string>)                   void  |
-| + set_failed_filter_validation_handler(Callback)                 void  |
 | + set_error_handler(Callback)                                    void  |
 | + set_authentication_handler(void)                               void  |
 | + set_method_handler(string,Callback)                            void  |
@@ -634,7 +633,6 @@ The service is responsible for managing the publicly available RESTful resources
                                            | + set_not_found_handler(Callback)                 void    |
                                            | + set_method_not_allowed_handler(Callback)        void    |
                                            | + set_method_not_implemented_handler(Callback)    void    |
-                                           | + set_failed_filter_validation_handler(Callback)  void    |
                                            | + set_error_handler(Callback)                     void    |
                                            | + set_authentication_handler(Callback)            void    |
                                            +-----------------------------O-----------------------------+
@@ -679,9 +677,6 @@ Entity Interactions
     |                                     | Perform Resource Authentication |   |
     |                                     |                                 +-->|
     |                                     |                                     |
-    |                                     |                                 +---|
-    |                                     |       Process Method Filters    |   |
-    |                                     |                                 +-->|
     |                                     |                                 +---|
     |                                     |       Invoke Method Handler     |   |
     |                                     |                                 +-->|

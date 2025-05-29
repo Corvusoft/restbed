@@ -104,7 +104,6 @@ namespace restbed
             m_not_found_handler( nullptr ),
             m_method_not_allowed_handler( nullptr ),
             m_method_not_implemented_handler( nullptr ),
-            m_failed_filter_validation_handler( nullptr ),
             m_error_handler( ServiceImpl::default_error_handler ),
             m_authentication_handler( nullptr )
         {
@@ -501,22 +500,6 @@ namespace restbed
             }
         }
         
-        void ServiceImpl::failed_filter_validation( const shared_ptr< Session > session ) const
-        {
-            log( Logger::INFO, String::format( "'%s' failed filter validation '%s'.",
-                                               session->get_origin( ).data( ),
-                                               session->get_request( )->get_path( ).data( ) ) );
-                                               
-            if ( m_failed_filter_validation_handler not_eq nullptr )
-            {
-                m_failed_filter_validation_handler( session );
-            }
-            else
-            {
-                session->close( BAD_REQUEST, { { "Connection", "close" } } );
-            }
-        }
-        
         void ServiceImpl::router( const shared_ptr< Session > session ) const
         {
             log( Logger::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
@@ -641,30 +624,12 @@ namespace restbed
             const auto resource = session->get_resource( );
             const auto method_handlers = resource->m_pimpl->m_method_handlers.equal_range( request->get_method( ) );
             
-            bool failed_filter_validation = false;
             function< void ( const shared_ptr< Session > ) > method_handler = nullptr;
             
+            // We can now migrate the method handler collection to a std::map, and map::at.
             for ( auto handler = method_handlers.first; handler not_eq method_handlers.second and method_handler == nullptr; handler++ )
             {
-                method_handler = handler->second.second;
-                
-                for ( const auto& filter : handler->second.first )
-                {
-                    for ( const auto& header : request->get_headers( filter.first ) )
-                    {
-                        if ( not regex_match( header.second, regex( filter.second ) ) )
-                        {
-                            method_handler = nullptr;
-                            failed_filter_validation = true;
-                        }
-                    }
-                }
-            }
-            
-            if ( failed_filter_validation and method_handler == nullptr )
-            {
-                const auto handler = resource->m_pimpl->m_failed_filter_validation_handler;
-                method_handler = ( handler == nullptr ) ? bind( &ServiceImpl::failed_filter_validation, this, _1 ) : handler;
+                method_handler = handler->second;
             }
             
             return method_handler;

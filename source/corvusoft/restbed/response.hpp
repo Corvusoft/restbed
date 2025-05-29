@@ -38,7 +38,6 @@
 namespace restbed
 {
     //Forward Declarations
-    class Http;
     
     namespace detail
     {
@@ -127,8 +126,7 @@ namespace restbed
             
         private:
             //Friends
-            friend Http;
-            
+
             //Definitions
             
             //Constructors
