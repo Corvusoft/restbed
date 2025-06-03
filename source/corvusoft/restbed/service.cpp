@@ -202,20 +202,6 @@ namespace restbed
             }
         }
     }
-
-    void Service::restart( const shared_ptr< const Settings >& settings )
-    {
-        try
-        {
-            stop( );
-        }
-        catch ( ... )
-        {
-            m_pimpl->log( Logger::WARNING, "Service failed graceful reboot." );
-        }
-        
-        start( settings );
-    }
     
     void Service::publish( const shared_ptr< const Resource >& resource )
     {

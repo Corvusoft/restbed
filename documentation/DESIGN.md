@@ -620,7 +620,6 @@ The service is responsible for managing the publicly available RESTful resources
                                            | + is_down(void)                                   boolean |
                                            | + stop(void)                                      void    |
                                            | + start(Settings)                                 void    |
-                                           | + restart(Settings)                               void    |
                                            | + publish(Resource)                               void    |
                                            | + suppress(Resource)                              void    |
                                            | + schedule(Callback,milliseconds)                 void    |

@@ -1585,7 +1585,6 @@ The service is responsible for managing the publicly available RESTful resources
 -	[is_down](#serviceis_down)
 -	[stop](#servicestop)
 -	[start](#servicestart)
--	[restart](#servicerestart)
 -	[publish](#servicepublish)
 -	[suppress](#servicesuppress)
 -	[schedule](#serviceschedule)
@@ -1707,28 +1706,6 @@ void start( const std::shared_ptr< const Settings >& settings = nullptr );
 ```
 
 Start the service with the supplied settings, otherwise default values will be set.
-
-##### Parameters
-
-| name       | type                                                                  | default value | direction |
-|:----------:|-----------------------------------------------------------------------|:-------------:|:---------:|
-| settings   | [std::shared_ptr](http://en.cppreference.com/w/cpp/memory/shared_ptr) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### Service::restart
-
-```C++
-void restart( const std::shared_ptr< const Settings >& settings = nullptr );
-```
-
-Restart the service with the supplied settings, otherwise default values will be set.
 
 ##### Parameters
 

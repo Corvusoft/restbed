@@ -69,8 +69,6 @@ namespace restbed
             
             SERVICE_EXPORT void start( const std::shared_ptr< const Settings >& settings = nullptr );
             
-            SERVICE_EXPORT void restart( const std::shared_ptr< const Settings >& settings = nullptr );
-            
             SERVICE_EXPORT void publish( const std::shared_ptr< const Resource >& resource );
             
             SERVICE_EXPORT void suppress( const std::shared_ptr< const Resource >& resource );
