@@ -15,6 +15,7 @@
 //Project Includes
 
 //External Includes
+#include <asio/io_context.hpp>
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
@@ -83,6 +84,8 @@ namespace restbed
             
             SERVICE_EXPORT const std::shared_ptr< const Uri > get_https_uri( void ) const;
             
+            SERVICE_EXPORT const std::shared_ptr< asio::io_context > get_io_context( void ) const;
+
             //Setters
             SERVICE_EXPORT void set_logger( const std::shared_ptr< Logger >& value );
             

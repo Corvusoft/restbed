@@ -321,6 +321,11 @@ namespace restbed
     {
         return m_pimpl->get_https_uri( );
     }
+
+    const std::shared_ptr< asio::io_context > Service::get_io_context( void ) const
+    {
+        return m_pimpl->m_io_context;
+    }
     
     void Service::set_logger( const shared_ptr< Logger >& value )
     {
