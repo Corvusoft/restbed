@@ -25,9 +25,6 @@
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
-#include <asio/io_context.hpp>
-#include <asio/steady_timer.hpp>
-
 #ifdef BUILD_SSL
     #include <asio/ssl.hpp>
 #endif
@@ -63,7 +60,6 @@ using restbed::detail::WebSocketManagerImpl;
 
 //External Namespaces
 using asio::io_context;
-using asio::steady_timer;
 
 namespace restbed
 {
@@ -119,8 +115,6 @@ namespace restbed
     
     void Service::start( const shared_ptr< const Settings >& settings )
     {
-        m_pimpl->setup_signal_handler( );
-        
         m_pimpl->m_settings = settings;
         
         if ( m_pimpl->m_settings == nullptr )
@@ -279,28 +273,6 @@ namespace restbed
         }
     }
     
-    void Service::schedule( const function< void ( void ) >& task, const milliseconds& interval )
-    {
-        if ( task == nullptr )
-        {
-            return;
-        }
-        
-        if ( interval == milliseconds::zero( ) )
-        {
-            asio::post( *m_pimpl->m_io_context, task );
-            return;
-        }
-        
-        auto timer = make_shared< steady_timer >( *m_pimpl->m_io_context );
-        timer->expires_after( interval );
-        timer->async_wait( [ this, task, interval, timer ]( const error_code& )
-        {
-            task( );
-            schedule( task, interval );
-        } );
-    }
-    
     const seconds Service::get_uptime( void ) const
     {
         if ( is_down( ) )
@@ -347,19 +319,6 @@ namespace restbed
         if ( value not_eq nullptr )
         {
             m_pimpl->m_ready_handler = bind( value, std::ref( *this ) );
-        }
-    }
-    
-    void Service::set_signal_handler( const int signal, const function< void ( const int ) >& value )
-    {
-        if ( is_up( ) )
-        {
-            throw runtime_error( "Runtime modifications of the service are prohibited." );
-        }
-        
-        if ( value not_eq nullptr )
-        {
-            m_pimpl->m_signal_handlers[ signal ] = value;
         }
     }
     

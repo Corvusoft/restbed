@@ -100,7 +100,6 @@ namespace restbed
             m_resource_paths( ),
             m_resource_routes( ),
             m_ready_handler( nullptr ),
-            m_signal_handlers( ),
             m_not_found_handler( nullptr ),
             m_method_not_allowed_handler( nullptr ),
             m_method_not_implemented_handler( nullptr ),
@@ -150,39 +149,6 @@ namespace restbed
         {
             auto socket = make_shared< tcp::socket >( *m_io_context );
             m_acceptor->async_accept( *socket, bind( &ServiceImpl::create_session, this, socket, _1 ) );
-        }
-        
-        void ServiceImpl::setup_signal_handler( void )
-        {
-            if ( m_signal_handlers.empty( ) )
-            {
-                return;
-            }
-            
-            m_signal_set = make_shared< signal_set >( *m_io_context );
-            
-            for ( const auto& signal_handler : m_signal_handlers )
-            {
-                m_signal_set->add( signal_handler.first );
-            }
-            
-            m_signal_set->async_wait( bind( &ServiceImpl::signal_handler, this, _1, _2 ) );
-        }
-        
-        void ServiceImpl::signal_handler( const error_code& error, const int signal_number ) const
-        {
-            if ( error )
-            {
-                log( Logger::WARNING, String::format( "Failed to process signal '%i', '%s'.", signal_number, error.message( ).data( ) ) );
-                return;
-            }
-            
-            if ( m_signal_handlers.count( signal_number ) )
-            {
-                m_signal_handlers.at( signal_number )( signal_number );
-            }
-            
-            m_signal_set->async_wait( bind( &ServiceImpl::signal_handler, this, _1, _2 ) );
         }
         
 #ifdef BUILD_SSL

@@ -85,10 +85,6 @@ namespace restbed
                 void create_ipc_session( const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::error_code& error ) const;
 #endif
 
-                void setup_signal_handler( void );
-                
-                void signal_handler( const std::error_code& error, const int signal_number ) const;
-                
                 std::string sanitise_path( const std::string& path ) const;
                 
                 void not_found( const std::shared_ptr< Session > session ) const;
@@ -168,8 +164,6 @@ namespace restbed
                 std::map< std::string, std::shared_ptr< const Resource > > m_resource_routes;
                 
                 std::function< void ( void ) > m_ready_handler;
-                
-                std::map< int, std::function< void ( const int ) > > m_signal_handlers;
                 
                 std::function< void ( const std::shared_ptr< Session > ) > m_not_found_handler;
                 

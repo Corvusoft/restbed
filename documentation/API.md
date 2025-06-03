@@ -1594,7 +1594,6 @@ The service is responsible for managing the publicly available RESTful resources
 -	[get_https_uri](#serviceget_https_uri)
 -	[set_logger](#serviceset_logger)
 -	[set_ready_handler](#serviceset_ready_handler)
--	[set_signal_handler](#serviceset_signal_handler)
 -	[set_not_found_handler](#serviceset_not_found_handler)
 -	[set_method_not_allowed_handler](#serviceset_method_not_allowed_handler)
 -	[set_method_not_implemented_handler](#serviceset_method_not_implemented_handler)
@@ -1906,29 +1905,6 @@ Set a handler to be invoked once the service is up and ready to serve incoming H
 
 | name       | type                                                                          | default value | direction |
 |:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
-
-##### Return Value
-
-n/a
-
-##### Exceptions
-
-n/a
-
-#### Service::set_signal_handler
-
-```C++
-void set_signal_handler( const int signal, const std::function< void ( const int ) >& value );
-```
-
-Set a handler for the specified system signal number.
-
-##### Parameters
-
-| name       | type                                                                          | default value | direction |
-|:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| signal     | [int](http://en.cppreference.com/w/cpp/types/integer)                         |      n/a      |   input   |
 | value      | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value

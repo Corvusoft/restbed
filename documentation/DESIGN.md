@@ -629,7 +629,6 @@ The service is responsible for managing the publicly available RESTful resources
                                            | + get_https_uri( void )                           Uri     |
                                            | + set_logger(Logger)                              void    |
                                            | + set_ready_handler(Callback)                     void    |
-                                           | + set_signal_handler(integer,Callback)            void    |
                                            | + set_not_found_handler(Callback)                 void    |
                                            | + set_method_not_allowed_handler(Callback)        void    |
                                            | + set_method_not_implemented_handler(Callback)    void    |

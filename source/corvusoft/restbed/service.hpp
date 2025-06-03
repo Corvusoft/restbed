@@ -75,8 +75,6 @@ namespace restbed
             
             SERVICE_EXPORT void suppress( const std::shared_ptr< const Resource >& resource );
             
-            SERVICE_EXPORT void schedule( const std::function< void ( void ) >& task, const std::chrono::milliseconds& interval = std::chrono::milliseconds::zero( ) );
-            
             //Getters
             SERVICE_EXPORT const std::chrono::seconds get_uptime( void ) const;
             
@@ -90,8 +88,6 @@ namespace restbed
             SERVICE_EXPORT void set_logger( const std::shared_ptr< Logger >& value );
             
             SERVICE_EXPORT void set_ready_handler( const std::function< void ( Service& ) >& value );
-            
-            SERVICE_EXPORT void set_signal_handler( const int signal, const std::function< void ( const int ) >& value );
             
             SERVICE_EXPORT void set_not_found_handler( const std::function< void ( const std::shared_ptr< Session > ) >& value );
             
