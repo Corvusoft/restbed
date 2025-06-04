@@ -1,10 +1,10 @@
 cmake_minimum_required( VERSION 3.22.0 FATAL_ERROR )
 
-project( "restbed" VERSION 4.8.0 LANGUAGES CXX )
+project( "restbed" VERSION 5.0.0 LANGUAGES CXX )
 message( "                                                              " )
 message( "##############################################################" )
 message( "#                                                            #" )
-message( "#  Copyright 2013-2024, Corvusoft Ltd, All Rights Reserved.  #" )
+message( "#  Copyright 2013-2025, Corvusoft Ltd, All Rights Reserved.  #" )
 message( "#                                                            #" )
 message( "#  Restbed is dual-licensed requiring commerical entities    #" )
 message( "#  to acquire a Corvusoft Permissive License, Contact        #" )
@@ -26,7 +26,7 @@ option( BUILD_DEVEL_PACKAGE "Build development package (including C++ header fil
 #
 # Configuration
 #
-set( CMAKE_CXX_STANDARD 14 )
+set( CMAKE_CXX_STANDARD 20 )
 set( INCLUDE_DIR "${PROJECT_SOURCE_DIR}/source" )
 set( SOURCE_DIR  "${PROJECT_SOURCE_DIR}/source/corvusoft/${PROJECT_NAME}" )
 
@@ -79,7 +79,7 @@ file( GLOB_RECURSE MANIFEST "${SOURCE_DIR}/*.cpp" )
 if ( BUILD_STATIC_LIBRARY )
     set( STATIC_LIBRARY_NAME "${PROJECT_NAME}-static" )
     add_library( ${STATIC_LIBRARY_NAME} STATIC ${MANIFEST} )
-    set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
+    set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD 20 )
     set_property( TARGET ${STATIC_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
     set_target_properties( ${STATIC_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
 
@@ -95,7 +95,7 @@ endif ( )
 if ( BUILD_SHARED_LIBRARY )
     set( SHARED_LIBRARY_NAME "${PROJECT_NAME}-shared" )
     add_library( ${SHARED_LIBRARY_NAME} SHARED ${MANIFEST} )
-    set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 14 )
+    set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 20 )
     set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
     if ( WIN32 )
         # Workaround to avoid name clash of static lib and dynamic import lib under windows.

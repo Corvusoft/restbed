@@ -203,7 +203,7 @@ Minimum Requirements
 
 | Resource | Requirement                                     |
 |:--------:|:-----------------------------------------------:|
-| Compiler |            C++14 compliant or above             |
+| Compiler |            C++20 compliant or above             |
 |    OS    | BSD, Linux, Mac OSX, Windows, Raspbian          |
 
 Road Map
