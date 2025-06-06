@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <ranges>
 #include <cstdio>
 #include <cstdlib>
 #include <stdexcept>
@@ -93,11 +94,6 @@ namespace restbed
         return Uri( value );
     }
     
-    string Uri::decode( const Bytes& value )
-    {
-        return decode( string( value.begin( ), value.end( ) ) );
-    }
-    
     string Uri::decode( const string& value )
     {
         static const signed char hex_to_dec[256] = 
@@ -170,9 +166,9 @@ namespace restbed
         return decode( String::replace( "+", " ", value ) );
     }
     
-    string Uri::encode( const Bytes& value )
+    string Uri::encode( const string& value )
     {
-        const bool unsafe_carachters[256] =
+        const bool unsafe_characters[256] =
         {
             /*      0 1 2 3  4 5 6 7  8 9 A B  C D E F */
             /* 0 */ 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 
@@ -197,9 +193,9 @@ namespace restbed
         string encoded;
         encoded.reserve( value.size() );
 
-        for ( Byte character : value )
+        for ( auto character : value )
         {
-            if ( unsafe_carachters[ character ] )
+            if ( unsafe_characters[ static_cast<uint8_t>(character) ] )
             {
                 encoded.push_back( '%' );
                 encoded.push_back( dec_to_hex[ character >> 4 ] );
@@ -212,11 +208,6 @@ namespace restbed
         }
 
         return encoded;
-    }
-    
-    string Uri::encode( const string& value )
-    {
-        return encode( Bytes( value.begin( ), value.end( ) ) );
     }
     
     string Uri::encode_parameter( const string& value )

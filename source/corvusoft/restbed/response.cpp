@@ -75,11 +75,6 @@ namespace restbed
         return m_pimpl->m_status_message;
     }
     
-    void Response::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const
-    {
-        body = ( transform == nullptr ) ? string( m_pimpl->m_body.begin( ), m_pimpl->m_body.end( ) ) : transform( m_pimpl->m_body );
-    }
-    
     string Response::get_header( const string& name, const string& default_value ) const
     {
         if ( name.empty( ) )
@@ -89,19 +84,6 @@ namespace restbed
         
         const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
         return ( headers.empty( ) ) ? default_value : headers.begin( )->second;
-    }
-    
-    string Response::get_header( const string& name, const function< string ( const string& ) >& transform ) const
-    {
-        if ( name.empty( ) )
-        {
-            return "";
-        }
-        
-        const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
-        const string value = ( headers.empty( ) ) ? "" : headers.begin( )->second;
-        
-        return Common::transform( value, transform );
     }
     
     multimap< string, string > Response::get_headers( const string& name ) const

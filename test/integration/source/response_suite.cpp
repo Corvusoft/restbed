@@ -23,7 +23,7 @@ TEST_CASE( "validate default instance values", "[response]" )
 
 TEST_CASE( "validate setters modify default values", "[response]" )
 {
-    Bytes expectation = { 'a', 'b' };
+    Bytes expectation = { std::byte('a'), std::byte('b') };
     
     Response response;
     response.set_body( expectation );

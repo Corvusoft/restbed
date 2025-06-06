@@ -43,7 +43,7 @@ Terminology
 System Entities
 ---------------
 
--	[Byte/Bytes](#bytebytes)
+-	[Bytes](#bytes)
 -	[Resource](#resource)
 -	[Callback](#callback)
 -	[StatusCode](#statuscode)
@@ -62,27 +62,9 @@ System Entities
 -	[Logger::Level](#loggerlevel)
 -	[Service](#service)
 
-### Byte/Bytes
+### Bytes
 
-Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with STL [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
-
-```
-+----------------+
-|   <<typedef>>  |
-|      Bytes     |
-+----------------+
-| vector< Byte > |
-+--------@-------+
-         |
-         |
-         |
-+--------+-------+
-|   <<typedef>>  |
-|      Byte      |
-+----------------+
-|     uint8_t    |
-+----------------+
-```
+Bytes provides container functionality with STL [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
 
 ### Resource
 

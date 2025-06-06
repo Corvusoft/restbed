@@ -56,7 +56,7 @@ multimap< string, string > build_websocket_handshake_response_headers( const sha
     auto key = request->get_header( "Sec-WebSocket-Key" );
     key.append( "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" );
     
-    Byte hash[ SHA_DIGEST_LENGTH ];
+    std::byte hash[ SHA_DIGEST_LENGTH ];
     SHA1( reinterpret_cast< const unsigned char* >( key.data( ) ), key.length( ), hash );
     
     multimap< string, string > headers;

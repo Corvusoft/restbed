@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <ranges>
 #include <memory>
 #include <ciso646>
 #include <algorithm>
@@ -33,12 +34,9 @@ namespace restbed
 {
     Bytes String::to_bytes( const string& value )
     {
-        return Bytes( value.begin( ), value.end( ) );
-    }
-    
-    string String::to_string( const Bytes& value )
-    {
-        return string( value.begin( ), value.end( ) );
+        return value | std::views::transform([](auto c){
+            return static_cast<std::byte>(c);
+        }) | std::ranges::to<Bytes>();
     }
     
     string String::lowercase( const string& value )

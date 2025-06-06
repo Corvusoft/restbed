@@ -6,7 +6,7 @@
 
 //System Includes
 #include <vector>
-#include <cstdint>
+#include <cstddef>
 
 //Project Includes
 
@@ -20,7 +20,5 @@
 
 namespace restbed
 {
-    typedef uint8_t Byte;
-    
-    typedef std::vector< Byte > Bytes;
+    typedef std::vector< std::byte > Bytes;
 }

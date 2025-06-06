@@ -55,8 +55,6 @@ namespace restbed
             //Functionality
             STRING_EXPORT static Bytes to_bytes( const std::string& value );
             
-            STRING_EXPORT static std::string to_string( const Bytes& value );
-            
             STRING_EXPORT static std::string lowercase( const std::string& value );
             
             STRING_EXPORT static std::string uppercase( const std::string& value );

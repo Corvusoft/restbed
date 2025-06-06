@@ -67,13 +67,9 @@ namespace restbed
             
             URI_EXPORT static Uri parse( const std::string& value );
             
-            URI_EXPORT static std::string decode( const Bytes& value );
-            
             URI_EXPORT static std::string decode( const std::string& value );
         
             URI_EXPORT static std::string decode_parameter( const std::string& value );
-            
-            URI_EXPORT static std::string encode( const Bytes& value );
             
             URI_EXPORT static std::string encode( const std::string& value );
             

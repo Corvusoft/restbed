@@ -23,7 +23,7 @@ using restbed::Request;
 
 TEST_CASE( "validate setters modify default values", "[request]" )
 {
-    Bytes expectation = { 'a', 'b', 'c' };
+    Bytes expectation = { std::byte('a'), std::byte('b'), std::byte('c') };
     
     Request request;
     request.set_body( expectation );

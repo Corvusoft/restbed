@@ -106,29 +106,24 @@ namespace restbed
         return m_pimpl->m_response;
     }
     
-    string Request::get_host( const function< string ( const string& ) >& transform ) const
+    string Request::get_host( void ) const
     {
-        return Common::transform( m_pimpl->m_host, transform );
+        return m_pimpl->m_host;
     }
     
-    string Request::get_path( const function< string ( const string& ) >& transform ) const
+    string Request::get_path( void ) const
     {
-        return Common::transform( m_pimpl->m_path, transform );
+        return m_pimpl->m_path;
     }
     
-    string Request::get_method( const function< string ( const string& ) >& transform ) const
+    string Request::get_method( void ) const
     {
-        return Common::transform( m_pimpl->m_method, transform );
+        return m_pimpl->m_method;
     }
     
-    string Request::get_protocol( const function< string ( const string& ) >& transform ) const
+    string Request::get_protocol( void ) const
     {
-        return Common::transform( m_pimpl->m_protocol, transform );
-    }
-    
-    void Request::get_body( string& body, const function< string ( const Bytes& ) >& transform ) const
-    {
-        body = ( transform == nullptr ) ? String::to_string( m_pimpl->m_body ) : transform( m_pimpl->m_body );
+        return m_pimpl->m_protocol;
     }
     
     string Request::get_header( const string& name, const string& default_value ) const
@@ -140,19 +135,6 @@ namespace restbed
         
         const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
         return ( headers.empty( ) ) ? default_value : headers.begin( )->second;
-    }
-    
-    string Request::get_header( const string& name, const function< string ( const string& ) >& transform ) const
-    {
-        if ( name.empty( ) )
-        {
-            return "";
-        }
-        
-        const auto headers = Common::get_parameters( name, m_pimpl->m_headers );
-        const string value = ( headers.empty( ) ) ? "" : headers.begin( )->second;
-        
-        return Common::transform( value, transform );
     }
     
     multimap< string, string > Request::get_headers( const string& name ) const
@@ -171,19 +153,6 @@ namespace restbed
         return ( parameters.empty( ) ) ? default_value : parameters.begin( )->second;
     }
     
-    string Request::get_query_parameter( const string& name, const function< string ( const string& ) >& transform ) const
-    {
-        if ( name.empty( ) )
-        {
-            return "";
-        }
-        
-        const auto parameters = Common::get_parameters( name, m_pimpl->m_query_parameters );
-        const string value = ( parameters.empty( ) ) ? "" : parameters.begin( )->second;
-        
-        return Common::transform( value, transform );
-    }
-    
     multimap< string, string > Request::get_query_parameters( const string& name ) const
     {
         return Common::get_parameters( name, m_pimpl->m_query_parameters );
@@ -198,19 +167,6 @@ namespace restbed
         
         const auto parameters = Common::get_parameters( name, m_pimpl->m_path_parameters );
         return ( parameters.empty( ) ) ? default_value : parameters.begin( )->second;
-    }
-    
-    string Request::get_path_parameter( const string& name, const function< string ( const string& ) >& transform ) const
-    {
-        if ( name.empty( ) )
-        {
-            return "";
-        }
-        
-        const auto parameters = Common::get_parameters( name, m_pimpl->m_path_parameters );
-        const string value = ( parameters.empty( ) ) ? "" : parameters.begin( )->second;
-        
-        return Common::transform( value, transform );
     }
     
     map< string, string > Request::get_path_parameters( const string& name ) const

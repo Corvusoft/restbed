@@ -82,19 +82,15 @@ namespace restbed
             
             REQUEST_EXPORT const std::shared_ptr< const Response > get_response( void ) const;
             
-            REQUEST_EXPORT std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_host( void ) const;
             
-            REQUEST_EXPORT std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_path( void ) const;
             
-            REQUEST_EXPORT std::string get_method( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_method( void ) const;
             
-            REQUEST_EXPORT std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
-            
-            REQUEST_EXPORT void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
+            REQUEST_EXPORT std::string get_protocol( void ) const;
             
             REQUEST_EXPORT std::string get_header( const std::string& name, const std::string& default_value = "" ) const;
-            
-            REQUEST_EXPORT std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_header( const std::string& name, const Type default_value ) const
@@ -106,8 +102,6 @@ namespace restbed
             
             REQUEST_EXPORT std::string get_query_parameter( const std::string& name, const std::string& default_value = "" ) const;
             
-            REQUEST_EXPORT std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
-            
             template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_query_parameter( const std::string& name, const Type default_value ) const
             {
@@ -117,8 +111,6 @@ namespace restbed
             REQUEST_EXPORT std::multimap< std::string, std::string > get_query_parameters( const std::string& name = "" ) const;
             
             REQUEST_EXPORT std::string get_path_parameter( const std::string& name, const std::string& default_value = "" ) const;
-            
-            REQUEST_EXPORT std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform ) const;
             
             template <typename Type, std::enable_if_t< std::is_arithmetic< std::remove_reference_t< Type > >::value > * = nullptr> inline
             Type get_path_parameter( const std::string& name, const Type default_value ) const

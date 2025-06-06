@@ -15,7 +15,7 @@ Table of Contents
 
 1.	[Overview](#overview)
 2.	[Interpretation](#interpretation)
-3.	[Byte/Bytes](#bytebytes)
+3.	[Bytes](#bytes)
 4.	[Logger](#logger)
 5.	[Logger::Level](#loggerlevel)
 6.	[Request](#request)
@@ -34,17 +34,15 @@ Table of Contents
 19. [WebSocketMessage::OpCode](#websocketmessageopcode)
 20.	[Further Reading](#further-reading)
 
-### Byte/Bytes
+### Bytes
 
 ```C++
-typedef uint8_t Byte;
-
-typedef std::vector< Byte > Bytes;
+typedef std::vector< std::byte > Bytes;
 ```
 
-Byte represents an unsigned 8-bit wide data-type, Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
+Bytes provides container functionality with [Standard Template Library](http://en.cppreference.com/w/cpp) (STL) [vector](http://en.cppreference.com/w/cpp/container/vector) collection semantics.
 
-See [std::uint8_t](http://en.cppreference.com/w/cpp/types/integer) and [std::vector](http://en.cppreference.com/w/cpp/container/vector) for further details.
+See [std::byte](http://en.cppreference.com/w/cpp/types/byte) and [std::vector](http://en.cppreference.com/w/cpp/container/vector) for further details.
 
 ### Logger
 
@@ -369,20 +367,15 @@ n/a
 
 ```C++
 Bytes get_body( void ) const;
-
-void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
 ```
 
 1) Retrieves the contents of the request body as [Bytes](#bytebytes); see also [set_body](#requestset_body).
-
-2) Alters the request body with the transform operation and returns the result as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string); see also [set_body](#requestset_body).
 
 ##### Parameters
 
 | name      | type                                                                          | default value | direction |
 |:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
 |   body    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |  output   |
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -415,16 +408,14 @@ n/a
 #### Request::get_host
 
 ```C++
-std::string get_host( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+std::string get_host( void ) const;
 ```
 
-Retrieves the a host for this request, optionally applying a text transformation.
+Retrieves the host for this request.
 
 ##### Parameters
 
-| name      | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+n/a
 
 ##### Return Value
 
@@ -437,16 +428,14 @@ n/a
 #### Request::get_path
 
 ```C++
-std::string get_path( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+std::string get_path( void ) const;
 ```
 
-Retrieves the path for this request, optionally applying a text transformation.
+Retrieves the path for this request.
 
 ##### Parameters
 
-| name      | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+n/a
 
 ##### Return Value
 
@@ -459,16 +448,14 @@ n/a
 #### Request::get_method
 
 ```C++
-std::string get_method( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+std::string get_method( void ) const;
 ```
 
-Retrieves the [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) for this request, optionally applying a text transformation.
+Retrieves the [HTTP method](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) for this request.
 
 ##### Parameters
 
-| name      | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+n/a
 
 ##### Return Value
 
@@ -481,16 +468,14 @@ n/a
 #### Request::get_protocol
 
 ```C++
-std::string get_protocol( const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
+std::string get_protocol( void ) const;
 ```
 
-Retrieves the protocol for this request, optionally applying a text transformation.
+Retrieves the protocol for this request.
 
 ##### Parameters
 
-| name      | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+n/a
 
 ##### Return Value
 
@@ -507,22 +492,17 @@ template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::va
 Type get_header( const std::string& name, const Type default_value ) const
 
 std::string get_header( const std::string& name, const std::string& default_value ) const;
-
-std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 ```
 
 1) Retrieve the first header with a matching name parsing to a an arithmetic value. if not found return default_value.
 
 2) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
 
-3) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
-
 ##### Parameters
 
 | name          | type                                                                              | default value | direction |
 |:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
-| default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
+| default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)               |      n/a      |   input   |
 
 ##### Return Value
 
@@ -542,9 +522,9 @@ Retrieves all headers as a [std::multimap](http://en.cppreference.com/w/cpp/cont
 
 ##### Parameters
 
-| name      | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+| name  | type                                                                          | default value | direction |
+|:-----:|-------------------------------------------------------------------------------|:-------------:|:---------:|
+| name  | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
 
 ##### Return Value
 
@@ -561,21 +541,16 @@ template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::va
 Type get_query_parameter( const std::string& name, const Type default_value ) const
 
 std::string get_query_parameter( const std::string& name, const std::string& default_value ) const;
-
-std::string get_query_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 ```
 
 1) Retrieve the first query parameter with a matching name parsing to a an arithmetic value. if not found return default_value.
 
 2) Retrieve the first query parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
 
-3) Retrieve the first query parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
-
 ##### Parameters
 
 | name          | type                                                                              | default value | direction |
 |:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
 | default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
 
 ##### Return Value
@@ -598,7 +573,6 @@ Retrieves all query parameters as a [std::multimap](http://en.cppreference.com/w
 
 | name      | type                                                                          | default value | direction |
 |:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 | option    | [String::Option](#stringoption)                                               |      n/a      |   input   |
 
 ##### Return Value
@@ -616,21 +590,16 @@ template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::va
 Type get_path_parameter( const std::string& name, const Type default_value ) const
 
 std::string get_path_parameter( const std::string& name, const std::string& default_value ) const;
-
-std::string get_path_parameter( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 ```
 
 1) Retrieve the first parameter with a matching name parsing to a an arithmetic value. if not found return default_value.
 
 2) Retrieve the first parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
 
-3) Retrieve the first parameter with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
-
 ##### Parameters
 
 | name          | type                                                                              | default value | direction |
 |:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
 | default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
 
 ##### Return Value
@@ -653,7 +622,6 @@ Retrieves all query parameters as a [std::multimap](http://en.cppreference.com/w
 
 | name      | type                                                                          | default value | direction |
 |:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 | option    | [String::Option](#stringoption)                                               |      n/a      |   input   |
 
 ##### Return Value
@@ -1024,20 +992,15 @@ No exceptions allowed specification: [noexcept](http://en.cppreference.com/w/cpp
 
 ```C++
 Bytes get_body( void ) const;
-
-void get_body( std::string& body, const std::function< std::string ( const Bytes& ) >& transform = nullptr ) const;
 ```
 
 1) Retrieves the contents of the response body as [Bytes](#bytebytes); see also [set_body](#responseset_body).
-
-2) Alters the response body with the transform operation and returns the result as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string); see also [set_body](#responseset_body).
 
 ##### Parameters
 
 | name      | type                                                                          | default value | direction |
 |:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
 |   body    | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |  output   |
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
 
 ##### Return Value
 
@@ -1134,21 +1097,16 @@ template< typename Type, typename std::enable_if< std::is_arithmetic< Type >::va
 Type get_header( const std::string& name, const Type default_value ) const
 
 std::string get_header( const std::string& name, const std::string& default_value ) const;
-
-std::string get_header( const std::string& name, const std::function< std::string ( const std::string& ) >& transform = nullptr ) const;
 ```
 
 1) Retrieve the first header with a matching name parsing to a an arithmetic value. if not found return default_value.
 
 2) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string). if not found return default_value.
 
-3) Retrieve the first header with a matching name as a [std::string](http://en.cppreference.com/w/cpp/string/basic_string), optionally applying a transformation.
-
 ##### Parameters
 
 | name          | type                                                                              | default value | direction |
 |:-------------:|-----------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform     | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)     |      n/a      |   input   |
 | default_value | [std::string](http://en.cppreference.com/w/cpp/string/basic_string) or arithmetic |      n/a      |   input   |
 
 ##### Return Value
@@ -1169,9 +1127,7 @@ Retrieves all headers as a [std::multimap](http://en.cppreference.com/w/cpp/cont
 
 ##### Parameters
 
-| name      | type                                                                          | default value | direction |
-|:---------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| transform | [std::function](http://en.cppreference.com/w/cpp/utility/functional/function) |      n/a      |   input   |
+n/a
 
 ##### Return Value
 
@@ -4110,8 +4066,6 @@ n/a
 #### Uri::decode
 
 ```C++
-static std::string decode( const Bytes& value );
-
 static std::string decode( const std::string& value );
 ```
 
@@ -4121,7 +4075,6 @@ Percent decoding functionality.
 
 | name       | type                                                                          | default value | direction |
 |:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
 | value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
 
 ##### Return Value
@@ -4157,8 +4110,6 @@ n/a
 #### Uri::encode
 
 ```C++
-static std::string encode( const Bytes& value );
-
 static std::string encode( const std::string& value );
 ```
 
@@ -4168,7 +4119,6 @@ Percent encoding functionality.
 
 | name       | type                                                                          | default value | direction |
 |:----------:|-------------------------------------------------------------------------------|:-------------:|:---------:|
-| value      | [Bytes](#bytebytes)                                                           |      n/a      |   input   |
 | value      | [std::string](http://en.cppreference.com/w/cpp/string/basic_string)           |      n/a      |   input   |
 
 ##### Return Value

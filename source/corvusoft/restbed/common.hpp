@@ -64,11 +64,6 @@ namespace restbed
                 return iterator not_eq parameters.end( );
             }
             
-            static std::string transform( const std::string& value, const std::function< std::string ( const std::string& ) >& transform )
-            {
-                return ( transform == nullptr ) ? value : transform( value );
-            }
-            
             //Getters
             template< typename Type >
             static Type get_parameters( const std::string& name, const Type& parameters )
