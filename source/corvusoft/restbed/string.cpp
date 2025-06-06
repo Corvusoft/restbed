@@ -53,27 +53,6 @@ namespace restbed
         return result;
     }
     
-    string String::format( const char* format, ... )
-    {
-        va_list arguments;
-        va_start( arguments, format );
-        
-        string formatted = "";
-        string::size_type length = FORMAT_BUFFER_INITIAL_LENGTH;
-        string::size_type required_length = String::format( formatted, length, format, arguments );
-        
-        va_end( arguments );
-        
-        if ( required_length > length )
-        {
-            va_start( arguments, format );
-            String::format( formatted, required_length, format, arguments );
-            va_end( arguments );
-        }
-        
-        return formatted;
-    }
-    
     vector< string > String::split( const string& value, const char delimiter )
     {
         vector< string > tokens;
@@ -154,21 +133,5 @@ namespace restbed
         }
         
         return result;
-    }
-    
-    string::size_type String::format( string& output, const string::size_type length, const char* format, va_list arguments )
-    {
-        unique_ptr< char[ ] > formatted( new char[ length + 1 ] );
-        
-        int required_length = vsnprintf( formatted.get( ), length + 1, format, arguments );
-        
-        if ( required_length == -1 )
-        {
-            required_length = 0;
-        }
-        
-        output = formatted.get( );
-        
-        return required_length;
     }
 }

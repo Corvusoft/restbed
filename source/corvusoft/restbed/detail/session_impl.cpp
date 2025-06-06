@@ -4,6 +4,7 @@
 
 //System Includes
 #include <regex>
+#include <format>
 #include <utility>
 #include <ciso646>
 #include <stdexcept>
@@ -213,11 +214,11 @@ namespace restbed
                 setlocale( LC_NUMERIC, "C" );
             }
             
-            auto data = String::format( "%s/%.1f %i %s\r\n",
-                                        value->get_protocol( ).data( ),
-                                        value->get_version( ),
-                                        value->get_status_code( ),
-                                        value->get_status_message( ).data( ) );
+            auto data = std::format( "{}/{:.1f} {} {}\r\n",
+                                     value->get_protocol( ),
+                                     value->get_version( ),
+                                     value->get_status_code( ),
+                                     value->get_status_message( ) );
             
             if (locale) {
                 setlocale( LC_NUMERIC, locale );

@@ -5,6 +5,7 @@
 //System Includes
 #include <regex>
 #include <cstdio>
+#include <format>
 #include <sstream>
 #include <utility>
 #include <ciso646>
@@ -138,7 +139,7 @@ namespace restbed
                 http_listen( );
                 
                 const auto location = get_http_uri( )->to_string( );
-                log( Logger::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+                log( Logger::INFO, std::format( "Service accepting HTTP connections at '{}'.",  location ) );
 #ifdef BUILD_SSL
             }
             
@@ -234,7 +235,7 @@ namespace restbed
                 https_listen( );
                 
                 const auto location = get_https_uri( )->to_string( );
-                log( Logger::INFO, String::format( "Service accepting HTTPS connections at '%s'.",  location.data( ) ) );
+                log( Logger::INFO, std::format( "Service accepting HTTPS connections at '{}'.",  location ) );
             }
         }
         
@@ -252,7 +253,7 @@ namespace restbed
                 {
                     if ( error )
                     {
-                        log( Logger::SECURITY, String::format( "Failed SSL handshake, '%s'.", error.message( ).data( ) ) );
+                        log( Logger::SECURITY, std::format( "Failed SSL handshake, '{}'.", error.message( ) ) );
                         return;
                     }
                     
@@ -283,7 +284,7 @@ namespace restbed
                     socket->lowest_layer( ).close( );
                 }
                 
-                log( Logger::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+                log( Logger::WARNING, std::format( "Failed to create session, '{}'.", error.message( ) ) );
             }
             
             https_listen( );
@@ -301,7 +302,7 @@ namespace restbed
             m_ipc_acceptor->listen( m_settings->get_connection_limit( ) );
             ipc_listen( );
                 
-            log( Logger::INFO, String::format( "Service accepting HTTP connections at '%s'.",  location.data( ) ) );
+            log( Logger::INFO, std::format( "Service accepting HTTP connections at '{}'.",  location ) );
         }
 
         void ServiceImpl::ipc_listen( void ) const
@@ -340,7 +341,7 @@ namespace restbed
                     socket->close( );
                 }
                 
-                log( Logger::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+                log( Logger::WARNING, std::format( "Failed to create session, '{}'.", error.message( ) ) );
             }
             
             ipc_listen( );
@@ -364,7 +365,7 @@ namespace restbed
                 {
                     if ( not regex_match( folder, matches, pattern ) or matches.size( ) not_eq 2 )
                     {
-                        throw runtime_error( String::format( "Resource path parameter declaration is malformed '%s'.", folder.data( ) ) );
+                        throw runtime_error( std::format( "Resource path parameter declaration is malformed '{}'.", folder ) );
                     }
                     
                     sanitised_path += '/' + matches[ 1 ].str( );
@@ -385,9 +386,9 @@ namespace restbed
         
         void ServiceImpl::not_found( const shared_ptr< Session > session ) const
         {
-            log( Logger::INFO, String::format( "'%s' resource route not found '%s'.",
-                                               session->get_origin( ).data( ),
-                                               session->get_request( )->get_path( ).data( ) ) );
+            log( Logger::INFO, std::format( "'{}' resource route not found '{}'.",
+                                               session->get_origin( ),
+                                               session->get_request( )->get_path( ) ) );
                                                
             if ( m_not_found_handler not_eq nullptr )
             {
@@ -434,10 +435,10 @@ namespace restbed
         
         void ServiceImpl::method_not_allowed( const shared_ptr< Session > session ) const
         {
-            log( Logger::INFO, String::format( "'%s' '%s' method not allowed '%s'.",
-                                               session->get_origin( ).data( ),
-                                               session->get_request( )->get_method( ).data( ),
-                                               session->get_request( )->get_path( ).data( ) ) );
+            log( Logger::INFO, std::format( "'{}' '{}' method not allowed '{}'.",
+                                               session->get_origin( ),
+                                               session->get_request( )->get_method( ),
+                                               session->get_request( )->get_path( ) ) );
                                                
             if ( m_method_not_allowed_handler not_eq nullptr )
             {
@@ -451,10 +452,10 @@ namespace restbed
         
         void ServiceImpl::method_not_implemented( const shared_ptr< Session > session ) const
         {
-            log( Logger::INFO, String::format( "'%s' '%s' method not implemented '%s'.",
-                                               session->get_origin( ).data( ),
-                                               session->get_request( )->get_method( ).data( ),
-                                               session->get_request( )->get_path( ).data( ) ) );
+            log( Logger::INFO, std::format( "'{}' '{}' method not implemented '{}'.",
+                                               session->get_origin( ),
+                                               session->get_request( )->get_method( ),
+                                               session->get_request( )->get_path( ) ) );
                                                
             if ( m_method_not_implemented_handler not_eq nullptr )
             {
@@ -468,10 +469,10 @@ namespace restbed
         
         void ServiceImpl::router( const shared_ptr< Session > session ) const
         {
-            log( Logger::INFO, String::format( "Incoming '%s' request from '%s' for route '%s'.",
-                                               session->get_request( )->get_method( ).data( ),
-                                               session->get_origin( ).data( ),
-                                               session->get_request( )->get_path( ).data( ) ) );
+            log( Logger::INFO, std::format( "Incoming '{}' request from '{}' for route '{}'.",
+                                               session->get_request( )->get_method( ),
+                                               session->get_origin( ),
+                                               session->get_request( )->get_path( ) ) );
                                                
             if ( session->is_closed( ) )
             {
@@ -555,7 +556,7 @@ namespace restbed
                     socket->close( );
                 }
                 
-                log( Logger::WARNING, String::format( "Failed to create session, '%s'.", error.message( ).data( ) ) );
+                log( Logger::WARNING, std::format( "Failed to create session, '{}'.", error.message( ) ) );
             }
             
             http_listen( );
@@ -815,11 +816,11 @@ namespace restbed
             
             if ( address.is_v6( ) )
             {
-                uri = String::format( "http://[%s]:%u", address.to_string( ).data( ), endpoint.port( ) );
+                uri = std::format( "http://[{}]:{}", address.to_string( ), endpoint.port( ) );
             }
             else
             {
-                uri = String::format( "http://%s:%u", address.to_string( ).data( ), endpoint.port( ) );
+                uri = std::format( "http://{}:{}", address.to_string( ), endpoint.port( ) );
             }
             
             return make_shared< const Uri >( uri );
@@ -840,11 +841,11 @@ namespace restbed
             
             if ( address.is_v6( ) )
             {
-                uri = String::format( "https://[%s]:%u", address.to_string( ).data( ), endpoint.port( ) );
+                uri = std::format( "https://[{}]:{}", address.to_string( ), endpoint.port( ) );
             }
             else
             {
-                uri = String::format( "https://%s:%u", address.to_string( ).data( ), endpoint.port( ) );
+                uri = std::format( "https://{}:{}", address.to_string( ), endpoint.port( ) );
             }
             
             return make_shared< const Uri >( uri );

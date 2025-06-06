@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <format>
 #include <thread>
 #include <vector>
 #include <utility>
@@ -149,10 +150,10 @@ namespace restbed
 #endif
         for ( const auto& route : m_pimpl->m_resource_paths )
         {
-            auto path = String::format( "/%s/%s", m_pimpl->m_settings->get_root( ).data( ), route.second.data( ) );
+            auto path = std::format( "/{}/{}", m_pimpl->m_settings->get_root( ), route.second );
             path = String::replace( "//", "/", path );
             
-            m_pimpl->log( Logger::INFO, String::format( "Resource published on route '%s'.", path.data( ) ) );
+            m_pimpl->log( Logger::INFO, std::format( "Resource published on route '{}'.", path ) );
         }
         
         if ( m_pimpl->m_ready_handler not_eq nullptr )
@@ -250,11 +251,11 @@ namespace restbed
         {
             if ( m_pimpl->m_resource_routes.erase( path ) )
             {
-                m_pimpl->log( Logger::INFO, String::format( "Suppressed resource route '%s'.", path.data( ) ) );
+                m_pimpl->log( Logger::INFO, std::format( "Suppressed resource route '{}'.", path ) );
             }
             else
             {
-                m_pimpl->log( Logger::WARNING, String::format( "Failed to suppress resource route '%s'; Not Found!", path.data( ) ) );
+                m_pimpl->log( Logger::WARNING, std::format( "Failed to suppress resource route '{}'; Not Found!", path ) );
             }
         }
     }

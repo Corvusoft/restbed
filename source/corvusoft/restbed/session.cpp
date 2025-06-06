@@ -3,6 +3,7 @@
  */
 
 //System Includes
+#include <format>
 #include <ciso646>
 #include <system_error>
 
@@ -75,7 +76,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
+                const auto message = std::format( "Close failed: {}", error.message( ) );
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
@@ -98,7 +99,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto message = String::format( "Close failed: %s", error.message( ).data( ) );
+                const auto message = std::format( "Close failed: {}", error.message( ) );
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
@@ -156,7 +157,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
+                const auto message = std::format( "Yield failed: {}", error.message( ) );
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
@@ -187,7 +188,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto message = String::format( "Yield failed: %s", error.message( ).data( ) );
+                const auto message = std::format( "Yield failed: {}", error.message( ) );
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
@@ -254,7 +255,7 @@ namespace restbed
             {
                 if ( error )
                 {
-                    const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
+                    const auto message = std::format( "Fetch failed: {}", error.message( ) );
                     const auto error_handler = m_pimpl->get_error_handler( );
                     return error_handler( 500, runtime_error( message ), session );
                 }
@@ -282,7 +283,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto message = String::format( "Fetch failed: %s", error.message( ).data( ) );
+                const auto message = std::format( "Fetch failed: {}", error.message( ) );
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
@@ -337,7 +338,7 @@ namespace restbed
         {
             if ( error )
             {
-                const auto message = String::format( "Wait failed: %s", error.message( ).data( ) );
+                const auto message = std::format( "Wait failed: {}", error.message( ) );
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
