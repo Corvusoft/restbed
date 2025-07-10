@@ -8,7 +8,7 @@ message( "#  Copyright 2013-2025, Corvusoft Ltd, All Rights Reserved.  #" )
 message( "#                                                            #" )
 message( "#  Restbed is dual-licensed requiring commerical entities    #" )
 message( "#  to acquire a Corvusoft Permissive License, Contact        #" )
-message( "#  sales@corvusoft.co.uk for details.                        #" )
+message( "#  sales@corvusoft.com for details.                          #" )
 message( "#                                                            #" )
 message( "##############################################################" )
 message( "                                                              " )
@@ -27,8 +27,8 @@ option( BUILD_DEVEL_PACKAGE "Build development package (including C++ header fil
 # Configuration
 #
 set( CMAKE_CXX_STANDARD 23 )
-set( INCLUDE_DIR "${PROJECT_SOURCE_DIR}/source" )
-set( SOURCE_DIR  "${PROJECT_SOURCE_DIR}/source/corvusoft/${PROJECT_NAME}" )
+set( INCLUDE_DIR "${PROJECT_SOURCE_DIR}/src" )
+set( SOURCE_DIR  "${PROJECT_SOURCE_DIR}/src/corvusoft/${PROJECT_NAME}" )
 
 if ( NOT DEFINED CMAKE_INSTALL_LIBDIR )
     set( CMAKE_INSTALL_LIBDIR "library")
@@ -118,9 +118,7 @@ if ( BUILD_TESTS )
     find_package( catch REQUIRED )
 
     enable_testing( )
-    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/unit" )
-    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/regression" )
-    add_subdirectory( "${PROJECT_SOURCE_DIR}/test/integration" )
+    add_subdirectory( "${PROJECT_SOURCE_DIR}/test" )
 endif ( )
 
 #

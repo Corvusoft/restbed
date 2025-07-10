@@ -48,8 +48,6 @@ namespace restbed
                 CASE_INSENSITIVE = 1
             };
             
-            STRING_EXPORT static const size_t FORMAT_BUFFER_INITIAL_LENGTH = 2048;
-            
             //Constructors
             
             //Functionality
