@@ -1,11 +1,11 @@
 Overview
 --------
 
-This document is intended to communicate core architectural decisions within the system. For this reason alone accuracy has suffered. It does not concern itself with interface specifics and primarily focuses on architectural decisions made during the design and development phase, see [API](API.md) for contract details.
+This document is intended to communicate core architectural decisions within the system. For this reason alone, accuracy has suffered. It does not concern itself with interface specifics and primarily focuses on architectural decisions made during the design and development phase. See [API](API.md) for contract details.
 
-All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the following suite of class diagrams is omitted for clarity; along with pointers, references and other background noise.
+All class definitions within the system strictly adhere to the [Opaque Pointer](https://en.wikipedia.org/wiki/Opaque_pointer) idiom. However, this level of detail in the following suite of class diagrams is omitted for clarity, along with pointers, references and other background noise.
 
-Unless otherwise specified all primary data-types originate within the Standard Template Library (STL).
+Unless otherwise specified, all primary data-types originate within the Standard Template Library (STL).
 
 Interpretation
 --------------
@@ -31,11 +31,11 @@ Terminology
 
 | Term         | Definition                                                                                                                  |
 |--------------|-----------------------------------------------------------------------------------------------------------------------------|
-| Resource     | A network addressable entity i.e Queue.                                                                                     |
+| Resource     | A network addressable entity, i.e Queue.                                                                                    |
 | Service      | A server responsible for request routing and processing.                                                                    |
 | Client       | A remote endpoint responsible for generating requests.                                                                      |
 | Logger       | A component making a systematic recording of events, observations, or measurements.                                         |
-| Charset      | A CHARacter SET is used to represent a repertoire of symbols i.e UTF-8.                                                     |
+| Charset      | A CHARacter SET is used to represent a repertoire of symbols, i.e UTF-8.                                                    |
 | URI          | Uniform Resource Identifier.                                                                                                |
 | UUID         | Universally Unique IDentifier.                                                                                              |
 | Path         | String identifier uniquely addressing a resource.                                                                           |
@@ -68,7 +68,7 @@ Bytes provides container functionality with STL [vector](http://en.cppreference.
 
 ### Resource
 
-Resource represents an network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource specific filteration, request processing, and authentication must be placed on this entity.
+Resource represents a network communication endpoint. This is the primary data-structure used throughout to represent RESTful resources. All resource-specific filtration, request processing, and authentication must be placed on this entity.
 
 ```
 +------------------------------------------------------------------------+
@@ -82,13 +82,12 @@ Resource represents an network communication endpoint. This is the primary data-
 | + set_error_handler(Callback)                                    void  |
 | + set_authentication_handler(void)                               void  |
 | + set_method_handler(string,Callback)                            void  |
-| + set_method_handler(string,multimap<string,string>,Callback)    void  |
 +------------------------------------------------------------------------+
 ```
 
 ### Callback
 
-Represents a functor with variable parameters and return; this is used to help illustrate the design without introducing unnecessary complexity.
+Represents a functor with variable parameters and return value; this is used to help illustrate the design without introducing unnecessary complexity.
 
 ```
 +-----------------+
@@ -136,7 +135,6 @@ Utility class with static scope offering a common suite of string manipulation r
  |                             String                            |
  +---------------------------------------------------------------+
  | + to_bytes(string)                             Bytes          |
- | + to_string(Bytes)                             string         |
  | + lowercase(string)                            string         |
  | + uppercase(string,string)                     string         |
  | + format(char*,...)                            string         |
@@ -174,10 +172,8 @@ Represents a Uniform Resource Identifier as specified in [RFC 3986](https://www.
  | + is_valid(string)            boolean                 |
  | + parse(string)               Uri                     |
  | + to_string(void)             string                  |
- | + decode(Bytes)               string                  |
  | + decode(string)              string                  |
  | + decode_parameter(string)    string                  |
- | + encode(Bytes)               string                  |
  | + encode(string)              string                  |
  | + encode_parameter(string)    string                  |
  | + get_port(void)              unsigned 16-bit integer |
@@ -194,7 +190,7 @@ Represents a Uniform Resource Identifier as specified in [RFC 3986](https://www.
 
 ### Request
 
-Represents a HTTP request with additional helper methods for manipulating data, and code readability.
+Represents an HTTP request with additional helper methods for manipulating data and code readability.
 
 ```
  +--------------------------------------------------------------------------------+
@@ -207,7 +203,6 @@ Represents a HTTP request with additional helper methods for manipulating data, 
  | + get_port(void)                                       unsigned 16-bit integer |
  | + get_version(void)                                    double                  |
  | + get_body(void)                                       Bytes                   |
- | + get_body(Callback)                                   Bytes                   |
  | + get_response(void)                                   Response                |
  | + get_host(Callback)                                   string                  |
  | + get_path(Callback)                                   string                  |
@@ -215,15 +210,12 @@ Represents a HTTP request with additional helper methods for manipulating data, 
  | + get_protocol(Callback)                               string                  |
  | + get_header(string,template<Type>)                    template<Type>          |
  | + get_header(string,string)                            string                  |
- | + get_header(string,Callback)                          string                  |
  | + get_headers(string)                                  multimap<string,string> |
  | + get_query_parameter(string,template<Type>)           template<Type>          |
  | + get_query_parameter(string,string)                   string                  |
- | + get_query_parameter(string,Callback)                 string                  |
  | + get_query_parameters(string)                         multimap<string,string> |
  | + get_path_parameter(string,template<Type>)            template<Type>          |
  | + get_path_parameter(string,string)                    string                  |
- | + get_path_parameter(string,Callback)                  string                  |
  | + get_path_parameters(string)                          map<string,string>      |
  | + set_body(Bytes)                                      void                    |
  | + set_body(string)                                     void                    |
@@ -253,7 +245,7 @@ Represents a HTTP request with additional helper methods for manipulating data, 
 
 ### Response
 
-Represents a HTTP response with additional helper methods for manipulating data, and improving code readability.
+Represents an HTTP response with additional helper methods for manipulating data and improving code readability.
 
 ```
  +-----------------------------------------------------------------+
@@ -262,12 +254,12 @@ Represents a HTTP response with additional helper methods for manipulating data,
  +-----------------------------------------------------------------+
  | + has_header(string)                    boolean                 |
  | + get_body(void)                        Bytes                   |
- | + get_body(Callback)                    Bytes                   |
  | + get_version(void)                     double                  |
  | + get_status_code(void)                 integer                 |
+ | + get_protocol(void)                    string                  |
+ | + get_status_message(void)              string                  |
  | + get_header(string,template<Type>)     template<Type>          |
  | + get_header(string,string)             string                  |
- | + get_header(string,Callback)           string                  |
  | + get_headers(string)                   multimap<string,string> |
  | + set_body(Bytes)                       void                    |
  | + set_body(string)                      void                    |
@@ -283,7 +275,7 @@ Represents a HTTP response with additional helper methods for manipulating data,
 
 ### Session
 
-Represents a conversation between a client and the service. Internally this class holds the network state and exposes public functionality to interact with the service event-loop for asynchronous data acquisition and/or sleep states.
+Represents a conversation between a client and the service. Internally, this class holds the network state and exposes public functionality to interact with the service event-loop for asynchronous data acquisition and/or sleep states.
 
 ```
  +-------------------------------------------------------------------------------------+
@@ -322,7 +314,7 @@ Represents a conversation between a client and the service. Internally this clas
  | + get_request(void)                                         Request                 |
  | + get_resource(void)                                        Resource                |
  | + get_headers(void)                                         multimap<string,string> |
- | + add_headerstring,string)                                  void                    |
+ | + add_header(string,string)                                 void                    |
  | + set_header(string,string)                                 void                    |
  | + set_headers(multimap<string,string>)                      void                    |
  +----------------------------------------@--------------------------------------------+
@@ -400,7 +392,7 @@ Represents Secure Socket Layer service configuration.
 
 ### Settings
 
-Represents the primary point of Service, and Logger configuration.
+Represents the primary point of Service and Logger configuration.
 
 ```
  +-------------------------------------------------------------------------+
@@ -409,6 +401,8 @@ Represents the primary point of Service, and Logger configuration.
  +-------------------------------------------------------------------------+
  | + get_port(void)                                unsigned 16-bit integer |
  | + get_root(void)                                string                  |
+ | + get_ipc_path(void)                            string                  |
+ | + get_reuse_address(void)                       boolean                 |
  | + get_worker_limit(void)                        unsigned integer        |
  | + get_connection_limit(void)                    unsigned integer        |
  | + get_bind_address(void)                        string                  |
@@ -422,6 +416,8 @@ Represents the primary point of Service, and Logger configuration.
  | + get_default_headers(void)                     multimap<string,string> |
  | + set_port(unsigned 16-bit integer)             void                    |
  | + set_root(string)                              void                    |
+ | + set_ipc_path(string)                          void                    |
+ | + set_reuse_address(boolean)                    void                    |
  | + set_worker_limit(unsigned integer)            void                    |
  | + set_connection_limit(unsigned integer)        void                    |
  | + set_bind_address(string)                      void                    |
@@ -449,7 +445,7 @@ Represents the primary point of Service, and Logger configuration.
 
 ### WebSocket
 
-Represents a WebSocket connection. Internally this class holds the network state and exposes public functionality for full-duplex client interaction.
+Represents a WebSocket connection. Internally, this class holds the network state and exposes public functionality for full-duplex client interaction.
 
 ```
                  +-----------------------------------------------------+  
@@ -530,7 +526,7 @@ Class representing a single WebSocket data message.
 
 ### WebSocketMessage::OpCode
 
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjunction with the [WebSocket](#websocket) and [WebSocketMessage](#websocketmessage) to detail the message category.
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) is used in conjunction with the [WebSocket](#websocket) and [WebSocketMessage](#websocketmessage) to detail the message category.
 
 ```
  +--------------------------+
@@ -548,7 +544,7 @@ Class representing a single WebSocket data message.
 
 ### Logger
 
-Interface detailing the required contract for logger extensions. No default logger is supplied with the codebase and it is the responsibility of third-party developers to implement the desired characteristics.
+Interface detailing the required contract for logger extensions. No default logger is supplied with the codebase; it is the responsibility of third-party developers to implement the desired characteristics.
 
 ```
  +-----------------------------------------------+
@@ -573,7 +569,7 @@ Interface detailing the required contract for logger extensions. No default logg
 
 ### Logger::Level
 
-[Enumeration](http://en.cppreference.com/w/cpp/language/enum) used in conjunction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
+[Enumeration](http://en.cppreference.com/w/cpp/language/enum) is used in conjunction with the [Logger interface](#logger) to detail the level of severity towards a particular log entry.
 
 ```
  +---------------+
@@ -591,7 +587,7 @@ Interface detailing the required contract for logger extensions. No default logg
 
 ### Service
 
-The service is responsible for managing the publicly available RESTful resources, HTTP compliance, scheduling of the socket data and insuring incoming requests are processed in a timely fashion.
+The service is responsible for managing the publicly available RESTful resources, HTTP compliance, scheduling of the socket data and ensuring incoming requests are processed in a timely fashion.
 
 ```
                                            +-----------------------------------------------------------+
@@ -604,10 +600,10 @@ The service is responsible for managing the publicly available RESTful resources
                                            | + start(Settings)                                 void    |
                                            | + publish(Resource)                               void    |
                                            | + suppress(Resource)                              void    |
-                                           | + schedule(Callback,milliseconds)                 void    |
                                            | + get_uptime( void )                              seconds |
                                            | + get_http_uri( void )                            Uri     |
                                            | + get_https_uri( void )                           Uri     |
+                                           | + get_io_context( void )                          ASIO    |
                                            | + set_logger(Logger)                              void    |
                                            | + set_ready_handler(Callback)                     void    |
                                            | + set_not_found_handler(Callback)                 void    |
@@ -691,7 +687,7 @@ The asynchronous nature of the framework is achieved by employing an [event-reac
 Thread allocation
 -----------------
 
-By default the framework will only allocate a single thread to process all incoming requests and scheduled work loads. This can be increased by altering the `Settings::set_worker_limit` attribute. It is recommended that you should not exceed the available hardware limit, see below for a suggested implementation.
+By default, the framework will only allocate a single thread to process all incoming requests and scheduled workloads. This can be increased by altering the `Settings::set_worker_limit` attribute. It is recommended that you should not exceed the available hardware limit. See below for a suggested implementation.
 
 ``` C++
 #include <thread>
@@ -720,15 +716,15 @@ int main( const int, const char** )
 Future Direction
 ----------------
 
- It is the aim of the core development team to remove ASIO as a dependency due to the tight coupling of IO and Event Loop principles. This setup leads to cross contamination of concerns and forces design decisions on dependees. The team will present an event-loop offering superior handling and management of event-reaction task processing in the first quarter of 2017, and integration within Restbed before close of the same year.
+ It is the aim of the core development team to remove ASIO as a dependency due to the tight coupling of IO and Event Loop principles. This setup leads to cross-contamination of concerns and forces design decisions on dependents.
 
  WebSocketManager and ResourceCache shall be exposed for customisation by third-party developers.
 
- Application Layer (HTTP, HTTP2, SPDY, etc...) will be exposed for customisation by third-party developers.
+ Application Layer (HTTP, HTTP2, SPDY, etc) will be exposed for customisation by third-party developers.
 
- Network Layer (TCP, UDP, RS232, etc...) shall be exposed for customisation by third-party developers.
+ Network Layer (TCP, UDP, RS232, etc) shall be exposed for customisation by third-party developers.
 
- The secure socket logic layer will be exposed to allow alternative implementations OpenSSL, GnuTLS, PolarSSL, MatrixSSL, etc...
+ The secure socket logic layer will allow alternative implementations, such as OpenSSL, GnuTLS, PolarSSL, MatrixSSL, etc.
 
 Further Reading
 ---------------
@@ -741,4 +737,4 @@ Further Reading
 
 [ASIO](http://think-async.com/) - Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
 
-[Eventloop](https://en.wikipedia.org/wiki/Event_loop) - In computer science, the event loop, message dispatcher, message loop, message pump, or run loop is a programming construct that waits for and dispatches events or messages in a program. It works by making a request to some internal or external "event provider" (that generally blocks the request until an event has arrived), and then it calls the relevant event handler ("dispatches the event"). The event-loop may be used in conjunction with a reactor, if the event provider follows the file interface, which can be selected or 'polled' (the Unix system call, not actual polling). The event loop almost always operates asynchronously with the message originator.
+[Eventloop](https://en.wikipedia.org/wiki/Event_loop) - In computer science, the event loop, message dispatcher, message loop, message pump, or run loop is a programming construct that waits for and dispatches events or messages in a program. It works by requesting some internal or external "event provider" (that generally blocks the request until an event has arrived), and then it calls the relevant event handler ("dispatches the event"). The event-loop may be used in conjunction with a reactor if the event provider follows the file interface, which can be selected or 'polled' (the Unix system call, not actual polling). The event loop almost always operates asynchronously with the message originator.

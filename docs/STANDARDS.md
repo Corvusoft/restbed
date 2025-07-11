@@ -1,9 +1,9 @@
 Overview
 --------
 
-This document sets out the expected coding style for those who wish to participate in this project. With this standard we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
+This document sets out the expected coding style for those who wish to participate in the project. With this standard, we will maintain a readable codebase that can be easily cannibalised by new and old developers alike.
 
-To ensure the codebase meets this standard please install the supplied [GIT pre-commit](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) hook into your local copy. You're also required to install the [Artistic Style](http://astyle.sourceforge.net/) tool on your system for this hook to be successful; you must have version 2.05 or greater installed.
+To ensure the codebase meets this standard, please install the supplied [GIT pre-commit](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) hook into your local copy. You're also required to install the [Artistic Style](http://astyle.sourceforge.net/) tool on your system for this hook to be successful; you must have version 2.05 or greater installed.
 
 ```
 cd restbed/
@@ -37,9 +37,9 @@ Table of Contents
 14.	[Namespaces](#namespaces)
 15.	[Optimisations](#optimisations)
 
-### Brackets
+### Brackets
 
--	Allman style broken braces, and avoid unbraced one line conditional statements.
+-	Allman style broken braces, and avoid unbraced one-line conditional statements.
 
 ```C++
 if ( condition == true )
@@ -55,7 +55,7 @@ else
 ### Indentation
 
 -	Do **not** use tabs. All indentation is of 4 spaces.
--	Class, Namespace, Struct, If, For, Switch, etc.. statements **must** be indented.
+-	Class, namespace, struct, if, for, switch, etc, statements **must** be indented.
 
 ```C++
 namespace transport
@@ -82,15 +82,15 @@ namespace transport
 
 ### Comments
 
--	Comments **should** be avoided as they add an additional layer of management and/or technical-debt.
+-	Comments **should** be avoided as they add a layer of management and/or technical debt.
 -	Commenting is just as ineffective as poorly readable code.
--	Code should be self documenting with descriptive naming conventions applied to functions, variables, files, directories, etc...
+-	Code should be self-documenting with descriptive naming conventions applied to functions, variables, files, directories, etc...
 -	Commenting may be a sign you need to split the logic into multiple manageable blocks.
 
 ### Properties/Variables
 
--	Property and Variables names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
--	Property and Variables **must** be initialised to a known state on declaration.
+-	Property and variables names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
+-	Property and variables **must** be initialised to a known state on declaration.
 
 ```C++
 int limit = 0;
@@ -105,10 +105,10 @@ string name = "";
 -	Class properties **must** be private in scope.
 -	Class getter/setter accessor methods **must not** return non-const pointers/references.
 -	There **must** be **no** using namespace declarations in class header files.
--	Forward declarations are favoured over `#include` within class header files; with the exception of the standard template library.
+-	Forward declarations are favoured over #include within class header files, except for the standard template library.
 -	Empty method bodies (when unavoidable) *shall* be marked with a single return.
 -	Public classes **must** implement an [opaque pointer](http://en.wikipedia.org/wiki/Opaque_pointer).
--	Class names **must** start each word boundary with an UPPERCASED letter.
+-	Class names **must** start each word boundary with a UPPERCASE letter.
 
 ```C++
 class Person
@@ -139,7 +139,7 @@ class Person
 -	Enumerations **must** be strongly typed.
 -	Enumeration fields **must** be UPPERCASED.
 -	Enumeration fields **must** be initialised to a known state.
--	Enumeration names **must** start each word boundary with an UPPERCASED letter.
+-	Enumeration names **must** start each word boundary with a UPPERCASE letter.
 
 ```C++
 enum LogLevel : int
@@ -157,7 +157,7 @@ enum LogLevel : int
 
 -	Structure property names **must** follow the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
 -	Structure properties **must** be initialised to a known state on instance creation.
--	Structure names **must** start each word boundary with an UPPERCASED letter.
+-	Structure names **must** start each word boundary with a UPPERCASE letter.
 
 ```C++
 struct HttpRequest
@@ -174,10 +174,10 @@ struct HttpRequest
 
 ### Methods/Functions
 
--	Functions and Methods **must** use the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
--	Functions and Methods **should** perform one mental operation which is reflected in their name.
--	Function and Method declarations **should** avoid similar argument types.
--	It is recommended that Functions and Methods are no greater than 70 lines of code. If you find that the [LOC](https://en.wikipedia.org/wiki/Source_lines_of_code) exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2.
+-	Functions and methods **must** use the [Snake-case naming convention](https://en.wikipedia.org/wiki/snake_case).
+-	Functions and methods **should** perform one mental operation, which is reflected in their name.
+-	Function and method declarations **should** avoid similar argument types.
+-	It is recommended that functions and methods be no greater than 70 lines of code. If you find that the [LoC](https://en.wikipedia.org/wiki/Source_lines_of_code) exceed this limit, it may be an indication that it is performing more than one mental operation; see rule 2.
 
 ```C++
 int ping( Hostname hostname, Interface interface, int16_t port )
@@ -194,7 +194,7 @@ int ping( Hostname hostname, Interface interface, int16_t port )
 
 ### Whitespace
 
--	Whitespace is free, don't be scared to use it.
+-	Whitespace is free; don't be scared to use it.
 
 ```C++
 int process_exit_status = 0;
@@ -212,7 +212,7 @@ while ( process_exit_status not_eq -1 );
 
 ### Pointers/References
 
--	Pointers and References **must** be aligned to the data type (left).
+-	Pointers and references **must** be aligned to the data type (left).
 
 ```C++
 int* age = nullptr;
@@ -222,7 +222,7 @@ string& surname = m_surname;
 
 ### Exceptions
 
--	Logic within catch-blocks **must** be short & sweet.
+-	Logic within catch-blocks **must** be short and sweet.
 -	Name exceptions per Java styling.
 
 ```C++
@@ -246,7 +246,7 @@ catch ( const exception& ex )
 
 ### Namespaces
 
--	**Do not** include entire Namespaces, import only the artifact you're interested in.
+-	**Do not** include entire Namespaces, import only the artefact you're interested in.
 -	Namespace names **must only** contain lowercased letters.
 
 ```C++
@@ -262,4 +262,4 @@ namespace restbed
 
 ### Optimisations
 
--	Avoid premature optimisation, **readable, maintainable code is more important**.
+-	Avoid premature optimisation; **readable, maintainable code is more important**.

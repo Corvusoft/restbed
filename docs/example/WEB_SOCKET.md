@@ -116,14 +116,14 @@ void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< We
     }
     else if ( opcode == WebSocketMessage::PONG_FRAME )
     {
-        //Ignore PONG_FRAME.
-        //
-        //Every time the ping_handler is scheduled to run, it fires off a PING_FRAME to each
-        //WebSocket. The client, if behaving correctly, will respond with a PONG_FRAME.
-        //
-        //On each occasion the underlying TCP socket sees any packet data transfer, whether
-        //a PING, PONG, TEXT, or BINARY... frame. It will automatically reset the timeout counter
-        //leaving the connection active; see also Settings::set_connection_timeout.
+        // Ignore PONG_FRAME.
+        // 
+        // Every time the ping_handler is scheduled to run, it fires off a PING_FRAME to each
+        // WebSocket. The client, if behaving correctly, will respond with a PONG_FRAME.
+        // 
+        // On each occasion the underlying TCP socket sees any packet data transfer, whether
+        // a PING, PONG, TEXT, or BINARY... frame. It will automatically reset the timeout counter
+        // leaving the connection active; see also Settings::set_connection_timeout.
         return;
     }
     else if ( opcode == WebSocketMessage::CONNECTION_CLOSE_FRAME )
@@ -132,7 +132,7 @@ void message_handler( const shared_ptr< WebSocket > source, const shared_ptr< We
     }
     else if ( opcode == WebSocketMessage::BINARY_FRAME )
     {
-        //We don't support binary data.
+        // We don't support binary data.
         auto response = make_shared< WebSocketMessage >( WebSocketMessage::CONNECTION_CLOSE_FRAME, Bytes( { 10, 03 } ) );
         source->send( response );
     }
