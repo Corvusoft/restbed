@@ -7,7 +7,10 @@ configuration: Release
 platform: Any CPU
 
 init:
-- sh: sudo apt-get install libasio-dev
+- sh: >-
+    if [ "$CI_LINUX" = true ]; then
+        sudo apt-get --yes install libasio-dev
+    fi
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
 - git submodule update --init --recursive
