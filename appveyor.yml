@@ -8,9 +8,14 @@ platform: Any CPU
 
 init:
 - sh: >-
-    if [ "$CI_LINUX" = true ]; then
-        sudo apt-get --yes install libasio-dev
-    fi
+    git clone https://github.com/chriskohlhoff/asio.git
+    make
+    make install
+
+    git clone https://github.com/catchorg/Catch2.git
+    cd Catch2
+    cmake -Bbuild -H. -DBUILD_TESTING=OFF
+    sudo cmake --build build/ --target install
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
 - git submodule update --init --recursive
