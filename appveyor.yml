@@ -7,6 +7,7 @@ configuration: Release
 platform: Any CPU
 
 init:
+- sh: apt-get install libasio-dev
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
 - git submodule update --init --recursive
