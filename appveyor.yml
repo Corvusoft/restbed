@@ -9,12 +9,17 @@ platform: Any CPU
 init:
 - sh: >-
     git clone https://github.com/chriskohlhoff/asio.git
+
     make
+
     make install
 
     git clone https://github.com/catchorg/Catch2.git
+
     cd Catch2
+
     cmake -Bbuild -H. -DBUILD_TESTING=OFF
+
     sudo cmake --build build/ --target install
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
