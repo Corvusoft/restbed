@@ -33,6 +33,9 @@ init:
     sudo cmake --build build/ --target install
 
     rm -rf Catch2/
+
+    ls -lh /home/appveyor/projects/restbed
+
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
 - git submodule update --init --recursive
