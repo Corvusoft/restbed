@@ -8,11 +8,17 @@ platform: Any CPU
 
 init:
 - sh: >-
+    mkdir deps/
+
+    cd deps/
+
     git clone https://github.com/chriskohlhoff/asio.git
+
+    cd asio/
 
     make
 
-    make install
+    sudo make install
 
     git clone https://github.com/catchorg/Catch2.git
 
@@ -21,6 +27,10 @@ init:
     cmake -Bbuild -H. -DBUILD_TESTING=OFF
 
     sudo cmake --build build/ --target install
+
+    cd ../
+
+    rm -rf deps/
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
 - git submodule update --init --recursive
