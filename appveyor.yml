@@ -14,11 +14,17 @@ init:
 
     git clone https://github.com/chriskohlhoff/asio.git
 
-    cd asio/
+    cd asio/asio/
+
+    ./autogen.sh
+
+    ./configure
 
     make
 
     sudo make install
+
+    rm -rf asio/
 
     git clone https://github.com/catchorg/Catch2.git
 
@@ -28,9 +34,7 @@ init:
 
     sudo cmake --build build/ --target install
 
-    cd ../
-
-    rm -rf deps/
+    rm -rf Catch2/
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
 - git submodule update --init --recursive
