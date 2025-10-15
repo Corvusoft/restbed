@@ -22,6 +22,8 @@ init:
 
     sudo make install
 
+    cd ../../
+
     rm -rf asio/
 
     git clone https://github.com/catchorg/Catch2.git
@@ -32,9 +34,9 @@ init:
 
     sudo cmake --build build/ --target install
 
-    rm -rf Catch2/
+    cd ../
 
-    ls -lh /home/appveyor/projects/restbed
+    rm -rf Catch2/
 
 - cmd: '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_x64'
 install:
