@@ -2,12 +2,14 @@ version: 4.8.0/{branch}-{build}
 image:
 - Visual Studio 2022
 - Ubuntu
-- macOS
+# - macOS
 configuration: Release
 platform: Any CPU
 
 init:
 - sh: >-
+    sudo apt install build-essential
+
     mkdir deps/
 
     cd deps/
