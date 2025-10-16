@@ -8,7 +8,11 @@ platform: Any CPU
 
 init:
 - sh: >-
+    sudo apt update && sudo apt upgrade
+
     sudo apt install build-essential autoconf
+
+    sudo apt install g++-14
 
     git clone https://github.com/chriskohlhoff/asio.git
 
