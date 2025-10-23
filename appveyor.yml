@@ -8,6 +8,8 @@ platform: Any CPU
 
 init:
 - sh: >-
+    sudo add-apt-repository universe
+
     sudo apt update && sudo apt upgrade --yes
 
     sudo apt install --yes build-essential autoconf
