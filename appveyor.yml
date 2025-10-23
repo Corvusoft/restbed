@@ -10,9 +10,23 @@ init:
 - sh: >-
     sudo apt update && sudo apt upgrade --yes
 
-    sudo apt install --yes build-essential autoconf
+    sudo apt install --yes build-essential autoconf libmpfr-dev libgmp3-dev libmpc-dev
 
-    sudo apt install --yes gcc-14
+    wget http://ftp.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.gz
+
+    tar -xf gcc-14.2.0.tar.gz
+
+    cd gcc-14.2.0
+
+    ./configure -v --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --prefix=/usr/local/gcc-14.2.0 --enable-checking=release --enable-languages=c,c++ --disable-multilib --program-suffix=-14.2.0
+
+    make
+
+    sudo make install
+
+    cd ../
+
+    rm -rf gcc-14.2.0
 
     git clone https://github.com/chriskohlhoff/asio.git
 
