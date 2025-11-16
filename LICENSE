@@ -7,13 +7,13 @@
 
  This work is part of Corvusoft's Restbed Framework (the "Software").
 
- You may at your option receive a license to the Software under either 
+ You may at your option receive a license to the Software under either
  the terms of the GNU Affero General Public License (AGPL) or the
  Corvusoft Permissive License (CPL), as explained in the note below.
 
  The Software may be used under the terms of the GNU Affero General Public
- License version 3 or (at your option) any later version as published by 
- the Free Software Foundation and appearing in the file LICENSE.AGPL 
+ License version 3 or (at your option) any later version as published by
+ the Free Software Foundation and appearing in the file LICENSE.AGPL
  included in the packaging of the Software.
 
  The Software is provided AS IS WITHOUT WARRANTY OF ANY KIND; without even
@@ -22,7 +22,7 @@
 
  **NOTE:**
 
- Using the AGPL requires that your work based on the Software must be 
+ Using the AGPL requires that your work based on the Software must be
  licensed under the AGPL. If you wish to develop a work based on the
  Software but desire to license it under your own terms, e.g. a closed source
  license, you MUST purchase a Corvusoft Permissive License.

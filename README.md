@@ -1,9 +1,9 @@
-Restbed [![Build Status](https://ci.appveyor.com/api/projects/status/naho4wmrxd47vko8/branch/master?svg=true)](https://ci.appveyor.com/project/Corvusoft/restbed/branch/master)
-=============================================================================================================================
+Restbed
+=======
 
 ---
 
-Restbed is a comprehensive and consistent programming model for building applications that require seamless and secure communication over HTTP, with the ability to model a range of business processes, designed to target mobile, tablet, desktop and embedded production environments.
+Restbed is a robust, enterprise-class framework for building server-side applications that demand secure, reliable, and scalable HTTP communication. It provides a flexible foundation for modeling complex business processes and is engineered to support deployment across mobile, tablet, desktop, and embedded environments.
 
 > It's akin to embedding NGINX into your companies own product line. -- Solutions Architect, Bellrock Technology
 
@@ -79,7 +79,7 @@ int main( const int, const char** )
 }
 ```
 
-More in-depth examples can be found [here](https://github.com/Corvusoft/restbed/tree/master/docs/example). To see Restbed used in anger, please visit Corvusoft's [RestQ](https://github.com/corvusoft/restq) project.
+More in-depth examples can be found in the [documentation](https://github.com/Corvusoft/restbed/tree/master/docs/example).
 
 License
 -------
@@ -159,9 +159,9 @@ Prerequisites: Visual Studio 2022, CMake, GIT, Perl.
 
 Using the x64 Native Tools Command Prompt begin by, if required, building OpenSSL.
 ```cmd
-git clone --recursive https://github.com/corvusoft/restbed.git
+git clone --recursive https://github.com/openssl/openssl.git
 
-cd restbed\dependency\openssl
+cd openssl
 perl Configure [no-]shared
 nmake
 nmake test
@@ -170,7 +170,7 @@ nmake test
 If you selected to use the default OpenSSL build (shared), you'll need to include the installation path in your environment.
 
 ```cmd
-set PATH=restbed\dependency\openssl;%PATH%
+set PATH=openssl;%PATH%
 ```
 
 If you selected to use the static OpenSSL build (no-shared), you'll need to include additional dependencies when linking your application code; See [OpenSSL project](https://github.com/openssl/openssl/pull/1062/files) for futher details.
@@ -182,6 +182,8 @@ target_link_libraries( my_microservice restbed-static.lib ws2_32.lib advapi32.li
 Now proceed with the following Restbed build instructions.
 
 ```cmd
+git clone --recursive https://github.com/corvusoft/restbed.git
+
 mkdir restbed\build
 cd restbed\build
 cmake -G "Visual Studio 17 2022" [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
@@ -204,37 +206,12 @@ Minimum Requirements
 | Resource | Requirement                                     |
 |:--------:|:-----------------------------------------------:|
 | Compiler |            C++23 compliant or above             |
-|    OS    | BSD, Linux, Mac OSX, Windows, Raspbian          |
-
-Road Map
---------
-
-| Milestone                                                                           | Feature                                 | Status      |
-|:-----------------------------------------------------------------------------------:|:---------------------------------------:|:-----------:|
-|                                         0.0                                         |        Asynchronous HTTP Service        |  complete   |
-|                                         1.0                                         |           HTTP 1.0 Compliance           |  complete   |
-|                                         2.0                                         |           HTTP 1.1 Compliance           |  complete   |
-|                                         2.5                                         |           Secure Socket Layer           |  complete   |
-|                                         2.5                                         | Simultaneous Network Ports (HTTP/HTTPS) |  complete   |
-|                                         3.0                                         |              Rules Engine               |  complete   |
-| [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5) |   Schedule Tasks on Service run-loop    |  complete   |
-| [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5) |    Multi-Threaded service capability    |  complete   |
-| [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5) |    Bind Service to specific Address     |  complete   |
-| [3.5](https://github.com/Corvusoft/restbed/issues?utf8=%E2%9C%93&q=milestone%3A3.5) |           Session Management            |  complete   |
-|             [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)              |               HTTP Client               |  complete   |
-|             [4.0](https://github.com/Corvusoft/restbed/milestones/4.0)              |             Signal Handling             |  complete   |
-|             [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)              |            API Documentation            |  complete   |
-|             [4.5](https://github.com/Corvusoft/restbed/milestones/4.5)              |               Web Sockets               |  complete   |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |      Client-side SSL certificates       | development |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            Resource Caching             | development |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |          Runtime Modifications          | development |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |            HTTP 2 compliance            | development |
-|             [5.0](https://github.com/Corvusoft/restbed/milestones/5.0)              |         Refactor, Reduce, Reuse         |   active    |
+|    OS    |         BSD, Linux, Mac OSX, Windows            |
 
 Contact
 -------
 
 | Method                                      | Description                                 |
 |:--------------------------------------------|:--------------------------------------------|
-| support@corvusoft.com                     | Support related queries.                    |
-| sales@corvusoft.com                       | Sale related queries.                       |
+| support@corvusoft.com                       | Support related queries.                    |
+| sales@corvusoft.com                         | Sale related queries.                       |
