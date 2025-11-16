@@ -20,13 +20,13 @@
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define SESSION_EXPORT __declspec(dllexport)
-	#else
-		#define SESSION_EXPORT __declspec(dllimport)
-	#endif
+    #ifdef WIN_DLL_EXPORT
+        #define SESSION_EXPORT __declspec(dllexport)
+    #else
+        #define SESSION_EXPORT __declspec(dllimport)
+    #endif
 #else
-	#define SESSION_EXPORT __attribute__((visibility ("default")))
+    #define SESSION_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
@@ -118,7 +118,7 @@ namespace restbed
             
             SESSION_EXPORT void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::shared_ptr< Session > ) >& callback );
             
-            //Getters            
+            //Getters
             SESSION_EXPORT const std::string get_origin( void ) const;
             
             SESSION_EXPORT const std::string get_destination( void ) const;

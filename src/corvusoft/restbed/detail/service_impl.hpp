@@ -76,15 +76,15 @@ namespace restbed
                 
                 void create_ssl_session( const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::error_code& error ) const;
 #endif
-
+                
 #ifdef BUILD_IPC
                 void ipc_start( void );
-
+                
                 void ipc_listen( void ) const;
-
+                
                 void create_ipc_session( const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::error_code& error ) const;
 #endif
-
+                
                 std::string sanitise_path( const std::string& path ) const;
                 
                 void not_found( const std::shared_ptr< Session > session ) const;
@@ -153,7 +153,7 @@ namespace restbed
                 
                 std::shared_ptr< asio::ip::tcp::acceptor > m_ssl_acceptor;
 #endif
-
+                
 #ifdef BUILD_IPC
                 std::shared_ptr< asio::local::stream_protocol::acceptor > m_ipc_acceptor;
 #endif

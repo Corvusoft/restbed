@@ -59,7 +59,7 @@ namespace restbed
                 return nullptr;
             }
             
-            uint8_t datum = static_cast<uint8_t>(packet[ 0 ]);
+            uint8_t datum = static_cast<uint8_t>( packet[ 0 ] );
             
             auto message = make_shared< WebSocketMessage >( );
             message->set_final_frame_flag( ( datum & 0x80 ) ? true : false );
@@ -75,7 +75,7 @@ namespace restbed
                 return message;
             }
             
-            datum = static_cast<uint8_t>(packet[ 1 ]);
+            datum = static_cast<uint8_t>( packet[ 1 ] );
             message->set_mask_flag( ( datum & 0x80 ) ? true : false );
             message->set_length( datum & 0x7F );
             
@@ -94,8 +94,8 @@ namespace restbed
                     return nullptr;
                 }
                 
-                length  = static_cast<uint8_t>(packet[ offset++ ]) << 8;
-                length |= static_cast<uint8_t>(packet[ offset++ ])     ;
+                length  = static_cast<uint8_t>( packet[ offset++ ] ) << 8;
+                length |= static_cast<uint8_t>( packet[ offset++ ] )     ;
                 
                 message->set_extended_length( length );
             }
@@ -106,10 +106,10 @@ namespace restbed
                     return nullptr;
                 }
                 
-                length |= static_cast<uint8_t>(packet[ offset++ ]) << 24;
-                length |= static_cast<uint8_t>(packet[ offset++ ]) << 16;
-                length |= static_cast<uint8_t>(packet[ offset++ ]) <<  8;
-                length  = static_cast<uint8_t>(packet[ offset++ ])      ;
+                length |= static_cast<uint8_t>( packet[ offset++ ] ) << 24;
+                length |= static_cast<uint8_t>( packet[ offset++ ] ) << 16;
+                length |= static_cast<uint8_t>( packet[ offset++ ] ) <<  8;
+                length  = static_cast<uint8_t>( packet[ offset++ ] )      ;
                 
                 message->set_extended_length( length );
             }
@@ -121,10 +121,10 @@ namespace restbed
                     return nullptr;
                 }
                 
-                uint32_t mask = static_cast<uint8_t>(packet[ offset++ ]) << 24;
-                mask |= static_cast<uint8_t>(packet[ offset++ ])         << 16;
-                mask |= static_cast<uint8_t>(packet[ offset++ ])         <<  8;
-                mask |= static_cast<uint8_t>(packet[ offset++ ])              ;
+                uint32_t mask = static_cast<uint8_t>( packet[ offset++ ] ) << 24;
+                mask |= static_cast<uint8_t>( packet[ offset++ ] )         << 16;
+                mask |= static_cast<uint8_t>( packet[ offset++ ] )         <<  8;
+                mask |= static_cast<uint8_t>( packet[ offset++ ] )              ;
                 
                 message->set_mask( mask );
             }
@@ -178,7 +178,7 @@ namespace restbed
                 datum |= std::byte{0x10};
             }
             
-            datum |= static_cast<std::byte>(message->get_opcode( ) & 0x0F);
+            datum |= static_cast<std::byte>( message->get_opcode( ) & 0x0F );
             
             Bytes frame = { datum };
             
@@ -188,22 +188,22 @@ namespace restbed
             if ( length == 126 )
             {
                 auto extended_length = message->get_extended_length( );
-                frame.push_back( static_cast<std::byte>(( mask_flag ) ? 254 : 126) );
-                frame.push_back( static_cast<std::byte>(( extended_length >> 8 ) & 0xFF) );
-                frame.push_back( static_cast<std::byte>(  extended_length        & 0xFF) );
+                frame.push_back( static_cast<std::byte>( ( mask_flag ) ? 254 : 126 ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 8 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>(  extended_length        & 0xFF ) );
             }
             else if ( length == 127 )
             {
                 auto extended_length = message->get_extended_length( );
-                frame.push_back( static_cast<std::byte>(( mask_flag ) ? 255 : 127 ) );
-                frame.push_back( static_cast<std::byte>(( extended_length >> 56 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(( extended_length >> 48 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(( extended_length >> 40 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(( extended_length >> 32 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(( extended_length >> 24 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(( extended_length >> 16 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(( extended_length >>  8 ) & 0xFF ));
-                frame.push_back( static_cast<std::byte>(  extended_length         & 0xFF ));
+                frame.push_back( static_cast<std::byte>( ( mask_flag ) ? 255 : 127 ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 56 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 48 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 40 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 32 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 24 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >> 16 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>( ( extended_length >>  8 ) & 0xFF ) );
+                frame.push_back( static_cast<std::byte>(  extended_length         & 0xFF ) );
             }
             else
             {
@@ -229,10 +229,10 @@ namespace restbed
                 mask[ 2 ] = ( masking_key >> 16 ) & 0xFF;
                 mask[ 3 ] = ( masking_key >> 24 ) & 0xFF;
                 
-                frame.push_back( std::byte{mask[ 3 ] });
-                frame.push_back( std::byte{mask[ 2 ] });
-                frame.push_back( std::byte{mask[ 1 ] });
-                frame.push_back( std::byte{mask[ 0 ] });
+                frame.push_back( std::byte{mask[ 3 ] } );
+                frame.push_back( std::byte{mask[ 2 ] } );
+                frame.push_back( std::byte{mask[ 1 ] } );
+                frame.push_back( std::byte{mask[ 0 ] } );
                 
                 auto data = message->get_data( );
                 
@@ -262,12 +262,16 @@ namespace restbed
             static auto& charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             thread_local static mt19937 generator{ random_device{ }( ) };
             thread_local static uniform_int_distribution< string::size_type > pick( 0, sizeof( charset ) - 2 );
-
+            
             string key;
             auto length = 16;
             key.reserve( length );
-            while( length-- ) key += charset[ pick( generator ) ];
-
+            
+            while ( length-- )
+            {
+                key += charset[ pick( generator ) ];
+            }
+            
             auto socket = make_shared< WebSocket >( );
             socket->set_key( key );
             socket->set_logger( m_logger );

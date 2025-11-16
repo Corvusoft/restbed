@@ -48,7 +48,9 @@ namespace restbed
     static multimap< string, string > empty_headers = { };
     
     Session::Session( void ) : m_pimpl( new SessionImpl )
-    { return; }
+    {
+        return;
+    }
     
     bool Session::is_open( void ) const
     {
@@ -192,7 +194,7 @@ namespace restbed
                 const auto error_handler = m_pimpl->get_error_handler( );
                 return error_handler( 500, runtime_error( message ), session );
             }
-
+            
             if ( callback == nullptr )
             {
                 m_pimpl->m_request->m_pimpl->m_socket->start_read( m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", [ this, session ]( const error_code & error, const size_t length )

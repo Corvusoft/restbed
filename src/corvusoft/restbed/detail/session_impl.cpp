@@ -95,10 +95,10 @@ namespace restbed
             {
                 body.insert( body.end( ), data.begin( ), data.end( ) );
             }
-
+            
             try
             {
-                callback(session, data);
+                callback( session, data );
             }
             catch ( const int status_code )
             {
@@ -123,7 +123,7 @@ namespace restbed
             catch ( ... )
             {
                 auto cex = current_exception( );
-
+                
                 if ( cex not_eq nullptr )
                 {
                     try
@@ -204,13 +204,14 @@ namespace restbed
             
             return error_handler;
         }
-
+        
         Bytes SessionImpl::to_bytes( const shared_ptr< Response >& value )
         {
             char* locale = nullptr;
-            if (auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
+            
+            if ( auto current_locale = setlocale( LC_NUMERIC, nullptr ) )
             {
-                locale = strdup(current_locale);
+                locale = strdup( current_locale );
                 setlocale( LC_NUMERIC, "C" );
             }
             
@@ -219,8 +220,9 @@ namespace restbed
                                      value->get_version( ),
                                      value->get_status_code( ),
                                      value->get_status_message( ) );
-            
-            if (locale) {
+                                     
+            if ( locale )
+            {
                 setlocale( LC_NUMERIC, locale );
                 free( locale );
             }

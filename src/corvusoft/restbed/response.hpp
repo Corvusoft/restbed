@@ -20,13 +20,13 @@
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define RESPONSE_EXPORT __declspec(dllexport)
-	#else
-		#define RESPONSE_EXPORT __declspec(dllimport)
-	#endif
+    #ifdef WIN_DLL_EXPORT
+        #define RESPONSE_EXPORT __declspec(dllexport)
+    #else
+        #define RESPONSE_EXPORT __declspec(dllimport)
+    #endif
 #else
-	#define RESPONSE_EXPORT __attribute__((visibility ("default")))
+    #define RESPONSE_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
@@ -92,9 +92,9 @@ namespace restbed
             RESPONSE_EXPORT void set_protocol( const std::string& protocol );
             
             RESPONSE_EXPORT void set_status_message( const std::string& value );
-
+            
             RESPONSE_EXPORT void add_header( const std::string& name, const std::string& value );
-
+            
             RESPONSE_EXPORT void set_header( const std::string& name, const std::string& value );
             
             RESPONSE_EXPORT void set_headers( const std::multimap< std::string, std::string >& values );
@@ -122,7 +122,7 @@ namespace restbed
             
         private:
             //Friends
-
+            
             //Definitions
             
             //Constructors

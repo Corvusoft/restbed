@@ -17,13 +17,13 @@
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define URI_EXPORT __declspec(dllexport)
-	#else
-		#define URI_EXPORT __declspec(dllimport)
-	#endif
+    #ifdef WIN_DLL_EXPORT
+        #define URI_EXPORT __declspec(dllexport)
+    #else
+        #define URI_EXPORT __declspec(dllimport)
+    #endif
 #else
-	#define URI_EXPORT __attribute__((visibility ("default")))
+    #define URI_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
@@ -37,7 +37,7 @@ namespace restbed
     //Forward Declarations
     namespace detail
     {
-		struct UriImpl;
+        struct UriImpl;
     }
     
     class Uri
@@ -68,7 +68,7 @@ namespace restbed
             URI_EXPORT static Uri parse( const std::string& value );
             
             URI_EXPORT static std::string decode( const std::string& value );
-        
+            
             URI_EXPORT static std::string decode_parameter( const std::string& value );
             
             URI_EXPORT static std::string encode( const std::string& value );

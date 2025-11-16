@@ -17,13 +17,13 @@
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define SETTINGS_EXPORT __declspec(dllexport)
-	#else
-		#define SETTINGS_EXPORT __declspec(dllimport)
-	#endif
+    #ifdef WIN_DLL_EXPORT
+        #define SETTINGS_EXPORT __declspec(dllexport)
+    #else
+        #define SETTINGS_EXPORT __declspec(dllimport)
+    #endif
 #else
-	#define SETTINGS_EXPORT __attribute__((visibility ("default")))
+    #define SETTINGS_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
@@ -74,13 +74,13 @@ namespace restbed
             SETTINGS_EXPORT bool get_case_insensitive_uris( void ) const;
             
             SETTINGS_EXPORT std::chrono::milliseconds get_connection_timeout( void ) const;
-
+            
             SETTINGS_EXPORT bool get_keep_alive( void ) const;
-
+            
             SETTINGS_EXPORT uint32_t get_keep_alive_start( void ) const;
-
+            
             SETTINGS_EXPORT uint32_t get_keep_alive_interval( void ) const;
-
+            
             SETTINGS_EXPORT uint32_t get_keep_alive_cnt( void ) const;
             
             SETTINGS_EXPORT std::string get_status_message( const int code ) const;
@@ -115,13 +115,13 @@ namespace restbed
             SETTINGS_EXPORT void set_connection_timeout( const std::chrono::seconds& value );
             
             SETTINGS_EXPORT void set_connection_timeout( const std::chrono::milliseconds& value );
-
+            
             SETTINGS_EXPORT void set_keep_alive( bool value );
-
+            
             SETTINGS_EXPORT void set_keep_alive_start( const uint32_t value );
-
+            
             SETTINGS_EXPORT void set_keep_alive_interval( const uint32_t value );
-
+            
             SETTINGS_EXPORT void set_keep_alive_cnt( const uint32_t value );
             
             SETTINGS_EXPORT void set_status_message( const int code, const std::string& message );

@@ -19,13 +19,13 @@
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define SERVICE_EXPORT __declspec(dllexport)
-	#else
-		#define SERVICE_EXPORT __declspec(dllimport)
-	#endif
+    #ifdef WIN_DLL_EXPORT
+        #define SERVICE_EXPORT __declspec(dllexport)
+    #else
+        #define SERVICE_EXPORT __declspec(dllimport)
+    #endif
 #else
-	#define SERVICE_EXPORT __attribute__((visibility ("default")))
+    #define SERVICE_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces
@@ -81,7 +81,7 @@ namespace restbed
             SERVICE_EXPORT const std::shared_ptr< const Uri > get_https_uri( void ) const;
             
             SERVICE_EXPORT const std::shared_ptr< asio::io_context > get_io_context( void ) const;
-
+            
             //Setters
             SERVICE_EXPORT void set_logger( const std::shared_ptr< Logger >& value );
             

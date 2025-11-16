@@ -34,22 +34,29 @@ namespace restbed
 {
     Bytes String::to_bytes( const string& value )
     {
-        return value | std::views::transform([](auto c){
-            return static_cast<std::byte>(c);
-        }) | std::ranges::to<Bytes>();
+        return value | std::views::transform( []( auto c )
+        {
+            return static_cast<std::byte>( c );
+        } ) | std::ranges::to<Bytes>();
     }
     
     string String::lowercase( const string& value )
     {
         string result = "";
-        transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value ) { return static_cast< char >( tolower( value ) ); } );
+        transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value )
+        {
+            return static_cast< char >( tolower( value ) );
+        } );
         return result;
     }
     
     string String::uppercase( const string& value )
     {
         string result = "";
-        transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value ) { return static_cast< char >( toupper( value ) ); } );
+        transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value )
+        {
+            return static_cast< char >( toupper( value ) );
+        } );
         return result;
     }
     

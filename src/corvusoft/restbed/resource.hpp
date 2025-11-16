@@ -16,13 +16,13 @@
 
 //Windows DLL Exports
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32) || defined(_WIN64)
-	#ifdef WIN_DLL_EXPORT
-		#define RESOURCE_EXPORT __declspec(dllexport)
-	#else
-		#define RESOURCE_EXPORT __declspec(dllimport)
-	#endif
+    #ifdef WIN_DLL_EXPORT
+        #define RESOURCE_EXPORT __declspec(dllexport)
+    #else
+        #define RESOURCE_EXPORT __declspec(dllimport)
+    #endif
 #else
-	#define RESOURCE_EXPORT __attribute__((visibility ("default")))
+    #define RESOURCE_EXPORT __attribute__((visibility ("default")))
 #endif
 
 //System Namespaces

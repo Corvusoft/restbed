@@ -259,10 +259,12 @@ namespace restbed
                     
                     auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_logger );
                     connection->set_timeout( m_settings->get_connection_timeout( ) );
-                    if (m_settings->get_keep_alive()) {
+                    
+                    if ( m_settings->get_keep_alive() )
+                    {
                         connection->set_keep_alive( m_settings->get_keep_alive_start(),
-                            m_settings->get_keep_alive_interval(),
-                            m_settings->get_keep_alive_cnt());
+                                                    m_settings->get_keep_alive_interval(),
+                                                    m_settings->get_keep_alive_cnt() );
                     }
                     
                     auto session = make_shared< Session >( );
@@ -290,37 +292,39 @@ namespace restbed
             https_listen( );
         }
 #endif
-
+        
 #ifdef BUILD_IPC
         void ServiceImpl::ipc_start( void )
         {
             const string location = m_settings->get_ipc_path( );
             ::remove( location.data( ) );
-
+            
             m_ipc_acceptor = make_shared< stream_protocol::acceptor >( *m_io_context, stream_protocol::endpoint( location ) );
             m_ipc_acceptor->set_option( socket_base::reuse_address( m_settings->get_reuse_address( ) ) );
             m_ipc_acceptor->listen( m_settings->get_connection_limit( ) );
             ipc_listen( );
-                
+            
             log( Logger::INFO, std::format( "Service accepting HTTP connections at '{}'.",  location ) );
         }
-
+        
         void ServiceImpl::ipc_listen( void ) const
         {
             auto socket = make_shared< stream_protocol::socket >( *m_io_context );
             m_ipc_acceptor->async_accept( *socket, bind( &ServiceImpl::create_ipc_session, this, socket, _1 ) );
         }
-
+        
         void ServiceImpl::create_ipc_session( const shared_ptr< stream_protocol::socket >& socket, const error_code& error ) const
         {
             if ( not error )
             {
                 auto connection = make_shared< IPCSocketImpl >( *m_io_context, socket, m_settings->get_ipc_path( ), m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
-                if (m_settings->get_keep_alive()) {
+                
+                if ( m_settings->get_keep_alive() )
+                {
                     connection->set_keep_alive( m_settings->get_keep_alive_start(),
-                        m_settings->get_keep_alive_interval(),
-                        m_settings->get_keep_alive_cnt());
+                                                m_settings->get_keep_alive_interval(),
+                                                m_settings->get_keep_alive_cnt() );
                 }
                 
                 auto session = make_shared< Session >( );
@@ -347,7 +351,7 @@ namespace restbed
             ipc_listen( );
         }
 #endif
-
+        
         string ServiceImpl::sanitise_path( const string& path ) const
         {
             if ( path == "/" )
@@ -387,9 +391,9 @@ namespace restbed
         void ServiceImpl::not_found( const shared_ptr< Session > session ) const
         {
             log( Logger::INFO, std::format( "'{}' resource route not found '{}'.",
-                                               session->get_origin( ),
-                                               session->get_request( )->get_path( ) ) );
-                                               
+                                            session->get_origin( ),
+                                            session->get_request( )->get_path( ) ) );
+                                            
             if ( m_not_found_handler not_eq nullptr )
             {
                 m_not_found_handler( session );
@@ -436,10 +440,10 @@ namespace restbed
         void ServiceImpl::method_not_allowed( const shared_ptr< Session > session ) const
         {
             log( Logger::INFO, std::format( "'{}' '{}' method not allowed '{}'.",
-                                               session->get_origin( ),
-                                               session->get_request( )->get_method( ),
-                                               session->get_request( )->get_path( ) ) );
-                                               
+                                            session->get_origin( ),
+                                            session->get_request( )->get_method( ),
+                                            session->get_request( )->get_path( ) ) );
+                                            
             if ( m_method_not_allowed_handler not_eq nullptr )
             {
                 m_method_not_allowed_handler( session );
@@ -453,10 +457,10 @@ namespace restbed
         void ServiceImpl::method_not_implemented( const shared_ptr< Session > session ) const
         {
             log( Logger::INFO, std::format( "'{}' '{}' method not implemented '{}'.",
-                                               session->get_origin( ),
-                                               session->get_request( )->get_method( ),
-                                               session->get_request( )->get_path( ) ) );
-                                               
+                                            session->get_origin( ),
+                                            session->get_request( )->get_method( ),
+                                            session->get_request( )->get_path( ) ) );
+                                            
             if ( m_method_not_implemented_handler not_eq nullptr )
             {
                 m_method_not_implemented_handler( session );
@@ -470,10 +474,10 @@ namespace restbed
         void ServiceImpl::router( const shared_ptr< Session > session ) const
         {
             log( Logger::INFO, std::format( "Incoming '{}' request from '{}' for route '{}'.",
-                                               session->get_request( )->get_method( ),
-                                               session->get_origin( ),
-                                               session->get_request( )->get_path( ) ) );
-                                               
+                                            session->get_request( )->get_method( ),
+                                            session->get_origin( ),
+                                            session->get_request( )->get_path( ) ) );
+                                            
             if ( session->is_closed( ) )
             {
                 return;
@@ -532,10 +536,12 @@ namespace restbed
             {
                 auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
-                if (m_settings->get_keep_alive()) {
+                
+                if ( m_settings->get_keep_alive() )
+                {
                     connection->set_keep_alive( m_settings->get_keep_alive_start(),
-                        m_settings->get_keep_alive_interval(),
-                        m_settings->get_keep_alive_cnt());
+                                                m_settings->get_keep_alive_interval(),
+                                                m_settings->get_keep_alive_cnt() );
                 }
                 
                 auto session = make_shared< Session >( );
@@ -569,10 +575,10 @@ namespace restbed
             
             const auto folders = String::split( request->get_path( ), '/' );
             const auto declarations = String::split( m_settings->get_root( ) + "/" + m_resource_paths.at( sanitised_path ), '/' );
-
+            
             // Clear previous parameters in case of "keep-alive" request
             request->m_pimpl->m_path_parameters.clear();
-
+            
             for ( size_t index = 0; index < folders.size( ) and index < declarations.size( ); index++ )
             {
                 const auto declaration = declarations[ index ];
@@ -608,12 +614,12 @@ namespace restbed
             {
                 m_authentication_handler( session, [ this ]( const shared_ptr< Session > session )
                 {
-                    this->router(session);
+                    this->router( session );
                 } );
             }
             else
             {
-                this->router(session);
+                this->router( session );
             }
         }
         
@@ -734,7 +740,7 @@ namespace restbed
             {
                 const auto items = parse_request_line( stream );
                 const auto uri = Uri::parse( "http://localhost" + items.at( "path" ) );
-
+                
                 session->m_pimpl->m_request->m_pimpl->m_body.clear( );
                 session->m_pimpl->m_request->m_pimpl->m_path = Uri::decode( uri.get_path( ) );
                 session->m_pimpl->m_request->m_pimpl->m_method = items.at( "method" );

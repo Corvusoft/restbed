@@ -106,7 +106,7 @@ namespace restbed
             m_pimpl->m_workers_stopped->wait_for( seconds( 1 ) );
             m_pimpl->m_workers_stopped.reset( );
         }
-
+        
         if ( m_pimpl->m_logger not_eq nullptr )
         {
             m_pimpl->log( Logger::INFO, "Service halted." );
@@ -140,7 +140,7 @@ namespace restbed
         }
         
         m_pimpl->m_web_socket_manager = make_shared< WebSocketManagerImpl >( );
-
+        
 #ifdef BUILD_IPC
         m_pimpl->ipc_start( );
 #endif
@@ -148,6 +148,7 @@ namespace restbed
 #ifdef BUILD_SSL
         m_pimpl->https_start( );
 #endif
+        
         for ( const auto& route : m_pimpl->m_resource_paths )
         {
             auto path = std::format( "/{}/{}", m_pimpl->m_settings->get_root( ), route.second );
@@ -171,31 +172,34 @@ namespace restbed
         else
         {
             promise<void> all_signalled;
-            m_pimpl->m_workers_stopped = unique_ptr<future<void> >(new future<void>(all_signalled.get_future()));
+            m_pimpl->m_workers_stopped = unique_ptr<future<void> >( new future<void>( all_signalled.get_future() ) );
             vector<future<void> > signals;
+            
             for ( unsigned int count = 0;  count < limit; count++ )
             {
-                signals.push_back( async(launch::async, [ this ]( )
-                                         {
-                                             m_pimpl->m_io_context->run( );
-                                         } ) );
+                signals.push_back( async( launch::async, [ this ]( )
+                {
+                    m_pimpl->m_io_context->run( );
+                } ) );
             }
             
             try
             {
-                while (!signals.empty())
+                while ( !signals.empty() )
                 {
-                    signals.erase(std::remove_if(signals.begin(), signals.end(),
-                                                 [](future<void>& signal) {
-                                                     return (signal.wait_for(milliseconds(5)) == future_status::ready) ?
-                                                     (signal.get(), true) : // this will throw if the worker thread ended with an exception
-                                                     false;
-                                                 }),
-                                  signals.end());
+                    signals.erase( std::remove_if( signals.begin(), signals.end(),
+                                                   []( future<void>& signal )
+                    {
+                        return ( signal.wait_for( milliseconds( 5 ) ) == future_status::ready ) ?
+                               ( signal.get(), true ) : // this will throw if the worker thread ended with an exception
+                               false;
+                    } ),
+                    signals.end() );
                 }
+                
                 all_signalled.set_value();
             }
-            catch(...)
+            catch ( ... )
             {
                 m_pimpl->m_io_context->stop( );
                 all_signalled.set_value();
@@ -280,7 +284,7 @@ namespace restbed
     {
         return m_pimpl->get_https_uri( );
     }
-
+    
     const std::shared_ptr< asio::io_context > Service::get_io_context( void ) const
     {
         return m_pimpl->m_io_context;

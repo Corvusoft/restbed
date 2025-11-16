@@ -53,7 +53,7 @@ namespace restbed
                 
                 //Constructors
                 IPCSocketImpl( asio::io_context& context, const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::string& path, const std::shared_ptr< Logger >& logger = nullptr );
-
+                
                 ~IPCSocketImpl( void ) = default;
                 
                 //Functionality
@@ -67,18 +67,18 @@ namespace restbed
                 
                 void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback ) override;
                 
-				void start_write(const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback) override;
-				
-				size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error ) override;
-				
-				size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error ) override;
+                void start_write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
                 
-				void start_read(const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure ) override;
+                size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error ) override;
                 
-				void start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
+                size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error ) override;
                 
-				void start_read(const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
-
+                void start_read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure ) override;
+                
+                void start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
+                
+                void start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback ) override;
+                
                 //Getters
                 std::string get_local_endpoint( void ) override;
                 
@@ -86,8 +86,8 @@ namespace restbed
                 
                 //Setters
                 void set_timeout( const std::chrono::milliseconds& value ) override;
-
-                void set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt) override;
+                
+                void set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt ) override;
                 
                 //Operators
                 
@@ -121,15 +121,15 @@ namespace restbed
                 
                 //Functionality
                 std::shared_ptr< IPCSocketImpl > shared_from_this( void );
-
+                
                 void connection_timeout_handler( const std::shared_ptr< IPCSocketImpl > socket, const std::error_code& error );
-
+                
                 void write( void );
                 
                 void write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
-				void write_helper( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
-
+                void write_helper( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
+                
                 size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
                 
                 void read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
@@ -139,7 +139,7 @@ namespace restbed
                 size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
                 
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
- 
+                
                 //Getters
                 
                 //Setters
@@ -149,23 +149,23 @@ namespace restbed
                 
                 //Properties
                 bool m_is_open;
-
-                const std::string m_path;
-
-		        const uint8_t MAX_WRITE_RETRIES = 5;
                 
-	            std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
-
+                const std::string m_path;
+                
+                const uint8_t MAX_WRITE_RETRIES = 5;
+                
+                std::queue< std::tuple< Bytes, uint8_t, std::function< void ( const std::error_code&, std::size_t ) > > > m_pending_writes;
+                
                 std::shared_ptr< Logger > m_logger;
                 
                 std::chrono::milliseconds m_timeout;
-
-                asio::io_context &m_io_service;
-
+                
+                asio::io_context& m_io_service;
+                
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
                 std::shared_ptr< asio::io_service::strand > m_strand;
-                                
+                
                 std::shared_ptr< asio::local::stream_protocol::socket > m_socket;
         };
     }
