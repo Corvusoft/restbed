@@ -1,0 +1,36 @@
+*** Corvusoft Restbed Changelog ***
+
+16-02-2026 - Version 5.0.0
+
+⚠ BREAKING CHANGES
+
+Added:
+- Public exposure of asio::io_context.
+
+Changed:
+- C++23 is now mandatory.
+- Directory structure updated to follow standard Unix layout.
+- Byte now uses std::byte.
+- Project versioning now follows Semantic Versioning.
+- Even-numbered major releases are designated as LTS (10+ years support).
+- Repository now follows Conventional Commit structure.
+
+Removed:
+- HTTP client.
+- Service restart functionality.
+- Service rules engine.
+- Service schedule (use asio directly).
+- Service signal handling (use asio::io_context directly).
+- Resource rules engine.
+- Uri::encode(Bytes).
+- Uri::decode(Bytes).
+- Session Manager.
+- Session::get_id / set_id (use request/response headers).
+- Session key/value context storage (use request/response headers).
+- String::format (use std::format).
+- Automatic string transformation on response (use std::format).
+- Built-in signal handlers (use asio::io_context directly).
+- Resource filters (filter directly in method handlers):
+  - Resource::set_method_handler
+  - Resource::set_failed_filter_validation_handler
+  - Service::set_failed_filter_validation_handler
