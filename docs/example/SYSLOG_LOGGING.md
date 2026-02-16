@@ -1,9 +1,10 @@
 Overview
 --------
 
-"In computing, syslog is a standard for message logging. It allows separation of the software that generates messages, the system that stores them, and the software that reports and analyzes them. Each message is labeled with a facility code, indicating the software type generating the message, and assigned a severity label.
+In computing, syslog is a standard protocol for message logging. It separates the system components that generate log messages from those that store, analyse, or report on them. Each message includes a *facility code* (identifying the source software type) and a *severity level* (indicating the importance of the event).
 
-Computer system designers may use syslog for system management and security auditing as well as general informational, analysis, and debugging messages. A wide variety of devices, such as printers, routers, and message receivers across many platforms use the syslog standard. This permits the consolidation of logging data from different types of systems in a central repository. Implementations of syslog exist for many operating systems." -- [Wikipedia](https://en.wikipedia.org/wiki/Syslog)
+System designers use syslog for system management, security auditing, debugging, and general informational messages. Many devices—such as printers, routers, and servers—support the syslog standard, allowing logs from diverse systems to be centralised in a single repository. Syslog implementations are available for many operating systems.
+
 
 Example
 -------
@@ -27,65 +28,65 @@ class SyslogLogger : public Logger
         {
             return;
         }
-        
+
         void start( const shared_ptr< const Settings >& )
         {
             return;
         }
-        
+
         void log( const Level level, const char* format, ... )
         {
             setlogmask( LOG_UPTO( LOG_DEBUG ) );
-            
+
             openlog( "Corvusoft Restbed", LOG_CONS | LOG_PID | LOG_NDELAY, LOG_LOCAL1 );
-            
+
             int priority = 0;
-            
+
             switch ( level )
             {
                 case FATAL:
                     priority = LOG_CRIT;
                     break;
-                    
+
                 case ERROR:
                     priority = LOG_ERR;
                     break;
-                    
+
                 case WARNING:
                     priority = LOG_WARNING;
                     break;
-                    
+
                 case SECURITY:
                     priority = LOG_ALERT;
                     break;
-                    
+
                 case INFO:
                 case DEBUG:
                 default:
                     priority = LOG_NOTICE;
             }
-            
+
             va_list arguments;
-            
+
             va_start( arguments, format );
-            
+
             vsyslog( priority, format, arguments );
-            
+
             va_end( arguments );
-            
+
             closelog( );
         }
-        
+
         void log_if( bool expression, const Level level, const char* format, ... )
         {
             if ( expression )
             {
                 va_list arguments;
-                
+
                 va_start( arguments, format );
-                
+
                 log( level, format, arguments );
-                
+
                 va_end( arguments );
             }
         }
@@ -101,17 +102,17 @@ int main( const int, const char** )
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
     resource->set_method_handler( "GET", get_method_handler );
-    
+
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
-    
+
     Service service;
     service.publish( resource );
     service.set_logger( make_shared< SyslogLogger >( ) );
-    
+
     service.start( settings );
-    
+
     return EXIT_SUCCESS;
 }
 ```
@@ -119,11 +120,14 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed
+> $ clang++ -std=c++20 -o example example.cpp -l restbed
 
 Execution
 ---------
 
+> $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 > $ ./example
 >
 > $ curl -w'\n' -v -XGET 'http://localhost:1984/resource'
+>
+> $ cat var/log/syslog

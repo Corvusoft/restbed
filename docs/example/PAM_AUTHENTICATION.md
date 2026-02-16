@@ -1,7 +1,9 @@
 Overview
 --------
 
-"A pluggable authentication module (PAM) is a mechanism to integrate multiple low-level authentication schemes into a high-level application programming interface (API). It allows programs that rely on authentication to be written independently of the underlying authentication scheme. PAM was first proposed by Sun Microsystems in an Open Software Foundation Request for Comments (RFC) 86.0 dated October 1995. It was adopted as the authentication framework of the Common Desktop Environment. As a stand-alone open-source infrastructure, PAM first appeared in Red Hat Linux 3.0.4 in August 1996 in the Linux PAM project. PAM is currently supported in the AIX operating system, DragonFly BSD,[1] FreeBSD, HP-UX, Linux, Mac OS X, NetBSD and Solaris." -- [Wikipedia](https://en.wikipedia.org/wiki/Pluggable_authentication_module)
+A Pluggable Authentication Module (PAM) is a system that allows multiple low-level authentication methods to be integrated into a single high-level API. This lets applications perform authentication without depending on the specific underlying mechanism.
+
+PAM was first proposed by Sun Microsystems in an Open Software Foundation RFC in 1995 and became the authentication framework for the Common Desktop Environment. As an open-source infrastructure, it appeared in Red Hat Linux 3.0.4 in 1996 through the Linux PAM project. Today, PAM is supported on multiple operating systems, including AIX, DragonFly BSD, FreeBSD, HP-UX, Linux, Mac OS X, NetBSD, and Solaris.
 
 Example
 -------
@@ -122,11 +124,13 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed -l pam
+> $ sudo apt-get install libpam0g-dev
+> $ clang++ -std=c++20 -o example example.cpp -l restbed -l pam
 
 Execution
 ---------
 
+> $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 > $ ./example
 >
 > $ curl -w'\n' -v -XGET 'http://<USERNAME>:<PASSWORD>@localhost:1984/resource'

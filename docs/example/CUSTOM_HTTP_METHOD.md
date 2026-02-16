@@ -1,7 +1,9 @@
 Overview
 --------
 
-"One of the fundamental constraints of HTTP and the central design feature of REST is a uniform interface provided by (among other things) a small, fixed set of methods that apply universally to all resources. The uniform interface constraint has a number of upsides and downsides." -- [StackExchange](https://softwareengineering.stackexchange.com/questions/193821/are-there-any-problems-with-implementing-custom-http-methods)
+A key constraint of HTTP and a core principle of REST is the uniform interface: a small, fixed set of methods applied consistently to all resources.
+
+This standardisation simplifies system design and improves interoperability, but it can also limit flexibility in certain use cases.
 
 Example
 -------
@@ -24,15 +26,15 @@ int main( const int, const char** )
     auto resource = make_shared< Resource >( );
     resource->set_path( "/resource" );
     resource->set_method_handler( "NOP", nop_method_handler );
-    
+
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
-    
+
     Service service;
     service.publish( resource );
     service.start( settings );
-    
+
     return EXIT_SUCCESS;
 }
 ```
@@ -40,11 +42,12 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed
+> $ clang++ -std=c++20 -o example example.cpp -l restbed
 
 Execution
 ---------
 
+> $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 > $ ./example
 >
 > $ curl -w'\n' -v -X NOP 'http://localhost:1984/resource'

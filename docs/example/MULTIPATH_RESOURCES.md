@@ -1,7 +1,13 @@
 Overview
 --------
 
-"The concept of a web resource is primitive in the web architecture, and is used in the definition of its fundamental elements. The term was first introduced to refer to targets of uniform resource locators (URLs), but its definition has been further extended to include the referent of any uniform resource identifier (RFC 3986), or internationalized resource identifier (RFC 3987). In the Semantic Web, abstract resources and their semantic properties are described using the family of languages based on Resource Description Framework (RDF)." -- [Wikipedia](https://en.wikipedia.org/wiki/Web_resource)
+A web resource is anything that can be identified and accessed on the web. Originally, the term referred to the target of a URL.
+
+Its definition now includes anything identified by a Uniform Resource Identifier (URI) or Internationalised Resource Identifier (IRI).
+
+In the Semantic Web, abstract resources and their properties are described using RDF (Resource Description Framework), which allows machines to understand and process the meaning of resources.
+
+In short, a web resource can be a webpage, a file, a service, or even an abstract concept, as long as it can be identified on the web.
 
 Example
 -------
@@ -24,15 +30,15 @@ int main( const int, const char** )
     auto resource = make_shared< Resource >( );
     resource->set_paths( { "/messages", "/queues/{id: [0-9]*}/messages" } );
     resource->set_method_handler( "GET", get_method_handler );
-    
+
     auto settings = make_shared< Settings >( );
     settings->set_port( 1984 );
     settings->set_default_header( "Connection", "close" );
-    
+
     Service service;
     service.publish( resource );
     service.start( settings );
-    
+
     return EXIT_SUCCESS;
 }
 ```
@@ -40,11 +46,12 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed
+> $ clang++ -std=c++20 -o example example.cpp -l restbed
 
 Execution
 ---------
 
+> $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 > $ ./example
 >
 > $ curl -w'\n' -v 'http://localhost:1984/messages'

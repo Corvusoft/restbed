@@ -1,9 +1,9 @@
 Overview
 --------
 
-"Chunked transfer encoding is a streaming data transfer mechanism available in version 1.1 of the Hypertext Transfer Protocol (HTTP). In chunked transfer encoding, the data stream is divided into a series of non-overlapping "chunks". The chunks are sent out and received independently of one another. No knowledge of the data stream outside the currently-being-processed chunk is necessary for both the sender and the receiver at any given time.
+Chunked transfer encoding is a streaming data transfer mechanism introduced in HTTP/1.1. It allows data to be sent in a series of independent, non-overlapping "chunks" rather than as a single continuous block.
 
-Each chunk is preceded by its size in bytes. The transmission ends when a zero-length chunk is received. The chunked keyword in the Transfer-Encoding header is used to indicate chunked transfer." -- [Wikipedia](https://en.wikipedia.org/wiki/Chunked_transfer_encoding)
+Each chunk is preceded by its size (in bytes), enabling the receiver to process data incrementally without knowing the total content length in advance. The transmission ends when a zero-length chunk is sent. The use of chunked transfer encoding is indicated by the `Transfer-Encoding: chunked` header.
 
 Example
 -------
@@ -20,11 +20,13 @@ Example
 using namespace std;
 using namespace restbed;
 
+void read_chunk( const shared_ptr< Session > session, const Bytes& );
+
 void read_chunk_size( const shared_ptr< Session > session, const Bytes& data )
 {
     if ( not data.empty( ) )
     {
-        const string length( data.begin( ), data.end( ) );
+        const string length( (const char*)data.data( ), data.size( ) );
 
         if ( length not_eq "0\r\n" )
         {
@@ -39,7 +41,7 @@ void read_chunk_size( const shared_ptr< Session > session, const Bytes& data )
     const auto request = session->get_request( );
     const auto body = request->get_body( );
 
-    fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), body.data( ) );
+    fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), (const char*) body.data( ) );
 }
 
 void read_chunk( const shared_ptr< Session > session, const Bytes& data )
@@ -53,7 +55,7 @@ void post_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
 
-    if ( request->get_header( "Transfer-Encoding", String::lowercase ) == "chunked" )
+    if ( request->get_header( "Transfer-Encoding" ) == "chunked" )
     {
         session->fetch( "\r\n", read_chunk_size );
     }
@@ -66,7 +68,7 @@ void post_method_handler( const shared_ptr< Session > session )
             const auto request = session->get_request( );
             const auto body = request->get_body( );
 
-            fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), body.data( ) );
+            fprintf( stdout, "Complete body content: %.*s\n", static_cast< int >( body.size( ) ), (const char*) body.data( ) );
             session->close( OK );
         } );
     }
@@ -97,11 +99,13 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed
+> $ clang++ -std=c++20 -o example example.cpp -l restbed
 
 Execution
 ---------
 
+> $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 > $ ./example
 >
-> $ curl -w'\n' -v -X POST --header "Transfer-Encoding: chunked" -d @<PATH TO LARGE FILE> 'http://localhost:1984/resources'
+> $ echo "My really large file..." > bigfile.txt
+> $ curl -w'\n' -v -X POST --header "Transfer-Encoding: chunked" -d @bigfile.txt 'http://localhost:1984/resources'

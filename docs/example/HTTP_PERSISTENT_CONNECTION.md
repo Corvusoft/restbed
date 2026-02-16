@@ -1,7 +1,9 @@
 Overview
 --------
 
-"HTTP persistent connection, also called HTTP keep-alive, or HTTP connection reuse, is the idea of using a single TCP connection to send and receive multiple HTTP requests/responses, as opposed to opening a new connection for every single request/response pair. The newer HTTP/2 protocol uses the same idea and takes it further to allow multiple concurrent requests/responses to be multiplexed over a single connection." -- [Wikipedia](https://en.wikipedia.org/wiki/HTTP_persistent_connection)
+HTTP persistent connections (also called keep-alive or connection reuse) allow multiple HTTP request–response exchanges to occur over a single TCP connection, instead of creating a new connection for each request. This reduces latency and improves efficiency.
+
+The newer HTTP/2 protocol extends this concept by enabling multiple concurrent requests and responses to be multiplexed over a single connection, further improving performance.
 
 Example
 -------
@@ -51,11 +53,12 @@ int main( const int, const char** )
 Build
 -----
 
-> $ clang++ -o example example.cpp -l restbed
+> $ clang++ -std=c++20 -o example example.cpp -l restbed
 
 Execution
 ---------
 
+> $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 > $ ./example
 >
 > $ curl -w'\n' -v 'http://localhost:1984/resources/persistent' 'http://localhost:1984/resources/intermittent'
