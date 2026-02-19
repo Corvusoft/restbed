@@ -57,8 +57,6 @@ namespace restbed
             
             STRING_EXPORT static std::string uppercase( const std::string& value );
             
-            STRING_EXPORT static std::string format( const char* format, ... );
-            
             STRING_EXPORT static std::vector< std::string > split( const std::string& text, const char delimiter );
             
             STRING_EXPORT static std::string join( const std::multimap< std::string, std::string >& values, const std::string& pair_delimiter, const std::string& delimiter );

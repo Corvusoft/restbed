@@ -58,15 +58,15 @@ TEST_CASE( "invoke yield on uninitialised instance", "[session]" )
     
     REQUIRE( session->is_closed( ) == true );
     
-    REQUIRE_NOTHROW( session->yield( Bytes( { 'a' } ), [ ]( const shared_ptr< Session > )
+    REQUIRE_NOTHROW( session->yield( Bytes( 'a' ), [ ]( const shared_ptr< Session > )
     {
         return;
     } ) );
-    REQUIRE_NOTHROW( session->yield( 200, Bytes( { 'a' } ), [ ]( const shared_ptr< Session > )
+    REQUIRE_NOTHROW( session->yield( 200, Bytes( 'a' ), [ ]( const shared_ptr< Session > )
     {
         return;
     } ) );
-    REQUIRE_NOTHROW( session->yield( 200, Bytes( { 'a' } ), { { "Content-Type", "text" } }, [ ]( const shared_ptr< Session > )
+    REQUIRE_NOTHROW( session->yield( 200, Bytes( 'a' ), { { "Content-Type", "text" } }, [ ]( const shared_ptr< Session > )
     {
         return;
     } ) );
