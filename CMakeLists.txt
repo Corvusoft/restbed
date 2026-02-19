@@ -90,7 +90,6 @@ if ( BUILD_SHARED_LIBRARY )
     set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD 23 )
     set_property( TARGET ${SHARED_LIBRARY_NAME} PROPERTY CXX_STANDARD_REQUIRED ON )
     if ( WIN32 )
-        # Workaround to avoid name clash of static lib and dynamic import lib under windows.
         set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}-shared" )
     else ( )
         set_target_properties( ${SHARED_LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME} )
