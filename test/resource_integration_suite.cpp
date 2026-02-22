@@ -9,6 +9,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -28,4 +29,9 @@ TEST_CASE( "validate invalid (empty) method argument", "[resource]" )
     const function< void ( const shared_ptr< Session > ) > callback;
     
     REQUIRE_THROWS_AS( resource.set_method_handler( "", callback ), invalid_argument );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

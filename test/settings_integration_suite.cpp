@@ -7,6 +7,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::shared_ptr;
@@ -34,4 +35,9 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     settings.set_ssl_settings( ssl_settings );
     
     REQUIRE( settings.get_ssl_settings( )->get_port( ) == 3434 );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

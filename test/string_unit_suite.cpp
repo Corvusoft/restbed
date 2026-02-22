@@ -8,6 +8,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -183,4 +184,9 @@ TEST_CASE( "replace with empty substitue and value", "[string]" )
 TEST_CASE( "replace with empty arguments", "[string]" )
 {
     REQUIRE( String::replace( "", "", "" ) == "" );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

@@ -13,6 +13,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::set;
@@ -70,4 +71,9 @@ TEST_CASE( "invoke yield on uninitialised instance", "[session]" )
     {
         return;
     } ) );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

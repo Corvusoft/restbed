@@ -12,6 +12,7 @@
 //External Includes
 #include <asio.hpp>
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -92,4 +93,9 @@ TEST_CASE( "service error handler overflow", "[service]" )
     worker->join( );
     
     REQUIRE( true );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

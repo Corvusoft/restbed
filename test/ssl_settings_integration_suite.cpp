@@ -7,6 +7,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -33,4 +34,9 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_certificate_chain( ) == "/tmp/chain.crt" );
     REQUIRE( settings.get_temporary_diffie_hellman( ) == "/tmp/dh512.pem" );
     REQUIRE( settings.get_certificate_authority_pool( ) == "/tmp" );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

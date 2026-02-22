@@ -9,6 +9,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -104,4 +105,9 @@ TEST_CASE( "validate URI constructor with no path", "[request]" )
     };
     
     REQUIRE( request.get_query_parameters( ) == parameters );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

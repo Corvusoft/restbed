@@ -7,6 +7,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -75,4 +76,9 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_bind_address( ) == "127.0.0.1" );
     REQUIRE( settings.get_passphrase( ) == "my-passphrase" );
     REQUIRE( settings.has_disabled_http( ) == true );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

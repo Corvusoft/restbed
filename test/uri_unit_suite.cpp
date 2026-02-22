@@ -8,6 +8,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -184,4 +185,9 @@ TEST_CASE( "encode", "[uri]" )
 TEST_CASE( "encode parameter", "[uri]" )
 {
     REQUIRE( Uri::encode_parameter( "a=b" ) == "a%3Db" );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

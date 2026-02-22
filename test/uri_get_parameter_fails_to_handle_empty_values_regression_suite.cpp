@@ -7,6 +7,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -29,4 +30,9 @@ TEST_CASE( "uri get parameter fails to handle empty values", "[uri]" )
 
     Uri uri_empty_param( "http://www.corvusoft.co.uk?param" );
     REQUIRE( uri_empty_param.get_query_parameters( ) == expectation );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

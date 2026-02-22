@@ -7,6 +7,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -48,4 +49,9 @@ TEST_CASE( "uri fails to handle file scheme relative paths", "[uri]" )
     REQUIRE( absolute.is_absolute( ) == true );
     REQUIRE( absolute.to_string( ) == "file:///certs/server.key" );
     REQUIRE( absolute.get_query_parameters( ) == expectation );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

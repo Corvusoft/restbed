@@ -6,6 +6,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 
@@ -30,4 +31,9 @@ TEST_CASE( "validate setters modify default values", "[response]" )
     
     const auto body = response.get_body( );
     REQUIRE( body == expectation );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

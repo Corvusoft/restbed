@@ -7,6 +7,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -149,4 +150,9 @@ TEST_CASE( "validate add_header does not override a previous value", "[request]"
         { "Content-Type", "application/xml" }
     };
     REQUIRE( headers == expectation );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

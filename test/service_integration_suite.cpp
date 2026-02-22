@@ -9,6 +9,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::shared_ptr;
@@ -52,3 +53,8 @@ TEST_CASE( "validate runtime_error is thrown when SSLSettings passed into start"
     service.stop( );
 }
 #endif
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
+}

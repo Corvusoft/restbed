@@ -6,6 +6,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::chrono::seconds;
@@ -42,4 +43,9 @@ TEST_CASE( "confirm default service state", "[service]" )
     REQUIRE( service.is_down( ) );
     REQUIRE_FALSE( service.is_up( ) );
     REQUIRE( service.get_uptime( ) == seconds( 0 ) );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

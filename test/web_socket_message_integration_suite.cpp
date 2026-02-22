@@ -9,6 +9,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::tuple;
@@ -110,4 +111,9 @@ TEST_CASE( "validate length and extended length are correctly set", "[web_socket
     WebSocketMessage upper_extend_limit_exceeded( WebSocketMessage::OpCode::TEXT_FRAME, upper_extend_limit_exceeded_data );
     REQUIRE( upper_extend_limit_exceeded.get_length( ) == 127 );
     REQUIRE( upper_extend_limit_exceeded.get_extended_length( ) == 65535 );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

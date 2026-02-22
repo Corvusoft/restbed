@@ -8,6 +8,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -30,4 +31,9 @@ TEST_CASE( "ssl settings to handle windows paths", "[ssl]" )
     catch ( const invalid_argument& ) {
         REQUIRE( false );
     }
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

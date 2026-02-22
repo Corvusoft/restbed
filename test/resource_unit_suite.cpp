@@ -6,6 +6,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 
@@ -24,4 +25,9 @@ TEST_CASE( "confirm default destructor throws no exceptions", "[resource]" )
     auto resource = new Resource;
     
     REQUIRE_NOTHROW( delete resource );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

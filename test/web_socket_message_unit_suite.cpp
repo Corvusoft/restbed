@@ -6,6 +6,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::tuple;
@@ -78,4 +79,9 @@ TEST_CASE( "validate mask and mask_flag setter logic", "[web_socket_message]" )
     
     REQUIRE( message.get_mask( ) == 123424 );
     REQUIRE( message.get_mask_flag( ) == true );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

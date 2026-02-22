@@ -8,6 +8,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::map;
@@ -277,4 +278,9 @@ TEST_CASE( "manipulation generic properties", "[settings]" )
         
         REQUIRE( settings.get_properties( ) == expectation );
     }
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }

@@ -8,6 +8,7 @@
 
 //External Includes
 #include <catch2/catch_all.hpp>
+#include <catch2/catch_session.hpp>
 
 //System Namespaces
 using std::string;
@@ -87,4 +88,9 @@ TEST_CASE( "case insensitive replace with empty substitute and value", "[string]
 TEST_CASE( "case insensitive replace with empty arguments", "[string]" )
 {
     REQUIRE( String::replace( "", "", "", String::CASE_INSENSITIVE ) == "" );
+}
+
+int main(int argc, char* argv[])
+{
+    return Catch::Session().run(argc, argv);
 }
