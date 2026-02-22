@@ -1,4 +1,4 @@
-find_path( ssl_INCLUDE openssl/ssl.h HINTS "/usr/local/opt/openssl/include" "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_path( ssl_INCLUDE openssl/ssl.h HINTS "/usr/local/opt/openssl/include" "/usr/include" "/usr/local/include" "/opt/local/include" "${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows/include" )
 if ( ssl_INCLUDE )
     message( STATUS "Found OpenSSL include at: ${ssl_INCLUDE}" )
 else ( )

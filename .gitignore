@@ -62,3 +62,4 @@ $RECYCLE.BIN/
 
 .vscode/
 .idea/
+vcpkg_installed/
