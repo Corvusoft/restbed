@@ -6,8 +6,8 @@ else ( )
 endif ( )
 
 if ( BUILD_STATIC_LIBRARY )
-    find_library( ssl_LIBRARY_STATIC libssl_static.lib libssl.a HINTS "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
-    find_library( crypto_LIBRARY_STATIC libcrypto_static.lib libcrypto.a HINTS  "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
+    find_library( ssl_LIBRARY_STATIC libssl_static.lib libssl.a libssl.lib HINTS "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows/lib" )
+    find_library( crypto_LIBRARY_STATIC libcrypto_static.lib libcrypto.a libcrypto.lib HINTS  "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows/lib" )
 
     if ( ssl_LIBRARY_STATIC AND crypto_LIBRARY_STATIC )
         message( STATUS "Found OpenSSL library at: ${ssl_LIBRARY_STATIC}" )
@@ -18,8 +18,8 @@ if ( BUILD_STATIC_LIBRARY )
 endif ( )
 
 if ( BUILD_SHARED_LIBRARY )
-    find_library( ssl_LIBRARY_SHARED libssl.lib libssl.so libssl.dylib HINTS "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
-    find_library( crypto_LIBRARY_SHARED libcrypto.lib libcrypto.so libcrypto.dylib HINTS  "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" )
+    find_library( ssl_LIBRARY_SHARED libssl.lib libssl.so libssl.dylib HINTS "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows/lib" )
+    find_library( crypto_LIBRARY_SHARED libcrypto.lib libcrypto.so libcrypto.dylib HINTS  "/usr/local/opt/openssl/lib" "/usr/lib" "/usr/local/lib" "/opt/local/lib" "${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows/lib" )
 
     if ( ssl_LIBRARY_SHARED AND crypto_LIBRARY_SHARED )
         message( STATUS "Found OpenSSL library at: ${ssl_LIBRARY_SHARED}" )

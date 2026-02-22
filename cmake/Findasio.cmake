@@ -1,4 +1,4 @@
-find_path( asio_INCLUDE asio.hpp HINTS "/usr/include" "/usr/local/include" "/opt/local/include" )
+find_path( asio_INCLUDE asio.hpp HINTS "/usr/include" "/usr/local/include" "/opt/local/include" "${PROJECT_SOURCE_DIR}/vcpkg_installed/x64-windows/include" )
 
 if ( asio_INCLUDE )
     set( ASIO_FOUND TRUE )

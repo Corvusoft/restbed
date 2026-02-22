@@ -155,40 +155,28 @@ Build Options
 Windows Build Instructions
 --------------------------
 
-Prerequisites: Visual Studio 2022, CMake, GIT, Perl.
+Prerequisites: Visual Studio >= 2022, CMake, GIT.
 
-Using the x64 Native Tools Command Prompt begin by, if required, building OpenSSL.
-```cmd
-git clone --recursive https://github.com/openssl/openssl.git
-
-cd openssl
-perl Configure [no-]shared
-nmake
-nmake test
-```
-
-If you selected to use the default OpenSSL build (shared), you'll need to include the installation path in your environment.
+Using the `x64 Native Tools Command Prompt` proceed with the following build instructions.
 
 ```cmd
-set PATH=openssl;%PATH%
+git clone --recursive https://github.com/corvusoft/restbed.git
+
+cd restbed
+vcpkg install
+
+mkdir build
+cd build
+
+cmake -G "Visual Studio 18 2026" [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
+cmake --build . --target ALL_BUILD --config Release
+ctest
 ```
 
 If you selected to use the static OpenSSL build (no-shared), you'll need to include additional dependencies when linking your application code; See [OpenSSL project](https://github.com/openssl/openssl/pull/1062/files) for futher details.
 
 ```cmd
 target_link_libraries( my_microservice restbed-static.lib ws2_32.lib advapi32.lib crypt32.lib gdi32.lib user32.lib )
-```
-
-Now proceed with the following Restbed build instructions.
-
-```cmd
-git clone --recursive https://github.com/corvusoft/restbed.git
-
-mkdir restbed\build
-cd restbed\build
-cmake -G "Visual Studio 17 2022" [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
-cmake --build . --target ALL_BUILD --config Release
-ctest
 ```
 
 For Microsoft Visual Studio 14 2015 instructions, and further details, please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
