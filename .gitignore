@@ -59,7 +59,24 @@ $RECYCLE.BIN/
 *.lnk
 
 # IDE Related
-
 .vscode/
 .idea/
 vcpkg_installed/
+
+# Autotools generated files
+Makefile
+Makefile.in
+configure
+configure~
+config.log
+aclocal.m4
+config.status
+libtool
+autom4te.cache/
+build-aux/
+m4/
+restbed.pc
+*.trs
+.dirstamp
+.deps/
+.libs/
