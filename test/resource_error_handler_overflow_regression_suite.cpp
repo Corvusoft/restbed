@@ -64,20 +64,22 @@ TEST_CASE( "service error handler overflow", "[service]" )
     resource->set_method_handler( "POST", post_method_handler );
     
     auto settings = make_shared< Settings >( );
-    settings->set_port( 1984 );
-    
+    settings->set_port( 0 );
+
     shared_ptr< thread > worker = nullptr;
-    
+
     Service service;
     service.publish( resource );
     service.set_ready_handler( [ &worker ]( Service & service )
     {
-        worker = make_shared< thread >( [ &service ] ( )
+        const auto port = std::to_string( service.get_http_uri( )->get_port( ) );
+
+        worker = make_shared< thread >( [ &service, port ] ( )
         {
             io_context io_context;
             tcp::socket socket( io_context );
             tcp::resolver resolver( io_context );
-            connect( socket, resolver.resolve( "localhost", "1984" ) );
+            connect( socket, resolver.resolve( "localhost", port ) );
             
             string request = "POST /test HTTP/1.1\r\nContent-Length: 1024\r\n\r\nABCDEFG";
             

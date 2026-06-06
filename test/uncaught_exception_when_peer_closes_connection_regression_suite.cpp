@@ -1,6 +1,8 @@
 //System Includes
 #include <thread>
-#include <chrono>
+#include <future>
+#include <string>
+#include <cstdint>
 #include <memory>
 #include <functional>
 
@@ -14,9 +16,10 @@
 
 //System Namespaces
 using std::thread;
+using std::promise;
+using std::to_string;
 using std::shared_ptr;
 using std::make_shared;
-using std::chrono::seconds;
 
 //Project Namespaces
 using namespace restbed;
@@ -44,31 +47,32 @@ void worker( shared_ptr< Service > service, shared_ptr< Settings > settings )
     }
 }
 
-void wait_for_service_initialisation( void )
-{
-    std::this_thread::sleep_for( seconds( 1 ) );
-}
-
 TEST_CASE( "peer closes connection without sending data", "[service]" )
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-    
+
     auto settings = make_shared< Settings >( );
-    settings->set_port( 1984 );
-    
+    settings->set_port( 0 );
+
+    promise< uint16_t > bound_port;
+
     auto service = make_shared< Service >( );
     service->publish( resource );
-    
+    service->set_ready_handler( [ &bound_port ]( Service & service )
+    {
+        bound_port.set_value( service.get_http_uri( )->get_port( ) );
+    } );
+
     thread restbed_thread( worker, service, settings );
-    
-    wait_for_service_initialisation( );
-    
+
+    const auto port = to_string( bound_port.get_future( ).get( ) );
+
     io_context io_context;
     tcp::socket socket( io_context );
     tcp::resolver resolver( io_context );
-    connect( socket, resolver.resolve("localhost", "1984" ) );
-    
+    connect( socket, resolver.resolve( "localhost", port ) );
+
     socket.close( );
     
     service->stop( );
