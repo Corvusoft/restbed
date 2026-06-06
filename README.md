@@ -93,36 +93,37 @@ Support
 
 Please contact sales@corvusoft.com, for support and licensing options including bespoke software development, testing, design consultation, training, mentoring and code review.
 
-Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker; Alternatively ask a question on [StackOverflow](http://stackoverflow.com/questions/ask) tagged [#restbed](http://stackoverflow.com/questions/tagged/restbed).
+Please submit all enhancements, proposals, and defects via the [issue](http://github.com/corvusoft/restbed/issues) tracker.
 
 Prerequisites
 -------------
 
-[Catch2](https://github.com/catchorg/Catch2) is a modern, C++-native, test framework for unit-tests, TDD, BDD, and benchmarks.
-```
-git clone https://github.com/catchorg/Catch2.git
-cd Catch2
-mkdir build
-cd build
-cmake ..
-make install
+Restbed is built with GNU Autotools and depends on:
+
+- A C++23 compiler (GCC >= 13, Clang >= 17, AppleClang >= 15)
+- [Asio](https://think-async.com/Asio/) (standalone, header-only)
+- [OpenSSL](https://www.openssl.org/) (optional — required when SSL/TLS support is enabled, on by default)
+- [Catch2](https://github.com/catchorg/Catch2) >= 3.0 (optional — required when the test suite is enabled, on by default)
+- `autoconf`, `automake`, `libtool`, `pkg-config`, `make`
+
+Install the toolchain and dependencies via your package manager:
+
+Debian / Ubuntu:
+```bash
+sudo apt-get install -y \
+    autoconf automake libtool pkg-config make g++ \
+    libasio-dev libssl-dev catch2
 ```
 
-[Asio](https://think-async.com/Asio/) is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.
-```
-git clone https://github.com/chriskohlhoff/asio
-cd asio/asio
-./autogen.sh
-./configure
-make install
+macOS (Homebrew):
+```bash
+brew install autoconf automake libtool pkg-config asio openssl@3 catch2
+export PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig"
 ```
 
-[OpenSSL](https://www.openssl.org/) is a robust, commercial-grade, full-featured Open Source Toolkit for the TLS (formerly SSL), DTLS and QUIC protocols.
-```
-git clone https://github.com/openssl/openssl.git
-cd openssl
-./config
-make install
+Windows (vcpkg, see [Windows Build Instructions](#windows-build-instructions) below):
+```cmd
+vcpkg install
 ```
 
 Build
@@ -131,55 +132,58 @@ Build
 ```bash
 git clone https://github.com/corvusoft/restbed.git
 cd restbed
-mkdir restbed/build
-cd restbed/build
-cmake [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
-make install
-make test
+./autogen.sh
+./configure
+make
+sudo make install
+make check
 ```
 
-You will now find all required components installed in the distribution sub-folder.
+`./autogen.sh` regenerates `configure` and supporting scripts via `autoreconf -fiv`; it only needs to be run from a fresh clone or after editing `configure.ac` / `Makefile.am`. Released tarballs ship with `configure` already generated, so end users can skip straight to `./configure`.
+
+Installation honours the standard GNU directory layout — override with `./configure --prefix=...`, `DESTDIR=...`, etc. A `restbed.pc` file is installed for `pkg-config` consumers:
+
+```bash
+pkg-config --cflags --libs restbed
+```
 
 Build Options
 -------------
 
-| Option               | Description                                | Default  |
-| :------------------- | :----------------------------------------- | :------: |
-| BUILD_SSL            | Enable SSL/TLS support.                    | Enabled  |
-| BUILD_IPC            | Enable Unix domain sockets.                | Disabled |
-| BUILD_TESTS          | Build project test suites.                 | Enabled  |
-| BUILD_DEVEL_PACKAGE  | Install headers into CMAKE_INSTALL_PREFIX. | Enabled  |
-| BUILD_SHARED_LIBRARY | Produce a shared build of restbed.         | Enabled  |
-| BUILD_STATIC_LIBRARY | Produce a static build of restbed.         | Enabled  |
+Pass these to `./configure`:
+
+| Option           | Description                                                                  | Default  |
+| :--------------- | :--------------------------------------------------------------------------- | :------: |
+| `--disable-ssl`  | Disable SSL/TLS support (drops the OpenSSL dependency).                      | Enabled  |
+| `--enable-ipc`   | Enable Unix domain socket support.                                           | Disabled |
+| `--disable-tests`| Skip building the Catch2 test suite (drops the Catch2 dependency).           | Enabled  |
+| `--enable-shared` / `--disable-shared` | libtool: produce a shared library.                     | Enabled  |
+| `--enable-static` / `--disable-static` | libtool: produce a static library.                     | Enabled  |
+| `--with-asio-include=DIR` | Path to ASIO headers if not on the default include search path.     | —        |
+
+Run `./configure --help` for the full list, including standard GNU directory variables (`--prefix`, `--libdir`, etc.).
 
 Windows Build Instructions
 --------------------------
 
-Prerequisites: Visual Studio >= 2022, CMake, GIT.
+The autotools build runs under [MSYS2](https://www.msys2.org/) or Cygwin. Native MSVC support has been removed alongside CMake; the `vcpkg.json` manifest is retained to provision dependencies (Asio, OpenSSL, Catch2) on MSYS2.
 
-Using the `x64 Native Tools Command Prompt` proceed with the following build instructions.
+From an MSYS2 UCRT64 shell:
 
-```cmd
-git clone --recursive https://github.com/corvusoft/restbed.git
+```bash
+pacman -S --needed \
+    base-devel mingw-w64-ucrt-x86_64-toolchain \
+    mingw-w64-ucrt-x86_64-asio \
+    mingw-w64-ucrt-x86_64-openssl \
+    mingw-w64-ucrt-x86_64-catch
 
+git clone https://github.com/corvusoft/restbed.git
 cd restbed
-vcpkg install
-
-mkdir build
-cd build
-
-cmake -G "Visual Studio 18 2026" [-DBUILD_SSL=NO] [-DBUILD_TESTS=NO] ..
-cmake --build . --target ALL_BUILD --config Release
-ctest
+./autogen.sh
+./configure
+make
+make check
 ```
-
-If you selected to use the static OpenSSL build (no-shared), you'll need to include additional dependencies when linking your application code; See [OpenSSL project](https://github.com/openssl/openssl/pull/1062/files) for futher details.
-
-```cmd
-target_link_libraries( my_microservice restbed-static.lib ws2_32.lib advapi32.lib crypt32.lib gdi32.lib user32.lib )
-```
-
-For Microsoft Visual Studio 14 2015 instructions, and further details, please see feature [#17](https://github.com/Corvusoft/restbed/issues/17).
 
 Documentation
 -------------
