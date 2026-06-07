@@ -65,15 +65,15 @@ TEST_CASE( "service error handler overflow", "[service]" )
     
     auto settings = make_shared< Settings >( );
     settings->set_port( 0 );
-
+    
     shared_ptr< thread > worker = nullptr;
-
+    
     Service service;
     service.publish( resource );
     service.set_ready_handler( [ &worker ]( Service & service )
     {
         const auto port = std::to_string( service.get_http_uri( )->get_port( ) );
-
+        
         worker = make_shared< thread >( [ &service, port ] ( )
         {
             io_context io_context;
@@ -97,7 +97,7 @@ TEST_CASE( "service error handler overflow", "[service]" )
     REQUIRE( true );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

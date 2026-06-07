@@ -113,7 +113,7 @@ TEST_CASE( "validate length and extended length are correctly set", "[web_socket
     REQUIRE( upper_extend_limit_exceeded.get_extended_length( ) == 65535 );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

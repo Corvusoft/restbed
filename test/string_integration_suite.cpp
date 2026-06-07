@@ -90,7 +90,7 @@ TEST_CASE( "case insensitive replace with empty arguments", "[string]" )
     REQUIRE( String::replace( "", "", "", String::CASE_INSENSITIVE ) == "" );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

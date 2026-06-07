@@ -19,7 +19,7 @@ using restbed::Service;
 
 TEST_CASE( "confirm default constructor throws no exceptions", "[service]" )
 {
-    REQUIRE_NOTHROW( std::unique_ptr<Service> (new Service) );
+    REQUIRE_NOTHROW( std::unique_ptr<Service> ( new Service ) );
 }
 
 TEST_CASE( "confirm default destructor throws no exceptions", "[service]" )
@@ -45,7 +45,7 @@ TEST_CASE( "confirm default service state", "[service]" )
     REQUIRE( service.get_uptime( ) == seconds( 0 ) );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

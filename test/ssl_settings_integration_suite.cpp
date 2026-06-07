@@ -36,7 +36,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_certificate_authority_pool( ) == "/tmp" );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

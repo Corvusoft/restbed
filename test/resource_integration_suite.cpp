@@ -31,7 +31,7 @@ TEST_CASE( "validate invalid (empty) method argument", "[resource]" )
     REQUIRE_THROWS_AS( resource.set_method_handler( "", callback ), invalid_argument );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

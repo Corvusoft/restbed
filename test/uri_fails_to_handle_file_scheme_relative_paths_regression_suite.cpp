@@ -51,7 +51,7 @@ TEST_CASE( "uri fails to handle file scheme relative paths", "[uri]" )
     REQUIRE( absolute.get_query_parameters( ) == expectation );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

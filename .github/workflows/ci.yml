@@ -7,6 +7,25 @@ on:
     branches: [master]
 
 jobs:
+  lint:
+    name: astyle
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install astyle
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y astyle
+
+      - name: Check formatting
+        run: |
+          astyle --options=astylerc './src/*.cpp' './src/*.hpp' './test/*.cpp'
+          if ! git diff --exit-code; then
+            echo "::error::Code style violations found. Run 'astyle --options=astylerc ./src/*.cpp ./src/*.hpp ./test/*.cpp' and commit the result."
+            exit 1
+          fi
+
   build:
     name: ${{ matrix.os }} / ssl=${{ matrix.ssl }} / ipc=${{ matrix.ipc }}
     runs-on: ${{ matrix.os }}

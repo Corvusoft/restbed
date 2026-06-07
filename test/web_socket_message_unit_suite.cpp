@@ -81,7 +81,7 @@ TEST_CASE( "validate mask and mask_flag setter logic", "[web_socket_message]" )
     REQUIRE( message.get_mask_flag( ) == true );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

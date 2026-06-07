@@ -46,7 +46,7 @@ TEST_CASE( "ipv4 constructor", "[uri]" )
     REQUIRE( uri.get_username( ) == "username" );
     REQUIRE( uri.get_password( ) == "password" );
     REQUIRE( uri.get_authority( ) == "127.1.1.1" );
-
+    
     const string value = uri.to_string( );
     REQUIRE( value == "http://username:password@127.1.1.1:80/resources/index.html?q=bear&b=cubs#frag1" );
 }
@@ -62,7 +62,7 @@ TEST_CASE( "ipv6 constructor", "[uri]" )
     REQUIRE( uri.get_username( ) == "username" );
     REQUIRE( uri.get_password( ) == "password" );
     REQUIRE( uri.get_authority( ) == "2001:0db8:85a3:0000:0000:8a2e:0370:7334" );
-
+    
     const string value = uri.to_string( );
     REQUIRE( value == "http://username:password@[2001:0db8:85a3:0000:0000:8a2e:0370:7334]:80/resources/index.html?q=bear&b=cubs#frag1" );
 }
@@ -187,7 +187,7 @@ TEST_CASE( "encode parameter", "[uri]" )
     REQUIRE( Uri::encode_parameter( "a=b" ) == "a%3Db" );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

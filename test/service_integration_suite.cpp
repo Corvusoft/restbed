@@ -28,7 +28,7 @@ TEST_CASE( "validate runtime_error is not thrown when SSLSettings passed into st
 {
     const auto ssl_settings = make_shared< SSLSettings >( );
     ssl_settings->set_port( 0 );
-
+    
     const auto settings = make_shared< Settings >( );
     settings->set_port( 0 );
     settings->set_ssl_settings( ssl_settings );
@@ -54,7 +54,7 @@ TEST_CASE( "validate runtime_error is thrown when SSLSettings passed into start"
 }
 #endif
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

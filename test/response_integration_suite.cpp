@@ -24,7 +24,7 @@ TEST_CASE( "validate default instance values", "[response]" )
 
 TEST_CASE( "validate setters modify default values", "[response]" )
 {
-    Bytes expectation = { std::byte('a'), std::byte('b') };
+    Bytes expectation = { std::byte( 'a' ), std::byte( 'b' ) };
     
     Response response;
     response.set_body( expectation );
@@ -33,7 +33,7 @@ TEST_CASE( "validate setters modify default values", "[response]" )
     REQUIRE( body == expectation );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

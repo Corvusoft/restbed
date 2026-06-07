@@ -24,7 +24,7 @@ using restbed::Request;
 
 TEST_CASE( "validate setters modify default values", "[request]" )
 {
-    Bytes expectation = { std::byte('a'), std::byte('b'), std::byte('c') };
+    Bytes expectation = { std::byte( 'a' ), std::byte( 'b' ), std::byte( 'c' ) };
     
     Request request;
     request.set_body( expectation );
@@ -107,7 +107,7 @@ TEST_CASE( "validate URI constructor with no path", "[request]" )
     REQUIRE( request.get_query_parameters( ) == parameters );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

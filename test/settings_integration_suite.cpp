@@ -37,7 +37,7 @@ TEST_CASE( "validate setters modify default values", "[settings]" )
     REQUIRE( settings.get_ssl_settings( )->get_port( ) == 3434 );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }

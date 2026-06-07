@@ -152,7 +152,7 @@ TEST_CASE( "validate add_header does not override a previous value", "[request]"
     REQUIRE( headers == expectation );
 }
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    return Catch::Session().run(argc, argv);
+    return Catch::Session().run( argc, argv );
 }
