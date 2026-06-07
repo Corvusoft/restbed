@@ -52,7 +52,29 @@ jobs:
         run: make -j$(getconf _NPROCESSORS_ONLN)
 
       - name: Test
-        run: make check || (cat test/test-suite.log; exit 1)
+        run: make check || (cat test/*.log; exit 1)
+
+  build-no-tests:
+    name: ubuntu-24.04 / tests=no
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            autoconf automake libtool pkg-config \
+            libasio-dev libssl-dev
+
+      - name: Bootstrap
+        run: ./autogen.sh
+
+      - name: Configure
+        run: ./configure --disable-tests
+
+      - name: Build
+        run: make -j$(getconf _NPROCESSORS_ONLN)
 
   distcheck:
     name: distcheck
@@ -72,3 +94,34 @@ jobs:
           ./autogen.sh
           ./configure
           make distcheck -j$(getconf _NPROCESSORS_ONLN)
+
+  windows:
+    name: windows-latest / msys2-ucrt64
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            base-devel autoconf automake libtool
+          pacboy: >-
+            gcc:p openssl:p asio:p catch:p pkgconf:p
+
+      - name: Bootstrap
+        run: ./autogen.sh
+
+      - name: Configure
+        run: ./configure
+
+      - name: Build
+        run: make -j$(nproc)
+
+      - name: Test
+        run: make check || (cat test/*.log; exit 1)

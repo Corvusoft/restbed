@@ -121,9 +121,13 @@ brew install autoconf automake libtool pkg-config asio openssl@3 catch2
 export PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig"
 ```
 
-Windows (vcpkg, see [Windows Build Instructions](#windows-build-instructions) below):
-```cmd
-vcpkg install
+Windows (MSYS2 UCRT64, see [Windows Build Instructions](#windows-build-instructions) below):
+```bash
+pacman -S --needed \
+    base-devel mingw-w64-ucrt-x86_64-toolchain \
+    mingw-w64-ucrt-x86_64-asio \
+    mingw-w64-ucrt-x86_64-openssl \
+    mingw-w64-ucrt-x86_64-catch
 ```
 
 Build
@@ -166,7 +170,7 @@ Run `./configure --help` for the full list, including standard GNU directory var
 Windows Build Instructions
 --------------------------
 
-The autotools build runs under [MSYS2](https://www.msys2.org/) or Cygwin. Native MSVC support has been removed alongside CMake; the `vcpkg.json` manifest is retained to provision dependencies (Asio, OpenSSL, Catch2) on MSYS2.
+The autotools build runs under [MSYS2](https://www.msys2.org/) or Cygwin. Native MSVC support has been removed alongside CMake; dependencies (Asio, OpenSSL, Catch2) are provisioned through the MSYS2 package manager (`pacman`).
 
 From an MSYS2 UCRT64 shell:
 

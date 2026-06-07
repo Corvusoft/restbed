@@ -99,12 +99,13 @@ noinst_HEADERS = \
     src/corvusoft/restbed/detail/web_socket_manager_impl.hpp \
     src/corvusoft/restbed/detail/web_socket_message_impl.hpp
 
-# LICENSE and README.md are distributed automatically by automake; the
+# README.md is distributed automatically by automake; LICENSE and the
 # remaining project assets must be listed explicitly so they ship in the
-# `make dist` tarball.
+# `make dist` tarball. (automake's `foreign` mode auto-distributes COPYING,
+# not LICENSE.)
 EXTRA_DIST = \
+    LICENSE \
     autogen.sh \
-    vcpkg.json \
     changelog.txt \
     copyright.txt \
     docs \

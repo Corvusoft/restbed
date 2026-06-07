@@ -61,7 +61,6 @@ $RECYCLE.BIN/
 # IDE Related
 .vscode/
 .idea/
-vcpkg_installed/
 
 # Autotools generated files
 Makefile
@@ -74,8 +73,16 @@ config.status
 libtool
 autom4te.cache/
 build-aux/
-m4/
 restbed.pc
+
+# libtool-generated m4 macros, recreated by autoreconf -fiv. Only these
+# generated files are ignored by name; any hand-written m4 macro added
+# later will have a different name and stay tracked.
+m4/libtool.m4
+m4/lt~obsolete.m4
+m4/ltoptions.m4
+m4/ltsugar.m4
+m4/ltversion.m4
 *.trs
 .dirstamp
 .deps/

@@ -7,7 +7,7 @@ Name: @PACKAGE_NAME@
 Description: Asynchronous C++23 HTTP/WebSocket server framework
 Version: @PACKAGE_VERSION@
 URL: @PACKAGE_URL@
-@OPENSSL_REQUIRES_PRIVATE@
+Requires.private: @OPENSSL_REQUIRES_PRIVATE@
 Cflags: -I${includedir} @ASIO_CFLAGS@
 Libs: -L${libdir} -l@PACKAGE_NAME@
-Libs.private: @PTHREAD_LIBS@ @OPENSSL_LIBS@
+Libs.private: @PTHREAD_LIBS@

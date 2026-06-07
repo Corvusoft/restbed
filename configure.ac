@@ -85,7 +85,7 @@ OPENSSL_LIBS=""
 OPENSSL_REQUIRES_PRIVATE=""
 AS_IF([test "x$enable_ssl" = "xyes"], [
     PKG_CHECK_MODULES([OPENSSL], [openssl],
-        [OPENSSL_REQUIRES_PRIVATE="Requires.private: openssl"],
+        [OPENSSL_REQUIRES_PRIVATE="openssl"],
         [AC_MSG_ERROR([OpenSSL not found. Install libssl-dev or pass --disable-ssl.])])
 ])
 AC_SUBST([OPENSSL_CFLAGS])
