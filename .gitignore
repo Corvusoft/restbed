@@ -1,8 +1,7 @@
-# Project Files
+# Project Files.
 build/
-distribution/
 
-# Compiled source
+# Compiled source.
 *.com
 *.class
 *.dll
@@ -28,7 +27,7 @@ distribution/
 *.gch
 *.pch
 
-# Packages
+# Packages.
 *.7z
 *.dmg
 *.gz
@@ -38,14 +37,14 @@ distribution/
 *.tar
 *.zip
 
-# Logs and databases
+# Logs and databases.
 *.log
 *.sql
 *.sqlite
 *.bak
 *.swp
 
-# OS generated files
+# OS generated files.
 .DS_Store
 .DS_Store?
 ._*
@@ -58,11 +57,11 @@ Desktop.ini
 $RECYCLE.BIN/
 *.lnk
 
-# IDE Related
+# IDE Related.
 .vscode/
 .idea/
 
-# Autotools generated files
+# Autotools generated files.
 Makefile
 Makefile.in
 configure
@@ -87,3 +86,6 @@ m4/ltversion.m4
 .dirstamp
 .deps/
 .libs/
+
+# Compiled test executables.
+test/*_suite
