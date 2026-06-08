@@ -250,8 +250,22 @@ namespace restbed
         {
             return 0;
         }
-        
-        return static_cast< uint16_t >( stoi( port ) );
+
+        try
+        {
+            const auto value = stoi( port );
+
+            if ( value < 0 or value > 65535 )
+            {
+                return 0;
+            }
+
+            return static_cast< uint16_t >( value );
+        }
+        catch ( const std::out_of_range& )
+        {
+            return 0;
+        }
     }
     
     string Uri::get_path( void ) const
