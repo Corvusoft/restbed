@@ -105,7 +105,8 @@ namespace restbed
     
     string Settings::get_status_message( const int code ) const
     {
-        return ( m_pimpl->m_status_messages.count( code ) ) ?  m_pimpl->m_status_messages.at( code ) : "No Appropriate Status Message Found";
+        const auto entry = m_pimpl->m_status_messages.find( code );
+        return ( entry not_eq m_pimpl->m_status_messages.end( ) ) ? entry->second : "No Appropriate Status Message Found";
     }
     
     map< int, string > Settings::get_status_messages( void ) const
@@ -115,7 +116,8 @@ namespace restbed
     
     string Settings::get_property( const string& name ) const
     {
-        return ( m_pimpl->m_properties.count( name ) ) ? m_pimpl->m_properties.at( name ) : "";
+        const auto entry = m_pimpl->m_properties.find( name );
+        return ( entry not_eq m_pimpl->m_properties.end( ) ) ? entry->second : "";
     }
     
     map< string, string > Settings::get_properties( void ) const
