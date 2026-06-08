@@ -21,8 +21,6 @@
 //System Namespaces
 using std::map;
 using std::pair;
-using std::stof;
-using std::stod;
 using std::string;
 using std::function;
 using std::multimap;
