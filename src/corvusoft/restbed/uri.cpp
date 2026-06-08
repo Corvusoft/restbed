@@ -199,11 +199,13 @@ namespace restbed
         
         for ( auto character : value )
         {
-            if ( unsafe_characters[ static_cast<uint8_t>( character ) ] )
+            const auto octet = static_cast<uint8_t>( character );
+
+            if ( unsafe_characters[ octet ] )
             {
                 encoded.push_back( '%' );
-                encoded.push_back( dec_to_hex[ character >> 4 ] );
-                encoded.push_back( dec_to_hex[ character & 0x0F ] );
+                encoded.push_back( dec_to_hex[ octet >> 4 ] );
+                encoded.push_back( dec_to_hex[ octet & 0x0F ] );
             }
             else
             {
