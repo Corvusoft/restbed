@@ -387,7 +387,7 @@ namespace restbed
         
         auto query = String::split( get_query( ), '&' );
         
-        for ( auto parameter : query )
+        for ( const auto& parameter : query )
         {
             auto index = parameter.find_first_of( '=' );
             auto name = decode_parameter( parameter.substr( 0, index ) );

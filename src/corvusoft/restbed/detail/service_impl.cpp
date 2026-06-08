@@ -363,7 +363,7 @@ namespace restbed
             string sanitised_path = "";
             static const regex pattern( "^\\{[a-zA-Z0-9_\\-]+: ?(.*)\\}$" );
             
-            for ( auto folder : String::split( path, '/' ) )
+            for ( const auto& folder : String::split( path, '/' ) )
             {
                 if ( folder.front( ) == '{' and folder.back( ) == '}' )
                 {

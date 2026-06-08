@@ -92,7 +92,7 @@ namespace restbed
     {
         string result = "";
         
-        for ( auto value : values )
+        for ( const auto& value : values )
         {
             result += value.first + pair_delimiter + value.second + delimiter;
         }
