@@ -131,14 +131,9 @@ namespace restbed
             pattern.assign( expression, icase );
         }
         
-        smatch match;
-        string result = value;
-        
-        while ( regex_search( result, match, pattern ) )
-        {
-            result = regex_replace( result, pattern, substitute );
-        }
-        
-        return result;
+        // A single pass replaces every non-overlapping occurrence. Re-scanning
+        // the result would recurse into freshly-substituted text and loop forever
+        // whenever the substitute contains the target.
+        return regex_replace( value, pattern, substitute );
     }
 }
