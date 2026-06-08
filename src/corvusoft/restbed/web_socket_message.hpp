@@ -42,7 +42,7 @@ namespace restbed
         struct WebSocketMessageImpl;
     }
     
-    class WebSocketMessage
+    class WEB_SOCKET_MESSAGE_EXPORT WebSocketMessage
     {
         public:
             //Friends

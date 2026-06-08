@@ -52,7 +52,7 @@ namespace restbed
         class WebSocketManagerImpl;
     }
     
-    class Request
+    class REQUEST_EXPORT Request
     {
         public:
             //Friends

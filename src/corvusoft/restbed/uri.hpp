@@ -40,7 +40,7 @@ namespace restbed
         struct UriImpl;
     }
     
-    class Uri
+    class URI_EXPORT Uri
     {
         public:
             //Friends

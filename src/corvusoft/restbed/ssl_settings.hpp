@@ -40,7 +40,7 @@ namespace restbed
         struct SSLSettingsImpl;
     }
     
-    class SSLSettings
+    class SSL_SETTINGS_EXPORT SSLSettings
     {
         public:
             //Friends

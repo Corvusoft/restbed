@@ -48,7 +48,7 @@ namespace restbed
         class ServiceImpl;
     }
     
-    class Service
+    class SERVICE_EXPORT Service
     {
         public:
             //Friends

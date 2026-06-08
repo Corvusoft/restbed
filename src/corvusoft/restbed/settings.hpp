@@ -42,7 +42,7 @@ namespace restbed
         struct SettingsImpl;
     }
     
-    class Settings
+    class SETTINGS_EXPORT Settings
     {
         public:
             //Friends

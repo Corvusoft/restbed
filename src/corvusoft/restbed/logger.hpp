@@ -38,7 +38,7 @@ namespace restbed
     //Forward Declarations
     class Settings;
     
-    class Logger
+    class LOGGER_EXPORT Logger
     {
         public:
             //Friends

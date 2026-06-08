@@ -44,7 +44,7 @@ namespace restbed
         struct ResourceImpl;
     }
     
-    class Resource
+    class RESOURCE_EXPORT Resource
     {
         public:
             //Friends

@@ -44,7 +44,7 @@ namespace restbed
         struct ResponseImpl;
     }
     
-    class Response
+    class RESPONSE_EXPORT Response
     {
         public:
             //Friends
