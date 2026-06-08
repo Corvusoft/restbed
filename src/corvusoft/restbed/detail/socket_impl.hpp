@@ -45,6 +45,11 @@ namespace restbed
     {
         //Forward Declarations
         
+#if defined( __GNUC__ )
+    #pragma GCC diagnostic push
+    //std::enable_shared_from_this has a protected, non-virtual destructor; safe to derive from but -Weffc++ flags it.
+    #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
         class SocketImpl : public std::enable_shared_from_this<SocketImpl>
         {
             public:
@@ -57,7 +62,7 @@ namespace restbed
 #ifdef BUILD_SSL
                 SocketImpl( asio::io_context& context, const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
 #endif
-                ~SocketImpl( void ) = default;
+                virtual ~SocketImpl( void ) = default;
                 
                 //Functionality
                 virtual void close( void );
@@ -172,5 +177,8 @@ namespace restbed
                 std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;
 #endif
         };
+#if defined( __GNUC__ )
+    #pragma GCC diagnostic pop
+#endif
     }
 }
