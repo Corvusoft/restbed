@@ -42,7 +42,11 @@ check_PROGRAMS = \
     ssl_settings_to_handle_windows_paths_regression_suite \
     uncaught_exception_when_peer_closes_connection_regression_suite \
     uri_fails_to_handle_file_scheme_relative_paths_regression_suite \
-    uri_get_parameter_fails_to_handle_empty_values_regression_suite
+    uri_get_parameter_fails_to_handle_empty_values_regression_suite \
+    uri_encode_fails_to_handle_high_bytes_regression_suite \
+    uri_get_port_overflow_regression_suite \
+    string_replace_infinite_loop_regression_suite \
+    web_socket_frame_parse_regression_suite
 
 TESTS = $(check_PROGRAMS)
 
@@ -81,4 +85,13 @@ ssl_settings_to_handle_windows_paths_regression_suite_SOURCES           = ssl_se
 uncaught_exception_when_peer_closes_connection_regression_suite_SOURCES = uncaught_exception_when_peer_closes_connection_regression_suite.cpp
 uri_fails_to_handle_file_scheme_relative_paths_regression_suite_SOURCES = uri_fails_to_handle_file_scheme_relative_paths_regression_suite.cpp
 uri_get_parameter_fails_to_handle_empty_values_regression_suite_SOURCES = uri_get_parameter_fails_to_handle_empty_values_regression_suite.cpp
+uri_encode_fails_to_handle_high_bytes_regression_suite_SOURCES         = uri_encode_fails_to_handle_high_bytes_regression_suite.cpp
+uri_get_port_overflow_regression_suite_SOURCES                         = uri_get_port_overflow_regression_suite.cpp
+string_replace_infinite_loop_regression_suite_SOURCES                  = string_replace_infinite_loop_regression_suite.cpp
+
+# This suite exercises restbed::detail::WebSocketManagerImpl, whose symbols are
+# compiled with hidden visibility and therefore absent from the shared library's
+# dynamic symbol table. Force a static link so the detail symbols resolve.
+web_socket_frame_parse_regression_suite_SOURCES                        = web_socket_frame_parse_regression_suite.cpp
+web_socket_frame_parse_regression_suite_LDFLAGS                        = -static
 endif
