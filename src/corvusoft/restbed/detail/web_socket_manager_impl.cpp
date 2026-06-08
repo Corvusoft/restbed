@@ -89,43 +89,51 @@ namespace restbed
             
             if ( length == 126 )
             {
-                if ( ( packet_length - ( offset + 1 ) ) <= 0 )
+                // 2-byte extended length. packet_length and offset are unsigned,
+                // so compare additively to avoid wrap-around on short frames.
+                if ( packet_length < offset + 2 )
                 {
                     return nullptr;
                 }
-                
-                length  = static_cast<uint8_t>( packet[ offset++ ] ) << 8;
-                length |= static_cast<uint8_t>( packet[ offset++ ] )     ;
-                
+
+                length  = static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 8;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) )     ;
+
                 message->set_extended_length( length );
             }
             else if ( length == 127 )
             {
-                if ( ( packet_length - ( offset + 3 ) ) <= 0 )
+                // 8-byte extended length.
+                if ( packet_length < offset + 8 )
                 {
                     return nullptr;
                 }
-                
-                length |= static_cast<uint8_t>( packet[ offset++ ] ) << 24;
-                length |= static_cast<uint8_t>( packet[ offset++ ] ) << 16;
-                length |= static_cast<uint8_t>( packet[ offset++ ] ) <<  8;
-                length  = static_cast<uint8_t>( packet[ offset++ ] )      ;
-                
+
+                length  = static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 56;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 48;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 40;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 32;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 24;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 16;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) <<  8;
+                length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) )      ;
+
                 message->set_extended_length( length );
             }
-            
+
             if ( message->get_mask_flag( ) == true )
             {
-                if ( ( packet_length - ( offset + 3 ) ) <= 0 )
+                // 4-byte masking key.
+                if ( packet_length < offset + 4 )
                 {
                     return nullptr;
                 }
-                
-                uint32_t mask = static_cast<uint8_t>( packet[ offset++ ] ) << 24;
-                mask |= static_cast<uint8_t>( packet[ offset++ ] )         << 16;
-                mask |= static_cast<uint8_t>( packet[ offset++ ] )         <<  8;
-                mask |= static_cast<uint8_t>( packet[ offset++ ] )              ;
-                
+
+                uint32_t mask = static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 24;
+                mask |= static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) )         << 16;
+                mask |= static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) )         <<  8;
+                mask |= static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) )              ;
+
                 message->set_mask( mask );
             }
             
