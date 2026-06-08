@@ -45,7 +45,7 @@ namespace restbed
         string result = "";
         transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value )
         {
-            return static_cast< char >( tolower( value ) );
+            return static_cast< char >( tolower( static_cast< unsigned char >( value ) ) );
         } );
         return result;
     }
@@ -55,7 +55,7 @@ namespace restbed
         string result = "";
         transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value )
         {
-            return static_cast< char >( toupper( value ) );
+            return static_cast< char >( toupper( static_cast< unsigned char >( value ) ) );
         } );
         return result;
     }
