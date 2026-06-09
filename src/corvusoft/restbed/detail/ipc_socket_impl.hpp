@@ -9,6 +9,7 @@
 //System Includes
 #include <queue>
 #include <tuple>
+#include <atomic>
 #include <chrono>
 #include <string>
 #include <memory>
@@ -24,8 +25,8 @@
 //External Includes
 #include <asio/streambuf.hpp>
 #include <asio/steady_timer.hpp>
-#include <asio/io_service.hpp>
-#include <asio/io_service_strand.hpp>
+#include <asio/io_context.hpp>
+#include <asio/strand.hpp>
 #include <asio/local/stream_protocol.hpp>
 
 //System Namespaces
@@ -63,7 +64,7 @@ namespace restbed
                 
                 bool is_closed( void ) const override;
                 
-                void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const std::error_code& ) >& callback ) override;
+                void connect(  const std::string& hostname, const uint16_t port, const std::function< void ( const std::error_code& ) >& callback );
                 
                 void sleep_for( const std::chrono::milliseconds& delay, const std::function< void ( const std::error_code& ) >& callback ) override;
                 
@@ -148,7 +149,7 @@ namespace restbed
                 IPCSocketImpl& operator =( const IPCSocketImpl& value ) = delete;
                 
                 //Properties
-                bool m_is_open;
+                std::atomic< bool > m_is_open;
                 
                 const std::string m_path;
                 
@@ -164,7 +165,7 @@ namespace restbed
                 
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
-                std::shared_ptr< asio::io_service::strand > m_strand;
+                std::shared_ptr< asio::strand< asio::io_context::executor_type > > m_strand;
                 
                 std::shared_ptr< asio::local::stream_protocol::socket > m_socket;
         };
