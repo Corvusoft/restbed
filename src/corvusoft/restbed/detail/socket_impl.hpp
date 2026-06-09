@@ -7,6 +7,7 @@
 //System Includes
 #include <queue>
 #include <tuple>
+#include <atomic>
 #include <chrono>
 #include <string>
 #include <memory>
@@ -153,7 +154,7 @@ namespace restbed
                 SocketImpl& operator =( const SocketImpl& value ) = delete;
                 
                 //Properties
-                bool m_is_open;
+                std::atomic< bool > m_is_open;
                 
                 const uint8_t MAX_WRITE_RETRIES = 5;
                 

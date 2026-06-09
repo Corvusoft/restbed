@@ -495,9 +495,15 @@ namespace restbed
             
             while ( !*finished )
             {
-                m_io_context.run_one();
+                if ( m_io_context.run_one() == 0 )
+                {
+                    // io_context stopped with the read still pending; bail out
+                    // instead of spinning at 100% CPU on a context with no work.
+                    *sharedError = asio::error::operation_aborted;
+                    break;
+                }
             }
-            
+
             error = *sharedError;
             size = *sharedSize;
             m_timer->cancel( );
@@ -652,9 +658,15 @@ namespace restbed
             
             while ( !*finished )
             {
-                m_io_context.run_one();
+                if ( m_io_context.run_one() == 0 )
+                {
+                    // io_context stopped with the read still pending; bail out
+                    // instead of spinning at 100% CPU on a context with no work.
+                    *sharedError = asio::error::operation_aborted;
+                    break;
+                }
             }
-            
+
             error = *sharedError;
             length = *sharedLength;
             m_timer->cancel( );
