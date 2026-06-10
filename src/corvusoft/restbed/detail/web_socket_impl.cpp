@@ -68,30 +68,35 @@ namespace restbed
             } );
         }
         
-        void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
+        std::size_t WebSocketImpl::frame_header_remainder( const std::uint8_t length_indicator, const bool masked )
         {
-            auto message = m_manager->parse( data );
-            
-            auto length = message->get_length( );
-            
-            if ( length == 126 )
+            std::size_t length = 0;
+
+            if ( length_indicator == 126 )
             {
+                // 16-bit extended length.
                 length = 2;
             }
-            else if ( length == 127 )
+            else if ( length_indicator == 127 )
             {
-                length = 4;
+                // 64-bit extended length.
+                length = 8;
             }
-            else
-            {
-                length = 0;
-            }
-            
-            if ( message->get_mask_flag( ) == true )
+
+            if ( masked )
             {
                 length += 4;
             }
-            
+
+            return length;
+        }
+
+        void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
+        {
+            auto message = m_manager->parse( data );
+
+            const auto length = frame_header_remainder( message->get_length( ), message->get_mask_flag( ) );
+
             m_socket->start_read( length, bind( &WebSocketImpl::parse_length_and_mask, this, _1, data, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )

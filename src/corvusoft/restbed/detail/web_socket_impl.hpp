@@ -7,6 +7,8 @@
 //System Includes
 #include <memory>
 #include <string>
+#include <cstddef>
+#include <cstdint>
 #include <functional>
 
 //Project Includes
@@ -49,6 +51,8 @@ namespace restbed
                 
                 void listen( const std::shared_ptr< WebSocket > socket );
                 
+                static std::size_t frame_header_remainder( const std::uint8_t length_indicator, const bool masked );
+
                 void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
                 
                 void parse_payload( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );
