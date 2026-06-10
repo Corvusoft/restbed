@@ -83,10 +83,6 @@ namespace restbed
                 
                 virtual void start_write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
-                virtual size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
-                
-                virtual size_t start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
-                
                 virtual void start_read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
                 
                 virtual void start_read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
@@ -174,14 +170,10 @@ namespace restbed
 
                 void write_helper( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
-                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
-                
                 void read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
-                
+
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
-                
-                size_t read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, std::error_code& error );
-                
+
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
                 //Getters

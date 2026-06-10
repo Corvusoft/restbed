@@ -3,7 +3,6 @@
  */
 
 //System Includes
-#include <future>
 #include <ciso646>
 
 //Project Includes
@@ -159,16 +158,6 @@ namespace restbed
         void SocketImpl::start_write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback )
         {
             m_strand->post( [this, self = shared_from_this(), data, callback] { write_helper( data, callback ); }, asio::get_associated_allocator( m_strand ) );
-        }
-
-        size_t SocketImpl::start_read( const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error )
-        {
-            return read( data, delimiter, error );
-        }
-
-        size_t SocketImpl::start_read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
-        {
-            return read( data, length, error );
         }
 
         void SocketImpl::start_read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
@@ -408,51 +397,6 @@ namespace restbed
             }
         }
 
-        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, error_code& error )
-        {
-            m_timer->cancel( );
-            m_timer->expires_after( m_timeout );
-            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
-
-            size_t size = 0;
-            auto finished = std::make_shared<bool>( false );
-            auto sharedError = std::make_shared<error_code>();
-            auto sharedSize = std::make_shared<size_t>( 0 );
-
-            with_active_stream( [&]( auto & stream )
-            {
-                asio::async_read( stream, *data, asio::transfer_at_least( length ),
-                                  [ finished, sharedSize, sharedError ]( const error_code & error, size_t size )
-                {
-                    *sharedError = error;
-                    *sharedSize = size;
-                    *finished = true;
-                } );
-            } );
-
-            while ( !*finished )
-            {
-                if ( m_io_context.run_one() == 0 )
-                {
-                    // io_context stopped with the read still pending; bail out
-                    // instead of spinning at 100% CPU on a context with no work.
-                    *sharedError = asio::error::operation_aborted;
-                    break;
-                }
-            }
-
-            error = *sharedError;
-            size = *sharedSize;
-            m_timer->cancel( );
-
-            if ( error )
-            {
-                m_is_open = false;
-            }
-
-            return size;
-        }
-
         void SocketImpl::read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
         {
             m_timer->cancel( );
@@ -504,51 +448,6 @@ namespace restbed
                     }
                 } ) );
             } );
-        }
-
-        size_t SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, error_code& error )
-        {
-            m_timer->cancel( );
-            m_timer->expires_after( m_timeout );
-            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
-
-            size_t length = 0;
-            auto finished = std::make_shared<bool>( false );
-            auto sharedError = std::make_shared<error_code>();
-            auto sharedLength = std::make_shared<size_t>( 0 );
-
-            with_active_stream( [&]( auto & stream )
-            {
-                asio::async_read_until( stream, *data, delimiter,
-                                        [ finished, sharedLength, sharedError ]( const error_code & error, size_t length )
-                {
-                    *sharedError = error;
-                    *sharedLength = length;
-                    *finished = true;
-                } );
-            } );
-
-            while ( !*finished )
-            {
-                if ( m_io_context.run_one() == 0 )
-                {
-                    // io_context stopped with the read still pending; bail out
-                    // instead of spinning at 100% CPU on a context with no work.
-                    *sharedError = asio::error::operation_aborted;
-                    break;
-                }
-            }
-
-            error = *sharedError;
-            length = *sharedLength;
-            m_timer->cancel( );
-
-            if ( error )
-            {
-                m_is_open = false;
-            }
-
-            return length;
         }
 
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback )
