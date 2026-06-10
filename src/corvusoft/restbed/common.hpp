@@ -39,16 +39,36 @@ namespace restbed
             template< typename Type >
             static Type parse_parameter( const std::string& value, const Type default_value )
             {
+                if constexpr ( std::is_unsigned_v< Type > )
+                {
+                    const auto position = value.find_first_not_of( " \t\f\v\r\n" );
+
+                    if ( position not_eq std::string::npos and value[ position ] == '-' )
+                    {
+                        return default_value;
+                    }
+                }
+
                 std::istringstream stream( value );
-                
+
                 Type parameter;
                 stream >> parameter;
-                
+
                 if ( stream.fail( ) )
                 {
                     return default_value;
                 }
-                
+
+                if constexpr ( std::is_arithmetic_v< Type > )
+                {
+                    stream >> std::ws;
+
+                    if ( not stream.eof( ) )
+                    {
+                        return default_value;
+                    }
+                }
+
                 return parameter;
             }
             

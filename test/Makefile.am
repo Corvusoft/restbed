@@ -49,7 +49,8 @@ check_PROGRAMS = \
     web_socket_frame_parse_regression_suite \
     web_socket_extended_length_read_regression_suite \
     web_socket_malformed_frame_regression_suite \
-    web_socket_extended_length_boundary_regression_suite
+    web_socket_extended_length_boundary_regression_suite \
+    parse_parameter_strictness_regression_suite
 
 if BUILD_IPC
 check_PROGRAMS += ipc_connection_timeout_error_handler_regression_suite
@@ -113,6 +114,8 @@ web_socket_malformed_frame_regression_suite_SOURCES                    = web_soc
 web_socket_malformed_frame_regression_suite_LDFLAGS                    = -static
 
 web_socket_extended_length_boundary_regression_suite_SOURCES           = web_socket_extended_length_boundary_regression_suite.cpp
+
+parse_parameter_strictness_regression_suite_SOURCES                    = parse_parameter_strictness_regression_suite.cpp
 
 if BUILD_IPC
 ipc_connection_timeout_error_handler_regression_suite_SOURCES          = ipc_connection_timeout_error_handler_regression_suite.cpp
