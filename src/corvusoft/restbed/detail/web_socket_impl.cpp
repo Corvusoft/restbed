@@ -4,6 +4,7 @@
 
 //System Includes
 #include <ciso646>
+#include <system_error>
 
 //Project Includes
 #include "corvusoft/restbed/web_socket.hpp"
@@ -16,9 +17,11 @@
 
 //System Namespaces
 using std::bind;
+using std::errc;
 using std::string;
 using std::shared_ptr;
 using std::error_code;
+using std::make_error_code;
 using std::placeholders::_1;
 
 //Project Namespaces
@@ -95,6 +98,16 @@ namespace restbed
         {
             auto message = m_manager->parse( data );
 
+            if ( message == nullptr )
+            {
+                if ( m_error_handler not_eq nullptr )
+                {
+                    m_error_handler( socket, make_error_code( errc::bad_message ) );
+                }
+
+                return;
+            }
+
             const auto length = frame_header_remainder( message->get_length( ), message->get_mask_flag( ) );
 
             m_socket->start_read( length, bind( &WebSocketImpl::parse_length_and_mask, this, _1, data, socket ), [ this, socket ]( const error_code code )
@@ -110,12 +123,22 @@ namespace restbed
         {
             packet.insert( packet.end( ), data.begin( ), data.end( ) );
             auto message = m_manager->parse( packet );
-            
+
+            if ( message == nullptr )
+            {
+                if ( m_error_handler not_eq nullptr )
+                {
+                    m_error_handler( socket, make_error_code( errc::bad_message ) );
+                }
+
+                return;
+            }
+
             if ( m_message_handler not_eq nullptr )
             {
                 m_message_handler( socket, message );
             }
-            
+
             listen( socket );
         }
         
@@ -123,7 +146,17 @@ namespace restbed
         {
             packet.insert( packet.end( ), data.begin( ), data.end( ) );
             auto message = m_manager->parse( packet );
-            
+
+            if ( message == nullptr )
+            {
+                if ( m_error_handler not_eq nullptr )
+                {
+                    m_error_handler( socket, make_error_code( errc::bad_message ) );
+                }
+
+                return;
+            }
+
             auto length = message->get_extended_length( );
             
             if ( length == 0 )
