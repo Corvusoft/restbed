@@ -5,8 +5,6 @@
 //System Includes
 #include <regex>
 #include <ranges>
-#include <cstdio>
-#include <cstdlib>
 #include <stdexcept>
 
 #if defined(_WIN32)
@@ -30,13 +28,9 @@
 using std::stoi;
 using std::regex;
 using std::smatch;
-using std::strtol;
 using std::string;
 using std::multimap;
-using std::snprintf;
 using std::to_string;
-using std::unique_ptr;
-using std::runtime_error;
 using std::invalid_argument;
 
 //Project Namespaces
@@ -172,7 +166,7 @@ namespace restbed
     
     string Uri::encode( const string& value )
     {
-        const bool unsafe_characters[256] =
+        static const bool unsafe_characters[256] =
         {
             /*      0 1 2 3  4 5 6 7  8 9 A B  C D E F */
             /* 0 */ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
