@@ -42,7 +42,8 @@ namespace restbed
     
     string String::lowercase( const string& value )
     {
-        string result = "";
+        string result;
+        result.reserve( value.size( ) );
         transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value )
         {
             return static_cast< char >( tolower( static_cast< unsigned char >( value ) ) );
@@ -52,7 +53,8 @@ namespace restbed
     
     string String::uppercase( const string& value )
     {
-        string result = "";
+        string result;
+        result.reserve( value.size( ) );
         transform( value.begin( ), value.end( ), back_inserter( result ), [ ]( const char value )
         {
             return static_cast< char >( toupper( static_cast< unsigned char >( value ) ) );
