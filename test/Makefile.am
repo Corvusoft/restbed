@@ -48,7 +48,8 @@ check_PROGRAMS = \
     string_replace_infinite_loop_regression_suite \
     web_socket_frame_parse_regression_suite \
     web_socket_extended_length_read_regression_suite \
-    web_socket_malformed_frame_regression_suite
+    web_socket_malformed_frame_regression_suite \
+    web_socket_extended_length_boundary_regression_suite
 
 if BUILD_IPC
 check_PROGRAMS += ipc_connection_timeout_error_handler_regression_suite
@@ -110,6 +111,8 @@ web_socket_extended_length_read_regression_suite_LDFLAGS               = -static
 # shared library; static link so the detail symbols resolve.
 web_socket_malformed_frame_regression_suite_SOURCES                    = web_socket_malformed_frame_regression_suite.cpp
 web_socket_malformed_frame_regression_suite_LDFLAGS                    = -static
+
+web_socket_extended_length_boundary_regression_suite_SOURCES           = web_socket_extended_length_boundary_regression_suite.cpp
 
 if BUILD_IPC
 ipc_connection_timeout_error_handler_regression_suite_SOURCES          = ipc_connection_timeout_error_handler_regression_suite.cpp

@@ -63,7 +63,7 @@ namespace restbed
         else
         {
             m_pimpl->m_extended_length = length;
-            m_pimpl->m_length = ( length < 65535 ) ? 126 : 127;
+            m_pimpl->m_length = ( length <= 65535 ) ? 126 : 127;
         }
     }
     
