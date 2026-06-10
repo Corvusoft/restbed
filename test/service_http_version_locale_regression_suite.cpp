@@ -15,8 +15,6 @@
 #include <clocale>
 
 //Project Includes
-#include <corvusoft/restbed/logger.hpp>
-#include <corvusoft/restbed/request.hpp>
 #include <corvusoft/restbed/detail/service_impl.hpp>
 
 //External Includes

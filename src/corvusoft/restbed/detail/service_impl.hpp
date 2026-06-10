@@ -18,6 +18,7 @@
 #include <system_error>
 
 //Project Includes
+#include "corvusoft/restbed/logger.hpp"
 
 //External Includes
 #include <asio/ip/tcp.hpp>
@@ -42,7 +43,7 @@ namespace restbed
 {
     //Forward Declarations
     class Uri;
-    class Logger;
+    class Request;
     class Session;
     class Resource;
     class Settings;
