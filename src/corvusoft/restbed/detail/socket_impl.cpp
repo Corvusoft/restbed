@@ -528,7 +528,7 @@ namespace restbed
         {
             m_timer->cancel( );
             m_timer->expires_after( m_timeout );
-            m_timer->async_wait( bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) );
+            m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
 
             size_t length = 0;
             auto finished = std::make_shared<bool>( false );
