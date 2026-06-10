@@ -30,6 +30,10 @@
     #include <asio/ssl.hpp>
 #endif
 
+#ifdef BUILD_IPC
+    #include <asio/local/stream_protocol.hpp>
+#endif
+
 //System Namespaces
 
 //Project Namespaces
@@ -62,6 +66,9 @@ namespace restbed
                 SocketImpl( asio::io_context& context, const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::shared_ptr< Logger >& logger = nullptr );
 #ifdef BUILD_SSL
                 SocketImpl( asio::io_context& context, const std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > >& socket, const std::shared_ptr< Logger >& logger = nullptr );
+#endif
+#ifdef BUILD_IPC
+                SocketImpl( asio::io_context& context, const std::shared_ptr< asio::local::stream_protocol::socket >& socket, const std::string& path, const std::shared_ptr< Logger >& logger = nullptr );
 #endif
                 virtual ~SocketImpl( void ) = default;
                 
@@ -128,12 +135,39 @@ namespace restbed
                 SocketImpl( const SocketImpl& original ) = delete;
                 
                 //Functionality
+                template< typename Operation >
+                void with_active_stream( Operation&& operation )
+                {
+                    if ( m_socket not_eq nullptr )
+                    {
+                        operation( *m_socket );
+                        return;
+                    }
+
+#ifdef BUILD_SSL
+
+                    if ( m_ssl_socket not_eq nullptr )
+                    {
+                        operation( *m_ssl_socket );
+                        return;
+                    }
+
+#endif
+#ifdef BUILD_IPC
+
+                    if ( m_ipc_socket not_eq nullptr )
+                    {
+                        operation( *m_ipc_socket );
+                        return;
+                    }
+
+#endif
+                }
+
                 void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
-                
+
                 void write( void );
-                
-                void write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
-                
+
                 void write_helper( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
                 size_t read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, std::error_code& error );
@@ -171,9 +205,14 @@ namespace restbed
                 std::shared_ptr< asio::strand< asio::io_context::executor_type > > m_strand;
 
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
-                
+
 #ifdef BUILD_SSL
                 std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;
+#endif
+#ifdef BUILD_IPC
+                std::shared_ptr< asio::local::stream_protocol::socket > m_ipc_socket;
+
+                std::string m_path;
 #endif
         };
 #if defined( __GNUC__ )

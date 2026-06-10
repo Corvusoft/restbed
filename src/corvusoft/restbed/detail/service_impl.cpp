@@ -30,7 +30,6 @@
 #include "corvusoft/restbed/detail/service_impl.hpp"
 #include "corvusoft/restbed/detail/session_impl.hpp"
 #include "corvusoft/restbed/detail/resource_impl.hpp"
-#include "corvusoft/restbed/detail/ipc_socket_impl.hpp"
 #include "corvusoft/restbed/detail/web_socket_manager_impl.hpp"
 
 //External Includes
@@ -317,7 +316,7 @@ namespace restbed
         {
             if ( not error )
             {
-                auto connection = make_shared< IPCSocketImpl >( *m_io_context, socket, m_settings->get_ipc_path( ), m_logger );
+                auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_settings->get_ipc_path( ), m_logger );
                 connection->set_timeout( m_settings->get_connection_timeout( ) );
                 
                 if ( m_settings->get_keep_alive() )
@@ -597,9 +596,7 @@ namespace restbed
             const auto resource = session->get_resource( );
             const auto method_handlers = resource->m_pimpl->m_method_handlers.equal_range( request->get_method( ) );
             
-            function< void ( const shared_ptr< Session > ) > method_handler = nullptr;
-            
-            // We can now migrate the method handler collection to a std::map, and map::at.
+            function< void ( const shared_ptr< Session > ) > method_handler = nullptr;            
             for ( auto handler = method_handlers.first; handler not_eq method_handlers.second and method_handler == nullptr; handler++ )
             {
                 method_handler = handler->second;

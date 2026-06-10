@@ -48,6 +48,10 @@ check_PROGRAMS = \
     string_replace_infinite_loop_regression_suite \
     web_socket_frame_parse_regression_suite
 
+if BUILD_IPC
+check_PROGRAMS += ipc_connection_timeout_error_handler_regression_suite
+endif
+
 TESTS = $(check_PROGRAMS)
 
 # Port-binding suites bind on port 0 (OS-assigned ephemeral) and discover the
@@ -94,4 +98,8 @@ string_replace_infinite_loop_regression_suite_SOURCES                  = string_
 # dynamic symbol table. Force a static link so the detail symbols resolve.
 web_socket_frame_parse_regression_suite_SOURCES                        = web_socket_frame_parse_regression_suite.cpp
 web_socket_frame_parse_regression_suite_LDFLAGS                        = -static
+
+if BUILD_IPC
+ipc_connection_timeout_error_handler_regression_suite_SOURCES          = ipc_connection_timeout_error_handler_regression_suite.cpp
+endif
 endif

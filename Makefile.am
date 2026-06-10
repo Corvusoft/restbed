@@ -20,10 +20,6 @@ librestbed_la_SOURCES = \
     src/corvusoft/restbed/detail/web_socket_impl.cpp \
     src/corvusoft/restbed/detail/web_socket_manager_impl.cpp
 
-if BUILD_IPC
-librestbed_la_SOURCES += src/corvusoft/restbed/detail/ipc_socket_impl.cpp
-endif
-
 librestbed_la_CPPFLAGS = \
     -I$(srcdir)/src \
     $(ASIO_CFLAGS)
@@ -85,7 +81,6 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = restbed.pc
 
 noinst_HEADERS = \
-    src/corvusoft/restbed/detail/ipc_socket_impl.hpp \
     src/corvusoft/restbed/detail/request_impl.hpp \
     src/corvusoft/restbed/detail/resource_impl.hpp \
     src/corvusoft/restbed/detail/response_impl.hpp \
