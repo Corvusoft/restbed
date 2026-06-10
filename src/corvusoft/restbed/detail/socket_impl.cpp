@@ -23,7 +23,6 @@ using std::get;
 using std::bind;
 using std::size_t;
 using std::string;
-using std::promise;
 using std::function;
 using std::to_string;
 using std::error_code;
@@ -58,7 +57,6 @@ namespace restbed
             m_io_context( context ),
             m_timer( make_shared< asio::steady_timer >( m_io_context ) ),
             m_strand( make_shared< asio::strand< asio::io_context::executor_type > > ( asio::make_strand( m_io_context ) ) ),
-            m_resolver( nullptr ),
             m_socket( socket )
 #ifdef BUILD_SSL
             , m_ssl_socket( nullptr )
@@ -75,7 +73,6 @@ namespace restbed
             m_io_context( context ),
             m_timer( make_shared< asio::steady_timer >( m_io_context ) ),
             m_strand( make_shared< asio::strand< asio::io_context::executor_type > > ( asio::make_strand( m_io_context ) ) ),
-            m_resolver( nullptr ),
             m_socket( nullptr ),
             m_ssl_socket( socket )
         {
@@ -243,25 +240,23 @@ namespace restbed
 #endif
             
 #ifdef _WIN32
-            std::string val = "1";
-            setsockopt( socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, val.c_str(), sizeof( val ) );
-            
-            // TCP_KEEPIDLE and TCP_KEEPINTVL are available since Win 10 version 1709
-            // TCP_KEEPCNT since Win 10 version 1703
+            DWORD val = 1;
+            setsockopt( socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, reinterpret_cast< const char* >( &val ), sizeof( val ) );
+
 #ifdef TCP_KEEPIDLE
-            std::string start_str = std::to_string( start );
+            DWORD start_val = start;
             setsockopt( socket.native_handle(), IPPROTO_TCP, TCP_KEEPIDLE,
-                        start_str.c_str(), sizeof( start_str ) );
+                        reinterpret_cast< const char* >( &start_val ), sizeof( start_val ) );
 #endif
 #ifdef TCP_KEEPINTVL
-            std::string interval_str = std::to_string( interval );
+            DWORD interval_val = interval;
             setsockopt( socket.native_handle(), IPPROTO_TCP, TCP_KEEPINTVL,
-                        interval_str.c_str(), sizeof( interval_str ) );
+                        reinterpret_cast< const char* >( &interval_val ), sizeof( interval_val ) );
 #endif
 #ifdef TCP_KEEPCNT
-            std::string cnt_str = std::to_string( cnt );
+            DWORD cnt_val = cnt;
             setsockopt( socket.native_handle(), IPPROTO_TCP, TCP_KEEPCNT,
-                        cnt_str.c_str(), sizeof( cnt_str ) );
+                        reinterpret_cast< const char* >( &cnt_val ), sizeof( cnt_val ) );
 #endif
 #else
             uint32_t val = 1;
@@ -287,7 +282,6 @@ namespace restbed
             m_io_context( context ),
             m_timer( make_shared< asio::steady_timer >( m_io_context ) ),
             m_strand( make_shared< asio::strand< asio::io_context::executor_type > > ( asio::make_strand( m_io_context ) ) ),
-            m_resolver( nullptr ),
             m_socket( nullptr )
 #ifdef BUILD_SSL
             , m_ssl_socket( nullptr )
@@ -295,7 +289,7 @@ namespace restbed
         {
             return;
         }
-        
+
         void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
         {
             if ( error or socket == nullptr or socket->m_timer->expiry( ) > steady_clock::now( ) )

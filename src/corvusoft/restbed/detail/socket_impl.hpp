@@ -169,9 +169,7 @@ namespace restbed
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
                 std::shared_ptr< asio::strand< asio::io_context::executor_type > > m_strand;
-                
-                std::shared_ptr< asio::ip::tcp::resolver > m_resolver;
-                
+
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
                 
 #ifdef BUILD_SSL
