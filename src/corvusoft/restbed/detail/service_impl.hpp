@@ -51,6 +51,7 @@ namespace restbed
     namespace detail
     {
         //Forward Declarations
+        class SocketImpl;
         class WebSocketManagerImpl;
         
         class ServiceImpl
@@ -100,6 +101,8 @@ namespace restbed
                 void router( const std::shared_ptr< Session > session ) const;
                 
                 void create_session( const std::shared_ptr< asio::ip::tcp::socket >& socket, const std::error_code& error ) const;
+
+                void start_session( const std::shared_ptr< SocketImpl >& connection ) const;
                 
                 void extract_path_parameters( const std::string& sanitised_path, const std::shared_ptr< const Request >& request ) const;
                 

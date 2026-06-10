@@ -256,26 +256,7 @@ namespace restbed
                         return;
                     }
                     
-                    auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_logger );
-                    connection->set_timeout( m_settings->get_connection_timeout( ) );
-                    
-                    if ( m_settings->get_keep_alive() )
-                    {
-                        connection->set_keep_alive( m_settings->get_keep_alive_start(),
-                                                    m_settings->get_keep_alive_interval(),
-                                                    m_settings->get_keep_alive_cnt() );
-                    }
-                    
-                    auto session = make_shared< Session >( );
-                    session->m_pimpl->m_settings = m_settings;
-                    session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
-                    session->m_pimpl->m_error_handler = m_error_handler;
-                    session->m_pimpl->m_request = make_shared< Request >( );
-                    session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                    session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
-                    session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                    session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
-                    session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
+                    start_session( make_shared< SocketImpl >( *m_io_context, socket, m_logger ) );
                 } );
             }
             else
@@ -316,26 +297,7 @@ namespace restbed
         {
             if ( not error )
             {
-                auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_settings->get_ipc_path( ), m_logger );
-                connection->set_timeout( m_settings->get_connection_timeout( ) );
-                
-                if ( m_settings->get_keep_alive() )
-                {
-                    connection->set_keep_alive( m_settings->get_keep_alive_start(),
-                                                m_settings->get_keep_alive_interval(),
-                                                m_settings->get_keep_alive_cnt() );
-                }
-                
-                auto session = make_shared< Session >( );
-                session->m_pimpl->m_settings = m_settings;
-                session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
-                session->m_pimpl->m_error_handler = m_error_handler;
-                session->m_pimpl->m_request = make_shared< Request >( );
-                session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
-                session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
-                session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
+                start_session( make_shared< SocketImpl >( *m_io_context, socket, m_settings->get_ipc_path( ), m_logger ) );
             }
             else
             {
@@ -343,10 +305,10 @@ namespace restbed
                 {
                     socket->close( );
                 }
-                
+
                 log( Logger::WARNING, std::format( "Failed to create session, '{}'.", error.message( ) ) );
             }
-            
+
             ipc_listen( );
         }
 #endif
@@ -529,30 +491,34 @@ namespace restbed
             }
         }
         
+        void ServiceImpl::start_session( const shared_ptr< SocketImpl >& connection ) const
+        {
+            connection->set_timeout( m_settings->get_connection_timeout( ) );
+
+            if ( m_settings->get_keep_alive() )
+            {
+                connection->set_keep_alive( m_settings->get_keep_alive_start(),
+                                            m_settings->get_keep_alive_interval(),
+                                            m_settings->get_keep_alive_cnt() );
+            }
+
+            auto session = make_shared< Session >( );
+            session->m_pimpl->m_settings = m_settings;
+            session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
+            session->m_pimpl->m_error_handler = m_error_handler;
+            session->m_pimpl->m_request = make_shared< Request >( );
+            session->m_pimpl->m_request->m_pimpl->m_socket = connection;
+            session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
+            session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
+            session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
+            session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
+        }
+
         void ServiceImpl::create_session( const shared_ptr< tcp::socket >& socket, const error_code& error ) const
         {
             if ( not error )
             {
-                auto connection = make_shared< SocketImpl >( *m_io_context, socket, m_logger );
-                connection->set_timeout( m_settings->get_connection_timeout( ) );
-                
-                if ( m_settings->get_keep_alive() )
-                {
-                    connection->set_keep_alive( m_settings->get_keep_alive_start(),
-                                                m_settings->get_keep_alive_interval(),
-                                                m_settings->get_keep_alive_cnt() );
-                }
-                
-                auto session = make_shared< Session >( );
-                session->m_pimpl->m_settings = m_settings;
-                session->m_pimpl->m_web_socket_manager = m_web_socket_manager;
-                session->m_pimpl->m_error_handler = m_error_handler;
-                session->m_pimpl->m_request = make_shared< Request >( );
-                session->m_pimpl->m_request->m_pimpl->m_socket = connection;
-                session->m_pimpl->m_request->m_pimpl->m_socket->m_error_handler = m_error_handler;
-                session->m_pimpl->m_request->m_pimpl->m_buffer = make_shared< asio::streambuf >( );
-                session->m_pimpl->m_keep_alive_callback = bind( &ServiceImpl::parse_request, this, _1, _2, _3 );
-                session->m_pimpl->m_request->m_pimpl->m_socket->start_read( session->m_pimpl->m_request->m_pimpl->m_buffer, "\r\n\r\n", bind( &ServiceImpl::parse_request, this, _1, _2, session ) );
+                start_session( make_shared< SocketImpl >( *m_io_context, socket, m_logger ) );
             }
             else
             {
