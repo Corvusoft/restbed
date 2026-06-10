@@ -24,9 +24,7 @@ using std::get;
 using std::bind;
 using std::size_t;
 using std::string;
-using std::promise;
 using std::function;
-using std::to_string;
 using std::error_code;
 using std::shared_ptr;
 using std::make_shared;
@@ -164,7 +162,6 @@ namespace restbed
         shared_ptr< IPCSocketImpl > IPCSocketImpl::shared_from_this( void )
         {
             return std::dynamic_pointer_cast< IPCSocketImpl >( SocketImpl::shared_from_this( ) );
-            //return shared_ptr< IPCSocketImpl >( this ); //test for circular reference and memory leak.
         }
         
         void IPCSocketImpl::connection_timeout_handler( const shared_ptr< IPCSocketImpl > socket, const error_code& error )
