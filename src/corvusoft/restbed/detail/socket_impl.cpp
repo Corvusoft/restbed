@@ -195,6 +195,28 @@ namespace restbed
             }, asio::get_associated_allocator( m_strand ) );
         }
 
+        asio::basic_socket< tcp >& SocketImpl::tcp_layer( void )
+        {
+#ifdef BUILD_SSL
+
+            if ( m_socket == nullptr )
+            {
+                return m_ssl_socket->lowest_layer( );
+            }
+
+#endif
+            return *m_socket;
+        }
+
+        string SocketImpl::format_endpoint( const tcp::endpoint& endpoint )
+        {
+            const auto address = endpoint.address( );
+            auto result = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
+            result += ::to_string( endpoint.port( ) );
+
+            return result;
+        }
+
         string SocketImpl::get_local_endpoint( void )
         {
 #ifdef BUILD_IPC
@@ -206,32 +228,14 @@ namespace restbed
 
 #endif
             error_code error;
-            tcp::endpoint endpoint;
-#ifdef BUILD_SSL
-
-            if ( m_socket not_eq nullptr )
-            {
-#endif
-                endpoint = m_socket->local_endpoint( error );
-#ifdef BUILD_SSL
-            }
-            else
-            {
-                endpoint = m_ssl_socket->lowest_layer( ).local_endpoint( error );
-            }
-
-#endif
+            const auto endpoint = tcp_layer( ).local_endpoint( error );
 
             if ( error )
             {
                 m_is_open = false;
             }
 
-            auto address = endpoint.address( );
-            auto local = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
-            local += ::to_string( endpoint.port( ) );
-
-            return local;
+            return format_endpoint( endpoint );
         }
 
         string SocketImpl::get_remote_endpoint( void )
@@ -245,32 +249,14 @@ namespace restbed
 
 #endif
             error_code error;
-            tcp::endpoint endpoint;
-#ifdef BUILD_SSL
-
-            if ( m_socket not_eq nullptr )
-            {
-#endif
-                endpoint = m_socket->remote_endpoint( error );
-#ifdef BUILD_SSL
-            }
-            else
-            {
-                endpoint = m_ssl_socket->lowest_layer( ).remote_endpoint( error );
-            }
-
-#endif
+            const auto endpoint = tcp_layer( ).remote_endpoint( error );
 
             if ( error )
             {
                 m_is_open = false;
             }
 
-            auto address = endpoint.address( );
-            auto remote = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
-            remote += ::to_string( endpoint.port( ) );
-
-            return remote;
+            return format_endpoint( endpoint );
         }
 
         void SocketImpl::set_timeout( const milliseconds& value )
@@ -292,11 +278,7 @@ namespace restbed
             ( void ) start;
             ( void ) interval;
 
-#ifdef BUILD_SSL
-            auto& socket = ( m_socket not_eq nullptr ) ? *m_socket : m_ssl_socket->lowest_layer( );
-#else
-            auto& socket = *m_socket;
-#endif
+            auto& socket = tcp_layer( );
 
 #ifdef _WIN32
             DWORD val = 1;

@@ -164,6 +164,10 @@ namespace restbed
 #endif
                 }
 
+                asio::basic_socket< asio::ip::tcp >& tcp_layer( void );
+
+                static std::string format_endpoint( const asio::ip::tcp::endpoint& endpoint );
+
                 void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
 
                 void write( void );
