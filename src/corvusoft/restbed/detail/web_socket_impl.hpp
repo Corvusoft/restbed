@@ -27,7 +27,8 @@ namespace restbed
 {
     //Forward Declarations
     class WebSocket;
-    
+    class WebSocketMessage;
+
     namespace detail
     {
         //Forward Declarations

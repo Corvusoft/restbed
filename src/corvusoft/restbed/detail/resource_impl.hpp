@@ -7,8 +7,9 @@
 //System Includes
 #include <map>
 #include <set>
+#include <memory>
 #include <string>
-#include <vector>
+#include <exception>
 #include <functional>
 
 //Project Includes
