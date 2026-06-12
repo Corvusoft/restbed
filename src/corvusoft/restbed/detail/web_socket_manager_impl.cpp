@@ -229,25 +229,26 @@ namespace restbed
             
             if ( mask_flag )
             {
-                auto masking_key = message->get_mask( );
-                
-                uint8_t mask[ 4 ] = { };
-                mask[ 0 ] =   masking_key         & 0xFF;
-                mask[ 1 ] = ( masking_key >>  8 ) & 0xFF;
-                mask[ 2 ] = ( masking_key >> 16 ) & 0xFF;
-                mask[ 3 ] = ( masking_key >> 24 ) & 0xFF;
-                
-                frame.push_back( std::byte{mask[ 3 ] } );
-                frame.push_back( std::byte{mask[ 2 ] } );
-                frame.push_back( std::byte{mask[ 1 ] } );
-                frame.push_back( std::byte{mask[ 0 ] } );
-                
+                const auto masking_key = message->get_mask( );
+                const uint8_t mask[ 4 ] =
+                {
+                    static_cast<uint8_t>( ( masking_key >> 24 ) & 0xFF ),
+                    static_cast<uint8_t>( ( masking_key >> 16 ) & 0xFF ),
+                    static_cast<uint8_t>( ( masking_key >>  8 ) & 0xFF ),
+                    static_cast<uint8_t>(   masking_key         & 0xFF )
+                };
+
+                frame.push_back( std::byte{ mask[ 0 ] } );
+                frame.push_back( std::byte{ mask[ 1 ] } );
+                frame.push_back( std::byte{ mask[ 2 ] } );
+                frame.push_back( std::byte{ mask[ 3 ] } );
+
                 auto data = message->get_data( );
-                
+
                 for ( size_t index = 0; index < data.size( ); index++ )
                 {
                     auto dat = data.at( index );
-                    dat ^= std::byte{mask[ index % 4 ]};
+                    dat ^= std::byte{ mask[ index % 4 ] };
                     frame.push_back( dat );
                 }
             }
