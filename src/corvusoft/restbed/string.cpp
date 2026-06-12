@@ -98,17 +98,12 @@ namespace restbed
         {
             result += value.first + pair_delimiter + value.second + delimiter;
         }
-        
+
         if ( not result.empty( ) )
         {
-            const size_t position = result.find_last_not_of( delimiter );
-            
-            if ( string::npos not_eq position )
-            {
-                result = result.substr( 0, position + 1 );
-            }
+            result.erase( result.size( ) - delimiter.size( ) );
         }
-        
+
         return result;
     }
     
