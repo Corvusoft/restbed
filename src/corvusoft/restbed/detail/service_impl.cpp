@@ -670,7 +670,7 @@ namespace restbed
         {
             double version = 0.0;
             const char* const first = value.data( );
-            const char* const last = first + value.size( );.
+            const char* const last = first + value.size( );
             const auto result = std::from_chars( first, last, version );
 
             if ( result.ec not_eq std::errc( ) or result.ptr not_eq last )

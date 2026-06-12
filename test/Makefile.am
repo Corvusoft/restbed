@@ -50,6 +50,7 @@ check_PROGRAMS = \
     web_socket_extended_length_read_regression_suite \
     web_socket_malformed_frame_regression_suite \
     web_socket_extended_length_boundary_regression_suite \
+    web_socket_error_handler_once_regression_suite \
     parse_parameter_strictness_regression_suite \
     service_http_version_locale_regression_suite
 
@@ -115,6 +116,8 @@ web_socket_malformed_frame_regression_suite_SOURCES                    = web_soc
 web_socket_malformed_frame_regression_suite_LDFLAGS                    = -static
 
 web_socket_extended_length_boundary_regression_suite_SOURCES           = web_socket_extended_length_boundary_regression_suite.cpp
+
+web_socket_error_handler_once_regression_suite_SOURCES                 = web_socket_error_handler_once_regression_suite.cpp
 
 parse_parameter_strictness_regression_suite_SOURCES                    = parse_parameter_strictness_regression_suite.cpp
 

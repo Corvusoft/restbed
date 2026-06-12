@@ -191,6 +191,7 @@ namespace restbed
         {
             if ( m_pimpl->m_error_handler_invoked == false )
             {
+                m_pimpl->m_error_handler_invoked = true;
                 value( socket, code );
             }
         };
