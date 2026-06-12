@@ -1,13 +1,3 @@
-/*
- * Copyright 2013-2026, Corvusoft Ltd, All Rights Reserved.
- *
- * Regression: a malformed/truncated WebSocket frame makes
- * WebSocketManagerImpl::parse() return nullptr. WebSocketImpl must route that
- * to the error handler rather than dereferencing the null message
- * (parse_length_and_mask) or forwarding it to the message handler and
- * re-listening on the socket (parse_payload). The unguarded code crashed.
- */
-
 //System Includes
 #include <memory>
 #include <system_error>

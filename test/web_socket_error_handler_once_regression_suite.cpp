@@ -1,14 +1,3 @@
-/*
- * Copyright 2013-2026, Corvusoft Ltd, All Rights Reserved.
- *
- * Regression: WebSocket::set_error_handler wraps the user callback in a guard
- * that should deliver at most one error per socket -- mirroring SessionImpl,
- * whose m_error_handler_invoked flag latches to true on first use. The
- * WebSocket equivalent read the flag but never set it, so the guard was inert
- * and the user's error handler could fire repeatedly (e.g. a read error
- * followed by a send error, or once per malformed frame).
- */
-
 //System Includes
 #include <memory>
 #include <system_error>

@@ -1,16 +1,3 @@
-/*
- * Copyright 2013-2026, Corvusoft Ltd, All Rights Reserved.
- *
- * Regression: the HTTP request-line version was parsed with std::stod wrapped
- * in a process-global setlocale( LC_NUMERIC, "C" ) override -- a data race on
- * the io_context worker pool. ServiceImpl::parse_http_version now uses
- * std::from_chars, which is locale-independent and touches no global state.
- *
- * Under a comma-decimal locale a locale-sensitive parser reads "1.1" as 1.0;
- * from_chars still yields 1.1. (If the locale below is unavailable the process
- * stays in "C" and the assertions still hold.)
- */
-
 //System Includes
 #include <clocale>
 

@@ -1,7 +1,3 @@
-/*
- * Copyright 2013-2026, Corvusoft Ltd, All Rights Reserved.
- */
-
 //System Includes
 #include <cstdint>
 
