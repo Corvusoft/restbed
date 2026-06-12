@@ -372,12 +372,12 @@ namespace restbed
             
             for ( const auto& path : paths )
             {
-                if ( m_resource_routes.count( path ) )
+                if ( m_resource_routes.count( sanitise_path( path ) ) )
                 {
                     return false;
                 }
             }
-            
+
             return true;
         }
         

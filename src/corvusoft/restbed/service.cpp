@@ -253,8 +253,11 @@ namespace restbed
         
         for ( const auto& path : resource->m_pimpl->m_paths )
         {
-            if ( m_pimpl->m_resource_routes.erase( path ) )
+            const string sanitised_path = m_pimpl->sanitise_path( path );
+
+            if ( m_pimpl->m_resource_routes.erase( sanitised_path ) )
             {
+                m_pimpl->m_resource_paths.erase( sanitised_path );
                 m_pimpl->log( Logger::INFO, std::format( "Suppressed resource route '{}'.", path ) );
             }
             else
