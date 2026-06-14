@@ -151,18 +151,25 @@ namespace restbed
         
         void SessionImpl::transmit( const Response& response, const function< void ( const error_code&, size_t ) >& callback ) const
         {
+            const auto merge = []( multimap< string, string >& target, const multimap< string, string >& source )
+            {
+                for ( const auto& field : source )
+                {
+                    Common::remove_parameters( field.first, target );
+                }
+
+                target.insert( source.begin( ), source.end( ) );
+            };
+
             auto hdrs = m_settings->get_default_headers( );
-            
+
             if ( m_resource not_eq nullptr )
             {
-                const auto m_resource_headers = m_resource->m_pimpl->m_default_headers;
-                hdrs.insert( m_resource_headers.begin( ), m_resource_headers.end( ) );
+                merge( hdrs, m_resource->m_pimpl->m_default_headers );
             }
-            
-            hdrs.insert( m_headers.begin( ), m_headers.end( ) );
-            
-            auto response_headers = response.get_headers( );
-            hdrs.insert( response_headers.begin( ), response_headers.end( ) );
+
+            merge( hdrs, m_headers );
+            merge( hdrs, response.get_headers( ) );
             
             auto payload = make_shared< Response >( );
             payload->set_headers( hdrs );
