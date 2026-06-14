@@ -6,6 +6,7 @@
 
 //System Includes
 #include <map>
+#include <mutex>
 #include <memory>
 #include <functional>
 
@@ -104,7 +105,9 @@ namespace restbed
                 
                 //Properties
                 std::shared_ptr< Logger > m_logger;
-                
+
+                std::mutex m_socket_lock;
+
                 std::map< std::string, std::shared_ptr< WebSocket > > m_sockets;
         };
     }

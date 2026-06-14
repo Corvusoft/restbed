@@ -4,6 +4,7 @@
 
 //System Includes
 #include <tuple>
+#include <mutex>
 #include <string>
 #include <random>
 #include <ciso646>
@@ -47,6 +48,7 @@ namespace restbed
     namespace detail
     {
         WebSocketManagerImpl::WebSocketManagerImpl( void ) : m_logger( nullptr ),
+            m_socket_lock( ),
             m_sockets( )
         {
             return;
@@ -286,14 +288,18 @@ namespace restbed
             socket->set_logger( m_logger );
             socket->set_socket( session->m_pimpl->m_request->m_pimpl->m_socket );
             socket->m_pimpl->m_manager = shared_from_this( );
-            
-            m_sockets.insert( make_pair( key, socket ) );
-            
+
+            {
+                std::lock_guard< std::mutex > guard( m_socket_lock );
+                m_sockets.insert( make_pair( key, socket ) );
+            }
+
             return socket;
         }
         
         shared_ptr< WebSocket > WebSocketManagerImpl::read( const string& key )
         {
+            std::lock_guard< std::mutex > guard( m_socket_lock );
             auto socket = m_sockets.find( key );
             return ( socket not_eq m_sockets.end( ) ) ? socket->second : nullptr;
         }
@@ -309,7 +315,8 @@ namespace restbed
             {
                 return;
             }
-            
+
+            std::lock_guard< std::mutex > guard( m_socket_lock );
             m_sockets.erase( socket->get_key( ) );
         }
         
