@@ -42,7 +42,10 @@ namespace restbed
     {
         try
         {
-            close( );
+            if ( m_pimpl->m_socket not_eq nullptr )
+            {
+                m_pimpl->m_socket->close( );
+            }
         }
         catch ( ... )
         {
