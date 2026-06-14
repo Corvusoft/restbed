@@ -91,22 +91,23 @@ namespace restbed
     void WebSocket::send( const shared_ptr< WebSocketMessage > message, const function< void ( const shared_ptr< WebSocket > ) > callback )
     {
         const auto data = m_pimpl->m_manager->compose( message );
-        
-        m_pimpl->m_socket->start_write( data, [ this, callback ]( const error_code & code, size_t )
+
+        auto self = shared_from_this( );
+        m_pimpl->m_socket->start_write( data, [ self, callback ]( const error_code & code, size_t )
         {
             if ( code )
             {
-                if ( m_pimpl->m_error_handler not_eq nullptr  )
+                if ( self->m_pimpl->m_error_handler not_eq nullptr  )
                 {
-                    m_pimpl->m_error_handler( shared_from_this( ), code );
+                    self->m_pimpl->m_error_handler( self, code );
                 }
-                
+
                 return;
             }
-            
+
             if ( callback not_eq nullptr )
             {
-                callback( shared_from_this( ) );
+                callback( self );
             }
         } );
     }
