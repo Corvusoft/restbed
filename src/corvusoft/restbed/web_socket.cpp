@@ -68,9 +68,16 @@ namespace restbed
         {
             m_pimpl->m_close_handler( socket );
         }
-        
-        m_pimpl->m_manager->destroy( socket );
-        m_pimpl->m_socket->close( );
+
+        if ( m_pimpl->m_manager not_eq nullptr )
+        {
+            m_pimpl->m_manager->destroy( socket );
+        }
+
+        if ( m_pimpl->m_socket not_eq nullptr )
+        {
+            m_pimpl->m_socket->close( );
+        }
     }
     
     void WebSocket::send( const Bytes& body, const function< void ( const shared_ptr< WebSocket > ) > callback )
