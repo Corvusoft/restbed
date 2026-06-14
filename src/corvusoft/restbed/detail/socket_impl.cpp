@@ -362,11 +362,11 @@ namespace restbed
                         {
                             ++retries;
                             buffer.erase( buffer.begin(), buffer.begin() + length );
+                            write();
+                            return;
                         }
-                        else
-                        {
-                            m_pending_writes.pop();
-                        }
+
+                        m_pending_writes.pop();
 
                         if ( error not_eq asio::error::operation_aborted )
                         {
