@@ -87,6 +87,7 @@ namespace restbed
         if ( callback not_eq nullptr )
         {
             m_pimpl->m_methods.insert( method );
+            m_pimpl->m_method_handlers.erase( method );
             m_pimpl->m_method_handlers.insert( make_pair( method, callback ) );
         }
     }
