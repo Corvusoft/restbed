@@ -65,6 +65,7 @@ check_PROGRAMS = \
     web_socket_is_closed_without_socket_regression_suite \
     web_socket_close_without_socket_regression_suite \
     web_socket_destructor_wind_down_warning_regression_suite \
+    web_socket_message_to_bytes_regression_suite \
     string_join_trailing_delimiter_regression_suite \
     parse_parameter_strictness_regression_suite \
     service_http_version_locale_regression_suite
@@ -164,6 +165,8 @@ web_socket_is_closed_without_socket_regression_suite_SOURCES           = web_soc
 web_socket_close_without_socket_regression_suite_SOURCES               = web_socket_close_without_socket_regression_suite.cpp
 
 web_socket_destructor_wind_down_warning_regression_suite_SOURCES       = web_socket_destructor_wind_down_warning_regression_suite.cpp
+
+web_socket_message_to_bytes_regression_suite_SOURCES                   = web_socket_message_to_bytes_regression_suite.cpp
 
 string_join_trailing_delimiter_regression_suite_SOURCES                = string_join_trailing_delimiter_regression_suite.cpp
 

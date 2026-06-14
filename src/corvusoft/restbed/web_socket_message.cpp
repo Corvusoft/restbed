@@ -76,7 +76,91 @@ namespace restbed
     {
         return;
     }
-    
+
+    Bytes WebSocketMessage::to_bytes( void ) const
+    {
+        std::byte datum = ( m_pimpl->m_final_frame_flag ) ? std::byte{ 0x80 } : std::byte{ 0x00 };
+
+        if ( m_pimpl->m_reserved_flag_one )
+        {
+            datum |= std::byte{ 0x40 };
+        }
+
+        if ( m_pimpl->m_reserved_flag_two )
+        {
+            datum |= std::byte{ 0x20 };
+        }
+
+        if ( m_pimpl->m_reserved_flag_three )
+        {
+            datum |= std::byte{ 0x10 };
+        }
+
+        datum |= static_cast< std::byte >( m_pimpl->m_opcode & 0x0F );
+
+        Bytes frame = { datum };
+
+        const auto length = m_pimpl->m_length;
+        const auto mask_flag = m_pimpl->m_mask_flag;
+
+        if ( length == 126 )
+        {
+            const auto extended_length = m_pimpl->m_extended_length;
+            frame.push_back( static_cast< std::byte >( ( mask_flag ) ? 254 : 126 ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 8 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >(  extended_length        & 0xFF ) );
+        }
+        else if ( length == 127 )
+        {
+            const auto extended_length = m_pimpl->m_extended_length;
+            frame.push_back( static_cast< std::byte >( ( mask_flag ) ? 255 : 127 ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 56 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 48 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 40 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 32 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 24 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 16 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >>  8 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >(  extended_length         & 0xFF ) );
+        }
+        else
+        {
+            uint8_t code = length;
+            code = ( mask_flag ) ? ( code | 0x80 ) : ( code & ~0x80 );
+            frame.push_back( std::byte{ code } );
+        }
+
+        if ( mask_flag )
+        {
+            const auto masking_key = m_pimpl->m_mask;
+            const uint8_t mask[ 4 ] =
+            {
+                static_cast< uint8_t >( ( masking_key >> 24 ) & 0xFF ),
+                static_cast< uint8_t >( ( masking_key >> 16 ) & 0xFF ),
+                static_cast< uint8_t >( ( masking_key >>  8 ) & 0xFF ),
+                static_cast< uint8_t >(   masking_key         & 0xFF )
+            };
+
+            frame.push_back( std::byte{ mask[ 0 ] } );
+            frame.push_back( std::byte{ mask[ 1 ] } );
+            frame.push_back( std::byte{ mask[ 2 ] } );
+            frame.push_back( std::byte{ mask[ 3 ] } );
+
+            for ( size_t index = 0; index < m_pimpl->m_data.size( ); index++ )
+            {
+                auto dat = m_pimpl->m_data[ index ];
+                dat ^= std::byte{ mask[ index % 4 ] };
+                frame.push_back( dat );
+            }
+        }
+        else
+        {
+            frame.insert( frame.end( ), m_pimpl->m_data.begin( ), m_pimpl->m_data.end( ) );
+        }
+
+        return frame;
+    }
+
     Bytes WebSocketMessage::get_data( void ) const
     {
         return m_pimpl->m_data;
