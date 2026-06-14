@@ -406,14 +406,18 @@ namespace restbed
             auto data = make_shared< asio::streambuf >( );
             with_active_stream( [ this, self = shared_from_this(), data, length, success, failure ]( auto & stream )
             {
-                asio::async_read( stream, *data, asio::transfer_exactly( length ), [ this, self, data, success, failure ]( const error_code code, const size_t length )
+                asio::async_read( stream, *data, asio::transfer_exactly( length ), asio::bind_executor( *m_strand, [ this, self, data, success, failure ]( const error_code code, const size_t length )
                 {
                     m_timer->cancel( );
 
                     if ( code )
                     {
                         m_is_open = false;
-                        failure( code );
+
+                        if ( code not_eq asio::error::operation_aborted )
+                        {
+                            failure( code );
+                        }
                     }
                     else
                     {
@@ -421,7 +425,7 @@ namespace restbed
                         asio::buffer_copy( asio::buffer( buf ), data->data( ) );
                         success( buf );
                     }
-                } );
+                } ) );
             } );
         }
 
