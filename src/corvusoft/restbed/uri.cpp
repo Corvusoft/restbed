@@ -194,7 +194,7 @@ namespace restbed
         for ( auto character : value )
         {
             const auto octet = static_cast<uint8_t>( character );
-
+            
             if ( unsafe_characters[ octet ] )
             {
                 encoded.push_back( '%' );
@@ -244,16 +244,16 @@ namespace restbed
         {
             return 0;
         }
-
+        
         try
         {
             const auto value = stoi( port );
-
+            
             if ( value < 0 or value > 65535 )
             {
                 return 0;
             }
-
+            
             return static_cast< uint16_t >( value );
         }
         catch ( const std::out_of_range& )

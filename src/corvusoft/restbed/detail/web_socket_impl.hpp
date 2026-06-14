@@ -28,7 +28,7 @@ namespace restbed
     //Forward Declarations
     class WebSocket;
     class WebSocketMessage;
-
+    
     namespace detail
     {
         //Forward Declarations
@@ -53,7 +53,7 @@ namespace restbed
                 void listen( const std::shared_ptr< WebSocket > socket );
                 
                 static std::size_t frame_header_remainder( const std::uint8_t length_indicator, const bool masked );
-
+                
                 void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
                 
                 void parse_payload( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );

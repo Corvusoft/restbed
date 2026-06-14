@@ -105,49 +105,49 @@ namespace restbed
             return;
         }
 #endif
-
+        
         void SocketImpl::close( void )
         {
             m_is_open = false;
-
+            
             if ( m_timer not_eq nullptr )
             {
                 m_timer->cancel( );
             }
-
+            
             if ( m_socket not_eq nullptr )
             {
                 m_socket->close( );
             }
-
+            
 #ifdef BUILD_SSL
-
+            
             if ( m_ssl_socket not_eq nullptr )
             {
                 m_ssl_socket->lowest_layer( ).close( );
             }
-
+            
 #endif
 #ifdef BUILD_IPC
-
+            
             if ( m_ipc_socket not_eq nullptr )
             {
                 m_ipc_socket->close( );
             }
-
+            
 #endif
         }
-
+        
         bool SocketImpl::is_open( void ) const
         {
             return m_is_open;
         }
-
+        
         bool SocketImpl::is_closed( void ) const
         {
             return not m_is_open;
         }
-
+        
         void SocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )
         {
             m_strand->post( [ this, self = shared_from_this( ), delay, callback ]
@@ -157,12 +157,12 @@ namespace restbed
                 m_timer->async_wait( asio::bind_executor( *m_strand, callback ) );
             }, asio::get_associated_allocator( m_strand ) );
         }
-
+        
         void SocketImpl::start_write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback )
         {
             m_strand->post( [this, self = shared_from_this(), data, callback] { write_helper( data, callback ); }, asio::get_associated_allocator( m_strand ) );
         }
-
+        
         void SocketImpl::start_read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
         {
             m_strand->post( [this, self = shared_from_this(), length, success, failure]
@@ -170,7 +170,7 @@ namespace restbed
                 read( length, success, failure );
             }, asio::get_associated_allocator( m_strand ) );
         }
-
+        
         void SocketImpl::start_read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_strand->post( [this, self = shared_from_this(), data, length, callback]
@@ -178,7 +178,7 @@ namespace restbed
                 read( data, length, callback );
             }, asio::get_associated_allocator( m_strand ) );
         }
-
+        
         void SocketImpl::start_read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_strand->post( [this, self = shared_from_this(), data, delimiter, callback]
@@ -186,96 +186,96 @@ namespace restbed
                 read( data, delimiter, callback );
             }, asio::get_associated_allocator( m_strand ) );
         }
-
+        
         asio::basic_socket< tcp >& SocketImpl::tcp_layer( void )
         {
 #ifdef BUILD_SSL
-
+        
             if ( m_socket == nullptr )
             {
                 return m_ssl_socket->lowest_layer( );
             }
-
+            
 #endif
             return *m_socket;
         }
-
+        
         string SocketImpl::format_endpoint( const tcp::endpoint& endpoint )
         {
             const auto address = endpoint.address( );
             auto result = address.is_v4( ) ? address.to_string( ) + ":" : "[" + address.to_string( ) + "]:";
             result += ::to_string( endpoint.port( ) );
-
+            
             return result;
         }
-
+        
         string SocketImpl::get_local_endpoint( void )
         {
 #ifdef BUILD_IPC
-
+        
             if ( m_ipc_socket not_eq nullptr )
             {
                 return m_path;
             }
-
+            
 #endif
             error_code error;
             const auto endpoint = tcp_layer( ).local_endpoint( error );
-
+            
             if ( error )
             {
                 m_is_open = false;
             }
-
+            
             return format_endpoint( endpoint );
         }
-
+        
         string SocketImpl::get_remote_endpoint( void )
         {
 #ifdef BUILD_IPC
-
+        
             if ( m_ipc_socket not_eq nullptr )
             {
                 return m_path;
             }
-
+            
 #endif
             error_code error;
             const auto endpoint = tcp_layer( ).remote_endpoint( error );
-
+            
             if ( error )
             {
                 m_is_open = false;
             }
-
+            
             return format_endpoint( endpoint );
         }
-
+        
         void SocketImpl::set_timeout( const milliseconds& value )
         {
             m_timeout = value;
         }
-
+        
         void SocketImpl::set_keep_alive( const uint32_t start, const uint32_t interval, const uint32_t cnt )
         {
 #ifdef BUILD_IPC
-
+        
             if ( m_ipc_socket not_eq nullptr )
             {
                 return;
             }
-
+            
 #endif
             ( void ) cnt;
             ( void ) start;
             ( void ) interval;
-
+            
             auto& socket = tcp_layer( );
-
+            
 #ifdef _WIN32
             DWORD val = 1;
             setsockopt( socket.native_handle(), SOL_SOCKET, SO_KEEPALIVE, reinterpret_cast< const char* >( &val ), sizeof( val ) );
-
+            
 #ifdef TCP_KEEPIDLE
             DWORD start_val = start;
             setsockopt( socket.native_handle(), IPPROTO_TCP, TCP_KEEPIDLE,
@@ -305,7 +305,7 @@ namespace restbed
 #endif
 #endif
         }
-
+        
         SocketImpl::SocketImpl( asio::io_context& context ) : m_error_handler( nullptr ),
             m_is_open( false ),
             m_pending_writes( ),
@@ -325,22 +325,22 @@ namespace restbed
         {
             return;
         }
-
+        
         void SocketImpl::connection_timeout_handler( const shared_ptr< SocketImpl > socket, const error_code& error )
         {
             if ( error or socket == nullptr or socket->m_timer->expiry( ) > steady_clock::now( ) )
             {
                 return;
             }
-
+            
             socket->close( );
-
+            
             if ( m_error_handler not_eq nullptr )
             {
                 m_error_handler( 408, runtime_error( "The socket timed out waiting for the request." ), nullptr );
             }
         }
-
+        
         void SocketImpl::write( void )
         {
             if ( m_is_open )
@@ -348,7 +348,7 @@ namespace restbed
                 m_timer->cancel( );
                 m_timer->expires_after( m_timeout );
                 m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
-
+                
                 with_active_stream( [ this, self = shared_from_this() ]( auto & stream )
                 {
                     asio::async_write( stream, asio::buffer( get<0>( m_pending_writes.front() ).data( ), get<0>( m_pending_writes.front() ).size( ) ), asio::bind_executor( *m_strand, [ this, self ]( const error_code & error, size_t length )
@@ -357,7 +357,7 @@ namespace restbed
                         auto callback = get<2>( m_pending_writes.front() );
                         auto& retries = get<1>( m_pending_writes.front() );
                         auto& buffer = get<0>( m_pending_writes.front() );
-
+                        
                         if ( length < buffer.size() &&  retries < MAX_WRITE_RETRIES &&  error not_eq asio::error::operation_aborted )
                         {
                             ++retries;
@@ -365,14 +365,14 @@ namespace restbed
                             write();
                             return;
                         }
-
+                        
                         m_pending_writes.pop();
-
+                        
                         if ( error not_eq asio::error::operation_aborted )
                         {
                             callback( error, length );
                         }
-
+                        
                         if ( !m_pending_writes.empty() )
                         {
                             write();
@@ -388,35 +388,35 @@ namespace restbed
                 }
             }
         }
-
+        
         void SocketImpl::write_helper( const Bytes& data, const function< void ( const error_code&, size_t ) >& callback )
         {
             const uint8_t retries = 0;
             m_pending_writes.push( make_tuple( data, retries, callback ) );
-
+            
             if ( m_pending_writes.size() == 1 )
             {
                 write();
             }
         }
-
+        
         void SocketImpl::read( const std::size_t length, const function< void ( const Bytes ) > success, const function< void ( const error_code ) > failure )
         {
             m_timer->cancel( );
             m_timer->expires_after( m_timeout );
             m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
-
+            
             auto data = make_shared< asio::streambuf >( );
             with_active_stream( [ this, self = shared_from_this(), data, length, success, failure ]( auto & stream )
             {
                 asio::async_read( stream, *data, asio::transfer_exactly( length ), asio::bind_executor( *m_strand, [ this, self, data, success, failure ]( const error_code code, const size_t length )
                 {
                     m_timer->cancel( );
-
+                    
                     if ( code )
                     {
                         m_is_open = false;
-
+                        
                         if ( code not_eq asio::error::operation_aborted )
                         {
                             failure( code );
@@ -431,24 +431,24 @@ namespace restbed
                 } ) );
             } );
         }
-
+        
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const size_t length, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );
             m_timer->expires_after( m_timeout );
             m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
-
+            
             with_active_stream( [ this, self = shared_from_this(), data, length, callback ]( auto & stream )
             {
                 asio::async_read( stream, *data, asio::transfer_at_least( length ), asio::bind_executor( *m_strand, [ this, self, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
-
+                    
                     if ( error )
                     {
                         m_is_open = false;
                     }
-
+                    
                     if ( error not_eq asio::error::operation_aborted )
                     {
                         callback( error, length );
@@ -456,24 +456,24 @@ namespace restbed
                 } ) );
             } );
         }
-
+        
         void SocketImpl::read( const shared_ptr< asio::streambuf >& data, const string& delimiter, const function< void ( const error_code&, size_t ) >& callback )
         {
             m_timer->cancel( );
             m_timer->expires_after( m_timeout );
             m_timer->async_wait( asio::bind_executor( *m_strand, bind( &SocketImpl::connection_timeout_handler, this, shared_from_this( ), _1 ) ) );
-
+            
             with_active_stream( [ this, self = shared_from_this(), data, delimiter, callback ]( auto & stream )
             {
                 asio::async_read_until( stream, *data, delimiter, asio::bind_executor( *m_strand, [ this, self, callback ]( const error_code & error, size_t length )
                 {
                     m_timer->cancel( );
-
+                    
                     if ( error )
                     {
                         m_is_open = false;
                     }
-
+                    
                     if ( error not_eq asio::error::operation_aborted )
                     {
                         callback( error, length );

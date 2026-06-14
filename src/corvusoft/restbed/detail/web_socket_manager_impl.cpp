@@ -97,10 +97,10 @@ namespace restbed
                 {
                     return nullptr;
                 }
-
+                
                 length  = static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 8;
                 length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) )     ;
-
+                
                 message->set_extended_length( length );
             }
             else if ( length == 127 )
@@ -110,7 +110,7 @@ namespace restbed
                 {
                     return nullptr;
                 }
-
+                
                 length  = static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 56;
                 length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 48;
                 length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 40;
@@ -119,10 +119,10 @@ namespace restbed
                 length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 16;
                 length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) <<  8;
                 length |= static_cast<uint64_t>( static_cast<uint8_t>( packet[ offset++ ] ) )      ;
-
+                
                 message->set_extended_length( length );
             }
-
+            
             if ( message->get_mask_flag( ) == true )
             {
                 // 4-byte masking key.
@@ -130,12 +130,12 @@ namespace restbed
                 {
                     return nullptr;
                 }
-
+                
                 uint32_t mask = static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) ) << 24;
                 mask |= static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) )         << 16;
                 mask |= static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) )         <<  8;
                 mask |= static_cast<uint32_t>( static_cast<uint8_t>( packet[ offset++ ] ) )              ;
-
+                
                 message->set_mask( mask );
             }
             
@@ -239,14 +239,14 @@ namespace restbed
                     static_cast<uint8_t>( ( masking_key >>  8 ) & 0xFF ),
                     static_cast<uint8_t>(   masking_key         & 0xFF )
                 };
-
+                
                 frame.push_back( std::byte{ mask[ 0 ] } );
                 frame.push_back( std::byte{ mask[ 1 ] } );
                 frame.push_back( std::byte{ mask[ 2 ] } );
                 frame.push_back( std::byte{ mask[ 3 ] } );
-
+                
                 auto data = message->get_data( );
-
+                
                 for ( size_t index = 0; index < data.size( ); index++ )
                 {
                     auto dat = data.at( index );
@@ -288,12 +288,12 @@ namespace restbed
             socket->set_logger( m_logger );
             socket->set_socket( session->m_pimpl->m_request->m_pimpl->m_socket );
             socket->m_pimpl->m_manager = shared_from_this( );
-
+            
             {
                 std::lock_guard< std::mutex > guard( m_socket_lock );
                 m_sockets.insert( make_pair( key, socket ) );
             }
-
+            
             return socket;
         }
         
@@ -315,7 +315,7 @@ namespace restbed
             {
                 return;
             }
-
+            
             std::lock_guard< std::mutex > guard( m_socket_lock );
             m_sockets.erase( socket->get_key( ) );
         }

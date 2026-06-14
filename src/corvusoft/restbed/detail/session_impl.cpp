@@ -212,7 +212,7 @@ namespace restbed
                                      value->get_version( ),
                                      value->get_status_code( ),
                                      value->get_status_message( ) );
-
+                                     
             auto headers = value->get_headers( );
             
             if ( not headers.empty( ) )

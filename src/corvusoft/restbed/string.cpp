@@ -98,12 +98,12 @@ namespace restbed
         {
             result += value.first + pair_delimiter + value.second + delimiter;
         }
-
+        
         if ( not result.empty( ) )
         {
             result.erase( result.size( ) - delimiter.size( ) );
         }
-
+        
         return result;
     }
     

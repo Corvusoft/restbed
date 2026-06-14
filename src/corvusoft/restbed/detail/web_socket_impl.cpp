@@ -74,7 +74,7 @@ namespace restbed
         std::size_t WebSocketImpl::frame_header_remainder( const std::uint8_t length_indicator, const bool masked )
         {
             std::size_t length = 0;
-
+            
             if ( length_indicator == 126 )
             {
                 // 16-bit extended length.
@@ -85,31 +85,31 @@ namespace restbed
                 // 64-bit extended length.
                 length = 8;
             }
-
+            
             if ( masked )
             {
                 length += 4;
             }
-
+            
             return length;
         }
-
+        
         void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
         {
             auto message = m_manager->parse( data );
-
+            
             if ( message == nullptr )
             {
                 if ( m_error_handler not_eq nullptr )
                 {
                     m_error_handler( socket, make_error_code( errc::bad_message ) );
                 }
-
+                
                 return;
             }
-
+            
             const auto length = frame_header_remainder( message->get_length( ), message->get_mask_flag( ) );
-
+            
             m_socket->start_read( length, bind( &WebSocketImpl::parse_length_and_mask, this, _1, data, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
@@ -123,22 +123,22 @@ namespace restbed
         {
             packet.insert( packet.end( ), data.begin( ), data.end( ) );
             auto message = m_manager->parse( packet );
-
+            
             if ( message == nullptr )
             {
                 if ( m_error_handler not_eq nullptr )
                 {
                     m_error_handler( socket, make_error_code( errc::bad_message ) );
                 }
-
+                
                 return;
             }
-
+            
             if ( m_message_handler not_eq nullptr )
             {
                 m_message_handler( socket, message );
             }
-
+            
             listen( socket );
         }
         
@@ -146,17 +146,17 @@ namespace restbed
         {
             packet.insert( packet.end( ), data.begin( ), data.end( ) );
             auto message = m_manager->parse( packet );
-
+            
             if ( message == nullptr )
             {
                 if ( m_error_handler not_eq nullptr )
                 {
                     m_error_handler( socket, make_error_code( errc::bad_message ) );
                 }
-
+                
                 return;
             }
-
+            
             auto length = message->get_extended_length( );
             
             if ( length == 0 )

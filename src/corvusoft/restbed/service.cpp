@@ -254,7 +254,7 @@ namespace restbed
         for ( const auto& path : resource->m_pimpl->m_paths )
         {
             const string sanitised_path = m_pimpl->sanitise_path( path );
-
+            
             if ( m_pimpl->m_resource_routes.erase( sanitised_path ) )
             {
                 m_pimpl->m_resource_paths.erase( sanitised_path );

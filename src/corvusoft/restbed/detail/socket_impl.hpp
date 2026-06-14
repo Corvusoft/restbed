@@ -139,41 +139,41 @@ namespace restbed
                         operation( *m_socket );
                         return;
                     }
-
+                    
 #ifdef BUILD_SSL
-
+                    
                     if ( m_ssl_socket not_eq nullptr )
                     {
                         operation( *m_ssl_socket );
                         return;
                     }
-
+                    
 #endif
 #ifdef BUILD_IPC
-
+                    
                     if ( m_ipc_socket not_eq nullptr )
                     {
                         operation( *m_ipc_socket );
                         return;
                     }
-
+                    
 #endif
                 }
-
+                
                 asio::basic_socket< asio::ip::tcp >& tcp_layer( void );
-
+                
                 static std::string format_endpoint( const asio::ip::tcp::endpoint& endpoint );
-
+                
                 void connection_timeout_handler( const std::shared_ptr< SocketImpl > socket, const std::error_code& error );
-
+                
                 void write( void );
-
+                
                 void write_helper( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
                 void read( const std::size_t length, const std::function< void ( const Bytes ) > success, const std::function< void ( const std::error_code ) > failure );
-
+                
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::size_t length, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
-
+                
                 void read( const std::shared_ptr< asio::streambuf >& data, const std::string& delimiter, const std::function< void ( const std::error_code&, std::size_t ) >& callback );
                 
                 //Getters
@@ -199,15 +199,15 @@ namespace restbed
                 std::shared_ptr< asio::steady_timer > m_timer;
                 
                 std::shared_ptr< asio::strand< asio::io_context::executor_type > > m_strand;
-
+                
                 std::shared_ptr< asio::ip::tcp::socket > m_socket;
-
+                
 #ifdef BUILD_SSL
                 std::shared_ptr< asio::ssl::stream< asio::ip::tcp::socket > > m_ssl_socket;
 #endif
 #ifdef BUILD_IPC
                 std::shared_ptr< asio::local::stream_protocol::socket > m_ipc_socket;
-
+                
                 std::string m_path;
 #endif
         };
