@@ -157,17 +157,17 @@ namespace restbed
                 {
                     Common::remove_parameters( field.first, target );
                 }
-
+                
                 target.insert( source.begin( ), source.end( ) );
             };
-
+            
             auto hdrs = m_settings->get_default_headers( );
-
+            
             if ( m_resource not_eq nullptr )
             {
                 merge( hdrs, m_resource->m_pimpl->m_default_headers );
             }
-
+            
             merge( hdrs, m_headers );
             merge( hdrs, response.get_headers( ) );
             

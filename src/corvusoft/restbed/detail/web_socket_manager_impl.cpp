@@ -291,15 +291,15 @@ namespace restbed
             
             {
                 std::lock_guard< std::mutex > guard( m_socket_lock );
-
-                std::erase_if( m_sockets, []( const auto& entry )
+                
+                std::erase_if( m_sockets, []( const auto & entry )
                 {
                     return entry.second.expired( );
                 } );
-
+                
                 m_sockets.insert( make_pair( key, std::weak_ptr< WebSocket >( socket ) ) );
             }
-
+            
             return socket;
         }
         

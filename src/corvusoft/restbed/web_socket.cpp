@@ -71,12 +71,12 @@ namespace restbed
         {
             m_pimpl->m_close_handler( socket );
         }
-
+        
         if ( m_pimpl->m_manager not_eq nullptr )
         {
             m_pimpl->m_manager->destroy( socket );
         }
-
+        
         if ( m_pimpl->m_socket not_eq nullptr )
         {
             m_pimpl->m_socket->close( );
@@ -101,7 +101,7 @@ namespace restbed
     void WebSocket::send( const shared_ptr< WebSocketMessage > message, const function< void ( const shared_ptr< WebSocket > ) > callback )
     {
         const auto data = m_pimpl->m_manager->compose( message );
-
+        
         auto self = shared_from_this( );
         m_pimpl->m_socket->start_write( data, [ self, callback ]( const error_code & code, size_t )
         {
@@ -111,10 +111,10 @@ namespace restbed
                 {
                     self->m_pimpl->m_error_handler( self, code );
                 }
-
+                
                 return;
             }
-
+            
             if ( callback not_eq nullptr )
             {
                 callback( self );
@@ -214,11 +214,11 @@ namespace restbed
         {
             return;
         }
-
+        
         const bool listening = ( m_pimpl->m_message_handler not_eq nullptr );
-
+        
         m_pimpl->m_message_handler = value;
-
+        
         if ( not listening )
         {
             m_pimpl->listen( shared_from_this( ) );
