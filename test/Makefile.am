@@ -59,6 +59,7 @@ check_PROGRAMS = \
     response_header_precedence_regression_suite \
     uri_assignment_relative_flag_regression_suite \
     request_header_dotted_name_regression_suite \
+    web_socket_set_message_handler_twice_regression_suite \
     string_join_trailing_delimiter_regression_suite \
     parse_parameter_strictness_regression_suite \
     service_http_version_locale_regression_suite
@@ -146,6 +147,8 @@ response_header_precedence_regression_suite_SOURCES                    = respons
 uri_assignment_relative_flag_regression_suite_SOURCES                  = uri_assignment_relative_flag_regression_suite.cpp
 
 request_header_dotted_name_regression_suite_SOURCES                    = request_header_dotted_name_regression_suite.cpp
+
+web_socket_set_message_handler_twice_regression_suite_SOURCES          = web_socket_set_message_handler_twice_regression_suite.cpp
 
 string_join_trailing_delimiter_regression_suite_SOURCES                = string_join_trailing_delimiter_regression_suite.cpp
 

@@ -204,8 +204,14 @@ namespace restbed
         {
             return;
         }
-        
+
+        const bool listening = ( m_pimpl->m_message_handler not_eq nullptr );
+
         m_pimpl->m_message_handler = value;
-        m_pimpl->listen( shared_from_this( ) );
+
+        if ( not listening )
+        {
+            m_pimpl->listen( shared_from_this( ) );
+        }
     }
 }
