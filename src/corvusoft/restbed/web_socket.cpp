@@ -57,7 +57,7 @@ namespace restbed
     
     bool WebSocket::is_closed( void ) const
     {
-        return m_pimpl->m_socket not_eq nullptr and m_pimpl->m_socket->is_closed( );
+        return m_pimpl->m_socket == nullptr or m_pimpl->m_socket->is_closed( );
     }
     
     void WebSocket::close( void )
