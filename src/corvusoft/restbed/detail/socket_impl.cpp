@@ -150,9 +150,12 @@ namespace restbed
 
         void SocketImpl::sleep_for( const milliseconds& delay, const function< void ( const error_code& ) >& callback )
         {
-            m_timer->cancel( );
-            m_timer->expires_after( delay );
-            m_timer->async_wait( callback );
+            m_strand->post( [ this, self = shared_from_this( ), delay, callback ]
+            {
+                m_timer->cancel( );
+                m_timer->expires_after( delay );
+                m_timer->async_wait( asio::bind_executor( *m_strand, callback ) );
+            }, asio::get_associated_allocator( m_strand ) );
         }
 
         void SocketImpl::start_write( const Bytes& data, const std::function< void ( const std::error_code&, std::size_t ) >& callback )
