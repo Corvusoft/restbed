@@ -291,9 +291,15 @@ namespace restbed
             
             {
                 std::lock_guard< std::mutex > guard( m_socket_lock );
-                m_sockets.insert( make_pair( key, socket ) );
+
+                std::erase_if( m_sockets, []( const auto& entry )
+                {
+                    return entry.second.expired( );
+                } );
+
+                m_sockets.insert( make_pair( key, std::weak_ptr< WebSocket >( socket ) ) );
             }
-            
+
             return socket;
         }
         
@@ -301,7 +307,7 @@ namespace restbed
         {
             std::lock_guard< std::mutex > guard( m_socket_lock );
             auto socket = m_sockets.find( key );
-            return ( socket not_eq m_sockets.end( ) ) ? socket->second : nullptr;
+            return ( socket not_eq m_sockets.end( ) ) ? socket->second.lock( ) : nullptr;
         }
         
         shared_ptr< WebSocket > WebSocketManagerImpl::update( const shared_ptr< WebSocket >& socket )

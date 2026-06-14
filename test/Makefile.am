@@ -55,6 +55,7 @@ check_PROGRAMS = \
     service_sanitised_route_bookkeeping_regression_suite \
     service_error_handler_reset_regression_suite \
     header_set_case_insensitive_regression_suite \
+    web_socket_manager_lifetime_regression_suite \
     string_join_trailing_delimiter_regression_suite \
     parse_parameter_strictness_regression_suite \
     service_http_version_locale_regression_suite
@@ -134,6 +135,8 @@ service_sanitised_route_bookkeeping_regression_suite_SOURCES           = service
 service_error_handler_reset_regression_suite_SOURCES                   = service_error_handler_reset_regression_suite.cpp
 
 header_set_case_insensitive_regression_suite_SOURCES                   = header_set_case_insensitive_regression_suite.cpp
+
+web_socket_manager_lifetime_regression_suite_SOURCES                   = web_socket_manager_lifetime_regression_suite.cpp
 
 string_join_trailing_delimiter_regression_suite_SOURCES                = string_join_trailing_delimiter_regression_suite.cpp
 
