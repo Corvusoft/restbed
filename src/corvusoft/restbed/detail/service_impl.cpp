@@ -339,11 +339,11 @@ namespace restbed
                 }
             }
             
-            if ( path.back( ) == '/' )
+            if ( not path.empty( ) and path.back( ) == '/' )
             {
                 sanitised_path += '/';
             }
-            
+
             return sanitised_path;
         }
         
