@@ -53,6 +53,7 @@ check_PROGRAMS = \
     web_socket_error_handler_once_regression_suite \
     web_socket_masked_compose_roundtrip_regression_suite \
     service_sanitised_route_bookkeeping_regression_suite \
+    service_error_handler_reset_regression_suite \
     string_join_trailing_delimiter_regression_suite \
     parse_parameter_strictness_regression_suite \
     service_http_version_locale_regression_suite
@@ -128,6 +129,8 @@ web_socket_masked_compose_roundtrip_regression_suite_SOURCES           = web_soc
 web_socket_masked_compose_roundtrip_regression_suite_LDFLAGS           = -static
 
 service_sanitised_route_bookkeeping_regression_suite_SOURCES           = service_sanitised_route_bookkeeping_regression_suite.cpp
+
+service_error_handler_reset_regression_suite_SOURCES                   = service_error_handler_reset_regression_suite.cpp
 
 string_join_trailing_delimiter_regression_suite_SOURCES                = string_join_trailing_delimiter_regression_suite.cpp
 
