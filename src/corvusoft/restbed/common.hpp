@@ -108,11 +108,28 @@ namespace restbed
             }
             
             //Setters
-            
+            template< typename Type >
+            static void remove_parameters( const std::string& name, Type& parameters )
+            {
+                const auto key = String::lowercase( name );
+
+                for ( auto iterator = parameters.begin( ); iterator not_eq parameters.end( ); )
+                {
+                    if ( key == String::lowercase( iterator->first ) )
+                    {
+                        iterator = parameters.erase( iterator );
+                    }
+                    else
+                    {
+                        ++iterator;
+                    }
+                }
+            }
+
             //Operators
-            
+
             //Properties
-            
+
         protected:
             //Friends
             

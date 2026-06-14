@@ -229,7 +229,7 @@ namespace restbed
     
     void Request::set_header( const string& name, const string& value )
     {
-        m_pimpl->m_headers.erase( name );
+        Common::remove_parameters( name, m_pimpl->m_headers );
         m_pimpl->m_headers.insert( make_pair( name, value ) );
     }
     
