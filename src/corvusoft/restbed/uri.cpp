@@ -395,7 +395,7 @@ namespace restbed
     
     Uri& Uri::operator =( const Uri& rhs )
     {
-        m_pimpl->m_uri = rhs.m_pimpl->m_uri;
+        *m_pimpl = *rhs.m_pimpl;
         return *this;
     }
     
