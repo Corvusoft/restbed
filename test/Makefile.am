@@ -61,6 +61,7 @@ check_PROGRAMS = \
     request_header_dotted_name_regression_suite \
     web_socket_set_message_handler_twice_regression_suite \
     resource_set_method_handler_replace_regression_suite \
+    session_keep_alive_stale_resource_regression_suite \
     string_join_trailing_delimiter_regression_suite \
     parse_parameter_strictness_regression_suite \
     service_http_version_locale_regression_suite
@@ -152,6 +153,8 @@ request_header_dotted_name_regression_suite_SOURCES                    = request
 web_socket_set_message_handler_twice_regression_suite_SOURCES          = web_socket_set_message_handler_twice_regression_suite.cpp
 
 resource_set_method_handler_replace_regression_suite_SOURCES           = resource_set_method_handler_replace_regression_suite.cpp
+
+session_keep_alive_stale_resource_regression_suite_SOURCES             = session_keep_alive_stale_resource_regression_suite.cpp
 
 string_join_trailing_delimiter_regression_suite_SOURCES                = string_join_trailing_delimiter_regression_suite.cpp
 
