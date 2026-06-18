@@ -47,6 +47,38 @@ TEST_CASE( "WebSocketMessage::to_bytes serialises a masked frame", "[web_socket_
     REQUIRE( message.to_bytes( ) == expected );
 }
 
+TEST_CASE( "WebSocketMessage::to_bytes derives the length from the payload", "[web_socket_message]" )
+{
+    // Construct with a two-octet payload (length field becomes 2), then replace
+    // the payload via set_data without touching the length field. The emitted
+    // frame must declare the real payload length, not the stale field value.
+    WebSocketMessage message( WebSocketMessage::OpCode::TEXT_FRAME, String::to_bytes( "Hi" ) );
+    message.set_data( String::to_bytes( "Hello" ) );
+
+    const Bytes expected =
+    {
+        byte{ 0x81 }, byte{ 0x05 },
+        byte{ 'H' }, byte{ 'e' }, byte{ 'l' }, byte{ 'l' }, byte{ 'o' }
+    };
+
+    REQUIRE( message.to_bytes( ) == expected );
+}
+
+TEST_CASE( "WebSocketMessage::to_bytes encodes a 16-bit extended length", "[web_socket_message]" )
+{
+    const Bytes payload( 200, byte{ 0x61 } );
+    const WebSocketMessage message( WebSocketMessage::OpCode::TEXT_FRAME, payload );
+
+    const auto frame = message.to_bytes( );
+
+    REQUIRE( frame.size( ) == 4 + payload.size( ) );
+    REQUIRE( frame[ 0 ] == byte{ 0x81 } );  // FIN + TEXT_FRAME
+    REQUIRE( frame[ 1 ] == byte{ 126 } );   // 16-bit extended-length marker, unmasked
+    REQUIRE( frame[ 2 ] == byte{ 0x00 } );  // 200 == 0x00C8, big-endian
+    REQUIRE( frame[ 3 ] == byte{ 0xC8 } );
+    REQUIRE( Bytes( frame.begin( ) + 4, frame.end( ) ) == payload );
+}
+
 int main( int argc, char* argv[] )
 {
     return Catch::Session( ).run( argc, argv );

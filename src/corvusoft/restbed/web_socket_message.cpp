@@ -100,19 +100,12 @@ namespace restbed
 
         Bytes frame = { datum };
 
-        const auto length = m_pimpl->m_length;
         const auto mask_flag = m_pimpl->m_mask_flag;
+        const auto payload_length = m_pimpl->m_data.size( );
 
-        if ( length == 126 )
+        if ( payload_length > 65535 )
         {
-            const auto extended_length = m_pimpl->m_extended_length;
-            frame.push_back( static_cast< std::byte >( ( mask_flag ) ? 254 : 126 ) );
-            frame.push_back( static_cast< std::byte >( ( extended_length >> 8 ) & 0xFF ) );
-            frame.push_back( static_cast< std::byte >(  extended_length        & 0xFF ) );
-        }
-        else if ( length == 127 )
-        {
-            const auto extended_length = m_pimpl->m_extended_length;
+            const auto extended_length = payload_length;
             frame.push_back( static_cast< std::byte >( ( mask_flag ) ? 255 : 127 ) );
             frame.push_back( static_cast< std::byte >( ( extended_length >> 56 ) & 0xFF ) );
             frame.push_back( static_cast< std::byte >( ( extended_length >> 48 ) & 0xFF ) );
@@ -123,9 +116,16 @@ namespace restbed
             frame.push_back( static_cast< std::byte >( ( extended_length >>  8 ) & 0xFF ) );
             frame.push_back( static_cast< std::byte >(  extended_length         & 0xFF ) );
         }
+        else if ( payload_length > 125 )
+        {
+            const auto extended_length = payload_length;
+            frame.push_back( static_cast< std::byte >( ( mask_flag ) ? 254 : 126 ) );
+            frame.push_back( static_cast< std::byte >( ( extended_length >> 8 ) & 0xFF ) );
+            frame.push_back( static_cast< std::byte >(  extended_length        & 0xFF ) );
+        }
         else
         {
-            uint8_t code = length;
+            uint8_t code = static_cast< uint8_t >( payload_length );
             code = ( mask_flag ) ? ( code | 0x80 ) : ( code & ~0x80 );
             frame.push_back( std::byte{ code } );
         }
