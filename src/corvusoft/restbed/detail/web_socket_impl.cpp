@@ -90,8 +90,16 @@ namespace restbed
             {
                 length += 4;
             }
-            
+
             return length;
+        }
+
+        std::uint64_t WebSocketImpl::payload_length( const std::uint8_t length_indicator, const std::uint64_t extended_length )
+        {
+            // A 126 / 127 indicator means the real length lives in the extended
+            // field ( which may legitimately be zero ); otherwise the indicator
+            // itself is the payload length.
+            return ( length_indicator < 126 ) ? length_indicator : extended_length;
         }
         
         void WebSocketImpl::parse_flags( const Bytes data, const shared_ptr< WebSocket > socket )
@@ -157,13 +165,8 @@ namespace restbed
                 return;
             }
             
-            auto length = message->get_extended_length( );
-            
-            if ( length == 0 )
-            {
-                length = message->get_length( );
-            }
-            
+            const auto length = payload_length( message->get_length( ), message->get_extended_length( ) );
+
             m_socket->start_read( length, bind( &WebSocketImpl::parse_payload, this, _1, packet, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
