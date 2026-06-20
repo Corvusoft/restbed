@@ -72,7 +72,8 @@ check_PROGRAMS = \
     web_socket_message_to_bytes_regression_suite \
     string_join_trailing_delimiter_regression_suite \
     parse_parameter_strictness_regression_suite \
-    service_http_version_locale_regression_suite
+    service_http_version_locale_regression_suite \
+    request_header_trailing_whitespace_regression_suite
 
 if BUILD_IPC
 check_PROGRAMS += ipc_connection_timeout_error_handler_regression_suite
@@ -190,6 +191,11 @@ parse_parameter_strictness_regression_suite_SOURCES                    = parse_p
 # shared library; static link so the detail symbols resolve.
 service_http_version_locale_regression_suite_SOURCES                   = service_http_version_locale_regression_suite.cpp
 service_http_version_locale_regression_suite_LDFLAGS                   = -static
+
+# Exercises restbed::detail::ServiceImpl, whose symbols are hidden in the
+# shared library; static link so the detail symbols resolve.
+request_header_trailing_whitespace_regression_suite_SOURCES            = request_header_trailing_whitespace_regression_suite.cpp
+request_header_trailing_whitespace_regression_suite_LDFLAGS            = -static
 
 if BUILD_IPC
 ipc_connection_timeout_error_handler_regression_suite_SOURCES          = ipc_connection_timeout_error_handler_regression_suite.cpp
