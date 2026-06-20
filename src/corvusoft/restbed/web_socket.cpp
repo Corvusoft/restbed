@@ -199,7 +199,11 @@ namespace restbed
         m_pimpl->m_close_handler = [ value, this ]( const shared_ptr< WebSocket >& socket  )
         {
             value( socket );
-            m_pimpl->m_manager->destroy( socket );
+            
+            if ( m_pimpl->m_manager not_eq nullptr )
+            {
+                m_pimpl->m_manager->destroy( socket );
+            }
         };
     }
     

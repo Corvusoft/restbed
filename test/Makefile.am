@@ -65,6 +65,7 @@ check_PROGRAMS = \
     session_keep_alive_stale_resource_regression_suite \
     web_socket_is_closed_without_socket_regression_suite \
     web_socket_close_without_socket_regression_suite \
+    web_socket_close_handler_without_manager_regression_suite \
     web_socket_send_without_socket_regression_suite \
     web_socket_destructor_wind_down_warning_regression_suite \
     web_socket_message_to_bytes_regression_suite \
@@ -170,6 +171,8 @@ session_keep_alive_stale_resource_regression_suite_SOURCES             = session
 web_socket_is_closed_without_socket_regression_suite_SOURCES           = web_socket_is_closed_without_socket_regression_suite.cpp
 
 web_socket_close_without_socket_regression_suite_SOURCES               = web_socket_close_without_socket_regression_suite.cpp
+
+web_socket_close_handler_without_manager_regression_suite_SOURCES      = web_socket_close_handler_without_manager_regression_suite.cpp
 
 web_socket_send_without_socket_regression_suite_SOURCES                = web_socket_send_without_socket_regression_suite.cpp
 
