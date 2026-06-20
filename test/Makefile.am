@@ -46,6 +46,7 @@ check_PROGRAMS = \
     uri_encode_fails_to_handle_high_bytes_regression_suite \
     uri_get_port_overflow_regression_suite \
     string_replace_infinite_loop_regression_suite \
+    string_replace_dollar_substitute_regression_suite \
     web_socket_frame_parse_regression_suite \
     web_socket_extended_length_read_regression_suite \
     web_socket_extended_length_zero_regression_suite \
@@ -117,6 +118,7 @@ uri_get_parameter_fails_to_handle_empty_values_regression_suite_SOURCES = uri_ge
 uri_encode_fails_to_handle_high_bytes_regression_suite_SOURCES         = uri_encode_fails_to_handle_high_bytes_regression_suite.cpp
 uri_get_port_overflow_regression_suite_SOURCES                         = uri_get_port_overflow_regression_suite.cpp
 string_replace_infinite_loop_regression_suite_SOURCES                  = string_replace_infinite_loop_regression_suite.cpp
+string_replace_dollar_substitute_regression_suite_SOURCES              = string_replace_dollar_substitute_regression_suite.cpp
 
 # This suite exercises restbed::detail::WebSocketManagerImpl, whose symbols are
 # compiled with hidden visibility and therefore absent from the shared library's

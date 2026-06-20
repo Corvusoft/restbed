@@ -127,10 +127,22 @@ namespace restbed
         {
             pattern.assign( expression, icase );
         }
+
+        string literal_substitute;
+        literal_substitute.reserve( substitute.size( ) );
         
-        // A single pass replaces every non-overlapping occurrence. Re-scanning
-        // the result would recurse into freshly-substituted text and loop forever
-        // whenever the substitute contains the target.
-        return regex_replace( value, pattern, substitute );
+        for ( const auto character : substitute )
+        {
+            if ( character == '$' ) // ECMASCript replacement.
+            {
+                literal_substitute += "$$";
+            }
+            else
+            {
+                literal_substitute += character;
+            }
+        }
+
+        return regex_replace( value, pattern, literal_substitute );
     }
 }
