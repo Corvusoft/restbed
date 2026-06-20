@@ -62,6 +62,16 @@ namespace restbed
         
         void WebSocketImpl::listen( const shared_ptr< WebSocket > socket )
         {
+            if ( m_socket == nullptr )
+            {
+                if ( m_error_handler not_eq nullptr )
+                {
+                    m_error_handler( socket, make_error_code( errc::not_connected ) );
+                }
+
+                return;
+            }
+
             m_socket->start_read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )

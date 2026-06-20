@@ -68,6 +68,7 @@ check_PROGRAMS = \
     web_socket_close_without_socket_regression_suite \
     web_socket_close_handler_without_manager_regression_suite \
     web_socket_send_without_socket_regression_suite \
+    web_socket_set_message_handler_without_socket_regression_suite \
     web_socket_destructor_wind_down_warning_regression_suite \
     web_socket_message_to_bytes_regression_suite \
     string_join_trailing_delimiter_regression_suite \
@@ -178,6 +179,8 @@ web_socket_close_without_socket_regression_suite_SOURCES               = web_soc
 web_socket_close_handler_without_manager_regression_suite_SOURCES      = web_socket_close_handler_without_manager_regression_suite.cpp
 
 web_socket_send_without_socket_regression_suite_SOURCES                = web_socket_send_without_socket_regression_suite.cpp
+
+web_socket_set_message_handler_without_socket_regression_suite_SOURCES = web_socket_set_message_handler_without_socket_regression_suite.cpp
 
 web_socket_destructor_wind_down_warning_regression_suite_SOURCES       = web_socket_destructor_wind_down_warning_regression_suite.cpp
 
