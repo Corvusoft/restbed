@@ -48,6 +48,7 @@ namespace restbed
     namespace detail
     {
         WebSocketManagerImpl::WebSocketManagerImpl( void ) : m_logger( nullptr ),
+            m_max_frame_size( 0 ),
             m_socket_lock( ),
             m_sockets( )
         {
@@ -91,8 +92,6 @@ namespace restbed
             
             if ( length == 126 )
             {
-                // 2-byte extended length. packet_length and offset are unsigned,
-                // so compare additively to avoid wrap-around on short frames.
                 if ( packet_length < offset + 2 )
                 {
                     return nullptr;
@@ -238,6 +237,16 @@ namespace restbed
         void WebSocketManagerImpl::set_logger( const shared_ptr< Logger >& value )
         {
             m_logger = value;
+        }
+        
+        std::size_t WebSocketManagerImpl::get_max_frame_size( void ) const
+        {
+            return m_max_frame_size;
+        }
+        
+        void WebSocketManagerImpl::set_max_frame_size( const std::size_t value )
+        {
+            m_max_frame_size = value;
         }
     }
 }

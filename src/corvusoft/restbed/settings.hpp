@@ -9,6 +9,7 @@
 #include <chrono>
 #include <memory>
 #include <string>
+#include <cstddef>
 #include <cstdint>
 
 //Project Includes
@@ -73,6 +74,8 @@ namespace restbed
             
             SETTINGS_EXPORT bool get_case_insensitive_uris( void ) const;
             
+            SETTINGS_EXPORT std::size_t get_web_socket_max_frame_size( void ) const;
+            
             SETTINGS_EXPORT std::chrono::milliseconds get_connection_timeout( void ) const;
             
             SETTINGS_EXPORT bool get_keep_alive( void ) const;
@@ -111,6 +114,8 @@ namespace restbed
             SETTINGS_EXPORT void set_bind_address( const std::string& value );
             
             SETTINGS_EXPORT void set_case_insensitive_uris( const bool value );
+            
+            SETTINGS_EXPORT void set_web_socket_max_frame_size( const std::size_t value );
             
             SETTINGS_EXPORT void set_connection_timeout( const std::chrono::seconds& value );
             

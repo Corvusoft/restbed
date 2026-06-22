@@ -8,6 +8,7 @@
 #include <map>
 #include <mutex>
 #include <memory>
+#include <cstddef>
 #include <functional>
 
 //Project Includes
@@ -62,8 +63,12 @@ namespace restbed
                 //Getters
                 std::shared_ptr< Logger > get_logger( void ) const;
                 
+                std::size_t get_max_frame_size( void ) const;
+                
                 //Setters
                 void set_logger( const std::shared_ptr< Logger >& value );
+                
+                void set_max_frame_size( const std::size_t value );
                 
                 //Operators
                 
@@ -105,6 +110,8 @@ namespace restbed
                 
                 //Properties
                 std::shared_ptr< Logger > m_logger;
+                
+                std::size_t m_max_frame_size = 0;
                 
                 std::mutex m_socket_lock;
                 

@@ -140,6 +140,7 @@ namespace restbed
         }
         
         m_pimpl->m_web_socket_manager = make_shared< WebSocketManagerImpl >( );
+        m_pimpl->m_web_socket_manager->set_max_frame_size( m_pimpl->m_settings->get_web_socket_max_frame_size( ) );
         
 #ifdef BUILD_IPC
         m_pimpl->ipc_start( );

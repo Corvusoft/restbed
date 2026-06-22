@@ -78,6 +78,11 @@ namespace restbed
         return m_pimpl->m_case_insensitive_uris;
     }
     
+    std::size_t Settings::get_web_socket_max_frame_size( void ) const
+    {
+        return m_pimpl->m_web_socket_max_frame_size;
+    }
+    
     milliseconds Settings::get_connection_timeout( void ) const
     {
         return m_pimpl->m_connection_timeout;
@@ -173,6 +178,11 @@ namespace restbed
     void Settings::set_case_insensitive_uris( const bool value )
     {
         m_pimpl->m_case_insensitive_uris = value;
+    }
+    
+    void Settings::set_web_socket_max_frame_size( const std::size_t value )
+    {
+        m_pimpl->m_web_socket_max_frame_size = value;
     }
     
     void Settings::set_connection_timeout( const seconds& value )

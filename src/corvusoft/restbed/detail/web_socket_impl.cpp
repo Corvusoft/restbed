@@ -109,11 +109,16 @@ namespace restbed
             return ( length_indicator < 126 ) ? length_indicator : extended_length;
         }
 
-        bool WebSocketImpl::payload_length_within_limit( const std::uint8_t length_indicator, const std::uint64_t extended_length )
+        bool WebSocketImpl::payload_length_within_limit( const std::uint8_t length_indicator, const std::uint64_t extended_length, const std::size_t max_frame_size )
         {
-            if ( length_indicator == 127 )
+            if ( length_indicator == 127 and ( extended_length & 0x8000000000000000ULL ) not_eq 0 )
             {
-                return ( extended_length & 0x8000000000000000ULL ) == 0;
+                return false;
+            }
+
+            if ( max_frame_size not_eq 0 and payload_length( length_indicator, extended_length ) > max_frame_size )
+            {
+                return false;
             }
 
             return true;
@@ -182,7 +187,7 @@ namespace restbed
                 return;
             }
             
-            if ( not payload_length_within_limit( message->get_length( ), message->get_extended_length( ) ) )
+            if ( not payload_length_within_limit( message->get_length( ), message->get_extended_length( ), m_manager->get_max_frame_size( ) ) )
             {
                 if ( m_error_handler not_eq nullptr )
                 {

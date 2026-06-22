@@ -9,6 +9,7 @@
 #include <string>
 #include <memory>
 #include <chrono>
+#include <cstddef>
 #include <cstdint>
 
 //Project Includes
@@ -47,6 +48,8 @@ namespace restbed
             std::string m_bind_address = "";
             
             bool m_case_insensitive_uris = true;
+            
+            std::size_t m_web_socket_max_frame_size = 0;
             
             bool m_keep_alive = true;
             
