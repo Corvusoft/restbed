@@ -196,13 +196,13 @@ namespace restbed
             return;
         }
         
-        m_pimpl->m_close_handler = [ value, this ]( const shared_ptr< WebSocket >& socket  )
+        m_pimpl->m_close_handler = [ value ]( const shared_ptr< WebSocket >& socket  )
         {
             value( socket );
             
-            if ( m_pimpl->m_manager not_eq nullptr )
+            if ( socket not_eq nullptr and socket->m_pimpl->m_manager not_eq nullptr )
             {
-                m_pimpl->m_manager->destroy( socket );
+                socket->m_pimpl->m_manager->destroy( socket );
             }
         };
     }
