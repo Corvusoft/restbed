@@ -66,6 +66,7 @@ check_PROGRAMS = \
     web_socket_set_message_handler_twice_regression_suite \
     resource_set_method_handler_replace_regression_suite \
     session_keep_alive_stale_resource_regression_suite \
+    session_keep_alive_error_handler_reset_regression_suite \
     web_socket_is_closed_without_socket_regression_suite \
     web_socket_close_without_socket_regression_suite \
     web_socket_close_handler_without_manager_regression_suite \
@@ -184,6 +185,8 @@ web_socket_set_message_handler_twice_regression_suite_SOURCES          = web_soc
 resource_set_method_handler_replace_regression_suite_SOURCES           = resource_set_method_handler_replace_regression_suite.cpp
 
 session_keep_alive_stale_resource_regression_suite_SOURCES             = session_keep_alive_stale_resource_regression_suite.cpp
+
+session_keep_alive_error_handler_reset_regression_suite_SOURCES        = session_keep_alive_error_handler_reset_regression_suite.cpp
 
 web_socket_is_closed_without_socket_regression_suite_SOURCES           = web_socket_is_closed_without_socket_regression_suite.cpp
 

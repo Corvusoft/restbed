@@ -705,6 +705,7 @@ namespace restbed
         void ServiceImpl::parse_request( const error_code& error, size_t, const shared_ptr< Session > session ) const
         {
             session->m_pimpl->m_resource = nullptr;
+            session->m_pimpl->m_error_handler_invoked = false;
             
             istream stream( session->m_pimpl->m_request->m_pimpl->m_buffer.get( ) );
             

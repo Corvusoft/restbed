@@ -81,6 +81,8 @@ namespace restbed
                 
                 std::function< void (  const std::error_code& error, std::size_t length, const std::shared_ptr< Session > ) > m_keep_alive_callback;
                 
+                bool m_error_handler_invoked;
+                
             protected:
                 //Friends
                 
@@ -115,7 +117,6 @@ namespace restbed
                 //Operators
                 
                 //Properties
-                bool m_error_handler_invoked;
         };
     }
 }
