@@ -56,6 +56,8 @@ namespace restbed
 
                 static std::uint64_t payload_length( const std::uint8_t length_indicator, const std::uint64_t extended_length );
 
+                static bool payload_length_within_limit( const std::uint8_t length_indicator, const std::uint64_t extended_length );
+
                 void parse_flags( const Bytes data, const std::shared_ptr< WebSocket > socket );
                 
                 void parse_payload( const Bytes data, Bytes packet, const std::shared_ptr< WebSocket > socket );
