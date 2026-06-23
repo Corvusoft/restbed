@@ -41,7 +41,7 @@ TEST_CASE( "set_method_handler replaces a previously registered handler", "[reso
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "test" );
-
+    
     resource->set_method_handler( "GET", [ ]( const shared_ptr< Session > session )
     {
         session->close( 200, string( "first" ), { { "Content-Length", "5" } } );
@@ -51,38 +51,41 @@ TEST_CASE( "set_method_handler replaces a previously registered handler", "[reso
     {
         session->close( 200, string( "second" ), { { "Content-Length", "6" } } );
     } );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 0 );
-
+    
     auto service = make_shared< Service >( );
     service->publish( resource );
     service->set_ready_handler( [ ]( Service & service )
     {
         g_port.set_value( service.get_http_uri( )->get_port( ) );
     } );
-
-    thread restbed_thread( [ service, settings ]( ) { service->start( settings ); } );
-
+    
+    thread restbed_thread( [ service, settings ]( )
+    {
+        service->start( settings );
+    } );
+    
     const auto port = to_string( g_port.get_future( ).get( ) );
-
+    
     io_context io;
     tcp::socket socket( io );
     tcp::resolver resolver( io );
     connect( socket, resolver.resolve( "localhost", port ) );
-
+    
     asio::write( socket, buffer( string( "GET /test HTTP/1.1\r\nHost: localhost\r\n\r\n" ) ) );
-
+    
     asio::streambuf buffer_in;
     error_code error;
     asio::read( socket, buffer_in, error );
-
+    
     const string response( ( std::istreambuf_iterator< char >( &buffer_in ) ), std::istreambuf_iterator< char >( ) );
-
+    
     socket.close( error );
     service->stop( );
     restbed_thread.join( );
-
+    
     REQUIRE( response.find( "second" ) not_eq string::npos );
     REQUIRE( response.find( "first" ) == string::npos );
 }

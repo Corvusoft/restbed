@@ -23,7 +23,7 @@ TEST_CASE( "uri get_port throws on out-of-range port", "[uri]" )
     // throw out of this accessor; an unparseable port should report 0 (the same
     // sentinel already used when no port is present).
     const Uri uri( "http://www.corvusoft.co.uk:99999999999/resource" );
-
+    
     uint16_t port = 1;
     REQUIRE_NOTHROW( port = uri.get_port( ) );
     REQUIRE( port == 0 );
@@ -35,7 +35,7 @@ TEST_CASE( "uri get_port does not silently truncate above 65535", "[uri]" )
     // masquerade as a valid low port. An out-of-range port must report the 0
     // sentinel instead.
     const Uri uri( "http://www.corvusoft.co.uk:65537/resource" );
-
+    
     uint16_t port = 1;
     REQUIRE_NOTHROW( port = uri.get_port( ) );
     REQUIRE( port == 0 );

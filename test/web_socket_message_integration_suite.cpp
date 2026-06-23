@@ -106,14 +106,14 @@ TEST_CASE( "validate length and extended length are correctly set", "[web_socket
     WebSocketMessage upper_extend_limit( WebSocketMessage::OpCode::TEXT_FRAME, upper_extend_limit_data );
     REQUIRE( upper_extend_limit.get_length( ) == 126 );
     REQUIRE( upper_extend_limit.get_extended_length( ) == 65534 );
-
+    
     // 65535 is the largest payload the 16-bit extended length can hold, so it
     // still uses marker 126 (RFC 6455 mandates the minimal length encoding).
     string upper_extend_limit_max_data( 65535, 'Y' );
     WebSocketMessage upper_extend_limit_max( WebSocketMessage::OpCode::TEXT_FRAME, upper_extend_limit_max_data );
     REQUIRE( upper_extend_limit_max.get_length( ) == 126 );
     REQUIRE( upper_extend_limit_max.get_extended_length( ) == 65535 );
-
+    
     // 65536 no longer fits 16 bits, so it requires the 64-bit field, marker 127.
     string upper_extend_limit_exceeded_data( 65536, 'Z' );
     WebSocketMessage upper_extend_limit_exceeded( WebSocketMessage::OpCode::TEXT_FRAME, upper_extend_limit_exceeded_data );

@@ -20,13 +20,13 @@ using restbed::WebSocket;
 TEST_CASE( "invoking a close handler on a WebSocket with no manager does not crash", "[web_socket]" )
 {
     auto socket = make_shared< WebSocket >( );
-
+    
     bool invoked = false;
     socket->set_close_handler( [ &invoked ]( const shared_ptr< WebSocket > )
     {
         invoked = true;
     } );
-
+    
     // close( ) guards m_manager before its own destroy( ) call, but the close
     // handler installed by set_close_handler( ) also calls m_manager->destroy( ).
     // On a socket-less / manager-less WebSocket m_manager is null, so firing the

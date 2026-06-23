@@ -68,10 +68,10 @@ namespace restbed
                 {
                     m_error_handler( socket, make_error_code( errc::not_connected ) );
                 }
-
+                
                 return;
             }
-
+            
             m_socket->start_read( 2, bind( &WebSocketImpl::parse_flags, this, _1, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )
@@ -100,27 +100,27 @@ namespace restbed
             {
                 length += 4;
             }
-
+            
             return length;
         }
-
+        
         std::uint64_t WebSocketImpl::payload_length( const std::uint8_t length_indicator, const std::uint64_t extended_length )
         {
             return ( length_indicator < 126 ) ? length_indicator : extended_length;
         }
-
+        
         bool WebSocketImpl::payload_length_within_limit( const std::uint8_t length_indicator, const std::uint64_t extended_length, const std::size_t max_frame_size )
         {
             if ( length_indicator == 127 and ( extended_length & 0x8000000000000000ULL ) not_eq 0 )
             {
                 return false;
             }
-
+            
             if ( max_frame_size not_eq 0 and payload_length( length_indicator, extended_length ) > max_frame_size )
             {
                 return false;
             }
-
+            
             return true;
         }
         
@@ -193,12 +193,12 @@ namespace restbed
                 {
                     m_error_handler( socket, make_error_code( errc::message_size ) );
                 }
-
+                
                 return;
             }
-
+            
             const auto length = payload_length( message->get_length( ), message->get_extended_length( ) );
-
+            
             m_socket->start_read( length, bind( &WebSocketImpl::parse_payload, this, _1, packet, socket ), [ this, socket ]( const error_code code )
             {
                 if ( m_error_handler not_eq nullptr )

@@ -32,12 +32,12 @@ TEST_CASE( "web socket parse decodes the full 64-bit extended length", "[web_soc
         byte{ 0x01 }, byte{ 0x02 }, byte{ 0x03 }, byte{ 0x04 },
         byte{ 0x05 }, byte{ 0x06 }, byte{ 0x07 }, byte{ 0x08 }
     };
-
+    
     WebSocketManagerImpl manager;
     const auto message = manager.parse( frame );
-
+    
     REQUIRE( message not_eq nullptr );
-
+    
     // The buggy parser reads only 4 of the 8 length bytes and overwrites the
     // accumulator with the last read, yielding 0x04 instead of the real value.
     REQUIRE( message->get_extended_length( ) == static_cast< uint64_t >( 0x0102030405060708ULL ) );
@@ -50,9 +50,9 @@ TEST_CASE( "web socket parse rejects a frame truncated before its mask", "[web_s
     // so the short-frame guard underflows and the parser reads past the end of
     // the packet. A truncated frame must be rejected with nullptr.
     const Bytes frame { byte{ 0x81 }, byte{ 0x80 }, byte{ 0x00 } };
-
+    
     WebSocketManagerImpl manager;
-
+    
     REQUIRE( manager.parse( frame ) == nullptr );
 }
 

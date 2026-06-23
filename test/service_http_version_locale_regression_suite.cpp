@@ -16,11 +16,11 @@ using restbed::detail::ServiceImpl;
 TEST_CASE( "parse_http_version is independent of the global locale", "[service]" )
 {
     std::setlocale( LC_ALL, "de_DE.utf8" );
-
+    
     REQUIRE( ServiceImpl::parse_http_version( "1.1" ) == 1.1 );
     REQUIRE( ServiceImpl::parse_http_version( "1.0" ) == 1.0 );
     REQUIRE( ServiceImpl::parse_http_version( "2.0" ) == 2.0 );
-
+    
     std::setlocale( LC_ALL, "C" );
 }
 

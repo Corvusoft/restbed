@@ -37,12 +37,12 @@ TEST_CASE( "string replace loops forever when the substitute contains the target
     // used instead.
     auto result = make_shared< promise< string > >( );
     auto future = result->get_future( );
-
+    
     thread( [ result ]( )
     {
         result->set_value( String::replace( "a", "ba", "a" ) );
     } ).detach( );
-
+    
     REQUIRE( future.wait_for( seconds( 2 ) ) == future_status::ready );
     REQUIRE( future.get( ) == "ba" );
 }

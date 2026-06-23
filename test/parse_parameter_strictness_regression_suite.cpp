@@ -35,7 +35,7 @@ TEST_CASE( "parse_parameter still accepts well-formed values", "[common]" )
     REQUIRE( Common::parse_parameter< int >( "-5", 0 ) == -5 );
     REQUIRE( Common::parse_parameter< unsigned long >( "123", 7ul ) == 123ul );
     REQUIRE( Common::parse_parameter< double >( "3.5", 0.0 ) == 3.5 );
-
+    
     // Surrounding whitespace remains tolerated.
     REQUIRE( Common::parse_parameter< int >( "42 ", -1 ) == 42 );
     REQUIRE( Common::parse_parameter< int >( "  7", -1 ) == 7 );

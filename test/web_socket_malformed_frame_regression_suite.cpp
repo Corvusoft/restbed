@@ -38,15 +38,15 @@ TEST_CASE( "malformed frame in parse_length_and_mask reports error without crash
 {
     WebSocketImpl impl;
     impl.m_manager = make_shared< WebSocketManagerImpl >( );
-
+    
     bool error_invoked = false;
     impl.m_error_handler = [ &error_invoked ]( const shared_ptr< WebSocket >, const error_code )
     {
         error_invoked = true;
     };
-
+    
     impl.parse_length_and_mask( truncated_tail, truncated_head, nullptr );
-
+    
     REQUIRE( error_invoked );
 }
 
@@ -54,7 +54,7 @@ TEST_CASE( "malformed frame in parse_payload reports error and skips the message
 {
     WebSocketImpl impl;
     impl.m_manager = make_shared< WebSocketManagerImpl >( );
-
+    
     bool error_invoked = false;
     bool message_invoked = false;
     impl.m_error_handler = [ &error_invoked ]( const shared_ptr< WebSocket >, const error_code )
@@ -65,9 +65,9 @@ TEST_CASE( "malformed frame in parse_payload reports error and skips the message
     {
         message_invoked = true;
     };
-
+    
     impl.parse_payload( truncated_tail, truncated_head, nullptr );
-
+    
     REQUIRE( error_invoked );
     REQUIRE_FALSE( message_invoked );
 }

@@ -24,18 +24,18 @@ using restbed::WebSocket;
 TEST_CASE( "the user's WebSocket error handler is invoked at most once", "[web_socket]" )
 {
     auto socket = make_shared< WebSocket >( );
-
+    
     int invocations = 0;
     socket->set_error_handler( [ &invocations ]( const shared_ptr< WebSocket >, const error_code )
     {
         invocations++;
     } );
-
+    
     const auto handler = socket->get_error_handler( );
-
+    
     handler( socket, make_error_code( errc::bad_message ) );
     handler( socket, make_error_code( errc::connection_reset ) );
-
+    
     REQUIRE( invocations == 1 );
 }
 

@@ -127,7 +127,7 @@ namespace restbed
         {
             pattern.assign( expression, icase );
         }
-
+        
         string literal_substitute;
         literal_substitute.reserve( substitute.size( ) );
         
@@ -142,7 +142,7 @@ namespace restbed
                 literal_substitute += character;
             }
         }
-
+        
         return regex_replace( value, pattern, literal_substitute );
     }
 }

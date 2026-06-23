@@ -20,12 +20,12 @@ TEST_CASE( "Uri copy-assignment preserves the relative flag", "[uri]" )
 {
     Uri absolute( "http://example.com/absolute" );
     Uri relative( "http://example.com/relative", true );
-
+    
     REQUIRE( absolute.is_relative( ) == false );
     REQUIRE( relative.is_relative( ) == true );
-
+    
     absolute = relative;
-
+    
     // Assignment must copy the whole value, not just the URI string, so the
     // relative flag has to come across with it ( the copy constructor already
     // does this ).
@@ -37,9 +37,9 @@ TEST_CASE( "Uri copy-assignment clears the relative flag when assigned an absolu
 {
     Uri relative( "http://example.com/relative", true );
     Uri absolute( "http://example.com/absolute" );
-
+    
     relative = absolute;
-
+    
     REQUIRE( relative.to_string( ) == absolute.to_string( ) );
     REQUIRE( relative.is_relative( ) == false );
 }

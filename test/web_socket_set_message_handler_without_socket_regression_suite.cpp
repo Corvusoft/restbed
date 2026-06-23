@@ -24,7 +24,7 @@ using restbed::WebSocketMessage;
 TEST_CASE( "setting a message handler on a WebSocket with no socket does not crash", "[web_socket]" )
 {
     auto socket = make_shared< WebSocket >( );
-
+    
     error_code reported;
     bool invoked = false;
     socket->set_error_handler( [ &reported, &invoked ]( const shared_ptr< WebSocket >, const error_code code )
@@ -32,13 +32,13 @@ TEST_CASE( "setting a message handler on a WebSocket with no socket does not cra
         reported = code;
         invoked = true;
     } );
-
+    
     // Setting a message handler starts the read loop via WebSocketImpl::listen( ),
     // which dereferenced m_socket. On a socket-less WebSocket m_socket is null, so
     // this crashed. listen( ) must guard the socket and report through the error
     // handler instead, mirroring the guards in send( ) / close( ).
     REQUIRE_NOTHROW( socket->set_message_handler( [ ]( const shared_ptr< WebSocket >, const shared_ptr< WebSocketMessage > ) { } ) );
-
+    
     REQUIRE( invoked == true );
     REQUIRE( reported == std::make_error_code( std::errc::not_connected ) );
 }

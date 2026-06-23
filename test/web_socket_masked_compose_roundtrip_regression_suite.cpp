@@ -28,13 +28,13 @@ TEST_CASE( "a masked frame survives a compose/parse round-trip", "[web_socket]" 
 {
     const Bytes payload = String::to_bytes( "The quick brown fox." );
     const uint32_t masking_key = 0x01020304;
-
+    
     auto outgoing = make_shared< WebSocketMessage >( WebSocketMessage::TEXT_FRAME, payload, masking_key );
-
+    
     WebSocketManagerImpl manager;
     const auto frame = manager.compose( outgoing );
     const auto incoming = manager.parse( frame );
-
+    
     REQUIRE( incoming not_eq nullptr );
     REQUIRE( incoming->get_mask_flag( ) == true );
     REQUIRE( incoming->get_data( ) == payload );

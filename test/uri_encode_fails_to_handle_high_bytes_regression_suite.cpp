@@ -24,9 +24,9 @@ TEST_CASE( "uri encode fails to handle high (non-ascii) bytes", "[uri]" )
     // produces a negative index into the hex lookup table (out-of-bounds read)
     // and emits a corrupt high nibble.
     const string utf8 = "\xC3\xA9";
-
+    
     REQUIRE( Uri::encode( utf8 ) == "%C3%A9" );
-
+    
     // Boundary: 0x80 is the first byte that becomes negative as a signed char.
     REQUIRE( Uri::encode( string( 1, '\x80' ) ) == "%80" );
     REQUIRE( Uri::encode( string( 1, '\xFF' ) ) == "%FF" );

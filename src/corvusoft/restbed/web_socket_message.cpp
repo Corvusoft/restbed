@@ -76,33 +76,34 @@ namespace restbed
     {
         return;
     }
-
+    
     Bytes WebSocketMessage::to_bytes( void ) const
     {
-        std::byte datum = ( m_pimpl->m_final_frame_flag ) ? std::byte{ 0x80 } : std::byte{ 0x00 };
-
+        std::byte datum = ( m_pimpl->m_final_frame_flag ) ? std::byte{ 0x80 } :
+                          std::byte{ 0x00 };
+                          
         if ( m_pimpl->m_reserved_flag_one )
         {
             datum |= std::byte{ 0x40 };
         }
-
+        
         if ( m_pimpl->m_reserved_flag_two )
         {
             datum |= std::byte{ 0x20 };
         }
-
+        
         if ( m_pimpl->m_reserved_flag_three )
         {
             datum |= std::byte{ 0x10 };
         }
-
+        
         datum |= static_cast< std::byte >( m_pimpl->m_opcode & 0x0F );
-
+        
         Bytes frame = { datum };
-
+        
         const auto mask_flag = m_pimpl->m_mask_flag;
         const auto payload_length = m_pimpl->m_data.size( );
-
+        
         if ( payload_length > 65535 )
         {
             const auto extended_length = payload_length;
@@ -129,7 +130,7 @@ namespace restbed
             code = ( mask_flag ) ? ( code | 0x80 ) : ( code & ~0x80 );
             frame.push_back( std::byte{ code } );
         }
-
+        
         if ( mask_flag )
         {
             const auto masking_key = m_pimpl->m_mask;
@@ -140,12 +141,12 @@ namespace restbed
                 static_cast< uint8_t >( ( masking_key >>  8 ) & 0xFF ),
                 static_cast< uint8_t >(   masking_key         & 0xFF )
             };
-
+            
             frame.push_back( std::byte{ mask[ 0 ] } );
             frame.push_back( std::byte{ mask[ 1 ] } );
             frame.push_back( std::byte{ mask[ 2 ] } );
             frame.push_back( std::byte{ mask[ 3 ] } );
-
+            
             for ( size_t index = 0; index < m_pimpl->m_data.size( ); index++ )
             {
                 auto dat = m_pimpl->m_data[ index ];
@@ -157,10 +158,10 @@ namespace restbed
         {
             frame.insert( frame.end( ), m_pimpl->m_data.begin( ), m_pimpl->m_data.end( ) );
         }
-
+        
         return frame;
     }
-
+    
     Bytes WebSocketMessage::get_data( void ) const
     {
         return m_pimpl->m_data;

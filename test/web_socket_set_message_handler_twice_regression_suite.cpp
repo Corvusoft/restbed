@@ -42,12 +42,12 @@ namespace
     promise< void > g_upgraded;
     promise< string > g_message;
     std::atomic< bool > g_signalled{ false };
-
+    
     void record( const shared_ptr< WebSocket >, const shared_ptr< WebSocketMessage > message )
     {
         const auto data = message->get_data( );
         const string text( reinterpret_cast< const char* >( data.data( ) ), data.size( ) );
-
+        
         if ( not g_signalled.exchange( true ) )
         {
             g_message.set_value( text );
@@ -70,43 +70,46 @@ TEST_CASE( "setting the WebSocket message handler twice does not corrupt framing
             g_upgraded.set_value( );
         } );
     } );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 0 );
-
+    
     auto service = make_shared< Service >( );
     service->publish( resource );
     service->set_ready_handler( [ ]( Service & service )
     {
         g_port.set_value( service.get_http_uri( )->get_port( ) );
     } );
-
-    thread restbed_thread( [ service, settings ]( ) { service->start( settings ); } );
-
+    
+    thread restbed_thread( [ service, settings ]( )
+    {
+        service->start( settings );
+    } );
+    
     const auto port = to_string( g_port.get_future( ).get( ) );
-
+    
     io_context io;
     tcp::socket socket( io );
     tcp::resolver resolver( io );
     connect( socket, resolver.resolve( "localhost", port ) );
-
+    
     asio::write( socket, buffer( string( "GET /test HTTP/1.1\r\nHost: localhost\r\n\r\n" ) ) );
-
+    
     g_upgraded.get_future( ).get( );
-
+    
     // A single masked TEXT frame carrying "hi": FIN+TEXT, MASK+len 2, key
     // 01 02 03 04, payload 'h'^01 'i'^02.
     const unsigned char frame[ ] = { 0x81, 0x82, 0x01, 0x02, 0x03, 0x04, 0x69, 0x6B };
     asio::write( socket, buffer( frame, sizeof( frame ) ) );
-
+    
     auto future = g_message.get_future( );
     const auto status = future.wait_for( seconds( 5 ) );
-
+    
     error_code ignored;
     socket.close( ignored );
     service->stop( );
     restbed_thread.join( );
-
+    
     REQUIRE( status == future_status::ready );
     REQUIRE( future.get( ) == "hi" );
 }

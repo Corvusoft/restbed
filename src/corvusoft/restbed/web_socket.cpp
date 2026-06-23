@@ -102,19 +102,19 @@ namespace restbed
     void WebSocket::send( const shared_ptr< WebSocketMessage > message, const function< void ( const shared_ptr< WebSocket > ) > callback )
     {
         auto self = shared_from_this( );
-
+        
         if ( m_pimpl->m_manager == nullptr or m_pimpl->m_socket == nullptr or message == nullptr )
         {
             if ( m_pimpl->m_error_handler not_eq nullptr )
             {
                 m_pimpl->m_error_handler( self, make_error_code( std::errc::not_connected ) );
             }
-
+            
             return;
         }
-
+        
         const auto data = m_pimpl->m_manager->compose( message );
-
+        
         m_pimpl->m_socket->start_write( data, [ self, callback ]( const error_code & code, size_t )
         {
             if ( code )

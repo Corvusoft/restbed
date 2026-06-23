@@ -23,7 +23,7 @@ TEST_CASE( "frame header remainder for 64-bit extended length", "[web_socket]" )
 {
     // 8 bytes of extended length; the buggy implementation read only 4.
     REQUIRE( WebSocketImpl::frame_header_remainder( 127, false ) == static_cast< size_t >( 8 ) );
-
+    
     // ...plus the 4-byte masking key when the mask bit is set.
     REQUIRE( WebSocketImpl::frame_header_remainder( 127, true ) == static_cast< size_t >( 12 ) );
 }

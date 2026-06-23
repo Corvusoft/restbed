@@ -43,12 +43,12 @@ namespace
     condition_variable g_condition;
     bool g_fired = false;
     int g_status = 0;
-
+    
     void error_handler( const int status, const exception&, const shared_ptr< Session > )
     {
         // The timeout path intentionally passes a null session; never touch it.
         unique_lock< mutex > lock( g_mutex );
-
+        
         if ( not g_fired )
         {
             g_fired = true;
@@ -62,14 +62,14 @@ TEST_CASE( "ipc connection timeout invokes service error handler", "[ipc]" )
 {
     const string socket_path = "/tmp/restbed_ipc_timeout_regression.sock";
     ::remove( socket_path.data( ) );
-
+    
     auto settings = make_shared< Settings >( );
     settings->set_port( 0 );
     settings->set_ipc_path( socket_path );
     settings->set_connection_timeout( milliseconds( 250 ) );
-
+    
     shared_ptr< thread > worker = nullptr;
-
+    
     Service service;
     service.set_error_handler( error_handler );
     service.set_ready_handler( [ &worker, socket_path ]( Service & service )
@@ -78,28 +78,31 @@ TEST_CASE( "ipc connection timeout invokes service error handler", "[ipc]" )
         {
             io_context io;
             stream_protocol::socket socket( io );
-
+            
             error_code error;
             socket.connect( stream_protocol::endpoint( socket_path ), error );
-
+            
             if ( not error )
             {
                 // Deliberately send nothing so the server's request read times out.
                 unique_lock< mutex > lock( g_mutex );
-                g_condition.wait_for( lock, seconds( 5 ), [ ]( ) { return g_fired; } );
+                g_condition.wait_for( lock, seconds( 5 ), [ ]( )
+                {
+                    return g_fired;
+                } );
                 lock.unlock( );
             }
-
+            
             error_code ignored;
             socket.close( ignored );
             service.stop( );
         } );
     } );
-
+    
     service.start( settings );
     worker->join( );
     ::remove( socket_path.data( ) );
-
+    
     REQUIRE( g_fired );
     REQUIRE( g_status == 408 );
 }

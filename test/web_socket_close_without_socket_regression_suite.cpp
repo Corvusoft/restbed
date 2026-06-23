@@ -19,7 +19,7 @@ using restbed::WebSocket;
 TEST_CASE( "closing a WebSocket with no underlying socket does not crash", "[web_socket]" )
 {
     auto socket = make_shared< WebSocket >( );
-
+    
     // A socket-less WebSocket has neither a manager nor an underlying socket.
     // close( ) must guard against both being null instead of dereferencing
     // them, mirroring the null-socket guards in is_open( )/is_closed( ).
